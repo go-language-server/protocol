@@ -1,0 +1,51 @@
+version: 2.1
+
+orbs:
+  golang: cci-orb/golang@0.0.4
+
+defaults: &defaults
+  working_directory: /go/src/github.com/go-language-server/protocol
+  executor: golang/stretch
+  environment:
+    GO111MODULE: "on"
+  shell: /bin/bash -euo pipefail
+
+jobs:
+  test:
+    <<: *defaults
+    steps:
+      - checkout
+      - golang/gomod
+      - run:
+          name: Test and collect coverages
+          command: |
+            make coverage/ci
+      - run:
+          name: Upload coverages to codecov
+          command: |
+            bash <(curl -s https://codecov.io/bash) -f /tmp/ci/artifacts/coverage.out
+      - store_artifacts:
+          path: /tmp/ci/artifacts
+      - store_artifacts:
+          path: /tmp/ci/artifacts
+      - store_test_results:
+          path: /tmp/ci/test-results
+
+  lint:
+    <<: *defaults
+    steps:
+      - checkout
+      - golang/gomod
+      - run:
+          name: Run lint for sources
+          command: |
+            make lint
+
+workflows:
+  version: 2
+  workflows:
+    jobs:
+      - test:
+          context: org-global
+      - lint:
+          context: org-global
