@@ -37,7 +37,7 @@ type CompletionContext struct {
 	TriggerCharacter string `json:"triggerCharacter,omitempty"`
 
 	// TriggerKind how the completion was triggered.
-	TriggerKind CompletionTriggerKind `json:"triggerKind"`
+	TriggerKind *CompletionTriggerKind `json:"triggerKind"`
 }
 
 // CompletionList represents a collection of [completion items](#CompletionItem) to be presented
@@ -305,7 +305,7 @@ type SignatureHelpRegistrationOptions struct {
 type ReferenceParams struct {
 	TextDocumentPositionParams
 
-	Context ReferenceContext `json:"context"`
+	Context *ReferenceContext `json:"context"`
 }
 
 // ReferenceContext context of ReferenceParams.
@@ -333,7 +333,7 @@ const (
 type DocumentSymbolParams struct {
 
 	// TextDocument is the text document.
-	TextDocument TextDocumentIdentifier `json:"textDocument"`
+	TextDocument *TextDocumentIdentifier `json:"textDocument"`
 }
 
 // SymbolKind specific capabilities for the `SymbolKind`.
@@ -423,11 +423,11 @@ type DocumentSymbol struct {
 	// Range is the range enclosing this symbol not including leading/trailing whitespace but everything else
 	// like comments. This information is typically used to determine if the clients cursor is
 	// inside the symbol to reveal in the symbol in the UI.
-	Range Range `json:"range"`
+	Range *Range `json:"range"`
 
 	// SelectionRange is the range that should be selected and revealed when this symbol is being picked, e.g the name of a function.
 	// Must be contained by the `range`.
-	SelectionRange Range `json:"selectionRange"`
+	SelectionRange *Range `json:"selectionRange"`
 
 	// Children children of this symbol, e.g. properties of a class.
 	Children []*DocumentSymbol `json:"children,omitempty"`
@@ -455,7 +455,7 @@ type SymbolInformation struct {
 	// The range doesn't have to denote a node range in the sense of a abstract
 	// syntax tree. It can therefore not be used to re-construct a hierarchy of
 	// the symbols.
-	Location Location `json:"location"`
+	Location *Location `json:"location"`
 
 	// ContainerName is the name of the symbol containing this symbol. This information is for
 	// user interface purposes (e.g. to render a qualifier in the user interface
@@ -468,13 +468,13 @@ type SymbolInformation struct {
 type CodeActionParams struct {
 
 	// TextDocument is the document in which the command was invoked.
-	TextDocument TextDocumentIdentifier `json:"textDocument"`
+	TextDocument *TextDocumentIdentifier `json:"textDocument"`
 
 	// Context carrying additional information.
-	Context CodeActionContext `json:"context"`
+	Context *CodeActionContext `json:"context"`
 
 	// Range is the range for which the command was invoked.
-	Range Range `json:"range"`
+	Range *Range `json:"range"`
 }
 
 // CodeActionKind is the code action kind values the client supports. When this
@@ -562,12 +562,12 @@ type CodeAction struct {
 	Diagnostics []Diagnostic `json:"diagnostics,omitempty"`
 
 	// Edit is the workspace edit this code action performs.
-	Edit WorkspaceEdit `json:"edit,omitempty"`
+	Edit *WorkspaceEdit `json:"edit,omitempty"`
 
 	// Command is a command this code action executes. If a code action
 	// provides an edit and a command, first the edit is
 	// executed and then the command.
-	Command Command `json:"command,omitempty"`
+	Command *Command `json:"command,omitempty"`
 }
 
 // CodeActionRegistrationOptions CodeAction Registrationi options.
@@ -580,7 +580,7 @@ type CodeActionRegistrationOptions struct {
 type CodeLensParams struct {
 
 	// TextDocument is the document to request code lens for.
-	TextDocument TextDocumentIdentifier `json:"textDocument"`
+	TextDocument *TextDocumentIdentifier `json:"textDocument"`
 }
 
 // CodeLens is a code lens represents a command that should be shown along with
@@ -591,7 +591,7 @@ type CodeLensParams struct {
 type CodeLens struct {
 
 	// Range is the range in which this code lens is valid. Should only span a single line.
-	Range Range `json:"range"`
+	Range *Range `json:"range"`
 
 	// Command is the command this code lens represents.
 	Command *Command `json:"command,omitempty"`
@@ -613,7 +613,7 @@ type CodeLensRegistrationOptions struct {
 type DocumentLinkParams struct {
 
 	// TextDocument is the document to provide document links for.
-	TextDocument TextDocumentIdentifier `json:"textDocument"`
+	TextDocument *TextDocumentIdentifier `json:"textDocument"`
 }
 
 // DocumentLink is a document link is a range in a text document that links to an internal or external resource, like another
@@ -642,10 +642,10 @@ type DocumentColorParams struct {
 type ColorInformation struct {
 
 	// Range is the range in the document where this color appears.
-	Range Range `json:"range"`
+	Range *Range `json:"range"`
 
 	// Color is the actual color value for this color range.
-	Color Color `json:"color"`
+	Color *Color `json:"color"`
 }
 
 // Color represents a color in RGBA space.
@@ -668,13 +668,13 @@ type Color struct {
 type ColorPresentationParams struct {
 
 	// TextDocument is the text document.
-	TextDocument TextDocumentIdentifier `json:"textDocument"`
+	TextDocument *TextDocumentIdentifier `json:"textDocument"`
 
 	// Color is the color information to request presentations for.
-	Color Color `json:"color"`
+	Color *Color `json:"color"`
 
 	// Range is the range where the color would be inserted. Serves as a context.
-	Range Range `json:"range"`
+	Range *Range `json:"range"`
 }
 
 // ColorPresentation response of Color Presentation Request.
@@ -698,10 +698,10 @@ type ColorPresentation struct {
 type DocumentFormattingParams struct {
 
 	// Options is the format options.
-	Options FormattingOptions `json:"options"`
+	Options *FormattingOptions `json:"options"`
 
 	// TextDocument is the document to format.
-	TextDocument TextDocumentIdentifier `json:"textDocument"`
+	TextDocument *TextDocumentIdentifier `json:"textDocument"`
 }
 
 // FormattingOptions value-object describing what options formatting should use.
@@ -718,29 +718,29 @@ type FormattingOptions struct {
 type DocumentRangeFormattingParams struct {
 
 	// TextDocument is the document to format.
-	TextDocument TextDocumentIdentifier `json:"textDocument"`
+	TextDocument *TextDocumentIdentifier `json:"textDocument"`
 
 	// Range is the range to format
-	Range Range `json:"range"`
+	Range *Range `json:"range"`
 
 	// Options is the format options.
-	Options FormattingOptions `json:"options"`
+	Options *FormattingOptions `json:"options"`
 }
 
 // DocumentOnTypeFormattingParams params of Document on Type Formatting Request.
 type DocumentOnTypeFormattingParams struct {
 
 	// TextDocument is the document to format.
-	TextDocument TextDocumentIdentifier `json:"textDocument"`
+	TextDocument *TextDocumentIdentifier `json:"textDocument"`
 
 	// Position is the position at which this request was sent.
-	Position Position `json:"position"`
+	Position *Position `json:"position"`
 
 	// Ch is the character that has been typed.
 	Ch string `json:"ch"`
 
 	// Options is the format options.
-	Options FormattingOptions `json:"options"`
+	Options *FormattingOptions `json:"options"`
 }
 
 // DocumentOnTypeFormattingRegistrationOptions DocumentOnTypeFormatting Registration options.
@@ -758,10 +758,10 @@ type DocumentOnTypeFormattingRegistrationOptions struct {
 type RenameParams struct {
 
 	// TextDocument is the document to rename.
-	TextDocument TextDocumentIdentifier `json:"textDocument"`
+	TextDocument *TextDocumentIdentifier `json:"textDocument"`
 
 	// Position is the position at which this request was sent.
-	Position Position `json:"position"`
+	Position *Position `json:"position"`
 
 	// NewName is the new name of the symbol. If the given name is not valid the
 	// request must return a [ResponseError](#ResponseError) with an
@@ -781,7 +781,7 @@ type RenameRegistrationOptions struct {
 type FoldingRangeParams struct {
 
 	// TextDocument is the text document.
-	TextDocument TextDocumentIdentifier `json:"textDocument"`
+	TextDocument *TextDocumentIdentifier `json:"textDocument"`
 }
 
 // FoldingRangeKind is the enum of known range kinds.
