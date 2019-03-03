@@ -10,8 +10,9 @@ import (
 	"log"
 	"strings"
 
-	"github.com/go-language-server/protocol/internal/pkg/genprotocol"
 	"gitlab.com/golang-commonmark/markdown"
+
+	"github.com/go-language-server/protocol/internal/cmd/genprotocol/pkg/genprotocol"
 )
 
 func main() {
