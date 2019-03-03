@@ -35,16 +35,16 @@ type Position struct {
 type Range struct {
 
 	// Start is the range's start position.
-	Start Position `json:"start"`
+	Start *Position `json:"start"`
 
 	// End is the range's end position.
-	End Position `json:"end"`
+	End *Position `json:"end"`
 }
 
 // Location represents a location inside a resource, such as a line inside a text file.
 type Location struct {
 	URI   DocumentURI `json:"uri"`
-	Range Range       `json:"range"`
+	Range *Range      `json:"range"`
 }
 
 // LocationLink represents a link between a source and a target location.
@@ -62,18 +62,18 @@ type LocationLink struct {
 	// TargetRange is the full target range of this link. If the target for example is a symbol then target range is the
 	// range enclosing this symbol not including leading/trailing whitespace but everything else
 	// like comments. This information is typically used to highlight the range in the editor.
-	TargetRange Range `json:"targetRange"`
+	TargetRange *Range `json:"targetRange"`
 
 	// TargetSelectionRange is the range that should be selected and revealed when this link is being followed, e.g the name of a function.
 	// Must be contained by the the `targetRange`. See also `DocumentSymbol#range`
-	TargetSelectionRange Range `json:"targetSelectionRange"`
+	TargetSelectionRange *Range `json:"targetSelectionRange"`
 }
 
 // Diagnostic represents a diagnostic, such as a compiler error or warning. Diagnostic objects are only valid in the scope of a resource.
 type Diagnostic struct {
 
 	// Range is the range at which the message applies.
-	Range Range `json:"range"`
+	Range *Range `json:"range"`
 
 	// Severity is the diagnostic's severity. Can be omitted. If omitted it is up to the
 	// client to interpret diagnostics as error, warning, info or hint.
@@ -114,7 +114,7 @@ const (
 type DiagnosticRelatedInformation struct {
 
 	// Location is the location of this related diagnostic information.
-	Location Location `json:"location"`
+	Location *Location `json:"location"`
 
 	// Message is the message of this related diagnostic information.
 	Message string `json:"message"`
@@ -142,7 +142,7 @@ type TextEdit struct {
 
 	// The range of the text document to be manipulated. To insert
 	// text into a document create a range where start === end.
-	Range Range `json:"range"`
+	Range *Range `json:"range"`
 
 	// The string to be inserted. For delete operations use an
 	// empty string.
@@ -156,7 +156,7 @@ type TextEdit struct {
 type TextDocumentEdit struct {
 
 	// The text document to change.
-	TextDocument VersionedTextDocumentIdentifier `json:"textDocument"`
+	TextDocument *VersionedTextDocumentIdentifier `json:"textDocument"`
 
 	// The edits to be applied.
 	Edits []TextEdit `json:"edits"`
@@ -407,10 +407,10 @@ type VersionedTextDocumentIdentifier struct {
 type TextDocumentPositionParams struct {
 
 	// TextDocument is the text document.
-	TextDocument TextDocumentIdentifier `json:"textDocument"`
+	TextDocument *TextDocumentIdentifier `json:"textDocument"`
 
 	// Position is the position inside the text document.
-	Position Position `json:"position"`
+	Position *Position `json:"position"`
 }
 
 // DocumentFilter is a document filter denotes a document through properties like language, scheme or pattern.
