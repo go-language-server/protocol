@@ -1,2 +1,11 @@
-github.com/go-language-server/jsonrpc2 v0.0.0-20190303082755-b64b36151105 h1:wPZEtaMNuxOQM3NidW98cgTUQWpukw7SgLT3q3nTNfA=
-github.com/go-language-server/jsonrpc2 v0.0.0-20190303082755-b64b36151105/go.mod h1:fu7QbZtRjFAMlGvT1UOIbTjjOuMGWdpTv/4z/r/8Eso=
+github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
+github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/francoispqt/gojay v0.0.0-20190228132548-90d953358b68 h1:WgG3zxKl8v+HIH9U3pUdrx5+3R+C/3AJYUvsxHYZveU=
+github.com/francoispqt/gojay v0.0.0-20190228132548-90d953358b68/go.mod h1:H8Wgri1Asi1VevY3ySdpIK5+KCpqzToVswNq8g2xZj4=
+github.com/go-language-server/jsonrpc2 v0.0.0-20190303151851-6e18e82c00ac h1:iZ4Of/0hX4SylNaHZRiWKUPkL05f9laD8ST+QTNOjnY=
+github.com/go-language-server/jsonrpc2 v0.0.0-20190303151851-6e18e82c00ac/go.mod h1:fu7QbZtRjFAMlGvT1UOIbTjjOuMGWdpTv/4z/r/8Eso=
+github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
+github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
+github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
+github.com/stretchr/testify v1.3.0 h1:TivCn/peBQ7UY8ooIcPgZFpTNSz0Q2U6UrFlUfqbe0Q=
+github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
