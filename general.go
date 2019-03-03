@@ -36,7 +36,7 @@ type InitializeParams struct {
 	InitializationOptions interface{} `json:"initializationOptions,omitempty"`
 
 	// Capabilities is the capabilities provided by the client (editor or tool)
-	Capabilities ClientCapabilities `json:"capabilities"`
+	Capabilities *ClientCapabilities `json:"capabilities"`
 
 	// Trace is the initial trace setting. If omitted trace is disabled ('off').
 	Trace string `json:"trace,omitempty"`
@@ -50,6 +50,56 @@ type InitializeParams struct {
 	WorkspaceFolders []*WorkspaceFolder `json:"workspaceFolders,omitempty"`
 }
 
+type WorkspaceClientCapabilitiesWorkspaceEdit struct {
+	// DocumentChanges is the client supports versioned document changes in `WorkspaceEdit`s
+	DocumentChanges bool `json:"documentChanges,omitempty"`
+
+	// FailureHandling is the failure handling strategy of a client if applying the workspace edit
+	// fails.
+	FailureHandling string `json:"failureHandling,omitempty"`
+
+	// ResourceOperations is the resource operations the client supports. Clients should at least
+	// support 'create', 'rename' and 'delete' files and folders.
+	ResourceOperations []string `json:"resourceOperations,omitempty"`
+}
+
+type WorkspaceClientCapabilitiesDidChangeConfiguration struct {
+	// Did change configuration notification supports dynamic registration.
+	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+}
+
+type WorkspaceClientCapabilitiesDidChangeWatchedFiles struct {
+	// Did change watched files notification supports dynamic registration.
+	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+}
+
+type WorkspaceClientCapabilitiesSymbol struct {
+	// Symbol request supports dynamic registration.
+	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+
+	// Specific capabilities for the `SymbolKind` in the `workspace/symbol` request.
+	SymbolKind *WorkspaceClientCapabilitiesSymbolKind `json:"symbolKind,omitempty"`
+}
+
+type WorkspaceClientCapabilitiesSymbolKind struct {
+	/**
+	 * ValueSet is the symbol kind values the client supports. When this
+	 * property exists the client also guarantees that it will
+	 * handle values outside its set gracefully and falls back
+	 * to a default value when unknown.
+	 *
+	 * If this property is not present the client only supports
+	 * the symbol kinds from `File` to `Array` as defined in
+	 * the initial version of the protocol.
+	 */
+	ValueSet []*SymbolKind `json:"valueSet,omitempty"`
+}
+
+type WorkspaceClientCapabilitiesExecuteCommand struct {
+	// DynamicRegistration Execute command supports dynamic registration.
+	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+}
+
 // WorkspaceClientCapabilities Workspace specific client capabilities.
 type WorkspaceClientCapabilities struct {
 
@@ -58,57 +108,19 @@ type WorkspaceClientCapabilities struct {
 	ApplyEdit bool `json:"applyEdit,omitempty"`
 
 	// WorkspaceEdit capabilities specific to `WorkspaceEdit`s
-	WorkspaceEdit *struct {
-		// DocumentChanges is the client supports versioned document changes in `WorkspaceEdit`s
-		DocumentChanges bool `json:"documentChanges,omitempty"`
-
-		// FailureHandling is the failure handling strategy of a client if applying the workspace edit
-		// fails.
-		FailureHandling string `json:"failureHandling,omitempty"`
-
-		// ResourceOperations is the resource operations the client supports. Clients should at least
-		// support 'create', 'rename' and 'delete' files and folders.
-		ResourceOperations []string `json:"resourceOperations,omitempty"`
-	} `json:"workspaceEdit,omitempty"`
+	WorkspaceEdit *WorkspaceClientCapabilitiesWorkspaceEdit `json:"workspaceEdit,omitempty"`
 
 	// DidChangeConfiguration capabilities specific to the `workspace/didChangeConfiguration` notification.
-	DidChangeConfiguration *struct {
-		// Did change configuration notification supports dynamic registration.
-		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-	} `json:"didChangeConfiguration,omitempty"`
+	DidChangeConfiguration *WorkspaceClientCapabilitiesDidChangeConfiguration `json:"didChangeConfiguration,omitempty"`
 
 	// DidChangeWatchedFiles capabilities specific to the `workspace/didChangeWatchedFiles` notification.
-	DidChangeWatchedFiles *struct {
-		// Did change watched files notification supports dynamic registration.
-		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-	} `json:"didChangeWatchedFiles,omitempty"`
+	DidChangeWatchedFiles *WorkspaceClientCapabilitiesDidChangeWatchedFiles `json:"didChangeWatchedFiles,omitempty"`
 
 	// Symbol capabilities specific to the `workspace/symbol` request.
-	Symbol *struct {
-		// Symbol request supports dynamic registration.
-		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-
-		// Specific capabilities for the `SymbolKind` in the `workspace/symbol` request.
-		SymbolKind *struct {
-			/**
-			 * ValueSet is the symbol kind values the client supports. When this
-			 * property exists the client also guarantees that it will
-			 * handle values outside its set gracefully and falls back
-			 * to a default value when unknown.
-			 *
-			 * If this property is not present the client only supports
-			 * the symbol kinds from `File` to `Array` as defined in
-			 * the initial version of the protocol.
-			 */
-			ValueSet []*SymbolKind `json:"valueSet,omitempty"`
-		} `json:"symbolKind,omitempty"`
-	} `json:"symbol,omitempty"`
+	Symbol *WorkspaceClientCapabilitiesSymbol `json:"symbol,omitempty"`
 
 	// ExecuteCommand capabilities specific to the `workspace/executeCommand` request.
-	ExecuteCommand *struct {
-		// DynamicRegistration Execute command supports dynamic registration.
-		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-	} `json:"executeCommand,omitempty"`
+	ExecuteCommand *WorkspaceClientCapabilitiesExecuteCommand `json:"executeCommand,omitempty"`
 
 	// WorkspaceFolders is the client has support for workspace folders.
 	//
@@ -121,291 +133,331 @@ type WorkspaceClientCapabilities struct {
 	Configuration bool `json:"configuration,omitempty"`
 }
 
+type TextDocumentClientCapabilitiesSynchronization struct {
+
+	// DidSave is the client supports did save notifications.
+	DidSave bool `json:"didSave,omitempty"`
+
+	// DynamicRegistration whether text document synchronization supports dynamic registration.
+	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+
+	// WillSave is the client supports sending will save notifications.
+	WillSave bool `json:"willSave,omitempty"`
+
+	// WillSaveWaitUntil is the client supports sending a will save request and
+	// waits for a response providing text edits which will
+	// be applied to the document before it is saved.
+	WillSaveWaitUntil bool `json:"willSaveWaitUntil,omitempty"`
+}
+
+type TextDocumentClientCapabilitiesCompletion struct {
+
+	// Whether completion supports dynamic registration.
+	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+
+	// The client supports the following `CompletionItem` specific
+	// capabilities.
+	CompletionItem *TextDocumentClientCapabilitiesCompletionItem `json:"completionItem,omitempty"`
+
+	CompletionItemKind *CompletionItemKind `json:"completionItemKind,omitempty"`
+
+	// ContextSupport is the client supports to send additional context information for a
+	// `textDocument/completion` request.
+	ContextSupport bool `json:"contextSupport,omitempty"`
+}
+
+type TextDocumentClientCapabilitiesCompletionItem struct {
+	// SnippetSupport client supports snippets as insert text.
+	//
+	// A snippet can define tab stops and placeholders with `$1`, `$2`
+	// and `${3:foo}`. `$0` defines the final tab stop, it defaults to
+	// the end of the snippet. Placeholders with equal identifiers are linked,
+	// that is typing in one will update others too.
+	SnippetSupport bool `json:"snippetSupport,omitempty"`
+
+	// CommitCharactersSupport client supports commit characters on a completion item.
+	CommitCharactersSupport bool `json:"commitCharactersSupport,omitempty"`
+
+	// DocumentationFormat client supports the follow content formats for the documentation
+	// property. The order describes the preferred format of the client.
+	DocumentationFormat []MarkupKind `json:"documentationFormat,omitempty"`
+
+	// DeprecatedSupport client supports the deprecated property on a completion item.
+	DeprecatedSupport bool `json:"deprecatedSupport,omitempty"`
+
+	// PreselectSupport client supports the preselect property on a completion item.
+	PreselectSupport bool `json:"preselectSupport,omitempty"`
+}
+
+type TextDocumentClientCapabilitiesHover struct {
+	/**
+	 * Whether hover supports dynamic registration.
+	 */
+	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+
+	/**
+	 * Client supports the follow content formats for the content
+	 * property. The order describes the preferred format of the client.
+	 */
+	ContentFormat []MarkupKind `json:"contentFormat,omitempty"`
+}
+
+type TextDocumentClientCapabilitiesSignatureHelp struct {
+	/**
+	 * DynamicRegistration whether signature help supports dynamic registration.
+	 */
+	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+
+	/**
+	 * The client supports the following `SignatureInformation`
+	 * specific properties.
+	 */
+	SignatureInformation *TextDocumentClientCapabilitiesSignatureInformation `json:"signatureInformation,omitempty"`
+}
+
+type TextDocumentClientCapabilitiesSignatureInformation struct {
+	/**
+	 * Client supports the follow content formats for the documentation
+	 * property. The order describes the preferred format of the client.
+	 */
+	DocumentationFormat []MarkupKind `json:"documentationFormat,omitempty"`
+}
+
+type TextDocumentClientCapabilitiesReferences struct {
+
+	// DynamicRegistration whether references supports dynamic registration.
+	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+}
+
+type TextDocumentClientCapabilitiesDocumentHighlight struct {
+	// DynamicRegistration Whether document highlight supports dynamic registration.
+	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+}
+
+type TextDocumentClientCapabilitiesDocumentSymbol struct {
+	// DynamicRegistration whether document symbol supports dynamic registration.
+	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+
+	// SymbolKind specific capabilities for the `SymbolKind`.
+	SymbolKind *WorkspaceClientCapabilitiesSymbolKind `json:"symbolKind,omitempty"`
+
+	// HierarchicalDocumentSymbolSupport is the client support hierarchical document symbols.
+	HierarchicalDocumentSymbolSupport bool `json:"hierarchicalDocumentSymbolSupport,omitempty"`
+}
+
+type TextDocumentClientCapabilitiesFormatting struct {
+
+	// DynamicRegistration whether formatting supports dynamic registration.
+	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+}
+
+type TextDocumentClientCapabilitiesRangeFormatting struct {
+
+	// DynamicRegistration whether range formatting supports dynamic registration.
+	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+}
+
+type TextDocumentClientCapabilitiesOnTypeFormatting struct {
+
+	// DynamicRegistration whether on type formatting supports dynamic registration.
+	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+}
+
+type TextDocumentClientCapabilitiesDeclaration struct {
+
+	// DynamicRegistration whether declaration supports dynamic registration. If this is set to `true`
+	// the client supports the new `(TextDocumentRegistrationOptions & StaticRegistrationOptions)`
+	// return value for the corresponding server capability as well.
+	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+
+	// LinkSupport is the client supports additional metadata in the form of declaration links.
+	//
+	// Since 3.14.0
+	LinkSupport bool `json:"linkSupport,omitempty"`
+}
+
+type TextDocumentClientCapabilitiesDefinition struct {
+
+	// DynamicRegistration whether definition supports dynamic registration.
+	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+
+	// LinkSupport is the client supports additional metadata in the form of definition links.
+	LinkSupport bool `json:"linkSupport,omitempty"`
+}
+
+type TextDocumentClientCapabilitiesTypeDefinition struct {
+
+	// DynamicRegistration whether typeDefinition supports dynamic registration. If this is set to `true`
+	// the client supports the new `(TextDocumentRegistrationOptions & StaticRegistrationOptions)`
+	// return value for the corresponding server capability as well.
+	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+
+	// LinkSupport is the client supports additional metadata in the form of definition links.
+	//
+	// Since 3.14.0
+	LinkSupport bool `json:"linkSupport,omitempty"`
+}
+
+type TextDocumentClientCapabilitiesImplementation struct {
+
+	// DynamicRegistration whether implementation supports dynamic registration. If this is set to `true`
+	// the client supports the new `(TextDocumentRegistrationOptions & StaticRegistrationOptions)`
+	// return value for the corresponding server capability as well.
+	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+
+	// LinkSupport is the client supports additional metadata in the form of definition links.
+	//
+	// Since 3.14.0
+	LinkSupport bool `json:"linkSupport,omitempty"`
+}
+
+type TextDocumentClientCapabilitiesCodeAction struct {
+	// DynamicRegistration whether code action supports dynamic registration.
+	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+	// CodeActionLiteralSupport is the client support code action literals as a valid
+	// response of the `textDocument/codeAction` request.
+	//
+	// Since 3.8.0
+	CodeActionLiteralSupport *TextDocumentClientCapabilitiesCodeActionLiteralSupport `json:"codeActionLiteralSupport,omitempty"`
+}
+
+type TextDocumentClientCapabilitiesCodeActionLiteralSupport struct {
+	// CodeActionKind is the code action kind is support with the following value
+	// set.
+	CodeActionKind *TextDocumentClientCapabilitiesCodeActionKind `json:"codeActionKind"`
+}
+
+type TextDocumentClientCapabilitiesCodeActionKind struct {
+
+	/**
+	 * ValueSet is the code action kind values the client supports. When this
+	 * property exists the client also guarantees that it will
+	 * handle values outside its set gracefully and falls back
+	 * to a default value when unknown.
+	 */
+	ValueSet []CodeActionKind `json:"valueSet"`
+}
+
+type TextDocumentClientCapabilitiesCodeLens struct {
+	// DynamicRegistration Whether code lens supports dynamic registration.
+	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+}
+
+type TextDocumentClientCapabilitiesDocumentLink struct {
+	// DynamicRegistration whether document link supports dynamic registration.
+	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+}
+
+type TextDocumentClientCapabilitiesColorProvider struct {
+	// DynamicRegistration whether colorProvider supports dynamic registration. If this is set to `true`
+	// the client supports the new `(ColorProviderOptions & TextDocumentRegistrationOptions & StaticRegistrationOptions)`
+	// return value for the corresponding server capability as well.
+	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+}
+
+type TextDocumentClientCapabilitiesRename struct {
+	// DynamicRegistration whether rename supports dynamic registration.
+	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+
+	// PrepareSupport is the client supports testing for validity of rename operations
+	// before execution.
+	PrepareSupport bool `json:"prepareSupport,omitempty"`
+}
+
+type TextDocumentClientCapabilitiesPublishDiagnostics struct {
+
+	// RelatedInformation whether the clients accepts diagnostics with related information.
+	RelatedInformation bool `json:"relatedInformation,omitempty"`
+}
+
+type TextDocumentClientCapabilitiesFoldingRange struct {
+	// DynamicRegistration whether implementation supports dynamic registration for folding range providers. If this is set to `true`
+	// the client supports the new `(FoldingRangeProviderOptions & TextDocumentRegistrationOptions & StaticRegistrationOptions)`
+	// return value for the corresponding server capability as well.
+	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+
+	// RangeLimit is the maximum number of folding ranges that the client prefers to receive per document. The value serves as a
+	// hint, servers are free to follow the limit.
+	RangeLimit float64 `json:"rangeLimit,omitempty"`
+	// LineFoldingOnly if set, the client signals that it only supports folding complete lines. If set, client will
+	// ignore specified `startCharacter` and `endCharacter` properties in a FoldingRange.
+	LineFoldingOnly bool `json:"lineFoldingOnly,omitempty"`
+}
+
 // TextDocumentClientCapabilities Text document specific client capabilities.
 type TextDocumentClientCapabilities struct {
-	Synchronization *struct {
-
-		// DidSave is the client supports did save notifications.
-		DidSave bool `json:"didSave,omitempty"`
-
-		// DynamicRegistration whether text document synchronization supports dynamic registration.
-		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-
-		// WillSave is the client supports sending will save notifications.
-		WillSave bool `json:"willSave,omitempty"`
-
-		// WillSaveWaitUntil is the client supports sending a will save request and
-		// waits for a response providing text edits which will
-		// be applied to the document before it is saved.
-		WillSaveWaitUntil bool `json:"willSaveWaitUntil,omitempty"`
-	} `json:"synchronization,omitempty"`
+	Synchronization *TextDocumentClientCapabilitiesSynchronization `json:"synchronization,omitempty"`
 
 	// Completion Capabilities specific to the `textDocument/completion`
-	Completion *struct {
-
-		// Whether completion supports dynamic registration.
-		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-
-		// The client supports the following `CompletionItem` specific
-		// capabilities.
-		CompletionItem *struct {
-			// SnippetSupport client supports snippets as insert text.
-			//
-			// A snippet can define tab stops and placeholders with `$1`, `$2`
-			// and `${3:foo}`. `$0` defines the final tab stop, it defaults to
-			// the end of the snippet. Placeholders with equal identifiers are linked,
-			// that is typing in one will update others too.
-			SnippetSupport bool `json:"snippetSupport,omitempty"`
-
-			// CommitCharactersSupport client supports commit characters on a completion item.
-			CommitCharactersSupport bool `json:"commitCharactersSupport,omitempty"`
-
-			// DocumentationFormat client supports the follow content formats for the documentation
-			// property. The order describes the preferred format of the client.
-			DocumentationFormat []MarkupKind `json:"documentationFormat,omitempty"`
-
-			// DeprecatedSupport client supports the deprecated property on a completion item.
-			DeprecatedSupport bool `json:"deprecatedSupport,omitempty"`
-
-			// PreselectSupport client supports the preselect property on a completion item.
-			PreselectSupport bool `json:"preselectSupport,omitempty"`
-		} `json:"completionItem,omitempty"`
-
-		CompletionItemKind *CompletionItemKind `json:"completionItemKind,omitempty"`
-
-		// ContextSupport is the client supports to send additional context information for a
-		// `textDocument/completion` request.
-		ContextSupport bool `json:"contextSupport,omitempty"`
-	} `json:"completion,omitempty"`
+	Completion *TextDocumentClientCapabilitiesCompletion `json:"completion,omitempty"`
 
 	// Hover capabilities specific to the `textDocument/hover`
-	Hover *struct {
-		/**
-		 * Whether hover supports dynamic registration.
-		 */
-		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-
-		/**
-		 * Client supports the follow content formats for the content
-		 * property. The order describes the preferred format of the client.
-		 */
-		ContentFormat []MarkupKind `json:"contentFormat,omitempty"`
-	} `json:"hover,omitempty"`
+	Hover *TextDocumentClientCapabilitiesHover `json:"hover,omitempty"`
 
 	// SignatureHelp capabilities specific to the `textDocument/signatureHelp`
-	SignatureHelp *struct {
-		/**
-		 * DynamicRegistration whether signature help supports dynamic registration.
-		 */
-		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-
-		/**
-		 * The client supports the following `SignatureInformation`
-		 * specific properties.
-		 */
-		SignatureInformation struct {
-			/**
-			 * Client supports the follow content formats for the documentation
-			 * property. The order describes the preferred format of the client.
-			 */
-			DocumentationFormat []MarkupKind `json:"documentationFormat,omitempty"`
-		} `json:"signatureInformation,omitempty"`
-	} `json:"signatureHelp,omitempty"`
+	SignatureHelp *TextDocumentClientCapabilitiesSignatureHelp `json:"signatureHelp,omitempty"`
 
 	// References capabilities specific to the `textDocument/references`
-	References *struct {
-
-		// DynamicRegistration whether references supports dynamic registration.
-		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-	} `json:"references,omitempty"`
+	References *TextDocumentClientCapabilitiesReferences `json:"references,omitempty"`
 
 	// DocumentHighlight capabilities specific to the `textDocument/documentHighlight`
-	DocumentHighlight *struct {
-		// DynamicRegistration Whether document highlight supports dynamic registration.
-		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-	} `json:"documentHighlight,omitempty"`
+	DocumentHighlight *TextDocumentClientCapabilitiesDocumentHighlight `json:"documentHighlight,omitempty"`
 
 	// DocumentSymbol capabilities specific to the `textDocument/documentSymbol`
-	DocumentSymbol *struct {
-		// DynamicRegistration whether document symbol supports dynamic registration.
-		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-
-		// SymbolKind specific capabilities for the `SymbolKind`.
-		SymbolKind *struct {
-			// ValueSet is the symbol kind values the client supports. When this
-			// property exists the client also guarantees that it will
-			// handle values outside its set gracefully and falls back
-			// to a default value when unknown.
-			//
-			// If this property is not present the client only supports
-			// the symbol kinds from `File` to `Array` as defined in
-			// the initial version of the protocol.
-			ValueSet []SymbolKind `json:"valueSet,omitempty"`
-		} `json:"symbolKind,omitempty"`
-
-		// HierarchicalDocumentSymbolSupport is the client support hierarchical document symbols.
-		HierarchicalDocumentSymbolSupport bool `json:"hierarchicalDocumentSymbolSupport,omitempty"`
-	} `json:"documentSymbol,omitempty"`
+	DocumentSymbol *TextDocumentClientCapabilitiesDocumentSymbol `json:"documentSymbol,omitempty"`
 
 	// Formatting capabilities specific to the `textDocument/formatting`
-	Formatting *struct {
-
-		// DynamicRegistration whether formatting supports dynamic registration.
-		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-	} `json:"formatting,omitempty"`
+	Formatting *TextDocumentClientCapabilitiesFormatting `json:"formatting,omitempty"`
 
 	// RangeFormatting capabilities specific to the `textDocument/rangeFormatting`
-	RangeFormatting *struct {
-
-		// DynamicRegistration whether range formatting supports dynamic registration.
-		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-	} `json:"rangeFormatting,omitempty"`
+	RangeFormatting *TextDocumentClientCapabilitiesRangeFormatting `json:"rangeFormatting,omitempty"`
 
 	// OnTypeFormatting Capabilities specific to the `textDocument/onTypeFormatting`
-	OnTypeFormatting *struct {
-
-		// DynamicRegistration whether on type formatting supports dynamic registration.
-		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-	} `json:"onTypeFormatting,omitempty"`
+	OnTypeFormatting *TextDocumentClientCapabilitiesOnTypeFormatting `json:"onTypeFormatting,omitempty"`
 
 	// Declaration capabilities specific to the `textDocument/declaration`
-	Declaration *struct {
-
-		// DynamicRegistration whether declaration supports dynamic registration. If this is set to `true`
-		// the client supports the new `(TextDocumentRegistrationOptions & StaticRegistrationOptions)`
-		// return value for the corresponding server capability as well.
-		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-
-		// LinkSupport is the client supports additional metadata in the form of declaration links.
-		//
-		// Since 3.14.0
-		LinkSupport bool `json:"linkSupport,omitempty"`
-	} `json:"declaration,omitempty"`
+	Declaration *TextDocumentClientCapabilitiesDeclaration `json:"declaration,omitempty"`
 
 	// Definition capabilities specific to the `textDocument/definition`.
 	//
 	// Since 3.14.0
-	Definition *struct {
-
-		// DynamicRegistration whether definition supports dynamic registration.
-		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-
-		// LinkSupport is the client supports additional metadata in the form of definition links.
-		LinkSupport bool `json:"linkSupport,omitempty"`
-	} `json:"definition,omitempty"`
+	Definition *TextDocumentClientCapabilitiesDefinition `json:"definition,omitempty"`
 
 	// TypeDefinition capabilities specific to the `textDocument/typeDefinition`
 	//
 	// Since 3.6.0
-	TypeDefinition *struct {
-
-		// DynamicRegistration whether typeDefinition supports dynamic registration. If this is set to `true`
-		// the client supports the new `(TextDocumentRegistrationOptions & StaticRegistrationOptions)`
-		// return value for the corresponding server capability as well.
-		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-
-		// LinkSupport is the client supports additional metadata in the form of definition links.
-		//
-		// Since 3.14.0
-		LinkSupport bool `json:"linkSupport,omitempty"`
-	} `json:"typeDefinition,omitempty"`
+	TypeDefinition *TextDocumentClientCapabilitiesTypeDefinition `json:"typeDefinition,omitempty"`
 
 	// Implementation capabilities specific to the `textDocument/implementation`.
 	//
 	// Since 3.6.0
-	Implementation *struct {
-
-		// DynamicRegistration whether implementation supports dynamic registration. If this is set to `true`
-		// the client supports the new `(TextDocumentRegistrationOptions & StaticRegistrationOptions)`
-		// return value for the corresponding server capability as well.
-		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-
-		// LinkSupport is the client supports additional metadata in the form of definition links.
-		//
-		// Since 3.14.0
-		LinkSupport bool `json:"linkSupport,omitempty"`
-	} `json:"implementation,omitempty"`
+	Implementation *TextDocumentClientCapabilitiesImplementation `json:"implementation,omitempty"`
 
 	// CodeAction capabilities specific to the `textDocument/codeAction`
-	CodeAction *struct {
-		// DynamicRegistration whether code action supports dynamic registration.
-		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-		// CodeActionLiteralSupport is the client support code action literals as a valid
-		// response of the `textDocument/codeAction` request.
-		//
-		// Since 3.8.0
-		CodeActionLiteralSupport *struct {
-			// CodeActionKind is the code action kind is support with the following value
-			// set.
-			CodeActionKind struct {
-
-				/**
-				 * ValueSet is the code action kind values the client supports. When this
-				 * property exists the client also guarantees that it will
-				 * handle values outside its set gracefully and falls back
-				 * to a default value when unknown.
-				 */
-				ValueSet []CodeActionKind `json:"valueSet"`
-			} `json:"codeActionKind"`
-		} `json:"codeActionLiteralSupport,omitempty"`
-	} `json:"codeAction,omitempty"`
+	CodeAction *TextDocumentClientCapabilitiesCodeAction `json:"codeAction,omitempty"`
 
 	// CodeLens capabilities specific to the `textDocument/codeLens`
-	CodeLens *struct {
-		// DynamicRegistration Whether code lens supports dynamic registration.
-		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-	} `json:"codeLens,omitempty"`
+	CodeLens *TextDocumentClientCapabilitiesCodeLens `json:"codeLens,omitempty"`
 
 	// DocumentLink capabilities specific to the `textDocument/documentLink`
-	DocumentLink *struct {
-		// DynamicRegistration whether document link supports dynamic registration.
-		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-	} `json:"documentLink,omitempty"`
+	DocumentLink *TextDocumentClientCapabilitiesDocumentLink `json:"documentLink,omitempty"`
 
 	// ColorProvider capabilities specific to the `textDocument/documentColor` and the
 	// `textDocument/colorPresentation` request.
 	//
 	// Since 3.6.0
-	ColorProvider *struct {
-		// DynamicRegistration whether colorProvider supports dynamic registration. If this is set to `true`
-		// the client supports the new `(ColorProviderOptions & TextDocumentRegistrationOptions & StaticRegistrationOptions)`
-		// return value for the corresponding server capability as well.
-		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-	} `json:"colorProvider,omitempty"`
+	ColorProvider *TextDocumentClientCapabilitiesColorProvider `json:"colorProvider,omitempty"`
 
 	// Rename capabilities specific to the `textDocument/rename`
-	Rename *struct {
-		// DynamicRegistration whether rename supports dynamic registration.
-		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-
-		// PrepareSupport is the client supports testing for validity of rename operations
-		// before execution.
-		PrepareSupport bool `json:"prepareSupport,omitempty"`
-	} `json:"rename,omitempty"`
+	Rename *TextDocumentClientCapabilitiesRename `json:"rename,omitempty"`
 
 	// PublishDiagnostics capabilities specific to `textDocument/publishDiagnostics`.
-	PublishDiagnostics *struct {
-
-		// RelatedInformation whether the clients accepts diagnostics with related information.
-		RelatedInformation bool `json:"relatedInformation,omitempty"`
-	} `json:"publishDiagnostics,omitempty"`
+	PublishDiagnostics *TextDocumentClientCapabilitiesPublishDiagnostics `json:"publishDiagnostics,omitempty"`
 
 	// FoldingRange capabilities specific to `textDocument/foldingRange` requests.
 	//
 	// Since 3.10.0
-	FoldingRange *struct {
-		// DynamicRegistration whether implementation supports dynamic registration for folding range providers. If this is set to `true`
-		// the client supports the new `(FoldingRangeProviderOptions & TextDocumentRegistrationOptions & StaticRegistrationOptions)`
-		// return value for the corresponding server capability as well.
-		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-
-		// RangeLimit is the maximum number of folding ranges that the client prefers to receive per document. The value serves as a
-		// hint, servers are free to follow the limit.
-		RangeLimit float64 `json:"rangeLimit,omitempty"`
-		// LineFoldingOnly if set, the client signals that it only supports folding complete lines. If set, client will
-		// ignore specified `startCharacter` and `endCharacter` properties in a FoldingRange.
-		LineFoldingOnly bool `json:"lineFoldingOnly,omitempty"`
-	} `json:"foldingRange,omitempty"`
+	FoldingRange *TextDocumentClientCapabilitiesFoldingRange `json:"foldingRange,omitempty"`
 }
 
 // ClientCapabilities now define capabilities for dynamic registration, workspace and text document features the client supports.
@@ -428,7 +480,7 @@ type ClientCapabilities struct {
 type InitializeResult struct {
 
 	// Capabilities is the capabilities the language server provides.
-	Capabilities ServerCapabilities `json:"capabilities"`
+	Capabilities *ServerCapabilities `json:"capabilities"`
 }
 
 // InitializeError known error codes for an `InitializeError`.
@@ -566,6 +618,27 @@ type StaticRegistrationOptions struct {
 	ID string `json:"id,omitempty"`
 }
 
+type ServerCapabilitiesWorkspace struct {
+	WorkspaceFolders *ServerCapabilitiesWorkspaceFolders `json:"workspaceFolders,omitempty"`
+}
+
+type ServerCapabilitiesWorkspaceFolders struct {
+	/**
+	 * The server has support for workspace folders
+	 */
+	Supported bool `json:"supported,omitempty"`
+	/**
+	 * Whether the server wants to receive workspace folder
+	 * change notifications.
+	 *
+	 * If a strings is provided the string is treated as a ID
+	 * under which the notification is registered on the client
+	 * side. The ID can be used to unregister for these events
+	 * using the `client/unregisterCapability` request.
+	 */
+	ChangeNotifications interface{} `json:"changeNotifications,omitempty"` // string | boolean
+}
+
 // ServerCapabilities server capabilities.
 type ServerCapabilities struct {
 
@@ -646,24 +719,7 @@ type ServerCapabilities struct {
 	ExecuteCommandProvider *ExecuteCommandOptions `json:"executeCommandProvider,omitempty"`
 
 	// Workspace specific server capabilities
-	Workspace *struct {
-		WorkspaceFolders struct {
-			/**
-			 * The server has support for workspace folders
-			 */
-			Supported bool `json:"supported,omitempty"`
-			/**
-			 * Whether the server wants to receive workspace folder
-			 * change notifications.
-			 *
-			 * If a strings is provided the string is treated as a ID
-			 * under which the notification is registered on the client
-			 * side. The ID can be used to unregister for these events
-			 * using the `client/unregisterCapability` request.
-			 */
-			ChangeNotifications interface{} `json:"changeNotifications,omitempty"` // string | boolean
-		} `json:"workspaceFolders,omitempty"`
-	} `json:"workspace,omitempty"`
+	Workspace *ServerCapabilitiesWorkspace `json:"workspace,omitempty"`
 
 	// Experimental server capabilities.
 	Experimental interface{} `json:"experimental,omitempty"`
