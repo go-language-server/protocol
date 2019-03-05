@@ -237,11 +237,11 @@ type CompletionRegistrationOptions struct {
 // Hover is the result of a hover request.
 type Hover struct {
 	// Contents is the hover's content
-	Contents MarkupContent
+	Contents MarkupContent `json:"contents"`
 
 	// Range an optional range is a range inside a text document
 	// that is used to visualize a hover, e.g. by changing the background color.
-	Range Range
+	Range Range `json:"range,omitempty"`
 }
 
 // SignatureHelp signature help represents the signature of something
@@ -330,10 +330,10 @@ type ReferenceContext struct {
 // the background color of its range.
 type DocumentHighlight struct {
 	// Range is the range this highlight applies to.
-	Range Range
+	Range Range `json:"range"`
 
 	// Kind is the highlight kind, default is DocumentHighlightKind.Text.
-	Kind DocumentHighlightKind
+	Kind DocumentHighlightKind `json:"kind,omitempty"`
 }
 
 // DocumentHighlightKind a document highlight kind.
