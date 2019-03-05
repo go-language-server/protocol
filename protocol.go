@@ -3,3 +3,8 @@
 // license that can be found in the LICENSE file.
 
 package protocol
+
+const (
+	// Version is the version of the language-server-protocol specification being implemented.
+	Version = "3.14.0"
+)
