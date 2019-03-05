@@ -1252,7 +1252,7 @@ func (v *TextDocumentSyncOptions) IsNil() bool { return v == nil }
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
 func (v *StaticRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
-	case "iD":
+	case "id":
 		return dec.String(&v.ID)
 	}
 	return nil
@@ -1263,7 +1263,7 @@ func (v *StaticRegistrationOptions) NKeys() int { return 1 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject
 func (v *StaticRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.StringKey("iD", v.ID)
+	enc.StringKey("id", v.ID)
 }
 
 // IsNil returns wether the structure is nil value or not
