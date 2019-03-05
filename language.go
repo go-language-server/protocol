@@ -234,6 +234,16 @@ type CompletionRegistrationOptions struct {
 	ResolveProvider bool `json:"resolveProvider,omitempty"`
 }
 
+// Hover is the result of a hover request.
+type Hover struct {
+	// Contents is the hover's content
+	Contents MarkupContent
+
+	// Range an optional range is a range inside a text document
+	// that is used to visualize a hover, e.g. by changing the background color.
+	Range Range
+}
+
 // SignatureHelp signature help represents the signature of something
 // callable. There can be multiple signature but only one
 // active and only one active parameter.
@@ -313,6 +323,17 @@ type ReferenceContext struct {
 
 	// IncludeDeclaration include the declaration of the current symbol.
 	IncludeDeclaration bool `json:"includeDeclaration"`
+}
+
+// DocumentHighlight a document highlight is a range inside a text document which deserves
+// special attention. Usually a document highlight is visualized by changing
+// the background color of its range.
+type DocumentHighlight struct {
+	// Range is the range this highlight applies to.
+	Range Range
+
+	// Kind is the highlight kind, default is DocumentHighlightKind.Text.
+	Kind DocumentHighlightKind
 }
 
 // DocumentHighlightKind a document highlight kind.

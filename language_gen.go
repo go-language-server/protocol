@@ -152,6 +152,29 @@ func (v *CompletionRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKey("resolveProvider", v.ResolveProvider)
 }
 
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+func (v *Hover) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	switch k {
+	case "contents":
+		return dec.Object(&v.Contents)
+	case "range":
+		return dec.Object(&v.Range)
+	}
+	return nil
+}
+
+// NKeys returns the number of keys to unmarshal
+func (v *Hover) NKeys() int { return 2 }
+
+// MarshalJSONObject implements gojay's MarshalerJSONObject
+func (v *Hover) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.ObjectKey("contents", &v.Contents)
+	enc.ObjectKey("range", &v.Range)
+}
+
+// IsNil returns wether the structure is nil value or not
+func (v *Hover) IsNil() bool { return v == nil }
+
 // IsNil returns wether the structure is nil value or not
 func (v *CompletionRegistrationOptions) IsNil() bool { return v == nil }
 
@@ -289,6 +312,29 @@ func (v *ReferenceContext) MarshalJSONObject(enc *gojay.Encoder) {
 
 // IsNil returns wether the structure is nil value or not
 func (v *ReferenceContext) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+func (v *DocumentHighlight) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	switch k {
+	case "range":
+		return dec.Object(&v.Range)
+	case "kind":
+		return dec.Int((*int)(&v.Kind))
+	}
+	return nil
+}
+
+// NKeys returns the number of keys to unmarshal
+func (v *DocumentHighlight) NKeys() int { return 2 }
+
+// MarshalJSONObject implements gojay's MarshalerJSONObject
+func (v *DocumentHighlight) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.ObjectKey("range", &v.Range)
+	enc.IntKey("kind", int(v.Kind))
+}
+
+// IsNil returns wether the structure is nil value or not
+func (v *DocumentHighlight) IsNil() bool { return v == nil }
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
 func (v *DocumentSymbolParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
