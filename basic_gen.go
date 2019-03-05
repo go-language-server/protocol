@@ -482,6 +482,29 @@ func (v *TextDocumentItem) MarshalJSONObject(enc *gojay.Encoder) {
 func (v *TextDocumentItem) IsNil() bool { return v == nil }
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+func (v *VersionedTextDocumentIdentifier) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	switch k {
+	case "uri":
+		return dec.String((*string)(&v.URI))
+	case "version":
+		return dec.Uint64(v.Version)
+	}
+	return nil
+}
+
+// NKeys returns the number of keys to unmarshal
+func (v *VersionedTextDocumentIdentifier) NKeys() int { return 2 }
+
+// MarshalJSONObject implements gojay's MarshalerJSONObject
+func (v *VersionedTextDocumentIdentifier) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.StringKey("uri", string(v.URI))
+	enc.Uint64Key("version", *v.Version)
+}
+
+// IsNil returns wether the structure is nil value or not
+func (v *VersionedTextDocumentIdentifier) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
 func (v *TextDocumentPositionParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "textDocument":
