@@ -560,3 +560,26 @@ func (v *DocumentSelector) MarshalJSONArray(enc *gojay.Encoder) {
 func (v *DocumentSelector) IsNil() bool {
 	return *v == nil || len(*v) == 0
 }
+
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+func (v *MarkupContent) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	switch k {
+	case "kind":
+		return dec.String((*string)(&v.Kind))
+	case "value":
+		return dec.String(&v.Value)
+	}
+	return nil
+}
+
+// NKeys returns the number of keys to unmarshal
+func (v *MarkupContent) NKeys() int { return 2 }
+
+// MarshalJSONObject implements gojay's MarshalerJSONObject
+func (v *MarkupContent) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.StringKey("kind", string(v.Kind))
+	enc.StringKey("value", v.Value)
+}
+
+// IsNil returns wether the structure is nil value or not
+func (v *MarkupContent) IsNil() bool { return v == nil }
