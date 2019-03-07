@@ -6,7 +6,6 @@ run:
   # skip-dirs:
   skip-files:
     - ".*\\.pb\\.go"
-    - ".*(.|_)gen\\.go"
   modules-download-mode: readonly
 
 linters-settings:
@@ -41,16 +40,14 @@ linters-settings:
         paramsOnly: true
       rangeValCopy:
         sizeThreshold: 32
-  # maligned:
-  #   suggest-new: true
   misspell:
     locale: US
   nakedret:
     max-func-lines: 30
   prealloc:
     simple: true
-    range-loops: true  # Report preallocation suggestions on range loops, true by default
-    for-loops: false  # Report preallocation suggestions on for loops, false by default
+    range-loops: true
+    for-loops: false
   unparam:
     algo: cha
     check-exported: true
