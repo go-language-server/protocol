@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   golang: cci-orb/golang@0.0.4
+  github: cci-orb/github@dev:0.0.1
 
 defaults: &defaults
   working_directory: /go/src/github.com/go-language-server/protocol
@@ -15,6 +16,7 @@ jobs:
     <<: *defaults
     steps:
       - checkout
+      - github/token
       - golang/gomod
       - run:
           name: Test and collect coverages
@@ -35,6 +37,7 @@ jobs:
     <<: *defaults
     steps:
       - checkout
+      - github/token
       - golang/gomod
       - run:
           name: Run lint for sources
