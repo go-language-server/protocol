@@ -23,9 +23,6 @@ GO_BENCH_FLAGS ?= -benchmem
 CGO_ENABLED ?= 0
 GO_LDFLAGS=-s -w $(CTIMEVAR)
 GO_LDFLAGS_STATIC=-s -w '-extldflags=-static' $(CTIMEVAR)
-ifneq ($(GO_OS),darwin)
-	GO_LDFLAGS_STATIC+=-d
-endif
 
 ifneq ($(wildcard go.mod),)  # exist go.mod
 ifeq ($(GO111MODULE),off)
