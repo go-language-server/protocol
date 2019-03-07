@@ -3,6 +3,7 @@ version: 2.1
 orbs:
   golang: cci-orb/golang@0.0.4
   github: cci-orb/github@dev:0.0.1
+  codecov: codecov/codecov@volatile
 
 defaults: &defaults
   working_directory: /go/src/github.com/go-language-server/protocol
@@ -22,10 +23,8 @@ jobs:
           name: Test and collect coverages
           command: |
             make coverage/ci
-      - run:
-          name: Upload coverages to codecov
-          command: |
-            bash <(curl -s https://codecov.io/bash) -f /tmp/ci/artifacts/coverage.out
+      - codecov/upload:
+          file: "/tmp/ci/artifacts/coverage.out"
       - store_artifacts:
           path: /tmp/ci/artifacts
       - store_artifacts:
