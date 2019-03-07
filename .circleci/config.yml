@@ -20,6 +20,10 @@ jobs:
       - github/token
       - golang/gomod
       - run:
+          name: Run go mod vendor
+          command: |
+            go mod vendor -v
+      - run:
           name: Test and collect coverages
           command: |
             make coverage/ci
@@ -38,6 +42,10 @@ jobs:
       - checkout
       - github/token
       - golang/gomod
+      - run:
+          name: Run go mod vendor
+          command: |
+            go mod vendor -v
       - run:
           name: Run lint for sources
           command: |
