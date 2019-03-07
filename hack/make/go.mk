@@ -21,8 +21,8 @@ GO_BENCH_FUNC ?= .
 GO_BENCH_FLAGS ?= -benchmem
 
 CGO_ENABLED ?= 0
-GO_LDFLAGS=-s -w $(CTIMEVAR)
-GO_LDFLAGS_STATIC=-s -w '-extldflags=-static' $(CTIMEVAR)
+GO_LDFLAGS=-s -w
+GO_LDFLAGS_STATIC=-s -w '-extldflags=-static'
 
 ifneq ($(wildcard go.mod),)  # exist go.mod
 ifeq ($(GO111MODULE),off)
@@ -47,9 +47,12 @@ endef
 # ----------------------------------------------------------------------------
 # targets
 
+## build and install
+
 .PHONY: pkg/install
 pkg/install:
-	CGO_ENABLED=$(CGO_ENABLED) go install -v ${GO_APP_PKGS}
+	$(call target)
+	GO111MODULE=on CGO_ENABLED=$(CGO_ENABLED) GOOS=$(GO_OS) GOARCH=$(GO_ARCH) go install -v ${GO_APP_PKGS}
 
 ## test, bench and coverage
 
@@ -59,7 +62,7 @@ test: GO_BUILDTAGS+=${GO_BUILDTAGS_STATIC}
 test: GO_FLAGS+=-installsuffix ${GO_INSTALLSUFFIX_STATIC}
 test:  ## Runs package test including race condition.
 	$(call target)
-	$(GO_TEST) -v -race $(strip $(GO_FLAGS)) -run=$(GO_TEST_FUNC) $(GO_TEST_PKGS)
+	@GO111MODULE=on $(GO_TEST) -v -race $(strip $(GO_FLAGS)) -run=$(GO_TEST_FUNC) $(GO_TEST_PKGS)
 
 .PHONY: bench
 bench: GO_LDFLAGS=${GO_LDFLAGS_STATIC}
@@ -67,22 +70,22 @@ bench: GO_BUILDTAGS+=${GO_BUILDTAGS_STATIC}
 bench: GO_FLAGS+=-installsuffix ${GO_INSTALLSUFFIX_STATIC}
 bench:  ## Take a package benchmark.
 	$(call target)
-	$(GO_TEST) -v $(strip $(GO_FLAGS)) -run='^$$' -bench=$(GO_BENCH_FUNC) -benchmem $(GO_TEST_PKGS)
+	@GO111MODULE=on $(GO_TEST) -v $(strip $(GO_FLAGS)) -run='^$$' -bench=$(GO_BENCH_FUNC) -benchmem $(GO_TEST_PKGS)
 
 .PHONY: bench/race
 bench/race:  ## Takes packages benchmarks with the race condition.
 	$(call target)
-	$(GO_TEST) -v -race $(strip $(GO_FLAGS)) -run='^$$' -bench=$(GO_BENCH_FUNC) -benchmem $(GO_TEST_PKGS)
+	@GO111MODULE=on $(GO_TEST) -v -race $(strip $(GO_FLAGS)) -run='^$$' -bench=$(GO_BENCH_FUNC) -benchmem $(GO_TEST_PKGS)
 
 .PHONY: bench/trace
 bench/trace:  ## Take a package benchmark with take a trace profiling.
 	$(GO_TEST) -v -c -o bench-trace.test $(PKG)/stackdriver
-	GODEBUG=allocfreetrace=1 ./bench-trace.test -test.run=none -test.bench=$(GO_BENCH_FUNC) -test.benchmem -test.benchtime=10ms 2> trace.log
+	GO111MODULE=on GODEBUG=allocfreetrace=1 ./bench-trace.test -test.run=none -test.bench=$(GO_BENCH_FUNC) -test.benchmem -test.benchtime=10ms 2> trace.log
 
 .PHONY: coverage
 coverage:  ## Takes packages test coverage.
 	$(call target)
-	$(GO_TEST) -v -race $(strip $(GO_FLAGS)) -covermode=atomic -coverpkg=$(PKG)/... -coverprofile=coverage.out $(GO_PKGS)
+	GO111MODULE=on $(GO_TEST) -v -race $(strip $(GO_FLAGS)) -covermode=atomic -coverpkg=$(PKG)/... -coverprofile=coverage.out $(GO_PKGS)
 
 $(GO_PATH)/bin/go-junit-report:
 	@GO111MODULE=off go get -u github.com/jstemmer/go-junit-report
@@ -98,7 +101,7 @@ coverage/ci: cmd/go-junit-report
 coverage/ci:  ## Takes packages test coverage, and output coverage results to CI artifacts.
 	$(call target)
 	@mkdir -p /tmp/ci/artifacts /tmp/ci/test-results
-	$(GO_TEST) -v -race $(strip $(GO_FLAGS)) -covermode=atomic -coverpkg=$(PKG)/... -coverprofile=/tmp/ci/artifacts/coverage.out $(GO_PKGS) 2>&1 | tee /dev/stderr | go-junit-report -set-exit-code > /tmp/ci/test-results/junit.xml
+	GO111MODULE=on $(GO_TEST) -v -race $(strip $(GO_FLAGS)) -covermode=atomic -coverpkg=$(PKG)/... -coverprofile=/tmp/ci/artifacts/coverage.out $(GO_PKGS) 2>&1 | tee /dev/stderr | go-junit-report -set-exit-code > /tmp/ci/test-results/junit.xml
 	@if [[ -f '/tmp/ci/artifacts/coverage.out' ]]; then go tool cover -html=/tmp/ci/artifacts/coverage.out -o /tmp/ci/artifacts/coverage.html; fi
 
 
@@ -116,7 +119,7 @@ cmd/golangci-lint: $(GO_PATH)/bin/golangci-lint  # go get 'golangci-lint' binary
 .PHONY: golangci-lint
 lint/golangci-lint: cmd/golangci-lint .golangci.yml  ## Run golangci-lint.
 	$(call target)
-	@golangci-lint run ./...
+	@GO111MODULE=on golangci-lint run ./...
 
 
 ## mod
