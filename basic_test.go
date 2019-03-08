@@ -2593,3 +2593,383 @@ func TestDeleteFile(t *testing.T) {
 		}
 	})
 }
+
+func TestWorkspaceEdit(t *testing.T) {
+	t.Run("Marshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name           string
+			field          WorkspaceEdit
+			want           string
+			wantMarshalErr bool
+			wantErr        bool
+		}{
+			{
+				name: "Valid",
+				field: WorkspaceEdit{
+					Changes: map[DocumentURI][]TextEdit{
+						"file:///path/to/basic.go": []TextEdit{
+							{
+								Range: Range{
+									Start: Position{
+										Line:      25,
+										Character: 1,
+									},
+									End: Position{
+										Line:      27,
+										Character: 3,
+									},
+								},
+								NewText: "foo bar",
+							},
+						},
+					},
+					DocumentChanges: []TextDocumentEdit{
+						{
+							TextDocument: VersionedTextDocumentIdentifier{
+								TextDocumentIdentifier: TextDocumentIdentifier{
+									URI: "file:///path/to/basic.go",
+								},
+								Version: Uint64(10),
+							},
+							Edits: []TextEdit{
+								{
+									Range: Range{
+										Start: Position{
+											Line:      25,
+											Character: 1,
+										},
+										End: Position{
+											Line:      27,
+											Character: 3,
+										},
+									},
+									NewText: "foo bar",
+								},
+							},
+						},
+					},
+				},
+				want:           `{"changes":{"file:///path/to/basic.go":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]},"documentChanges":[{"textDocument":{"uri":"file:///path/to/basic.go","version":10},"edits":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}]}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name: "ValidNilChanges",
+				field: WorkspaceEdit{
+					DocumentChanges: []TextDocumentEdit{
+						{
+							TextDocument: VersionedTextDocumentIdentifier{
+								TextDocumentIdentifier: TextDocumentIdentifier{
+									URI: "file:///path/to/basic.go",
+								},
+								Version: Uint64(10),
+							},
+							Edits: []TextEdit{
+								{
+									Range: Range{
+										Start: Position{
+											Line:      25,
+											Character: 1,
+										},
+										End: Position{
+											Line:      27,
+											Character: 3,
+										},
+									},
+									NewText: "foo bar",
+								},
+							},
+						},
+					},
+				},
+				want:           `{"documentChanges":[{"textDocument":{"uri":"file:///path/to/basic.go","version":10},"edits":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}]}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name: "ValidNilDocumentChanges",
+				field: WorkspaceEdit{
+					Changes: map[DocumentURI][]TextEdit{
+						"file:///path/to/basic.go": []TextEdit{
+							{
+								Range: Range{
+									Start: Position{
+										Line:      25,
+										Character: 1,
+									},
+									End: Position{
+										Line:      27,
+										Character: 3,
+									},
+								},
+								NewText: "foo bar",
+							},
+						},
+					},
+				},
+				want:           `{"changes":{"file:///path/to/basic.go":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name: "Invalid",
+				field: WorkspaceEdit{
+					Changes: map[DocumentURI][]TextEdit{
+						"file:///path/to/basic.go": []TextEdit{
+							{
+								Range: Range{
+									Start: Position{
+										Line:      25,
+										Character: 1,
+									},
+									End: Position{
+										Line:      27,
+										Character: 3,
+									},
+								},
+								NewText: "foo bar",
+							},
+						},
+					},
+					DocumentChanges: []TextDocumentEdit{
+						{
+							TextDocument: VersionedTextDocumentIdentifier{
+								TextDocumentIdentifier: TextDocumentIdentifier{
+									URI: "file:///path/to/basic.go",
+								},
+								Version: Uint64(10),
+							},
+							Edits: []TextEdit{
+								{
+									Range: Range{
+										Start: Position{
+											Line:      25,
+											Character: 1,
+										},
+										End: Position{
+											Line:      27,
+											Character: 3,
+										},
+									},
+									NewText: "foo bar",
+								},
+							},
+						},
+					},
+				},
+				want:           `{"changes":{"file:///path/to/basic_gen.go":[{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"newText":"foo bar"}]},"documentChanges":[{"textDocument":{"uri":"file:///path/to/basic_gen.go","version":10},"edits":[{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"newText":"foo bar"}]}]}`,
+				wantMarshalErr: false,
+				wantErr:        true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got, err := gojay.Marshal(&tt.field)
+				if (err != nil) != tt.wantMarshalErr {
+					t.Error(err)
+					return
+				}
+
+				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+
+	t.Run("Unmarshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name             string
+			field            string
+			want             WorkspaceEdit
+			wantUnmarshalErr bool
+			wantErr          bool
+		}{
+			{
+				name:  "Valid",
+				field: `{"changes":{"file:///path/to/basic.go":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]},"documentChanges":[{"textDocument":{"uri":"file:///path/to/basic.go","version":10},"edits":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}]}`,
+				want: WorkspaceEdit{
+					Changes: map[DocumentURI][]TextEdit{
+						"file:///path/to/basic.go": []TextEdit{
+							{
+								Range: Range{
+									Start: Position{
+										Line:      25,
+										Character: 1,
+									},
+									End: Position{
+										Line:      27,
+										Character: 3,
+									},
+								},
+								NewText: "foo bar",
+							},
+						},
+					},
+					DocumentChanges: []TextDocumentEdit{
+						{
+							TextDocument: VersionedTextDocumentIdentifier{
+								TextDocumentIdentifier: TextDocumentIdentifier{
+									URI: "file:///path/to/basic.go",
+								},
+								Version: Uint64(10),
+							},
+							Edits: []TextEdit{
+								{
+									Range: Range{
+										Start: Position{
+											Line:      25,
+											Character: 1,
+										},
+										End: Position{
+											Line:      27,
+											Character: 3,
+										},
+									},
+									NewText: "foo bar",
+								},
+							},
+						},
+					},
+				},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:  "ValidNilChanges",
+				field: `{"documentChanges":[{"textDocument":{"uri":"file:///path/to/basic.go","version":10},"edits":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}]}`,
+				want: WorkspaceEdit{
+					DocumentChanges: []TextDocumentEdit{
+						{
+							TextDocument: VersionedTextDocumentIdentifier{
+								TextDocumentIdentifier: TextDocumentIdentifier{
+									URI: "file:///path/to/basic.go",
+								},
+								Version: Uint64(10),
+							},
+							Edits: []TextEdit{
+								{
+									Range: Range{
+										Start: Position{
+											Line:      25,
+											Character: 1,
+										},
+										End: Position{
+											Line:      27,
+											Character: 3,
+										},
+									},
+									NewText: "foo bar",
+								},
+							},
+						},
+					},
+				},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:  "ValidNilDocumentChanges",
+				field: `{"changes":{"file:///path/to/basic.go":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}}`,
+				want: WorkspaceEdit{
+					Changes: map[DocumentURI][]TextEdit{
+						"file:///path/to/basic.go": []TextEdit{
+							{
+								Range: Range{
+									Start: Position{
+										Line:      25,
+										Character: 1,
+									},
+									End: Position{
+										Line:      27,
+										Character: 3,
+									},
+								},
+								NewText: "foo bar",
+							},
+						},
+					},
+				},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:  "Invalid",
+				field: `{"changes":{"file:///path/to/basic.go":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]},"documentChanges":[{"textDocument":{"uri":"file:///path/to/basic.go","version":10},"edits":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}]}`,
+				want: WorkspaceEdit{
+					Changes: map[DocumentURI][]TextEdit{
+						"file:///path/to/basic.go": []TextEdit{
+							{
+								Range: Range{
+									Start: Position{
+										Line:      2,
+										Character: 1,
+									},
+									End: Position{
+										Line:      3,
+										Character: 2,
+									},
+								},
+								NewText: "foo bar",
+							},
+						},
+					},
+					DocumentChanges: []TextDocumentEdit{
+						{
+							TextDocument: VersionedTextDocumentIdentifier{
+								TextDocumentIdentifier: TextDocumentIdentifier{
+									URI: "file:///path/to/basic_gen.go",
+								},
+								Version: Uint64(10),
+							},
+							Edits: []TextEdit{
+								{
+									Range: Range{
+										Start: Position{
+											Line:      2,
+											Character: 1,
+										},
+										End: Position{
+											Line:      3,
+											Character: 2,
+										},
+									},
+									NewText: "foo bar",
+								},
+							},
+						},
+					},
+				},
+				wantUnmarshalErr: false,
+				wantErr:          true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got := WorkspaceEdit{}
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
+				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
+					t.Error(err)
+					return
+				}
+
+				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+}
