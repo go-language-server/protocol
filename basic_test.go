@@ -686,8 +686,20 @@ func TestDiagnostic(t *testing.T) {
 					Message:  "foo bar",
 					RelatedInformation: []DiagnosticRelatedInformation{
 						{
-							Location: Location{URI: "file:///path/to/basic.go", Range: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
-							Message:  "basic_gen.go",
+							Location: Location{
+								URI: "file:///path/to/basic.go",
+								Range: Range{
+									Start: Position{
+										Line:      25,
+										Character: 1,
+									},
+									End: Position{
+										Line:      27,
+										Character: 3,
+									},
+								},
+							},
+							Message: "basic_gen.go",
 						},
 					},
 				},
@@ -713,8 +725,20 @@ func TestDiagnostic(t *testing.T) {
 					Message: "foo bar",
 					RelatedInformation: []DiagnosticRelatedInformation{
 						{
-							Location: Location{URI: "file:///path/to/basic.go", Range: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
-							Message:  "basic_gen.go",
+							Location: Location{
+								URI: "file:///path/to/basic.go",
+								Range: Range{
+									Start: Position{
+										Line:      25,
+										Character: 1,
+									},
+									End: Position{
+										Line:      27,
+										Character: 3,
+									},
+								},
+							},
+							Message: "basic_gen.go",
 						},
 					},
 				},
@@ -740,8 +764,20 @@ func TestDiagnostic(t *testing.T) {
 					Message:  "foo bar",
 					RelatedInformation: []DiagnosticRelatedInformation{
 						{
-							Location: Location{URI: "file:///path/to/basic.go", Range: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
-							Message:  "basic_gen.go",
+							Location: Location{
+								URI: "file:///path/to/basic.go",
+								Range: Range{
+									Start: Position{
+										Line:      25,
+										Character: 1,
+									},
+									End: Position{
+										Line:      27,
+										Character: 3,
+									},
+								},
+							},
+							Message: "basic_gen.go",
 						},
 					},
 				},
@@ -809,8 +845,20 @@ func TestDiagnostic(t *testing.T) {
 					Message:  "foo bar",
 					RelatedInformation: []DiagnosticRelatedInformation{
 						{
-							Location: Location{URI: "file:///path/to/basic.go", Range: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
-							Message:  "basic_gen.go",
+							Location: Location{
+								URI: "file:///path/to/basic.go",
+								Range: Range{
+									Start: Position{
+										Line:      25,
+										Character: 1,
+									},
+									End: Position{
+										Line:      27,
+										Character: 3,
+									},
+								},
+							},
+							Message: "basic_gen.go",
 						},
 					},
 				},
@@ -895,8 +943,20 @@ func TestDiagnostic(t *testing.T) {
 					Message: "foo bar",
 					RelatedInformation: []DiagnosticRelatedInformation{
 						{
-							Location: Location{URI: "file:///path/to/basic.go", Range: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
-							Message:  "basic_gen.go",
+							Location: Location{
+								URI: "file:///path/to/basic.go",
+								Range: Range{
+									Start: Position{
+										Line:      25,
+										Character: 1,
+									},
+									End: Position{
+										Line:      27,
+										Character: 3,
+									},
+								},
+							},
+							Message: "basic_gen.go",
 						},
 					},
 				},
@@ -922,8 +982,20 @@ func TestDiagnostic(t *testing.T) {
 					Message:  "foo bar",
 					RelatedInformation: []DiagnosticRelatedInformation{
 						{
-							Location: Location{URI: "file:///path/to/basic.go", Range: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
-							Message:  "basic_gen.go",
+							Location: Location{
+								URI: "file:///path/to/basic.go",
+								Range: Range{
+									Start: Position{
+										Line:      25,
+										Character: 1,
+									},
+									End: Position{
+										Line:      27,
+										Character: 3,
+									},
+								},
+							},
+							Message: "basic_gen.go",
 						},
 					},
 				},
@@ -991,8 +1063,20 @@ func TestDiagnostic(t *testing.T) {
 					Message:  "foo bar",
 					RelatedInformation: []DiagnosticRelatedInformation{
 						{
-							Location: Location{URI: "file:///path/to/basic.go", Range: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
-							Message:  "basic_gen.go",
+							Location: Location{
+								URI: "file:///path/to/basic.go",
+								Range: Range{
+									Start: Position{
+										Line:      25,
+										Character: 1,
+									},
+									End: Position{
+										Line:      27,
+										Character: 3,
+									},
+								},
+							},
+							Message: "basic_gen.go",
 						},
 					},
 				},
@@ -1036,8 +1120,20 @@ func TestDiagnosticRelatedInformation(t *testing.T) {
 			{
 				name: "Valid",
 				field: DiagnosticRelatedInformation{
-					Location: Location{URI: "file:///path/to/basic.go", Range: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
-					Message:  "basic_gen.go",
+					Location: Location{
+						URI: "file:///path/to/basic.go",
+						Range: Range{
+							Start: Position{
+								Line:      25,
+								Character: 1,
+							},
+							End: Position{
+								Line:      27,
+								Character: 3,
+							},
+						},
+					},
+					Message: "basic_gen.go",
 				},
 				want:           `{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}`,
 				wantMarshalErr: false,
@@ -1046,8 +1142,20 @@ func TestDiagnosticRelatedInformation(t *testing.T) {
 			{
 				name: "Invalid",
 				field: DiagnosticRelatedInformation{
-					Location: Location{URI: "file:///path/to/basic.go", Range: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
-					Message:  "basic_gen.go",
+					Location: Location{
+						URI: "file:///path/to/basic.go",
+						Range: Range{
+							Start: Position{
+								Line:      25,
+								Character: 1,
+							},
+							End: Position{
+								Line:      27,
+								Character: 3,
+							},
+						},
+					},
+					Message: "basic_gen.go",
 				},
 				want:           `{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}},"message":"basic_gen.go"}`,
 				wantMarshalErr: false,
@@ -1087,8 +1195,20 @@ func TestDiagnosticRelatedInformation(t *testing.T) {
 				name:  "Valid",
 				field: `{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}`,
 				want: DiagnosticRelatedInformation{
-					Location: Location{URI: "file:///path/to/basic.go", Range: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
-					Message:  "basic_gen.go",
+					Location: Location{
+						URI: "file:///path/to/basic.go",
+						Range: Range{
+							Start: Position{
+								Line:      25,
+								Character: 1,
+							},
+							End: Position{
+								Line:      27,
+								Character: 3,
+							},
+						},
+					},
+					Message: "basic_gen.go",
 				},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -1097,8 +1217,20 @@ func TestDiagnosticRelatedInformation(t *testing.T) {
 				name:  "Invalid",
 				field: `{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}},"message":"basic_gen.go"}`,
 				want: DiagnosticRelatedInformation{
-					Location: Location{URI: "file:///path/to/basic.go", Range: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
-					Message:  "basic_gen.go",
+					Location: Location{
+						URI: "file:///path/to/basic.go",
+						Range: Range{
+							Start: Position{
+								Line:      25,
+								Character: 1,
+							},
+							End: Position{
+								Line:      27,
+								Character: 3,
+							},
+						},
+					},
+					Message: "basic_gen.go",
 				},
 				wantUnmarshalErr: false,
 				wantErr:          true,
