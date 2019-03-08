@@ -2153,3 +2153,149 @@ func TestRenameFileOptions(t *testing.T) {
 		}
 	})
 }
+
+func TestRenameFile(t *testing.T) {
+	t.Run("Marshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name           string
+			field          RenameFile
+			want           string
+			wantMarshalErr bool
+			wantErr        bool
+		}{
+			{
+				name: "Valid",
+				field: RenameFile{
+					Kind:   "rename",
+					OldURI: "file:///path/to/old.go",
+					NewURI: "file:///path/to/new.go",
+					Options: &RenameFileOptions{
+						Overwrite:      true,
+						IgnoreIfExists: true,
+					},
+				},
+				want:           `{"kind":"rename","oldUri":"file:///path/to/old.go","newUri":"file:///path/to/new.go","options":{"overwrite":true,"ignoreIfExists":true}}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name: "ValidNilOptions",
+				field: RenameFile{
+					Kind:   "rename",
+					OldURI: "file:///path/to/old.go",
+					NewURI: "file:///path/to/new.go",
+				},
+				want:           `{"kind":"rename","oldUri":"file:///path/to/old.go","newUri":"file:///path/to/new.go"}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name: "Invalid",
+				field: RenameFile{
+					Kind:   "rename",
+					OldURI: "file:///path/to/old.go",
+					NewURI: "file:///path/to/new.go",
+					Options: &RenameFileOptions{
+						Overwrite:      true,
+						IgnoreIfExists: true,
+					},
+				},
+				want:           `{"kind":"rename","oldUri":"file:///path/to/old2.go","newUri":"file:///path/to/new2.go","options":{"overwrite":false,"ignoreIfExists":false}}`,
+				wantMarshalErr: false,
+				wantErr:        true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got, err := gojay.MarshalJSONObject(&tt.field)
+				if (err != nil) != tt.wantMarshalErr {
+					t.Error(err)
+					return
+				}
+
+				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+
+	t.Run("Unmarshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name             string
+			field            string
+			want             RenameFile
+			wantUnmarshalErr bool
+			wantErr          bool
+		}{
+			{
+				name:  "Valid",
+				field: `{"kind":"rename","oldUri":"file:///path/to/old.go","newUri":"file:///path/to/new.go","options":{"overwrite":true,"ignoreIfExists":true}}`,
+				want: RenameFile{
+					Kind:   "rename",
+					OldURI: "file:///path/to/old.go",
+					NewURI: "file:///path/to/new.go",
+					Options: &RenameFileOptions{
+						Overwrite:      true,
+						IgnoreIfExists: true,
+					},
+				},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:  "ValidNilOptions",
+				field: `{"kind":"rename","oldUri":"file:///path/to/old.go","newUri":"file:///path/to/new.go"}`,
+				want: RenameFile{
+					Kind:   "rename",
+					OldURI: "file:///path/to/old.go",
+					NewURI: "file:///path/to/new.go",
+				},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:  "Invalid",
+				field: `{"kind":"rename","oldUri":"file:///path/to/old.go","newUri":"file:///path/to/new.go","options":{"overwrite":true,"ignoreIfExists":true}}`,
+				want: RenameFile{
+					Kind:   "rename",
+					OldURI: "file:///path/to/old2.go",
+					NewURI: "file:///path/to/new2.go",
+					Options: &RenameFileOptions{
+						Overwrite:      false,
+						IgnoreIfExists: false,
+					},
+				},
+				wantUnmarshalErr: false,
+				wantErr:          true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got := RenameFile{}
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
+				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
+					t.Error(err)
+					return
+				}
+
+				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+}
