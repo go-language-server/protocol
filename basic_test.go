@@ -44,6 +44,7 @@ func TestPosition(t *testing.T) {
 				got, err := gojay.MarshalJSONObject(&tt.position)
 				if err != nil {
 					t.Error(err)
+					return
 				}
 
 				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
@@ -86,6 +87,7 @@ func TestPosition(t *testing.T) {
 				defer dec.Release()
 				if err := dec.Decode(&got); err != nil {
 					t.Error(err)
+					return
 				}
 
 				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
@@ -128,6 +130,7 @@ func TestRange(t *testing.T) {
 				got, err := gojay.MarshalJSONObject(&tt.Range)
 				if err != nil {
 					t.Error(err)
+					return
 				}
 
 				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
@@ -170,6 +173,7 @@ func TestRange(t *testing.T) {
 				defer dec.Release()
 				if err := dec.Decode(&got); err != nil {
 					t.Error(err)
+					return
 				}
 
 				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
