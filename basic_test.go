@@ -3452,3 +3452,185 @@ func TestTextDocumentPositionParams(t *testing.T) {
 		}
 	})
 }
+
+func TestDocumentFilter(t *testing.T) {
+	t.Run("Marshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name           string
+			field          DocumentFilter
+			want           string
+			wantMarshalErr bool
+			wantErr        bool
+		}{
+			{
+				name: "Valid",
+				field: DocumentFilter{
+					Language: "go",
+					Scheme:   "file",
+					Pattern:  "*",
+				},
+				want:           `{"language":"go","scheme":"file","pattern":"*"}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name: "ValidNilLanguage",
+				field: DocumentFilter{
+					Scheme:  "file",
+					Pattern: "*",
+				},
+				want:           `{"scheme":"file","pattern":"*"}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name: "ValidNilScheme",
+				field: DocumentFilter{
+					Language: "go",
+					Pattern:  "*",
+				},
+				want:           `{"language":"go","pattern":"*"}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name: "ValidNilPattern",
+				field: DocumentFilter{
+					Language: "go",
+					Scheme:   "file",
+				},
+				want:           `{"language":"go","scheme":"file"}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name:           "ValidNilAll",
+				field:          DocumentFilter{},
+				want:           `{}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name: "Invalid",
+				field: DocumentFilter{
+					Language: "go",
+					Scheme:   "file",
+					Pattern:  "*",
+				},
+				want:           `{"language":"typescript","scheme":"file","pattern":"?"}`,
+				wantMarshalErr: false,
+				wantErr:        true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got, err := gojay.Marshal(&tt.field)
+				if (err != nil) != tt.wantMarshalErr {
+					t.Error(err)
+					return
+				}
+
+				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+
+	t.Run("Unmarshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name             string
+			field            string
+			want             DocumentFilter
+			wantUnmarshalErr bool
+			wantErr          bool
+		}{
+			{
+				name:  "Valid",
+				field: `{"language":"go","scheme":"file","pattern":"*"}`,
+				want: DocumentFilter{
+					Language: "go",
+					Scheme:   "file",
+					Pattern:  "*",
+				},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:  "ValidNilLanguage",
+				field: `{"scheme":"file","pattern":"*"}`,
+				want: DocumentFilter{
+					Scheme:  "file",
+					Pattern: "*",
+				},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:  "ValidNilScheme",
+				field: `{"language":"go","pattern":"*"}`,
+				want: DocumentFilter{
+					Language: "go",
+					Pattern:  "*",
+				},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:  "ValidNilPattern",
+				field: `{"language":"go","scheme":"file"}`,
+				want: DocumentFilter{
+					Language: "go",
+					Scheme:   "file",
+				},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:             "ValidNilAll",
+				field:            `{}`,
+				want:             DocumentFilter{},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:  "Invalid",
+				field: `{"language":"typescript","scheme":"file","pattern":"?"}`,
+				want: DocumentFilter{
+					Language: "go",
+					Scheme:   "file",
+					Pattern:  "*",
+				},
+				wantUnmarshalErr: false,
+				wantErr:          true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got := DocumentFilter{}
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
+				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
+					t.Error(err)
+					return
+				}
+
+				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+}
