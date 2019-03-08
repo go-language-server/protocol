@@ -2609,7 +2609,7 @@ func TestWorkspaceEdit(t *testing.T) {
 				name: "Valid",
 				field: WorkspaceEdit{
 					Changes: map[DocumentURI][]TextEdit{
-						"file:///path/to/basic.go": []TextEdit{
+						"file:///path/to/basic.go": {
 							{
 								Range: Range{
 									Start: Position{
@@ -2692,7 +2692,7 @@ func TestWorkspaceEdit(t *testing.T) {
 				name: "ValidNilDocumentChanges",
 				field: WorkspaceEdit{
 					Changes: map[DocumentURI][]TextEdit{
-						"file:///path/to/basic.go": []TextEdit{
+						"file:///path/to/basic.go": {
 							{
 								Range: Range{
 									Start: Position{
@@ -2717,7 +2717,7 @@ func TestWorkspaceEdit(t *testing.T) {
 				name: "Invalid",
 				field: WorkspaceEdit{
 					Changes: map[DocumentURI][]TextEdit{
-						"file:///path/to/basic.go": []TextEdit{
+						"file:///path/to/basic.go": {
 							{
 								Range: Range{
 									Start: Position{
@@ -2798,7 +2798,7 @@ func TestWorkspaceEdit(t *testing.T) {
 				field: `{"changes":{"file:///path/to/basic.go":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]},"documentChanges":[{"textDocument":{"uri":"file:///path/to/basic.go","version":10},"edits":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}]}`,
 				want: WorkspaceEdit{
 					Changes: map[DocumentURI][]TextEdit{
-						"file:///path/to/basic.go": []TextEdit{
+						"file:///path/to/basic.go": {
 							{
 								Range: Range{
 									Start: Position{
@@ -2881,7 +2881,7 @@ func TestWorkspaceEdit(t *testing.T) {
 				field: `{"changes":{"file:///path/to/basic.go":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}}`,
 				want: WorkspaceEdit{
 					Changes: map[DocumentURI][]TextEdit{
-						"file:///path/to/basic.go": []TextEdit{
+						"file:///path/to/basic.go": {
 							{
 								Range: Range{
 									Start: Position{
@@ -2906,7 +2906,7 @@ func TestWorkspaceEdit(t *testing.T) {
 				field: `{"changes":{"file:///path/to/basic.go":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]},"documentChanges":[{"textDocument":{"uri":"file:///path/to/basic.go","version":10},"edits":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}]}`,
 				want: WorkspaceEdit{
 					Changes: map[DocumentURI][]TextEdit{
-						"file:///path/to/basic.go": []TextEdit{
+						"file:///path/to/basic.go": {
 							{
 								Range: Range{
 									Start: Position{
