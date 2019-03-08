@@ -37,14 +37,8 @@ func (v *Position) IsNil() bool { return v == nil }
 func (v *Range) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "start":
-		if &v.Start == nil {
-			return errors.ErrorInvalidParams("Range.Start field must be non-nil")
-		}
 		return dec.Object(&v.Start)
 	case "end":
-		if &v.End == nil {
-			return errors.ErrorInvalidParams("Range.End field must be non-nil")
-		}
 		return dec.Object(&v.End)
 	}
 	return nil
@@ -92,9 +86,6 @@ func (v *Location) IsNil() bool { return v == nil }
 func (v *LocationLink) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "originSelectionRange":
-		if &v.OriginSelectionRange == nil {
-			return errors.ErrorInvalidParams("LocationLink.OriginSelectionRange field must be non-nil")
-		}
 		return dec.Object(v.OriginSelectionRange)
 	case "targetURI":
 		return dec.String(&v.TargetURI)
@@ -130,9 +121,6 @@ func (v *LocationLink) IsNil() bool { return v == nil }
 func (v *Diagnostic) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "range":
-		if &v.Range == nil {
-			return errors.ErrorInvalidParams("Diagnostic.Range field must be non-nil")
-		}
 		return dec.Object(&v.Range)
 	case "severity":
 		return dec.Float64((*float64)(&v.Severity))
@@ -162,9 +150,6 @@ func (v *Diagnostic) IsNil() bool { return v == nil }
 func (v *DiagnosticRelatedInformation) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "location":
-		if &v.Location == nil {
-			return errors.ErrorInvalidParams("DiagnosticRelatedInformation.Location field must be non-nil")
-		}
 		return dec.Object(&v.Location)
 	case "message":
 		return dec.String(&v.Message)
@@ -211,9 +196,6 @@ func (v *Command) IsNil() bool { return v == nil }
 func (v *TextEdit) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "range":
-		if &v.Range == nil {
-			return errors.ErrorInvalidParams("TextEdit.Range field must be non-nil")
-		}
 		return dec.Object(&v.Range)
 	case "newText":
 		return dec.String(&v.NewText)
@@ -237,9 +219,6 @@ func (v *TextEdit) IsNil() bool { return v == nil }
 func (v *TextDocumentEdit) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "textDocument":
-		if &v.TextDocument == nil {
-			return errors.ErrorInvalidParams("TextDocumentEdit.TextDocument field must be non-nil")
-		}
 		return dec.Object(&v.TextDocument)
 	}
 	return nil
@@ -508,14 +487,8 @@ func (v *VersionedTextDocumentIdentifier) IsNil() bool { return v == nil }
 func (v *TextDocumentPositionParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "textDocument":
-		if &v.TextDocument == nil {
-			return errors.ErrorInvalidParams("TextDocumentPositionParams.TextDocument field must be non-nil")
-		}
 		return dec.Object(&v.TextDocument)
 	case "position":
-		if &v.Position == nil {
-			return errors.ErrorInvalidParams("TextDocumentPositionParams.Position field must be non-nil")
-		}
 		return dec.Object(&v.Position)
 	}
 	return nil
