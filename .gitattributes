@@ -4,5 +4,4 @@
 docs linguist-documentation
 *.pb.go linguist-generated
 *_string.go linguist-generated
-*_gen.go linguist-generated
 vendor/* linguist-vendored
