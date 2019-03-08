@@ -8,7 +8,7 @@ import (
 	"github.com/francoispqt/gojay"
 )
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *CompletionParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "textDocument":
@@ -24,20 +24,20 @@ func (v *CompletionParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) err
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *CompletionParams) NKeys() int { return 3 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *CompletionParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("textDocument", &v.TextDocument)
 	enc.ObjectKey("position", &v.Position)
 	enc.ObjectKey("context", v.Context)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *CompletionParams) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *CompletionContext) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "triggerCharacter":
@@ -48,19 +48,19 @@ func (v *CompletionContext) UnmarshalJSONObject(dec *gojay.Decoder, k string) er
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *CompletionContext) NKeys() int { return 2 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *CompletionContext) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey("triggerCharacter", v.TriggerCharacter)
 	enc.Float64Key("triggerKind", float64(*v.TriggerKind))
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *CompletionContext) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *CompletionList) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "isIncomplete":
@@ -69,18 +69,18 @@ func (v *CompletionList) UnmarshalJSONObject(dec *gojay.Decoder, k string) error
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *CompletionList) NKeys() int { return 1 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *CompletionList) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKey("isIncomplete", v.IsIncomplete)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *CompletionList) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *CompletionItem) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "command":
@@ -109,10 +109,10 @@ func (v *CompletionItem) UnmarshalJSONObject(dec *gojay.Decoder, k string) error
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *CompletionItem) NKeys() int { return 11 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *CompletionItem) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("command", v.Command)
 	enc.BoolKey("deprecated", v.Deprecated)
@@ -127,10 +127,10 @@ func (v *CompletionItem) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("textEdit", v.TextEdit)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *CompletionItem) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *CompletionRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "documentSelector":
@@ -141,16 +141,16 @@ func (v *CompletionRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, 
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *CompletionRegistrationOptions) NKeys() int { return 2 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *CompletionRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ArrayKey("documentSelector", v.DocumentSelector)
 	enc.BoolKey("resolveProvider", v.ResolveProvider)
 }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *Hover) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "contents":
@@ -161,22 +161,22 @@ func (v *Hover) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *Hover) NKeys() int { return 2 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *Hover) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("contents", &v.Contents)
 	enc.ObjectKey("range", &v.Range)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *Hover) IsNil() bool { return v == nil }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *CompletionRegistrationOptions) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *SignatureHelp) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "activeParameter":
@@ -187,19 +187,19 @@ func (v *SignatureHelp) UnmarshalJSONObject(dec *gojay.Decoder, k string) error 
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *SignatureHelp) NKeys() int { return 2 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *SignatureHelp) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.Float64Key("activeParameter", v.ActiveParameter)
 	enc.Float64Key("activeSignature", v.ActiveSignature)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *SignatureHelp) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *SignatureInformation) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "parameterInformation":
@@ -211,18 +211,18 @@ func (v *SignatureInformation) UnmarshalJSONObject(dec *gojay.Decoder, k string)
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *SignatureInformation) NKeys() int { return 1 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *SignatureInformation) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("parameterInformation", v.ParameterInformation)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *SignatureInformation) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ParameterInformation) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "label":
@@ -231,18 +231,18 @@ func (v *ParameterInformation) UnmarshalJSONObject(dec *gojay.Decoder, k string)
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *ParameterInformation) NKeys() int { return 1 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ParameterInformation) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey("label", v.Label)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *ParameterInformation) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *SignatureHelpRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "documentSelector":
@@ -251,18 +251,18 @@ func (v *SignatureHelpRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decode
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *SignatureHelpRegistrationOptions) NKeys() int { return 1 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *SignatureHelpRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ArrayKey("documentSelector", v.DocumentSelector)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *SignatureHelpRegistrationOptions) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ReferenceContext) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "includeDeclaration":
@@ -271,7 +271,7 @@ func (v *ReferenceContext) UnmarshalJSONObject(dec *gojay.Decoder, k string) err
 	return nil
 }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ReferenceParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "textDocument":
@@ -287,31 +287,31 @@ func (v *ReferenceParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) erro
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *ReferenceParams) NKeys() int { return 3 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ReferenceParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("textDocument", &v.TextDocument)
 	enc.ObjectKey("position", &v.Position)
 	enc.ObjectKey("context", v.Context)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *ReferenceParams) IsNil() bool { return v == nil }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *ReferenceContext) NKeys() int { return 1 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ReferenceContext) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKey("includeDeclaration", v.IncludeDeclaration)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *ReferenceContext) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *DocumentHighlight) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "range":
@@ -322,19 +322,19 @@ func (v *DocumentHighlight) UnmarshalJSONObject(dec *gojay.Decoder, k string) er
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *DocumentHighlight) NKeys() int { return 2 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *DocumentHighlight) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("range", &v.Range)
 	enc.IntKey("kind", int(v.Kind))
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *DocumentHighlight) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *DocumentSymbolParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "textDocument":
@@ -343,18 +343,18 @@ func (v *DocumentSymbolParams) UnmarshalJSONObject(dec *gojay.Decoder, k string)
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *DocumentSymbolParams) NKeys() int { return 1 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *DocumentSymbolParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("textDocument", v.TextDocument)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *DocumentSymbolParams) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *DocumentSymbol) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "name":
@@ -373,10 +373,10 @@ func (v *DocumentSymbol) UnmarshalJSONObject(dec *gojay.Decoder, k string) error
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *DocumentSymbol) NKeys() int { return 6 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *DocumentSymbol) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey("name", v.Name)
 	enc.StringKey("detail", v.Detail)
@@ -386,10 +386,10 @@ func (v *DocumentSymbol) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("selectionRange", v.SelectionRange)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *DocumentSymbol) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *DocumentFormattingParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "options":
@@ -403,19 +403,19 @@ func (v *DocumentFormattingParams) UnmarshalJSONObject(dec *gojay.Decoder, k str
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *DocumentFormattingParams) NKeys() int { return 2 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *DocumentFormattingParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("options", v.Options)
 	enc.ObjectKey("textDocument", v.TextDocument)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *DocumentFormattingParams) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *SymbolInformation) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "name":
@@ -432,10 +432,10 @@ func (v *SymbolInformation) UnmarshalJSONObject(dec *gojay.Decoder, k string) er
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *SymbolInformation) NKeys() int { return 5 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *SymbolInformation) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey("name", v.Name)
 	enc.Float64Key("kind", v.Kind)
@@ -444,10 +444,10 @@ func (v *SymbolInformation) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey("containerName", v.ContainerName)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *SymbolInformation) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *CodeActionParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "textDocument":
@@ -463,40 +463,40 @@ func (v *CodeActionParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) err
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *CodeActionParams) NKeys() int { return 3 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *CodeActionParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("textDocument", v.TextDocument)
 	enc.ObjectKey("context", v.Context)
 	enc.ObjectKey("range", v.Range)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *CodeActionParams) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *CodeActionContext) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	}
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *CodeActionContext) NKeys() int { return 0 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *CodeActionContext) MarshalJSONObject(enc *gojay.Encoder) {
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *CodeActionContext) IsNil() bool { return v == nil }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *CodeActionRegistrationOptions) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *CodeAction) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "title":
@@ -511,10 +511,10 @@ func (v *CodeAction) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *CodeAction) NKeys() int { return 4 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *CodeAction) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey("title", v.Title)
 	enc.StringKey("kind", string(v.Kind))
@@ -522,10 +522,10 @@ func (v *CodeAction) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("command", v.Command)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *CodeAction) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *CodeActionRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "documentSelector":
@@ -534,15 +534,15 @@ func (v *CodeActionRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, 
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *CodeActionRegistrationOptions) NKeys() int { return 1 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *CodeActionRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ArrayKey("documentSelector", v.DocumentSelector)
 }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *CodeLensParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "textDocument":
@@ -551,18 +551,18 @@ func (v *CodeLensParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *CodeLensParams) NKeys() int { return 1 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *CodeLensParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("textDocument", v.TextDocument)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *CodeLensParams) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *CodeLens) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "range":
@@ -573,19 +573,19 @@ func (v *CodeLens) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *CodeLens) NKeys() int { return 2 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *CodeLens) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("range", v.Range)
 	enc.ObjectKey("command", v.Command)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *CodeLens) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *CodeLensRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "documentSelector":
@@ -596,19 +596,19 @@ func (v *CodeLensRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k 
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *CodeLensRegistrationOptions) NKeys() int { return 2 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *CodeLensRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ArrayKey("documentSelector", v.DocumentSelector)
 	enc.BoolKey("resolveProvider", v.ResolveProvider)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *CodeLensRegistrationOptions) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *DocumentLinkParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "textDocument":
@@ -617,18 +617,18 @@ func (v *DocumentLinkParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) e
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *DocumentLinkParams) NKeys() int { return 1 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *DocumentLinkParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("textDocument", v.TextDocument)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *DocumentLinkParams) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *DocumentLink) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "range":
@@ -639,19 +639,19 @@ func (v *DocumentLink) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *DocumentLink) NKeys() int { return 2 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *DocumentLink) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("range", &v.Range)
 	enc.StringKey("target", string(v.Target))
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *DocumentLink) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *DocumentColorParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "textDocument":
@@ -660,18 +660,18 @@ func (v *DocumentColorParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) 
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *DocumentColorParams) NKeys() int { return 1 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *DocumentColorParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("textDocument", &v.TextDocument)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *DocumentColorParams) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ColorInformation) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "range":
@@ -685,19 +685,19 @@ func (v *ColorInformation) UnmarshalJSONObject(dec *gojay.Decoder, k string) err
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *ColorInformation) NKeys() int { return 2 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ColorInformation) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("range", v.Range)
 	enc.ObjectKey("color", v.Color)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *ColorInformation) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *Color) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "alpha":
@@ -712,10 +712,10 @@ func (v *Color) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *Color) NKeys() int { return 4 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *Color) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.Float64Key("alpha", v.Alpha)
 	enc.Float64Key("blue", v.Blue)
@@ -723,10 +723,10 @@ func (v *Color) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.Float64Key("red", v.Red)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *Color) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ColorPresentationParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "textDocument":
@@ -742,20 +742,20 @@ func (v *ColorPresentationParams) UnmarshalJSONObject(dec *gojay.Decoder, k stri
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *ColorPresentationParams) NKeys() int { return 3 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ColorPresentationParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("textDocument", v.TextDocument)
 	enc.ObjectKey("color", v.Color)
 	enc.ObjectKey("range", v.Range)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *ColorPresentationParams) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ColorPresentation) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "label":
@@ -766,19 +766,19 @@ func (v *ColorPresentation) UnmarshalJSONObject(dec *gojay.Decoder, k string) er
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *ColorPresentation) NKeys() int { return 2 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ColorPresentation) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey("label", v.Label)
 	enc.ObjectKey("textEdit", v.TextEdit)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *ColorPresentation) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *FormattingOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "insertSpaces":
@@ -789,19 +789,19 @@ func (v *FormattingOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) er
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *FormattingOptions) NKeys() int { return 2 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *FormattingOptions) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKey("insertSpaces", v.InsertSpaces)
 	enc.Float64Key("tabSize", v.TabSize)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *FormattingOptions) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *DocumentRangeFormattingParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "textDocument":
@@ -817,20 +817,20 @@ func (v *DocumentRangeFormattingParams) UnmarshalJSONObject(dec *gojay.Decoder, 
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *DocumentRangeFormattingParams) NKeys() int { return 3 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *DocumentRangeFormattingParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("textDocument", v.TextDocument)
 	enc.ObjectKey("range", v.Range)
 	enc.ObjectKey("options", v.Options)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *DocumentRangeFormattingParams) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *DocumentOnTypeFormattingParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "textDocument":
@@ -848,10 +848,10 @@ func (v *DocumentOnTypeFormattingParams) UnmarshalJSONObject(dec *gojay.Decoder,
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *DocumentOnTypeFormattingParams) NKeys() int { return 4 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *DocumentOnTypeFormattingParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("textDocument", v.TextDocument)
 	enc.ObjectKey("position", v.Position)
@@ -859,10 +859,10 @@ func (v *DocumentOnTypeFormattingParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("options", v.Options)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *DocumentOnTypeFormattingParams) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *DocumentOnTypeFormattingRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "documentSelector":
@@ -873,19 +873,19 @@ func (v *DocumentOnTypeFormattingRegistrationOptions) UnmarshalJSONObject(dec *g
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *DocumentOnTypeFormattingRegistrationOptions) NKeys() int { return 2 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *DocumentOnTypeFormattingRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ArrayKey("documentSelector", v.DocumentSelector)
 	enc.StringKey("firstTriggerCharacter", v.FirstTriggerCharacter)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *DocumentOnTypeFormattingRegistrationOptions) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *RenameParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "textDocument":
@@ -898,20 +898,20 @@ func (v *RenameParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *RenameParams) NKeys() int { return 3 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *RenameParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("textDocument", v.TextDocument)
 	enc.ObjectKey("position", v.Position)
 	enc.StringKey("newName", v.NewName)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *RenameParams) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *RenameRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "documentSelector":
@@ -922,19 +922,19 @@ func (v *RenameRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k st
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *RenameRegistrationOptions) NKeys() int { return 2 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *RenameRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ArrayKey("documentSelector", v.DocumentSelector)
 	enc.BoolKey("prepareProvider", v.PrepareProvider)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *RenameRegistrationOptions) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *FoldingRangeParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "textDocument":
@@ -943,18 +943,18 @@ func (v *FoldingRangeParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) e
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *FoldingRangeParams) NKeys() int { return 1 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *FoldingRangeParams) IsNil() bool { return v == nil }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *FoldingRangeParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("textDocument", v.TextDocument)
 }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *FoldingRange) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "startLine":
@@ -971,10 +971,10 @@ func (v *FoldingRange) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *FoldingRange) NKeys() int { return 5 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *FoldingRange) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.Float64Key("startLine", v.StartLine)
 	enc.Float64Key("startCharacter", v.StartCharacter)
@@ -983,5 +983,5 @@ func (v *FoldingRange) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey("kind", string(v.Kind))
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *FoldingRange) IsNil() bool { return v == nil }

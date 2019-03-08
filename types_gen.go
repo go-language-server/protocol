@@ -19,17 +19,17 @@ func (v *interfaces) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *interfaces) NKeys() int { return 1 }
 
-// MarshalJSONArray implements gojay's MarshalerJSONArray
+// MarshalJSONArray implements gojay's MarshalerJSONArray.
 func (v *interfaces) MarshalJSONArray(enc *gojay.Encoder) {
 	for _, t := range *v {
 		enc.AddInterface(t)
 	}
 }
 
-// IsNil implements gojay's MarshalerJSONArray
+// IsNil implements gojay's MarshalerJSONArray.
 func (v *interfaces) IsNil() bool {
 	return &v == nil || len(*v) == 0
 }

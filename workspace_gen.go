@@ -8,7 +8,7 @@ import (
 	"github.com/francoispqt/gojay"
 )
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *WorkspaceFolder) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "name":
@@ -19,19 +19,19 @@ func (v *WorkspaceFolder) UnmarshalJSONObject(dec *gojay.Decoder, k string) erro
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *WorkspaceFolder) NKeys() int { return 2 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *WorkspaceFolder) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey("name", v.Name)
 	enc.StringKey("uRI", v.URI)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *WorkspaceFolder) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *DidChangeWorkspaceFoldersParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "event":
@@ -43,69 +43,69 @@ func (v *DidChangeWorkspaceFoldersParams) UnmarshalJSONObject(dec *gojay.Decoder
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *DidChangeWorkspaceFoldersParams) NKeys() int { return 1 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *DidChangeWorkspaceFoldersParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("event", v.Event)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *DidChangeWorkspaceFoldersParams) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *WorkspaceFoldersChangeEvent) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	}
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *WorkspaceFoldersChangeEvent) NKeys() int { return 0 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *WorkspaceFoldersChangeEvent) MarshalJSONObject(enc *gojay.Encoder) {
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *WorkspaceFoldersChangeEvent) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *DidChangeConfigurationParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	}
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *DidChangeConfigurationParams) NKeys() int { return 0 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *DidChangeConfigurationParams) MarshalJSONObject(enc *gojay.Encoder) {
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *DidChangeConfigurationParams) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ConfigurationParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	}
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *ConfigurationParams) NKeys() int { return 0 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ConfigurationParams) MarshalJSONObject(enc *gojay.Encoder) {
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *ConfigurationParams) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ConfigurationItem) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "scopeURI":
@@ -116,36 +116,36 @@ func (v *ConfigurationItem) UnmarshalJSONObject(dec *gojay.Decoder, k string) er
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *ConfigurationItem) NKeys() int { return 2 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ConfigurationItem) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey("scopeURI", v.ScopeURI)
 	enc.StringKey("section", v.Section)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *ConfigurationItem) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *DidChangeWatchedFilesParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	}
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *DidChangeWatchedFilesParams) NKeys() int { return 0 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *DidChangeWatchedFilesParams) MarshalJSONObject(enc *gojay.Encoder) {
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *DidChangeWatchedFilesParams) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *FileEvent) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "type":
@@ -156,36 +156,36 @@ func (v *FileEvent) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *FileEvent) NKeys() int { return 2 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *FileEvent) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.Float64Key("type", v.Type)
 	enc.StringKey("uri", string(v.URI))
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *FileEvent) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *DidChangeWatchedFilesRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	}
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *DidChangeWatchedFilesRegistrationOptions) NKeys() int { return 0 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *DidChangeWatchedFilesRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *DidChangeWatchedFilesRegistrationOptions) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *FileSystemWatcher) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "globPattern":
@@ -196,19 +196,19 @@ func (v *FileSystemWatcher) UnmarshalJSONObject(dec *gojay.Decoder, k string) er
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *FileSystemWatcher) NKeys() int { return 2 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *FileSystemWatcher) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey("globPattern", v.GlobPattern)
 	enc.Float64Key("kind", float64(v.Kind))
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *FileSystemWatcher) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *WorkspaceSymbolParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "query":
@@ -217,18 +217,18 @@ func (v *WorkspaceSymbolParams) UnmarshalJSONObject(dec *gojay.Decoder, k string
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *WorkspaceSymbolParams) NKeys() int { return 1 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *WorkspaceSymbolParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey("query", v.Query)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *WorkspaceSymbolParams) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ExecuteCommandParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "command":
@@ -237,35 +237,35 @@ func (v *ExecuteCommandParams) UnmarshalJSONObject(dec *gojay.Decoder, k string)
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *ExecuteCommandParams) NKeys() int { return 1 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ExecuteCommandParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey("command", v.Command)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *ExecuteCommandParams) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ExecuteCommandRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	}
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *ExecuteCommandRegistrationOptions) NKeys() int { return 0 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ExecuteCommandRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *ExecuteCommandRegistrationOptions) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ApplyWorkspaceEditParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "label":
@@ -276,19 +276,19 @@ func (v *ApplyWorkspaceEditParams) UnmarshalJSONObject(dec *gojay.Decoder, k str
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *ApplyWorkspaceEditParams) NKeys() int { return 2 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ApplyWorkspaceEditParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey("label", v.Label)
 	enc.ObjectKey("edit", &v.Edit)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *ApplyWorkspaceEditParams) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ApplyWorkspaceEditResponse) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "applied":
@@ -297,13 +297,13 @@ func (v *ApplyWorkspaceEditResponse) UnmarshalJSONObject(dec *gojay.Decoder, k s
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *ApplyWorkspaceEditResponse) NKeys() int { return 1 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ApplyWorkspaceEditResponse) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKey("applied", v.Applied)
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *ApplyWorkspaceEditResponse) IsNil() bool { return v == nil }

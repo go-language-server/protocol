@@ -8,7 +8,7 @@ import (
 	"github.com/francoispqt/gojay"
 )
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *PublishDiagnosticsParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "uri":
@@ -17,13 +17,13 @@ func (v *PublishDiagnosticsParams) UnmarshalJSONObject(dec *gojay.Decoder, k str
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal
+// NKeys returns the number of keys to unmarshal.
 func (v *PublishDiagnosticsParams) NKeys() int { return 1 }
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *PublishDiagnosticsParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey("uri", string(v.URI))
 }
 
-// IsNil returns wether the structure is nil value or not
+// IsNil returns wether the structure is nil value or not.
 func (v *PublishDiagnosticsParams) IsNil() bool { return v == nil }
