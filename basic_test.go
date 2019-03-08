@@ -1705,3 +1705,157 @@ func TestTextDocumentEdit(t *testing.T) {
 		}
 	})
 }
+
+func TestCreateFileOptions(t *testing.T) {
+	t.Run("Marshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name           string
+			field          CreateFileOptions
+			want           string
+			wantMarshalErr bool
+			wantErr        bool
+		}{
+			{
+				name: "Valid",
+				field: CreateFileOptions{
+					Overwrite:      true,
+					IgnoreIfExists: true,
+				},
+				want:           `{"overwrite":true,"ignoreIfExists":true}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name: "ValidNilOverwrite",
+				field: CreateFileOptions{
+					IgnoreIfExists: true,
+				},
+				want:           `{"ignoreIfExists":true}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name: "ValidNilIgnoreIfExists",
+				field: CreateFileOptions{
+					Overwrite: true,
+				},
+				want:           `{"overwrite":true}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name:           "ValidNilAll",
+				field:          CreateFileOptions{},
+				want:           `{}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name: "Invalid",
+				field: CreateFileOptions{
+					Overwrite:      true,
+					IgnoreIfExists: true,
+				},
+				want:           `{"overwrite":false,"ignoreIfExists":false}`,
+				wantMarshalErr: false,
+				wantErr:        true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got, err := gojay.MarshalJSONObject(&tt.field)
+				if (err != nil) != tt.wantMarshalErr {
+					t.Error(err)
+					return
+				}
+
+				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+
+	t.Run("Unmarshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name             string
+			field            string
+			want             CreateFileOptions
+			wantUnmarshalErr bool
+			wantErr          bool
+		}{
+			{
+				name:  "Valid",
+				field: `{"overwrite":true,"ignoreIfExists":true}`,
+				want: CreateFileOptions{
+					Overwrite:      true,
+					IgnoreIfExists: true,
+				},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:  "ValidNilOverwrite",
+				field: `{"ignoreIfExists":true}`,
+				want: CreateFileOptions{
+					IgnoreIfExists: true,
+				},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:  "ValidNilIgnoreIfExists",
+				field: `{"overwrite":true}`,
+				want: CreateFileOptions{
+					Overwrite: true,
+				},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:             "ValidNilAll",
+				field:            `{}`,
+				want:             CreateFileOptions{},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:  "Invalid",
+				field: `{"overwrite":true,"ignoreIfExists":true}`,
+				want: CreateFileOptions{
+					Overwrite:      false,
+					IgnoreIfExists: false,
+				},
+				wantUnmarshalErr: false,
+				wantErr:          true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got := CreateFileOptions{}
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
+				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
+					t.Error(err)
+					return
+				}
+
+				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+}
