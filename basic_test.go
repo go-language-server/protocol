@@ -24,15 +24,21 @@ func TestPosition(t *testing.T) {
 			wantErr        bool
 		}{
 			{
-				name:           "Valid",
-				field:          Position{Line: 25, Character: 1},
+				name: "Valid",
+				field: Position{
+					Line:      25,
+					Character: 1,
+				},
 				want:           `{"line":25,"character":1}`,
 				wantMarshalErr: false,
 				wantErr:        false,
 			},
 			{
-				name:           "Invalid",
-				field:          Position{Line: 25, Character: 1},
+				name: "Invalid",
+				field: Position{
+					Line:      25,
+					Character: 1,
+				},
 				want:           `{"line":2,"character":0}`,
 				wantMarshalErr: false,
 				wantErr:        true,
@@ -68,16 +74,22 @@ func TestPosition(t *testing.T) {
 			wantErr          bool
 		}{
 			{
-				name:             "Valid",
-				field:            `{"line":25, "character":1}`,
-				want:             Position{Line: 25, Character: 1},
+				name:  "Valid",
+				field: `{"line":25, "character":1}`,
+				want: Position{
+					Line:      25,
+					Character: 1,
+				},
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
 			{
-				name:             "Invalid",
-				field:            `{"line":2, "character":0}`,
-				want:             Position{Line: 25, Character: 1},
+				name:  "Invalid",
+				field: `{"line":2, "character":0}`,
+				want: Position{
+					Line:      25,
+					Character: 1,
+				},
 				wantUnmarshalErr: false,
 				wantErr:          true,
 			},
@@ -116,15 +128,33 @@ func TestRange(t *testing.T) {
 			wantErr        bool
 		}{
 			{
-				name:           "Valid",
-				field:          Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}},
+				name: "Valid",
+				field: Range{
+					Start: Position{
+						Line:      25,
+						Character: 1,
+					},
+					End: Position{
+						Line:      27,
+						Character: 3,
+					},
+				},
 				want:           `{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}`,
 				wantMarshalErr: false,
 				wantErr:        false,
 			},
 			{
-				name:           "Invalid",
-				field:          Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}},
+				name: "Invalid",
+				field: Range{
+					Start: Position{
+						Line:      25,
+						Character: 1,
+					},
+					End: Position{
+						Line:      27,
+						Character: 3,
+					},
+				},
 				want:           `{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}`,
 				wantMarshalErr: false,
 				wantErr:        true,
@@ -160,16 +190,34 @@ func TestRange(t *testing.T) {
 			wantErr          bool
 		}{
 			{
-				name:             "Valid",
-				field:            `{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}`,
-				want:             Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}},
+				name:  "Valid",
+				field: `{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}`,
+				want: Range{
+					Start: Position{
+						Line:      25,
+						Character: 1,
+					},
+					End: Position{
+						Line:      27,
+						Character: 3,
+					},
+				},
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
 			{
-				name:             "Invalid",
-				field:            `{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}`,
-				want:             Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}},
+				name:  "Invalid",
+				field: `{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}`,
+				want: Range{
+					Start: Position{
+						Line:      25,
+						Character: 1,
+					},
+					End: Position{
+						Line:      27,
+						Character: 3,
+					},
+				},
 				wantUnmarshalErr: false,
 				wantErr:          true,
 			},
@@ -208,15 +256,39 @@ func TestLocation(t *testing.T) {
 			wantErr        bool
 		}{
 			{
-				name:           "Valid",
-				field:          Location{URI: "file:///Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go", Range: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
+				name: "Valid",
+				field: Location{
+					URI: "file:///Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go",
+					Range: Range{
+						Start: Position{
+							Line:      25,
+							Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+				},
 				want:           `{"uri":"file:///Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`,
 				wantMarshalErr: false,
 				wantErr:        false,
 			},
 			{
-				name:           "Invalid",
-				field:          Location{URI: "file:///Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go", Range: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
+				name: "Invalid",
+				field: Location{
+					URI: "file:///Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go",
+					Range: Range{
+						Start: Position{
+							Line:      25,
+							Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+				},
 				want:           `{"uri":"file:///Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}}`,
 				wantMarshalErr: false,
 				wantErr:        true,
@@ -252,16 +324,40 @@ func TestLocation(t *testing.T) {
 			wantErr          bool
 		}{
 			{
-				name:             "Valid",
-				field:            `{"uri":"file:///Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`,
-				want:             Location{URI: "file:///Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go", Range: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
+				name:  "Valid",
+				field: `{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`,
+				want: Location{
+					URI: "file:///path/to/basic.go",
+					Range: Range{
+						Start: Position{
+							Line:      25,
+							Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+				},
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
 			{
-				name:             "Invalid",
-				field:            `{"uri":"file:///Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}}`,
-				want:             Location{URI: "file:///Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go", Range: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
+				name:  "Invalid",
+				field: `{"uri":"file:///path/to/basic.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}}`,
+				want: Location{
+					URI: "file:///path/to/basic.go",
+					Range: Range{
+						Start: Position{
+							Line:      25,
+							Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+				},
 				wantUnmarshalErr: false,
 				wantErr:          true,
 			},
@@ -300,22 +396,105 @@ func TestLocationLink(t *testing.T) {
 			wantErr        bool
 		}{
 			{
-				name:           "Valid",
-				field:          LocationLink{OriginSelectionRange: &Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}, TargetURI: "file:///path/to/test.go", TargetRange: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}, TargetSelectionRange: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
+				name: "Valid",
+				field: LocationLink{
+					OriginSelectionRange: &Range{
+						Start: Position{
+							Line:      25,
+							Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+					TargetURI: "file:///path/to/test.go",
+					TargetRange: Range{
+						Start: Position{
+							Line:      25,
+							Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+					TargetSelectionRange: Range{
+						Start: Position{
+							Line: 25, Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+				},
 				want:           `{"originSelectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"targetUri":"file:///path/to/test.go","targetRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"targetSelectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`,
 				wantMarshalErr: false,
 				wantErr:        false,
 			},
 			{
-				name:           "ValidNilOriginSelectionRange",
-				field:          LocationLink{TargetURI: "file:///path/to/test.go", TargetRange: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}, TargetSelectionRange: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
+				name: "ValidNilOriginSelectionRange",
+				field: LocationLink{
+					TargetURI: "file:///path/to/test.go",
+					TargetRange: Range{
+						Start: Position{
+							Line:      25,
+							Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+					TargetSelectionRange: Range{
+						Start: Position{
+							Line: 25, Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+				},
 				want:           `{"targetUri":"file:///path/to/test.go","targetRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"targetSelectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`,
 				wantMarshalErr: false,
 				wantErr:        false,
 			},
 			{
-				name:           "Invalid",
-				field:          LocationLink{OriginSelectionRange: &Range{Start: Position{Line: 25, Character: 1}}, TargetURI: "file:///path/to/test.go", TargetRange: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}, TargetSelectionRange: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
+				name: "Invalid",
+				field: LocationLink{
+					OriginSelectionRange: &Range{
+						Start: Position{
+							Line:      25,
+							Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+					TargetURI: "file:///path/to/test.go",
+					TargetRange: Range{
+						Start: Position{
+							Line:      25,
+							Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+					TargetSelectionRange: Range{
+						Start: Position{
+							Line: 25, Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+				},
 				want:           `{"originSelectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"targetUri":"file:///path/to/test.go","targetRange":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"targetSelectionRange":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}}`,
 				wantMarshalErr: false,
 				wantErr:        true,
@@ -351,23 +530,106 @@ func TestLocationLink(t *testing.T) {
 			wantErr          bool
 		}{
 			{
-				name:             "Valid",
-				field:            `{"originSelectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"targetUri":"file:///path/to/test.go","targetRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"targetSelectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`,
-				want:             LocationLink{OriginSelectionRange: &Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}, TargetURI: "file:///path/to/test.go", TargetRange: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}, TargetSelectionRange: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
+				name:  "Valid",
+				field: `{"originSelectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"targetUri":"file:///path/to/test.go","targetRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"targetSelectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`,
+				want: LocationLink{
+					OriginSelectionRange: &Range{
+						Start: Position{
+							Line:      25,
+							Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+					TargetURI: "file:///path/to/test.go",
+					TargetRange: Range{
+						Start: Position{
+							Line:      25,
+							Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+					TargetSelectionRange: Range{
+						Start: Position{
+							Line: 25, Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+				},
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
 			{
-				name:             "ValidNilOriginSelectionRange",
-				field:            `{"targetUri":"file:///path/to/test.go","targetRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"targetSelectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`,
-				want:             LocationLink{TargetURI: "file:///path/to/test.go", TargetRange: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}, TargetSelectionRange: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
+				name:  "ValidNilOriginSelectionRange",
+				field: `{"targetUri":"file:///path/to/test.go","targetRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"targetSelectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`,
+				want: LocationLink{
+					TargetURI: "file:///path/to/test.go",
+					TargetRange: Range{
+						Start: Position{
+							Line:      25,
+							Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+					TargetSelectionRange: Range{
+						Start: Position{
+							Line: 25, Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+				},
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
 			{
-				name:             "Invalid",
-				field:            `{"originSelectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"targetUri":"file:///path/to/test.go","targetRange":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"targetSelectionRange":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}}`,
-				want:             LocationLink{OriginSelectionRange: &Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}, TargetURI: "file:///path/to/test.go", TargetRange: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}, TargetSelectionRange: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
+				name:  "Invalid",
+				field: `{"originSelectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"targetUri":"file:///path/to/test.go","targetRange":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"targetSelectionRange":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}}`,
+				want: LocationLink{
+					OriginSelectionRange: &Range{
+						Start: Position{
+							Line:      25,
+							Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+					TargetURI: "file:///path/to/test.go",
+					TargetRange: Range{
+						Start: Position{
+							Line:      25,
+							Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+					TargetSelectionRange: Range{
+						Start: Position{
+							Line: 25, Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+				},
 				wantUnmarshalErr: false,
 				wantErr:          true,
 			},
