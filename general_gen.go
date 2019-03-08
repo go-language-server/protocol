@@ -12,16 +12,13 @@ import (
 func (v *InitializeParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "processID":
-		return dec.Float64(v.ProcessID)
+		return dec.Float64(&v.ProcessID)
 	case "rootPath":
-		return dec.String(v.RootPath)
+		return dec.String(&v.RootPath)
 	case "rootURI":
-		return dec.String((*string)(v.RootURI))
+		return dec.String((*string)(&v.RootURI))
 	case "capabilities":
-		if v.Capabilities == nil {
-			v.Capabilities = &ClientCapabilities{}
-		}
-		return dec.Object(v.Capabilities)
+		return dec.Object(&v.Capabilities)
 	case "trace":
 		return dec.String(&v.Trace)
 	}
@@ -33,10 +30,10 @@ func (v *InitializeParams) NKeys() int { return 5 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *InitializeParams) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.Float64Key("processID", *v.ProcessID)
-	enc.StringKey("rootPath", *v.RootPath)
-	enc.StringKey("rootURI", string(*v.RootURI))
-	enc.ObjectKey("capabilities", v.Capabilities)
+	enc.Float64Key("processID", v.ProcessID)
+	enc.StringKey("rootPath", v.RootPath)
+	enc.StringKey("rootURI", string(v.RootURI))
+	enc.ObjectKey("capabilities", &v.Capabilities)
 	enc.StringKey("trace", v.Trace)
 }
 
@@ -973,10 +970,7 @@ func (v *ClientCapabilities) IsNil() bool { return v == nil }
 func (v *InitializeResult) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "capabilities":
-		if v.Capabilities == nil {
-			v.Capabilities = &ServerCapabilities{}
-		}
-		return dec.Object(v.Capabilities)
+		return dec.Object(&v.Capabilities)
 	}
 	return nil
 }
@@ -986,7 +980,7 @@ func (v *InitializeResult) NKeys() int { return 1 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *InitializeResult) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ObjectKey("capabilities", v.Capabilities)
+	enc.ObjectKey("capabilities", &v.Capabilities)
 }
 
 // IsNil returns wether the structure is nil value or not.

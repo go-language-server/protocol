@@ -21,22 +21,22 @@ type InitializeParams struct {
 	// ProcessID is the process Id of the parent process that started
 	// the server. Is null if the process has not been started by another process.
 	// If the parent process is not alive then the server should exit (see exit notification) its process.
-	ProcessID *float64 `json:"processId"`
+	ProcessID float64 `json:"processId"`
 
 	// RootPath is the rootPath of the workspace. Is null
 	// if no folder is open.
-	RootPath *string `json:"rootPath,omitempty"`
+	RootPath string `json:"rootPath,omitempty"`
 
 	// RootURI is the rootUri of the workspace. Is null if no
 	// folder is open. If both `rootPath` and `rootUri` are set
 	// `rootUri` wins.
-	RootURI *DocumentURI `json:"rootUri"`
+	RootURI DocumentURI `json:"rootUri"`
 
 	// InitializationOptions user provided initialization options.
 	InitializationOptions interface{} `json:"initializationOptions,omitempty"`
 
 	// Capabilities is the capabilities provided by the client (editor or tool)
-	Capabilities *ClientCapabilities `json:"capabilities"`
+	Capabilities ClientCapabilities `json:"capabilities"`
 
 	// Trace is the initial trace setting. If omitted trace is disabled ('off').
 	Trace string `json:"trace,omitempty"`
@@ -47,7 +47,7 @@ type InitializeParams struct {
 	// configured.
 	//
 	// Since 3.6.0
-	WorkspaceFolders []*WorkspaceFolder `json:"workspaceFolders,omitempty"`
+	WorkspaceFolders []WorkspaceFolder `json:"workspaceFolders,omitempty"`
 }
 
 // WorkspaceClientCapabilitiesWorkspaceEdit capabilities specific to `WorkspaceEdit`s
@@ -97,7 +97,7 @@ type WorkspaceClientCapabilitiesSymbolKind struct {
 	 * the symbol kinds from `File` to `Array` as defined in
 	 * the initial version of the protocol.
 	 */
-	ValueSet []*SymbolKind `json:"valueSet,omitempty"`
+	ValueSet []SymbolKind `json:"valueSet,omitempty"`
 }
 
 // WorkspaceClientCapabilitiesExecuteCommand capabilities specific to the `workspace/executeCommand` request.
@@ -525,7 +525,7 @@ type ClientCapabilities struct {
 type InitializeResult struct {
 
 	// Capabilities is the capabilities the language server provides.
-	Capabilities *ServerCapabilities `json:"capabilities"`
+	Capabilities ServerCapabilities `json:"capabilities"`
 }
 
 // InitializeError known error codes for an `InitializeError`.
