@@ -421,8 +421,8 @@ func (v *DeleteFileOptions) NKeys() int { return 2 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject
 func (v *DeleteFileOptions) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.BoolKey("recursive", v.Recursive)
-	enc.BoolKey("ignoreIfNotExists", v.IgnoreIfNotExists)
+	enc.BoolKeyOmitEmpty("recursive", v.Recursive)
+	enc.BoolKeyOmitEmpty("ignoreIfNotExists", v.IgnoreIfNotExists)
 }
 
 // IsNil returns wether the structure is nil value or not
@@ -433,7 +433,7 @@ func (v *DeleteFile) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "kind":
 		return dec.String(&v.Kind)
-	case "uRI":
+	case "uri":
 		return dec.String(&v.URI)
 	case "options":
 		if v.Options == nil {
@@ -450,8 +450,8 @@ func (v *DeleteFile) NKeys() int { return 3 }
 // MarshalJSONObject implements gojay's MarshalerJSONObject
 func (v *DeleteFile) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey("kind", v.Kind)
-	enc.StringKey("uRI", v.URI)
-	enc.ObjectKey("options", v.Options)
+	enc.StringKey("uri", v.URI)
+	enc.ObjectKeyOmitEmpty("options", v.Options)
 }
 
 // IsNil returns wether the structure is nil value or not
