@@ -342,9 +342,9 @@ func (v *CreateFile) NKeys() int { return 3 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject
 func (v *CreateFile) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.StringKey("kind", v.Kind)
-	enc.StringKey("uRI", v.URI)
-	enc.ObjectKey("options", v.Options)
+	enc.StringKeyOmitEmpty("kind", v.Kind)
+	enc.StringKeyOmitEmpty("uri", v.URI)
+	enc.ObjectKeyOmitEmpty("options", v.Options)
 }
 
 // IsNil returns wether the structure is nil value or not
