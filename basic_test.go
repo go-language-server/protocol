@@ -1859,3 +1859,143 @@ func TestCreateFileOptions(t *testing.T) {
 		}
 	})
 }
+
+func TestCreateFile(t *testing.T) {
+	t.Run("Marshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name           string
+			field          CreateFile
+			want           string
+			wantMarshalErr bool
+			wantErr        bool
+		}{
+			{
+				name: "Valid",
+				field: CreateFile{
+					Kind: "create",
+					URI:  "file:///path/to/basic.go",
+					Options: &CreateFileOptions{
+						Overwrite:      true,
+						IgnoreIfExists: true,
+					},
+				},
+				want:           `{"kind":"create","uri":"file:///path/to/basic.go","options":{"overwrite":true,"ignoreIfExists":true}}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name: "ValidNilOptions",
+				field: CreateFile{
+					Kind: "create",
+					URI:  "file:///path/to/basic.go",
+				},
+				want:           `{"kind":"create","uri":"file:///path/to/basic.go"}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name: "Invalid",
+				field: CreateFile{
+					Kind: "create",
+					URI:  "file:///path/to/basic.go",
+					Options: &CreateFileOptions{
+						Overwrite:      true,
+						IgnoreIfExists: true,
+					},
+				},
+				want:           `{"kind":"create","uri":"file:///path/to/basic_gen.go","options":{"overwrite":false,"ignoreIfExists":false}}`,
+				wantMarshalErr: false,
+				wantErr:        true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got, err := gojay.MarshalJSONObject(&tt.field)
+				if (err != nil) != tt.wantMarshalErr {
+					t.Error(err)
+					return
+				}
+
+				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+
+	t.Run("Unmarshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name             string
+			field            string
+			want             CreateFile
+			wantUnmarshalErr bool
+			wantErr          bool
+		}{
+			{
+				name:  "Valid",
+				field: `{"kind":"create","uri":"file:///path/to/basic.go","options":{"overwrite":true,"ignoreIfExists":true}}`,
+				want: CreateFile{
+					Kind: "create",
+					URI:  "file:///path/to/basic.go",
+					Options: &CreateFileOptions{
+						Overwrite:      true,
+						IgnoreIfExists: true,
+					},
+				},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:  "ValidNilOptions",
+				field: `{"kind":"create","uri":"file:///path/to/basic.go"}`,
+				want: CreateFile{
+					Kind: "create",
+					URI:  "file:///path/to/basic.go",
+				},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:  "Invalid",
+				field: `{"kind":"create","uri":"file:///path/to/basic.go","options":{"overwrite":true,"ignoreIfExists":true}}`,
+				want: CreateFile{
+					Kind: "create",
+					URI:  "file:///path/to/basic_gen.go",
+					Options: &CreateFileOptions{
+						Overwrite:      false,
+						IgnoreIfExists: false,
+					},
+				},
+				wantUnmarshalErr: false,
+				wantErr:          true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got := CreateFile{}
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
+				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
+					t.Error(err)
+					return
+				}
+
+				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+}
