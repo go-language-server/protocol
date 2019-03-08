@@ -253,20 +253,50 @@ func (v *TextDocumentEdit) UnmarshalJSONObject(dec *gojay.Decoder, k string) err
 	switch k {
 	case "textDocument":
 		return dec.Object(&v.TextDocument)
+	case "edits":
+		return dec.Array((*textEdits)(&v.Edits))
 	}
 	return nil
 }
 
 // NKeys returns the number of keys to unmarshal
-func (v *TextDocumentEdit) NKeys() int { return 1 }
+func (v *TextDocumentEdit) NKeys() int { return 2 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject
 func (v *TextDocumentEdit) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("textDocument", &v.TextDocument)
+	enc.ArrayKey("edits", (*textEdits)(&v.Edits))
 }
 
 // IsNil returns wether the structure is nil value or not
 func (v *TextDocumentEdit) IsNil() bool { return v == nil }
+
+type textEdits []TextEdit
+
+// UnmarshalJSONArray implements gojay's UnmarshalerJSONArray
+func (v *textEdits) UnmarshalJSONArray(dec *gojay.Decoder) error {
+	s := &TextEdit{}
+	if err := dec.Object(s); err != nil {
+		return err
+	}
+	*v = append(*v, *s)
+	return nil
+}
+
+// NKeys returns the number of keys to unmarshal
+func (v *textEdits) NKeys() int { return 1 }
+
+// MarshalJSONArray implements gojay's MarshalerJSONArray
+func (v *textEdits) MarshalJSONArray(enc *gojay.Encoder) {
+	for _, s := range *v {
+		enc.Object(&s)
+	}
+}
+
+// IsNil implements gojay's MarshalerJSONArray
+func (v *textEdits) IsNil() bool {
+	return *v == nil || len(*v) == 0
+}
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
 func (v *CreateFileOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
