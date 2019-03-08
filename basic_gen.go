@@ -6,8 +6,6 @@ package protocol
 
 import (
 	"github.com/francoispqt/gojay"
-
-	"github.com/go-language-server/protocol/internal/pkg/errors"
 )
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
@@ -62,9 +60,6 @@ func (v *Location) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	case "uri":
 		return dec.String((*string)(&v.URI))
 	case "range":
-		if &v.Range == nil {
-			return errors.ErrorInvalidParams("Location.Range field must be non-nil")
-		}
 		return dec.Object(&v.Range)
 	}
 	return nil
@@ -90,14 +85,8 @@ func (v *LocationLink) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	case "targetURI":
 		return dec.String(&v.TargetURI)
 	case "targetRange":
-		if &v.TargetRange == nil {
-			return errors.ErrorInvalidParams("LocationLink.TargetRange field must be non-nil")
-		}
 		return dec.Object(&v.TargetRange)
 	case "targetSelectionRange":
-		if &v.TargetSelectionRange == nil {
-			return errors.ErrorInvalidParams("LocationLink.TargetSelectionRange field must be non-nil")
-		}
 		return dec.Object(&v.TargetSelectionRange)
 	}
 	return nil
