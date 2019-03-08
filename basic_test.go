@@ -18,21 +18,21 @@ func TestPosition(t *testing.T) {
 
 		tests := []struct {
 			name           string
-			position       Position
+			field          Position
 			want           string
 			wantMarshalErr bool
 			wantErr        bool
 		}{
 			{
 				name:           "Valid",
-				position:       Position{Line: 25, Character: 1},
+				field:          Position{Line: 25, Character: 1},
 				want:           `{"line":25,"character":1}`,
 				wantMarshalErr: false,
 				wantErr:        false,
 			},
 			{
 				name:           "Invalid",
-				position:       Position{Line: 25, Character: 1},
+				field:          Position{Line: 25, Character: 1},
 				want:           `{"line":2,"character":0}`,
 				wantMarshalErr: false,
 				wantErr:        true,
@@ -44,7 +44,7 @@ func TestPosition(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.MarshalJSONObject(&tt.position)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -62,21 +62,21 @@ func TestPosition(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			position         string
+			field            string
 			want             Position
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:             "Valid",
-				position:         `{"line":25, "character":1}`,
+				field:            `{"line":25, "character":1}`,
 				want:             Position{Line: 25, Character: 1},
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
 			{
 				name:             "Invalid",
-				position:         `{"line":2, "character":0}`,
+				field:            `{"line":2, "character":0}`,
 				want:             Position{Line: 25, Character: 1},
 				wantUnmarshalErr: false,
 				wantErr:          true,
@@ -89,7 +89,7 @@ func TestPosition(t *testing.T) {
 				t.Parallel()
 
 				var got Position
-				dec := gojay.NewDecoder(strings.NewReader(tt.position))
+				dec := gojay.NewDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -110,21 +110,21 @@ func TestRange(t *testing.T) {
 
 		tests := []struct {
 			name           string
-			Range          Range
+			field          Range
 			want           string
 			wantMarshalErr bool
 			wantErr        bool
 		}{
 			{
 				name:           "Valid",
-				Range:          Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}},
+				field:          Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}},
 				want:           `{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}`,
 				wantMarshalErr: false,
 				wantErr:        false,
 			},
 			{
 				name:           "Invalid",
-				Range:          Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}},
+				field:          Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}},
 				want:           `{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}`,
 				wantMarshalErr: false,
 				wantErr:        true,
@@ -136,7 +136,7 @@ func TestRange(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.MarshalJSONObject(&tt.Range)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -154,21 +154,21 @@ func TestRange(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			Range            string
+			field            string
 			want             Range
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:             "Valid",
-				Range:            `{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}`,
+				field:            `{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}`,
 				want:             Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}},
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
 			{
 				name:             "Invalid",
-				Range:            `{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}`,
+				field:            `{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}`,
 				want:             Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}},
 				wantUnmarshalErr: false,
 				wantErr:          true,
@@ -180,8 +180,8 @@ func TestRange(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				var got Range
-				dec := gojay.NewDecoder(strings.NewReader(tt.Range))
+				got := Range{}
+				dec := gojay.NewDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
