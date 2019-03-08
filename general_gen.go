@@ -9,6 +9,25 @@ import (
 )
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
+func (v *CancelParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	if k == "id" {
+		return dec.Object(&v.ID)
+	}
+	return nil
+}
+
+// NKeys returns the number of keys to unmarshal.
+func (v *CancelParams) NKeys() int { return 1 }
+
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
+func (v *CancelParams) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.ObjectKey("id", &v.ID)
+}
+
+// IsNil returns wether the structure is nil value or not.
+func (v *CancelParams) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *InitializeParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "processID":
