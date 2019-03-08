@@ -195,3 +195,95 @@ func TestRange(t *testing.T) {
 		}
 	})
 }
+
+func TestLocation(t *testing.T) {
+	t.Run("Marshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name           string
+			field          Location
+			want           string
+			wantMarshalErr bool
+			wantErr        bool
+		}{
+			{
+				name:           "Valid",
+				field:          Location{URI: "file:///Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go", Range: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
+				want:           `{"uri":"file:///Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name:           "Invalid",
+				field:          Location{URI: "file:///Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go", Range: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
+				want:           `{"uri":"file:///Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}}`,
+				wantMarshalErr: false,
+				wantErr:        true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got, err := gojay.MarshalJSONObject(&tt.field)
+				if (err != nil) != tt.wantMarshalErr {
+					t.Error(err)
+					return
+				}
+
+				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+
+	t.Run("Unmarshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name             string
+			field            string
+			want             Location
+			wantUnmarshalErr bool
+			wantErr          bool
+		}{
+			{
+				name:             "Valid",
+				field:            `{"uri":"file:///Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`,
+				want:             Location{URI: "file:///Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go", Range: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:             "Invalid",
+				field:            `{"uri":"file:///Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}}`,
+				want:             Location{URI: "file:///Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go", Range: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
+				wantUnmarshalErr: false,
+				wantErr:          true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got := Location{}
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
+				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
+					t.Error(err)
+					return
+				}
+
+				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+}
