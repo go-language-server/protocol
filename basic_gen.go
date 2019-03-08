@@ -378,9 +378,9 @@ func (v *RenameFile) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "kind":
 		return dec.String(&v.Kind)
-	case "oldURI":
+	case "oldUri":
 		return dec.String(&v.OldURI)
-	case "newURI":
+	case "newUri":
 		return dec.String(&v.NewURI)
 	case "options":
 		if v.Options == nil {
@@ -397,8 +397,8 @@ func (v *RenameFile) NKeys() int { return 4 }
 // MarshalJSONObject implements gojay's MarshalerJSONObject
 func (v *RenameFile) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey("kind", v.Kind)
-	enc.StringKey("oldURI", v.OldURI)
-	enc.StringKey("newURI", v.NewURI)
+	enc.StringKey("oldUri", v.OldURI)
+	enc.StringKey("newUri", v.NewURI)
 	enc.ObjectKey("options", v.Options)
 }
 
