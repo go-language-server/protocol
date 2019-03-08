@@ -176,10 +176,10 @@ type CreateFileOptions struct {
 type CreateFile struct {
 
 	// Kind a create.
-	Kind string `json:"kind,omitempty"`
+	Kind string `json:"kind"` // should be `create`
 
 	// URI is the resource to create.
-	URI string `json:"uri,omitempty"`
+	URI string `json:"uri"`
 
 	// Options additional options
 	Options *CreateFileOptions `json:"options,omitempty"`
