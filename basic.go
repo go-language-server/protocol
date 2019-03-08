@@ -91,7 +91,7 @@ type Diagnostic struct {
 
 	// RelatedInformation an array of related diagnostic information, e.g. when symbol-names within
 	// a scope collide all definitions can be marked via this property.
-	RelatedInformation []*DiagnosticRelatedInformation `json:"relatedInformation,omitempty"`
+	RelatedInformation []DiagnosticRelatedInformation `json:"relatedInformation,omitempty"`
 }
 
 // DiagnosticSeverity indicates the severity of a Diagnostic message.
