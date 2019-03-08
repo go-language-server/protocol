@@ -199,7 +199,7 @@ type RenameFileOptions struct {
 type RenameFile struct {
 
 	// Kind a rename.
-	Kind string `json:"kind"`
+	Kind string `json:"kind"` // should be `rename`
 
 	// OldURI is the old (existing) location.
 	OldURI string `json:"oldUri"`
@@ -225,7 +225,7 @@ type DeleteFileOptions struct {
 type DeleteFile struct {
 
 	// Kind is a delete.
-	Kind string `json:"kind"`
+	Kind string `json:"kind"` // should be `delete`
 
 	// URI is the file to delete.
 	URI string `json:"uri"`
