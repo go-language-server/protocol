@@ -6,7 +6,8 @@ run:
   # skip-dirs:
   skip-files:
     - ".*\\.pb\\.go"
-  modules-download-mode: readonly
+    - ".*(.|_)gen\\.go"
+  modules-download-mode: vendor
 
 linters-settings:
   depguard:
