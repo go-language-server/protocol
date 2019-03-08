@@ -1125,3 +1125,131 @@ func TestDiagnosticRelatedInformation(t *testing.T) {
 		}
 	})
 }
+
+func TestCommand(t *testing.T) {
+	t.Run("Marshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name           string
+			field          Command
+			want           string
+			wantMarshalErr bool
+			wantErr        bool
+		}{
+			{
+				name: "Valid",
+				field: Command{
+					Title:     "exec echo",
+					Command:   "echo",
+					Arguments: []interface{}{"hello"},
+				},
+				want:           `{"title":"exec echo","command":"echo","arguments":["hello"]}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name: "ValidNilArguments",
+				field: Command{
+					Title:   "exec echo",
+					Command: "echo",
+				},
+				want:           `{"title":"exec echo","command":"echo"}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name: "Invalid",
+				field: Command{
+					Title:     "exec echo",
+					Command:   "echo",
+					Arguments: []interface{}{"hello"},
+				},
+				want:           `{"title":"exec echo","command":"true","arguments":["hello"]}`,
+				wantMarshalErr: false,
+				wantErr:        true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got, err := gojay.MarshalJSONObject(&tt.field)
+				if (err != nil) != tt.wantMarshalErr {
+					t.Error(err)
+					return
+				}
+
+				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+
+	t.Run("Unmarshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name             string
+			field            string
+			want             Command
+			wantUnmarshalErr bool
+			wantErr          bool
+		}{
+			{
+				name:  "Valid",
+				field: `{"title":"exec echo","command":"echo","arguments":["hello"]}`,
+				want: Command{
+					Title:     "exec echo",
+					Command:   "echo",
+					Arguments: []interface{}{"hello"},
+				},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:  "ValidNilArguments",
+				field: `{"title":"exec echo","command":"echo"`,
+				want: Command{
+					Title:   "exec echo",
+					Command: "echo",
+				},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:  "Invalid",
+				field: `{"title":"exec echo","command":"echo","arguments":["hello"]}`,
+				want: Command{
+					Title:     "exec echo",
+					Command:   "true",
+					Arguments: []interface{}{"hello"},
+				},
+				wantUnmarshalErr: false,
+				wantErr:          true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got := Command{}
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
+				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
+					t.Error(err)
+					return
+				}
+
+				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+}
