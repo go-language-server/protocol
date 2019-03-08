@@ -2299,3 +2299,157 @@ func TestRenameFile(t *testing.T) {
 		}
 	})
 }
+
+func TestDeleteFileOptions(t *testing.T) {
+	t.Run("Marshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name           string
+			field          DeleteFileOptions
+			want           string
+			wantMarshalErr bool
+			wantErr        bool
+		}{
+			{
+				name: "Valid",
+				field: DeleteFileOptions{
+					Recursive:         true,
+					IgnoreIfNotExists: true,
+				},
+				want:           `{"recursive":true,"ignoreIfNotExists":true}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name: "ValidNilRecursive",
+				field: DeleteFileOptions{
+					IgnoreIfNotExists: true,
+				},
+				want:           `{"ignoreIfNotExists":true}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name: "ValidNiIgnoreIfNotExists",
+				field: DeleteFileOptions{
+					Recursive: true,
+				},
+				want:           `{"recursive":true}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name:           "ValidNilAll",
+				field:          DeleteFileOptions{},
+				want:           `{}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name: "Invalid",
+				field: DeleteFileOptions{
+					Recursive:         true,
+					IgnoreIfNotExists: true,
+				},
+				want:           `{"recursive":false,"ignoreIfNotExists":false}`,
+				wantMarshalErr: false,
+				wantErr:        true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got, err := gojay.Marshal(&tt.field)
+				if (err != nil) != tt.wantMarshalErr {
+					t.Error(err)
+					return
+				}
+
+				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+
+	t.Run("Unmarshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name             string
+			field            string
+			want             DeleteFileOptions
+			wantUnmarshalErr bool
+			wantErr          bool
+		}{
+			{
+				name:  "Valid",
+				field: `{"recursive":true,"ignoreIfNotExists":true}`,
+				want: DeleteFileOptions{
+					Recursive:         true,
+					IgnoreIfNotExists: true,
+				},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:  "ValidNilRecursive",
+				field: `{"ignoreIfNotExists":true}`,
+				want: DeleteFileOptions{
+					IgnoreIfNotExists: true,
+				},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:  "ValidNilIgnoreIfNotExists",
+				field: `{"recursive":true}`,
+				want: DeleteFileOptions{
+					Recursive: true,
+				},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:             "ValidNilAll",
+				field:            `{}`,
+				want:             DeleteFileOptions{},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:  "Invalid",
+				field: `{"recursive":true,"ignoreIfNotExists":true}`,
+				want: DeleteFileOptions{
+					Recursive:         false,
+					IgnoreIfNotExists: false,
+				},
+				wantUnmarshalErr: false,
+				wantErr:          true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got := DeleteFileOptions{}
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
+				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
+					t.Error(err)
+					return
+				}
+
+				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+}
