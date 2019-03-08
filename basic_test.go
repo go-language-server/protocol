@@ -89,7 +89,7 @@ func TestPosition(t *testing.T) {
 				t.Parallel()
 
 				var got Position
-				dec := gojay.NewDecoder(strings.NewReader(tt.field))
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -181,7 +181,7 @@ func TestRange(t *testing.T) {
 				t.Parallel()
 
 				got := Range{}
-				dec := gojay.NewDecoder(strings.NewReader(tt.field))
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
