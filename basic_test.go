@@ -3080,3 +3080,115 @@ func TestTextDocumentIdentifier(t *testing.T) {
 		}
 	})
 }
+
+func TestTextDocumentItem(t *testing.T) {
+	t.Run("Marshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name           string
+			field          TextDocumentItem
+			want           string
+			wantMarshalErr bool
+			wantErr        bool
+		}{
+			{
+				name: "Valid",
+				field: TextDocumentItem{
+					URI:        "file:///path/to/basic.go",
+					LanguageID: GoLanguage,
+					Version:    float64(10),
+					Text:       "Go Language",
+				},
+				want:           `{"uri":"file:///path/to/basic.go","languageId":"go","version":10,"text":"Go Language"}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name: "Invalid",
+				field: TextDocumentItem{
+					URI:        "file:///path/to/basic.go",
+					LanguageID: GoLanguage,
+					Version:    float64(10),
+					Text:       "Go Language",
+				},
+				want:           `{"uri":"file:///path/to/basic_gen.go","languageId":"cpp","version":10,"text":"C++ Language"}`,
+				wantMarshalErr: false,
+				wantErr:        true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got, err := gojay.Marshal(&tt.field)
+				if (err != nil) != tt.wantMarshalErr {
+					t.Error(err)
+					return
+				}
+
+				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+
+	t.Run("Unmarshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name             string
+			field            string
+			want             TextDocumentItem
+			wantUnmarshalErr bool
+			wantErr          bool
+		}{
+			{
+				name:  "Valid",
+				field: `{"uri":"file:///path/to/basic.go","languageId":"go","version":10,"text":"Go Language"}`,
+				want: TextDocumentItem{
+					URI:        "file:///path/to/basic.go",
+					LanguageID: GoLanguage,
+					Version:    float64(10),
+					Text:       "Go Language",
+				},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:  "Valid",
+				field: `{"uri":"file:///path/to/basic.go","languageId":"go","version":10,"text":"Go Language"}`,
+				want: TextDocumentItem{
+					URI:        "file:///path/to/basic_gen.go",
+					LanguageID: CppLanguage,
+					Version:    float64(10),
+					Text:       "C++ Language",
+				},
+				wantUnmarshalErr: false,
+				wantErr:          true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got := TextDocumentItem{}
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
+				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
+					t.Error(err)
+					return
+				}
+
+				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+}
