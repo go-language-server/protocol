@@ -3634,3 +3634,139 @@ func TestDocumentFilter(t *testing.T) {
 		}
 	})
 }
+
+func TestDocumentSelector(t *testing.T) {
+	t.Run("Marshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name           string
+			field          DocumentSelector
+			want           string
+			wantMarshalErr bool
+			wantErr        bool
+		}{
+			{
+				name: "Valid",
+				field: DocumentSelector{
+					{
+						Language: "go",
+						Scheme:   "file",
+						Pattern:  "*.go",
+					},
+					{
+						Language: "cpp",
+						Scheme:   "untitled",
+						Pattern:  "*.{cpp,hpp}",
+					},
+				},
+				want:           `[{"language":"go","scheme":"file","pattern":"*.go"},{"language":"cpp","scheme":"untitled","pattern":"*.{cpp,hpp}"}]`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name: "Invalid",
+				field: DocumentSelector{
+					{
+						Language: "go",
+						Scheme:   "file",
+						Pattern:  "*.go",
+					},
+					{
+						Language: "cpp",
+						Scheme:   "untitled",
+						Pattern:  "*.{cpp,hpp}",
+					},
+				},
+				want:           `[{"language":"typescript","scheme":"file","pattern":"*.{ts,js}"},{"language":"c","scheme":"untitled","pattern":"*.{c,h}"}]`,
+				wantMarshalErr: false,
+				wantErr:        true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got, err := gojay.Marshal(&tt.field)
+				if (err != nil) != tt.wantMarshalErr {
+					t.Error(err)
+					return
+				}
+
+				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+
+	t.Run("Unmarshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name             string
+			field            string
+			want             DocumentSelector
+			wantUnmarshalErr bool
+			wantErr          bool
+		}{
+			{
+				name:  "Valid",
+				field: `[{"language":"go","scheme":"file","pattern":"*.go"},{"language":"cpp","scheme":"untitled","pattern":"*.{cpp,hpp}"}]`,
+				want: DocumentSelector{
+					{
+						Language: "go",
+						Scheme:   "file",
+						Pattern:  "*.go",
+					},
+					{
+						Language: "cpp",
+						Scheme:   "untitled",
+						Pattern:  "*.{cpp,hpp}",
+					},
+				},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:  "Invalid",
+				field: `[{"language":"go","scheme":"file","pattern":"*.go"},{"language":"cpp","scheme":"untitled","pattern":"*.{cpp,hpp}"}]`,
+				want: DocumentSelector{
+					{
+						Language: "typescript",
+						Scheme:   "file",
+						Pattern:  "*.{ts,js}",
+					},
+					{
+						Language: "c",
+						Scheme:   "untitled",
+						Pattern:  "*.{c,h}",
+					},
+				},
+				wantUnmarshalErr: false,
+				wantErr:          true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got := DocumentSelector{}
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
+				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
+					t.Error(err)
+					return
+				}
+
+				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+}
