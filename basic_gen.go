@@ -399,7 +399,7 @@ func (v *RenameFile) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey("kind", v.Kind)
 	enc.StringKey("oldUri", v.OldURI)
 	enc.StringKey("newUri", v.NewURI)
-	enc.ObjectKey("options", v.Options)
+	enc.ObjectKeyOmitEmpty("options", v.Options)
 }
 
 // IsNil returns wether the structure is nil value or not
