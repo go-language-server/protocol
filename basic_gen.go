@@ -116,23 +116,32 @@ func (v *Diagnostic) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 		return dec.Object(&v.Range)
 	case "severity":
 		return dec.Float64((*float64)(&v.Severity))
+	case "code":
+		return dec.Interface(&v.Code)
 	case "source":
 		return dec.String(&v.Source)
 	case "message":
 		return dec.String(&v.Message)
+	case "relatedInformation":
+		if &v.RelatedInformation == nil {
+			v.RelatedInformation = []DiagnosticRelatedInformation{}
+		}
+		return dec.Array((*diagnosticRelatedInformations)(&v.RelatedInformation))
 	}
 	return nil
 }
 
 // NKeys returns the number of keys to unmarshal
-func (v *Diagnostic) NKeys() int { return 4 }
+func (v *Diagnostic) NKeys() int { return 6 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject
 func (v *Diagnostic) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("range", &v.Range)
-	enc.Float64Key("severity", float64(v.Severity))
+	enc.Float64KeyOmitEmpty("severity", float64(v.Severity))
+	enc.AddInterfaceKeyOmitEmpty("code", v.Code)
 	enc.StringKey("source", v.Source)
 	enc.StringKey("message", v.Message)
+	enc.ArrayKeyOmitEmpty("relatedInformation", (*diagnosticRelatedInformations)(&v.RelatedInformation))
 }
 
 // IsNil returns wether the structure is nil value or not
@@ -160,6 +169,32 @@ func (v *DiagnosticRelatedInformation) MarshalJSONObject(enc *gojay.Encoder) {
 
 // IsNil returns wether the structure is nil value or not
 func (v *DiagnosticRelatedInformation) IsNil() bool { return v == nil }
+
+type diagnosticRelatedInformations []DiagnosticRelatedInformation
+
+func (v *diagnosticRelatedInformations) UnmarshalJSONArray(dec *gojay.Decoder) error {
+	t := DiagnosticRelatedInformation{}
+	if err := dec.Object(&t); err != nil {
+		return err
+	}
+	*v = append(*v, t)
+	return nil
+}
+
+// NKeys returns the number of keys to unmarshal
+func (v *diagnosticRelatedInformations) NKeys() int { return 1 }
+
+// MarshalJSONArray implements gojay's MarshalerJSONArray
+func (v *diagnosticRelatedInformations) MarshalJSONArray(enc *gojay.Encoder) {
+	for _, t := range *v {
+		enc.Object(&t)
+	}
+}
+
+// IsNil implements gojay's MarshalerJSONArray
+func (v *diagnosticRelatedInformations) IsNil() bool {
+	return *v == nil || len(*v) == 0
+}
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
 func (v *Command) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
