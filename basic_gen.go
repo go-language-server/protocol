@@ -651,9 +651,9 @@ func (v *DocumentFilter) NKeys() int { return 3 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject
 func (v *DocumentFilter) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.StringKey("language", v.Language)
-	enc.StringKey("scheme", v.Scheme)
-	enc.StringKey("pattern", v.Pattern)
+	enc.StringKeyOmitEmpty("language", v.Language)
+	enc.StringKeyOmitEmpty("scheme", v.Scheme)
+	enc.StringKeyOmitEmpty("pattern", v.Pattern)
 }
 
 // IsNil returns wether the structure is nil value or not
