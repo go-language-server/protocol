@@ -314,8 +314,8 @@ func (v *CreateFileOptions) NKeys() int { return 2 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject
 func (v *CreateFileOptions) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.BoolKey("overwrite", v.Overwrite)
-	enc.BoolKey("ignoreIfExists", v.IgnoreIfExists)
+	enc.BoolKeyOmitEmpty("overwrite", v.Overwrite)
+	enc.BoolKeyOmitEmpty("ignoreIfExists", v.IgnoreIfExists)
 }
 
 // IsNil returns wether the structure is nil value or not
