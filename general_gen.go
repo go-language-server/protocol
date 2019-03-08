@@ -937,6 +937,7 @@ func (v *TextDocumentClientCapabilities) MarshalJSONObject(enc *gojay.Encoder) {
 // IsNil returns wether the structure is nil value or not
 func (v *TextDocumentClientCapabilities) IsNil() bool { return v == nil }
 
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
 func (v *ClientCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "workspace":
