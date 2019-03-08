@@ -35,15 +35,15 @@ func (v *Position) IsNil() bool { return v == nil }
 func (v *Range) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "start":
-		if v.Start == nil {
-			v.Start = &Position{}
+		if &v.Start == nil {
+			return ErrorInvalidParams("Range.Start field must be not empty")
 		}
-		return dec.Object(v.Start)
+		return dec.Object(&v.Start)
 	case "end":
-		if v.End == nil {
-			v.End = &Position{}
+		if &v.End == nil {
+			return ErrorInvalidParams("Range.End field must be not empty")
 		}
-		return dec.Object(v.End)
+		return dec.Object(&v.End)
 	}
 	return nil
 }
@@ -53,8 +53,8 @@ func (v *Range) NKeys() int { return 2 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject
 func (v *Range) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ObjectKey("start", v.Start)
-	enc.ObjectKey("end", v.End)
+	enc.ObjectKey("start", &v.Start)
+	enc.ObjectKey("end", &v.End)
 }
 
 // IsNil returns wether the structure is nil value or not
@@ -66,10 +66,10 @@ func (v *Location) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	case "uri":
 		return dec.String((*string)(&v.URI))
 	case "range":
-		if v.Range == nil {
-			v.Range = &Range{}
+		if &v.Range == nil {
+			return ErrorInvalidParams("Location.Range field must be non-nil")
 		}
-		return dec.Object(v.Range)
+		return dec.Object(&v.Range)
 	}
 	return nil
 }
@@ -80,7 +80,7 @@ func (v *Location) NKeys() int { return 2 }
 // MarshalJSONObject implements gojay's MarshalerJSONObject
 func (v *Location) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey("uri", string(v.URI))
-	enc.ObjectKey("range", v.Range)
+	enc.ObjectKey("range", &v.Range)
 }
 
 // IsNil returns wether the structure is nil value or not
@@ -90,22 +90,22 @@ func (v *Location) IsNil() bool { return v == nil }
 func (v *LocationLink) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "originSelectionRange":
-		if v.OriginSelectionRange == nil {
-			v.OriginSelectionRange = &Range{}
+		if &v.OriginSelectionRange == nil {
+			return ErrorInvalidParams("LocationLink.OriginSelectionRange field must be non-nil")
 		}
 		return dec.Object(v.OriginSelectionRange)
 	case "targetURI":
 		return dec.String(&v.TargetURI)
 	case "targetRange":
-		if v.TargetRange == nil {
-			v.TargetRange = &Range{}
+		if &v.TargetRange == nil {
+			return ErrorInvalidParams("LocationLink.TargetRange field must be non-nil")
 		}
-		return dec.Object(v.TargetRange)
+		return dec.Object(&v.TargetRange)
 	case "targetSelectionRange":
-		if v.TargetSelectionRange == nil {
-			v.TargetSelectionRange = &Range{}
+		if &v.TargetSelectionRange == nil {
+			return ErrorInvalidParams("LocationLink.TargetSelectionRange field must be non-nil")
 		}
-		return dec.Object(v.TargetSelectionRange)
+		return dec.Object(&v.TargetSelectionRange)
 	}
 	return nil
 }
@@ -117,8 +117,8 @@ func (v *LocationLink) NKeys() int { return 4 }
 func (v *LocationLink) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("originSelectionRange", v.OriginSelectionRange)
 	enc.StringKey("targetURI", v.TargetURI)
-	enc.ObjectKey("targetRange", v.TargetRange)
-	enc.ObjectKey("targetSelectionRange", v.TargetSelectionRange)
+	enc.ObjectKey("targetRange", &v.TargetRange)
+	enc.ObjectKey("targetSelectionRange", &v.TargetSelectionRange)
 }
 
 // IsNil returns wether the structure is nil value or not
@@ -128,10 +128,10 @@ func (v *LocationLink) IsNil() bool { return v == nil }
 func (v *Diagnostic) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "range":
-		if v.Range == nil {
-			v.Range = &Range{}
+		if &v.Range == nil {
+			return ErrorInvalidParams("Diagnostic.Range field must be non-nil")
 		}
-		return dec.Object(v.Range)
+		return dec.Object(&v.Range)
 	case "severity":
 		return dec.Float64((*float64)(&v.Severity))
 	case "source":
@@ -147,7 +147,7 @@ func (v *Diagnostic) NKeys() int { return 4 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject
 func (v *Diagnostic) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ObjectKey("range", v.Range)
+	enc.ObjectKey("range", &v.Range)
 	enc.Float64Key("severity", float64(v.Severity))
 	enc.StringKey("source", v.Source)
 	enc.StringKey("message", v.Message)
@@ -160,10 +160,10 @@ func (v *Diagnostic) IsNil() bool { return v == nil }
 func (v *DiagnosticRelatedInformation) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "location":
-		if v.Location == nil {
-			v.Location = &Location{}
+		if &v.Location == nil {
+			return ErrorInvalidParams("DiagnosticRelatedInformation.Location field must be non-nil")
 		}
-		return dec.Object(v.Location)
+		return dec.Object(&v.Location)
 	case "message":
 		return dec.String(&v.Message)
 	}
@@ -175,7 +175,7 @@ func (v *DiagnosticRelatedInformation) NKeys() int { return 2 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject
 func (v *DiagnosticRelatedInformation) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ObjectKey("location", v.Location)
+	enc.ObjectKey("location", &v.Location)
 	enc.StringKey("message", v.Message)
 }
 
@@ -209,10 +209,10 @@ func (v *Command) IsNil() bool { return v == nil }
 func (v *TextEdit) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "range":
-		if v.Range == nil {
-			v.Range = &Range{}
+		if &v.Range == nil {
+			return ErrorInvalidParams("TextEdit.Range field must be non-nil")
 		}
-		return dec.Object(v.Range)
+		return dec.Object(&v.Range)
 	case "newText":
 		return dec.String(&v.NewText)
 	}
@@ -224,7 +224,7 @@ func (v *TextEdit) NKeys() int { return 2 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject
 func (v *TextEdit) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ObjectKey("range", v.Range)
+	enc.ObjectKey("range", &v.Range)
 	enc.StringKey("newText", v.NewText)
 }
 
@@ -235,10 +235,10 @@ func (v *TextEdit) IsNil() bool { return v == nil }
 func (v *TextDocumentEdit) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "textDocument":
-		if v.TextDocument == nil {
-			v.TextDocument = &VersionedTextDocumentIdentifier{}
+		if &v.TextDocument == nil {
+			return ErrorInvalidParams("TextDocumentEdit.TextDocument field must be non-nil")
 		}
-		return dec.Object(v.TextDocument)
+		return dec.Object(&v.TextDocument)
 	}
 	return nil
 }
@@ -248,7 +248,7 @@ func (v *TextDocumentEdit) NKeys() int { return 1 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject
 func (v *TextDocumentEdit) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ObjectKey("textDocument", v.TextDocument)
+	enc.ObjectKey("textDocument", &v.TextDocument)
 }
 
 // IsNil returns wether the structure is nil value or not
@@ -506,15 +506,15 @@ func (v *VersionedTextDocumentIdentifier) IsNil() bool { return v == nil }
 func (v *TextDocumentPositionParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "textDocument":
-		if v.TextDocument == nil {
-			v.TextDocument = &TextDocumentIdentifier{}
+		if &v.TextDocument == nil {
+			return ErrorInvalidParams("TextDocumentPositionParams.TextDocument field must be non-nil")
 		}
-		return dec.Object(v.TextDocument)
+		return dec.Object(&v.TextDocument)
 	case "position":
-		if v.Position == nil {
-			v.Position = &Position{}
+		if &v.Position == nil {
+			return ErrorInvalidParams("TextDocumentPositionParams.Position field must be non-nil")
 		}
-		return dec.Object(v.Position)
+		return dec.Object(&v.Position)
 	}
 	return nil
 }
@@ -524,8 +524,8 @@ func (v *TextDocumentPositionParams) NKeys() int { return 2 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject
 func (v *TextDocumentPositionParams) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ObjectKey("textDocument", v.TextDocument)
-	enc.ObjectKey("position", v.Position)
+	enc.ObjectKey("textDocument", &v.TextDocument)
+	enc.ObjectKey("position", &v.Position)
 }
 
 // IsNil returns wether the structure is nil value or not

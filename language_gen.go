@@ -12,9 +12,9 @@ import (
 func (v *CompletionParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "textDocument":
-		return dec.Object(v.TextDocument)
+		return dec.Object(&v.TextDocument)
 	case "position":
-		return dec.Object(v.Position)
+		return dec.Object(&v.Position)
 	case "context":
 		if v.Context == nil {
 			v.Context = &CompletionContext{}
@@ -29,8 +29,8 @@ func (v *CompletionParams) NKeys() int { return 3 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject
 func (v *CompletionParams) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ObjectKey("textDocument", v.TextDocument)
-	enc.ObjectKey("position", v.Position)
+	enc.ObjectKey("textDocument", &v.TextDocument)
+	enc.ObjectKey("position", &v.Position)
 	enc.ObjectKey("context", v.Context)
 }
 
@@ -275,9 +275,9 @@ func (v *ReferenceContext) UnmarshalJSONObject(dec *gojay.Decoder, k string) err
 func (v *ReferenceParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "textDocument":
-		return dec.Object(v.TextDocument)
+		return dec.Object(&v.TextDocument)
 	case "position":
-		return dec.Object(v.Position)
+		return dec.Object(&v.Position)
 	case "context":
 		if v.Context == nil {
 			v.Context = &ReferenceContext{}
@@ -292,8 +292,8 @@ func (v *ReferenceParams) NKeys() int { return 3 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject
 func (v *ReferenceParams) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ObjectKey("textDocument", v.TextDocument)
-	enc.ObjectKey("position", v.Position)
+	enc.ObjectKey("textDocument", &v.TextDocument)
+	enc.ObjectKey("position", &v.Position)
 	enc.ObjectKey("context", v.Context)
 }
 
