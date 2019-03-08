@@ -81,8 +81,11 @@ func (v *Location) IsNil() bool { return v == nil }
 func (v *LocationLink) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "originSelectionRange":
+		if v.OriginSelectionRange == nil {
+			v.OriginSelectionRange = &Range{}
+		}
 		return dec.Object(v.OriginSelectionRange)
-	case "targetURI":
+	case "targetUri":
 		return dec.String(&v.TargetURI)
 	case "targetRange":
 		return dec.Object(&v.TargetRange)
@@ -97,8 +100,8 @@ func (v *LocationLink) NKeys() int { return 4 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject
 func (v *LocationLink) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ObjectKey("originSelectionRange", v.OriginSelectionRange)
-	enc.StringKey("targetURI", v.TargetURI)
+	enc.ObjectKeyOmitEmpty("originSelectionRange", v.OriginSelectionRange)
+	enc.StringKey("targetUri", v.TargetURI)
 	enc.ObjectKey("targetRange", &v.TargetRange)
 	enc.ObjectKey("targetSelectionRange", &v.TargetSelectionRange)
 }
