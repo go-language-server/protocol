@@ -203,17 +203,23 @@ func (v *Command) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 		return dec.String(&v.Title)
 	case "command":
 		return dec.String(&v.Command)
+	case "arguments":
+		if &v.Arguments == nil {
+			v.Arguments = []interface{}{nil}
+		}
+		return dec.Array((*interfaces)(&v.Arguments))
 	}
 	return nil
 }
 
 // NKeys returns the number of keys to unmarshal
-func (v *Command) NKeys() int { return 2 }
+func (v *Command) NKeys() int { return 3 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject
 func (v *Command) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey("title", v.Title)
 	enc.StringKey("command", v.Command)
+	enc.ArrayKeyOmitEmpty("arguments", (*interfaces)(&v.Arguments))
 }
 
 // IsNil returns wether the structure is nil value or not
