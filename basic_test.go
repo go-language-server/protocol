@@ -1344,7 +1344,7 @@ func TestCommand(t *testing.T) {
 			},
 			{
 				name:  "ValidNilArguments",
-				field: `{"title":"exec echo","command":"echo"`,
+				field: `{"title":"exec echo","command":"echo"}`,
 				want: Command{
 					Title:   "exec echo",
 					Command: "echo",
