@@ -541,8 +541,7 @@ func (v *WorkspaceEdit) IsNil() bool { return v == nil }
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
 func (v *TextDocumentIdentifier) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	switch k {
-	case "uri":
+	if k == "uri" {
 		return dec.String((*string)(&v.URI))
 	}
 	return nil
