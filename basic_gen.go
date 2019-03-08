@@ -457,18 +457,83 @@ func (v *DeleteFile) MarshalJSONObject(enc *gojay.Encoder) {
 // IsNil returns wether the structure is nil value or not
 func (v *DeleteFile) IsNil() bool { return v == nil }
 
+type changes map[DocumentURI][]TextEdit
+
+func (c changes) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	edits := []TextEdit{}
+	err := dec.Array((*textEdits)(&edits))
+	if err != nil {
+		return err
+	}
+	c[DocumentURI(k)] = (textEdits)(edits)
+	return nil
+}
+
+// we return 0, it tells the Decoder to decode all keys
+func (c changes) NKeys() int { return 0 }
+
+// Implementing Marshaler
+func (c changes) MarshalJSONObject(enc *gojay.Encoder) {
+	for k, v := range c {
+		enc.ArrayKeyOmitEmpty(string(k), (*textEdits)(&v))
+	}
+}
+
+func (c changes) IsNil() bool {
+	return c == nil
+}
+
+type documentChanges []TextDocumentEdit
+
+// UnmarshalJSONArray implements gojay's UnmarshalerJSONArray
+func (v *documentChanges) UnmarshalJSONArray(dec *gojay.Decoder) error {
+	t := TextDocumentEdit{}
+	if err := dec.Object(&t); err != nil {
+		return err
+	}
+	*v = append(*v, t)
+	return nil
+}
+
+// NKeys returns the number of keys to unmarshal
+func (v *documentChanges) NKeys() int { return 1 }
+
+// MarshalJSONArray implements gojay's MarshalerJSONArray
+func (v *documentChanges) MarshalJSONArray(enc *gojay.Encoder) {
+	for _, t := range *v {
+		enc.ObjectOmitEmpty(&t)
+	}
+}
+
+// IsNil implements gojay's MarshalerJSONArray
+func (v *documentChanges) IsNil() bool {
+	return *v == nil || len(*v) == 0
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
 func (v *WorkspaceEdit) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
+	case "changes":
+		if v.Changes == nil {
+			v.Changes = make(map[DocumentURI][]TextEdit)
+		}
+		return dec.Object((changes)(v.Changes))
+	case "documentChanges":
+		if v.DocumentChanges == nil {
+			v.DocumentChanges = []TextDocumentEdit{}
+		}
+		return dec.Array((*documentChanges)(&v.DocumentChanges))
 	}
 	return nil
 }
 
 // NKeys returns the number of keys to unmarshal
-func (v *WorkspaceEdit) NKeys() int { return 0 }
+func (v *WorkspaceEdit) NKeys() int { return 2 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject
 func (v *WorkspaceEdit) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.ObjectKeyOmitEmpty("changes", (*changes)(&v.Changes))
+	enc.ArrayKeyOmitEmpty("documentChanges", (*documentChanges)(&v.DocumentChanges))
 }
 
 // IsNil returns wether the structure is nil value or not
