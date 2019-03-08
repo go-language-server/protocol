@@ -563,7 +563,7 @@ func (v *TextDocumentItem) UnmarshalJSONObject(dec *gojay.Decoder, k string) err
 	switch k {
 	case "uri":
 		return dec.String((*string)(&v.URI))
-	case "languageID":
+	case "languageId":
 		return dec.String((*string)(&v.LanguageID))
 	case "version":
 		return dec.Float64(&v.Version)
@@ -579,7 +579,7 @@ func (v *TextDocumentItem) NKeys() int { return 4 }
 // MarshalJSONObject implements gojay's MarshalerJSONObject
 func (v *TextDocumentItem) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey("uri", string(v.URI))
-	enc.StringKey("languageID", string(v.LanguageID))
+	enc.StringKey("languageId", string(v.LanguageID))
 	enc.Float64Key("version", v.Version)
 	enc.StringKey("text", v.Text)
 }
