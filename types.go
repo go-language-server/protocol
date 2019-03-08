@@ -4,6 +4,7 @@
 
 package protocol
 
+// Uint64 returns the i pointers.
 func Uint64(i uint64) *uint64 {
 	return &i
 }
