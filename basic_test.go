@@ -682,7 +682,7 @@ func TestDiagnostic(t *testing.T) {
 					},
 					Severity: SeverityError,
 					Code:     "foo/bar",
-					Source:   "",
+					Source:   "test foo bar",
 					Message:  "foo bar",
 					RelatedInformation: []DiagnosticRelatedInformation{
 						{
@@ -691,7 +691,7 @@ func TestDiagnostic(t *testing.T) {
 						},
 					},
 				},
-				want:           `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}]}`,
+				want:           `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}]}`,
 				wantMarshalErr: false,
 				wantErr:        false,
 			},
@@ -710,7 +710,7 @@ func TestDiagnostic(t *testing.T) {
 					},
 					Severity: SeverityError,
 					Code:     "foo/bar",
-					Source:   "",
+					Source:   "test foo bar",
 					Message:  "foo bar",
 					RelatedInformation: []DiagnosticRelatedInformation{
 						{
@@ -719,7 +719,7 @@ func TestDiagnostic(t *testing.T) {
 						},
 					},
 				},
-				want:           `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}]}`,
+				want:           `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}]}`,
 				wantMarshalErr: false,
 				wantErr:        true,
 			},
@@ -755,7 +755,7 @@ func TestDiagnostic(t *testing.T) {
 		}{
 			{
 				name:  "Valid",
-				field: `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}]}`,
+				field: `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}]}`,
 				want: Diagnostic{
 					Range: Range{
 						Start: Position{
@@ -769,7 +769,7 @@ func TestDiagnostic(t *testing.T) {
 					},
 					Severity: SeverityError,
 					Code:     "foo/bar",
-					Source:   "",
+					Source:   "test foo bar",
 					Message:  "foo bar",
 					RelatedInformation: []DiagnosticRelatedInformation{
 						{
@@ -783,7 +783,7 @@ func TestDiagnostic(t *testing.T) {
 			},
 			{
 				name:  "Invalid",
-				field: `{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"severity":1,"code":"foo/bar","source":"","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}},"message":"basic_gen.go"}]}`,
+				field: `{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}},"message":"basic_gen.go"}]}`,
 				want: Diagnostic{
 					Range: Range{
 						Start: Position{
@@ -797,7 +797,7 @@ func TestDiagnostic(t *testing.T) {
 					},
 					Severity: SeverityError,
 					Code:     "foo/bar",
-					Source:   "",
+					Source:   "test foo bar",
 					Message:  "foo bar",
 					RelatedInformation: []DiagnosticRelatedInformation{
 						{

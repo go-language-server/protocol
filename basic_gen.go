@@ -139,7 +139,7 @@ func (v *Diagnostic) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey("range", &v.Range)
 	enc.Float64KeyOmitEmpty("severity", float64(v.Severity))
 	enc.AddInterfaceKeyOmitEmpty("code", v.Code)
-	enc.StringKey("source", v.Source)
+	enc.StringKeyOmitEmpty("source", v.Source)
 	enc.StringKey("message", v.Message)
 	enc.ArrayKeyOmitEmpty("relatedInformation", (*diagnosticRelatedInformations)(&v.RelatedInformation))
 }
