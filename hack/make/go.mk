@@ -193,7 +193,7 @@ boilerplate/go/%: BOILERPLATE_PKG_DIR=$(shell printf $@ | cut -d'/' -f3- | rev |
 boilerplate/go/%: BOILERPLATE_PKG_NAME=$(if $(findstring main,$@),main,$(shell printf $@ | rev | cut -d/ -f2 | rev))
 boilerplate/go/%: hack/boilerplate/boilerplate.go.txt
 boilerplate/go/%:  ## Creates a go file based on boilerplate.go.txt in % location.
-	@if [ ! ${BOILERPLATE_PKG_DIR:-3} == ".go" ] && [ ! -d ${BOILERPLATE_PKG_DIR} ]; then mkdir -p ${BOILERPLATE_PKG_DIR}; fi
+	@if [[ ! ${BOILERPLATE_PKG_DIR} == *'.go'* ]] && [ ! -d ${BOILERPLATE_PKG_DIR} ]; then mkdir -p ${BOILERPLATE_PKG_DIR}; fi
 	@cat hack/boilerplate/boilerplate.go.txt <(printf "package ${BOILERPLATE_PKG_NAME}\\n") > $*
 	@sed -i "s|YEAR|$(shell date '+%Y')|g" $*
 
