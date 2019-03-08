@@ -696,6 +696,101 @@ func TestDiagnostic(t *testing.T) {
 				wantErr:        false,
 			},
 			{
+				name: "ValidNilSeverity",
+				field: Diagnostic{
+					Range: Range{
+						Start: Position{
+							Line:      25,
+							Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+					Code:    "foo/bar",
+					Source:  "test foo bar",
+					Message: "foo bar",
+					RelatedInformation: []DiagnosticRelatedInformation{
+						{
+							Location: Location{URI: "file:///path/to/basic.go", Range: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
+							Message:  "basic_gen.go",
+						},
+					},
+				},
+				want:           `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}]}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name: "ValidNilCode",
+				field: Diagnostic{
+					Range: Range{
+						Start: Position{
+							Line:      25,
+							Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+					Severity: SeverityError,
+					Source:   "test foo bar",
+					Message:  "foo bar",
+					RelatedInformation: []DiagnosticRelatedInformation{
+						{
+							Location: Location{URI: "file:///path/to/basic.go", Range: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
+							Message:  "basic_gen.go",
+						},
+					},
+				},
+				want:           `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}]}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name: "ValidNilRelatedInformation",
+				field: Diagnostic{
+					Range: Range{
+						Start: Position{
+							Line:      25,
+							Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+					Severity: SeverityError,
+					Code:     "foo/bar",
+					Source:   "test foo bar",
+					Message:  "foo bar",
+				},
+				want:           `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar"}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name: "ValidNilAll",
+				field: Diagnostic{
+					Range: Range{
+						Start: Position{
+							Line:      25,
+							Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+					Message: "foo bar",
+				},
+				want:           `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"message":"foo bar"}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
 				name: "Invalid",
 				field: Diagnostic{
 					Range: Range{
@@ -777,6 +872,101 @@ func TestDiagnostic(t *testing.T) {
 							Message:  "basic_gen.go",
 						},
 					},
+				},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:  "ValidNilSeverity",
+				field: `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}]}`,
+				want: Diagnostic{
+					Range: Range{
+						Start: Position{
+							Line:      25,
+							Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+					Code:    "foo/bar",
+					Source:  "test foo bar",
+					Message: "foo bar",
+					RelatedInformation: []DiagnosticRelatedInformation{
+						{
+							Location: Location{URI: "file:///path/to/basic.go", Range: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
+							Message:  "basic_gen.go",
+						},
+					},
+				},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:  "ValidNilCode",
+				field: `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}]}`,
+				want: Diagnostic{
+					Range: Range{
+						Start: Position{
+							Line:      25,
+							Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+					Severity: SeverityError,
+					Source:   "test foo bar",
+					Message:  "foo bar",
+					RelatedInformation: []DiagnosticRelatedInformation{
+						{
+							Location: Location{URI: "file:///path/to/basic.go", Range: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
+							Message:  "basic_gen.go",
+						},
+					},
+				},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:  "ValidNilRelatedInformation",
+				field: `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar"}`,
+				want: Diagnostic{
+					Range: Range{
+						Start: Position{
+							Line:      25,
+							Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+					Severity: SeverityError,
+					Code:     "foo/bar",
+					Source:   "test foo bar",
+					Message:  "foo bar",
+				},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:  "ValidNilAll",
+				field: `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"message":"foo bar"}`,
+				want: Diagnostic{
+					Range: Range{
+						Start: Position{
+							Line:      25,
+							Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+					Message: "foo bar",
 				},
 				wantUnmarshalErr: false,
 				wantErr:          false,
