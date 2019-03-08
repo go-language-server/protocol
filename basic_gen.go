@@ -38,12 +38,12 @@ func (v *Range) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "start":
 		if &v.Start == nil {
-			return errors.ErrorInvalidParams("Range.Start field must be not empty")
+			return errors.ErrorInvalidParams("Range.Start field must be non-nil")
 		}
 		return dec.Object(&v.Start)
 	case "end":
 		if &v.End == nil {
-			return errors.ErrorInvalidParams("Range.End field must be not empty")
+			return errors.ErrorInvalidParams("Range.End field must be non-nil")
 		}
 		return dec.Object(&v.End)
 	}
