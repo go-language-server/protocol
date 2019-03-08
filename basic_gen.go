@@ -6,6 +6,8 @@ package protocol
 
 import (
 	"github.com/francoispqt/gojay"
+
+	"github.com/go-language-server/protocol/internal/pkg/errors"
 )
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject
@@ -36,12 +38,12 @@ func (v *Range) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "start":
 		if &v.Start == nil {
-			return ErrorInvalidParams("Range.Start field must be not empty")
+			return errors.ErrorInvalidParams("Range.Start field must be not empty")
 		}
 		return dec.Object(&v.Start)
 	case "end":
 		if &v.End == nil {
-			return ErrorInvalidParams("Range.End field must be not empty")
+			return errors.ErrorInvalidParams("Range.End field must be not empty")
 		}
 		return dec.Object(&v.End)
 	}
@@ -67,7 +69,7 @@ func (v *Location) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 		return dec.String((*string)(&v.URI))
 	case "range":
 		if &v.Range == nil {
-			return ErrorInvalidParams("Location.Range field must be non-nil")
+			return errors.ErrorInvalidParams("Location.Range field must be non-nil")
 		}
 		return dec.Object(&v.Range)
 	}
@@ -91,19 +93,19 @@ func (v *LocationLink) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "originSelectionRange":
 		if &v.OriginSelectionRange == nil {
-			return ErrorInvalidParams("LocationLink.OriginSelectionRange field must be non-nil")
+			return errors.ErrorInvalidParams("LocationLink.OriginSelectionRange field must be non-nil")
 		}
 		return dec.Object(v.OriginSelectionRange)
 	case "targetURI":
 		return dec.String(&v.TargetURI)
 	case "targetRange":
 		if &v.TargetRange == nil {
-			return ErrorInvalidParams("LocationLink.TargetRange field must be non-nil")
+			return errors.ErrorInvalidParams("LocationLink.TargetRange field must be non-nil")
 		}
 		return dec.Object(&v.TargetRange)
 	case "targetSelectionRange":
 		if &v.TargetSelectionRange == nil {
-			return ErrorInvalidParams("LocationLink.TargetSelectionRange field must be non-nil")
+			return errors.ErrorInvalidParams("LocationLink.TargetSelectionRange field must be non-nil")
 		}
 		return dec.Object(&v.TargetSelectionRange)
 	}
@@ -129,7 +131,7 @@ func (v *Diagnostic) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "range":
 		if &v.Range == nil {
-			return ErrorInvalidParams("Diagnostic.Range field must be non-nil")
+			return errors.ErrorInvalidParams("Diagnostic.Range field must be non-nil")
 		}
 		return dec.Object(&v.Range)
 	case "severity":
@@ -161,7 +163,7 @@ func (v *DiagnosticRelatedInformation) UnmarshalJSONObject(dec *gojay.Decoder, k
 	switch k {
 	case "location":
 		if &v.Location == nil {
-			return ErrorInvalidParams("DiagnosticRelatedInformation.Location field must be non-nil")
+			return errors.ErrorInvalidParams("DiagnosticRelatedInformation.Location field must be non-nil")
 		}
 		return dec.Object(&v.Location)
 	case "message":
@@ -210,7 +212,7 @@ func (v *TextEdit) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "range":
 		if &v.Range == nil {
-			return ErrorInvalidParams("TextEdit.Range field must be non-nil")
+			return errors.ErrorInvalidParams("TextEdit.Range field must be non-nil")
 		}
 		return dec.Object(&v.Range)
 	case "newText":
@@ -236,7 +238,7 @@ func (v *TextDocumentEdit) UnmarshalJSONObject(dec *gojay.Decoder, k string) err
 	switch k {
 	case "textDocument":
 		if &v.TextDocument == nil {
-			return ErrorInvalidParams("TextDocumentEdit.TextDocument field must be non-nil")
+			return errors.ErrorInvalidParams("TextDocumentEdit.TextDocument field must be non-nil")
 		}
 		return dec.Object(&v.TextDocument)
 	}
@@ -507,12 +509,12 @@ func (v *TextDocumentPositionParams) UnmarshalJSONObject(dec *gojay.Decoder, k s
 	switch k {
 	case "textDocument":
 		if &v.TextDocument == nil {
-			return ErrorInvalidParams("TextDocumentPositionParams.TextDocument field must be non-nil")
+			return errors.ErrorInvalidParams("TextDocumentPositionParams.TextDocument field must be non-nil")
 		}
 		return dec.Object(&v.TextDocument)
 	case "position":
 		if &v.Position == nil {
-			return ErrorInvalidParams("TextDocumentPositionParams.Position field must be non-nil")
+			return errors.ErrorInvalidParams("TextDocumentPositionParams.Position field must be non-nil")
 		}
 		return dec.Object(&v.Position)
 	}
