@@ -2453,3 +2453,143 @@ func TestDeleteFileOptions(t *testing.T) {
 		}
 	})
 }
+
+func TestDeleteFile(t *testing.T) {
+	t.Run("Marshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name           string
+			field          DeleteFile
+			want           string
+			wantMarshalErr bool
+			wantErr        bool
+		}{
+			{
+				name: "Valid",
+				field: DeleteFile{
+					Kind: "delete",
+					URI:  "file:///path/to/delete.go",
+					Options: &DeleteFileOptions{
+						Recursive:         true,
+						IgnoreIfNotExists: true,
+					},
+				},
+				want:           `{"kind":"delete","uri":"file:///path/to/delete.go","options":{"recursive":true,"ignoreIfNotExists":true}}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name: "ValidNilOptions",
+				field: DeleteFile{
+					Kind: "delete",
+					URI:  "file:///path/to/delete.go",
+				},
+				want:           `{"kind":"delete","uri":"file:///path/to/delete.go"}`,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name: "Invalid",
+				field: DeleteFile{
+					Kind: "delete",
+					URI:  "file:///path/to/delete.go",
+					Options: &DeleteFileOptions{
+						Recursive:         true,
+						IgnoreIfNotExists: true,
+					},
+				},
+				want:           `{"kind":"delete","uri":"file:///path/to/delete2.go","options":{"recursive":false,"ignoreIfNotExists":false}}`,
+				wantMarshalErr: false,
+				wantErr:        true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got, err := gojay.Marshal(&tt.field)
+				if (err != nil) != tt.wantMarshalErr {
+					t.Error(err)
+					return
+				}
+
+				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+
+	t.Run("Unmarshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name             string
+			field            string
+			want             DeleteFile
+			wantUnmarshalErr bool
+			wantErr          bool
+		}{
+			{
+				name:  "Valid",
+				field: `{"kind":"delete","uri":"file:///path/to/delete.go","options":{"recursive":true,"ignoreIfNotExists":true}}`,
+				want: DeleteFile{
+					Kind: "delete",
+					URI:  "file:///path/to/delete.go",
+					Options: &DeleteFileOptions{
+						Recursive:         true,
+						IgnoreIfNotExists: true,
+					},
+				},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:  "ValidNilOptions",
+				field: `{"kind":"delete","uri":"file:///path/to/delete.go"}`,
+				want: DeleteFile{
+					Kind: "delete",
+					URI:  "file:///path/to/delete.go",
+				},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:  "Invalid",
+				field: `{"kind":"rename","uri":"file:///path/to/delete.go","options":{"overwrite":true,"ignoreIfExists":true}}`,
+				want: DeleteFile{
+					Kind: "delete",
+					URI:  "file:///path/to/delete2.go",
+					Options: &DeleteFileOptions{
+						Recursive:         false,
+						IgnoreIfNotExists: false,
+					},
+				},
+				wantUnmarshalErr: false,
+				wantErr:          true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got := DeleteFile{}
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
+				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
+					t.Error(err)
+					return
+				}
+
+				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+}
