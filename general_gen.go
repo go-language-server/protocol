@@ -8,25 +8,6 @@ import (
 	"github.com/francoispqt/gojay"
 )
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
-func (v *CancelParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	if k == "id" {
-		return dec.Object(&v.ID)
-	}
-	return nil
-}
-
-// NKeys returns the number of keys to unmarshal.
-func (v *CancelParams) NKeys() int { return 1 }
-
-// MarshalJSONObject implements gojay's MarshalerJSONObject.
-func (v *CancelParams) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ObjectKey("id", &v.ID)
-}
-
-// IsNil returns wether the structure is nil value or not.
-func (v *CancelParams) IsNil() bool { return v == nil }
-
 type workspaceFolders []WorkspaceFolder
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
@@ -83,7 +64,7 @@ func (v *InitializeParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.Float64Key("processId", v.ProcessID)
 	enc.StringKeyOmitEmpty("rootPath", v.RootPath)
 	enc.StringKey("rootUri", string(v.RootURI))
-	enc.AddInterfaceKey("initializationOptions", &v.InitializationOptions)
+	enc.AddInterfaceKey("initializationOptions", v.InitializationOptions)
 	enc.ObjectKey("capabilities", &v.Capabilities)
 	enc.StringKeyOmitEmpty("trace", v.Trace)
 	enc.ArrayKeyOmitEmpty("workspaceFolders", (*workspaceFolders)(&v.WorkspaceFolders))
@@ -1094,9 +1075,9 @@ func (v *ClientCapabilities) NKeys() int { return 3 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ClientCapabilities) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ObjectKey("workspace", v.Workspace)
-	enc.ObjectKey("textDocument", v.TextDocument)
-	enc.AddInterfaceKey("experimental", v.Experimental)
+	enc.ObjectKeyOmitEmpty("workspace", v.Workspace)
+	enc.ObjectKeyOmitEmpty("textDocument", v.TextDocument)
+	enc.AddInterfaceKeyOmitEmpty("experimental", v.Experimental)
 }
 
 // IsNil returns wether the structure is nil value or not.
