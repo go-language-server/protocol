@@ -663,10 +663,10 @@ type DocumentColorParams struct {
 type ColorInformation struct {
 
 	// Range is the range in the document where this color appears.
-	Range *Range `json:"range"`
+	Range Range `json:"range"`
 
 	// Color is the actual color value for this color range.
-	Color *Color `json:"color"`
+	Color Color `json:"color"`
 }
 
 // Color represents a color in RGBA space.
