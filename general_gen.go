@@ -1538,7 +1538,7 @@ func (v *ServerCapabilities) IsNil() bool { return v == nil }
 func (v *DocumentLinkRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "documentSelector":
-		return dec.Array(v.DocumentSelector)
+		return dec.Array(&v.DocumentSelector)
 	case "resolveProvider":
 		return dec.Bool(&v.ResolveProvider)
 	}
@@ -1550,7 +1550,7 @@ func (v *DocumentLinkRegistrationOptions) NKeys() int { return 2 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *DocumentLinkRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.AddArrayKey("documentSelector", v.DocumentSelector)
+	enc.AddArrayKey("documentSelector", &v.DocumentSelector)
 	enc.BoolKeyOmitEmpty("resolveProvider", v.ResolveProvider)
 }
 

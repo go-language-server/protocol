@@ -178,7 +178,7 @@ func (v *CompletionItem) IsNil() bool { return v == nil }
 func (v *CompletionRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "documentSelector":
-		return dec.Array(v.DocumentSelector)
+		return dec.Array(&v.DocumentSelector)
 	case "triggerCharacters":
 		return dec.Array((*stringSlice)(&v.TriggerCharacters))
 	case "resolveProvider":
@@ -192,7 +192,7 @@ func (v *CompletionRegistrationOptions) NKeys() int { return 3 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *CompletionRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKey("documentSelector", v.DocumentSelector)
+	enc.ArrayKey("documentSelector", &v.DocumentSelector)
 	enc.AddArrayKeyOmitEmpty("triggerCharacters", (*stringSlice)(&v.TriggerCharacters))
 	enc.BoolKeyOmitEmpty("resolveProvider", v.ResolveProvider)
 }
@@ -329,7 +329,7 @@ func (v *ParameterInformation) IsNil() bool { return v == nil }
 func (v *SignatureHelpRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "documentSelector":
-		return dec.Array(v.DocumentSelector)
+		return dec.Array(&v.DocumentSelector)
 	case "triggerCharacters":
 		return dec.Array((*stringSlice)(&v.TriggerCharacters))
 	}
@@ -341,7 +341,7 @@ func (v *SignatureHelpRegistrationOptions) NKeys() int { return 2 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *SignatureHelpRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKey("documentSelector", v.DocumentSelector)
+	enc.ArrayKey("documentSelector", &v.DocumentSelector)
 	enc.AddArrayKeyOmitEmpty("triggerCharacters", (*stringSlice)(&v.TriggerCharacters))
 }
 
@@ -652,7 +652,7 @@ func (v *CodeAction) IsNil() bool { return v == nil }
 func (v *CodeActionRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "documentSelector":
-		return dec.Array(v.DocumentSelector)
+		return dec.Array(&v.DocumentSelector)
 	case "codeActionKinds":
 		dec.Array((*codeActionKindValueSet)(&v.CodeActionKinds))
 	}
@@ -664,7 +664,7 @@ func (v *CodeActionRegistrationOptions) NKeys() int { return 2 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *CodeActionRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKey("documentSelector", v.DocumentSelector)
+	enc.ArrayKey("documentSelector", &v.DocumentSelector)
 	enc.ArrayKeyOmitEmpty("codeActionKinds", (*codeActionKindValueSet)(&v.CodeActionKinds))
 }
 
@@ -720,7 +720,7 @@ func (v *CodeLens) IsNil() bool { return v == nil }
 func (v *CodeLensRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "documentSelector":
-		return dec.Array(v.DocumentSelector)
+		return dec.Array(&v.DocumentSelector)
 	case "resolveProvider":
 		return dec.Bool(&v.ResolveProvider)
 	}
@@ -732,7 +732,7 @@ func (v *CodeLensRegistrationOptions) NKeys() int { return 2 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *CodeLensRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKey("documentSelector", v.DocumentSelector)
+	enc.ArrayKey("documentSelector", &v.DocumentSelector)
 	enc.BoolKeyOmitEmpty("resolveProvider", v.ResolveProvider)
 }
 
@@ -996,7 +996,7 @@ func (v *DocumentOnTypeFormattingParams) IsNil() bool { return v == nil }
 func (v *DocumentOnTypeFormattingRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "documentSelector":
-		return dec.Array(v.DocumentSelector)
+		return dec.Array(&v.DocumentSelector)
 	case "firstTriggerCharacter":
 		return dec.String(&v.FirstTriggerCharacter)
 	case "moreTriggerCharacter":
@@ -1010,7 +1010,7 @@ func (v *DocumentOnTypeFormattingRegistrationOptions) NKeys() int { return 3 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *DocumentOnTypeFormattingRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKey("documentSelector", v.DocumentSelector)
+	enc.ArrayKey("documentSelector", &v.DocumentSelector)
 	enc.StringKey("firstTriggerCharacter", v.FirstTriggerCharacter)
 	enc.ArrayKeyOmitEmpty("moreTriggerCharacter", (*stringSlice)(&v.MoreTriggerCharacter))
 }
@@ -1048,7 +1048,7 @@ func (v *RenameParams) IsNil() bool { return v == nil }
 func (v *RenameRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "documentSelector":
-		return dec.Array(v.DocumentSelector)
+		return dec.Array(&v.DocumentSelector)
 	case "prepareProvider":
 		return dec.Bool(&v.PrepareProvider)
 	}
@@ -1060,7 +1060,7 @@ func (v *RenameRegistrationOptions) NKeys() int { return 2 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *RenameRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKey("documentSelector", v.DocumentSelector)
+	enc.ArrayKey("documentSelector", &v.DocumentSelector)
 	enc.BoolKeyOmitEmpty("prepareProvider", v.PrepareProvider)
 }
 

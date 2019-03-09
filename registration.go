@@ -28,7 +28,7 @@ type TextDocumentRegistrationOptions struct {
 
 	// DocumentSelector a document selector to identify the scope of the registration. If set to null
 	// the document selector provided on the client side will be used.
-	DocumentSelector *DocumentSelector `json:"documentSelector"`
+	DocumentSelector DocumentSelector `json:"documentSelector"`
 }
 
 // Unregistration general parameters to unregister a capability.
