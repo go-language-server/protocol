@@ -19,7 +19,7 @@ type WorkspaceFolder struct {
 type DidChangeWorkspaceFoldersParams struct {
 
 	// Event is the actual workspace folder change event.
-	Event *WorkspaceFoldersChangeEvent `json:"event"`
+	Event WorkspaceFoldersChangeEvent `json:"event"`
 }
 
 // WorkspaceFoldersChangeEvent is the workspace folder change event.
