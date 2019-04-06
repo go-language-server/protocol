@@ -33,7 +33,7 @@ ifeq ($(GO111MODULE),off)
 endif
 endif
 
-GO_BUILDTAGS=osusergo
+GO_BUILDTAGS=osusergo netgo
 GO_BUILDTAGS_STATIC=static static_build
 GO_FLAGS ?= -tags='$(GO_BUILDTAGS)' -ldflags="${GO_LDFLAGS}"
 GO_INSTALLSUFFIX_STATIC=netgo
@@ -123,11 +123,11 @@ lint: lint/vet lint/golangci-lint  ## Run all linters.
 $(GO_PATH)/bin/vet:
 	@GO111MODULE=off go get -u golang.org/x/tools/go/analysis/cmd/vet golang.org/x/tools/go/analysis/passes/...
 
-.PHONY: cmd/golangci-lint
+.PHONY: cmd/vet
 cmd/vet: $(GO_PATH)/bin/vet  # go get 'vet' binary
 
 .PHONY: lint/vet
-lint/vet: cmd/golangci-lint
+lint/vet: cmd/vet
 	@GO111MODULE=on vet -asmdecl -assign -atomic -atomicalign -bool -bools -buildtag -buildtags -cgocall -compositewhitelist -copylocks -errorsas -httpresponse -loopclosure -lostcancel -methods -nilfunc -nilness -printfuncs -rangeloops -shift -source -stdmethods -structtag -tags -tests -unmarshal -unreachable -unsafeptr -unusedfuncs -unusedstringmethods $(GO_PKGS)
 
 $(GO_PATH)/bin/golangci-lint:
@@ -136,7 +136,7 @@ $(GO_PATH)/bin/golangci-lint:
 .PHONY: cmd/golangci-lint
 cmd/golangci-lint: $(GO_PATH)/bin/golangci-lint  # go get 'golangci-lint' binary
 
-.PHONY: golangci-lint
+.PHONY: lint/golangci-lint
 lint/golangci-lint: cmd/golangci-lint .golangci.yml  ## Run golangci-lint.
 	$(call target)
 	@GO111MODULE=on golangci-lint run ./...
