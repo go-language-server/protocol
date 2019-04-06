@@ -108,7 +108,17 @@ coverage/ci:  ## Takes packages test coverage, and output coverage results to CI
 ## lint
 
 .PHONY: lint
-lint: lint/golangci-lint  ## Run all linters.
+lint: lint/vet lint/golangci-lint  ## Run all linters.
+
+$(GO_PATH)/bin/vet:
+	@GO111MODULE=off go get -u golang.org/x/tools/go/analysis/cmd/vet golang.org/x/tools/go/analysis/passes/...
+
+.PHONY: cmd/golangci-lint
+cmd/vet: $(GO_PATH)/bin/vet  # go get 'vet' binary
+
+.PHONY: lint/vet
+lint/vet: cmd/golangci-lint
+	@GO111MODULE=on vet -asmdecl -assign -atomic -atomicalign -bool -bools -buildtag -buildtags -cgocall -compositewhitelist -copylocks -errorsas -httpresponse -loopclosure -lostcancel -methods -nilfunc -nilness -printfuncs -rangeloops -shift -source -stdmethods -structtag -tags -tests -unmarshal -unreachable -unsafeptr -unusedfuncs -unusedstringmethods $(GO_PKGS)
 
 $(GO_PATH)/bin/golangci-lint:
 	@GO111MODULE=off go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
