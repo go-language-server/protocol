@@ -204,9 +204,6 @@ func (v *Command) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	case "command":
 		return dec.String(&v.Command)
 	case "arguments":
-		if v.Arguments == nil {
-			v.Arguments = []interface{}{nil}
-		}
 		return dec.Array((*interfaces)(&v.Arguments))
 	}
 	return nil
