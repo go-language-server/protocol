@@ -47,7 +47,7 @@ func clientHandler(client Client, log *zap.Logger) jsonrpc2.Handler {
 		case cancelRequest:
 			var params CancelParams
 			if err := dec.Unmarshal(*r.Params, &params); err != nil {
-				sendParseError(ctx, log, conn, r, err)
+				replyError(ctx, log, conn, r, err)
 				return
 			}
 			conn.Cancel(params.ID)
@@ -55,7 +55,7 @@ func clientHandler(client Client, log *zap.Logger) jsonrpc2.Handler {
 		case windowShowMessage:
 			var params ShowMessageParams
 			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
-				sendParseError(ctx, log, conn, r, err)
+				replyError(ctx, log, conn, r, err)
 				return
 			}
 			if err := client.ShowMessage(ctx, &params); err != nil {
@@ -65,7 +65,7 @@ func clientHandler(client Client, log *zap.Logger) jsonrpc2.Handler {
 		case windowShowMessageRequest:
 			var params ShowMessageRequestParams
 			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
-				sendParseError(ctx, log, conn, r, err)
+				replyError(ctx, log, conn, r, err)
 				return
 			}
 			resp, err := client.ShowMessageRequest(ctx, &params)
@@ -76,7 +76,7 @@ func clientHandler(client Client, log *zap.Logger) jsonrpc2.Handler {
 		case windowLogMessage:
 			var params LogMessageParams
 			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
-				sendParseError(ctx, log, conn, r, err)
+				replyError(ctx, log, conn, r, err)
 				return
 			}
 			if err := client.LogMessage(ctx, &params); err != nil {
@@ -86,7 +86,7 @@ func clientHandler(client Client, log *zap.Logger) jsonrpc2.Handler {
 		case telemetryEvent:
 			var params interface{}
 			if err := dec.Unmarshal(*r.Params, &params); err != nil {
-				sendParseError(ctx, log, conn, r, err)
+				replyError(ctx, log, conn, r, err)
 				return
 			}
 			if err := client.Telemetry(ctx, &params); err != nil {
@@ -96,7 +96,7 @@ func clientHandler(client Client, log *zap.Logger) jsonrpc2.Handler {
 		case clientRegisterCapability:
 			var params RegistrationParams
 			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
-				sendParseError(ctx, log, conn, r, err)
+				replyError(ctx, log, conn, r, err)
 				return
 			}
 			if err := client.RegisterCapability(ctx, &params); err != nil {
@@ -106,7 +106,7 @@ func clientHandler(client Client, log *zap.Logger) jsonrpc2.Handler {
 		case clientUnregisterCapability:
 			var params UnregistrationParams
 			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
-				sendParseError(ctx, log, conn, r, err)
+				replyError(ctx, log, conn, r, err)
 				return
 			}
 			if err := client.UnregisterCapability(ctx, &params); err != nil {
@@ -126,7 +126,7 @@ func clientHandler(client Client, log *zap.Logger) jsonrpc2.Handler {
 		case workspaceConfiguration:
 			var params ConfigurationParams
 			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
-				sendParseError(ctx, log, conn, r, err)
+				replyError(ctx, log, conn, r, err)
 				return
 			}
 			resp, err := client.Configuration(ctx, &params)
@@ -137,7 +137,7 @@ func clientHandler(client Client, log *zap.Logger) jsonrpc2.Handler {
 		case workspaceApplyEdit:
 			var params ApplyWorkspaceEditParams
 			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
-				sendParseError(ctx, log, conn, r, err)
+				replyError(ctx, log, conn, r, err)
 				return
 			}
 			resp, err := client.ApplyEdit(ctx, &params)
@@ -148,7 +148,7 @@ func clientHandler(client Client, log *zap.Logger) jsonrpc2.Handler {
 		case textDocumentPublishDiagnostics:
 			var params PublishDiagnosticsParams
 			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
-				sendParseError(ctx, log, conn, r, err)
+				replyError(ctx, log, conn, r, err)
 				return
 			}
 			if err := client.PublishDiagnostics(ctx, &params); err != nil {
