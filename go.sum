@@ -6,8 +6,8 @@ github.com/francoispqt/gojay v1.2.11-0.20190329162224-e46791d21b5e h1:6aHWrF+JAG
 github.com/francoispqt/gojay v1.2.11-0.20190329162224-e46791d21b5e/go.mod h1:H8Wgri1Asi1VevY3ySdpIK5+KCpqzToVswNq8g2xZj4=
 github.com/go-language-server/jsonrpc2 v0.0.2-0.20190407023115-4c7ce7965d52 h1:HYO88cItL4tDdlI6N2DRRC+2j1qIwgh5eXt0nAZq4rM=
 github.com/go-language-server/jsonrpc2 v0.0.2-0.20190407023115-4c7ce7965d52/go.mod h1:v7nU89v1FaH1foYP2w4ZFa2u45jxJYON9cfQ3+dAcEI=
-github.com/google/go-cmp v0.2.1-0.20190228024137-c81281657ad9 h1:GDk30QdVXDf6i734280OeWAO9UCCjXLeWkLLyHQGUkI=
-github.com/google/go-cmp v0.2.1-0.20190228024137-c81281657ad9/go.mod h1:8QqcDgzrUqlUb/G2PQTWiueGozuR1884gddMywk6iLU=
+github.com/google/go-cmp v0.2.1-0.20190312032427-6f77996f0c42 h1:q3pnF5JFBNRz8sRD+IRj7Y6DMyYGTNqnZ9axTbSfoNI=
+github.com/google/go-cmp v0.2.1-0.20190312032427-6f77996f0c42/go.mod h1:8QqcDgzrUqlUb/G2PQTWiueGozuR1884gddMywk6iLU=
 github.com/json-iterator/go v1.1.6 h1:MrUvLMLTMxbqFJ9kzlvat/rYZqZnW3u4wkLzWTaFwKs=
 github.com/json-iterator/go v1.1.6/go.mod h1:+SdeFBvtyEkXs7REEP0seUULqWtbJapLOCVDaaPEHmU=
 github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd h1:TRLaZ9cD/w8PVh93nsPXa1VrQ6jlwL5oN8l14QlcNfg=
