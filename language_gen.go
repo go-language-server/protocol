@@ -141,7 +141,7 @@ func (v *CompletionItem) UnmarshalJSONObject(dec *gojay.Decoder, k string) error
 	case "sortText":
 		return dec.String(&v.SortText)
 	case "textEdit":
-		if &v.TextEdit == nil {
+		if v.TextEdit == nil {
 			v.TextEdit = &TextEdit{}
 		}
 		return dec.Object(v.TextEdit)

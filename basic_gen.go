@@ -123,7 +123,7 @@ func (v *Diagnostic) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	case "message":
 		return dec.String(&v.Message)
 	case "relatedInformation":
-		if &v.RelatedInformation == nil {
+		if v.RelatedInformation == nil {
 			v.RelatedInformation = []DiagnosticRelatedInformation{}
 		}
 		return dec.Array((*diagnosticRelatedInformations)(&v.RelatedInformation))
@@ -204,7 +204,7 @@ func (v *Command) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	case "command":
 		return dec.String(&v.Command)
 	case "arguments":
-		if &v.Arguments == nil {
+		if v.Arguments == nil {
 			v.Arguments = []interface{}{nil}
 		}
 		return dec.Array((*interfaces)(&v.Arguments))

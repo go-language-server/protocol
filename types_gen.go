@@ -31,7 +31,7 @@ func (v *interfaces) MarshalJSONArray(enc *gojay.Encoder) {
 
 // IsNil implements gojay's MarshalerJSONArray.
 func (v *interfaces) IsNil() bool {
-	return &v == nil || len(*v) == 0
+	return v == nil || len(*v) == 0
 }
 
 type stringSlice []string
@@ -57,5 +57,5 @@ func (v *stringSlice) MarshalJSONArray(enc *gojay.Encoder) {
 
 // IsNil implements gojay's MarshalerJSONArray.
 func (v *stringSlice) IsNil() bool {
-	return &v == nil || len(*v) == 0
+	return v == nil || len(*v) == 0
 }
