@@ -518,11 +518,11 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 	}
 }
 
-type serverDispatcher struct {
+type server struct {
 	*jsonrpc2.Conn
 }
 
-func (s *serverDispatcher) Initialize(ctx context.Context, params *InitializeParams) (*InitializeResult, error) {
+func (s *server) Initialize(ctx context.Context, params *InitializeParams) (*InitializeResult, error) {
 	var result InitializeResult
 	if err := s.Conn.Call(ctx, initialize, params, &result); err != nil {
 		return nil, err
@@ -531,31 +531,31 @@ func (s *serverDispatcher) Initialize(ctx context.Context, params *InitializePar
 	return &result, nil
 }
 
-func (s *serverDispatcher) Initialized(ctx context.Context, params *InitializedParams) error {
+func (s *server) Initialized(ctx context.Context, params *InitializedParams) error {
 	return s.Conn.Notify(ctx, initialized, params)
 }
 
-func (s *serverDispatcher) Shutdown(ctx context.Context) error {
+func (s *server) Shutdown(ctx context.Context) error {
 	return s.Conn.Call(ctx, shutdown, nil, nil)
 }
 
-func (s *serverDispatcher) Exit(ctx context.Context) error {
+func (s *server) Exit(ctx context.Context) error {
 	return s.Conn.Notify(ctx, exit, nil)
 }
 
-func (s *serverDispatcher) DidChangeWorkspaceFolders(ctx context.Context, params *DidChangeWorkspaceFoldersParams) error {
+func (s *server) DidChangeWorkspaceFolders(ctx context.Context, params *DidChangeWorkspaceFoldersParams) error {
 	return s.Conn.Notify(ctx, workspaceDidChangeWorkspaceFolders, params)
 }
 
-func (s *serverDispatcher) DidChangeConfiguration(ctx context.Context, params *DidChangeConfigurationParams) error {
+func (s *server) DidChangeConfiguration(ctx context.Context, params *DidChangeConfigurationParams) error {
 	return s.Conn.Notify(ctx, workspaceDidChangeConfiguration, params)
 }
 
-func (s *serverDispatcher) DidChangeWatchedFiles(ctx context.Context, params *DidChangeWatchedFilesParams) error {
+func (s *server) DidChangeWatchedFiles(ctx context.Context, params *DidChangeWatchedFilesParams) error {
 	return s.Conn.Notify(ctx, workspaceDidChangeWatchedFiles, params)
 }
 
-func (s *serverDispatcher) Symbols(ctx context.Context, params *WorkspaceSymbolParams) ([]SymbolInformation, error) {
+func (s *server) Symbols(ctx context.Context, params *WorkspaceSymbolParams) ([]SymbolInformation, error) {
 	var result []SymbolInformation
 	if err := s.Conn.Call(ctx, workspaceSymbol, params, &result); err != nil {
 		return nil, err
@@ -564,7 +564,7 @@ func (s *serverDispatcher) Symbols(ctx context.Context, params *WorkspaceSymbolP
 	return result, nil
 }
 
-func (s *serverDispatcher) ExecuteCommand(ctx context.Context, params *ExecuteCommandParams) (interface{}, error) {
+func (s *server) ExecuteCommand(ctx context.Context, params *ExecuteCommandParams) (interface{}, error) {
 	var result interface{}
 	if err := s.Conn.Call(ctx, workspaceExecuteCommand, params, &result); err != nil {
 		return nil, err
@@ -573,19 +573,19 @@ func (s *serverDispatcher) ExecuteCommand(ctx context.Context, params *ExecuteCo
 	return result, nil
 }
 
-func (s *serverDispatcher) DidOpen(ctx context.Context, params *DidOpenTextDocumentParams) error {
+func (s *server) DidOpen(ctx context.Context, params *DidOpenTextDocumentParams) error {
 	return s.Conn.Notify(ctx, textDocumentDidOpen, params)
 }
 
-func (s *serverDispatcher) DidChange(ctx context.Context, params *DidChangeTextDocumentParams) error {
+func (s *server) DidChange(ctx context.Context, params *DidChangeTextDocumentParams) error {
 	return s.Conn.Notify(ctx, textDocumentDidChange, params)
 }
 
-func (s *serverDispatcher) WillSave(ctx context.Context, params *WillSaveTextDocumentParams) error {
+func (s *server) WillSave(ctx context.Context, params *WillSaveTextDocumentParams) error {
 	return s.Conn.Notify(ctx, textDocumentWillSave, params)
 }
 
-func (s *serverDispatcher) WillSaveWaitUntil(ctx context.Context, params *WillSaveTextDocumentParams) ([]TextEdit, error) {
+func (s *server) WillSaveWaitUntil(ctx context.Context, params *WillSaveTextDocumentParams) ([]TextEdit, error) {
 	var result []TextEdit
 	if err := s.Conn.Call(ctx, textDocumentWillSaveWaitUntil, params, &result); err != nil {
 		return nil, err
@@ -594,15 +594,15 @@ func (s *serverDispatcher) WillSaveWaitUntil(ctx context.Context, params *WillSa
 	return result, nil
 }
 
-func (s *serverDispatcher) DidSave(ctx context.Context, params *DidSaveTextDocumentParams) error {
+func (s *server) DidSave(ctx context.Context, params *DidSaveTextDocumentParams) error {
 	return s.Conn.Notify(ctx, textDocumentDidSave, params)
 }
 
-func (s *serverDispatcher) DidClose(ctx context.Context, params *DidCloseTextDocumentParams) error {
+func (s *server) DidClose(ctx context.Context, params *DidCloseTextDocumentParams) error {
 	return s.Conn.Notify(ctx, textDocumentDidClose, params)
 }
 
-func (s *serverDispatcher) Completion(ctx context.Context, params *CompletionParams) (*CompletionList, error) {
+func (s *server) Completion(ctx context.Context, params *CompletionParams) (*CompletionList, error) {
 	var result CompletionList
 	if err := s.Conn.Call(ctx, textDocumentCompletion, params, &result); err != nil {
 		return nil, err
@@ -611,7 +611,7 @@ func (s *serverDispatcher) Completion(ctx context.Context, params *CompletionPar
 	return &result, nil
 }
 
-func (s *serverDispatcher) CompletionResolve(ctx context.Context, params *CompletionItem) (*CompletionItem, error) {
+func (s *server) CompletionResolve(ctx context.Context, params *CompletionItem) (*CompletionItem, error) {
 	var result CompletionItem
 	if err := s.Conn.Call(ctx, completionItemResolve, params, &result); err != nil {
 		return nil, err
@@ -620,7 +620,7 @@ func (s *serverDispatcher) CompletionResolve(ctx context.Context, params *Comple
 	return &result, nil
 }
 
-func (s *serverDispatcher) Hover(ctx context.Context, params *TextDocumentPositionParams) (*Hover, error) {
+func (s *server) Hover(ctx context.Context, params *TextDocumentPositionParams) (*Hover, error) {
 	var result Hover
 	if err := s.Conn.Call(ctx, textDocumentHover, params, &result); err != nil {
 		return nil, err
@@ -629,7 +629,7 @@ func (s *serverDispatcher) Hover(ctx context.Context, params *TextDocumentPositi
 	return &result, nil
 }
 
-func (s *serverDispatcher) SignatureHelp(ctx context.Context, params *TextDocumentPositionParams) (*SignatureHelp, error) {
+func (s *server) SignatureHelp(ctx context.Context, params *TextDocumentPositionParams) (*SignatureHelp, error) {
 	var result SignatureHelp
 	if err := s.Conn.Call(ctx, textDocumentSignatureHelp, params, &result); err != nil {
 		return nil, err
@@ -638,7 +638,7 @@ func (s *serverDispatcher) SignatureHelp(ctx context.Context, params *TextDocume
 	return &result, nil
 }
 
-func (s *serverDispatcher) Definition(ctx context.Context, params *TextDocumentPositionParams) ([]Location, error) {
+func (s *server) Definition(ctx context.Context, params *TextDocumentPositionParams) ([]Location, error) {
 	var result []Location
 	if err := s.Conn.Call(ctx, textDocumentDefinition, params, &result); err != nil {
 		return nil, err
@@ -647,7 +647,7 @@ func (s *serverDispatcher) Definition(ctx context.Context, params *TextDocumentP
 	return result, nil
 }
 
-func (s *serverDispatcher) TypeDefinition(ctx context.Context, params *TextDocumentPositionParams) ([]Location, error) {
+func (s *server) TypeDefinition(ctx context.Context, params *TextDocumentPositionParams) ([]Location, error) {
 	var result []Location
 	if err := s.Conn.Call(ctx, textDocumentTypeDefinition, params, &result); err != nil {
 		return nil, err
@@ -656,7 +656,7 @@ func (s *serverDispatcher) TypeDefinition(ctx context.Context, params *TextDocum
 	return result, nil
 }
 
-func (s *serverDispatcher) Implementation(ctx context.Context, params *TextDocumentPositionParams) ([]Location, error) {
+func (s *server) Implementation(ctx context.Context, params *TextDocumentPositionParams) ([]Location, error) {
 	var result []Location
 	if err := s.Conn.Call(ctx, textDocumentImplementation, params, &result); err != nil {
 		return nil, err
@@ -665,7 +665,7 @@ func (s *serverDispatcher) Implementation(ctx context.Context, params *TextDocum
 	return result, nil
 }
 
-func (s *serverDispatcher) References(ctx context.Context, params *ReferenceParams) ([]Location, error) {
+func (s *server) References(ctx context.Context, params *ReferenceParams) ([]Location, error) {
 	var result []Location
 	if err := s.Conn.Call(ctx, textDocumentReferences, params, &result); err != nil {
 		return nil, err
@@ -674,7 +674,7 @@ func (s *serverDispatcher) References(ctx context.Context, params *ReferencePara
 	return result, nil
 }
 
-func (s *serverDispatcher) DocumentHighlight(ctx context.Context, params *TextDocumentPositionParams) ([]DocumentHighlight, error) {
+func (s *server) DocumentHighlight(ctx context.Context, params *TextDocumentPositionParams) ([]DocumentHighlight, error) {
 	var result []DocumentHighlight
 	if err := s.Conn.Call(ctx, textDocumentDocumentHighlight, params, &result); err != nil {
 		return nil, err
@@ -683,7 +683,7 @@ func (s *serverDispatcher) DocumentHighlight(ctx context.Context, params *TextDo
 	return result, nil
 }
 
-func (s *serverDispatcher) DocumentSymbol(ctx context.Context, params *DocumentSymbolParams) ([]DocumentSymbol, error) {
+func (s *server) DocumentSymbol(ctx context.Context, params *DocumentSymbolParams) ([]DocumentSymbol, error) {
 	var result []DocumentSymbol
 	if err := s.Conn.Call(ctx, textDocumentDocumentSymbol, params, &result); err != nil {
 		return nil, err
@@ -692,7 +692,7 @@ func (s *serverDispatcher) DocumentSymbol(ctx context.Context, params *DocumentS
 	return result, nil
 }
 
-func (s *serverDispatcher) CodeAction(ctx context.Context, params *CodeActionParams) ([]CodeAction, error) {
+func (s *server) CodeAction(ctx context.Context, params *CodeActionParams) ([]CodeAction, error) {
 	var result []CodeAction
 	if err := s.Conn.Call(ctx, textDocumentCodeAction, params, &result); err != nil {
 		return nil, err
@@ -701,7 +701,7 @@ func (s *serverDispatcher) CodeAction(ctx context.Context, params *CodeActionPar
 	return result, nil
 }
 
-func (s *serverDispatcher) CodeLens(ctx context.Context, params *CodeLensParams) ([]CodeLens, error) {
+func (s *server) CodeLens(ctx context.Context, params *CodeLensParams) ([]CodeLens, error) {
 	var result []CodeLens
 	if err := s.Conn.Call(ctx, textDocumentCodeLens, params, &result); err != nil {
 		return nil, err
@@ -710,7 +710,7 @@ func (s *serverDispatcher) CodeLens(ctx context.Context, params *CodeLensParams)
 	return result, nil
 }
 
-func (s *serverDispatcher) CodeLensResolve(ctx context.Context, params *CodeLens) (*CodeLens, error) {
+func (s *server) CodeLensResolve(ctx context.Context, params *CodeLens) (*CodeLens, error) {
 	var result CodeLens
 	if err := s.Conn.Call(ctx, codeLensResolve, params, &result); err != nil {
 		return nil, err
@@ -719,7 +719,7 @@ func (s *serverDispatcher) CodeLensResolve(ctx context.Context, params *CodeLens
 	return &result, nil
 }
 
-func (s *serverDispatcher) DocumentLink(ctx context.Context, params *DocumentLinkParams) ([]DocumentLink, error) {
+func (s *server) DocumentLink(ctx context.Context, params *DocumentLinkParams) ([]DocumentLink, error) {
 	var result []DocumentLink
 	if err := s.Conn.Call(ctx, textDocumentDocumentLink, params, &result); err != nil {
 		return nil, err
@@ -728,7 +728,7 @@ func (s *serverDispatcher) DocumentLink(ctx context.Context, params *DocumentLin
 	return result, nil
 }
 
-func (s *serverDispatcher) DocumentLinkResolve(ctx context.Context, params *DocumentLink) (*DocumentLink, error) {
+func (s *server) DocumentLinkResolve(ctx context.Context, params *DocumentLink) (*DocumentLink, error) {
 	var result DocumentLink
 	if err := s.Conn.Call(ctx, documentLinkResolve, params, &result); err != nil {
 		return nil, err
@@ -737,7 +737,7 @@ func (s *serverDispatcher) DocumentLinkResolve(ctx context.Context, params *Docu
 	return &result, nil
 }
 
-func (s *serverDispatcher) DocumentColor(ctx context.Context, params *DocumentColorParams) ([]ColorInformation, error) {
+func (s *server) DocumentColor(ctx context.Context, params *DocumentColorParams) ([]ColorInformation, error) {
 	var result []ColorInformation
 	if err := s.Conn.Call(ctx, textDocumentDocumentColor, params, &result); err != nil {
 		return nil, err
@@ -746,7 +746,7 @@ func (s *serverDispatcher) DocumentColor(ctx context.Context, params *DocumentCo
 	return result, nil
 }
 
-func (s *serverDispatcher) ColorPresentation(ctx context.Context, params *ColorPresentationParams) ([]ColorPresentation, error) {
+func (s *server) ColorPresentation(ctx context.Context, params *ColorPresentationParams) ([]ColorPresentation, error) {
 	var result []ColorPresentation
 	if err := s.Conn.Call(ctx, textDocumentColorPresentation, params, &result); err != nil {
 		return nil, err
@@ -755,7 +755,7 @@ func (s *serverDispatcher) ColorPresentation(ctx context.Context, params *ColorP
 	return result, nil
 }
 
-func (s *serverDispatcher) Formatting(ctx context.Context, params *DocumentFormattingParams) ([]TextEdit, error) {
+func (s *server) Formatting(ctx context.Context, params *DocumentFormattingParams) ([]TextEdit, error) {
 	var result []TextEdit
 	if err := s.Conn.Call(ctx, textDocumentFormatting, params, &result); err != nil {
 		return nil, err
@@ -764,7 +764,7 @@ func (s *serverDispatcher) Formatting(ctx context.Context, params *DocumentForma
 	return result, nil
 }
 
-func (s *serverDispatcher) RangeFormatting(ctx context.Context, params *DocumentRangeFormattingParams) ([]TextEdit, error) {
+func (s *server) RangeFormatting(ctx context.Context, params *DocumentRangeFormattingParams) ([]TextEdit, error) {
 	var result []TextEdit
 	if err := s.Conn.Call(ctx, textDocumentRangeFormatting, params, &result); err != nil {
 		return nil, err
@@ -773,7 +773,7 @@ func (s *serverDispatcher) RangeFormatting(ctx context.Context, params *Document
 	return result, nil
 }
 
-func (s *serverDispatcher) OnTypeFormatting(ctx context.Context, params *DocumentOnTypeFormattingParams) ([]TextEdit, error) {
+func (s *server) OnTypeFormatting(ctx context.Context, params *DocumentOnTypeFormattingParams) ([]TextEdit, error) {
 	var result []TextEdit
 	if err := s.Conn.Call(ctx, textDocumentOnTypeFormatting, params, &result); err != nil {
 		return nil, err
@@ -782,7 +782,7 @@ func (s *serverDispatcher) OnTypeFormatting(ctx context.Context, params *Documen
 	return result, nil
 }
 
-func (s *serverDispatcher) Rename(ctx context.Context, params *RenameParams) ([]WorkspaceEdit, error) {
+func (s *server) Rename(ctx context.Context, params *RenameParams) ([]WorkspaceEdit, error) {
 	var result []WorkspaceEdit
 	if err := s.Conn.Call(ctx, textDocumentRename, params, &result); err != nil {
 		return nil, err
@@ -791,7 +791,7 @@ func (s *serverDispatcher) Rename(ctx context.Context, params *RenameParams) ([]
 	return result, nil
 }
 
-func (s *serverDispatcher) FoldingRanges(ctx context.Context, params *FoldingRangeParams) ([]FoldingRange, error) {
+func (s *server) FoldingRanges(ctx context.Context, params *FoldingRangeParams) ([]FoldingRange, error) {
 	var result []FoldingRange
 	if err := s.Conn.Call(ctx, textDocumentFoldingRange, params, &result); err != nil {
 		return nil, err
