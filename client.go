@@ -163,15 +163,15 @@ func clientHandler(client Client, log *zap.Logger) jsonrpc2.Handler {
 	}
 }
 
-type clientDispatcher struct {
+type client struct {
 	*jsonrpc2.Conn
 }
 
-func (c *clientDispatcher) ShowMessage(ctx context.Context, params *ShowMessageParams) error {
+func (c *client) ShowMessage(ctx context.Context, params *ShowMessageParams) error {
 	return c.Conn.Notify(ctx, windowShowMessage, params)
 }
 
-func (c *clientDispatcher) ShowMessageRequest(ctx context.Context, params *ShowMessageRequestParams) (*MessageActionItem, error) {
+func (c *client) ShowMessageRequest(ctx context.Context, params *ShowMessageRequestParams) (*MessageActionItem, error) {
 	var result MessageActionItem
 	if err := c.Conn.Call(ctx, windowShowMessageRequest, params, &result); err != nil {
 		return nil, err
@@ -179,23 +179,23 @@ func (c *clientDispatcher) ShowMessageRequest(ctx context.Context, params *ShowM
 	return &result, nil
 }
 
-func (c *clientDispatcher) LogMessage(ctx context.Context, params *LogMessageParams) error {
+func (c *client) LogMessage(ctx context.Context, params *LogMessageParams) error {
 	return c.Conn.Notify(ctx, windowLogMessage, params)
 }
 
-func (c *clientDispatcher) Telemetry(ctx context.Context, params interface{}) error {
+func (c *client) Telemetry(ctx context.Context, params interface{}) error {
 	return c.Conn.Notify(ctx, telemetryEvent, params)
 }
 
-func (c *clientDispatcher) RegisterCapability(ctx context.Context, params *RegistrationParams) error {
+func (c *client) RegisterCapability(ctx context.Context, params *RegistrationParams) error {
 	return c.Conn.Notify(ctx, clientRegisterCapability, params)
 }
 
-func (c *clientDispatcher) UnregisterCapability(ctx context.Context, params *UnregistrationParams) error {
+func (c *client) UnregisterCapability(ctx context.Context, params *UnregistrationParams) error {
 	return c.Conn.Notify(ctx, clientUnregisterCapability, params)
 }
 
-func (c *clientDispatcher) WorkspaceFolders(ctx context.Context) ([]WorkspaceFolder, error) {
+func (c *client) WorkspaceFolders(ctx context.Context) ([]WorkspaceFolder, error) {
 	var result []WorkspaceFolder
 	if err := c.Conn.Call(ctx, workspaceWorkspaceFolders, nil, &result); err != nil {
 		return nil, err
@@ -203,7 +203,7 @@ func (c *clientDispatcher) WorkspaceFolders(ctx context.Context) ([]WorkspaceFol
 	return result, nil
 }
 
-func (c *clientDispatcher) Configuration(ctx context.Context, params *ConfigurationParams) ([]interface{}, error) {
+func (c *client) Configuration(ctx context.Context, params *ConfigurationParams) ([]interface{}, error) {
 	var result []interface{}
 	if err := c.Conn.Call(ctx, workspaceConfiguration, params, &result); err != nil {
 		return nil, err
@@ -211,7 +211,7 @@ func (c *clientDispatcher) Configuration(ctx context.Context, params *Configurat
 	return result, nil
 }
 
-func (c *clientDispatcher) ApplyEdit(ctx context.Context, params *ApplyWorkspaceEditParams) (bool, error) {
+func (c *client) ApplyEdit(ctx context.Context, params *ApplyWorkspaceEditParams) (bool, error) {
 	var result bool
 	if err := c.Conn.Call(ctx, workspaceApplyEdit, params, &result); err != nil {
 		return false, err
@@ -219,6 +219,6 @@ func (c *clientDispatcher) ApplyEdit(ctx context.Context, params *ApplyWorkspace
 	return result, nil
 }
 
-func (c *clientDispatcher) PublishDiagnostics(ctx context.Context, params *PublishDiagnosticsParams) error {
+func (c *client) PublishDiagnostics(ctx context.Context, params *PublishDiagnosticsParams) error {
 	return c.Conn.Notify(ctx, textDocumentPublishDiagnostics, params)
 }
