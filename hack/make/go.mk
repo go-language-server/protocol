@@ -128,6 +128,7 @@ cmd/vet: $(GO_PATH)/bin/vet  # go get 'vet' binary
 
 .PHONY: lint/vet
 lint/vet: cmd/vet
+	$(call target)
 	@GO111MODULE=on vet -asmdecl -assign -atomic -atomicalign -bool -bools -buildtag -buildtags -cgocall -compositewhitelist -copylocks -errorsas -httpresponse -loopclosure -lostcancel -methods -nilfunc -nilness -printfuncs -rangeloops -shift -source -stdmethods -structtag -tags -tests -unmarshal -unreachable -unsafeptr -unusedfuncs -unusedstringmethods $(GO_PKGS)
 
 $(GO_PATH)/bin/golangci-lint:
