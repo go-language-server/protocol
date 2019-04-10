@@ -14,7 +14,6 @@ import (
 
 // Client represents a implementation of language-server-protocol client.
 type Client interface {
-	Run(ctx context.Context) (err error)
 	RegisterCapability(ctx context.Context, params *RegistrationParams) (err error)
 	UnregisterCapability(ctx context.Context, params *UnregistrationParams) (err error)
 	Telemetry(ctx context.Context, params interface{}) (err error)
@@ -45,11 +44,6 @@ type client struct {
 }
 
 var _ Client = (*client)(nil)
-
-func (c *client) Run(ctx context.Context) (err error) {
-	err = c.Conn.Run(ctx)
-	return
-}
 
 func (c *client) RegisterCapability(ctx context.Context, params *RegistrationParams) (err error) {
 	err = c.Conn.Notify(ctx, clientRegisterCapability, params)
