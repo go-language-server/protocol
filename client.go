@@ -88,7 +88,8 @@ func (c *client) ShowMessageRequest(ctx context.Context, params *ShowMessageRequ
 	return result, err
 }
 
-func (c *client) WorkspaceApplyEdit(ctx context.Context, params *ApplyWorkspaceEditParams) (result bool, err error) {
+func (c *client) WorkspaceApplyEdit(ctx context.Context, params *ApplyWorkspaceEditParams) (_ bool, err error) {
+	var result bool
 	err = c.Conn.Call(ctx, workspaceApplyEdit, params, &result)
 
 	return result, err
@@ -102,6 +103,7 @@ func (c *client) WorkspaceConfiguration(ctx context.Context, params *Configurati
 }
 
 func (c *client) WorkspaceFolders(ctx context.Context) (result []WorkspaceFolder, err error) {
+	result = []WorkspaceFolder{}
 	err = c.Conn.Call(ctx, workspaceWorkspaceFolders, nil, &result)
 
 	return result, err
