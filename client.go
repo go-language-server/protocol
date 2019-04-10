@@ -105,13 +105,10 @@ func (c *client) WorkspaceFolders(ctx context.Context) (result []WorkspaceFolder
 // ClientHandler returns the client handler.
 func ClientHandler(client Client, logger *zap.Logger) jsonrpc2.Handler {
 	return func(ctx context.Context, conn *jsonrpc2.Conn, r *jsonrpc2.Request) {
-		dec := gojay.BorrowDecoder(r.Params)
-		defer dec.Release()
-
 		switch r.Method {
 		case cancelRequest:
 			var params CancelParams
-			if err := dec.Decode(&params); err != nil {
+			if err := gojay.Unsafe.Unmarshal(*r.Params.EmbeddedJSON, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -119,7 +116,7 @@ func ClientHandler(client Client, logger *zap.Logger) jsonrpc2.Handler {
 
 		case clientRegisterCapability:
 			var params RegistrationParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := gojay.Unsafe.UnmarshalJSONObject(*r.Params.EmbeddedJSON, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -129,7 +126,7 @@ func ClientHandler(client Client, logger *zap.Logger) jsonrpc2.Handler {
 
 		case clientUnregisterCapability:
 			var params UnregistrationParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := gojay.Unsafe.UnmarshalJSONObject(*r.Params.EmbeddedJSON, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -139,7 +136,7 @@ func ClientHandler(client Client, logger *zap.Logger) jsonrpc2.Handler {
 
 		case telemetryEvent:
 			var params interface{}
-			if err := dec.DecodeInterface(&params); err != nil {
+			if err := gojay.Unsafe.Unmarshal(*r.Params.EmbeddedJSON, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -149,7 +146,7 @@ func ClientHandler(client Client, logger *zap.Logger) jsonrpc2.Handler {
 
 		case textDocumentPublishDiagnostics:
 			var params PublishDiagnosticsParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := gojay.Unsafe.UnmarshalJSONObject(*r.Params.EmbeddedJSON, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -159,7 +156,7 @@ func ClientHandler(client Client, logger *zap.Logger) jsonrpc2.Handler {
 
 		case windowLogMessage:
 			var params LogMessageParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := gojay.Unsafe.UnmarshalJSONObject(*r.Params.EmbeddedJSON, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -169,7 +166,7 @@ func ClientHandler(client Client, logger *zap.Logger) jsonrpc2.Handler {
 
 		case windowShowMessage:
 			var params ShowMessageParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := gojay.Unsafe.UnmarshalJSONObject(*r.Params.EmbeddedJSON, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -179,7 +176,7 @@ func ClientHandler(client Client, logger *zap.Logger) jsonrpc2.Handler {
 
 		case windowShowMessageRequest:
 			var params ShowMessageRequestParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := gojay.Unsafe.UnmarshalJSONObject(*r.Params.EmbeddedJSON, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -190,7 +187,7 @@ func ClientHandler(client Client, logger *zap.Logger) jsonrpc2.Handler {
 
 		case workspaceApplyEdit:
 			var params ApplyWorkspaceEditParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := gojay.Unsafe.UnmarshalJSONObject(*r.Params.EmbeddedJSON, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -201,7 +198,7 @@ func ClientHandler(client Client, logger *zap.Logger) jsonrpc2.Handler {
 
 		case workspaceConfiguration:
 			var params ConfigurationParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := gojay.Unsafe.UnmarshalJSONObject(*r.Params.EmbeddedJSON, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
