@@ -118,7 +118,7 @@ func ClientHandler(client ClientInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case cancelRequest:
 			var params CancelParams
 			if err := dec.Decode(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			conn.Cancel(params.ID)
@@ -126,7 +126,7 @@ func ClientHandler(client ClientInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case clientRegisterCapability:
 			var params RegistrationParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			if err := client.RegisterCapability(ctx, &params); err != nil {
@@ -136,7 +136,7 @@ func ClientHandler(client ClientInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case clientUnregisterCapability:
 			var params UnregistrationParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			if err := client.UnregisterCapability(ctx, &params); err != nil {
@@ -146,7 +146,7 @@ func ClientHandler(client ClientInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case telemetryEvent:
 			var params interface{}
 			if err := dec.DecodeInterface(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			if err := client.Telemetry(ctx, &params); err != nil {
@@ -156,7 +156,7 @@ func ClientHandler(client ClientInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case textDocumentPublishDiagnostics:
 			var params PublishDiagnosticsParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			if err := client.PublishDiagnostics(ctx, &params); err != nil {
@@ -166,7 +166,7 @@ func ClientHandler(client ClientInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case windowLogMessage:
 			var params LogMessageParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			if err := client.LogMessage(ctx, &params); err != nil {
@@ -176,7 +176,7 @@ func ClientHandler(client ClientInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case windowShowMessage:
 			var params ShowMessageParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			if err := client.ShowMessage(ctx, &params); err != nil {
@@ -186,7 +186,7 @@ func ClientHandler(client ClientInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case windowShowMessageRequest:
 			var params ShowMessageRequestParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := client.ShowMessageRequest(ctx, &params)
@@ -197,7 +197,7 @@ func ClientHandler(client ClientInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case workspaceApplyEdit:
 			var params ApplyWorkspaceEditParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := client.WorkspaceApplyEdit(ctx, &params)
@@ -208,7 +208,7 @@ func ClientHandler(client ClientInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case workspaceConfiguration:
 			var params ConfigurationParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := client.WorkspaceConfiguration(ctx, &params)

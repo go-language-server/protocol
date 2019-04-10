@@ -389,7 +389,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case initialize:
 			var params InitializeParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := server.Initialize(ctx, &params)
@@ -400,7 +400,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case initialized:
 			var params InitializedParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			if err := server.Initialized(ctx, &params); err != nil {
@@ -428,7 +428,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case cancelRequest:
 			var params CancelParams
 			if err := dec.Decode(params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			conn.Cancel(params.ID)
@@ -436,7 +436,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case textDocumentCodeAction:
 			var params CodeActionParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := server.CodeAction(ctx, &params)
@@ -447,7 +447,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case textDocumentCodeLens:
 			var params CodeLensParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := server.CodeLens(ctx, &params)
@@ -458,7 +458,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case codeLensResolve:
 			var params CodeLens
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := server.CodeLensResolve(ctx, &params)
@@ -469,7 +469,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case textDocumentColorPresentation:
 			var params ColorPresentationParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := server.ColorPresentation(ctx, &params)
@@ -480,7 +480,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case textDocumentCompletion:
 			var params CompletionParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := server.Completion(ctx, &params)
@@ -491,7 +491,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case completionItemResolve:
 			var params CompletionItem
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := server.CompletionResolve(ctx, &params)
@@ -502,7 +502,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case textDocumentDefinition:
 			var params TextDocumentPositionParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := server.Definition(ctx, &params)
@@ -513,7 +513,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case textDocumentDidChange:
 			var params DidChangeTextDocumentParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			if err := server.DidChange(ctx, &params); err != nil {
@@ -523,7 +523,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case workspaceDidChangeConfiguration:
 			var params DidChangeConfigurationParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			if err := server.DidChangeConfiguration(ctx, &params); err != nil {
@@ -533,7 +533,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case workspaceDidChangeWatchedFiles:
 			var params DidChangeWatchedFilesParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			if err := server.DidChangeWatchedFiles(ctx, &params); err != nil {
@@ -543,7 +543,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case workspaceDidChangeWorkspaceFolders:
 			var params DidChangeWorkspaceFoldersParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			if err := server.DidChangeWorkspaceFolders(ctx, &params); err != nil {
@@ -553,7 +553,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case textDocumentDidClose:
 			var params DidCloseTextDocumentParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			if err := server.DidClose(ctx, &params); err != nil {
@@ -563,7 +563,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case textDocumentDidOpen:
 			var params DidOpenTextDocumentParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			if err := server.DidOpen(ctx, &params); err != nil {
@@ -573,7 +573,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case textDocumentDidSave:
 			var params DidSaveTextDocumentParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			if err := server.DidSave(ctx, &params); err != nil {
@@ -583,7 +583,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case textDocumentDocumentColor:
 			var params DocumentColorParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := server.DocumentColor(ctx, &params)
@@ -594,7 +594,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case textDocumentDocumentHighlight:
 			var params TextDocumentPositionParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := server.DocumentHighlight(ctx, &params)
@@ -605,7 +605,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case textDocumentDocumentLink:
 			var params DocumentLinkParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := server.DocumentLink(ctx, &params)
@@ -616,7 +616,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case documentLinkResolve:
 			var params DocumentLink
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := server.DocumentLinkResolve(ctx, &params)
@@ -627,7 +627,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case textDocumentDocumentSymbol:
 			var params DocumentSymbolParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := server.DocumentSymbol(ctx, &params)
@@ -638,7 +638,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case workspaceExecuteCommand:
 			var params ExecuteCommandParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := server.ExecuteCommand(ctx, &params)
@@ -649,7 +649,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case textDocumentFoldingRange:
 			var params FoldingRangeParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := server.FoldingRanges(ctx, &params)
@@ -660,7 +660,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case textDocumentFormatting:
 			var params DocumentFormattingParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := server.Formatting(ctx, &params)
@@ -671,7 +671,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case textDocumentHover:
 			var params TextDocumentPositionParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := server.Hover(ctx, &params)
@@ -682,7 +682,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case textDocumentImplementation:
 			var params TextDocumentPositionParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := server.Implementation(ctx, &params)
@@ -693,7 +693,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case textDocumentOnTypeFormatting:
 			var params DocumentOnTypeFormattingParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := server.OnTypeFormatting(ctx, &params)
@@ -704,7 +704,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case textDocumentRangeFormatting:
 			var params DocumentRangeFormattingParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := server.RangeFormatting(ctx, &params)
@@ -715,7 +715,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case textDocumentReferences:
 			var params ReferenceParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := server.References(ctx, &params)
@@ -726,7 +726,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case textDocumentRename:
 			var params RenameParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := server.Rename(ctx, &params)
@@ -737,7 +737,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case textDocumentSignatureHelp:
 			var params TextDocumentPositionParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := server.SignatureHelp(ctx, &params)
@@ -748,7 +748,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case workspaceSymbol:
 			var params WorkspaceSymbolParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := server.Symbols(ctx, &params)
@@ -759,7 +759,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case textDocumentTypeDefinition:
 			var params TextDocumentPositionParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := server.TypeDefinition(ctx, &params)
@@ -770,7 +770,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case textDocumentWillSave:
 			var params WillSaveTextDocumentParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			if err := server.WillSave(ctx, &params); err != nil {
@@ -780,7 +780,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 		case textDocumentWillSaveWaitUntil:
 			var params WillSaveTextDocumentParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
 			resp, err := server.WillSaveWaitUntil(ctx, &params)

@@ -17,7 +17,7 @@ func ErrorInvalidParams(format string, args ...interface{}) error {
 }
 
 // ReplyError reply errors.
-func ReplyError(ctx context.Context, err error, logger *zap.Logger, conn *jsonrpc2.Conn, req *jsonrpc2.Request) {
+func ReplyError(ctx context.Context, err error, conn *jsonrpc2.Conn, req *jsonrpc2.Request, logger *zap.Logger) {
 	if _, ok := err.(*jsonrpc2.Error); !ok {
 		err = jsonrpc2.Errorf(jsonrpc2.CodeParseError, "%v", err)
 	}
