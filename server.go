@@ -12,45 +12,45 @@ import (
 	"go.uber.org/zap"
 )
 
-// Server represents a implementation of language-server-protocol server.
-type Server interface {
-	Initialize(ctx context.Context, param *InitializeParams) (result *InitializeResult, err error)
-	Initialized(ctx context.Context, param *InitializedParams) (err error)
+// ServerInterface represents a implementation of language-server-protocol server.
+type ServerInterface interface {
+	Initialize(ctx context.Context, params *InitializeParams) (result *InitializeResult, err error)
+	Initialized(ctx context.Context, params *InitializedParams) (err error)
 	Shutdown(ctx context.Context) (err error)
 	Exit(ctx context.Context) (err error)
-	CodeAction(ctx context.Context, param *CodeActionParams) (result []CodeAction, err error)
-	CodeLens(ctx context.Context, param *CodeLensParams) (result []CodeLens, err error)
-	CodeLensResolve(ctx context.Context, param *CodeLens) (result *CodeLens, err error)
-	ColorPresentation(ctx context.Context, param *ColorPresentationParams) (result []ColorPresentation, err error)
-	Completion(ctx context.Context, param *CompletionParams) (result *CompletionList, err error)
-	CompletionResolve(ctx context.Context, param *CompletionItem) (result *CompletionItem, err error)
-	Definition(ctx context.Context, param *TextDocumentPositionParams) (result []Location, err error)
-	DidChange(ctx context.Context, param *DidChangeTextDocumentParams) (err error)
-	DidChangeConfiguration(ctx context.Context, param *DidChangeConfigurationParams) (err error)
-	DidChangeWatchedFiles(ctx context.Context, param *DidChangeWatchedFilesParams) (err error)
-	DidChangeWorkspaceFolders(ctx context.Context, param *DidChangeWorkspaceFoldersParams) (err error)
-	DidClose(ctx context.Context, param *DidCloseTextDocumentParams) (err error)
-	DidOpen(ctx context.Context, param *DidOpenTextDocumentParams) (err error)
-	DidSave(ctx context.Context, param *DidSaveTextDocumentParams) (err error)
-	DocumentColor(ctx context.Context, param *DocumentColorParams) (result []ColorInformation, err error)
-	DocumentHighlight(ctx context.Context, param *TextDocumentPositionParams) (result []DocumentHighlight, err error)
-	DocumentLink(ctx context.Context, param *DocumentLinkParams) (result []DocumentLink, err error)
-	DocumentLinkResolve(ctx context.Context, param *DocumentLink) (result *DocumentLink, err error)
-	DocumentSymbol(ctx context.Context, param *DocumentSymbolParams) (result []DocumentSymbol, err error)
-	ExecuteCommand(ctx context.Context, param *ExecuteCommandParams) (result interface{}, err error)
-	FoldingRanges(ctx context.Context, param *FoldingRangeParams) (result []FoldingRange, err error)
-	Formatting(ctx context.Context, param *DocumentFormattingParams) (result []TextEdit, err error)
-	Hover(ctx context.Context, param *TextDocumentPositionParams) (result *Hover, err error)
-	Implementation(ctx context.Context, param *TextDocumentPositionParams) (result []Location, err error)
-	OnTypeFormatting(ctx context.Context, param *DocumentOnTypeFormattingParams) (result []TextEdit, err error)
-	RangeFormatting(ctx context.Context, param *DocumentRangeFormattingParams) (result []TextEdit, err error)
-	References(ctx context.Context, param *ReferenceParams) (result []Location, err error)
-	Rename(ctx context.Context, param *RenameParams) (result []WorkspaceEdit, err error)
-	SignatureHelp(ctx context.Context, param *TextDocumentPositionParams) (result *SignatureHelp, err error)
-	Symbols(ctx context.Context, param *WorkspaceSymbolParams) (result []SymbolInformation, err error)
-	TypeDefinition(ctx context.Context, param *TextDocumentPositionParams) (result []Location, err error)
-	WillSave(ctx context.Context, param *WillSaveTextDocumentParams) (err error)
-	WillSaveWaitUntil(ctx context.Context, param *WillSaveTextDocumentParams) (result []TextEdit, err error)
+	CodeAction(ctx context.Context, params *CodeActionParams) (result []CodeAction, err error)
+	CodeLens(ctx context.Context, params *CodeLensParams) (result []CodeLens, err error)
+	CodeLensResolve(ctx context.Context, params *CodeLens) (result *CodeLens, err error)
+	ColorPresentation(ctx context.Context, params *ColorPresentationParams) (result []ColorPresentation, err error)
+	Completion(ctx context.Context, params *CompletionParams) (result *CompletionList, err error)
+	CompletionResolve(ctx context.Context, params *CompletionItem) (result *CompletionItem, err error)
+	Definition(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error)
+	DidChange(ctx context.Context, params *DidChangeTextDocumentParams) (err error)
+	DidChangeConfiguration(ctx context.Context, params *DidChangeConfigurationParams) (err error)
+	DidChangeWatchedFiles(ctx context.Context, params *DidChangeWatchedFilesParams) (err error)
+	DidChangeWorkspaceFolders(ctx context.Context, params *DidChangeWorkspaceFoldersParams) (err error)
+	DidClose(ctx context.Context, params *DidCloseTextDocumentParams) (err error)
+	DidOpen(ctx context.Context, params *DidOpenTextDocumentParams) (err error)
+	DidSave(ctx context.Context, params *DidSaveTextDocumentParams) (err error)
+	DocumentColor(ctx context.Context, params *DocumentColorParams) (result []ColorInformation, err error)
+	DocumentHighlight(ctx context.Context, params *TextDocumentPositionParams) (result []DocumentHighlight, err error)
+	DocumentLink(ctx context.Context, params *DocumentLinkParams) (result []DocumentLink, err error)
+	DocumentLinkResolve(ctx context.Context, params *DocumentLink) (result *DocumentLink, err error)
+	DocumentSymbol(ctx context.Context, params *DocumentSymbolParams) (result []DocumentSymbol, err error)
+	ExecuteCommand(ctx context.Context, params *ExecuteCommandParams) (result interface{}, err error)
+	FoldingRanges(ctx context.Context, params *FoldingRangeParams) (result []FoldingRange, err error)
+	Formatting(ctx context.Context, params *DocumentFormattingParams) (result []TextEdit, err error)
+	Hover(ctx context.Context, params *TextDocumentPositionParams) (result *Hover, err error)
+	Implementation(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error)
+	OnTypeFormatting(ctx context.Context, params *DocumentOnTypeFormattingParams) (result []TextEdit, err error)
+	RangeFormatting(ctx context.Context, params *DocumentRangeFormattingParams) (result []TextEdit, err error)
+	References(ctx context.Context, params *ReferenceParams) (result []Location, err error)
+	Rename(ctx context.Context, params *RenameParams) (result []WorkspaceEdit, err error)
+	SignatureHelp(ctx context.Context, params *TextDocumentPositionParams) (result *SignatureHelp, err error)
+	Symbols(ctx context.Context, params *WorkspaceSymbolParams) (result []SymbolInformation, err error)
+	TypeDefinition(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error)
+	WillSave(ctx context.Context, params *WillSaveTextDocumentParams) (err error)
+	WillSaveWaitUntil(ctx context.Context, params *WillSaveTextDocumentParams) (result []TextEdit, err error)
 }
 
 const (
@@ -94,7 +94,293 @@ const (
 	textDocumentWillSaveWaitUntil      = "textDocument/willSaveWaitUntil"
 )
 
-func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
+type Server struct {
+	*jsonrpc2.Conn
+}
+
+var _ ServerInterface = (*Server)(nil)
+
+// NewServer returns the new jsonrpc2.Conn for Server and Client.
+func NewServer(ctx context.Context, server ServerInterface, stream jsonrpc2.Stream, logger *zap.Logger, opts ...jsonrpc2.Options) (*jsonrpc2.Conn, ClientInterface) {
+	conn := jsonrpc2.NewConn(ctx, stream, opts...)
+	c := &Client{Conn: conn}
+
+	return conn, c
+}
+
+func (s *Server) Initialize(ctx context.Context, params *InitializeParams) (result *InitializeResult, err error) {
+	result = new(InitializeResult)
+	if err := s.Conn.Call(ctx, initialize, params, result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (s *Server) Initialized(ctx context.Context, params *InitializedParams) (err error) {
+	err = s.Conn.Notify(ctx, initialized, params)
+	return
+}
+
+func (s *Server) Shutdown(ctx context.Context) (err error) {
+	err = s.Conn.Call(ctx, shutdown, nil, nil)
+	return
+}
+
+func (s *Server) Exit(ctx context.Context) (err error) {
+	err = s.Conn.Notify(ctx, exit, nil)
+	return
+}
+
+func (s *Server) CodeAction(ctx context.Context, params *CodeActionParams) (result []CodeAction, err error) {
+	if err = s.Conn.Call(ctx, textDocumentCodeAction, params, &result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (s *Server) CodeLens(ctx context.Context, params *CodeLensParams) (result []CodeLens, err error) {
+	if err = s.Conn.Call(ctx, textDocumentCodeLens, params, &result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (s *Server) CodeLensResolve(ctx context.Context, params *CodeLens) (result *CodeLens, err error) {
+	result = new(CodeLens)
+	if err = s.Conn.Call(ctx, codeLensResolve, params, result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (s *Server) ColorPresentation(ctx context.Context, params *ColorPresentationParams) (result []ColorPresentation, err error) {
+	if err = s.Conn.Call(ctx, textDocumentColorPresentation, params, &result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (s *Server) Completion(ctx context.Context, params *CompletionParams) (result *CompletionList, err error) {
+	result = new(CompletionList)
+	if err = s.Conn.Call(ctx, textDocumentCompletion, params, result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (s *Server) CompletionResolve(ctx context.Context, params *CompletionItem) (result *CompletionItem, err error) {
+	result = new(CompletionItem)
+	if err = s.Conn.Call(ctx, completionItemResolve, params, result); err != nil {
+		return nil, err
+
+	}
+
+	return result, nil
+}
+
+func (s *Server) Definition(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
+	if err = s.Conn.Call(ctx, textDocumentDefinition, params, &result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (s *Server) DidChange(ctx context.Context, params *DidChangeTextDocumentParams) (err error) {
+	err = s.Conn.Notify(ctx, textDocumentDidChange, params)
+	return
+}
+
+func (s *Server) DidChangeConfiguration(ctx context.Context, params *DidChangeConfigurationParams) (err error) {
+	err = s.Conn.Notify(ctx, workspaceDidChangeConfiguration, params)
+	return
+}
+
+func (s *Server) DidChangeWatchedFiles(ctx context.Context, params *DidChangeWatchedFilesParams) (err error) {
+	err = s.Conn.Notify(ctx, workspaceDidChangeWatchedFiles, params)
+	return
+}
+
+func (s *Server) DidChangeWorkspaceFolders(ctx context.Context, params *DidChangeWorkspaceFoldersParams) (err error) {
+	err = s.Conn.Notify(ctx, workspaceDidChangeWorkspaceFolders, params)
+	return
+}
+
+func (s *Server) DidClose(ctx context.Context, params *DidCloseTextDocumentParams) (err error) {
+	err = s.Conn.Notify(ctx, textDocumentDidClose, params)
+	return
+}
+
+func (s *Server) DidOpen(ctx context.Context, params *DidOpenTextDocumentParams) (err error) {
+	err = s.Conn.Notify(ctx, textDocumentDidOpen, params)
+	return
+}
+
+func (s *Server) DidSave(ctx context.Context, params *DidSaveTextDocumentParams) (err error) {
+	err = s.Conn.Notify(ctx, textDocumentDidSave, params)
+	return
+}
+
+func (s *Server) DocumentColor(ctx context.Context, params *DocumentColorParams) (result []ColorInformation, err error) {
+	if err = s.Conn.Call(ctx, textDocumentDocumentColor, params, &result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (s *Server) DocumentHighlight(ctx context.Context, params *TextDocumentPositionParams) (result []DocumentHighlight, err error) {
+	if err = s.Conn.Call(ctx, textDocumentDocumentHighlight, params, &result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (s *Server) DocumentLink(ctx context.Context, params *DocumentLinkParams) (result []DocumentLink, err error) {
+	if err = s.Conn.Call(ctx, textDocumentDocumentLink, params, &result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (s *Server) DocumentLinkResolve(ctx context.Context, params *DocumentLink) (result *DocumentLink, err error) {
+	result = new(DocumentLink)
+	if err = s.Conn.Call(ctx, documentLinkResolve, params, result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (s *Server) DocumentSymbol(ctx context.Context, params *DocumentSymbolParams) (result []DocumentSymbol, err error) {
+	if err = s.Conn.Call(ctx, textDocumentDocumentSymbol, params, &result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (s *Server) ExecuteCommand(ctx context.Context, params *ExecuteCommandParams) (result interface{}, err error) {
+	if err = s.Conn.Call(ctx, workspaceExecuteCommand, params, &result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (s *Server) FoldingRanges(ctx context.Context, params *FoldingRangeParams) (result []FoldingRange, err error) {
+	if err = s.Conn.Call(ctx, textDocumentFoldingRange, params, &result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (s *Server) Formatting(ctx context.Context, params *DocumentFormattingParams) (result []TextEdit, err error) {
+	if err = s.Conn.Call(ctx, textDocumentFormatting, params, &result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (s *Server) Hover(ctx context.Context, params *TextDocumentPositionParams) (result *Hover, err error) {
+	result = new(Hover)
+	if err = s.Conn.Call(ctx, textDocumentHover, params, result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (s *Server) Implementation(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
+	if err = s.Conn.Call(ctx, textDocumentImplementation, params, &result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (s *Server) OnTypeFormatting(ctx context.Context, params *DocumentOnTypeFormattingParams) (result []TextEdit, err error) {
+	if err = s.Conn.Call(ctx, textDocumentOnTypeFormatting, params, &result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (s *Server) RangeFormatting(ctx context.Context, params *DocumentRangeFormattingParams) (result []TextEdit, err error) {
+	if err = s.Conn.Call(ctx, textDocumentRangeFormatting, params, &result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (s *Server) References(ctx context.Context, params *ReferenceParams) (result []Location, err error) {
+	if err = s.Conn.Call(ctx, textDocumentReferences, params, &result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (s *Server) Rename(ctx context.Context, params *RenameParams) (result []WorkspaceEdit, err error) {
+	if err = s.Conn.Call(ctx, textDocumentRename, params, &result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (s *Server) SignatureHelp(ctx context.Context, params *TextDocumentPositionParams) (result *SignatureHelp, err error) {
+	result = new(SignatureHelp)
+	if err := s.Conn.Call(ctx, textDocumentSignatureHelp, params, result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (s *Server) Symbols(ctx context.Context, params *WorkspaceSymbolParams) (result []SymbolInformation, err error) {
+	if err = s.Conn.Call(ctx, workspaceSymbol, params, &result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (s *Server) TypeDefinition(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
+	if err = s.Conn.Call(ctx, textDocumentTypeDefinition, params, &result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (s *Server) WillSave(ctx context.Context, params *WillSaveTextDocumentParams) (err error) {
+	err = s.Conn.Notify(ctx, textDocumentWillSave, params)
+	return
+}
+
+func (s *Server) WillSaveWaitUntil(ctx context.Context, params *WillSaveTextDocumentParams) (result []TextEdit, err error) {
+	if err = s.Conn.Call(ctx, textDocumentWillSaveWaitUntil, params, &result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+// ServerHandler returns the client handler.
+func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler {
 	return func(ctx context.Context, conn *jsonrpc2.Conn, r *jsonrpc2.Request) {
 		dec := gojay.BorrowDecoder(r.Params)
 		defer dec.Release()
@@ -103,7 +389,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case initialize:
 			var params InitializeParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			resp, err := server.Initialize(ctx, &params)
@@ -114,7 +400,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case initialized:
 			var params InitializedParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			if err := server.Initialized(ctx, &params); err != nil {
@@ -142,7 +428,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case cancelRequest:
 			var params CancelParams
 			if err := dec.Decode(params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			conn.Cancel(params.ID)
@@ -150,7 +436,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case textDocumentCodeAction:
 			var params CodeActionParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			resp, err := server.CodeAction(ctx, &params)
@@ -161,7 +447,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case textDocumentCodeLens:
 			var params CodeLensParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			resp, err := server.CodeLens(ctx, &params)
@@ -172,7 +458,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case codeLensResolve:
 			var params CodeLens
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			resp, err := server.CodeLensResolve(ctx, &params)
@@ -183,7 +469,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case textDocumentColorPresentation:
 			var params ColorPresentationParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			resp, err := server.ColorPresentation(ctx, &params)
@@ -194,7 +480,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case textDocumentCompletion:
 			var params CompletionParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			resp, err := server.Completion(ctx, &params)
@@ -205,7 +491,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case completionItemResolve:
 			var params CompletionItem
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			resp, err := server.CompletionResolve(ctx, &params)
@@ -216,7 +502,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case textDocumentDefinition:
 			var params TextDocumentPositionParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			resp, err := server.Definition(ctx, &params)
@@ -227,7 +513,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case textDocumentDidChange:
 			var params DidChangeTextDocumentParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			if err := server.DidChange(ctx, &params); err != nil {
@@ -237,7 +523,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case workspaceDidChangeConfiguration:
 			var params DidChangeConfigurationParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			if err := server.DidChangeConfiguration(ctx, &params); err != nil {
@@ -247,7 +533,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case workspaceDidChangeWatchedFiles:
 			var params DidChangeWatchedFilesParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			if err := server.DidChangeWatchedFiles(ctx, &params); err != nil {
@@ -257,7 +543,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case workspaceDidChangeWorkspaceFolders:
 			var params DidChangeWorkspaceFoldersParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			if err := server.DidChangeWorkspaceFolders(ctx, &params); err != nil {
@@ -267,7 +553,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case textDocumentDidClose:
 			var params DidCloseTextDocumentParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			if err := server.DidClose(ctx, &params); err != nil {
@@ -277,7 +563,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case textDocumentDidOpen:
 			var params DidOpenTextDocumentParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			if err := server.DidOpen(ctx, &params); err != nil {
@@ -287,7 +573,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case textDocumentDidSave:
 			var params DidSaveTextDocumentParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			if err := server.DidSave(ctx, &params); err != nil {
@@ -297,7 +583,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case textDocumentDocumentColor:
 			var params DocumentColorParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			resp, err := server.DocumentColor(ctx, &params)
@@ -308,7 +594,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case textDocumentDocumentHighlight:
 			var params TextDocumentPositionParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			resp, err := server.DocumentHighlight(ctx, &params)
@@ -319,7 +605,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case textDocumentDocumentLink:
 			var params DocumentLinkParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			resp, err := server.DocumentLink(ctx, &params)
@@ -330,7 +616,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case documentLinkResolve:
 			var params DocumentLink
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			resp, err := server.DocumentLinkResolve(ctx, &params)
@@ -341,7 +627,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case textDocumentDocumentSymbol:
 			var params DocumentSymbolParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			resp, err := server.DocumentSymbol(ctx, &params)
@@ -352,7 +638,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case workspaceExecuteCommand:
 			var params ExecuteCommandParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			resp, err := server.ExecuteCommand(ctx, &params)
@@ -363,7 +649,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case textDocumentFoldingRange:
 			var params FoldingRangeParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			resp, err := server.FoldingRanges(ctx, &params)
@@ -374,7 +660,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case textDocumentFormatting:
 			var params DocumentFormattingParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			resp, err := server.Formatting(ctx, &params)
@@ -385,7 +671,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case textDocumentHover:
 			var params TextDocumentPositionParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			resp, err := server.Hover(ctx, &params)
@@ -396,7 +682,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case textDocumentImplementation:
 			var params TextDocumentPositionParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			resp, err := server.Implementation(ctx, &params)
@@ -407,7 +693,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case textDocumentOnTypeFormatting:
 			var params DocumentOnTypeFormattingParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			resp, err := server.OnTypeFormatting(ctx, &params)
@@ -418,7 +704,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case textDocumentRangeFormatting:
 			var params DocumentRangeFormattingParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			resp, err := server.RangeFormatting(ctx, &params)
@@ -429,7 +715,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case textDocumentReferences:
 			var params ReferenceParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			resp, err := server.References(ctx, &params)
@@ -440,7 +726,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case textDocumentRename:
 			var params RenameParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			resp, err := server.Rename(ctx, &params)
@@ -451,7 +737,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case textDocumentSignatureHelp:
 			var params TextDocumentPositionParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			resp, err := server.SignatureHelp(ctx, &params)
@@ -462,7 +748,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case workspaceSymbol:
 			var params WorkspaceSymbolParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			resp, err := server.Symbols(ctx, &params)
@@ -473,7 +759,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case textDocumentTypeDefinition:
 			var params TextDocumentPositionParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			resp, err := server.TypeDefinition(ctx, &params)
@@ -484,7 +770,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case textDocumentWillSave:
 			var params WillSaveTextDocumentParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			if err := server.WillSave(ctx, &params); err != nil {
@@ -494,7 +780,7 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 		case textDocumentWillSaveWaitUntil:
 			var params WillSaveTextDocumentParams
 			if err := dec.DecodeObject(&params); err != nil {
-				replyError(ctx, err, logger, conn, r)
+				ReplyError(ctx, err, logger, conn, r)
 				return
 			}
 			resp, err := server.WillSaveWaitUntil(ctx, &params)
@@ -508,281 +794,4 @@ func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 			}
 		}
 	}
-}
-
-type server struct {
-	*jsonrpc2.Conn
-}
-
-var _ Server = (*server)(nil)
-
-func (s *server) Initialize(ctx context.Context, params *InitializeParams) (result *InitializeResult, err error) {
-	result = new(InitializeResult)
-	if err := s.Conn.Call(ctx, initialize, params, result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (s *server) Initialized(ctx context.Context, params *InitializedParams) (err error) {
-	err = s.Conn.Notify(ctx, initialized, params)
-	return
-}
-
-func (s *server) Shutdown(ctx context.Context) (err error) {
-	err = s.Conn.Call(ctx, shutdown, nil, nil)
-	return
-}
-
-func (s *server) Exit(ctx context.Context) (err error) {
-	err = s.Conn.Notify(ctx, exit, nil)
-	return
-}
-
-func (s *server) CodeAction(ctx context.Context, params *CodeActionParams) (result []CodeAction, err error) {
-	if err = s.Conn.Call(ctx, textDocumentCodeAction, params, &result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (s *server) CodeLens(ctx context.Context, params *CodeLensParams) (result []CodeLens, err error) {
-	if err = s.Conn.Call(ctx, textDocumentCodeLens, params, &result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (s *server) CodeLensResolve(ctx context.Context, params *CodeLens) (result *CodeLens, err error) {
-	result = new(CodeLens)
-	if err = s.Conn.Call(ctx, codeLensResolve, params, result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (s *server) ColorPresentation(ctx context.Context, params *ColorPresentationParams) (result []ColorPresentation, err error) {
-	if err = s.Conn.Call(ctx, textDocumentColorPresentation, params, &result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (s *server) Completion(ctx context.Context, params *CompletionParams) (result *CompletionList, err error) {
-	result = new(CompletionList)
-	if err = s.Conn.Call(ctx, textDocumentCompletion, params, result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (s *server) CompletionResolve(ctx context.Context, params *CompletionItem) (result *CompletionItem, err error) {
-	result = new(CompletionItem)
-	if err = s.Conn.Call(ctx, completionItemResolve, params, result); err != nil {
-		return nil, err
-
-	}
-
-	return result, nil
-}
-
-func (s *server) Definition(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
-	if err = s.Conn.Call(ctx, textDocumentDefinition, params, &result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (s *server) DidChange(ctx context.Context, params *DidChangeTextDocumentParams) (err error) {
-	err = s.Conn.Notify(ctx, textDocumentDidChange, params)
-	return
-}
-
-func (s *server) DidChangeConfiguration(ctx context.Context, params *DidChangeConfigurationParams) (err error) {
-	err = s.Conn.Notify(ctx, workspaceDidChangeConfiguration, params)
-	return
-}
-
-func (s *server) DidChangeWatchedFiles(ctx context.Context, params *DidChangeWatchedFilesParams) (err error) {
-	err = s.Conn.Notify(ctx, workspaceDidChangeWatchedFiles, params)
-	return
-}
-
-func (s *server) DidChangeWorkspaceFolders(ctx context.Context, params *DidChangeWorkspaceFoldersParams) (err error) {
-	err = s.Conn.Notify(ctx, workspaceDidChangeWorkspaceFolders, params)
-	return
-}
-
-func (s *server) DidClose(ctx context.Context, params *DidCloseTextDocumentParams) (err error) {
-	err = s.Conn.Notify(ctx, textDocumentDidClose, params)
-	return
-}
-
-func (s *server) DidOpen(ctx context.Context, params *DidOpenTextDocumentParams) (err error) {
-	err = s.Conn.Notify(ctx, textDocumentDidOpen, params)
-	return
-}
-
-func (s *server) DidSave(ctx context.Context, params *DidSaveTextDocumentParams) (err error) {
-	err = s.Conn.Notify(ctx, textDocumentDidSave, params)
-	return
-}
-
-func (s *server) DocumentColor(ctx context.Context, params *DocumentColorParams) (result []ColorInformation, err error) {
-	if err = s.Conn.Call(ctx, textDocumentDocumentColor, params, &result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (s *server) DocumentHighlight(ctx context.Context, params *TextDocumentPositionParams) (result []DocumentHighlight, err error) {
-	if err = s.Conn.Call(ctx, textDocumentDocumentHighlight, params, &result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (s *server) DocumentLink(ctx context.Context, params *DocumentLinkParams) (result []DocumentLink, err error) {
-	if err = s.Conn.Call(ctx, textDocumentDocumentLink, params, &result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (s *server) DocumentLinkResolve(ctx context.Context, params *DocumentLink) (result *DocumentLink, err error) {
-	result = new(DocumentLink)
-	if err = s.Conn.Call(ctx, documentLinkResolve, params, result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (s *server) DocumentSymbol(ctx context.Context, params *DocumentSymbolParams) (result []DocumentSymbol, err error) {
-	if err = s.Conn.Call(ctx, textDocumentDocumentSymbol, params, &result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (s *server) ExecuteCommand(ctx context.Context, params *ExecuteCommandParams) (result interface{}, err error) {
-	if err = s.Conn.Call(ctx, workspaceExecuteCommand, params, &result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (s *server) FoldingRanges(ctx context.Context, params *FoldingRangeParams) (result []FoldingRange, err error) {
-	if err = s.Conn.Call(ctx, textDocumentFoldingRange, params, &result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (s *server) Formatting(ctx context.Context, params *DocumentFormattingParams) (result []TextEdit, err error) {
-	if err = s.Conn.Call(ctx, textDocumentFormatting, params, &result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (s *server) Hover(ctx context.Context, params *TextDocumentPositionParams) (result *Hover, err error) {
-	result = new(Hover)
-	if err = s.Conn.Call(ctx, textDocumentHover, params, result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (s *server) Implementation(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
-	if err = s.Conn.Call(ctx, textDocumentImplementation, params, &result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (s *server) OnTypeFormatting(ctx context.Context, params *DocumentOnTypeFormattingParams) (result []TextEdit, err error) {
-	if err = s.Conn.Call(ctx, textDocumentOnTypeFormatting, params, &result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (s *server) RangeFormatting(ctx context.Context, params *DocumentRangeFormattingParams) (result []TextEdit, err error) {
-	if err = s.Conn.Call(ctx, textDocumentRangeFormatting, params, &result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (s *server) References(ctx context.Context, params *ReferenceParams) (result []Location, err error) {
-	if err = s.Conn.Call(ctx, textDocumentReferences, params, &result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (s *server) Rename(ctx context.Context, params *RenameParams) (result []WorkspaceEdit, err error) {
-	if err = s.Conn.Call(ctx, textDocumentRename, params, &result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (s *server) SignatureHelp(ctx context.Context, params *TextDocumentPositionParams) (result *SignatureHelp, err error) {
-	result = new(SignatureHelp)
-	if err := s.Conn.Call(ctx, textDocumentSignatureHelp, params, result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (s *server) Symbols(ctx context.Context, params *WorkspaceSymbolParams) (result []SymbolInformation, err error) {
-	if err = s.Conn.Call(ctx, workspaceSymbol, params, &result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (s *server) TypeDefinition(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
-	if err = s.Conn.Call(ctx, textDocumentTypeDefinition, params, &result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (s *server) WillSave(ctx context.Context, params *WillSaveTextDocumentParams) (err error) {
-	err = s.Conn.Notify(ctx, textDocumentWillSave, params)
-	return
-}
-
-func (s *server) WillSaveWaitUntil(ctx context.Context, params *WillSaveTextDocumentParams) (result []TextEdit, err error) {
-	if err = s.Conn.Call(ctx, textDocumentWillSaveWaitUntil, params, &result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
 }
