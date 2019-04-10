@@ -33,7 +33,7 @@ ifeq ($(GO111MODULE),off)
 endif
 endif
 
-GO_BUILDTAGS=osusergo netgo
+GO_BUILDTAGS=osusergo netcgo
 GO_BUILDTAGS_STATIC=static static_build
 GO_FLAGS ?= -tags='$(GO_BUILDTAGS)' -ldflags="${GO_LDFLAGS}"
 GO_INSTALLSUFFIX_STATIC=netgo
