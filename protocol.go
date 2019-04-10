@@ -25,21 +25,21 @@ func DefaultCanceller(ctx context.Context, conn *jsonrpc2.Conn, req *jsonrpc2.Re
 }
 
 // NewServer returns the new jsonrpc2.Conn for Server and Client.
-func NewServer(ctx context.Context, srv Server, stream jsonrpc2.Stream, logger *zap.Logger, opts ...jsonrpc2.Options) (*jsonrpc2.Conn, Client) {
+func NewServer(ctx context.Context, stream jsonrpc2.Stream, logger *zap.Logger, opts ...jsonrpc2.Options) (Server, Client) {
 	conn := jsonrpc2.NewConn(ctx, stream, opts...)
 
 	s := &server{Conn: conn}
 	conn.Handler = ServerHandler(s, logger)
 
-	return conn, &client{Conn: conn}
+	return s, &client{Conn: conn}
 }
 
 // NewClient returns the new jsonrpc2.Conn for Client and Server.
-func NewClient(ctx context.Context, cli Client, stream jsonrpc2.Stream, logger *zap.Logger, opts ...jsonrpc2.Options) (*jsonrpc2.Conn, Server) {
+func NewClient(ctx context.Context, stream jsonrpc2.Stream, logger *zap.Logger, opts ...jsonrpc2.Options) (Client, Server) {
 	conn := jsonrpc2.NewConn(ctx, stream, opts...)
 
 	c := &client{Conn: conn}
 	conn.Handler = ClientHandler(c, logger)
 
-	return conn, &server{Conn: conn}
+	return c, &server{Conn: conn}
 }
