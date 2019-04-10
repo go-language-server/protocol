@@ -12,8 +12,8 @@ import (
 	"go.uber.org/zap"
 )
 
-// ClientInterface represents a implementation of language-server-protocol client.
-type ClientInterface interface {
+// Client represents a implementation of language-server-protocol client.
+type Client interface {
 	RegisterCapability(ctx context.Context, params *RegistrationParams) (err error)
 	UnregisterCapability(ctx context.Context, params *UnregistrationParams) (err error)
 	Telemetry(ctx context.Context, params interface{}) (err error)
@@ -39,77 +39,70 @@ const (
 	workspaceWorkspaceFolders      = "workspace/workspaceFolders"
 )
 
-type Client struct {
+type client struct {
 	*jsonrpc2.Conn
 }
 
-var _ ClientInterface = (*Client)(nil)
+var _ Client = (*client)(nil)
 
-// NewClient returns the new jsonrpc2.Conn for Client and Server.
-func NewClient(ctx context.Context, client ClientInterface, stream jsonrpc2.Stream, logger *zap.Logger, opts ...jsonrpc2.Options) (*jsonrpc2.Conn, ServerInterface) {
-	conn := jsonrpc2.NewConn(ctx, stream, opts...)
-
-	return conn, &Server{Conn: conn}
-}
-
-func (c *Client) RegisterCapability(ctx context.Context, params *RegistrationParams) (err error) {
+func (c *client) RegisterCapability(ctx context.Context, params *RegistrationParams) (err error) {
 	err = c.Conn.Notify(ctx, clientRegisterCapability, params)
 	return
 }
 
-func (c *Client) UnregisterCapability(ctx context.Context, params *UnregistrationParams) (err error) {
+func (c *client) UnregisterCapability(ctx context.Context, params *UnregistrationParams) (err error) {
 	err = c.Conn.Notify(ctx, clientUnregisterCapability, params)
 	return
 }
 
-func (c *Client) Telemetry(ctx context.Context, params interface{}) (err error) {
+func (c *client) Telemetry(ctx context.Context, params interface{}) (err error) {
 	err = c.Conn.Notify(ctx, telemetryEvent, params)
 	return
 }
 
-func (c *Client) PublishDiagnostics(ctx context.Context, params *PublishDiagnosticsParams) (err error) {
+func (c *client) PublishDiagnostics(ctx context.Context, params *PublishDiagnosticsParams) (err error) {
 	err = c.Conn.Notify(ctx, textDocumentPublishDiagnostics, params)
 	return
 }
 
-func (c *Client) LogMessage(ctx context.Context, params *LogMessageParams) (err error) {
+func (c *client) LogMessage(ctx context.Context, params *LogMessageParams) (err error) {
 	err = c.Conn.Notify(ctx, windowLogMessage, params)
 	return
 }
 
-func (c *Client) ShowMessage(ctx context.Context, params *ShowMessageParams) (err error) {
+func (c *client) ShowMessage(ctx context.Context, params *ShowMessageParams) (err error) {
 	err = c.Conn.Notify(ctx, windowShowMessage, params)
 	return
 }
 
-func (c *Client) ShowMessageRequest(ctx context.Context, params *ShowMessageRequestParams) (result *MessageActionItem, err error) {
+func (c *client) ShowMessageRequest(ctx context.Context, params *ShowMessageRequestParams) (result *MessageActionItem, err error) {
 	result = new(MessageActionItem)
 	err = c.Conn.Call(ctx, windowShowMessageRequest, params, result)
 
 	return result, err
 }
 
-func (c *Client) WorkspaceApplyEdit(ctx context.Context, params *ApplyWorkspaceEditParams) (result bool, err error) {
+func (c *client) WorkspaceApplyEdit(ctx context.Context, params *ApplyWorkspaceEditParams) (result bool, err error) {
 	err = c.Conn.Call(ctx, workspaceApplyEdit, params, &result)
 
 	return result, err
 }
 
-func (c *Client) WorkspaceConfiguration(ctx context.Context, params *ConfigurationParams) (_ []interface{}, err error) {
+func (c *client) WorkspaceConfiguration(ctx context.Context, params *ConfigurationParams) (_ []interface{}, err error) {
 	var result []interface{}
 	err = c.Conn.Call(ctx, workspaceConfiguration, params, &result)
 
 	return result, err
 }
 
-func (c *Client) WorkspaceFolders(ctx context.Context) (result []WorkspaceFolder, err error) {
+func (c *client) WorkspaceFolders(ctx context.Context) (result []WorkspaceFolder, err error) {
 	err = c.Conn.Call(ctx, workspaceWorkspaceFolders, nil, &result)
 
 	return result, err
 }
 
 // ClientHandler returns the client handler.
-func ClientHandler(client ClientInterface, logger *zap.Logger) jsonrpc2.Handler {
+func ClientHandler(client Client, logger *zap.Logger) jsonrpc2.Handler {
 	return func(ctx context.Context, conn *jsonrpc2.Conn, r *jsonrpc2.Request) {
 		dec := gojay.BorrowDecoder(r.Params)
 		defer dec.Release()
