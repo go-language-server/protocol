@@ -46,12 +46,12 @@ type client struct {
 var _ Client = (*client)(nil)
 
 func (c *client) RegisterCapability(ctx context.Context, params *RegistrationParams) (err error) {
-	err = c.Conn.Notify(ctx, clientRegisterCapability, params)
+	err = c.Conn.Notify(ctx, clientRegisterCapability, *params)
 	return
 }
 
 func (c *client) UnregisterCapability(ctx context.Context, params *UnregistrationParams) (err error) {
-	err = c.Conn.Notify(ctx, clientUnregisterCapability, params)
+	err = c.Conn.Notify(ctx, clientUnregisterCapability, *params)
 	return
 }
 
@@ -61,37 +61,36 @@ func (c *client) Telemetry(ctx context.Context, params interface{}) (err error) 
 }
 
 func (c *client) PublishDiagnostics(ctx context.Context, params *PublishDiagnosticsParams) (err error) {
-	err = c.Conn.Notify(ctx, textDocumentPublishDiagnostics, params)
+	err = c.Conn.Notify(ctx, textDocumentPublishDiagnostics, *params)
 	return
 }
 
 func (c *client) LogMessage(ctx context.Context, params *LogMessageParams) (err error) {
-	err = c.Conn.Notify(ctx, windowLogMessage, params)
+	err = c.Conn.Notify(ctx, windowLogMessage, *params)
 	return
 }
 
 func (c *client) ShowMessage(ctx context.Context, params *ShowMessageParams) (err error) {
-	err = c.Conn.Notify(ctx, windowShowMessage, params)
+	err = c.Conn.Notify(ctx, windowShowMessage, *params)
 	return
 }
 
 func (c *client) ShowMessageRequest(ctx context.Context, params *ShowMessageRequestParams) (result *MessageActionItem, err error) {
 	result = new(MessageActionItem)
-	err = c.Conn.Call(ctx, windowShowMessageRequest, params, result)
+	err = c.Conn.Call(ctx, windowShowMessageRequest, *params, result)
 
 	return result, err
 }
 
-func (c *client) WorkspaceApplyEdit(ctx context.Context, params *ApplyWorkspaceEditParams) (_ bool, err error) {
-	var result bool
-	err = c.Conn.Call(ctx, workspaceApplyEdit, params, &result)
+func (c *client) WorkspaceApplyEdit(ctx context.Context, params *ApplyWorkspaceEditParams) (result bool, err error) {
+	err = c.Conn.Call(ctx, workspaceApplyEdit, *params, &result)
 
 	return result, err
 }
 
 func (c *client) WorkspaceConfiguration(ctx context.Context, params *ConfigurationParams) (_ []interface{}, err error) {
 	var result []interface{}
-	err = c.Conn.Call(ctx, workspaceConfiguration, params, &result)
+	err = c.Conn.Call(ctx, workspaceConfiguration, *params, &result)
 
 	return result, err
 }
