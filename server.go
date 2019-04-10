@@ -94,15 +94,6 @@ const (
 	textDocumentFoldingRange           = "textDocument/foldingRange"
 )
 
-func replyError(ctx context.Context, logger *zap.Logger, conn *jsonrpc2.Conn, req *jsonrpc2.Request, err error) {
-	if _, ok := err.(*jsonrpc2.Error); !ok {
-		err = jsonrpc2.Errorf(jsonrpc2.CodeParseError, "%v", err)
-	}
-	if err := conn.Reply(ctx, req, nil, err); err != nil {
-		logger.Error("sendParseError", zap.Error(err))
-	}
-}
-
 func serverHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 	return func(ctx context.Context, conn *jsonrpc2.Conn, r *jsonrpc2.Request) {
 		dec := gojay.Unsafe
