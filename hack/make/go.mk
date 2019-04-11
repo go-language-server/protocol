@@ -60,7 +60,7 @@ pkg/install:
 ## test, bench and coverage
 
 .PHONY: test
-test: GO_FLAGS+=-race -count 1
+test: GO_FLAGS+=-race
 test:  ## Runs package test including race condition.
 	$(call target)
 	@GO111MODULE=on $(GO_TEST) -v $(strip $(GO_FLAGS)) -run=$(GO_TEST_FUNC) $(GO_TEST_PKGS)
@@ -104,7 +104,7 @@ coverage/ci: cmd/go-junit-report
 coverage/ci:  ## Takes packages test coverage, and output coverage results to CI artifacts.
 	$(call target)
 	@mkdir -p /tmp/ci/artifacts /tmp/ci/test-results
-	GO111MODULE=on $(GO_TEST) -a -v -race $(strip $(GO_FLAGS)) -covermode=atomic -coverpkg=$(PKG)/pkg/... -coverprofile=/tmp/ci/artifacts/coverage.out $(GO_PKGS) 2>&1 | tee /dev/stderr | go-junit-report -set-exit-code > /tmp/ci/test-results/junit.xml
+	GO111MODULE=on $(GO_TEST) -a -v -race $(strip $(GO_FLAGS)) -covermode=atomic -coverpkg=$(PKG)/... -coverprofile=/tmp/ci/artifacts/coverage.out $(GO_PKGS) 2>&1 | tee /dev/stderr | go-junit-report -set-exit-code > /tmp/ci/test-results/junit.xml
 	@if [[ -f '/tmp/ci/artifacts/coverage.out' ]]; then go tool cover -html=/tmp/ci/artifacts/coverage.out -o /tmp/ci/artifacts/coverage.html; fi
 
 
