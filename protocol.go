@@ -16,30 +16,16 @@ const (
 	Version = "3.14.0"
 )
 
-// DefaultBufferSize default message buffer size.
-const DefaultBufferSize = 20
+// NewClient returns the new Client, Server and jsonrpc2.Conn.
+func NewClient(ctx context.Context, conn *jsonrpc2.Conn, logger *zap.Logger) (ClientInterface, ServerInterface) {
+	c := &Client{Conn: conn}
 
-// DefaultCanceller returns the default canceler function.
-func DefaultCanceller(ctx context.Context, conn *jsonrpc2.Conn, req *jsonrpc2.Request) {
-	conn.Notify(context.Background(), cancelRequest, &CancelParams{ID: *req.ID})
+	return c, &Server{Conn: conn}
 }
 
-// NewServer returns the new jsonrpc2.Conn for Server and Client.
-func NewServer(ctx context.Context, stream jsonrpc2.Stream, logger *zap.Logger, opts ...jsonrpc2.Options) (Server, Client) {
-	conn := jsonrpc2.NewConn(ctx, stream, opts...)
+// NewServer returns the new Server, Client and jsonrpc2.Conn.
+func NewServer(ctx context.Context, conn *jsonrpc2.Conn, logger *zap.Logger) (ServerInterface, ClientInterface) {
+	s := &Server{Conn: conn}
 
-	s := &server{Conn: conn}
-	conn.Handler = ServerHandler(s, logger)
-
-	return s, &client{Conn: conn}
-}
-
-// NewClient returns the new jsonrpc2.Conn for Client and Server.
-func NewClient(ctx context.Context, stream jsonrpc2.Stream, logger *zap.Logger, opts ...jsonrpc2.Options) (Client, Server) {
-	conn := jsonrpc2.NewConn(ctx, stream, opts...)
-
-	c := &client{Conn: conn}
-	conn.Handler = ClientHandler(c, logger)
-
-	return c, &server{Conn: conn}
+	return s, &Client{Conn: conn}
 }
