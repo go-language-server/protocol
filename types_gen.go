@@ -31,7 +31,7 @@ func (v *interfaces) MarshalJSONArray(enc *gojay.Encoder) {
 
 // IsNil implements gojay's MarshalerJSONArray.
 func (v *interfaces) IsNil() bool {
-	return v == nil || len(*v) == 0
+	return len(*v) == 0
 }
 
 type stringSlice []string
@@ -45,9 +45,6 @@ func (v *stringSlice) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal.
-func (v *stringSlice) NKeys() int { return 1 }
-
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
 func (v *stringSlice) MarshalJSONArray(enc *gojay.Encoder) {
 	for _, t := range *v {
@@ -57,5 +54,5 @@ func (v *stringSlice) MarshalJSONArray(enc *gojay.Encoder) {
 
 // IsNil implements gojay's MarshalerJSONArray.
 func (v *stringSlice) IsNil() bool {
-	return v == nil || len(*v) == 0
+	return len(*v) == 0
 }
