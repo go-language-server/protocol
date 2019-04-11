@@ -14,7 +14,6 @@ import (
 
 // ServerInterface represents a implementation of language-server-protocol server.
 type ServerInterface interface {
-	Run(ctx context.Context) error
 	Initialize(ctx context.Context, params *InitializeParams) (result *InitializeResult, err error)
 	Initialized(ctx context.Context, params *InitializedParams) (err error)
 	Shutdown(ctx context.Context) (err error)
@@ -100,10 +99,6 @@ type Server struct {
 }
 
 var _ ServerInterface = (*Server)(nil)
-
-func (s *Server) Run(ctx context.Context) error {
-	return s.Conn.Run(ctx)
-}
 
 func (s *Server) Initialize(ctx context.Context, params *InitializeParams) (result *InitializeResult, err error) {
 	result = new(InitializeResult)
