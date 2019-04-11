@@ -8,6 +8,10 @@ import (
 	"strconv"
 )
 
+const (
+	fileSchema = "file://"
+)
+
 var (
 	nullUint64, _ = strconv.ParseUint("null", 10, 64)
 )
@@ -15,4 +19,8 @@ var (
 // Uint64 returns the i pointers.
 func Uint64(i uint64) *uint64 {
 	return &i
+}
+
+func ToDocumentURI(s string) DocumentURI {
+	return DocumentURI(fileSchema + s)
 }
