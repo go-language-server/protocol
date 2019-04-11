@@ -23,7 +23,7 @@ GO_TEST_FLAGS ?=
 GO_BENCH_FUNC ?= .
 GO_BENCH_FLAGS ?= -benchmem
 
-CGO_ENABLED ?= 0
+CGO_ENABLED ?= 1
 GO_LDFLAGS=-s -w
 GO_LDFLAGS_STATIC=-s -w '-extldflags=-static'
 
@@ -33,7 +33,7 @@ ifeq ($(GO111MODULE),off)
 endif
 endif
 
-GO_BUILDTAGS=osusergo netcgo
+GO_BUILDTAGS=osusergo
 GO_BUILDTAGS_STATIC=static static_build
 GO_FLAGS ?= -tags='$(GO_BUILDTAGS)' -ldflags="${GO_LDFLAGS}"
 GO_INSTALLSUFFIX_STATIC=netgo
@@ -60,19 +60,12 @@ pkg/install:
 ## test, bench and coverage
 
 .PHONY: test
-test: GO_FLAGS+=${GO_MOD_FLAGS}
-test: GO_LDFLAGS=${GO_LDFLAGS_STATIC}
-test: GO_BUILDTAGS+=${GO_BUILDTAGS_STATIC}
-test: GO_FLAGS+=-installsuffix ${GO_INSTALLSUFFIX_STATIC}
+test: GO_FLAGS+=-race -count 1
 test:  ## Runs package test including race condition.
 	$(call target)
-	@GO111MODULE=on $(GO_TEST) -v -race -count 1 $(strip $(GO_FLAGS)) -run=$(GO_TEST_FUNC) $(GO_TEST_PKGS)
+	@GO111MODULE=on $(GO_TEST) -v $(strip $(GO_FLAGS)) -run=$(GO_TEST_FUNC) $(GO_TEST_PKGS)
 
 .PHONY: bench
-bench: GO_FLAGS+=${GO_MOD_FLAGS}
-bench: GO_LDFLAGS=${GO_LDFLAGS_STATIC}
-bench: GO_BUILDTAGS+=${GO_BUILDTAGS_STATIC}
-bench: GO_FLAGS+=-installsuffix ${GO_INSTALLSUFFIX_STATIC}
 bench:  ## Take a package benchmark.
 	$(call target)
 	@GO111MODULE=on $(GO_TEST) -v $(strip $(GO_FLAGS)) -run='^$$' -bench=$(GO_BENCH_FUNC) -benchmem $(GO_TEST_PKGS)
