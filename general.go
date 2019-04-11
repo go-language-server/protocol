@@ -235,6 +235,19 @@ type TextDocumentClientCapabilitiesSignatureInformation struct {
 	 * property. The order describes the preferred format of the client.
 	 */
 	DocumentationFormat []MarkupKind `json:"documentationFormat,omitempty"`
+	/**
+	* Client capabilities specific to parameter information.
+	 */
+	ParameterInformation *TextDocumentClientCapabilitiesParameterInformation `json:"parameterInformation,omitempty"`
+}
+
+// TextDocumentClientCapabilitiesParameterInformation is the client capabilities specific to parameter information.
+type TextDocumentClientCapabilitiesParameterInformation struct {
+	// LabelOffsetSupport is the client supports processing label offsets instead of a
+	// simple label string.
+	//
+	// Since 3.14.0
+	LabelOffsetSupport bool `json:"labelOffsetSupport,omitempty"`
 }
 
 // TextDocumentClientCapabilitiesReferences capabilities specific to the `textDocument/references`
