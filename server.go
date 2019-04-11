@@ -12,8 +12,9 @@ import (
 	"go.uber.org/zap"
 )
 
-// Server represents a implementation of language-server-protocol server.
-type Server interface {
+// ServerInterface represents a implementation of language-server-protocol server.
+type ServerInterface interface {
+	Run(ctx context.Context) error
 	Initialize(ctx context.Context, params *InitializeParams) (result *InitializeResult, err error)
 	Initialized(ctx context.Context, params *InitializedParams) (err error)
 	Shutdown(ctx context.Context) (err error)
@@ -94,13 +95,17 @@ const (
 	textDocumentWillSaveWaitUntil      = "textDocument/willSaveWaitUntil"
 )
 
-type server struct {
+type Server struct {
 	*jsonrpc2.Conn
 }
 
-var _ Server = (*server)(nil)
+var _ ServerInterface = (*Server)(nil)
 
-func (s *server) Initialize(ctx context.Context, params *InitializeParams) (result *InitializeResult, err error) {
+func (s *Server) Run(ctx context.Context) error {
+	return s.Conn.Run(ctx)
+}
+
+func (s *Server) Initialize(ctx context.Context, params *InitializeParams) (result *InitializeResult, err error) {
 	result = new(InitializeResult)
 	if err := s.Conn.Call(ctx, initialize, params, result); err != nil {
 		return nil, err
@@ -109,22 +114,22 @@ func (s *server) Initialize(ctx context.Context, params *InitializeParams) (resu
 	return result, nil
 }
 
-func (s *server) Initialized(ctx context.Context, params *InitializedParams) (err error) {
+func (s *Server) Initialized(ctx context.Context, params *InitializedParams) (err error) {
 	err = s.Conn.Notify(ctx, initialized, params)
 	return
 }
 
-func (s *server) Shutdown(ctx context.Context) (err error) {
+func (s *Server) Shutdown(ctx context.Context) (err error) {
 	err = s.Conn.Call(ctx, shutdown, nil, nil)
 	return
 }
 
-func (s *server) Exit(ctx context.Context) (err error) {
+func (s *Server) Exit(ctx context.Context) (err error) {
 	err = s.Conn.Notify(ctx, exit, nil)
 	return
 }
 
-func (s *server) CodeAction(ctx context.Context, params *CodeActionParams) (result []CodeAction, err error) {
+func (s *Server) CodeAction(ctx context.Context, params *CodeActionParams) (result []CodeAction, err error) {
 	if err = s.Conn.Call(ctx, textDocumentCodeAction, params, &result); err != nil {
 		return nil, err
 	}
@@ -132,7 +137,7 @@ func (s *server) CodeAction(ctx context.Context, params *CodeActionParams) (resu
 	return result, nil
 }
 
-func (s *server) CodeLens(ctx context.Context, params *CodeLensParams) (result []CodeLens, err error) {
+func (s *Server) CodeLens(ctx context.Context, params *CodeLensParams) (result []CodeLens, err error) {
 	if err = s.Conn.Call(ctx, textDocumentCodeLens, params, &result); err != nil {
 		return nil, err
 	}
@@ -140,7 +145,7 @@ func (s *server) CodeLens(ctx context.Context, params *CodeLensParams) (result [
 	return result, nil
 }
 
-func (s *server) CodeLensResolve(ctx context.Context, params *CodeLens) (result *CodeLens, err error) {
+func (s *Server) CodeLensResolve(ctx context.Context, params *CodeLens) (result *CodeLens, err error) {
 	result = new(CodeLens)
 	if err = s.Conn.Call(ctx, codeLensResolve, params, result); err != nil {
 		return nil, err
@@ -149,7 +154,7 @@ func (s *server) CodeLensResolve(ctx context.Context, params *CodeLens) (result 
 	return result, nil
 }
 
-func (s *server) ColorPresentation(ctx context.Context, params *ColorPresentationParams) (result []ColorPresentation, err error) {
+func (s *Server) ColorPresentation(ctx context.Context, params *ColorPresentationParams) (result []ColorPresentation, err error) {
 	if err = s.Conn.Call(ctx, textDocumentColorPresentation, params, &result); err != nil {
 		return nil, err
 	}
@@ -157,7 +162,7 @@ func (s *server) ColorPresentation(ctx context.Context, params *ColorPresentatio
 	return result, nil
 }
 
-func (s *server) Completion(ctx context.Context, params *CompletionParams) (result *CompletionList, err error) {
+func (s *Server) Completion(ctx context.Context, params *CompletionParams) (result *CompletionList, err error) {
 	result = new(CompletionList)
 	if err = s.Conn.Call(ctx, textDocumentCompletion, params, result); err != nil {
 		return nil, err
@@ -166,7 +171,7 @@ func (s *server) Completion(ctx context.Context, params *CompletionParams) (resu
 	return result, nil
 }
 
-func (s *server) CompletionResolve(ctx context.Context, params *CompletionItem) (result *CompletionItem, err error) {
+func (s *Server) CompletionResolve(ctx context.Context, params *CompletionItem) (result *CompletionItem, err error) {
 	result = new(CompletionItem)
 	if err = s.Conn.Call(ctx, completionItemResolve, params, result); err != nil {
 		return nil, err
@@ -176,7 +181,7 @@ func (s *server) CompletionResolve(ctx context.Context, params *CompletionItem) 
 	return result, nil
 }
 
-func (s *server) Definition(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
+func (s *Server) Definition(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
 	if err = s.Conn.Call(ctx, textDocumentDefinition, params, &result); err != nil {
 		return nil, err
 	}
@@ -184,42 +189,42 @@ func (s *server) Definition(ctx context.Context, params *TextDocumentPositionPar
 	return result, nil
 }
 
-func (s *server) DidChange(ctx context.Context, params *DidChangeTextDocumentParams) (err error) {
+func (s *Server) DidChange(ctx context.Context, params *DidChangeTextDocumentParams) (err error) {
 	err = s.Conn.Notify(ctx, textDocumentDidChange, params)
 	return
 }
 
-func (s *server) DidChangeConfiguration(ctx context.Context, params *DidChangeConfigurationParams) (err error) {
+func (s *Server) DidChangeConfiguration(ctx context.Context, params *DidChangeConfigurationParams) (err error) {
 	err = s.Conn.Notify(ctx, workspaceDidChangeConfiguration, params)
 	return
 }
 
-func (s *server) DidChangeWatchedFiles(ctx context.Context, params *DidChangeWatchedFilesParams) (err error) {
+func (s *Server) DidChangeWatchedFiles(ctx context.Context, params *DidChangeWatchedFilesParams) (err error) {
 	err = s.Conn.Notify(ctx, workspaceDidChangeWatchedFiles, params)
 	return
 }
 
-func (s *server) DidChangeWorkspaceFolders(ctx context.Context, params *DidChangeWorkspaceFoldersParams) (err error) {
+func (s *Server) DidChangeWorkspaceFolders(ctx context.Context, params *DidChangeWorkspaceFoldersParams) (err error) {
 	err = s.Conn.Notify(ctx, workspaceDidChangeWorkspaceFolders, params)
 	return
 }
 
-func (s *server) DidClose(ctx context.Context, params *DidCloseTextDocumentParams) (err error) {
+func (s *Server) DidClose(ctx context.Context, params *DidCloseTextDocumentParams) (err error) {
 	err = s.Conn.Notify(ctx, textDocumentDidClose, params)
 	return
 }
 
-func (s *server) DidOpen(ctx context.Context, params *DidOpenTextDocumentParams) (err error) {
+func (s *Server) DidOpen(ctx context.Context, params *DidOpenTextDocumentParams) (err error) {
 	err = s.Conn.Notify(ctx, textDocumentDidOpen, params)
 	return
 }
 
-func (s *server) DidSave(ctx context.Context, params *DidSaveTextDocumentParams) (err error) {
+func (s *Server) DidSave(ctx context.Context, params *DidSaveTextDocumentParams) (err error) {
 	err = s.Conn.Notify(ctx, textDocumentDidSave, params)
 	return
 }
 
-func (s *server) DocumentColor(ctx context.Context, params *DocumentColorParams) (result []ColorInformation, err error) {
+func (s *Server) DocumentColor(ctx context.Context, params *DocumentColorParams) (result []ColorInformation, err error) {
 	if err = s.Conn.Call(ctx, textDocumentDocumentColor, params, &result); err != nil {
 		return nil, err
 	}
@@ -227,7 +232,7 @@ func (s *server) DocumentColor(ctx context.Context, params *DocumentColorParams)
 	return result, nil
 }
 
-func (s *server) DocumentHighlight(ctx context.Context, params *TextDocumentPositionParams) (result []DocumentHighlight, err error) {
+func (s *Server) DocumentHighlight(ctx context.Context, params *TextDocumentPositionParams) (result []DocumentHighlight, err error) {
 	if err = s.Conn.Call(ctx, textDocumentDocumentHighlight, params, &result); err != nil {
 		return nil, err
 	}
@@ -235,7 +240,7 @@ func (s *server) DocumentHighlight(ctx context.Context, params *TextDocumentPosi
 	return result, nil
 }
 
-func (s *server) DocumentLink(ctx context.Context, params *DocumentLinkParams) (result []DocumentLink, err error) {
+func (s *Server) DocumentLink(ctx context.Context, params *DocumentLinkParams) (result []DocumentLink, err error) {
 	if err = s.Conn.Call(ctx, textDocumentDocumentLink, params, &result); err != nil {
 		return nil, err
 	}
@@ -243,7 +248,7 @@ func (s *server) DocumentLink(ctx context.Context, params *DocumentLinkParams) (
 	return result, nil
 }
 
-func (s *server) DocumentLinkResolve(ctx context.Context, params *DocumentLink) (result *DocumentLink, err error) {
+func (s *Server) DocumentLinkResolve(ctx context.Context, params *DocumentLink) (result *DocumentLink, err error) {
 	result = new(DocumentLink)
 	if err = s.Conn.Call(ctx, documentLinkResolve, params, result); err != nil {
 		return nil, err
@@ -252,7 +257,7 @@ func (s *server) DocumentLinkResolve(ctx context.Context, params *DocumentLink) 
 	return result, nil
 }
 
-func (s *server) DocumentSymbol(ctx context.Context, params *DocumentSymbolParams) (result []DocumentSymbol, err error) {
+func (s *Server) DocumentSymbol(ctx context.Context, params *DocumentSymbolParams) (result []DocumentSymbol, err error) {
 	if err = s.Conn.Call(ctx, textDocumentDocumentSymbol, params, &result); err != nil {
 		return nil, err
 	}
@@ -260,7 +265,7 @@ func (s *server) DocumentSymbol(ctx context.Context, params *DocumentSymbolParam
 	return result, nil
 }
 
-func (s *server) ExecuteCommand(ctx context.Context, params *ExecuteCommandParams) (result interface{}, err error) {
+func (s *Server) ExecuteCommand(ctx context.Context, params *ExecuteCommandParams) (result interface{}, err error) {
 	if err = s.Conn.Call(ctx, workspaceExecuteCommand, params, &result); err != nil {
 		return nil, err
 	}
@@ -268,7 +273,7 @@ func (s *server) ExecuteCommand(ctx context.Context, params *ExecuteCommandParam
 	return result, nil
 }
 
-func (s *server) FoldingRanges(ctx context.Context, params *FoldingRangeParams) (result []FoldingRange, err error) {
+func (s *Server) FoldingRanges(ctx context.Context, params *FoldingRangeParams) (result []FoldingRange, err error) {
 	if err = s.Conn.Call(ctx, textDocumentFoldingRange, params, &result); err != nil {
 		return nil, err
 	}
@@ -276,7 +281,7 @@ func (s *server) FoldingRanges(ctx context.Context, params *FoldingRangeParams) 
 	return result, nil
 }
 
-func (s *server) Formatting(ctx context.Context, params *DocumentFormattingParams) (result []TextEdit, err error) {
+func (s *Server) Formatting(ctx context.Context, params *DocumentFormattingParams) (result []TextEdit, err error) {
 	if err = s.Conn.Call(ctx, textDocumentFormatting, params, &result); err != nil {
 		return nil, err
 	}
@@ -284,7 +289,7 @@ func (s *server) Formatting(ctx context.Context, params *DocumentFormattingParam
 	return result, nil
 }
 
-func (s *server) Hover(ctx context.Context, params *TextDocumentPositionParams) (result *Hover, err error) {
+func (s *Server) Hover(ctx context.Context, params *TextDocumentPositionParams) (result *Hover, err error) {
 	result = new(Hover)
 	if err = s.Conn.Call(ctx, textDocumentHover, params, result); err != nil {
 		return nil, err
@@ -293,7 +298,7 @@ func (s *server) Hover(ctx context.Context, params *TextDocumentPositionParams) 
 	return result, nil
 }
 
-func (s *server) Implementation(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
+func (s *Server) Implementation(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
 	if err = s.Conn.Call(ctx, textDocumentImplementation, params, &result); err != nil {
 		return nil, err
 	}
@@ -301,7 +306,7 @@ func (s *server) Implementation(ctx context.Context, params *TextDocumentPositio
 	return result, nil
 }
 
-func (s *server) OnTypeFormatting(ctx context.Context, params *DocumentOnTypeFormattingParams) (result []TextEdit, err error) {
+func (s *Server) OnTypeFormatting(ctx context.Context, params *DocumentOnTypeFormattingParams) (result []TextEdit, err error) {
 	if err = s.Conn.Call(ctx, textDocumentOnTypeFormatting, params, &result); err != nil {
 		return nil, err
 	}
@@ -309,7 +314,7 @@ func (s *server) OnTypeFormatting(ctx context.Context, params *DocumentOnTypeFor
 	return result, nil
 }
 
-func (s *server) RangeFormatting(ctx context.Context, params *DocumentRangeFormattingParams) (result []TextEdit, err error) {
+func (s *Server) RangeFormatting(ctx context.Context, params *DocumentRangeFormattingParams) (result []TextEdit, err error) {
 	if err = s.Conn.Call(ctx, textDocumentRangeFormatting, params, &result); err != nil {
 		return nil, err
 	}
@@ -317,7 +322,7 @@ func (s *server) RangeFormatting(ctx context.Context, params *DocumentRangeForma
 	return result, nil
 }
 
-func (s *server) References(ctx context.Context, params *ReferenceParams) (result []Location, err error) {
+func (s *Server) References(ctx context.Context, params *ReferenceParams) (result []Location, err error) {
 	if err = s.Conn.Call(ctx, textDocumentReferences, params, &result); err != nil {
 		return nil, err
 	}
@@ -325,7 +330,7 @@ func (s *server) References(ctx context.Context, params *ReferenceParams) (resul
 	return result, nil
 }
 
-func (s *server) Rename(ctx context.Context, params *RenameParams) (result []WorkspaceEdit, err error) {
+func (s *Server) Rename(ctx context.Context, params *RenameParams) (result []WorkspaceEdit, err error) {
 	if err = s.Conn.Call(ctx, textDocumentRename, params, &result); err != nil {
 		return nil, err
 	}
@@ -333,7 +338,7 @@ func (s *server) Rename(ctx context.Context, params *RenameParams) (result []Wor
 	return result, nil
 }
 
-func (s *server) SignatureHelp(ctx context.Context, params *TextDocumentPositionParams) (result *SignatureHelp, err error) {
+func (s *Server) SignatureHelp(ctx context.Context, params *TextDocumentPositionParams) (result *SignatureHelp, err error) {
 	result = new(SignatureHelp)
 	if err := s.Conn.Call(ctx, textDocumentSignatureHelp, params, result); err != nil {
 		return nil, err
@@ -342,7 +347,7 @@ func (s *server) SignatureHelp(ctx context.Context, params *TextDocumentPosition
 	return result, nil
 }
 
-func (s *server) Symbols(ctx context.Context, params *WorkspaceSymbolParams) (result []SymbolInformation, err error) {
+func (s *Server) Symbols(ctx context.Context, params *WorkspaceSymbolParams) (result []SymbolInformation, err error) {
 	if err = s.Conn.Call(ctx, workspaceSymbol, params, &result); err != nil {
 		return nil, err
 	}
@@ -350,7 +355,7 @@ func (s *server) Symbols(ctx context.Context, params *WorkspaceSymbolParams) (re
 	return result, nil
 }
 
-func (s *server) TypeDefinition(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
+func (s *Server) TypeDefinition(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
 	if err = s.Conn.Call(ctx, textDocumentTypeDefinition, params, &result); err != nil {
 		return nil, err
 	}
@@ -358,12 +363,12 @@ func (s *server) TypeDefinition(ctx context.Context, params *TextDocumentPositio
 	return result, nil
 }
 
-func (s *server) WillSave(ctx context.Context, params *WillSaveTextDocumentParams) (err error) {
+func (s *Server) WillSave(ctx context.Context, params *WillSaveTextDocumentParams) (err error) {
 	err = s.Conn.Notify(ctx, textDocumentWillSave, params)
 	return
 }
 
-func (s *server) WillSaveWaitUntil(ctx context.Context, params *WillSaveTextDocumentParams) (result []TextEdit, err error) {
+func (s *Server) WillSaveWaitUntil(ctx context.Context, params *WillSaveTextDocumentParams) (result []TextEdit, err error) {
 	if err = s.Conn.Call(ctx, textDocumentWillSaveWaitUntil, params, &result); err != nil {
 		return nil, err
 	}
@@ -372,15 +377,14 @@ func (s *server) WillSaveWaitUntil(ctx context.Context, params *WillSaveTextDocu
 }
 
 // ServerHandler returns the client handler.
-func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
+func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler {
 	return func(ctx context.Context, conn *jsonrpc2.Conn, r *jsonrpc2.Request) {
-		dec := gojay.BorrowDecoder(r.Params)
-		defer dec.Release()
+		dec := gojay.Unsafe
 
 		switch r.Method {
 		case initialize:
 			var params InitializeParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.Unmarshal(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -391,7 +395,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case initialized:
 			var params InitializedParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -419,7 +423,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case cancelRequest:
 			var params CancelParams
-			if err := dec.Decode(params); err != nil {
+			if err := dec.Unmarshal(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -427,7 +431,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case textDocumentCodeAction:
 			var params CodeActionParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -438,7 +442,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case textDocumentCodeLens:
 			var params CodeLensParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -449,7 +453,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case codeLensResolve:
 			var params CodeLens
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -460,7 +464,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case textDocumentColorPresentation:
 			var params ColorPresentationParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -471,7 +475,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case textDocumentCompletion:
 			var params CompletionParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -482,7 +486,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case completionItemResolve:
 			var params CompletionItem
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -493,7 +497,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case textDocumentDefinition:
 			var params TextDocumentPositionParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -504,7 +508,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case textDocumentDidChange:
 			var params DidChangeTextDocumentParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -514,7 +518,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case workspaceDidChangeConfiguration:
 			var params DidChangeConfigurationParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -524,7 +528,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case workspaceDidChangeWatchedFiles:
 			var params DidChangeWatchedFilesParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -534,7 +538,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case workspaceDidChangeWorkspaceFolders:
 			var params DidChangeWorkspaceFoldersParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -544,7 +548,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case textDocumentDidClose:
 			var params DidCloseTextDocumentParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -554,7 +558,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case textDocumentDidOpen:
 			var params DidOpenTextDocumentParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -564,7 +568,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case textDocumentDidSave:
 			var params DidSaveTextDocumentParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -574,7 +578,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case textDocumentDocumentColor:
 			var params DocumentColorParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -585,7 +589,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case textDocumentDocumentHighlight:
 			var params TextDocumentPositionParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -596,7 +600,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case textDocumentDocumentLink:
 			var params DocumentLinkParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -607,7 +611,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case documentLinkResolve:
 			var params DocumentLink
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -618,7 +622,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case textDocumentDocumentSymbol:
 			var params DocumentSymbolParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -629,7 +633,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case workspaceExecuteCommand:
 			var params ExecuteCommandParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -640,7 +644,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case textDocumentFoldingRange:
 			var params FoldingRangeParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -651,7 +655,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case textDocumentFormatting:
 			var params DocumentFormattingParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -662,7 +666,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case textDocumentHover:
 			var params TextDocumentPositionParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -673,7 +677,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case textDocumentImplementation:
 			var params TextDocumentPositionParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -684,7 +688,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case textDocumentOnTypeFormatting:
 			var params DocumentOnTypeFormattingParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -695,7 +699,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case textDocumentRangeFormatting:
 			var params DocumentRangeFormattingParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -706,7 +710,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case textDocumentReferences:
 			var params ReferenceParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -717,7 +721,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case textDocumentRename:
 			var params RenameParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -728,7 +732,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case textDocumentSignatureHelp:
 			var params TextDocumentPositionParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -739,7 +743,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case workspaceSymbol:
 			var params WorkspaceSymbolParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -750,7 +754,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case textDocumentTypeDefinition:
 			var params TextDocumentPositionParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -761,7 +765,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case textDocumentWillSave:
 			var params WillSaveTextDocumentParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -771,7 +775,7 @@ func ServerHandler(server Server, logger *zap.Logger) jsonrpc2.Handler {
 
 		case textDocumentWillSaveWaitUntil:
 			var params WillSaveTextDocumentParams
-			if err := dec.DecodeObject(&params); err != nil {
+			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
