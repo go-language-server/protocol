@@ -167,7 +167,7 @@ type TextDocumentClientCapabilitiesCompletion struct {
 	// capabilities.
 	CompletionItem *TextDocumentClientCapabilitiesCompletionItem `json:"completionItem,omitempty"`
 
-	CompletionItemKind *CompletionItemKind `json:"completionItemKind,omitempty"`
+	CompletionItemKind CompletionItemKind `json:"completionItemKind,omitempty"`
 
 	// ContextSupport is the client supports to send additional context information for a
 	// `textDocument/completion` request.

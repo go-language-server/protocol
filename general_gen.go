@@ -20,9 +20,6 @@ func (v *workspaceFolders) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal.
-func (v *workspaceFolders) NKeys() int { return 1 }
-
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
 func (v *workspaceFolders) MarshalJSONArray(enc *gojay.Encoder) {
 	for _, t := range *v {
@@ -32,7 +29,7 @@ func (v *workspaceFolders) MarshalJSONArray(enc *gojay.Encoder) {
 
 // IsNil implements gojay's MarshalerJSONArray.
 func (v *workspaceFolders) IsNil() bool {
-	return *v == nil || len(*v) == 0
+	return len(*v) == 0
 }
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
@@ -175,13 +172,10 @@ func (v *symbolKindValueSet) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal.
-func (v *symbolKindValueSet) NKeys() int { return 1 }
-
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
 func (v *symbolKindValueSet) MarshalJSONArray(enc *gojay.Encoder) {
 	for _, t := range *v {
-		enc.Float64KeyOmitEmpty("valueSet", float64(t))
+		enc.Float64OmitEmpty(float64(t))
 	}
 }
 
@@ -193,6 +187,9 @@ func (v *symbolKindValueSet) IsNil() bool {
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *WorkspaceClientCapabilitiesSymbolKind) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == "valueSet" {
+		if v.ValueSet == nil {
+			v.ValueSet = []SymbolKind{}
+		}
 		dec.Array((*symbolKindValueSet)(&v.ValueSet))
 	}
 	return nil
@@ -324,7 +321,7 @@ func (v *TextDocumentClientCapabilitiesCompletion) UnmarshalJSONObject(dec *goja
 		}
 		return dec.Object(v.CompletionItem)
 	case "completionItemKind":
-		return dec.Int((*int)(v.CompletionItemKind))
+		return dec.Int((*int)(&v.CompletionItemKind))
 	case "contextSupport":
 		return dec.Bool(&v.ContextSupport)
 	}
@@ -338,17 +335,17 @@ func (v *TextDocumentClientCapabilitiesCompletion) NKeys() int { return 4 }
 func (v *TextDocumentClientCapabilitiesCompletion) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKeyOmitEmpty("dynamicRegistration", v.DynamicRegistration)
 	enc.ObjectKeyOmitEmpty("completionItem", v.CompletionItem)
-	enc.IntKeyOmitEmpty("completionItemKind", int(*v.CompletionItemKind))
+	enc.IntKeyOmitEmpty("completionItemKind", int(v.CompletionItemKind))
 	enc.BoolKeyOmitEmpty("contextSupport", v.ContextSupport)
 }
 
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilitiesCompletion) IsNil() bool { return v == nil }
 
-type documentationFormat []MarkupKind
+type markupKinds []MarkupKind
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
-func (v *documentationFormat) UnmarshalJSONArray(dec *gojay.Decoder) error {
+func (v *markupKinds) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	var t MarkupKind
 	if err := dec.String((*string)(&t)); err != nil {
 		return err
@@ -357,18 +354,15 @@ func (v *documentationFormat) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal.
-func (v *documentationFormat) NKeys() int { return 1 }
-
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
-func (v *documentationFormat) MarshalJSONArray(enc *gojay.Encoder) {
+func (v *markupKinds) MarshalJSONArray(enc *gojay.Encoder) {
 	for _, t := range *v {
-		enc.StringKeyOmitEmpty("valueSet", string(t))
+		enc.StringOmitEmpty(string(t))
 	}
 }
 
 // IsNil implements gojay's MarshalerJSONArray.
-func (v *documentationFormat) IsNil() bool {
+func (v *markupKinds) IsNil() bool {
 	return *v == nil || len(*v) == 0
 }
 
@@ -380,7 +374,7 @@ func (v *TextDocumentClientCapabilitiesCompletionItem) UnmarshalJSONObject(dec *
 	case "commitCharactersSupport":
 		return dec.Bool(&v.CommitCharactersSupport)
 	case "documentationFormat":
-		return dec.Array((*documentationFormat)(&v.DocumentationFormat))
+		return dec.Array((*markupKinds)(&v.DocumentationFormat))
 	case "deprecatedSupport":
 		return dec.Bool(&v.DeprecatedSupport)
 	case "preselectSupport":
@@ -396,7 +390,7 @@ func (v *TextDocumentClientCapabilitiesCompletionItem) NKeys() int { return 5 }
 func (v *TextDocumentClientCapabilitiesCompletionItem) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKeyOmitEmpty("snippetSupport", v.SnippetSupport)
 	enc.BoolKeyOmitEmpty("commitCharactersSupport", v.CommitCharactersSupport)
-	enc.ArrayKeyOmitEmpty("documentationFormat", (*documentationFormat)(&v.DocumentationFormat))
+	enc.ArrayKeyOmitEmpty("documentationFormat", (*markupKinds)(&v.DocumentationFormat))
 	enc.BoolKeyOmitEmpty("deprecatedSupport", v.DeprecatedSupport)
 	enc.BoolKeyOmitEmpty("preselectSupport", v.PreselectSupport)
 }
@@ -410,7 +404,7 @@ func (v *TextDocumentClientCapabilitiesHover) UnmarshalJSONObject(dec *gojay.Dec
 	case "dynamicRegistration":
 		return dec.Bool(&v.DynamicRegistration)
 	case "contentFormat":
-		return dec.Array((*documentationFormat)(&v.ContentFormat))
+		return dec.Array((*markupKinds)(&v.ContentFormat))
 	}
 	return nil
 }
@@ -421,7 +415,7 @@ func (v *TextDocumentClientCapabilitiesHover) NKeys() int { return 2 }
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesHover) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKeyOmitEmpty("dynamicRegistration", v.DynamicRegistration)
-	enc.ArrayKeyOmitEmpty("contentFormat", (*documentationFormat)(&v.ContentFormat))
+	enc.ArrayKeyOmitEmpty("contentFormat", (*markupKinds)(&v.ContentFormat))
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -456,7 +450,7 @@ func (v *TextDocumentClientCapabilitiesSignatureHelp) IsNil() bool { return v ==
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesSignatureInformation) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == "documentationFormat" {
-		return dec.Array((*documentationFormat)(&v.DocumentationFormat))
+		return dec.Array((*markupKinds)(&v.DocumentationFormat))
 	}
 	return nil
 }
@@ -466,7 +460,7 @@ func (v *TextDocumentClientCapabilitiesSignatureInformation) NKeys() int { retur
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesSignatureInformation) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKeyOmitEmpty("documentationFormat", (*documentationFormat)(&v.DocumentationFormat))
+	enc.ArrayKeyOmitEmpty("documentationFormat", (*markupKinds)(&v.DocumentationFormat))
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -749,19 +743,16 @@ func (v *codeActionKindValueSet) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal.
-func (v *codeActionKindValueSet) NKeys() int { return 1 }
-
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
 func (v *codeActionKindValueSet) MarshalJSONArray(enc *gojay.Encoder) {
 	for _, t := range *v {
-		enc.StringKey("valueSet", string(t))
+		enc.String(string(t))
 	}
 }
 
 // IsNil implements gojay's MarshalerJSONArray.
 func (v *codeActionKindValueSet) IsNil() bool {
-	return *v == nil || len(*v) == 0
+	return len(*v) == 0
 }
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
@@ -1127,13 +1118,16 @@ func (v *CompletionOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) er
 	case "resolveProvider":
 		return dec.Bool(&v.ResolveProvider)
 	case "triggerCharacters":
+		if v.TriggerCharacters == nil {
+			v.TriggerCharacters = stringSlice{}
+		}
 		return dec.Array((*stringSlice)(&v.TriggerCharacters))
 	}
 	return nil
 }
 
 // NKeys returns the number of keys to unmarshal.
-func (v *CompletionOptions) NKeys() int { return 1 }
+func (v *CompletionOptions) NKeys() int { return 2 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *CompletionOptions) MarshalJSONObject(enc *gojay.Encoder) {
@@ -1147,7 +1141,7 @@ func (v *CompletionOptions) IsNil() bool { return v == nil }
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *SignatureHelpOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == "codeActionKinds" {
-		dec.Array((*stringSlice)(&v.TriggerCharacters))
+		return dec.Array((*stringSlice)(&v.TriggerCharacters))
 	}
 	return nil
 }
@@ -1166,7 +1160,7 @@ func (v *SignatureHelpOptions) IsNil() bool { return v == nil }
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *CodeActionOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == "codeActionKinds" {
-		dec.Array((*codeActionKindValueSet)(&v.CodeActionKinds))
+		return dec.Array((*codeActionKindValueSet)(&v.CodeActionKinds))
 	}
 	return nil
 }
@@ -1213,7 +1207,7 @@ func (v *DocumentOnTypeFormattingOptions) UnmarshalJSONObject(dec *gojay.Decoder
 }
 
 // NKeys returns the number of keys to unmarshal.
-func (v *DocumentOnTypeFormattingOptions) NKeys() int { return 1 }
+func (v *DocumentOnTypeFormattingOptions) NKeys() int { return 2 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *DocumentOnTypeFormattingOptions) MarshalJSONObject(enc *gojay.Encoder) {
@@ -1421,7 +1415,7 @@ func (v *ServerCapabilitiesWorkspaceFolders) NKeys() int { return 2 }
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ServerCapabilitiesWorkspaceFolders) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKey("supported", v.Supported)
-	enc.AddInterfaceKeyOmitEmpty("changeNotifications", &v.ChangeNotifications)
+	enc.AddInterfaceKeyOmitEmpty("changeNotifications", v.ChangeNotifications)
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -1431,7 +1425,7 @@ func (v *ServerCapabilitiesWorkspaceFolders) IsNil() bool { return v == nil }
 func (v *ServerCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "textDocumentSync":
-		return dec.DecodeInterface(&v.TextDocumentSync)
+		return dec.Interface(&v.TextDocumentSync)
 	case "hoverProvider":
 		return dec.Bool(&v.HoverProvider)
 	case "completionProvider":
@@ -1447,9 +1441,9 @@ func (v *ServerCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) e
 	case "definitionProvider":
 		return dec.Bool(&v.DefinitionProvider)
 	case "typeDefinitionProvider":
-		return dec.DecodeInterface(&v.TypeDefinitionProvider)
+		return dec.Interface(&v.TypeDefinitionProvider)
 	case "implementationProvider":
-		return dec.DecodeInterface(&v.ImplementationProvider)
+		return dec.Interface(&v.ImplementationProvider)
 	case "referencesProvider":
 		return dec.Bool(&v.ReferencesProvider)
 	case "documentHighlightProvider":
@@ -1482,9 +1476,9 @@ func (v *ServerCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) e
 		}
 		return dec.Object(v.DocumentLinkProvider)
 	case "colorProvider":
-		return dec.DecodeInterface(&v.ColorProvider)
+		return dec.Interface(&v.ColorProvider)
 	case "foldingRangeProvider":
-		return dec.DecodeInterface(&v.FoldingRangeProvider)
+		return dec.Interface(&v.FoldingRangeProvider)
 	case "executeCommandProvider":
 		if v.ExecuteCommandProvider == nil {
 			v.ExecuteCommandProvider = &ExecuteCommandOptions{}
@@ -1496,7 +1490,7 @@ func (v *ServerCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) e
 		}
 		return dec.Object(v.Workspace)
 	case "experimental":
-		return dec.DecodeInterface(&v.Experimental)
+		return dec.Interface(&v.Experimental)
 	}
 	return nil
 }
@@ -1524,8 +1518,8 @@ func (v *ServerCapabilities) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKeyOmitEmpty("documentOnTypeFormattingProvider", v.DocumentOnTypeFormattingProvider)
 	enc.BoolKeyOmitEmpty("renameProvider", v.RenameProvider)
 	enc.ObjectKeyOmitEmpty("documentLinkProvider", v.DocumentLinkProvider)
-	enc.AddInterfaceKey("colorProvider", v.ColorProvider)
-	enc.AddInterfaceKey("foldingRangeProvider", v.FoldingRangeProvider)
+	enc.AddInterfaceKeyOmitEmpty("colorProvider", v.ColorProvider)
+	enc.AddInterfaceKeyOmitEmpty("foldingRangeProvider", v.FoldingRangeProvider)
 	enc.ObjectKeyOmitEmpty("executeCommandProvider", v.ExecuteCommandProvider)
 	enc.ObjectKeyOmitEmpty("workspace", v.Workspace)
 	enc.AddInterfaceKeyOmitEmpty("experimental", v.Experimental)
