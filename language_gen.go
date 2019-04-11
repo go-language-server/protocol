@@ -280,7 +280,7 @@ func (v *SignatureHelp) IsNil() bool { return v == nil }
 func (v *SignatureInformation) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case "documentationFormat":
-		return dec.Array((*stringSlice)(&v.DocumentationFormat))
+		return dec.Array((*markupKinds)(&v.DocumentationFormat))
 	case "parameterInformation":
 		if v.ParameterInformation == nil {
 			v.ParameterInformation = &ParameterInformation{}
@@ -295,7 +295,7 @@ func (v *SignatureInformation) NKeys() int { return 2 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *SignatureInformation) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKeyOmitEmpty("documentationFormat", (*stringSlice)(&v.DocumentationFormat))
+	enc.ArrayKeyOmitEmpty("documentationFormat", (*markupKinds)(&v.DocumentationFormat))
 	enc.ObjectKeyOmitEmpty("parameterInformation", v.ParameterInformation)
 }
 

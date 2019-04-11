@@ -277,7 +277,7 @@ type SignatureInformation struct {
 
 	// DocumentationFormat is the client supports the follow content formats for the documentation
 	// property. The order describes the preferred format of the client.
-	DocumentationFormat []string `json:"documentationFormat,omitempty"`
+	DocumentationFormat []MarkupKind `json:"documentationFormat,omitempty"`
 
 	// ParameterInformation client capabilities specific to parameter information.
 	ParameterInformation *ParameterInformation `json:"parameterInformation,omitempty"`
