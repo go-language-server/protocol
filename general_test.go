@@ -16,7 +16,17 @@ import (
 )
 
 func Test_workspaceFolders(t *testing.T) {
-	const want = `[{"name":"protocol","uri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol"},{"name":"jsonrpc2","uri":"file:///Users/zchee/go/src/github.com/go-language-server/jsonrpc2"}]`
+	const want = `[{"uri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol","name":"protocol"},{"uri":"file:///Users/zchee/go/src/github.com/go-language-server/jsonrpc2","name":"jsonrpc2"}]`
+	var wantType = workspaceFolders{
+		{
+			URI:  string(ToDocumentURI("/Users/zchee/go/src/github.com/go-language-server/protocol")),
+			Name: filepath.Base("/Users/zchee/go/src/github.com/go-language-server/protocol"),
+		},
+		{
+			URI:  string(ToDocumentURI("/Users/zchee/go/src/github.com/go-language-server/jsonrpc2")),
+			Name: filepath.Base("/Users/zchee/go/src/github.com/go-language-server/jsonrpc2"),
+		},
+	}
 
 	t.Run("Marshal", func(t *testing.T) {
 		t.Parallel()
@@ -29,17 +39,8 @@ func Test_workspaceFolders(t *testing.T) {
 			wantErr        bool
 		}{
 			{
-				name: "Valid",
-				field: workspaceFolders{
-					{
-						Name: filepath.Base("/Users/zchee/go/src/github.com/go-language-server/protocol"),
-						URI:  string(ToDocumentURI("/Users/zchee/go/src/github.com/go-language-server/protocol")),
-					},
-					{
-						Name: filepath.Base("/Users/zchee/go/src/github.com/go-language-server/jsonrpc2"),
-						URI:  string(ToDocumentURI("/Users/zchee/go/src/github.com/go-language-server/jsonrpc2")),
-					},
-				},
+				name:           "Valid",
+				field:          wantType,
 				want:           want,
 				wantMarshalErr: false,
 				wantErr:        false,
@@ -75,18 +76,9 @@ func Test_workspaceFolders(t *testing.T) {
 			wantErr          bool
 		}{
 			{
-				name:  "Valid",
-				field: strings.NewReader(want),
-				want: workspaceFolders{
-					{
-						Name: filepath.Base("/Users/zchee/go/src/github.com/go-language-server/protocol"),
-						URI:  string(ToDocumentURI("/Users/zchee/go/src/github.com/go-language-server/protocol")),
-					},
-					{
-						Name: filepath.Base("/Users/zchee/go/src/github.com/go-language-server/jsonrpc2"),
-						URI:  string(ToDocumentURI("/Users/zchee/go/src/github.com/go-language-server/jsonrpc2")),
-					},
-				},
+				name:             "Valid",
+				field:            strings.NewReader(want),
+				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
@@ -114,8 +106,26 @@ func Test_workspaceFolders(t *testing.T) {
 }
 
 func TestInitializeParams(t *testing.T) {
-	const want = `{"processId":25556,"rootPath":"~/go/src/github.com/go-language-server/protocol","rootUri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol","initializationOptions":"testdata","capabilities":{},"trace":"on","workspaceFolders":[{"name":"protocol","uri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol"},{"name":"jsonrpc2","uri":"file:///Users/zchee/go/src/github.com/go-language-server/jsonrpc2"}]}`
+	const want = `{"processId":25556,"rootPath":"~/go/src/github.com/go-language-server/protocol","rootUri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol","initializationOptions":"testdata","capabilities":{},"trace":"on","workspaceFolders":[{"uri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol","name":"protocol"},{"uri":"file:///Users/zchee/go/src/github.com/go-language-server/jsonrpc2","name":"jsonrpc2"}]}`
 	const wantNil = `{"processId":25556,"rootUri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol","capabilities":{}}`
+	var wantType = InitializeParams{
+		ProcessID:             25556,
+		RootPath:              "~/go/src/github.com/go-language-server/protocol",
+		RootURI:               "file:///Users/zchee/go/src/github.com/go-language-server/protocol",
+		InitializationOptions: "testdata",
+		Capabilities:          ClientCapabilities{},
+		Trace:                 "on",
+		WorkspaceFolders: []WorkspaceFolder{
+			{
+				Name: filepath.Base("/Users/zchee/go/src/github.com/go-language-server/protocol"),
+				URI:  string(ToDocumentURI("/Users/zchee/go/src/github.com/go-language-server/protocol")),
+			},
+			{
+				Name: filepath.Base("/Users/zchee/go/src/github.com/go-language-server/jsonrpc2"),
+				URI:  string(ToDocumentURI("/Users/zchee/go/src/github.com/go-language-server/jsonrpc2")),
+			},
+		},
+	}
 
 	t.Run("Marshal", func(t *testing.T) {
 		t.Parallel()
@@ -128,25 +138,8 @@ func TestInitializeParams(t *testing.T) {
 			wantErr        bool
 		}{
 			{
-				name: "Valid",
-				field: InitializeParams{
-					ProcessID:             25556,
-					RootPath:              "~/go/src/github.com/go-language-server/protocol",
-					RootURI:               "file:///Users/zchee/go/src/github.com/go-language-server/protocol",
-					InitializationOptions: "testdata",
-					Capabilities:          ClientCapabilities{},
-					Trace:                 "on",
-					WorkspaceFolders: []WorkspaceFolder{
-						{
-							Name: filepath.Base("/Users/zchee/go/src/github.com/go-language-server/protocol"),
-							URI:  string(ToDocumentURI("/Users/zchee/go/src/github.com/go-language-server/protocol")),
-						},
-						{
-							Name: filepath.Base("/Users/zchee/go/src/github.com/go-language-server/jsonrpc2"),
-							URI:  string(ToDocumentURI("/Users/zchee/go/src/github.com/go-language-server/jsonrpc2")),
-						},
-					},
-				},
+				name:           "Valid",
+				field:          wantType,
 				want:           want,
 				wantMarshalErr: false,
 				wantErr:        false,
@@ -193,26 +186,9 @@ func TestInitializeParams(t *testing.T) {
 			wantErr          bool
 		}{
 			{
-				name:  "Valid",
-				field: strings.NewReader(want),
-				want: InitializeParams{
-					ProcessID:             25556,
-					RootPath:              "~/go/src/github.com/go-language-server/protocol",
-					RootURI:               "file:///Users/zchee/go/src/github.com/go-language-server/protocol",
-					InitializationOptions: "testdata",
-					Capabilities:          ClientCapabilities{},
-					Trace:                 "on",
-					WorkspaceFolders: []WorkspaceFolder{
-						{
-							Name: filepath.Base("/Users/zchee/go/src/github.com/go-language-server/protocol"),
-							URI:  string(ToDocumentURI("/Users/zchee/go/src/github.com/go-language-server/protocol")),
-						},
-						{
-							Name: filepath.Base("/Users/zchee/go/src/github.com/go-language-server/jsonrpc2"),
-							URI:  string(ToDocumentURI("/Users/zchee/go/src/github.com/go-language-server/jsonrpc2")),
-						},
-					},
-				},
+				name:             "Valid",
+				field:            strings.NewReader(want),
+				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
@@ -241,6 +217,38 @@ func TestInitializeParams(t *testing.T) {
 
 func TestWorkspaceClientCapabilities(t *testing.T) {
 	const want = `{"applyEdit":true,"workspaceEdit":{"documentChanges":true,"failureHandling":"FailureHandling","resourceOperations":["ResourceOperations"]},"didChangeConfiguration":{"dynamicRegistration":true},"didChangeWatchedFiles":{"dynamicRegistration":true},"symbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]}},"executeCommand":{"dynamicRegistration":true},"workspaceFolders":true,"configuration":true}`
+	var wantType = WorkspaceClientCapabilities{
+		ApplyEdit: true,
+		WorkspaceEdit: &WorkspaceClientCapabilitiesWorkspaceEdit{
+			DocumentChanges:    true,
+			FailureHandling:    "FailureHandling",
+			ResourceOperations: []string{"ResourceOperations"},
+		},
+		DidChangeConfiguration: &WorkspaceClientCapabilitiesDidChangeConfiguration{
+			DynamicRegistration: true,
+		},
+		DidChangeWatchedFiles: &WorkspaceClientCapabilitiesDidChangeWatchedFiles{
+			DynamicRegistration: true,
+		},
+		Symbol: &WorkspaceClientCapabilitiesSymbol{
+			DynamicRegistration: true,
+			SymbolKind: &WorkspaceClientCapabilitiesSymbolKind{
+				ValueSet: []SymbolKind{
+					FileSymbol,
+					ModuleSymbol,
+					NamespaceSymbol,
+					PackageSymbol,
+					ClassSymbol,
+					MethodSymbol,
+				},
+			},
+		},
+		ExecuteCommand: &WorkspaceClientCapabilitiesExecuteCommand{
+			DynamicRegistration: true,
+		},
+		WorkspaceFolders: true,
+		Configuration:    true,
+	}
 
 	t.Run("Marshal", func(t *testing.T) {
 		t.Parallel()
@@ -253,39 +261,8 @@ func TestWorkspaceClientCapabilities(t *testing.T) {
 			wantErr        bool
 		}{
 			{
-				name: "Valid",
-				field: WorkspaceClientCapabilities{
-					ApplyEdit: true,
-					WorkspaceEdit: &WorkspaceClientCapabilitiesWorkspaceEdit{
-						DocumentChanges:    true,
-						FailureHandling:    "FailureHandling",
-						ResourceOperations: []string{"ResourceOperations"},
-					},
-					DidChangeConfiguration: &WorkspaceClientCapabilitiesDidChangeConfiguration{
-						DynamicRegistration: true,
-					},
-					DidChangeWatchedFiles: &WorkspaceClientCapabilitiesDidChangeWatchedFiles{
-						DynamicRegistration: true,
-					},
-					Symbol: &WorkspaceClientCapabilitiesSymbol{
-						DynamicRegistration: true,
-						SymbolKind: &WorkspaceClientCapabilitiesSymbolKind{
-							ValueSet: []SymbolKind{
-								FileSymbol,
-								ModuleSymbol,
-								NamespaceSymbol,
-								PackageSymbol,
-								ClassSymbol,
-								MethodSymbol,
-							},
-						},
-					},
-					ExecuteCommand: &WorkspaceClientCapabilitiesExecuteCommand{
-						DynamicRegistration: true,
-					},
-					WorkspaceFolders: true,
-					Configuration:    true,
-				},
+				name:           "Valid",
+				field:          wantType,
 				want:           want,
 				wantMarshalErr: false,
 				wantErr:        false,
@@ -321,40 +298,9 @@ func TestWorkspaceClientCapabilities(t *testing.T) {
 			wantErr          bool
 		}{
 			{
-				name:  "Valid",
-				field: strings.NewReader(want),
-				want: WorkspaceClientCapabilities{
-					ApplyEdit: true,
-					WorkspaceEdit: &WorkspaceClientCapabilitiesWorkspaceEdit{
-						DocumentChanges:    true,
-						FailureHandling:    "FailureHandling",
-						ResourceOperations: []string{"ResourceOperations"},
-					},
-					DidChangeConfiguration: &WorkspaceClientCapabilitiesDidChangeConfiguration{
-						DynamicRegistration: true,
-					},
-					DidChangeWatchedFiles: &WorkspaceClientCapabilitiesDidChangeWatchedFiles{
-						DynamicRegistration: true,
-					},
-					Symbol: &WorkspaceClientCapabilitiesSymbol{
-						DynamicRegistration: true,
-						SymbolKind: &WorkspaceClientCapabilitiesSymbolKind{
-							ValueSet: []SymbolKind{
-								FileSymbol,
-								ModuleSymbol,
-								NamespaceSymbol,
-								PackageSymbol,
-								ClassSymbol,
-								MethodSymbol,
-							},
-						},
-					},
-					ExecuteCommand: &WorkspaceClientCapabilitiesExecuteCommand{
-						DynamicRegistration: true,
-					},
-					WorkspaceFolders: true,
-					Configuration:    true,
-				},
+				name:             "Valid",
+				field:            strings.NewReader(want),
+				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
@@ -383,6 +329,12 @@ func TestWorkspaceClientCapabilities(t *testing.T) {
 
 func TestTextDocumentClientCapabilitiesSynchronization(t *testing.T) {
 	const want = `{"didSave":true,"dynamicRegistration":true,"willSave":true,"willSaveWaitUntil":true}`
+	var wantType = TextDocumentClientCapabilitiesSynchronization{
+		DidSave:             true,
+		DynamicRegistration: true,
+		WillSave:            true,
+		WillSaveWaitUntil:   true,
+	}
 
 	t.Run("Marshal", func(t *testing.T) {
 		t.Parallel()
@@ -395,13 +347,8 @@ func TestTextDocumentClientCapabilitiesSynchronization(t *testing.T) {
 			wantErr        bool
 		}{
 			{
-				name: "Valid",
-				field: TextDocumentClientCapabilitiesSynchronization{
-					DidSave:             true,
-					DynamicRegistration: true,
-					WillSave:            true,
-					WillSaveWaitUntil:   true,
-				},
+				name:           "Valid",
+				field:          wantType,
 				want:           want,
 				wantMarshalErr: false,
 				wantErr:        false,
@@ -444,14 +391,9 @@ func TestTextDocumentClientCapabilitiesSynchronization(t *testing.T) {
 			wantErr          bool
 		}{
 			{
-				name:  "Valid",
-				field: strings.NewReader(want),
-				want: TextDocumentClientCapabilitiesSynchronization{
-					DidSave:             true,
-					DynamicRegistration: true,
-					WillSave:            true,
-					WillSaveWaitUntil:   true,
-				},
+				name:             "Valid",
+				field:            strings.NewReader(want),
+				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
@@ -2551,6 +2493,126 @@ func TestTextDocumentClientCapabilitiesFoldingRange(t *testing.T) {
 
 func TestTextDocumentClientCapabilities(t *testing.T) {
 	const want = `{"synchronization":{"didSave":true,"dynamicRegistration":true,"willSave":true,"willSaveWaitUntil":true},"completion":{"dynamicRegistration":true,"completionItem":{"snippetSupport":true,"commitCharactersSupport":true,"documentationFormat":["plaintext","markdown"],"deprecatedSupport":true,"preselectSupport":true},"completionItemKind":1,"contextSupport":true},"hover":{"dynamicRegistration":true,"contentFormat":["plaintext","markdown"]},"signatureHelp":{"dynamicRegistration":true,"signatureInformation":{"documentationFormat":["plaintext","markdown"]}},"references":{"dynamicRegistration":true},"documentHighlight":{"dynamicRegistration":true},"documentSymbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]},"hierarchicalDocumentSymbolSupport":true},"formatting":{"dynamicRegistration":true},"rangeFormatting":{"dynamicRegistration":true},"onTypeFormatting":{"dynamicRegistration":true},"declaration":{"dynamicRegistration":true,"linkSupport":true},"definition":{"dynamicRegistration":true,"linkSupport":true},"typeDefinition":{"dynamicRegistration":true,"linkSupport":true},"implementation":{"dynamicRegistration":true,"linkSupport":true},"codeAction":{"dynamicRegistration":true,"codeActionLiteralSupport":{"codeActionKind":{"valueSet":["quickfix","refactor","refactor.extract","refactor.rewrite","source","source.organizeImports"]}}},"codeLens":{"dynamicRegistration":true},"documentLink":{"dynamicRegistration":true},"colorProvider":{"dynamicRegistration":true},"rename":{"dynamicRegistration":true,"prepareSupport":true},"publishDiagnostics":{"relatedInformation":true},"foldingRange":{"dynamicRegistration":true,"rangeLimit":0.5,"lineFoldingOnly":true}}`
+	var wantType = TextDocumentClientCapabilities{
+		Synchronization: &TextDocumentClientCapabilitiesSynchronization{
+			DidSave:             true,
+			DynamicRegistration: true,
+			WillSave:            true,
+			WillSaveWaitUntil:   true,
+		},
+		Completion: &TextDocumentClientCapabilitiesCompletion{
+			DynamicRegistration: true,
+			CompletionItem: &TextDocumentClientCapabilitiesCompletionItem{
+				SnippetSupport:          true,
+				CommitCharactersSupport: true,
+				DocumentationFormat: []MarkupKind{
+					PlainText,
+					Markdown,
+				},
+				DeprecatedSupport: true,
+				PreselectSupport:  true,
+			},
+			CompletionItemKind: TextCompletion,
+			ContextSupport:     true,
+		},
+		Hover: &TextDocumentClientCapabilitiesHover{
+			DynamicRegistration: true,
+			ContentFormat: []MarkupKind{
+				PlainText,
+				Markdown,
+			},
+		},
+		SignatureHelp: &TextDocumentClientCapabilitiesSignatureHelp{
+			DynamicRegistration: true,
+			SignatureInformation: &TextDocumentClientCapabilitiesSignatureInformation{
+				DocumentationFormat: []MarkupKind{
+					PlainText,
+					Markdown,
+				},
+			},
+		},
+		References: &TextDocumentClientCapabilitiesReferences{
+			DynamicRegistration: true,
+		},
+		DocumentHighlight: &TextDocumentClientCapabilitiesDocumentHighlight{
+			DynamicRegistration: true,
+		},
+		DocumentSymbol: &TextDocumentClientCapabilitiesDocumentSymbol{
+			DynamicRegistration: true,
+			SymbolKind: &WorkspaceClientCapabilitiesSymbolKind{
+				ValueSet: []SymbolKind{
+					FileSymbol,
+					ModuleSymbol,
+					NamespaceSymbol,
+					PackageSymbol,
+					ClassSymbol,
+					MethodSymbol,
+				},
+			},
+			HierarchicalDocumentSymbolSupport: true,
+		},
+		Formatting: &TextDocumentClientCapabilitiesFormatting{
+			DynamicRegistration: true,
+		},
+		RangeFormatting: &TextDocumentClientCapabilitiesRangeFormatting{
+			DynamicRegistration: true,
+		},
+		OnTypeFormatting: &TextDocumentClientCapabilitiesOnTypeFormatting{
+			DynamicRegistration: true,
+		},
+		Declaration: &TextDocumentClientCapabilitiesDeclaration{
+			DynamicRegistration: true,
+			LinkSupport:         true,
+		},
+		Definition: &TextDocumentClientCapabilitiesDefinition{
+			DynamicRegistration: true,
+			LinkSupport:         true,
+		},
+		TypeDefinition: &TextDocumentClientCapabilitiesTypeDefinition{
+			DynamicRegistration: true,
+			LinkSupport:         true,
+		},
+		Implementation: &TextDocumentClientCapabilitiesImplementation{
+			DynamicRegistration: true,
+			LinkSupport:         true,
+		},
+		CodeAction: &TextDocumentClientCapabilitiesCodeAction{
+			DynamicRegistration: true,
+			CodeActionLiteralSupport: &TextDocumentClientCapabilitiesCodeActionLiteralSupport{
+				CodeActionKind: &TextDocumentClientCapabilitiesCodeActionKind{
+					ValueSet: []CodeActionKind{
+						QuickFix,
+						Refactor,
+						RefactorExtract,
+						RefactorRewrite,
+						Source,
+						SourceOrganizeImports,
+					},
+				},
+			},
+		},
+		CodeLens: &TextDocumentClientCapabilitiesCodeLens{
+			DynamicRegistration: true,
+		},
+		DocumentLink: &TextDocumentClientCapabilitiesDocumentLink{
+			DynamicRegistration: true,
+		},
+		ColorProvider: &TextDocumentClientCapabilitiesColorProvider{
+			DynamicRegistration: true,
+		},
+		Rename: &TextDocumentClientCapabilitiesRename{
+			DynamicRegistration: true,
+			PrepareSupport:      true,
+		},
+		PublishDiagnostics: &TextDocumentClientCapabilitiesPublishDiagnostics{
+			RelatedInformation: true,
+		},
+		FoldingRange: &TextDocumentClientCapabilitiesFoldingRange{
+			DynamicRegistration: true,
+			RangeLimit:          float64(0.5),
+			LineFoldingOnly:     true,
+		},
+	}
 
 	t.Run("Marshal", func(t *testing.T) {
 		t.Parallel()
@@ -2563,127 +2625,8 @@ func TestTextDocumentClientCapabilities(t *testing.T) {
 			wantErr        bool
 		}{
 			{
-				name: "Valid",
-				field: TextDocumentClientCapabilities{
-					Synchronization: &TextDocumentClientCapabilitiesSynchronization{
-						DidSave:             true,
-						DynamicRegistration: true,
-						WillSave:            true,
-						WillSaveWaitUntil:   true,
-					},
-					Completion: &TextDocumentClientCapabilitiesCompletion{
-						DynamicRegistration: true,
-						CompletionItem: &TextDocumentClientCapabilitiesCompletionItem{
-							SnippetSupport:          true,
-							CommitCharactersSupport: true,
-							DocumentationFormat: []MarkupKind{
-								PlainText,
-								Markdown,
-							},
-							DeprecatedSupport: true,
-							PreselectSupport:  true,
-						},
-						CompletionItemKind: TextCompletion,
-						ContextSupport:     true,
-					},
-					Hover: &TextDocumentClientCapabilitiesHover{
-						DynamicRegistration: true,
-						ContentFormat: []MarkupKind{
-							PlainText,
-							Markdown,
-						},
-					},
-					SignatureHelp: &TextDocumentClientCapabilitiesSignatureHelp{
-						DynamicRegistration: true,
-						SignatureInformation: &TextDocumentClientCapabilitiesSignatureInformation{
-							DocumentationFormat: []MarkupKind{
-								PlainText,
-								Markdown,
-							},
-						},
-					},
-					References: &TextDocumentClientCapabilitiesReferences{
-						DynamicRegistration: true,
-					},
-					DocumentHighlight: &TextDocumentClientCapabilitiesDocumentHighlight{
-						DynamicRegistration: true,
-					},
-					DocumentSymbol: &TextDocumentClientCapabilitiesDocumentSymbol{
-						DynamicRegistration: true,
-						SymbolKind: &WorkspaceClientCapabilitiesSymbolKind{
-							ValueSet: []SymbolKind{
-								FileSymbol,
-								ModuleSymbol,
-								NamespaceSymbol,
-								PackageSymbol,
-								ClassSymbol,
-								MethodSymbol,
-							},
-						},
-						HierarchicalDocumentSymbolSupport: true,
-					},
-					Formatting: &TextDocumentClientCapabilitiesFormatting{
-						DynamicRegistration: true,
-					},
-					RangeFormatting: &TextDocumentClientCapabilitiesRangeFormatting{
-						DynamicRegistration: true,
-					},
-					OnTypeFormatting: &TextDocumentClientCapabilitiesOnTypeFormatting{
-						DynamicRegistration: true,
-					},
-					Declaration: &TextDocumentClientCapabilitiesDeclaration{
-						DynamicRegistration: true,
-						LinkSupport:         true,
-					},
-					Definition: &TextDocumentClientCapabilitiesDefinition{
-						DynamicRegistration: true,
-						LinkSupport:         true,
-					},
-					TypeDefinition: &TextDocumentClientCapabilitiesTypeDefinition{
-						DynamicRegistration: true,
-						LinkSupport:         true,
-					},
-					Implementation: &TextDocumentClientCapabilitiesImplementation{
-						DynamicRegistration: true,
-						LinkSupport:         true,
-					},
-					CodeAction: &TextDocumentClientCapabilitiesCodeAction{
-						DynamicRegistration: true,
-						CodeActionLiteralSupport: &TextDocumentClientCapabilitiesCodeActionLiteralSupport{
-							CodeActionKind: &TextDocumentClientCapabilitiesCodeActionKind{
-								ValueSet: []CodeActionKind{
-									QuickFix,
-									Refactor,
-									RefactorExtract,
-									RefactorRewrite,
-									Source,
-									SourceOrganizeImports,
-								},
-							},
-						},
-					},
-					CodeLens: &TextDocumentClientCapabilitiesCodeLens{
-						DynamicRegistration: true,
-					},
-					DocumentLink: &TextDocumentClientCapabilitiesDocumentLink{
-						DynamicRegistration: true,
-					},
-					ColorProvider: &TextDocumentClientCapabilitiesColorProvider{
-						DynamicRegistration: true,
-					},
-					Rename: &TextDocumentClientCapabilitiesRename{
-						DynamicRegistration: true,
-						PrepareSupport:      true,
-					},
-					PublishDiagnostics: &TextDocumentClientCapabilitiesPublishDiagnostics{
-						RelatedInformation: true,
-					},
-					FoldingRange: &TextDocumentClientCapabilitiesFoldingRange{
-						DynamicRegistration: true,
-						RangeLimit:          float64(0.5),
-						LineFoldingOnly:     true,
-					},
-				},
+				name:           "Valid",
+				field:          wantType,
 				want:           want,
 				wantMarshalErr: false,
 				wantErr:        false,
@@ -2726,128 +2669,9 @@ func TestTextDocumentClientCapabilities(t *testing.T) {
 			wantErr          bool
 		}{
 			{
-				name:  "Valid",
-				field: strings.NewReader(want),
-				want: TextDocumentClientCapabilities{
-					Synchronization: &TextDocumentClientCapabilitiesSynchronization{
-						DidSave:             true,
-						DynamicRegistration: true,
-						WillSave:            true,
-						WillSaveWaitUntil:   true,
-					},
-					Completion: &TextDocumentClientCapabilitiesCompletion{
-						DynamicRegistration: true,
-						CompletionItem: &TextDocumentClientCapabilitiesCompletionItem{
-							SnippetSupport:          true,
-							CommitCharactersSupport: true,
-							DocumentationFormat: []MarkupKind{
-								PlainText,
-								Markdown,
-							},
-							DeprecatedSupport: true,
-							PreselectSupport:  true,
-						},
-						CompletionItemKind: TextCompletion,
-						ContextSupport:     true,
-					},
-					Hover: &TextDocumentClientCapabilitiesHover{
-						DynamicRegistration: true,
-						ContentFormat: []MarkupKind{
-							PlainText,
-							Markdown,
-						},
-					},
-					SignatureHelp: &TextDocumentClientCapabilitiesSignatureHelp{
-						DynamicRegistration: true,
-						SignatureInformation: &TextDocumentClientCapabilitiesSignatureInformation{
-							DocumentationFormat: []MarkupKind{
-								PlainText,
-								Markdown,
-							},
-						},
-					},
-					References: &TextDocumentClientCapabilitiesReferences{
-						DynamicRegistration: true,
-					},
-					DocumentHighlight: &TextDocumentClientCapabilitiesDocumentHighlight{
-						DynamicRegistration: true,
-					},
-					DocumentSymbol: &TextDocumentClientCapabilitiesDocumentSymbol{
-						DynamicRegistration: true,
-						SymbolKind: &WorkspaceClientCapabilitiesSymbolKind{
-							ValueSet: []SymbolKind{
-								FileSymbol,
-								ModuleSymbol,
-								NamespaceSymbol,
-								PackageSymbol,
-								ClassSymbol,
-								MethodSymbol,
-							},
-						},
-						HierarchicalDocumentSymbolSupport: true,
-					},
-					Formatting: &TextDocumentClientCapabilitiesFormatting{
-						DynamicRegistration: true,
-					},
-					RangeFormatting: &TextDocumentClientCapabilitiesRangeFormatting{
-						DynamicRegistration: true,
-					},
-					OnTypeFormatting: &TextDocumentClientCapabilitiesOnTypeFormatting{
-						DynamicRegistration: true,
-					},
-					Declaration: &TextDocumentClientCapabilitiesDeclaration{
-						DynamicRegistration: true,
-						LinkSupport:         true,
-					},
-					Definition: &TextDocumentClientCapabilitiesDefinition{
-						DynamicRegistration: true,
-						LinkSupport:         true,
-					},
-					TypeDefinition: &TextDocumentClientCapabilitiesTypeDefinition{
-						DynamicRegistration: true,
-						LinkSupport:         true,
-					},
-					Implementation: &TextDocumentClientCapabilitiesImplementation{
-						DynamicRegistration: true,
-						LinkSupport:         true,
-					},
-					CodeAction: &TextDocumentClientCapabilitiesCodeAction{
-						DynamicRegistration: true,
-						CodeActionLiteralSupport: &TextDocumentClientCapabilitiesCodeActionLiteralSupport{
-							CodeActionKind: &TextDocumentClientCapabilitiesCodeActionKind{
-								ValueSet: []CodeActionKind{
-									QuickFix,
-									Refactor,
-									RefactorExtract,
-									RefactorRewrite,
-									Source,
-									SourceOrganizeImports,
-								},
-							},
-						},
-					},
-					CodeLens: &TextDocumentClientCapabilitiesCodeLens{
-						DynamicRegistration: true,
-					},
-					DocumentLink: &TextDocumentClientCapabilitiesDocumentLink{
-						DynamicRegistration: true,
-					},
-					ColorProvider: &TextDocumentClientCapabilitiesColorProvider{
-						DynamicRegistration: true,
-					},
-					Rename: &TextDocumentClientCapabilitiesRename{
-						DynamicRegistration: true,
-						PrepareSupport:      true,
-					},
-					PublishDiagnostics: &TextDocumentClientCapabilitiesPublishDiagnostics{
-						RelatedInformation: true,
-					},
-					FoldingRange: &TextDocumentClientCapabilitiesFoldingRange{
-						DynamicRegistration: true,
-						RangeLimit:          float64(0.5),
-						LineFoldingOnly:     true,
-					},
-				},
+				name:             "Valid",
+				field:            strings.NewReader(want),
+				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
