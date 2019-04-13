@@ -96,11 +96,15 @@ const (
 
 type Server struct {
 	*jsonrpc2.Conn
+	logger *zap.Logger
 }
 
 var _ ServerInterface = (*Server)(nil)
 
 func (s *Server) Initialize(ctx context.Context, params *InitializeParams) (result *InitializeResult, err error) {
+	s.logger.Debug("call " + initialize)
+	defer s.logger.Debug("end " + initialize)
+
 	result = new(InitializeResult)
 	err = s.Conn.Call(ctx, initialize, params, result)
 
@@ -108,18 +112,27 @@ func (s *Server) Initialize(ctx context.Context, params *InitializeParams) (resu
 }
 
 func (s *Server) Initialized(ctx context.Context, params *InitializedParams) (err error) {
+	s.logger.Debug("notify " + initialized)
+	defer s.logger.Debug("end " + initialized)
+
 	err = s.Conn.Notify(ctx, initialized, params)
-	return
+	return err
 }
 
 func (s *Server) Shutdown(ctx context.Context) (err error) {
+	s.logger.Debug("call " + shutdown)
+	defer s.logger.Debug("end " + shutdown)
+
 	err = s.Conn.Call(ctx, shutdown, nil, nil)
-	return
+	return err
 }
 
 func (s *Server) Exit(ctx context.Context) (err error) {
+	s.logger.Debug("notify " + exit)
+	defer s.logger.Debug("end " + exit)
+
 	err = s.Conn.Notify(ctx, exit, nil)
-	return
+	return err
 }
 
 func (s *Server) CodeAction(ctx context.Context, params *CodeActionParams) (result []CodeAction, err error) {
@@ -148,6 +161,9 @@ func (s *Server) ColorPresentation(ctx context.Context, params *ColorPresentatio
 }
 
 func (s *Server) Completion(ctx context.Context, params *CompletionParams) (result *CompletionList, err error) {
+	s.logger.Debug("call " + textDocumentCompletion)
+	defer s.logger.Debug("end " + textDocumentCompletion)
+
 	result = new(CompletionList)
 	err = s.Conn.Call(ctx, textDocumentCompletion, params, result)
 
@@ -162,12 +178,18 @@ func (s *Server) CompletionResolve(ctx context.Context, params *CompletionItem) 
 }
 
 func (s *Server) Definition(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
+	s.logger.Debug("call " + textDocumentDefinition)
+	defer s.logger.Debug("end " + textDocumentDefinition)
+
 	err = s.Conn.Call(ctx, textDocumentDefinition, params, &result)
 
 	return result, err
 }
 
 func (s *Server) DidChange(ctx context.Context, params *DidChangeTextDocumentParams) (err error) {
+	s.logger.Debug("notify " + textDocumentDidChange)
+	defer s.logger.Debug("end " + textDocumentDidChange)
+
 	err = s.Conn.Notify(ctx, textDocumentDidChange, params)
 	return
 }
@@ -321,6 +343,7 @@ func (s *Server) WillSaveWaitUntil(ctx context.Context, params *WillSaveTextDocu
 // ServerHandler returns the client handler.
 func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler {
 	return func(ctx context.Context, conn *jsonrpc2.Conn, r *jsonrpc2.Request) {
+		logger.Debug("ServerHandler", zap.String("r.Method", r.Method))
 		dec := gojay.Unsafe
 
 		switch r.Method {

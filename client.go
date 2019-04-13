@@ -41,6 +41,7 @@ const (
 
 type Client struct {
 	*jsonrpc2.Conn
+	logger *zap.Logger
 }
 
 var _ ClientInterface = (*Client)(nil)
@@ -105,6 +106,8 @@ func (c *Client) WorkspaceFolders(ctx context.Context) (result []WorkspaceFolder
 // ClientHandler returns the client handler.
 func ClientHandler(client ClientInterface, logger *zap.Logger) jsonrpc2.Handler {
 	return func(ctx context.Context, conn *jsonrpc2.Conn, r *jsonrpc2.Request) {
+		logger.Debug("ClientHandler", zap.String("r.Method", r.Method))
+
 		switch r.Method {
 		case cancelRequest:
 			var params CancelParams
