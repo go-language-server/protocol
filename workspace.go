@@ -7,12 +7,12 @@ package protocol
 // WorkspaceFolder response of Workspace folders request.
 type WorkspaceFolder struct {
 
+	// URI is the associated URI for this workspace folder.
+	URI string `json:"uri"`
+
 	// Name is the name of the workspace folder. Used to refer to this
 	// workspace folder in the user interface.
 	Name string `json:"name"`
-
-	// URI is the associated URI for this workspace folder.
-	URI string `json:"uri"`
 }
 
 // DidChangeWorkspaceFoldersParams params of DidChangeWorkspaceFolders Notification.

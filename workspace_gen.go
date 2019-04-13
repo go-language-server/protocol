@@ -11,10 +11,10 @@ import (
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *WorkspaceFolder) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
-	case "name":
-		return dec.String(&v.Name)
 	case "uri":
 		return dec.String(&v.URI)
+	case "name":
+		return dec.String(&v.Name)
 	}
 	return nil
 }
@@ -24,8 +24,8 @@ func (v *WorkspaceFolder) NKeys() int { return 2 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *WorkspaceFolder) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.StringKey("name", v.Name)
 	enc.StringKey("uri", v.URI)
+	enc.StringKey("name", v.Name)
 }
 
 // IsNil returns wether the structure is nil value or not.
