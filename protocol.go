@@ -17,15 +17,33 @@ const (
 )
 
 // NewClient returns the new Client, Server and jsonrpc2.Conn.
-func NewClient(ctx context.Context, conn *jsonrpc2.Conn, logger *zap.Logger) (ClientInterface, ServerInterface) {
-	c := &Client{Conn: conn}
+func NewClient(ctx context.Context, client ClientInterface, stream jsonrpc2.Stream, logger *zap.Logger) (*jsonrpc2.Conn, ServerInterface) {
+	logger = logger.Named("jsonrpc2")
+	opts := []jsonrpc2.Options{
+		jsonrpc2.WithCanceler(jsonrpc2.Canceler(Canceller)),
+		jsonrpc2.WithCapacity(DefaultBufferSize),
+		jsonrpc2.WithOverloaded(true),
+		jsonrpc2.WithLogger(logger.Named("client")),
+	}
+	conn := jsonrpc2.NewConn(ctx, stream, opts...)
+	conn.Handler = ClientHandler(client, logger.Named("handler"))
 
-	return c, &Server{Conn: conn}
+	return conn, &Server{Conn: conn, logger: logger.Named("server")}
 }
 
 // NewServer returns the new Server, Client and jsonrpc2.Conn.
-func NewServer(ctx context.Context, conn *jsonrpc2.Conn, logger *zap.Logger) (ServerInterface, ClientInterface) {
-	s := &Server{Conn: conn}
+func NewServer(ctx context.Context, server ServerInterface, stream jsonrpc2.Stream, logger *zap.Logger) (*jsonrpc2.Conn, ClientInterface) {
+	logger = logger.Named("jsonrpc2")
+	opts := []jsonrpc2.Options{
+		jsonrpc2.WithCanceler(jsonrpc2.Canceler(Canceller)),
+		jsonrpc2.WithCapacity(DefaultBufferSize),
+		jsonrpc2.WithOverloaded(true),
+		jsonrpc2.WithLogger(logger.Named("server")),
+	}
+	conn := jsonrpc2.NewConn(ctx, stream, opts...)
 
-	return s, &Client{Conn: conn}
+	client := &Client{Conn: conn, logger: logger.Named("client")}
+	conn.Handler = ServerHandler(server, logger.Named("handler"))
+
+	return conn, client
 }
