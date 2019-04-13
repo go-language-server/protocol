@@ -5,6 +5,7 @@
 package protocol
 
 import (
+	"strconv"
 	"strings"
 	"testing"
 
@@ -3194,6 +3195,8 @@ func TestTextDocumentItem(t *testing.T) {
 }
 
 func TestVersionedTextDocumentIdentifier(t *testing.T) {
+	var nullUint64, _ = strconv.ParseUint("null", 10, 64)
+
 	t.Run("Marshal", func(t *testing.T) {
 		t.Parallel()
 

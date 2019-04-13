@@ -4,16 +4,8 @@
 
 package protocol
 
-import (
-	"strconv"
-)
-
 const (
 	fileSchema = "file://"
-)
-
-var (
-	nullUint64, _ = strconv.ParseUint("null", 10, 64)
 )
 
 // Uint64 returns the i pointers.
