@@ -6,15 +6,9 @@ run:
   # skip-dirs:
   skip-files:
     - ".*\\.pb\\.go"
-    - ".*(.|_)gen\\.go"
   modules-download-mode: vendor
 
 linters-settings:
-  depguard:
-    list-type: blacklist
-    include-go-root: false
-    packages:
-      - github.com/davecgh/go-spew/spew
   errcheck:
     check-type-assertions: true
     check-blank: true
@@ -59,15 +53,15 @@ linters:
   enable:
   enable-all: true
   disable:
-    - dupl
-    - gochecknoglobals
-    - gochecknoinits
-    - gocyclo
-    - gosec
+    # - dupl
+    # - gochecknoglobals
+    # - gochecknoinits
+    # - gocyclo
+    # - gosec
     - lll
-    - maligned
-    - megacheck
-    - typecheck
+    # - maligned
+    # - megacheck
+    # - typecheck
   fast: true
 
 issues:
