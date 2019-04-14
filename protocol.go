@@ -5,8 +5,6 @@
 package protocol
 
 import (
-	"context"
-
 	"github.com/go-language-server/jsonrpc2"
 	"go.uber.org/zap"
 )
@@ -17,33 +15,26 @@ const (
 )
 
 // NewClient returns the new Client, Server and jsonrpc2.Conn.
-func NewClient(ctx context.Context, client ClientInterface, stream jsonrpc2.Stream, logger *zap.Logger) (*jsonrpc2.Conn, ServerInterface) {
-	logger = logger.Named("jsonrpc2")
-	opts := []jsonrpc2.Options{
-		jsonrpc2.WithCanceler(jsonrpc2.Canceler(Canceller)),
-		jsonrpc2.WithCapacity(DefaultBufferSize),
-		jsonrpc2.WithOverloaded(true),
-		jsonrpc2.WithLogger(logger.Named("client")),
-	}
-	conn := jsonrpc2.NewConn(ctx, stream, opts...)
+func NewClient(client ClientInterface, stream jsonrpc2.Stream, logger *zap.Logger, options ...jsonrpc2.Options) (*jsonrpc2.Conn, ServerInterface) {
+	conn := jsonrpc2.NewConn(stream, options...)
 	conn.Handler = ClientHandler(client, logger.Named("handler"))
+	// conn.Logger = logger.Named("jsonrpc2")
 
-	return conn, &Server{Conn: conn, logger: logger.Named("server")}
+	// serverConn := jsonrpc2.NewConn(stream, options...)
+	s := &Server{Conn: conn, logger: logger.Named("server")}
+
+	return conn, s
 }
 
 // NewServer returns the new Server, Client and jsonrpc2.Conn.
-func NewServer(ctx context.Context, server ServerInterface, stream jsonrpc2.Stream, logger *zap.Logger) (*jsonrpc2.Conn, ClientInterface) {
-	logger = logger.Named("jsonrpc2")
-	opts := []jsonrpc2.Options{
-		jsonrpc2.WithCanceler(jsonrpc2.Canceler(Canceller)),
-		jsonrpc2.WithCapacity(DefaultBufferSize),
-		jsonrpc2.WithOverloaded(true),
-		jsonrpc2.WithLogger(logger.Named("server")),
-	}
-	conn := jsonrpc2.NewConn(ctx, stream, opts...)
-
-	client := &Client{Conn: conn, logger: logger.Named("client")}
+func NewServer(server ServerInterface, stream jsonrpc2.Stream, logger *zap.Logger, options ...jsonrpc2.Options) (*jsonrpc2.Conn, ClientInterface) {
+	conn := jsonrpc2.NewConn(stream, options...)
 	conn.Handler = ServerHandler(server, logger.Named("handler"))
+	conn.Logger = logger.Named("jsonrpc2")
 
-	return conn, client
+	clientConn := jsonrpc2.NewConn(stream, options...)
+	c := &Client{Conn: clientConn, logger: logger.Named("client")}
+	clientConn.Handler = ClientHandler(c, c.Logger.Named("handler"))
+
+	return conn, c
 }
