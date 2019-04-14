@@ -15,5 +15,5 @@ const DefaultBufferSize = 20
 
 // Canceller returns the default canceler function.
 func Canceller(ctx context.Context, conn *jsonrpc2.Conn, req *jsonrpc2.Request) {
-	conn.Notify(context.Background(), cancelRequest, &CancelParams{ID: *req.ID})
+	conn.Notify(ctx, MethodCancelRequest, &CancelParams{ID: *req.ID})
 }
