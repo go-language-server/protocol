@@ -8,6 +8,7 @@ const (
 	fileSchema = "file://"
 )
 
+// ToDocumentURI returns the new DocumentURI from s.
 func ToDocumentURI(s string) DocumentURI {
 	return DocumentURI(fileSchema + s)
 }
