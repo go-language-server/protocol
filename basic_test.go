@@ -5,6 +5,7 @@
 package protocol
 
 import (
+	"encoding/json"
 	"strconv"
 	"strings"
 	"testing"
@@ -14,33 +15,63 @@ import (
 )
 
 func TestPosition(t *testing.T) {
+	const (
+		want        = `{"line":25,"character":1}`
+		wantInvalid = `{"line":2,"character":0}`
+	)
+
 	t.Run("Marshal", func(t *testing.T) {
 		t.Parallel()
 
 		tests := []struct {
 			name           string
+			marshalFunc    marshalFunc
 			field          Position
 			want           string
 			wantMarshalErr bool
 			wantErr        bool
 		}{
 			{
-				name: "Valid",
+				name:        "gojayValid",
+				marshalFunc: gojay.Marshal,
 				field: Position{
 					Line:      25,
 					Character: 1,
 				},
-				want:           `{"line":25,"character":1}`,
+				want:           want,
 				wantMarshalErr: false,
 				wantErr:        false,
 			},
 			{
-				name: "Invalid",
+				name:        "jsonValid",
+				marshalFunc: json.Marshal,
 				field: Position{
 					Line:      25,
 					Character: 1,
 				},
-				want:           `{"line":2,"character":0}`,
+				want:           want,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name:        "Invalid",
+				marshalFunc: gojay.Marshal,
+				field: Position{
+					Line:      25,
+					Character: 1,
+				},
+				want:           wantInvalid,
+				wantMarshalErr: false,
+				wantErr:        true,
+			},
+			{
+				name:        "jsonInvalid",
+				marshalFunc: json.Marshal,
+				field: Position{
+					Line:      25,
+					Character: 1,
+				},
+				want:           wantInvalid,
 				wantMarshalErr: false,
 				wantErr:        true,
 			},
@@ -51,7 +82,7 @@ func TestPosition(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := tt.marshalFunc(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -76,7 +107,7 @@ func TestPosition(t *testing.T) {
 		}{
 			{
 				name:  "Valid",
-				field: `{"line":25, "character":1}`,
+				field: want,
 				want: Position{
 					Line:      25,
 					Character: 1,
@@ -86,7 +117,7 @@ func TestPosition(t *testing.T) {
 			},
 			{
 				name:  "Invalid",
-				field: `{"line":2, "character":0}`,
+				field: wantInvalid,
 				want: Position{
 					Line:      25,
 					Character: 1,
@@ -118,6 +149,11 @@ func TestPosition(t *testing.T) {
 }
 
 func TestRange(t *testing.T) {
+	const (
+		want        = `{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}`
+		wantInvalid = `{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}`
+	)
+
 	t.Run("Marshal", func(t *testing.T) {
 		t.Parallel()
 
@@ -140,7 +176,7 @@ func TestRange(t *testing.T) {
 						Character: 3,
 					},
 				},
-				want:           `{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}`,
+				want:           want,
 				wantMarshalErr: false,
 				wantErr:        false,
 			},
@@ -156,7 +192,7 @@ func TestRange(t *testing.T) {
 						Character: 3,
 					},
 				},
-				want:           `{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}`,
+				want:           wantInvalid,
 				wantMarshalErr: false,
 				wantErr:        true,
 			},
@@ -192,7 +228,7 @@ func TestRange(t *testing.T) {
 		}{
 			{
 				name:  "Valid",
-				field: `{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}`,
+				field: want,
 				want: Range{
 					Start: Position{
 						Line:      25,
@@ -208,7 +244,7 @@ func TestRange(t *testing.T) {
 			},
 			{
 				name:  "Invalid",
-				field: `{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}`,
+				field: wantInvalid,
 				want: Range{
 					Start: Position{
 						Line:      25,
