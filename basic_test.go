@@ -6,7 +6,6 @@ package protocol
 
 import (
 	"encoding/json"
-	"strconv"
 	"strings"
 	"testing"
 
@@ -1581,7 +1580,7 @@ func TestTextDocumentEdit(t *testing.T) {
 						TextDocumentIdentifier: TextDocumentIdentifier{
 							URI: "file:///path/to/basic.go",
 						},
-						Version: Uint64(10),
+						Version: 10,
 					},
 					Edits: []TextEdit{
 						{
@@ -1610,7 +1609,7 @@ func TestTextDocumentEdit(t *testing.T) {
 						TextDocumentIdentifier: TextDocumentIdentifier{
 							URI: "file:///path/to/basic.go",
 						},
-						Version: Uint64(10),
+						Version: 10,
 					},
 					Edits: []TextEdit{
 						{
@@ -1670,7 +1669,7 @@ func TestTextDocumentEdit(t *testing.T) {
 						TextDocumentIdentifier: TextDocumentIdentifier{
 							URI: "file:///path/to/basic.go",
 						},
-						Version: Uint64(10),
+						Version: 10,
 					},
 					Edits: []TextEdit{
 						{
@@ -1699,7 +1698,7 @@ func TestTextDocumentEdit(t *testing.T) {
 						TextDocumentIdentifier: TextDocumentIdentifier{
 							URI: "file:///path/to/basic.go",
 						},
-						Version: Uint64(10),
+						Version: 10,
 					},
 					Edits: []TextEdit{
 						{
@@ -2668,7 +2667,7 @@ func TestWorkspaceEdit(t *testing.T) {
 								TextDocumentIdentifier: TextDocumentIdentifier{
 									URI: "file:///path/to/basic.go",
 								},
-								Version: Uint64(10),
+								Version: 10,
 							},
 							Edits: []TextEdit{
 								{
@@ -2701,7 +2700,7 @@ func TestWorkspaceEdit(t *testing.T) {
 								TextDocumentIdentifier: TextDocumentIdentifier{
 									URI: "file:///path/to/basic.go",
 								},
-								Version: Uint64(10),
+								Version: 10,
 							},
 							Edits: []TextEdit{
 								{
@@ -2776,7 +2775,7 @@ func TestWorkspaceEdit(t *testing.T) {
 								TextDocumentIdentifier: TextDocumentIdentifier{
 									URI: "file:///path/to/basic.go",
 								},
-								Version: Uint64(10),
+								Version: 10,
 							},
 							Edits: []TextEdit{
 								{
@@ -2857,7 +2856,7 @@ func TestWorkspaceEdit(t *testing.T) {
 								TextDocumentIdentifier: TextDocumentIdentifier{
 									URI: "file:///path/to/basic.go",
 								},
-								Version: Uint64(10),
+								Version: 10,
 							},
 							Edits: []TextEdit{
 								{
@@ -2890,7 +2889,7 @@ func TestWorkspaceEdit(t *testing.T) {
 								TextDocumentIdentifier: TextDocumentIdentifier{
 									URI: "file:///path/to/basic.go",
 								},
-								Version: Uint64(10),
+								Version: 10,
 							},
 							Edits: []TextEdit{
 								{
@@ -2965,7 +2964,7 @@ func TestWorkspaceEdit(t *testing.T) {
 								TextDocumentIdentifier: TextDocumentIdentifier{
 									URI: "file:///path/to/basic_gen.go",
 								},
-								Version: Uint64(10),
+								Version: 10,
 							},
 							Edits: []TextEdit{
 								{
@@ -3231,8 +3230,6 @@ func TestTextDocumentItem(t *testing.T) {
 }
 
 func TestVersionedTextDocumentIdentifier(t *testing.T) {
-	var nullUint64, _ = strconv.ParseUint("null", 10, 64)
-
 	t.Run("Marshal", func(t *testing.T) {
 		t.Parallel()
 
@@ -3249,7 +3246,7 @@ func TestVersionedTextDocumentIdentifier(t *testing.T) {
 					TextDocumentIdentifier: TextDocumentIdentifier{
 						URI: "file:///path/to/basic.go",
 					},
-					Version: Uint64(10),
+					Version: 10,
 				},
 				want:           `{"uri":"file:///path/to/basic.go","version":10}`,
 				wantMarshalErr: false,
@@ -3261,7 +3258,7 @@ func TestVersionedTextDocumentIdentifier(t *testing.T) {
 					TextDocumentIdentifier: TextDocumentIdentifier{
 						URI: "file:///path/to/basic.go",
 					},
-					Version: &nullUint64,
+					Version: 0,
 				},
 				want:           `{"uri":"file:///path/to/basic.go","version":null}`,
 				wantMarshalErr: false,
@@ -3273,7 +3270,7 @@ func TestVersionedTextDocumentIdentifier(t *testing.T) {
 					TextDocumentIdentifier: TextDocumentIdentifier{
 						URI: "file:///path/to/basic.go",
 					},
-					Version: Uint64(10),
+					Version: 10,
 				},
 				want:           `{"uri":"file:///path/to/basic_gen.go","version":50}`,
 				wantMarshalErr: false,
@@ -3316,7 +3313,7 @@ func TestVersionedTextDocumentIdentifier(t *testing.T) {
 					TextDocumentIdentifier: TextDocumentIdentifier{
 						URI: "file:///path/to/basic.go",
 					},
-					Version: Uint64(10),
+					Version: 10,
 				},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -3328,7 +3325,7 @@ func TestVersionedTextDocumentIdentifier(t *testing.T) {
 					TextDocumentIdentifier: TextDocumentIdentifier{
 						URI: "file:///path/to/basic.go",
 					},
-					Version: (*uint64)(nil),
+					Version: 0,
 				},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -3340,7 +3337,7 @@ func TestVersionedTextDocumentIdentifier(t *testing.T) {
 					TextDocumentIdentifier: TextDocumentIdentifier{
 						URI: "file:///path/to/basic_gen.go",
 					},
-					Version: Uint64(50),
+					Version: 50,
 				},
 				wantUnmarshalErr: false,
 				wantErr:          true,
