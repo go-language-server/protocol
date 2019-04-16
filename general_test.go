@@ -7,10 +7,8 @@ package protocol
 import (
 	"encoding/json"
 	"path/filepath"
-	"sort"
 	"strings"
 	"testing"
-	"time"
 
 	"github.com/francoispqt/gojay"
 	"github.com/google/go-cmp/cmp"
@@ -2768,73 +2766,6 @@ func TestTextDocumentClientCapabilities(t *testing.T) {
 	})
 }
 
-type solidSnakeSimulation struct {
-	Date time.Time         `json:"date"` // SONS OF LIBERTY
-	Name map[string]string `json:"name"` // InitialName[FullName]
-}
-
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
-func (v *solidSnakeSimulation) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	switch k {
-	case "date":
-		return dec.Time(&v.Date, "2006-01-02 15:04:05 -0700 EDT")
-	case "name":
-		for i := 0; i < len(v.Name); i++ {
-			s := ""
-			err := dec.String(&s)
-			if err != nil {
-				return err
-			}
-			v.Name[k] = s
-		}
-		return nil
-	}
-	return nil
-}
-
-// NKeys returns the number of keys to unmarshal.
-func (v *solidSnakeSimulation) NKeys() int { return 2 }
-
-// MarshalJSONObject implements gojay's MarshalerJSONObject.
-func (v *solidSnakeSimulation) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.TimeKey("date", &v.Date, time.UnixDate)
-
-	names := make([]string, 0, len(v.Name))
-	for name := range v.Name {
-		names = append(names, name)
-	}
-	sort.Strings(names)
-	for _, name := range names {
-		v := v.Name[name]
-		enc.StringKey(name, v)
-	}
-}
-
-// IsNil returns wether the structure is nil value or not.
-func (v *solidSnakeSimulation) IsNil() bool { return v == nil }
-
-func testExperimentalValue(tb testing.TB) interface{} {
-	tb.Helper()
-
-	NYC, err := time.LoadLocation("America/New_York")
-	if err != nil {
-		tb.Fatal(err)
-	}
-
-	selectionForSocietalSanity := &solidSnakeSimulation{
-		Date: time.Date(2009, time.April, 0, 0, 0, 0, 0, NYC), // 2009-04: SONS OF LIBERTY
-		Name: map[string]string{
-			"J.D": "JohnDoe",
-			"G.W": "George Washington",
-			"T.J": "Thomas Jefferson",
-			"A.L": "Abraham Lincoln",
-			"T.R": "Theodore Roosevelt",
-		},
-	}
-
-	return selectionForSocietalSanity
-}
-
 func TestClientCapabilities(t *testing.T) {
 	const want = `{"workspace":{"applyEdit":true,"workspaceEdit":{"documentChanges":true,"failureHandling":"FailureHandling","resourceOperations":["ResourceOperations"]},"didChangeConfiguration":{"dynamicRegistration":true},"didChangeWatchedFiles":{"dynamicRegistration":true},"symbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]}},"executeCommand":{"dynamicRegistration":true},"workspaceFolders":true,"configuration":true},"textDocument":{"synchronization":{"didSave":true,"dynamicRegistration":true,"willSave":true,"willSaveWaitUntil":true},"completion":{"dynamicRegistration":true,"completionItem":{"snippetSupport":true,"commitCharactersSupport":true,"documentationFormat":["plaintext","markdown"],"deprecatedSupport":true,"preselectSupport":true},"completionItemKind":1,"contextSupport":true},"hover":{"dynamicRegistration":true,"contentFormat":["plaintext","markdown"]},"signatureHelp":{"dynamicRegistration":true,"signatureInformation":{"documentationFormat":["plaintext","markdown"]}},"references":{"dynamicRegistration":true},"documentHighlight":{"dynamicRegistration":true},"documentSymbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]},"hierarchicalDocumentSymbolSupport":true},"formatting":{"dynamicRegistration":true},"rangeFormatting":{"dynamicRegistration":true},"onTypeFormatting":{"dynamicRegistration":true},"declaration":{"dynamicRegistration":true,"linkSupport":true},"definition":{"dynamicRegistration":true,"linkSupport":true},"typeDefinition":{"dynamicRegistration":true,"linkSupport":true},"implementation":{"dynamicRegistration":true,"linkSupport":true},"codeAction":{"dynamicRegistration":true,"codeActionLiteralSupport":{"codeActionKind":{"valueSet":["quickfix","refactor","refactor.extract","refactor.rewrite","source","source.organizeImports"]}}},"codeLens":{"dynamicRegistration":true},"documentLink":{"dynamicRegistration":true},"colorProvider":{"dynamicRegistration":true},"rename":{"dynamicRegistration":true,"prepareSupport":true},"publishDiagnostics":{"relatedInformation":true},"foldingRange":{"dynamicRegistration":true,"rangeLimit":0.5,"lineFoldingOnly":true}}}`
 	var wantType = ClientCapabilities{
@@ -2990,7 +2921,6 @@ func TestClientCapabilities(t *testing.T) {
 				LineFoldingOnly:     true,
 			},
 		},
-		// Experimental: wantExperimental,
 	}
 
 	t.Run("Marshal", func(t *testing.T) {
