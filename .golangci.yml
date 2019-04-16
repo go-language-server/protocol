@@ -3,7 +3,8 @@ run:
   deadline: 5m
   issues-exit-code: 1
   tests: true
-  # skip-dirs:
+  skip-dirs:
+    - "internal"
   skip-files:
     - ".*\\.pb\\.go"
   modules-download-mode: vendor
@@ -53,15 +54,12 @@ linters:
   enable:
   enable-all: true
   disable:
-    # - dupl
-    # - gochecknoglobals
-    # - gochecknoinits
+    - gochecknoglobals
+    - gochecknoinits
     - gocyclo
-    # - gosec
+    - gosec
     - lll
-    # - maligned
-    # - megacheck
-    # - typecheck
+    - nakedret
   fast: true
 
 issues:
