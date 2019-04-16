@@ -190,7 +190,7 @@ func (v *WorkspaceClientCapabilitiesSymbolKind) UnmarshalJSONObject(dec *gojay.D
 		if v.ValueSet == nil {
 			v.ValueSet = []SymbolKind{}
 		}
-		dec.Array((*symbolKindValueSet)(&v.ValueSet))
+		return dec.Array((*symbolKindValueSet)(&v.ValueSet))
 	}
 	return nil
 }
@@ -757,7 +757,7 @@ func (v *codeActionKindValueSet) IsNil() bool {
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesCodeActionKind) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyValueSet {
-		dec.Array((*codeActionKindValueSet)(&v.ValueSet))
+		return dec.Array((*codeActionKindValueSet)(&v.ValueSet))
 	}
 	return nil
 }

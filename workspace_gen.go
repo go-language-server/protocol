@@ -54,9 +54,9 @@ func (v *DidChangeWorkspaceFoldersParams) IsNil() bool { return v == nil }
 func (v *WorkspaceFoldersChangeEvent) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keyAdded:
-		dec.Array((*workspaceFolders)(&v.Added))
+		return dec.Array((*workspaceFolders)(&v.Added))
 	case keyRemoved:
-		dec.Array((*workspaceFolders)(&v.Removed))
+		return dec.Array((*workspaceFolders)(&v.Removed))
 	}
 	return nil
 }
@@ -76,7 +76,7 @@ func (v *WorkspaceFoldersChangeEvent) IsNil() bool { return v == nil }
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *DidChangeConfigurationParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keySettings {
-		dec.Interface(&v.Settings)
+		return dec.Interface(&v.Settings)
 	}
 	return nil
 }
@@ -122,7 +122,7 @@ func (v *configurationItem) IsNil() bool {
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ConfigurationParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyItems {
-		dec.Array((*configurationItem)(&v.Items))
+		return dec.Array((*configurationItem)(&v.Items))
 	}
 	return nil
 }
@@ -194,7 +194,7 @@ func (v *DidChangeWatchedFilesParams) UnmarshalJSONObject(dec *gojay.Decoder, k 
 		if v.Changes == nil {
 			v.Changes = []*FileEvent{}
 		}
-		dec.Array((*fileEvents)(&v.Changes))
+		return dec.Array((*fileEvents)(&v.Changes))
 	}
 	return nil
 }
@@ -263,7 +263,7 @@ func (v *fileSystemWatcher) IsNil() bool {
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *DidChangeWatchedFilesRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyWatchers {
-		dec.Array((*fileSystemWatcher)(&v.Watchers))
+		return dec.Array((*fileSystemWatcher)(&v.Watchers))
 	}
 	return nil
 }
@@ -347,7 +347,7 @@ func (v *ExecuteCommandParams) IsNil() bool { return v == nil }
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ExecuteCommandRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyCommands {
-		dec.Array((*stringSlice)(&v.Commands))
+		return dec.Array((*stringSlice)(&v.Commands))
 	}
 	return nil
 }

@@ -589,9 +589,9 @@ func (v *CodeActionParams) IsNil() bool { return v == nil }
 func (v *CodeActionContext) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keyDiagnostics:
-		dec.Array((*diagnostics)(&v.Diagnostics))
+		return dec.Array((*diagnostics)(&v.Diagnostics))
 	case keyOnly:
-		dec.Array((*codeActionKindValueSet)(&v.Only))
+		return dec.Array((*codeActionKindValueSet)(&v.Only))
 	}
 	return nil
 }
@@ -619,7 +619,7 @@ func (v *CodeAction) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	case keyKind:
 		return dec.String((*string)(&v.Kind))
 	case keyDiagnostics:
-		dec.Array((*diagnostics)(&v.Diagnostics))
+		return dec.Array((*diagnostics)(&v.Diagnostics))
 	case keyEdit:
 		if v.Edit == nil {
 			v.Edit = &WorkspaceEdit{}
@@ -655,7 +655,7 @@ func (v *CodeActionRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, 
 	case keyDocumentSelector:
 		return dec.Array(&v.DocumentSelector)
 	case keyCodeActionKinds:
-		dec.Array((*codeActionKindValueSet)(&v.CodeActionKinds))
+		return dec.Array((*codeActionKindValueSet)(&v.CodeActionKinds))
 	}
 	return nil
 }
@@ -897,7 +897,7 @@ func (v *ColorPresentation) UnmarshalJSONObject(dec *gojay.Decoder, k string) er
 		}
 		return dec.Object(v.TextEdit)
 	case keyAdditionalTextEdits:
-		dec.Array((*textEdits)(&v.AdditionalTextEdits))
+		return dec.Array((*textEdits)(&v.AdditionalTextEdits))
 	}
 	return nil
 }
