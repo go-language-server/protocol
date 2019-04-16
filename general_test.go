@@ -5,6 +5,7 @@
 package protocol
 
 import (
+	"encoding/json"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -20,11 +21,11 @@ func Test_workspaceFolders(t *testing.T) {
 	var wantType = workspaceFolders{
 		{
 			URI:  string(ToDocumentURI("/Users/zchee/go/src/github.com/go-language-server/protocol")),
-			Name: filepath.Base("/Users/zchee/go/src/github.com/go-language-server/protocol"),
+			Name: "protocol",
 		},
 		{
 			URI:  string(ToDocumentURI("/Users/zchee/go/src/github.com/go-language-server/jsonrpc2")),
-			Name: filepath.Base("/Users/zchee/go/src/github.com/go-language-server/jsonrpc2"),
+			Name: "jsonrpc2",
 		},
 	}
 
@@ -32,18 +33,38 @@ func Test_workspaceFolders(t *testing.T) {
 		t.Parallel()
 
 		tests := []struct {
-			name           string
-			field          workspaceFolders
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
+			name               string
+			marshalFunc        marshalFunc
+			compareMarshalFunc marshalFunc
+			field              workspaceFolders
+			want               string
+			wantMarshalErr     bool
+			wantErr            bool
 		}{
 			{
-				name:           "Valid",
+				name:           "gojayValid",
+				marshalFunc:    gojay.Marshal,
 				field:          wantType,
 				want:           want,
 				wantMarshalErr: false,
 				wantErr:        false,
+			},
+			{
+				name:           "jsonValid",
+				marshalFunc:    json.Marshal,
+				field:          wantType,
+				want:           want,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name:               "Compare",
+				marshalFunc:        gojay.Marshal,
+				compareMarshalFunc: json.Marshal,
+				field:              wantType,
+				want:               want,
+				wantMarshalErr:     false,
+				wantErr:            false,
 			},
 		}
 
@@ -52,9 +73,21 @@ func Test_workspaceFolders(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := tt.marshalFunc(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
+					return
+				}
+
+				if tt.compareMarshalFunc != nil {
+					got2, err := tt.compareMarshalFunc(&tt.field)
+					if (err != nil) != tt.wantMarshalErr {
+						t.Error(err)
+						return
+					}
+					if diff := cmp.Diff(string(got), string(got2)); (diff != "") != tt.wantErr {
+						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					}
 					return
 				}
 
@@ -69,18 +102,38 @@ func Test_workspaceFolders(t *testing.T) {
 		t.Parallel()
 
 		tests := []struct {
-			name             string
-			field            *strings.Reader
-			want             workspaceFolders
-			wantUnmarshalErr bool
-			wantErr          bool
+			name                 string
+			unmarshalFunc        unmarshalFunc
+			compareUnmarshalFunc unmarshalFunc
+			field                []byte
+			want                 workspaceFolders
+			wantUnmarshalErr     bool
+			wantErr              bool
 		}{
 			{
-				name:             "Valid",
-				field:            strings.NewReader(want),
+				name:             "gojayValid",
+				unmarshalFunc:    gojay.Unmarshal,
+				field:            []byte(want),
 				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          false,
+			},
+			{
+				name:             "jsonValid",
+				unmarshalFunc:    json.Unmarshal,
+				field:            []byte(want),
+				want:             wantType,
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:                 "compare",
+				unmarshalFunc:        gojay.Unmarshal,
+				compareUnmarshalFunc: json.Unmarshal,
+				field:                []byte(want),
+				want:                 wantType,
+				wantUnmarshalErr:     false,
+				wantErr:              false,
 			},
 		}
 
@@ -90,10 +143,20 @@ func Test_workspaceFolders(t *testing.T) {
 				t.Parallel()
 
 				var got workspaceFolders
-				dec := gojay.BorrowDecoder(tt.field)
-				defer dec.Release()
-				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
+				if err := tt.unmarshalFunc(tt.field, &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
+					return
+				}
+
+				if tt.compareUnmarshalFunc != nil {
+					var got2 workspaceFolders
+					if err := tt.compareUnmarshalFunc(tt.field, &got2); (err != nil) != tt.wantUnmarshalErr {
+						t.Error(err)
+						return
+					}
+					if diff := cmp.Diff(got, got2); (diff != "") != tt.wantErr {
+						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					}
 					return
 				}
 
@@ -2773,193 +2836,207 @@ func testExperimentalValue(tb testing.TB) interface{} {
 }
 
 func TestClientCapabilities(t *testing.T) {
-	const want = `{"workspace":{"applyEdit":true,"workspaceEdit":{"documentChanges":true,"failureHandling":"FailureHandling","resourceOperations":["ResourceOperations"]},"didChangeConfiguration":{"dynamicRegistration":true},"didChangeWatchedFiles":{"dynamicRegistration":true},"symbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]}},"executeCommand":{"dynamicRegistration":true},"workspaceFolders":true,"configuration":true},"textDocument":{"synchronization":{"didSave":true,"dynamicRegistration":true,"willSave":true,"willSaveWaitUntil":true},"completion":{"dynamicRegistration":true,"completionItem":{"snippetSupport":true,"commitCharactersSupport":true,"documentationFormat":["plaintext","markdown"],"deprecatedSupport":true,"preselectSupport":true},"completionItemKind":1,"contextSupport":true},"hover":{"dynamicRegistration":true,"contentFormat":["plaintext","markdown"]},"signatureHelp":{"dynamicRegistration":true,"signatureInformation":{"documentationFormat":["plaintext","markdown"]}},"references":{"dynamicRegistration":true},"documentHighlight":{"dynamicRegistration":true},"documentSymbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]},"hierarchicalDocumentSymbolSupport":true},"formatting":{"dynamicRegistration":true},"rangeFormatting":{"dynamicRegistration":true},"onTypeFormatting":{"dynamicRegistration":true},"declaration":{"dynamicRegistration":true,"linkSupport":true},"definition":{"dynamicRegistration":true,"linkSupport":true},"typeDefinition":{"dynamicRegistration":true,"linkSupport":true},"implementation":{"dynamicRegistration":true,"linkSupport":true},"codeAction":{"dynamicRegistration":true,"codeActionLiteralSupport":{"codeActionKind":{"valueSet":["quickfix","refactor","refactor.extract","refactor.rewrite","source","source.organizeImports"]}}},"codeLens":{"dynamicRegistration":true},"documentLink":{"dynamicRegistration":true},"colorProvider":{"dynamicRegistration":true},"rename":{"dynamicRegistration":true,"prepareSupport":true},"publishDiagnostics":{"relatedInformation":true},"foldingRange":{"dynamicRegistration":true,"rangeLimit":0.5,"lineFoldingOnly":true}},"experimental":{"date":"Tue Mar 31 00:00:00 EDT 2009","A.L":"Abraham Lincoln","G.W":"George Washington","J.D":"JohnDoe","T.J":"Thomas Jefferson","T.R":"Theodore Roosevelt"}}`
-	var wantExperimental = map[string]interface{}{
-		"A.L":  string("Abraham Lincoln"),
-		"G.W":  string("George Washington"),
-		"J.D":  string("JohnDoe"),
-		"T.J":  string("Thomas Jefferson"),
-		"T.R":  string("Theodore Roosevelt"),
-		"date": string("Tue Mar 31 00:00:00 EDT 2009"),
+	const want = `{"workspace":{"applyEdit":true,"workspaceEdit":{"documentChanges":true,"failureHandling":"FailureHandling","resourceOperations":["ResourceOperations"]},"didChangeConfiguration":{"dynamicRegistration":true},"didChangeWatchedFiles":{"dynamicRegistration":true},"symbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]}},"executeCommand":{"dynamicRegistration":true},"workspaceFolders":true,"configuration":true},"textDocument":{"synchronization":{"didSave":true,"dynamicRegistration":true,"willSave":true,"willSaveWaitUntil":true},"completion":{"dynamicRegistration":true,"completionItem":{"snippetSupport":true,"commitCharactersSupport":true,"documentationFormat":["plaintext","markdown"],"deprecatedSupport":true,"preselectSupport":true},"completionItemKind":1,"contextSupport":true},"hover":{"dynamicRegistration":true,"contentFormat":["plaintext","markdown"]},"signatureHelp":{"dynamicRegistration":true,"signatureInformation":{"documentationFormat":["plaintext","markdown"]}},"references":{"dynamicRegistration":true},"documentHighlight":{"dynamicRegistration":true},"documentSymbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]},"hierarchicalDocumentSymbolSupport":true},"formatting":{"dynamicRegistration":true},"rangeFormatting":{"dynamicRegistration":true},"onTypeFormatting":{"dynamicRegistration":true},"declaration":{"dynamicRegistration":true,"linkSupport":true},"definition":{"dynamicRegistration":true,"linkSupport":true},"typeDefinition":{"dynamicRegistration":true,"linkSupport":true},"implementation":{"dynamicRegistration":true,"linkSupport":true},"codeAction":{"dynamicRegistration":true,"codeActionLiteralSupport":{"codeActionKind":{"valueSet":["quickfix","refactor","refactor.extract","refactor.rewrite","source","source.organizeImports"]}}},"codeLens":{"dynamicRegistration":true},"documentLink":{"dynamicRegistration":true},"colorProvider":{"dynamicRegistration":true},"rename":{"dynamicRegistration":true,"prepareSupport":true},"publishDiagnostics":{"relatedInformation":true},"foldingRange":{"dynamicRegistration":true,"rangeLimit":0.5,"lineFoldingOnly":true}}}`
+	var wantType = ClientCapabilities{
+		Workspace: &WorkspaceClientCapabilities{
+			ApplyEdit: true,
+			WorkspaceEdit: &WorkspaceClientCapabilitiesWorkspaceEdit{
+				DocumentChanges:    true,
+				FailureHandling:    "FailureHandling",
+				ResourceOperations: []string{"ResourceOperations"},
+			},
+			DidChangeConfiguration: &WorkspaceClientCapabilitiesDidChangeConfiguration{
+				DynamicRegistration: true,
+			},
+			DidChangeWatchedFiles: &WorkspaceClientCapabilitiesDidChangeWatchedFiles{
+				DynamicRegistration: true,
+			},
+			Symbol: &WorkspaceClientCapabilitiesSymbol{
+				DynamicRegistration: true,
+				SymbolKind: &WorkspaceClientCapabilitiesSymbolKind{
+					ValueSet: []SymbolKind{
+						FileSymbol,
+						ModuleSymbol,
+						NamespaceSymbol,
+						PackageSymbol,
+						ClassSymbol,
+						MethodSymbol,
+					},
+				},
+			},
+			ExecuteCommand: &WorkspaceClientCapabilitiesExecuteCommand{
+				DynamicRegistration: true,
+			},
+			WorkspaceFolders: true,
+			Configuration:    true,
+		},
+		TextDocument: &TextDocumentClientCapabilities{
+			Synchronization: &TextDocumentClientCapabilitiesSynchronization{
+				DidSave:             true,
+				DynamicRegistration: true,
+				WillSave:            true,
+				WillSaveWaitUntil:   true,
+			},
+			Completion: &TextDocumentClientCapabilitiesCompletion{
+				DynamicRegistration: true,
+				CompletionItem: &TextDocumentClientCapabilitiesCompletionItem{
+					SnippetSupport:          true,
+					CommitCharactersSupport: true,
+					DocumentationFormat: []MarkupKind{
+						PlainText,
+						Markdown,
+					},
+					DeprecatedSupport: true,
+					PreselectSupport:  true,
+				},
+				CompletionItemKind: TextCompletion,
+				ContextSupport:     true,
+			},
+			Hover: &TextDocumentClientCapabilitiesHover{
+				DynamicRegistration: true,
+				ContentFormat: []MarkupKind{
+					PlainText,
+					Markdown,
+				},
+			},
+			SignatureHelp: &TextDocumentClientCapabilitiesSignatureHelp{
+				DynamicRegistration: true,
+				SignatureInformation: &TextDocumentClientCapabilitiesSignatureInformation{
+					DocumentationFormat: []MarkupKind{
+						PlainText,
+						Markdown,
+					},
+				},
+			},
+			References: &TextDocumentClientCapabilitiesReferences{
+				DynamicRegistration: true,
+			},
+			DocumentHighlight: &TextDocumentClientCapabilitiesDocumentHighlight{
+				DynamicRegistration: true,
+			},
+			DocumentSymbol: &TextDocumentClientCapabilitiesDocumentSymbol{
+				DynamicRegistration: true,
+				SymbolKind: &WorkspaceClientCapabilitiesSymbolKind{
+					ValueSet: []SymbolKind{
+						FileSymbol,
+						ModuleSymbol,
+						NamespaceSymbol,
+						PackageSymbol,
+						ClassSymbol,
+						MethodSymbol,
+					},
+				},
+				HierarchicalDocumentSymbolSupport: true,
+			},
+			Formatting: &TextDocumentClientCapabilitiesFormatting{
+				DynamicRegistration: true,
+			},
+			RangeFormatting: &TextDocumentClientCapabilitiesRangeFormatting{
+				DynamicRegistration: true,
+			},
+			OnTypeFormatting: &TextDocumentClientCapabilitiesOnTypeFormatting{
+				DynamicRegistration: true,
+			},
+			Declaration: &TextDocumentClientCapabilitiesDeclaration{
+				DynamicRegistration: true,
+				LinkSupport:         true,
+			},
+			Definition: &TextDocumentClientCapabilitiesDefinition{
+				DynamicRegistration: true,
+				LinkSupport:         true,
+			},
+			TypeDefinition: &TextDocumentClientCapabilitiesTypeDefinition{
+				DynamicRegistration: true,
+				LinkSupport:         true,
+			},
+			Implementation: &TextDocumentClientCapabilitiesImplementation{
+				DynamicRegistration: true,
+				LinkSupport:         true,
+			},
+			CodeAction: &TextDocumentClientCapabilitiesCodeAction{
+				DynamicRegistration: true,
+				CodeActionLiteralSupport: &TextDocumentClientCapabilitiesCodeActionLiteralSupport{
+					CodeActionKind: &TextDocumentClientCapabilitiesCodeActionKind{
+						ValueSet: []CodeActionKind{
+							QuickFix,
+							Refactor,
+							RefactorExtract,
+							RefactorRewrite,
+							Source,
+							SourceOrganizeImports,
+						},
+					},
+				},
+			},
+			CodeLens: &TextDocumentClientCapabilitiesCodeLens{
+				DynamicRegistration: true,
+			},
+			DocumentLink: &TextDocumentClientCapabilitiesDocumentLink{
+				DynamicRegistration: true,
+			},
+			ColorProvider: &TextDocumentClientCapabilitiesColorProvider{
+				DynamicRegistration: true,
+			},
+			Rename: &TextDocumentClientCapabilitiesRename{
+				DynamicRegistration: true,
+				PrepareSupport:      true,
+			},
+			PublishDiagnostics: &TextDocumentClientCapabilitiesPublishDiagnostics{
+				RelatedInformation: true,
+			},
+			FoldingRange: &TextDocumentClientCapabilitiesFoldingRange{
+				DynamicRegistration: true,
+				RangeLimit:          float64(0.5),
+				LineFoldingOnly:     true,
+			},
+		},
+		// Experimental: wantExperimental,
 	}
 
 	t.Run("Marshal", func(t *testing.T) {
 		t.Parallel()
 
 		tests := []struct {
-			name           string
-			field          ClientCapabilities
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
+			name               string
+			marshalFunc        marshalFunc
+			compareMarshalFunc marshalFunc
+			field              ClientCapabilities
+			want               string
+			wantMarshalErr     bool
+			wantErr            bool
 		}{
 			{
-				name: "Valid",
-				field: ClientCapabilities{
-					Workspace: &WorkspaceClientCapabilities{
-						ApplyEdit: true,
-						WorkspaceEdit: &WorkspaceClientCapabilitiesWorkspaceEdit{
-							DocumentChanges:    true,
-							FailureHandling:    "FailureHandling",
-							ResourceOperations: []string{"ResourceOperations"},
-						},
-						DidChangeConfiguration: &WorkspaceClientCapabilitiesDidChangeConfiguration{
-							DynamicRegistration: true,
-						},
-						DidChangeWatchedFiles: &WorkspaceClientCapabilitiesDidChangeWatchedFiles{
-							DynamicRegistration: true,
-						},
-						Symbol: &WorkspaceClientCapabilitiesSymbol{
-							DynamicRegistration: true,
-							SymbolKind: &WorkspaceClientCapabilitiesSymbolKind{
-								ValueSet: []SymbolKind{
-									FileSymbol,
-									ModuleSymbol,
-									NamespaceSymbol,
-									PackageSymbol,
-									ClassSymbol,
-									MethodSymbol,
-								},
-							},
-						},
-						ExecuteCommand: &WorkspaceClientCapabilitiesExecuteCommand{
-							DynamicRegistration: true,
-						},
-						WorkspaceFolders: true,
-						Configuration:    true,
-					},
-					TextDocument: &TextDocumentClientCapabilities{
-						Synchronization: &TextDocumentClientCapabilitiesSynchronization{
-							DidSave:             true,
-							DynamicRegistration: true,
-							WillSave:            true,
-							WillSaveWaitUntil:   true,
-						},
-						Completion: &TextDocumentClientCapabilitiesCompletion{
-							DynamicRegistration: true,
-							CompletionItem: &TextDocumentClientCapabilitiesCompletionItem{
-								SnippetSupport:          true,
-								CommitCharactersSupport: true,
-								DocumentationFormat: []MarkupKind{
-									PlainText,
-									Markdown,
-								},
-								DeprecatedSupport: true,
-								PreselectSupport:  true,
-							},
-							CompletionItemKind: TextCompletion,
-							ContextSupport:     true,
-						},
-						Hover: &TextDocumentClientCapabilitiesHover{
-							DynamicRegistration: true,
-							ContentFormat: []MarkupKind{
-								PlainText,
-								Markdown,
-							},
-						},
-						SignatureHelp: &TextDocumentClientCapabilitiesSignatureHelp{
-							DynamicRegistration: true,
-							SignatureInformation: &TextDocumentClientCapabilitiesSignatureInformation{
-								DocumentationFormat: []MarkupKind{
-									PlainText,
-									Markdown,
-								},
-							},
-						},
-						References: &TextDocumentClientCapabilitiesReferences{
-							DynamicRegistration: true,
-						},
-						DocumentHighlight: &TextDocumentClientCapabilitiesDocumentHighlight{
-							DynamicRegistration: true,
-						},
-						DocumentSymbol: &TextDocumentClientCapabilitiesDocumentSymbol{
-							DynamicRegistration: true,
-							SymbolKind: &WorkspaceClientCapabilitiesSymbolKind{
-								ValueSet: []SymbolKind{
-									FileSymbol,
-									ModuleSymbol,
-									NamespaceSymbol,
-									PackageSymbol,
-									ClassSymbol,
-									MethodSymbol,
-								},
-							},
-							HierarchicalDocumentSymbolSupport: true,
-						},
-						Formatting: &TextDocumentClientCapabilitiesFormatting{
-							DynamicRegistration: true,
-						},
-						RangeFormatting: &TextDocumentClientCapabilitiesRangeFormatting{
-							DynamicRegistration: true,
-						},
-						OnTypeFormatting: &TextDocumentClientCapabilitiesOnTypeFormatting{
-							DynamicRegistration: true,
-						},
-						Declaration: &TextDocumentClientCapabilitiesDeclaration{
-							DynamicRegistration: true,
-							LinkSupport:         true,
-						},
-						Definition: &TextDocumentClientCapabilitiesDefinition{
-							DynamicRegistration: true,
-							LinkSupport:         true,
-						},
-						TypeDefinition: &TextDocumentClientCapabilitiesTypeDefinition{
-							DynamicRegistration: true,
-							LinkSupport:         true,
-						},
-						Implementation: &TextDocumentClientCapabilitiesImplementation{
-							DynamicRegistration: true,
-							LinkSupport:         true,
-						},
-						CodeAction: &TextDocumentClientCapabilitiesCodeAction{
-							DynamicRegistration: true,
-							CodeActionLiteralSupport: &TextDocumentClientCapabilitiesCodeActionLiteralSupport{
-								CodeActionKind: &TextDocumentClientCapabilitiesCodeActionKind{
-									ValueSet: []CodeActionKind{
-										QuickFix,
-										Refactor,
-										RefactorExtract,
-										RefactorRewrite,
-										Source,
-										SourceOrganizeImports,
-									},
-								},
-							},
-						},
-						CodeLens: &TextDocumentClientCapabilitiesCodeLens{
-							DynamicRegistration: true,
-						},
-						DocumentLink: &TextDocumentClientCapabilitiesDocumentLink{
-							DynamicRegistration: true,
-						},
-						ColorProvider: &TextDocumentClientCapabilitiesColorProvider{
-							DynamicRegistration: true,
-						},
-						Rename: &TextDocumentClientCapabilitiesRename{
-							DynamicRegistration: true,
-							PrepareSupport:      true,
-						},
-						PublishDiagnostics: &TextDocumentClientCapabilitiesPublishDiagnostics{
-							RelatedInformation: true,
-						},
-						FoldingRange: &TextDocumentClientCapabilitiesFoldingRange{
-							DynamicRegistration: true,
-							RangeLimit:          float64(0.5),
-							LineFoldingOnly:     true,
-						},
-					},
-					Experimental: testExperimentalValue(t),
-				},
+				name:           "Valid",
+				marshalFunc:    gojay.Marshal,
+				field:          wantType,
 				want:           want,
 				wantMarshalErr: false,
 				wantErr:        false,
 			},
 			{
 				name:           "ValidNilAll",
+				marshalFunc:    gojay.Marshal,
 				field:          ClientCapabilities{},
 				want:           emptyData,
 				wantMarshalErr: false,
 				wantErr:        false,
+			},
+			{
+				name:           "jsonValid",
+				marshalFunc:    json.Marshal,
+				field:          wantType,
+				want:           want,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name:               "Compare",
+				marshalFunc:        gojay.Marshal,
+				compareMarshalFunc: json.Marshal,
+				field:              wantType,
+				want:               want,
+				wantMarshalErr:     false,
+				wantErr:            false,
 			},
 		}
 
@@ -2968,9 +3045,20 @@ func TestClientCapabilities(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := tt.marshalFunc(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
+					return
+				}
+				if tt.compareMarshalFunc != nil {
+					got2, err := tt.compareMarshalFunc(&tt.field)
+					if (err != nil) != tt.wantMarshalErr {
+						t.Error(err)
+						return
+					}
+					if diff := cmp.Diff(string(got), string(got2)); (diff != "") != tt.wantErr {
+						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					}
 					return
 				}
 
@@ -2985,179 +3073,46 @@ func TestClientCapabilities(t *testing.T) {
 		t.Parallel()
 
 		tests := []struct {
-			name             string
-			field            *strings.Reader
-			want             ClientCapabilities
-			wantUnmarshalErr bool
-			wantErr          bool
+			name                 string
+			unmarshalFunc        unmarshalFunc
+			compareUnmarshalFunc unmarshalFunc
+			field                []byte
+			want                 ClientCapabilities
+			wantUnmarshalErr     bool
+			wantErr              bool
 		}{
 			{
-				name:  "Valid",
-				field: strings.NewReader(want),
-				want: ClientCapabilities{
-					Workspace: &WorkspaceClientCapabilities{
-						ApplyEdit: true,
-						WorkspaceEdit: &WorkspaceClientCapabilitiesWorkspaceEdit{
-							DocumentChanges:    true,
-							FailureHandling:    "FailureHandling",
-							ResourceOperations: []string{"ResourceOperations"},
-						},
-						DidChangeConfiguration: &WorkspaceClientCapabilitiesDidChangeConfiguration{
-							DynamicRegistration: true,
-						},
-						DidChangeWatchedFiles: &WorkspaceClientCapabilitiesDidChangeWatchedFiles{
-							DynamicRegistration: true,
-						},
-						Symbol: &WorkspaceClientCapabilitiesSymbol{
-							DynamicRegistration: true,
-							SymbolKind: &WorkspaceClientCapabilitiesSymbolKind{
-								ValueSet: []SymbolKind{
-									FileSymbol,
-									ModuleSymbol,
-									NamespaceSymbol,
-									PackageSymbol,
-									ClassSymbol,
-									MethodSymbol,
-								},
-							},
-						},
-						ExecuteCommand: &WorkspaceClientCapabilitiesExecuteCommand{
-							DynamicRegistration: true,
-						},
-						WorkspaceFolders: true,
-						Configuration:    true,
-					},
-					TextDocument: &TextDocumentClientCapabilities{
-						Synchronization: &TextDocumentClientCapabilitiesSynchronization{
-							DidSave:             true,
-							DynamicRegistration: true,
-							WillSave:            true,
-							WillSaveWaitUntil:   true,
-						},
-						Completion: &TextDocumentClientCapabilitiesCompletion{
-							DynamicRegistration: true,
-							CompletionItem: &TextDocumentClientCapabilitiesCompletionItem{
-								SnippetSupport:          true,
-								CommitCharactersSupport: true,
-								DocumentationFormat: []MarkupKind{
-									PlainText,
-									Markdown,
-								},
-								DeprecatedSupport: true,
-								PreselectSupport:  true,
-							},
-							CompletionItemKind: TextCompletion,
-							ContextSupport:     true,
-						},
-						Hover: &TextDocumentClientCapabilitiesHover{
-							DynamicRegistration: true,
-							ContentFormat: []MarkupKind{
-								PlainText,
-								Markdown,
-							},
-						},
-						SignatureHelp: &TextDocumentClientCapabilitiesSignatureHelp{
-							DynamicRegistration: true,
-							SignatureInformation: &TextDocumentClientCapabilitiesSignatureInformation{
-								DocumentationFormat: []MarkupKind{
-									PlainText,
-									Markdown,
-								},
-							},
-						},
-						References: &TextDocumentClientCapabilitiesReferences{
-							DynamicRegistration: true,
-						},
-						DocumentHighlight: &TextDocumentClientCapabilitiesDocumentHighlight{
-							DynamicRegistration: true,
-						},
-						DocumentSymbol: &TextDocumentClientCapabilitiesDocumentSymbol{
-							DynamicRegistration: true,
-							SymbolKind: &WorkspaceClientCapabilitiesSymbolKind{
-								ValueSet: []SymbolKind{
-									FileSymbol,
-									ModuleSymbol,
-									NamespaceSymbol,
-									PackageSymbol,
-									ClassSymbol,
-									MethodSymbol,
-								},
-							},
-							HierarchicalDocumentSymbolSupport: true,
-						},
-						Formatting: &TextDocumentClientCapabilitiesFormatting{
-							DynamicRegistration: true,
-						},
-						RangeFormatting: &TextDocumentClientCapabilitiesRangeFormatting{
-							DynamicRegistration: true,
-						},
-						OnTypeFormatting: &TextDocumentClientCapabilitiesOnTypeFormatting{
-							DynamicRegistration: true,
-						},
-						Declaration: &TextDocumentClientCapabilitiesDeclaration{
-							DynamicRegistration: true,
-							LinkSupport:         true,
-						},
-						Definition: &TextDocumentClientCapabilitiesDefinition{
-							DynamicRegistration: true,
-							LinkSupport:         true,
-						},
-						TypeDefinition: &TextDocumentClientCapabilitiesTypeDefinition{
-							DynamicRegistration: true,
-							LinkSupport:         true,
-						},
-						Implementation: &TextDocumentClientCapabilitiesImplementation{
-							DynamicRegistration: true,
-							LinkSupport:         true,
-						},
-						CodeAction: &TextDocumentClientCapabilitiesCodeAction{
-							DynamicRegistration: true,
-							CodeActionLiteralSupport: &TextDocumentClientCapabilitiesCodeActionLiteralSupport{
-								CodeActionKind: &TextDocumentClientCapabilitiesCodeActionKind{
-									ValueSet: []CodeActionKind{
-										QuickFix,
-										Refactor,
-										RefactorExtract,
-										RefactorRewrite,
-										Source,
-										SourceOrganizeImports,
-									},
-								},
-							},
-						},
-						CodeLens: &TextDocumentClientCapabilitiesCodeLens{
-							DynamicRegistration: true,
-						},
-						DocumentLink: &TextDocumentClientCapabilitiesDocumentLink{
-							DynamicRegistration: true,
-						},
-						ColorProvider: &TextDocumentClientCapabilitiesColorProvider{
-							DynamicRegistration: true,
-						},
-						Rename: &TextDocumentClientCapabilitiesRename{
-							DynamicRegistration: true,
-							PrepareSupport:      true,
-						},
-						PublishDiagnostics: &TextDocumentClientCapabilitiesPublishDiagnostics{
-							RelatedInformation: true,
-						},
-						FoldingRange: &TextDocumentClientCapabilitiesFoldingRange{
-							DynamicRegistration: true,
-							RangeLimit:          float64(0.5),
-							LineFoldingOnly:     true,
-						},
-					},
-					Experimental: wantExperimental,
-				},
+				name:             "Valid",
+				unmarshalFunc:    gojay.Unsafe.Unmarshal,
+				field:            []byte(want),
+				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				unmarshalFunc:    gojay.Unsafe.Unmarshal,
+				field:            []byte(emptyData),
 				want:             ClientCapabilities{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
+			},
+			{
+				name:             "jsonValid",
+				unmarshalFunc:    json.Unmarshal,
+				field:            []byte(want),
+				want:             wantType,
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:                 "compare",
+				unmarshalFunc:        gojay.Unsafe.Unmarshal,
+				compareUnmarshalFunc: json.Unmarshal,
+				field:                []byte(want),
+				want:                 wantType,
+				wantUnmarshalErr:     false,
+				wantErr:              false,
 			},
 		}
 
@@ -3167,10 +3122,19 @@ func TestClientCapabilities(t *testing.T) {
 				t.Parallel()
 
 				var got ClientCapabilities
-				dec := gojay.BorrowDecoder(tt.field)
-				defer dec.Release()
-				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
+				if err := tt.unmarshalFunc(tt.field, &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
+					return
+				}
+				if tt.compareUnmarshalFunc != nil {
+					var got2 ClientCapabilities
+					if err := tt.compareUnmarshalFunc(tt.field, &got2); (err != nil) != tt.wantUnmarshalErr {
+						t.Error(err)
+						return
+					}
+					if diff := cmp.Diff(got, got2); (diff != "") != tt.wantErr {
+						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					}
 					return
 				}
 
