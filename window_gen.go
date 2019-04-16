@@ -11,9 +11,9 @@ import (
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ShowMessageParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
-	case "message":
+	case keyMessage:
 		return dec.String(&v.Message)
-	case "type":
+	case keyType:
 		return dec.Float64((*float64)(&v.Type))
 	}
 	return nil
@@ -24,8 +24,8 @@ func (v *ShowMessageParams) NKeys() int { return 2 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ShowMessageParams) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.StringKey("message", v.Message)
-	enc.Float64Key("type", float64(v.Type))
+	enc.StringKey(keyMessage, v.Message)
+	enc.Float64Key(keyType, float64(v.Type))
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -61,11 +61,11 @@ func (v *actions) IsNil() bool {
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ShowMessageRequestParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
-	case "actions":
+	case keyActions:
 		return dec.Array((*actions)(&v.Actions))
-	case "message":
+	case keyMessage:
 		return dec.String(&v.Message)
-	case "type":
+	case keyType:
 		return dec.Float64((*float64)(&v.Type))
 	}
 	return nil
@@ -76,9 +76,9 @@ func (v *ShowMessageRequestParams) NKeys() int { return 3 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ShowMessageRequestParams) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKey("actions", (*actions)(&v.Actions))
-	enc.StringKey("message", v.Message)
-	enc.Float64Key("type", float64(v.Type))
+	enc.ArrayKey(keyActions, (*actions)(&v.Actions))
+	enc.StringKey(keyMessage, v.Message)
+	enc.Float64Key(keyType, float64(v.Type))
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -86,8 +86,7 @@ func (v *ShowMessageRequestParams) IsNil() bool { return v == nil }
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *MessageActionItem) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	switch k {
-	case "title":
+	if k == keyTitle {
 		return dec.String(&v.Title)
 	}
 	return nil
@@ -98,7 +97,7 @@ func (v *MessageActionItem) NKeys() int { return 1 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *MessageActionItem) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.StringKey("title", v.Title)
+	enc.StringKey(keyTitle, v.Title)
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -107,9 +106,9 @@ func (v *MessageActionItem) IsNil() bool { return v == nil }
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *LogMessageParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
-	case "message":
+	case keyMessage:
 		return dec.String(&v.Message)
-	case "type":
+	case keyType:
 		return dec.Float64((*float64)(&v.Type))
 	}
 	return nil
@@ -120,8 +119,8 @@ func (v *LogMessageParams) NKeys() int { return 2 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *LogMessageParams) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.StringKey("message", v.Message)
-	enc.Float64Key("type", float64(v.Type))
+	enc.StringKey(keyMessage, v.Message)
+	enc.Float64Key(keyType, float64(v.Type))
 }
 
 // IsNil returns wether the structure is nil value or not.

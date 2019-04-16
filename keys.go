@@ -196,4 +196,6 @@ const (
 	keyRangeLength                       = "rangeLength"
 	keySyncKind                          = "syncKind"
 	keyReason                            = "reason"
+	keyType                              = "type"
+	keyActions                           = "actions"
 )
