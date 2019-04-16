@@ -192,4 +192,8 @@ const (
 	keyRegisterOptions                   = "registerOptions"
 	keyRegistrations                     = "registrations"
 	keyUnregisterations                  = "unregisterations"
+	keyContentChanges                    = "contentChanges"
+	keyRangeLength                       = "rangeLength"
+	keySyncKind                          = "syncKind"
+	keyReason                            = "reason"
 )
