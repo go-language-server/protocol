@@ -50,7 +50,7 @@ func (m MessageType) String() string {
 
 // Enabled reports whether the level is enabled.
 func (m MessageType) Enabled(level MessageType) bool {
-	return m > level
+	return level > 0 && m >= level
 }
 
 // messageTypeMap map of MessageTypes.
