@@ -54,12 +54,15 @@ linters:
   enable:
   enable-all: true
   disable:
+    - dupl
     - gochecknoglobals
     - gochecknoinits
     - gocyclo
     - gosec
     - lll
+    - maligned
     - nakedret
+    - scopelint
   fast: true
 
 issues:
