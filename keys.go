@@ -188,4 +188,8 @@ const (
 	keyStartCharacter                    = "startCharacter"
 	keyEndLine                           = "endLine"
 	keyEndCharacter                      = "endCharacter"
+	keyMethod                            = "method"
+	keyRegisterOptions                   = "registerOptions"
+	keyRegistrations                     = "registrations"
+	keyUnregisterations                  = "unregisterations"
 )

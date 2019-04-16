@@ -11,11 +11,11 @@ import (
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *Registration) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
-	case "id":
+	case keyID:
 		return dec.String(&v.ID)
-	case "method":
+	case keyMethod:
 		return dec.String(&v.Method)
-	case "registerOptions":
+	case keyRegisterOptions:
 		return dec.Interface(&v.RegisterOptions)
 	}
 	return nil
@@ -26,9 +26,9 @@ func (v *Registration) NKeys() int { return 3 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *Registration) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.StringKey("id", v.ID)
-	enc.StringKey("method", v.Method)
-	enc.AddInterfaceKeyOmitEmpty("registerOptions", &v.RegisterOptions)
+	enc.StringKey(keyID, v.ID)
+	enc.StringKey(keyMethod, v.Method)
+	enc.AddInterfaceKeyOmitEmpty(keyRegisterOptions, &v.RegisterOptions)
 }
 
 type registrations []Registration
@@ -63,7 +63,7 @@ func (v *Registration) IsNil() bool { return v == nil }
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *RegistrationParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	if k == "registrations" {
+	if k == keyRegistrations {
 		return dec.Array((*registrations)(&v.Registrations))
 	}
 	return nil
@@ -74,7 +74,7 @@ func (v *RegistrationParams) NKeys() int { return 1 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *RegistrationParams) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKey("registrations", (*registrations)(&v.Registrations))
+	enc.ArrayKey(keyRegistrations, (*registrations)(&v.Registrations))
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -82,7 +82,7 @@ func (v *RegistrationParams) IsNil() bool { return v == nil }
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	if k == "documentSelector" {
+	if k == keyDocumentSelector {
 		return dec.Array(&v.DocumentSelector)
 	}
 	return nil
@@ -93,7 +93,7 @@ func (v *TextDocumentRegistrationOptions) NKeys() int { return 1 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKey("documentSelector", &v.DocumentSelector)
+	enc.ArrayKey(keyDocumentSelector, &v.DocumentSelector)
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -102,9 +102,9 @@ func (v *TextDocumentRegistrationOptions) IsNil() bool { return v == nil }
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *Unregistration) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
-	case "id":
+	case keyID:
 		return dec.String(&v.ID)
-	case "method":
+	case keyMethod:
 		return dec.String(&v.Method)
 	}
 	return nil
@@ -115,8 +115,8 @@ func (v *Unregistration) NKeys() int { return 2 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *Unregistration) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.StringKey("id", v.ID)
-	enc.StringKey("method", v.Method)
+	enc.StringKey(keyID, v.ID)
+	enc.StringKey(keyMethod, v.Method)
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -151,7 +151,7 @@ func (v *unregisterations) IsNil() bool {
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *UnregistrationParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	if k == "unregisterations" {
+	if k == keyUnregisterations {
 		return dec.Array((*unregisterations)(&v.Unregisterations))
 	}
 	return nil
@@ -162,7 +162,7 @@ func (v *UnregistrationParams) NKeys() int { return 1 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *UnregistrationParams) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKey("unregisterations", (*unregisterations)(&v.Unregisterations))
+	enc.ArrayKey(keyUnregisterations, (*unregisterations)(&v.Unregisterations))
 }
 
 // IsNil returns wether the structure is nil value or not.
