@@ -228,3 +228,129 @@ func TestShowMessageRequestParams(t *testing.T) {
 		}
 	})
 }
+
+func TestMessageTypeString(t *testing.T) {
+	tests := []struct {
+		name string
+		m    MessageType
+		want string
+	}{
+		{
+			name: "Error",
+			m:    Error,
+			want: "error",
+		},
+		{
+			name: "Warning",
+			m:    Warning,
+			want: "warning",
+		},
+		{
+			name: "Info",
+			m:    Info,
+			want: "info",
+		},
+		{
+			name: "Log",
+			m:    Log,
+			want: "log",
+		},
+		{
+			name: "Unknown",
+			m:    MessageType(0),
+			want: "0",
+		},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			if got := tt.m.String(); got != tt.want {
+				t.Errorf("MessageType.String() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestMessageType_Enabled(t *testing.T) {
+	tests := []struct {
+		name  string
+		m     MessageType
+		level MessageType
+		want  bool
+	}{
+		{
+			name:  "ErrorError",
+			m:     Error,
+			level: Error,
+			want:  true,
+		},
+		{
+			name:  "ErrorInfo",
+			m:     Error,
+			level: Info,
+			want:  false,
+		},
+		{
+			name:  "ErrorUnknown",
+			m:     Error,
+			level: MessageType(0),
+			want:  false,
+		},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			if got := tt.m.Enabled(tt.level); got != tt.want {
+				t.Errorf("MessageType.Enabled(%v) = %v, want %v", tt.level, got, tt.want)
+			}
+		})
+	}
+}
+
+func TestToMessageType(t *testing.T) {
+	tests := []struct {
+		name  string
+		level string
+		want  MessageType
+	}{
+		{
+			name:  "Error",
+			level: "error",
+			want:  Error,
+		},
+		{
+			name:  "Warning",
+			level: "warning",
+			want:  Warning,
+		},
+		{
+			name:  "Info",
+			level: "info",
+			want:  Info,
+		},
+		{
+			name:  "Log",
+			level: "log",
+			want:  Log,
+		},
+		{
+			name:  "Unknown",
+			level: "0",
+			want:  MessageType(0),
+		},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			if got := ToMessageType(tt.level); got != tt.want {
+				t.Errorf("ToMessageType(%v) = %v, want %v", tt.level, got, tt.want)
+			}
+		})
+	}
+}
