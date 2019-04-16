@@ -10,8 +10,7 @@ import (
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *DidOpenTextDocumentParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	switch k {
-	case keyTextDocument:
+	if k == keyTextDocument {
 		return dec.Object(&v.TextDocument)
 	}
 	return nil

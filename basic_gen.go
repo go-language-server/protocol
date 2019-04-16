@@ -462,7 +462,7 @@ func (c changes) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if err != nil {
 		return err
 	}
-	c[DocumentURI(k)] = (textEdits)(edits)
+	c[DocumentURI(k)] = textEdits(edits)
 	return nil
 }
 
@@ -514,7 +514,7 @@ func (v *WorkspaceEdit) UnmarshalJSONObject(dec *gojay.Decoder, k string) error 
 		if v.Changes == nil {
 			v.Changes = make(map[DocumentURI][]TextEdit)
 		}
-		return dec.Object((changes)(v.Changes))
+		return dec.Object(changes(v.Changes))
 	case keyDocumentChanges:
 		if v.DocumentChanges == nil {
 			v.DocumentChanges = []TextDocumentEdit{}
