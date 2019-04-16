@@ -57,46 +57,125 @@ type ServerInterface interface {
 }
 
 const (
-	MethodInitialize                         = "initialize"
-	MethodInitialized                        = "initialized"
-	MethodShutdown                           = "shutdown"
-	MethodExit                               = "exit"
-	MethodCancelRequest                      = "$/cancelRequest"
-	MethodTextDocumentCodeAction             = "textDocument/codeAction"
-	MethodTextDocumentCodeLens               = "textDocument/codeLens"
-	MethodCodeLensResolve                    = "codeLens/resolve"
-	MethodTextDocumentColorPresentation      = "textDocument/colorPresentation"
-	MethodTextDocumentCompletion             = "textDocument/completion"
-	MethodCompletionItemResolve              = "completionItem/resolve"
-	MethodTextDocumentDeclaration            = "textDocument/declaration"
-	MethodTextDocumentDefinition             = "textDocument/definition"
-	MethodTextDocumentDidChange              = "textDocument/didChange"
-	MethodWorkspaceDidChangeConfiguration    = "workspace/didChangeConfiguration"
-	MethodWorkspaceDidChangeWatchedFiles     = "workspace/didChangeWatchedFiles"
+	// MethodInitialize method name of "initialize".
+	MethodInitialize = "initialize"
+
+	// MethodInitialized method name of "initialized".
+	MethodInitialized = "initialized"
+
+	// MethodShutdown method name of "shutdown".
+	MethodShutdown = "shutdown"
+
+	// MethodExit method name of "exit".
+	MethodExit = "exit"
+
+	// MethodCancelRequest method name of "$/cancelRequest".
+	MethodCancelRequest = "$/cancelRequest"
+
+	// MethodTextDocumentCodeAction method name of "textDocument/codeAction".
+	MethodTextDocumentCodeAction = "textDocument/codeAction"
+
+	// MethodTextDocumentCodeLens method name of "textDocument/codeLens".
+	MethodTextDocumentCodeLens = "textDocument/codeLens"
+
+	// MethodCodeLensResolve method name of "codeLens/resolve".
+	MethodCodeLensResolve = "codeLens/resolve"
+
+	// MethodTextDocumentColorPresentation method name of "textDocument/colorPresentation".
+	MethodTextDocumentColorPresentation = "textDocument/colorPresentation"
+
+	// MethodTextDocumentCompletion method name of "textDocument/completion".
+	MethodTextDocumentCompletion = "textDocument/completion"
+
+	// MethodCompletionItemResolve method name of "completionItem/resolve".
+	MethodCompletionItemResolve = "completionItem/resolve"
+
+	// MethodTextDocumentDeclaration method name of "textDocument/declaration".
+	MethodTextDocumentDeclaration = "textDocument/declaration"
+
+	// MethodTextDocumentDefinition method name of "textDocument/definition".
+	MethodTextDocumentDefinition = "textDocument/definition"
+
+	// MethodTextDocumentDidChange method name of "textDocument/didChange".
+	MethodTextDocumentDidChange = "textDocument/didChange"
+
+	// MethodWorkspaceDidChangeConfiguration method name of "workspace/didChangeConfiguration".
+	MethodWorkspaceDidChangeConfiguration = "workspace/didChangeConfiguration"
+
+	// MethodWorkspaceDidChangeWatchedFiles method name of "workspace/didChangeWatchedFiles".
+	MethodWorkspaceDidChangeWatchedFiles = "workspace/didChangeWatchedFiles"
+
+	// MethodWorkspaceDidChangeWorkspaceFolders method name of "workspace/didChangeWorkspaceFolders".
 	MethodWorkspaceDidChangeWorkspaceFolders = "workspace/didChangeWorkspaceFolders"
-	MethodTextDocumentDidClose               = "textDocument/didClose"
-	MethodTextDocumentDidOpen                = "textDocument/didOpen"
-	MethodTextDocumentDidSave                = "textDocument/didSave"
-	MethodTextDocumentDocumentColor          = "textDocument/documentColor"
-	MethodTextDocumentDocumentHighlight      = "textDocument/documentHighlight"
-	MethodTextDocumentDocumentLink           = "textDocument/documentLink"
-	MethodDocumentLinkResolve                = "documentLink/resolve"
-	MethodTextDocumentDocumentSymbol         = "textDocument/documentSymbol"
-	MethodWorkspaceExecuteCommand            = "workspace/executeCommand"
-	MethodTextDocumentFoldingRange           = "textDocument/foldingRange"
-	MethodTextDocumentFormatting             = "textDocument/formatting"
-	MethodTextDocumentHover                  = "textDocument/hover"
-	MethodTextDocumentImplementation         = "textDocument/implementation"
-	MethodTextDocumentOnTypeFormatting       = "textDocument/onTypeFormatting"
-	MethodTextDocumentPrepareRename          = "textDocument/prepareRename"
-	MethodTextDocumentRangeFormatting        = "textDocument/rangeFormatting"
-	MethodTextDocumentReferences             = "textDocument/references"
-	MethodTextDocumentRename                 = "textDocument/rename"
-	MethodTextDocumentSignatureHelp          = "textDocument/signatureHelp"
-	MethodWorkspaceSymbol                    = "workspace/symbol"
-	MethodTextDocumentTypeDefinition         = "textDocument/typeDefinition"
-	MethodTextDocumentWillSave               = "textDocument/willSave"
-	MethodTextDocumentWillSaveWaitUntil      = "textDocument/willSaveWaitUntil"
+
+	// MethodTextDocumentDidClose method name of "textDocument/didClose".
+	MethodTextDocumentDidClose = "textDocument/didClose"
+
+	// MethodTextDocumentDidOpen method name of "textDocument/didOpen".
+	MethodTextDocumentDidOpen = "textDocument/didOpen"
+
+	// MethodTextDocumentDidSave method name of "textDocument/didSave".
+	MethodTextDocumentDidSave = "textDocument/didSave"
+
+	// MethodTextDocumentDocumentColor method name of"textDocument/documentColor".
+	MethodTextDocumentDocumentColor = "textDocument/documentColor"
+
+	// MethodTextDocumentDocumentHighlight method name of "textDocument/documentHighlight".
+	MethodTextDocumentDocumentHighlight = "textDocument/documentHighlight"
+
+	// MethodTextDocumentDocumentLink method name of "textDocument/documentLink".
+	MethodTextDocumentDocumentLink = "textDocument/documentLink"
+
+	// MethodDocumentLinkResolve method name of "documentLink/resolve".
+	MethodDocumentLinkResolve = "documentLink/resolve"
+
+	// MethodTextDocumentDocumentSymbol method name of "textDocument/documentSymbol".
+	MethodTextDocumentDocumentSymbol = "textDocument/documentSymbol"
+
+	// MethodWorkspaceExecuteCommand method name of "workspace/executeCommand".
+	MethodWorkspaceExecuteCommand = "workspace/executeCommand"
+
+	// MethodTextDocumentFoldingRange method name of "textDocument/foldingRange".
+	MethodTextDocumentFoldingRange = "textDocument/foldingRange"
+
+	// MethodTextDocumentFormatting method name of "textDocument/formatting".
+	MethodTextDocumentFormatting = "textDocument/formatting"
+
+	// MethodTextDocumentHover method name of "textDocument/hover".
+	MethodTextDocumentHover = "textDocument/hover"
+
+	// MethodTextDocumentImplementation method name of "textDocument/implementation".
+	MethodTextDocumentImplementation = "textDocument/implementation"
+
+	// MethodTextDocumentOnTypeFormatting method name of "textDocument/onTypeFormatting".
+	MethodTextDocumentOnTypeFormatting = "textDocument/onTypeFormatting"
+
+	// MethodTextDocumentPrepareRename method name of "textDocument/prepareRename".
+	MethodTextDocumentPrepareRename = "textDocument/prepareRename"
+
+	// MethodTextDocumentRangeFormatting method name of "textDocument/rangeFormatting".
+	MethodTextDocumentRangeFormatting = "textDocument/rangeFormatting"
+
+	// MethodTextDocumentReferences method name of "textDocument/references".
+	MethodTextDocumentReferences = "textDocument/references"
+
+	// MethodTextDocumentRename method name of "textDocument/rename".
+	MethodTextDocumentRename = "textDocument/rename"
+
+	// MethodTextDocumentSignatureHelp method name of "textDocument/signatureHelp".
+	MethodTextDocumentSignatureHelp = "textDocument/signatureHelp"
+
+	// MethodWorkspaceSymbol method name of "workspace/symbol".
+	MethodWorkspaceSymbol = "workspace/symbol"
+
+	// MethodTextDocumentTypeDefinition method name of "textDocument/typeDefinition".
+	MethodTextDocumentTypeDefinition = "textDocument/typeDefinition"
+
+	// MethodTextDocumentWillSave method name of "textDocument/willSave".
+	MethodTextDocumentWillSave = "textDocument/willSave"
+
+	// MethodTextDocumentWillSaveWaitUntil method name of "textDocument/willSaveWaitUntil".
+	MethodTextDocumentWillSaveWaitUntil = "textDocument/willSaveWaitUntil"
 )
 
 // Server implements a Language Server Protocol server.
