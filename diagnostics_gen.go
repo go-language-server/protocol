@@ -38,9 +38,9 @@ func (v *diagnostics) IsNil() bool {
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *PublishDiagnosticsParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
-	case "uri":
+	case keyURI:
 		return dec.String((*string)(&v.URI))
-	case "diagnostics":
+	case keyDiagnostics:
 		return dec.Array((*diagnostics)(&v.Diagnostics))
 	}
 	return nil
@@ -51,8 +51,8 @@ func (v *PublishDiagnosticsParams) NKeys() int { return 2 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *PublishDiagnosticsParams) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.StringKey("uri", string(v.URI))
-	enc.ArrayKey("diagnostics", (*diagnostics)(&v.Diagnostics))
+	enc.StringKey(keyURI, string(v.URI))
+	enc.ArrayKey(keyDiagnostics, (*diagnostics)(&v.Diagnostics))
 }
 
 // IsNil returns wether the structure is nil value or not.

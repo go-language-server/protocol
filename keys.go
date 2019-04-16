@@ -45,4 +45,5 @@ const (
 	keyScheme               = "scheme"
 	keyPattern              = "pattern"
 	keyValue                = "value"
+	keyDiagnostics          = "diagnostics"
 )
