@@ -18,9 +18,7 @@ const (
 func NewClient(client ClientInterface, stream jsonrpc2.Stream, logger *zap.Logger, options ...jsonrpc2.Options) (*jsonrpc2.Conn, ServerInterface) {
 	conn := jsonrpc2.NewConn(stream, options...)
 	conn.Handler = ClientHandler(client, logger.Named("handler"))
-	// conn.Logger = logger.Named("jsonrpc2")
 
-	// serverConn := jsonrpc2.NewConn(stream, options...)
 	s := &Server{Conn: conn, logger: logger.Named("server")}
 
 	return conn, s
