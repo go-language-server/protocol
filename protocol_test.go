@@ -5,3 +5,7 @@
 package protocol
 
 const emptyData = `{}`
+
+type marshalFunc func(v interface{}) ([]byte, error)
+
+type unmarshalFunc func(data []byte, v interface{}) error
