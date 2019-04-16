@@ -409,6 +409,9 @@ func (s *Server) DidClose(ctx context.Context, params *DidCloseTextDocumentParam
 // This means open and close notification must be balanced and the max open count for a particular textDocument is one.
 // Note that a server’s ability to fulfill requests is independent of whether a text document is open or closed.
 func (s *Server) DidOpen(ctx context.Context, params *DidOpenTextDocumentParams) (err error) {
+	s.logger.Debug("call " + MethodTextDocumentDidOpen)
+	defer s.logger.Debug("end " + MethodTextDocumentDidOpen)
+
 	err = s.Conn.Notify(ctx, MethodTextDocumentDidOpen, params)
 	return
 }
