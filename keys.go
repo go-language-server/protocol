@@ -1,0 +1,48 @@
+// Copyright 2019 The go-language-server Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+package protocol
+
+const (
+	keyLine                 = "line"
+	keyCharacter            = "character"
+	keyStart                = "start"
+	keyEnd                  = "end"
+	keyURI                  = "uri"
+	keyRange                = "range"
+	keyOriginSelectionRange = "originSelectionRange"
+	keyTargetURI            = "targetUri"
+	keyTargetRange          = "targetRange"
+	keyTargetSelectionRange = "targetSelectionRange"
+	keySeverity             = "severity"
+	keyCode                 = "code"
+	keySource               = "source"
+	keyMessage              = "message"
+	keyRelatedInformation   = "relatedInformation"
+	keyLocation             = "location"
+	keyTitle                = "title"
+	keyCommand              = "command"
+	keyArguments            = "arguments"
+	keyNewText              = "newText"
+	keyTextDocument         = "textDocument"
+	keyEdits                = "edits"
+	keyOverwrite            = "overwrite"
+	keyIgnoreIfExists       = "ignoreIfExists"
+	keyKind                 = "kind"
+	keyOptions              = "options"
+	keyOldURI               = "oldUri"
+	keyNewURI               = "newUri"
+	keyRecursive            = "recursive"
+	keyIgnoreIfNotExists    = "ignoreIfNotExists"
+	keyChanges              = "changes"
+	keyDocumentChanges      = "documentChanges"
+	keyLanguageID           = "languageId"
+	keyVersion              = "version"
+	keyText                 = "text"
+	keyPosition             = "position"
+	keyLanguage             = "language"
+	keyScheme               = "scheme"
+	keyPattern              = "pattern"
+	keyValue                = "value"
+)
