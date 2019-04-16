@@ -48,8 +48,9 @@ func (v *registrations) NKeys() int { return 1 }
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
 func (v *registrations) MarshalJSONArray(enc *gojay.Encoder) {
-	for _, t := range *v {
-		enc.ObjectOmitEmpty(&t)
+	vv := *v
+	for i := range vv {
+		enc.ObjectOmitEmpty(&vv[i])
 	}
 }
 
@@ -139,8 +140,9 @@ func (v *unregisterations) NKeys() int { return 1 }
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
 func (v *unregisterations) MarshalJSONArray(enc *gojay.Encoder) {
-	for _, t := range *v {
-		enc.ObjectOmitEmpty(&t)
+	vv := *v
+	for i := range vv {
+		enc.ObjectOmitEmpty(&vv[i])
 	}
 }
 

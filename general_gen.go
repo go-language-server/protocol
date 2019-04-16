@@ -22,8 +22,9 @@ func (v *workspaceFolders) UnmarshalJSONArray(dec *gojay.Decoder) error {
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
 func (v *workspaceFolders) MarshalJSONArray(enc *gojay.Encoder) {
-	for _, t := range *v {
-		enc.ObjectOmitEmpty(&t)
+	vv := *v
+	for i := range vv {
+		enc.ObjectOmitEmpty(&vv[i])
 	}
 }
 

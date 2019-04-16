@@ -25,8 +25,9 @@ func (v *diagnostics) NKeys() int { return 1 }
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
 func (v *diagnostics) MarshalJSONArray(enc *gojay.Encoder) {
-	for _, s := range *v {
-		enc.Object(&s)
+	vv := *v
+	for i := range vv {
+		enc.Object(&vv[i])
 	}
 }
 

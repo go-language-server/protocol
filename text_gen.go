@@ -44,8 +44,9 @@ func (v *textDocumentContentChangeEvents) NKeys() int { return 1 }
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
 func (v *textDocumentContentChangeEvents) MarshalJSONArray(enc *gojay.Encoder) {
-	for _, t := range *v {
-		enc.ObjectOmitEmpty(&t)
+	vv := *v
+	for i := range vv {
+		enc.ObjectOmitEmpty(&vv[i])
 	}
 }
 

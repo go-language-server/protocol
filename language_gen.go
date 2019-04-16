@@ -77,8 +77,9 @@ func (v *items) NKeys() int { return 1 }
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
 func (v *items) MarshalJSONArray(enc *gojay.Encoder) {
-	for _, t := range *v {
-		enc.ObjectOmitEmpty(&t)
+	vv := *v
+	for i := range vv {
+		enc.ObjectOmitEmpty(&vv[i])
 	}
 }
 
@@ -241,8 +242,9 @@ func (v *signatures) NKeys() int { return 1 }
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
 func (v *signatures) MarshalJSONArray(enc *gojay.Encoder) {
-	for _, t := range *v {
-		enc.ObjectOmitEmpty(&t)
+	vv := *v
+	for i := range vv {
+		enc.ObjectOmitEmpty(&vv[i])
 	}
 }
 
@@ -453,8 +455,9 @@ func (v *documentSymbols) NKeys() int { return 1 }
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
 func (v *documentSymbols) MarshalJSONArray(enc *gojay.Encoder) {
-	for _, t := range *v {
-		enc.ObjectOmitEmpty(&t)
+	vv := *v
+	for i := range vv {
+		enc.ObjectOmitEmpty(&vv[i])
 	}
 }
 
@@ -742,8 +745,7 @@ func (v *CodeLensRegistrationOptions) IsNil() bool { return v == nil }
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *DocumentLinkParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	switch k {
-	case keyTextDocument:
+	if k == keyTextDocument {
 		return dec.Object(&v.TextDocument)
 	}
 	return nil
@@ -1070,8 +1072,7 @@ func (v *RenameRegistrationOptions) IsNil() bool { return v == nil }
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *FoldingRangeParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	switch k {
-	case keyTextDocument:
+	if k == keyTextDocument {
 		return dec.Object(&v.TextDocument)
 	}
 	return nil
