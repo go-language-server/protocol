@@ -56,7 +56,7 @@ linters:
     # - dupl
     # - gochecknoglobals
     # - gochecknoinits
-    # - gocyclo
+    - gocyclo
     # - gosec
     - lll
     # - maligned
