@@ -4,6 +4,10 @@
 
 package protocol
 
+import (
+	"strconv"
+)
+
 // ShowMessageParams params of ShowMessage Notification.
 type ShowMessageParams struct {
 
@@ -27,6 +31,45 @@ const (
 	// Log a log message.
 	Log MessageType = 4
 )
+
+// String implements fmt.Stringer.
+func (m MessageType) String() string {
+	switch m {
+	case Error:
+		return "error"
+	case Warning:
+		return "warning"
+	case Info:
+		return "info"
+	case Log:
+		return "log"
+	default:
+		return strconv.FormatFloat(float64(m), 'f', -1, 64)
+	}
+}
+
+// Enabled reports whether the level is enabled.
+func (m MessageType) Enabled(level MessageType) bool {
+	return m > level
+}
+
+// messageTypeMap map of MessageTypes.
+var messageTypeMap = map[string]MessageType{
+	"error":   Error,
+	"warning": Warning,
+	"info":    Info,
+	"log":     Log,
+}
+
+// ToMessageType converts level to the MessageType.
+func ToMessageType(level string) MessageType {
+	mt, ok := messageTypeMap[level]
+	if !ok {
+		return MessageType(0) // unknown
+	}
+
+	return mt
+}
 
 // ShowMessageRequestParams params of ShowMessage Request.
 type ShowMessageRequestParams struct {
