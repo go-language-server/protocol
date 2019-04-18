@@ -4,9 +4,11 @@
 
 package protocol
 
-// DocumentURI represents the URI of a document.
+// DocumentURI represents an URI of a document.
+//
 // Many of the interfaces contain fields that correspond to the URI of a document.
 // For clarity, the type of such a field is declared as a DocumentURI.
+//
 // Over the wire, it will still be transferred as a string, but this guarantees
 // that the contents of that string can be parsed as a valid URI.
 type DocumentURI string
@@ -14,26 +16,26 @@ type DocumentURI string
 // EOL denotes represents the character offset.
 var EOL = []string{"\n", "\r\n", "\r"}
 
-// Position in a text document expressed as zero-based line and zero-based character offset. A position is between two characters like an 'insert' cursor in a editor.
+// Position represents a text document expressed as zero-based line and zero-based character offset.
+//
+// A position is between two characters like an "insert" cursor in a editor.
 type Position struct {
-
 	// Line position in a document (zero-based).
 	Line float64 `json:"line"`
 
 	// Character offset on a line in a document (zero-based). Assuming that the line is
 	// represented as a string, the `character` value represents the gap between the
 	// `character` and `character + 1`.
-	//
 	// If the character value is greater than the line length it defaults back to the
 	// line length.
 	Character float64 `json:"character"`
 }
 
-// Range in a text document expressed as (zero-based) start and end positions.
+// Range represents a text document expressed as (zero-based) start and end positions.
+//
 // A range is comparable to a selection in an editor. Therefore the end position is exclusive.
 // If you want to specify a range that contains a line including the line ending character(s) then use an end position denoting the start of the next line.
 type Range struct {
-
 	// Start is the range's start position.
 	Start Position `json:"start"`
 
@@ -49,9 +51,7 @@ type Location struct {
 
 // LocationLink represents a link between a source and a target location.
 type LocationLink struct {
-
 	// OriginSelectionRange span of the origin of this link.
-	//
 	// Used as the underlined span for mouse interaction. Defaults to the word range at
 	// the mouse position.
 	OriginSelectionRange *Range `json:"originSelectionRange,omitempty"`
@@ -69,9 +69,10 @@ type LocationLink struct {
 	TargetSelectionRange Range `json:"targetSelectionRange"`
 }
 
-// Diagnostic represents a diagnostic, such as a compiler error or warning. Diagnostic objects are only valid in the scope of a resource.
+// Diagnostic represents a diagnostic, such as a compiler error or warning.
+//
+// Diagnostic objects are only valid in the scope of a resource.
 type Diagnostic struct {
-
 	// Range is the range at which the message applies.
 	Range Range `json:"range"`
 
@@ -108,8 +109,9 @@ const (
 	SeverityHint DiagnosticSeverity = 4
 )
 
-// DiagnosticRelatedInformation represents a related message and source code location for a diagnostic. This should be
-// used to point to code locations that cause or related to a diagnostics, e.g when duplicating
+// DiagnosticRelatedInformation represents a related message and source code location for a diagnostic.
+//
+// This should be used to point to code locations that cause or related to a diagnostics, e.g when duplicating
 // a symbol in a scope.
 type DiagnosticRelatedInformation struct {
 
@@ -121,27 +123,25 @@ type DiagnosticRelatedInformation struct {
 }
 
 // Command represents a reference to a command. Provides a title which will be used to represent a command in the UI.
+//
 // Commands are identified by a string identifier.
 // The recommended way to handle commands is to implement their execution on the server side if the client and server provides the corresponding capabilities.
 // Alternatively the tool extension code could handle the command. The protocol currently doesn't specify a set of well-known commands.
 type Command struct {
-
 	// Title of the command, like `save`.
 	Title string `json:"title"`
 
 	// Command is the identifier of the actual command handler.
 	Command string `json:"command"`
 
-	// Arguments that the command handler should be
-	// invoked with.
+	// Arguments that the command handler should be invoked with.
 	Arguments []interface{} `json:"arguments,omitempty"`
 }
 
 // TextEdit is a textual edit applicable to a text document.
 type TextEdit struct {
-
-	// The range of the text document to be manipulated. To insert
-	// text into a document create a range where start === end.
+	// The range of the text document to be manipulated.
+	// To insert text into a document create a range where start === end.
 	Range Range `json:"range"`
 
 	// The string to be inserted. For delete operations use an
@@ -150,11 +150,11 @@ type TextEdit struct {
 }
 
 // TextDocumentEdit describes textual changes on a single text document.
+//
 // The text document is referred to as a VersionedTextDocumentIdentifier to allow clients to check the text document version before an edit is applied.
 // A TextDocumentEdit describes all changes on a version Si and after they are applied move the document to version Si+1.
 // So the creator of a TextDocumentEdit doesn't need to sort the array or do any kind of ordering. However the edits must be non overlapping.
 type TextDocumentEdit struct {
-
 	// The text document to change.
 	TextDocument VersionedTextDocumentIdentifier `json:"textDocument"`
 
@@ -162,42 +162,38 @@ type TextDocumentEdit struct {
 	Edits []TextEdit `json:"edits"`
 }
 
-// CreateFileOptions options to create a file.
+// CreateFileOptions represents an options to create a file.
 type CreateFileOptions struct {
-
-	// Overwrite existing file. Overwrite wins over `ignoreIfExists`
+	// Overwrite existing file. Overwrite wins over `ignoreIfExists`.
 	Overwrite bool `json:"overwrite,omitempty"`
 
 	// IgnoreIfExists ignore if exists.
 	IgnoreIfExists bool `json:"ignoreIfExists,omitempty"`
 }
 
-// CreateFile create file operation.
+// CreateFile represents a create file operation.
 type CreateFile struct {
-
 	// Kind a create.
 	Kind string `json:"kind"` // should be `create`
 
 	// URI is the resource to create.
 	URI string `json:"uri"`
 
-	// Options additional options
+	// Options additional options.
 	Options *CreateFileOptions `json:"options,omitempty"`
 }
 
-// RenameFileOptions rename file options.
+// RenameFileOptions represents a rename file options.
 type RenameFileOptions struct {
-
-	// Overwrite target if existing. Overwrite wins over `ignoreIfExists`
+	// Overwrite target if existing. Overwrite wins over `ignoreIfExists`.
 	Overwrite bool `json:"overwrite,omitempty"`
 
 	// IgnoreIfExists ignores if target exists.
 	IgnoreIfExists bool `json:"ignoreIfExists,omitempty"`
 }
 
-// RenameFile rename file operation.
+// RenameFile represents a rename file operation.
 type RenameFile struct {
-
 	// Kind a rename.
 	Kind string `json:"kind"` // should be `rename`
 
@@ -211,9 +207,8 @@ type RenameFile struct {
 	Options *RenameFileOptions `json:"options,omitempty"`
 }
 
-// DeleteFileOptions delete file options.
+// DeleteFileOptions represents a delete file options.
 type DeleteFileOptions struct {
-
 	// Recursive delete the content recursively if a folder is denoted.
 	Recursive bool `json:"recursive,omitempty"`
 
@@ -221,9 +216,8 @@ type DeleteFileOptions struct {
 	IgnoreIfNotExists bool `json:"ignoreIfNotExists,omitempty"`
 }
 
-// DeleteFile delete file operation.
+// DeleteFile represents a delete file operation.
 type DeleteFile struct {
-
 	// Kind is a delete.
 	Kind string `json:"kind"` // should be `delete`
 
@@ -234,13 +228,13 @@ type DeleteFile struct {
 	Options *DeleteFileOptions `json:"options,omitempty"`
 }
 
-// WorkspaceEdit represents changes to many resources managed in the workspace.
+// WorkspaceEdit represent a changes to many resources managed in the workspace.
+//
 // The edit should either provide changes or documentChanges.
 // If the client can handle versioned document edits and if documentChanges are present, the latter are preferred over changes.
 type WorkspaceEdit struct {
 	// Changes holds changes to existing resources.
 	Changes map[DocumentURI][]TextEdit `json:"changes,omitempty"`
-
 	// DocumentChanges depending on the client capability `workspace.workspaceEdit.resourceOperations` document changes
 	// are either an array of `TextDocumentEdit`s to express changes to n different text documents
 	// where each text document edit addresses a specific version of a text document. Or it can contain
@@ -254,14 +248,13 @@ type WorkspaceEdit struct {
 	DocumentChanges []TextDocumentEdit `json:"documentChanges,omitempty"`
 }
 
-// TextDocumentIdentifier are identified using a URI. On the protocol level, URIs are passed as strings.
+// TextDocumentIdentifier indicates the using a URI. On the protocol level, URIs are passed as strings.
 type TextDocumentIdentifier struct {
-
 	// URI is the text document's URI.
 	URI DocumentURI `json:"uri"`
 }
 
-// TextDocumentItem an item to transfer a text document from the client to the server.
+// TextDocumentItem represent an item to transfer a text document from the client to the server.
 type TextDocumentItem struct {
 
 	// URI is the text document's URI.
@@ -278,116 +271,168 @@ type TextDocumentItem struct {
 	Text string `json:"text"`
 }
 
-// LanguageIdentifier is the text document's language identifier.
+// LanguageIdentifier represent a text document's language identifier.
 type LanguageIdentifier string
 
 const (
 	// BatLanguage Windows Bat Language.
 	BatLanguage LanguageIdentifier = "bat"
+
 	// BibtexLanguage BibTeX Language.
 	BibtexLanguage LanguageIdentifier = "bibtex"
+
 	// ClojureLanguage Clojure Language.
 	ClojureLanguage LanguageIdentifier = "clojure"
+
 	// CoffeescriptLanguage Coffeescript Language.
 	CoffeescriptLanguage LanguageIdentifier = "coffeescript"
+
 	// CLanguage C Language.
 	CLanguage LanguageIdentifier = "c"
+
 	// CppLanguage C++ Language.
 	CppLanguage LanguageIdentifier = "cpp"
+
 	// CsharpLanguage C# Language.
 	CsharpLanguage LanguageIdentifier = "csharp"
+
 	// CSSLanguage CSS Language.
 	CSSLanguage LanguageIdentifier = "css"
+
 	// DiffLanguage Diff Language.
 	DiffLanguage LanguageIdentifier = "diff"
+
 	// DartLanguage Dart Language.
 	DartLanguage LanguageIdentifier = "dart"
+
 	// DockerfileLanguage Dockerfile Language.
 	DockerfileLanguage LanguageIdentifier = "dockerfile"
+
 	// FsharpLanguage F# Language.
 	FsharpLanguage LanguageIdentifier = "fsharp"
+
 	// GitCommitLanguage Git Language.
 	GitCommitLanguage LanguageIdentifier = "git-commit"
+
 	// GitRebaseLanguage Git Language.
 	GitRebaseLanguage LanguageIdentifier = "git-rebase"
+
 	// GoLanguage Go Language.
 	GoLanguage LanguageIdentifier = "go"
+
 	// GroovyLanguage Groovy Language.
 	GroovyLanguage LanguageIdentifier = "groovy"
+
 	// HandlebarsLanguage Handlebars Language.
 	HandlebarsLanguage LanguageIdentifier = "handlebars"
+
 	// HTMLLanguage HTML Language.
 	HTMLLanguage LanguageIdentifier = "html"
+
 	// IniLanguage Ini Language.
 	IniLanguage LanguageIdentifier = "ini"
+
 	// JavaLanguage Java Language.
 	JavaLanguage LanguageIdentifier = "java"
+
 	// JavaScriptLanguage JavaScript Language.
 	JavaScriptLanguage LanguageIdentifier = "javascript"
+
 	// JSONLanguage JSON Language.
 	JSONLanguage LanguageIdentifier = "json"
+
 	// LatexLanguage LaTeX Language.
 	LatexLanguage LanguageIdentifier = "latex"
+
 	// LessLanguage Less Language.
 	LessLanguage LanguageIdentifier = "less"
+
 	// LuaLanguage Lua Language.
 	LuaLanguage LanguageIdentifier = "lua"
+
 	// MakefileLanguage Makefile Language.
 	MakefileLanguage LanguageIdentifier = "makefile"
+
 	// MarkdownLanguage Markdown Language.
 	MarkdownLanguage LanguageIdentifier = "markdown"
+
 	// ObjectiveCLanguage Objective-C Language.
 	ObjectiveCLanguage LanguageIdentifier = "objective-c"
+
 	// ObjectiveCppLanguage Objective-C++ Language.
 	ObjectiveCppLanguage LanguageIdentifier = "objective-cpp"
+
 	// PerlLanguage Perl Language.
 	PerlLanguage LanguageIdentifier = "perl"
+
 	// Perl6Language Perl Language.
 	Perl6Language LanguageIdentifier = "perl6"
+
 	// PHPLanguage PHP Language.
 	PHPLanguage LanguageIdentifier = "php"
+
 	// PowershellLanguage Powershell Language.
 	PowershellLanguage LanguageIdentifier = "powershell"
+
 	// JadeLanguage Pug Language.
 	JadeLanguage LanguageIdentifier = "jade"
+
 	// PythonLanguage Python Language.
 	PythonLanguage LanguageIdentifier = "python"
+
 	// RLanguage R Language.
 	RLanguage LanguageIdentifier = "r"
+
 	// RazorLanguage Razor(cshtml) Language.
 	RazorLanguage LanguageIdentifier = "razor"
+
 	// RubyLanguage Ruby Language.
 	RubyLanguage LanguageIdentifier = "ruby"
+
 	// RustLanguage Rust Language.
 	RustLanguage LanguageIdentifier = "rust"
+
 	// ScssLanguage Sass Language.
 	ScssLanguage LanguageIdentifier = "scss"
+
 	// SassLanguage Sass Language.
 	SassLanguage LanguageIdentifier = "sass"
+
 	// ScalaLanguage Scala Language.
 	ScalaLanguage LanguageIdentifier = "scala"
+
 	// ShaderlabLanguage ShaderLab Language.
 	ShaderlabLanguage LanguageIdentifier = "shaderlab"
+
 	// ShellscriptLanguage Shell Script (Bash) Language.
 	ShellscriptLanguage LanguageIdentifier = "shellscript"
+
 	// SQLLanguage SQL Language.
 	SQLLanguage LanguageIdentifier = "sql"
+
 	// SwiftLanguage Swift Language.
 	SwiftLanguage LanguageIdentifier = "swift"
+
 	// TypeScriptLanguage TypeScript Language.
 	TypeScriptLanguage LanguageIdentifier = "typescript"
+
 	// TexLanguage TeX Language.
 	TexLanguage LanguageIdentifier = "tex"
+
 	// VBLanguage Visual Basic Language.
 	VBLanguage LanguageIdentifier = "vb"
+
 	// XMLLanguage XML Language.
 	XMLLanguage LanguageIdentifier = "xml"
+
 	// XslLanguage XSL Language.
 	XslLanguage LanguageIdentifier = "xsl"
+
 	// YamlLanguage YAML Language.
 	YamlLanguage LanguageIdentifier = "yaml"
 )
 
+// languageIdentifierMap map of LanguageIdentifiers.
 var languageIdentifierMap = map[string]LanguageIdentifier{
 	"bat":           BatLanguage,
 	"bibtex":        BibtexLanguage,
@@ -453,7 +498,7 @@ func ToLanguageIdentifier(ft string) LanguageIdentifier {
 	return langID
 }
 
-// VersionedTextDocumentIdentifier an identifier to denote a specific version of a text document.
+// VersionedTextDocumentIdentifier represents an identifier to denote a specific version of a text document.
 type VersionedTextDocumentIdentifier struct {
 	TextDocumentIdentifier
 
@@ -470,7 +515,6 @@ type VersionedTextDocumentIdentifier struct {
 
 // TextDocumentPositionParams is a parameter literal used in requests to pass a text document and a position inside that document.
 type TextDocumentPositionParams struct {
-
 	// TextDocument is the text document.
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
 
@@ -479,9 +523,9 @@ type TextDocumentPositionParams struct {
 }
 
 // DocumentFilter is a document filter denotes a document through properties like language, scheme or pattern.
+//
 // An example is a filter that applies to TypeScript files on disk.
 type DocumentFilter struct {
-
 	// Language a language id, like `typescript`.
 	Language string `json:"language,omitempty"`
 
@@ -519,7 +563,9 @@ const (
 )
 
 // MarkupContent a `MarkupContent` literal represents a string value which content is interpreted base on its
-// kind flag. Currently the protocol supports `plaintext` and `markdown` as markup kinds.
+// kind flag.
+//
+// Currently the protocol supports `plaintext` and `markdown` as markup kinds.
 //
 // If the kind is `markdown` then the value can contain fenced code blocks like in GitHub issues.
 // See https://help.github.com/articles/creating-and-highlighting-code-blocks/#syntax-highlighting
@@ -541,7 +587,6 @@ const (
 // *Please Note* that clients might sanitize the return markdown. A client could decide to
 // remove HTML from the markdown to avoid script execution.
 type MarkupContent struct {
-
 	// Kind is the type of the Markup
 	Kind MarkupKind `json:"kind"`
 
