@@ -8,8 +8,9 @@ import (
 	"sync"
 )
 
-// basic
 var (
+	// basic
+
 	// PositionPool represents a pool the Position.
 	PositionPool *sync.Pool
 
@@ -78,10 +79,15 @@ var (
 
 	// MarkupContentPool represents a pool the MarkupContent.
 	MarkupContentPool *sync.Pool
+
+	// diagnostics
+
+	// PublishDiagnosticsParamsPool represents a pool the PublishDiagnosticsParams.
+	PublishDiagnosticsParamsPool *sync.Pool
 )
 
-// basic
 func init() {
+	// basic
 	PositionPool = &sync.Pool{
 		New: func() interface{} {
 			return &Position{}
@@ -195,6 +201,13 @@ func init() {
 	MarkupContentPool = &sync.Pool{
 		New: func() interface{} {
 			return &MarkupContent{}
+		},
+	}
+
+	// diagnostics
+	PublishDiagnosticsParamsPool = &sync.Pool{
+		New: func() interface{} {
+			return &PublishDiagnosticsParams{}
 		},
 	}
 }
