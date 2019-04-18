@@ -592,7 +592,7 @@ func (v *CodeActionParams) IsNil() bool { return v == nil }
 func (v *CodeActionContext) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keyDiagnostics:
-		return dec.Array((*diagnostics)(&v.Diagnostics))
+		return dec.Array((*Diagnostics)(&v.Diagnostics))
 	case keyOnly:
 		return dec.Array((*codeActionKindValueSet)(&v.Only))
 	}
@@ -604,7 +604,7 @@ func (v *CodeActionContext) NKeys() int { return 2 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *CodeActionContext) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKey(keyDiagnostics, (*diagnostics)(&v.Diagnostics))
+	enc.ArrayKey(keyDiagnostics, Diagnostics(v.Diagnostics))
 	enc.ArrayKey(keyOnly, (*codeActionKindValueSet)(&v.Only))
 }
 
@@ -622,7 +622,7 @@ func (v *CodeAction) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	case keyKind:
 		return dec.String((*string)(&v.Kind))
 	case keyDiagnostics:
-		return dec.Array((*diagnostics)(&v.Diagnostics))
+		return dec.Array((*Diagnostics)(&v.Diagnostics))
 	case keyEdit:
 		if v.Edit == nil {
 			v.Edit = &WorkspaceEdit{}
@@ -644,7 +644,7 @@ func (v *CodeAction) NKeys() int { return 5 }
 func (v *CodeAction) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey(keyTitle, v.Title)
 	enc.StringKeyOmitEmpty(keyKind, string(v.Kind))
-	enc.ArrayKeyOmitEmpty(keyDiagnostics, (*diagnostics)(&v.Diagnostics))
+	enc.ArrayKeyOmitEmpty(keyDiagnostics, Diagnostics(v.Diagnostics))
 	enc.ObjectKeyOmitEmpty(keyEdit, v.Edit)
 	enc.ObjectKeyOmitEmpty(keyCommand, v.Command)
 }
