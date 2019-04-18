@@ -176,10 +176,12 @@ func (v *Diagnostic) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	case keyMessage:
 		return dec.String(&v.Message)
 	case keyRelatedInformation:
-		if v.RelatedInformation == nil {
-			v.RelatedInformation = []DiagnosticRelatedInformation{}
+		var values = DiagnosticRelatedInformations{}
+		err := dec.Array(&values)
+		if err == nil && len(values) > 0 {
+			v.RelatedInformation = []DiagnosticRelatedInformation(values)
 		}
-		return dec.Array((*diagnosticRelatedInformations)(&v.RelatedInformation))
+		return err
 	}
 	return nil
 }
@@ -194,7 +196,7 @@ func (v *Diagnostic) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.AddInterfaceKeyOmitEmpty(keyCode, v.Code)
 	enc.StringKeyOmitEmpty(keySource, v.Source)
 	enc.StringKey(keyMessage, v.Message)
-	enc.ArrayKeyOmitEmpty(keyRelatedInformation, (*diagnosticRelatedInformations)(&v.RelatedInformation))
+	enc.ArrayKeyOmitEmpty(keyRelatedInformation, DiagnosticRelatedInformations(v.RelatedInformation))
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -212,6 +214,7 @@ func (v *Diagnostic) Reset() {
 		v.RelatedInformation[i].Reset()
 		DiagnosticRelatedInformationPool.Put(&v.RelatedInformation[i])
 	}
+	v.RelatedInformation = nil
 }
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
@@ -244,31 +247,29 @@ func (v *DiagnosticRelatedInformation) Reset() {
 	v.Message = ""
 }
 
-type diagnosticRelatedInformations []DiagnosticRelatedInformation
+// DiagnosticRelatedInformations represents a slice of DiagnosticRelatedInformation.
+type DiagnosticRelatedInformations []DiagnosticRelatedInformation
 
-func (v *diagnosticRelatedInformations) UnmarshalJSONArray(dec *gojay.Decoder) error {
-	t := DiagnosticRelatedInformation{}
-	if err := dec.Object(&t); err != nil {
+// UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
+func (v *DiagnosticRelatedInformations) UnmarshalJSONArray(dec *gojay.Decoder) error {
+	var value = DiagnosticRelatedInformation{}
+	if err := dec.Object(&value); err != nil {
 		return err
 	}
-	*v = append(*v, t)
+	*v = append(*v, value)
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal.
-func (v *diagnosticRelatedInformations) NKeys() int { return 1 }
-
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
-func (v *diagnosticRelatedInformations) MarshalJSONArray(enc *gojay.Encoder) {
-	vv := *v
-	for i := range vv {
-		enc.Object(&vv[i])
+func (v DiagnosticRelatedInformations) MarshalJSONArray(enc *gojay.Encoder) {
+	for i := range v {
+		enc.Object(&v[i])
 	}
 }
 
 // IsNil implements gojay's MarshalerJSONArray.
-func (v *diagnosticRelatedInformations) IsNil() bool {
-	return *v == nil || len(*v) == 0
+func (v DiagnosticRelatedInformations) IsNil() bool {
+	return len(v) == 0
 }
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
