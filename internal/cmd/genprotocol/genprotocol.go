@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Command genprotocol generates typescript codes from Microsoft/language-server-protocol/specification.md markdown.
+// Command genprotocol generates the TypeScript codes from Microsoft/language-server-protocol/specification.md markdown.
 package main
 
 import (

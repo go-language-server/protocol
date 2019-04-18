@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package genprotocol generates typescript codes from Microsoft/language-server-protocol/specification.md markdown.
+// Package genprotocol generates the TypeScript codes from Microsoft/language-server-protocol/specification.md markdown.
 //
 // The "gitlab.com/golang-commonmark/markdown" AST are:
 //
