@@ -101,10 +101,13 @@ type DiagnosticSeverity float64
 const (
 	// SeverityError reports an error.
 	SeverityError DiagnosticSeverity = 1
+
 	// SeverityWarning reports a warning.
 	SeverityWarning DiagnosticSeverity = 2
+
 	// SeverityInformation reports an information.
 	SeverityInformation DiagnosticSeverity = 3
+
 	// SeverityHint reports a hint.
 	SeverityHint DiagnosticSeverity = 4
 )
@@ -114,7 +117,6 @@ const (
 // This should be used to point to code locations that cause or related to a diagnostics, e.g when duplicating
 // a symbol in a scope.
 type DiagnosticRelatedInformation struct {
-
 	// Location is the location of this related diagnostic information.
 	Location Location `json:"location"`
 
@@ -140,11 +142,11 @@ type Command struct {
 
 // TextEdit is a textual edit applicable to a text document.
 type TextEdit struct {
-	// The range of the text document to be manipulated.
+	// Range is the range of the text document to be manipulated.
 	// To insert text into a document create a range where start === end.
 	Range Range `json:"range"`
 
-	// The string to be inserted. For delete operations use an
+	// NewText is the string to be inserted. For delete operations use an
 	// empty string.
 	NewText string `json:"newText"`
 }
@@ -155,10 +157,10 @@ type TextEdit struct {
 // A TextDocumentEdit describes all changes on a version Si and after they are applied move the document to version Si+1.
 // So the creator of a TextDocumentEdit doesn't need to sort the array or do any kind of ordering. However the edits must be non overlapping.
 type TextDocumentEdit struct {
-	// The text document to change.
+	// TextDocument is the text document to change.
 	TextDocument VersionedTextDocumentIdentifier `json:"textDocument"`
 
-	// The edits to be applied.
+	// Edits is the edits to be applied.
 	Edits []TextEdit `json:"edits"`
 }
 
@@ -235,6 +237,7 @@ type DeleteFile struct {
 type WorkspaceEdit struct {
 	// Changes holds changes to existing resources.
 	Changes map[DocumentURI][]TextEdit `json:"changes,omitempty"`
+
 	// DocumentChanges depending on the client capability `workspace.workspaceEdit.resourceOperations` document changes
 	// are either an array of `TextDocumentEdit`s to express changes to n different text documents
 	// where each text document edit addresses a specific version of a text document. Or it can contain
@@ -256,7 +259,6 @@ type TextDocumentIdentifier struct {
 
 // TextDocumentItem represent an item to transfer a text document from the client to the server.
 type TextDocumentItem struct {
-
 	// URI is the text document's URI.
 	URI DocumentURI `json:"uri"`
 
@@ -502,8 +504,9 @@ func ToLanguageIdentifier(ft string) LanguageIdentifier {
 type VersionedTextDocumentIdentifier struct {
 	TextDocumentIdentifier
 
-	// Version is the version number of this document. If a versioned text document identifier
-	// is sent from the server to the client and the file is not open in the editor
+	// Version is the version number of this document.
+	//
+	// If a versioned text document identifier is sent from the server to the client and the file is not open in the editor
 	// (the server has not received an open notification before) the server can send
 	// `null` to indicate that the version is known and the content on disk is the
 	// truth (as speced with document content ownership).
@@ -584,7 +587,7 @@ const (
 //  * };
 //  * ```
 //
-// *Please Note* that clients might sanitize the return markdown. A client could decide to
+// NOTE: clients might sanitize the return markdown. A client could decide to
 // remove HTML from the markdown to avoid script execution.
 type MarkupContent struct {
 	// Kind is the type of the Markup
