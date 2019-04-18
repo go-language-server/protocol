@@ -65,6 +65,7 @@ type Client struct {
 	logger *zap.Logger
 }
 
+// compiler time check whether the Client implements ClientInterface interface.
 var _ ClientInterface = (*Client)(nil)
 
 // Run runs the Language Server Protocol client.
@@ -73,7 +74,7 @@ func (c *Client) Run(ctx context.Context) (err error) {
 	return
 }
 
-// LogMessage sents the notification from the server to the client to ask the client to log a particular message.
+// LogMessage sends the notification from the server to the client to ask the client to log a particular message.
 func (c *Client) LogMessage(ctx context.Context, params *LogMessageParams) (err error) {
 	err = c.Conn.Notify(ctx, MethodWindowLogMessage, params)
 	return
@@ -111,13 +112,13 @@ func (c *Client) ShowMessageRequest(ctx context.Context, params *ShowMessageRequ
 	return result, err
 }
 
-// Telemetry sents the notification from the server to the client to ask the client to log a telemetry event.
+// Telemetry sends the notification from the server to the client to ask the client to log a telemetry event.
 func (c *Client) Telemetry(ctx context.Context, params interface{}) (err error) {
 	err = c.Conn.Notify(ctx, MethodTelemetryEvent, params)
 	return
 }
 
-// RegisterCapability sents the request from the server to the client to register for a new capability on the client side.
+// RegisterCapability sends the request from the server to the client to register for a new capability on the client side.
 //
 // Not all clients need to support dynamic capability registration.
 //
@@ -128,7 +129,7 @@ func (c *Client) RegisterCapability(ctx context.Context, params *RegistrationPar
 	return
 }
 
-// UnregisterCapability sents the request from the server to the client to unregister a previously registered capability.
+// UnregisterCapability sends the request from the server to the client to unregister a previously registered capability.
 func (c *Client) UnregisterCapability(ctx context.Context, params *UnregistrationParams) (err error) {
 	err = c.Conn.Notify(ctx, MethodClientUnregisterCapability, params)
 	return
@@ -153,7 +154,7 @@ func (c *Client) WorkspaceConfiguration(ctx context.Context, params *Configurati
 	return result, err
 }
 
-// WorkspaceFolders sents the request from the server to the client to fetch the current open list of workspace folders.
+// WorkspaceFolders sends the request from the server to the client to fetch the current open list of workspace folders.
 //
 // Returns null in the response if only a single file is open in the tool. Returns an empty array if a workspace is open but no folders are configured.
 //
@@ -167,7 +168,7 @@ func (c *Client) WorkspaceFolders(ctx context.Context) (result []WorkspaceFolder
 // ClientHandler returns the client handler.
 func ClientHandler(client ClientInterface, logger *zap.Logger) jsonrpc2.Handler {
 	return func(ctx context.Context, conn *jsonrpc2.Conn, r *jsonrpc2.Request) {
-		logger.Debug("ClientHandler", zap.String("r.Method", r.Method))
+		logger.Debug("ClientHandler", zap.Any("conn", conn), zap.String("r.Method", r.Method))
 
 		switch r.Method {
 		case MethodCancelRequest:
