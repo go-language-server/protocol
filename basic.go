@@ -388,6 +388,71 @@ const (
 	YamlLanguage LanguageIdentifier = "yaml"
 )
 
+var languageIdentifierMap = map[string]LanguageIdentifier{
+	"bat":           BatLanguage,
+	"bibtex":        BibtexLanguage,
+	"clojure":       ClojureLanguage,
+	"coffeescript":  CoffeescriptLanguage,
+	"c":             CLanguage,
+	"cpp":           CppLanguage,
+	"csharp":        CsharpLanguage,
+	"css":           CSSLanguage,
+	"diff":          DiffLanguage,
+	"dart":          DartLanguage,
+	"dockerfile":    DockerfileLanguage,
+	"fsharp":        FsharpLanguage,
+	"git-commit":    GitCommitLanguage,
+	"git-rebase":    GitRebaseLanguage,
+	"go":            GoLanguage,
+	"groovy":        GroovyLanguage,
+	"handlebars":    HandlebarsLanguage,
+	"html":          HTMLLanguage,
+	"ini":           IniLanguage,
+	"java":          JavaLanguage,
+	"javascript":    JavaScriptLanguage,
+	"json":          JSONLanguage,
+	"latex":         LatexLanguage,
+	"less":          LessLanguage,
+	"lua":           LuaLanguage,
+	"makefile":      MakefileLanguage,
+	"markdown":      MarkdownLanguage,
+	"objective-c":   ObjectiveCLanguage,
+	"objective-cpp": ObjectiveCppLanguage,
+	"perl":          PerlLanguage,
+	"perl6":         Perl6Language,
+	"php":           PHPLanguage,
+	"powershell":    PowershellLanguage,
+	"jade":          JadeLanguage,
+	"python":        PythonLanguage,
+	"r":             RLanguage,
+	"razor":         RazorLanguage,
+	"ruby":          RubyLanguage,
+	"rust":          RustLanguage,
+	"scss":          ScssLanguage,
+	"sass":          SassLanguage,
+	"scala":         ScalaLanguage,
+	"shaderlab":     ShaderlabLanguage,
+	"shellscript":   ShellscriptLanguage,
+	"sql":           SQLLanguage,
+	"swift":         SwiftLanguage,
+	"typescript":    TypeScriptLanguage,
+	"tex":           TexLanguage,
+	"vb":            VBLanguage,
+	"xml":           XMLLanguage,
+	"xsl":           XslLanguage,
+	"yaml":          YamlLanguage,
+}
+
+// ToLanguageIdentifier converts ft to LanguageIdentifier.
+func ToLanguageIdentifier(ft string) LanguageIdentifier {
+	langID, ok := languageIdentifierMap[ft]
+	if !ok {
+		return LanguageIdentifier(ft)
+	}
+
+	return langID
+}
+
 // VersionedTextDocumentIdentifier an identifier to denote a specific version of a text document.
 type VersionedTextDocumentIdentifier struct {
 	TextDocumentIdentifier
