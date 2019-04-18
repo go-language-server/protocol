@@ -11,18 +11,13 @@ import (
 	"go.uber.org/zap"
 )
 
-// ErrorInvalidParams reports InvalidParams error.
-func ErrorInvalidParams(format string, args ...interface{}) error {
-	return jsonrpc2.Errorf(jsonrpc2.CodeInvalidParams, format, args...)
-}
-
-// ReplyError reply errors.
+// ReplyError replies error message.
 func ReplyError(ctx context.Context, err error, conn *jsonrpc2.Conn, req *jsonrpc2.Request, logger *zap.Logger) {
 	if _, ok := err.(*jsonrpc2.Error); !ok {
-		err = jsonrpc2.Errorf(jsonrpc2.CodeParseError, "%v", err)
+		err = jsonrpc2.NewError(jsonrpc2.CodeUnknownError, err)
 	}
 
 	if err := conn.Reply(ctx, req, nil, err); err != nil {
-		logger.Error("sendParseError", zap.Error(err))
+		logger.Error("ReplyError", zap.Error(err))
 	}
 }
