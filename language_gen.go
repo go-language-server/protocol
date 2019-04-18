@@ -115,7 +115,7 @@ func (v *CompletionList) IsNil() bool { return v == nil }
 func (v *CompletionItem) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keyAdditionalTextEdits:
-		return dec.Array((*textEdits)(&v.AdditionalTextEdits))
+		return dec.Array((*TextEdits)(&v.AdditionalTextEdits))
 	case keyCommand:
 		return dec.Object(v.Command)
 	case keyCommitCharacters:
@@ -156,7 +156,7 @@ func (v *CompletionItem) NKeys() int { return 15 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *CompletionItem) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.AddArrayKeyOmitEmpty(keyAdditionalTextEdits, (*textEdits)(&v.AdditionalTextEdits))
+	enc.AddArrayKeyOmitEmpty(keyAdditionalTextEdits, (*TextEdits)(&v.AdditionalTextEdits))
 	enc.ObjectKeyOmitEmpty(keyCommand, v.Command)
 	enc.AddArrayKeyOmitEmpty(keyCommitCharacters, (*stringSlice)(&v.CommitCharacters))
 	enc.AddInterfaceKeyOmitEmpty(keyData, &v.Data)
@@ -899,7 +899,7 @@ func (v *ColorPresentation) UnmarshalJSONObject(dec *gojay.Decoder, k string) er
 		}
 		return dec.Object(v.TextEdit)
 	case keyAdditionalTextEdits:
-		return dec.Array((*textEdits)(&v.AdditionalTextEdits))
+		return dec.Array((*TextEdits)(&v.AdditionalTextEdits))
 	}
 	return nil
 }
@@ -911,7 +911,7 @@ func (v *ColorPresentation) NKeys() int { return 3 }
 func (v *ColorPresentation) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey(keyLabel, v.Label)
 	enc.ObjectKey(keyTextEdit, v.TextEdit)
-	enc.AddArrayKeyOmitEmpty(keyAdditionalTextEdits, (*textEdits)(&v.AdditionalTextEdits))
+	enc.AddArrayKeyOmitEmpty(keyAdditionalTextEdits, (*TextEdits)(&v.AdditionalTextEdits))
 }
 
 // IsNil returns wether the structure is nil value or not.
