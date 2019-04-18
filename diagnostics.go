@@ -4,9 +4,8 @@
 
 package protocol
 
-// PublishDiagnosticsParams params of PublishDiagnostics Notification.
+// PublishDiagnosticsParams represents a params of PublishDiagnostics Notification.
 type PublishDiagnosticsParams struct {
-
 	// URI is the URI for which diagnostic information is reported.
 	URI DocumentURI `json:"uri"`
 
