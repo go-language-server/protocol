@@ -45,5 +45,6 @@ _testmain.go
 # coverage
 coverage.*
 
-# vendor
+# modules
+go.sum
 vendor/*
