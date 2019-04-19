@@ -54,9 +54,9 @@ func (v *DidChangeWorkspaceFoldersParams) IsNil() bool { return v == nil }
 func (v *WorkspaceFoldersChangeEvent) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keyAdded:
-		return dec.Array((*workspaceFolders)(&v.Added))
+		return dec.Array((*WorkspaceFolders)(&v.Added))
 	case keyRemoved:
-		return dec.Array((*workspaceFolders)(&v.Removed))
+		return dec.Array((*WorkspaceFolders)(&v.Removed))
 	}
 	return nil
 }
@@ -66,8 +66,8 @@ func (v *WorkspaceFoldersChangeEvent) NKeys() int { return 2 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *WorkspaceFoldersChangeEvent) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKey(keyAdded, (*workspaceFolders)(&v.Added))
-	enc.ArrayKey(keyRemoved, (*workspaceFolders)(&v.Removed))
+	enc.ArrayKey(keyAdded, (*WorkspaceFolders)(&v.Added))
+	enc.ArrayKey(keyRemoved, (*WorkspaceFolders)(&v.Removed))
 }
 
 // IsNil returns wether the structure is nil value or not.

@@ -8,29 +8,29 @@ import (
 	"github.com/francoispqt/gojay"
 )
 
-type workspaceFolders []WorkspaceFolder
+// WorkspaceFolders represents a slice of WorkspaceFolder.
+type WorkspaceFolders []WorkspaceFolder
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
-func (v *workspaceFolders) UnmarshalJSONArray(dec *gojay.Decoder) error {
-	t := WorkspaceFolder{}
-	if err := dec.Object(&t); err != nil {
+func (v *WorkspaceFolders) UnmarshalJSONArray(dec *gojay.Decoder) error {
+	var value = WorkspaceFolder{}
+	if err := dec.Object(&value); err != nil {
 		return err
 	}
-	*v = append(*v, t)
+	*v = append(*v, value)
 	return nil
 }
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
-func (v *workspaceFolders) MarshalJSONArray(enc *gojay.Encoder) {
-	vv := *v
-	for i := range vv {
-		enc.ObjectOmitEmpty(&vv[i])
+func (v WorkspaceFolders) MarshalJSONArray(enc *gojay.Encoder) {
+	for i := range v {
+		enc.Object(&v[i])
 	}
 }
 
 // IsNil implements gojay's MarshalerJSONArray.
-func (v *workspaceFolders) IsNil() bool {
-	return len(*v) == 0
+func (v WorkspaceFolders) IsNil() bool {
+	return len(v) == 0
 }
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
@@ -49,7 +49,12 @@ func (v *InitializeParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) err
 	case keyTrace:
 		return dec.String(&v.Trace)
 	case keyWorkspaceFolders:
-		return dec.Array((*workspaceFolders)(&v.WorkspaceFolders))
+		var values WorkspaceFolders
+		err := dec.Array(&values)
+		if err == nil && len(values) > 0 {
+			v.WorkspaceFolders = []WorkspaceFolder(values)
+		}
+		return err
 	}
 	return nil
 }
@@ -65,7 +70,7 @@ func (v *InitializeParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.AddInterfaceKey(keyInitializationOptions, v.InitializationOptions)
 	enc.ObjectKey(keyCapabilities, &v.Capabilities)
 	enc.StringKeyOmitEmpty(keyTrace, v.Trace)
-	enc.ArrayKeyOmitEmpty(keyWorkspaceFolders, (*workspaceFolders)(&v.WorkspaceFolders))
+	enc.ArrayKeyOmitEmpty(keyWorkspaceFolders, (*WorkspaceFolders)(&v.WorkspaceFolders))
 }
 
 // IsNil returns wether the structure is nil value or not.

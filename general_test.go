@@ -14,9 +14,9 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-func Test_workspaceFolders(t *testing.T) {
+func Test_WorkspaceFolders(t *testing.T) {
 	const want = `[{"uri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol","name":"protocol"},{"uri":"file:///Users/zchee/go/src/github.com/go-language-server/jsonrpc2","name":"jsonrpc2"}]`
-	var wantType = workspaceFolders{
+	var wantType = WorkspaceFolders{
 		{
 			URI:  string(ToDocumentURI("/Users/zchee/go/src/github.com/go-language-server/protocol")),
 			Name: "protocol",
@@ -34,7 +34,7 @@ func Test_workspaceFolders(t *testing.T) {
 			name               string
 			marshalFunc        marshalFunc
 			compareMarshalFunc marshalFunc
-			field              workspaceFolders
+			field              WorkspaceFolders
 			want               string
 			wantMarshalErr     bool
 			wantErr            bool
@@ -104,7 +104,7 @@ func Test_workspaceFolders(t *testing.T) {
 			unmarshalFunc        unmarshalFunc
 			compareUnmarshalFunc unmarshalFunc
 			field                []byte
-			want                 workspaceFolders
+			want                 WorkspaceFolders
 			wantUnmarshalErr     bool
 			wantErr              bool
 		}{
@@ -140,14 +140,14 @@ func Test_workspaceFolders(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				var got workspaceFolders
+				var got WorkspaceFolders
 				if err := tt.unmarshalFunc(tt.field, &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
 				}
 
 				if tt.compareUnmarshalFunc != nil {
-					var got2 workspaceFolders
+					var got2 WorkspaceFolders
 					if err := tt.compareUnmarshalFunc(tt.field, &got2); (err != nil) != tt.wantUnmarshalErr {
 						t.Error(err)
 						return
@@ -167,7 +167,7 @@ func Test_workspaceFolders(t *testing.T) {
 }
 
 func TestInitializeParams(t *testing.T) {
-	const want = `{"processId":25556,"rootPath":"~/go/src/github.com/go-language-server/protocol","rootUri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol","initializationOptions":"testdata","capabilities":{},"trace":"on","workspaceFolders":[{"uri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol","name":"protocol"},{"uri":"file:///Users/zchee/go/src/github.com/go-language-server/jsonrpc2","name":"jsonrpc2"}]}`
+	const want = `{"processId":25556,"rootPath":"~/go/src/github.com/go-language-server/protocol","rootUri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol","initializationOptions":"testdata","capabilities":{},"trace":"on","WorkspaceFolders":[{"uri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol","name":"protocol"},{"uri":"file:///Users/zchee/go/src/github.com/go-language-server/jsonrpc2","name":"jsonrpc2"}]}`
 	const wantNil = `{"processId":25556,"rootUri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol","capabilities":{}}`
 	var wantType = InitializeParams{
 		ProcessID:             25556,
@@ -277,7 +277,7 @@ func TestInitializeParams(t *testing.T) {
 }
 
 func TestWorkspaceClientCapabilities(t *testing.T) {
-	const want = `{"applyEdit":true,"workspaceEdit":{"documentChanges":true,"failureHandling":"FailureHandling","resourceOperations":["ResourceOperations"]},"didChangeConfiguration":{"dynamicRegistration":true},"didChangeWatchedFiles":{"dynamicRegistration":true},"symbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]}},"executeCommand":{"dynamicRegistration":true},"workspaceFolders":true,"configuration":true}`
+	const want = `{"applyEdit":true,"workspaceEdit":{"documentChanges":true,"failureHandling":"FailureHandling","resourceOperations":["ResourceOperations"]},"didChangeConfiguration":{"dynamicRegistration":true},"didChangeWatchedFiles":{"dynamicRegistration":true},"symbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]}},"executeCommand":{"dynamicRegistration":true},"WorkspaceFolders":true,"configuration":true}`
 	var wantType = WorkspaceClientCapabilities{
 		ApplyEdit: true,
 		WorkspaceEdit: &WorkspaceClientCapabilitiesWorkspaceEdit{
@@ -2767,7 +2767,7 @@ func TestTextDocumentClientCapabilities(t *testing.T) {
 }
 
 func TestClientCapabilities(t *testing.T) {
-	const want = `{"workspace":{"applyEdit":true,"workspaceEdit":{"documentChanges":true,"failureHandling":"FailureHandling","resourceOperations":["ResourceOperations"]},"didChangeConfiguration":{"dynamicRegistration":true},"didChangeWatchedFiles":{"dynamicRegistration":true},"symbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]}},"executeCommand":{"dynamicRegistration":true},"workspaceFolders":true,"configuration":true},"textDocument":{"synchronization":{"didSave":true,"dynamicRegistration":true,"willSave":true,"willSaveWaitUntil":true},"completion":{"dynamicRegistration":true,"completionItem":{"snippetSupport":true,"commitCharactersSupport":true,"documentationFormat":["plaintext","markdown"],"deprecatedSupport":true,"preselectSupport":true},"completionItemKind":1,"contextSupport":true},"hover":{"dynamicRegistration":true,"contentFormat":["plaintext","markdown"]},"signatureHelp":{"dynamicRegistration":true,"signatureInformation":{"documentationFormat":["plaintext","markdown"]}},"references":{"dynamicRegistration":true},"documentHighlight":{"dynamicRegistration":true},"documentSymbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]},"hierarchicalDocumentSymbolSupport":true},"formatting":{"dynamicRegistration":true},"rangeFormatting":{"dynamicRegistration":true},"onTypeFormatting":{"dynamicRegistration":true},"declaration":{"dynamicRegistration":true,"linkSupport":true},"definition":{"dynamicRegistration":true,"linkSupport":true},"typeDefinition":{"dynamicRegistration":true,"linkSupport":true},"implementation":{"dynamicRegistration":true,"linkSupport":true},"codeAction":{"dynamicRegistration":true,"codeActionLiteralSupport":{"codeActionKind":{"valueSet":["quickfix","refactor","refactor.extract","refactor.rewrite","source","source.organizeImports"]}}},"codeLens":{"dynamicRegistration":true},"documentLink":{"dynamicRegistration":true},"colorProvider":{"dynamicRegistration":true},"rename":{"dynamicRegistration":true,"prepareSupport":true},"publishDiagnostics":{"relatedInformation":true},"foldingRange":{"dynamicRegistration":true,"rangeLimit":0.5,"lineFoldingOnly":true}}}`
+	const want = `{"workspace":{"applyEdit":true,"workspaceEdit":{"documentChanges":true,"failureHandling":"FailureHandling","resourceOperations":["ResourceOperations"]},"didChangeConfiguration":{"dynamicRegistration":true},"didChangeWatchedFiles":{"dynamicRegistration":true},"symbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]}},"executeCommand":{"dynamicRegistration":true},"WorkspaceFolders":true,"configuration":true},"textDocument":{"synchronization":{"didSave":true,"dynamicRegistration":true,"willSave":true,"willSaveWaitUntil":true},"completion":{"dynamicRegistration":true,"completionItem":{"snippetSupport":true,"commitCharactersSupport":true,"documentationFormat":["plaintext","markdown"],"deprecatedSupport":true,"preselectSupport":true},"completionItemKind":1,"contextSupport":true},"hover":{"dynamicRegistration":true,"contentFormat":["plaintext","markdown"]},"signatureHelp":{"dynamicRegistration":true,"signatureInformation":{"documentationFormat":["plaintext","markdown"]}},"references":{"dynamicRegistration":true},"documentHighlight":{"dynamicRegistration":true},"documentSymbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]},"hierarchicalDocumentSymbolSupport":true},"formatting":{"dynamicRegistration":true},"rangeFormatting":{"dynamicRegistration":true},"onTypeFormatting":{"dynamicRegistration":true},"declaration":{"dynamicRegistration":true,"linkSupport":true},"definition":{"dynamicRegistration":true,"linkSupport":true},"typeDefinition":{"dynamicRegistration":true,"linkSupport":true},"implementation":{"dynamicRegistration":true,"linkSupport":true},"codeAction":{"dynamicRegistration":true,"codeActionLiteralSupport":{"codeActionKind":{"valueSet":["quickfix","refactor","refactor.extract","refactor.rewrite","source","source.organizeImports"]}}},"codeLens":{"dynamicRegistration":true},"documentLink":{"dynamicRegistration":true},"colorProvider":{"dynamicRegistration":true},"rename":{"dynamicRegistration":true,"prepareSupport":true},"publishDiagnostics":{"relatedInformation":true},"foldingRange":{"dynamicRegistration":true,"rangeLimit":0.5,"lineFoldingOnly":true}}}`
 	var wantType = ClientCapabilities{
 		Workspace: &WorkspaceClientCapabilities{
 			ApplyEdit: true,
@@ -3077,7 +3077,7 @@ func TestClientCapabilities(t *testing.T) {
 }
 
 func TestInitializeResult(t *testing.T) {
-	const want = `{"capabilities":{"hoverProvider":true,"completionProvider":{"resolveProvider":true,"triggerCharacters":["Tab"]},"signatureHelpProvider":{"codeActionKinds":["C-K"]},"definitionProvider":true,"referencesProvider":true,"documentHighlightProvider":true,"documentSymbolProvider":true,"workspaceSymbolProvider":true,"codeActionProvider":true,"codeLensProvider":{"resolveProvider":true},"documentFormattingProvider":true,"documentRangeFormattingProvider":true,"documentOnTypeFormattingProvider":{"firstTriggerCharacter":"<Space>","moreTriggerCharacter":["f"]},"renameProvider":true,"documentLinkProvider":{"resolveProvider":true},"executeCommandProvider":{"commands":["test","command"]},"workspace":{"workspaceFolders":{"supported":true}}}}`
+	const want = `{"capabilities":{"hoverProvider":true,"completionProvider":{"resolveProvider":true,"triggerCharacters":["Tab"]},"signatureHelpProvider":{"codeActionKinds":["C-K"]},"definitionProvider":true,"referencesProvider":true,"documentHighlightProvider":true,"documentSymbolProvider":true,"workspaceSymbolProvider":true,"codeActionProvider":true,"codeLensProvider":{"resolveProvider":true},"documentFormattingProvider":true,"documentRangeFormattingProvider":true,"documentOnTypeFormattingProvider":{"firstTriggerCharacter":"<Space>","moreTriggerCharacter":["f"]},"renameProvider":true,"documentLinkProvider":{"resolveProvider":true},"executeCommandProvider":{"commands":["test","command"]},"workspace":{"WorkspaceFolders":{"supported":true}}}}`
 	const wantNil = `{"capabilities":{}}`
 
 	t.Run("Marshal", func(t *testing.T) {
