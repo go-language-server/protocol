@@ -594,7 +594,7 @@ func (v *CodeActionContext) UnmarshalJSONObject(dec *gojay.Decoder, k string) er
 	case keyDiagnostics:
 		return dec.Array((*Diagnostics)(&v.Diagnostics))
 	case keyOnly:
-		return dec.Array((*codeActionKindValueSet)(&v.Only))
+		return dec.Array((*CodeActionKinds)(&v.Only))
 	}
 	return nil
 }
@@ -605,7 +605,7 @@ func (v *CodeActionContext) NKeys() int { return 2 }
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *CodeActionContext) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ArrayKey(keyDiagnostics, Diagnostics(v.Diagnostics))
-	enc.ArrayKey(keyOnly, (*codeActionKindValueSet)(&v.Only))
+	enc.ArrayKey(keyOnly, CodeActionKinds(v.Only))
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -658,7 +658,7 @@ func (v *CodeActionRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, 
 	case keyDocumentSelector:
 		return dec.Array(&v.DocumentSelector)
 	case keyCodeActionKinds:
-		return dec.Array((*codeActionKindValueSet)(&v.CodeActionKinds))
+		return dec.Array((*CodeActionKinds)(&v.CodeActionKinds))
 	}
 	return nil
 }
@@ -669,7 +669,7 @@ func (v *CodeActionRegistrationOptions) NKeys() int { return 2 }
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *CodeActionRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ArrayKey(keyDocumentSelector, &v.DocumentSelector)
-	enc.ArrayKeyOmitEmpty(keyCodeActionKinds, (*codeActionKindValueSet)(&v.CodeActionKinds))
+	enc.ArrayKeyOmitEmpty(keyCodeActionKinds, CodeActionKinds(v.CodeActionKinds))
 }
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.

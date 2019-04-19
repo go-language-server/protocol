@@ -731,34 +731,35 @@ func (v *TextDocumentClientCapabilitiesCodeActionLiteralSupport) MarshalJSONObje
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilitiesCodeActionLiteralSupport) IsNil() bool { return v == nil }
 
-type codeActionKindValueSet []CodeActionKind
+// CodeActionKinds represents a slice of CodeActionKind.
+type CodeActionKinds []CodeActionKind
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
-func (v *codeActionKindValueSet) UnmarshalJSONArray(dec *gojay.Decoder) error {
-	var t CodeActionKind
-	if err := dec.String((*string)(&t)); err != nil {
+func (v *CodeActionKinds) UnmarshalJSONArray(dec *gojay.Decoder) error {
+	var value CodeActionKind
+	if err := dec.String((*string)(&value)); err != nil {
 		return err
 	}
-	*v = append(*v, t)
+	*v = append(*v, value)
 	return nil
 }
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
-func (v *codeActionKindValueSet) MarshalJSONArray(enc *gojay.Encoder) {
-	for _, t := range *v {
-		enc.String(string(t))
+func (v CodeActionKinds) MarshalJSONArray(enc *gojay.Encoder) {
+	for i := range v {
+		enc.String(string(v[i]))
 	}
 }
 
 // IsNil implements gojay's MarshalerJSONArray.
-func (v *codeActionKindValueSet) IsNil() bool {
-	return len(*v) == 0
+func (v CodeActionKinds) IsNil() bool {
+	return len(v) == 0
 }
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesCodeActionKind) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyValueSet {
-		return dec.Array((*codeActionKindValueSet)(&v.ValueSet))
+		return dec.Array((*CodeActionKinds)(&v.ValueSet))
 	}
 	return nil
 }
@@ -768,7 +769,7 @@ func (v *TextDocumentClientCapabilitiesCodeActionKind) NKeys() int { return 1 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesCodeActionKind) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKey(keyValueSet, (*codeActionKindValueSet)(&v.ValueSet))
+	enc.ArrayKey(keyValueSet, (*CodeActionKinds)(&v.ValueSet))
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -1160,7 +1161,7 @@ func (v *SignatureHelpOptions) IsNil() bool { return v == nil }
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *CodeActionOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyCodeActionKinds {
-		return dec.Array((*codeActionKindValueSet)(&v.CodeActionKinds))
+		return dec.Array((*CodeActionKinds)(&v.CodeActionKinds))
 	}
 	return nil
 }
@@ -1170,7 +1171,7 @@ func (v *CodeActionOptions) NKeys() int { return 1 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *CodeActionOptions) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKeyOmitEmpty(keyCodeActionKinds, (*codeActionKindValueSet)(&v.CodeActionKinds))
+	enc.ArrayKeyOmitEmpty(keyCodeActionKinds, (*CodeActionKinds)(&v.CodeActionKinds))
 }
 
 // IsNil returns wether the structure is nil value or not.
