@@ -5,6 +5,8 @@
 package protocol
 
 import (
+	"context"
+
 	"github.com/go-language-server/jsonrpc2"
 	"go.uber.org/zap"
 )
@@ -13,6 +15,14 @@ const (
 	// Version is the version of the language-server-protocol specification being implemented.
 	Version = "3.14.0"
 )
+
+// DefaultBufferSize default message buffer size.
+const DefaultBufferSize = 20
+
+// Canceller returns the default canceler function.
+func Canceller(ctx context.Context, conn *jsonrpc2.Conn, req *jsonrpc2.Request) {
+	conn.Notify(ctx, MethodCancelRequest, &CancelParams{ID: *req.ID})
+}
 
 // NewClient returns the new Client, Server and jsonrpc2.Conn.
 func NewClient(client ClientInterface, stream jsonrpc2.Stream, logger *zap.Logger, options ...jsonrpc2.Options) (*jsonrpc2.Conn, ServerInterface) {
