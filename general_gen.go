@@ -244,6 +244,11 @@ func (v *WorkspaceClientCapabilitiesSymbolKind) MarshalJSONObject(enc *gojay.Enc
 // IsNil returns wether the structure is nil value or not.
 func (v *WorkspaceClientCapabilitiesSymbolKind) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *WorkspaceClientCapabilitiesSymbolKind) Reset() {
+	v.ValueSet = nil
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *WorkspaceClientCapabilitiesExecuteCommand) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyDynamicRegistration {
@@ -262,6 +267,11 @@ func (v *WorkspaceClientCapabilitiesExecuteCommand) MarshalJSONObject(enc *gojay
 
 // IsNil returns wether the structure is nil value or not.
 func (v *WorkspaceClientCapabilitiesExecuteCommand) IsNil() bool { return v == nil }
+
+// Reset reset fields
+func (v *WorkspaceClientCapabilitiesExecuteCommand) Reset() {
+	v.DynamicRegistration = false
+}
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *WorkspaceClientCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
@@ -319,6 +329,23 @@ func (v *WorkspaceClientCapabilities) MarshalJSONObject(enc *gojay.Encoder) {
 // IsNil returns wether the structure is nil value or not.
 func (v *WorkspaceClientCapabilities) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *WorkspaceClientCapabilities) Reset() {
+	v.ApplyEdit = false
+	WorkspaceClientCapabilitiesWorkspaceEditPool.Put(v.WorkspaceEdit)
+	v.WorkspaceEdit = nil
+	WorkspaceClientCapabilitiesDidChangeConfigurationPool.Put(v.DidChangeConfiguration)
+	v.DidChangeConfiguration = nil
+	WorkspaceClientCapabilitiesDidChangeWatchedFilesPool.Put(v.DidChangeWatchedFiles)
+	v.DidChangeWatchedFiles = nil
+	WorkspaceClientCapabilitiesSymbolPool.Put(v.Symbol)
+	v.Symbol = nil
+	WorkspaceClientCapabilitiesExecuteCommandPool.Put(v.ExecuteCommand)
+	v.ExecuteCommand = nil
+	v.WorkspaceFolders = false
+	v.Configuration = false
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesSynchronization) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
@@ -347,6 +374,14 @@ func (v *TextDocumentClientCapabilitiesSynchronization) MarshalJSONObject(enc *g
 
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilitiesSynchronization) IsNil() bool { return v == nil }
+
+// Reset reset fields
+func (v *TextDocumentClientCapabilitiesSynchronization) Reset() {
+	v.DidSave = false
+	v.DynamicRegistration = false
+	v.WillSave = false
+	v.WillSaveWaitUntil = false
+}
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesCompletion) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
@@ -379,6 +414,14 @@ func (v *TextDocumentClientCapabilitiesCompletion) MarshalJSONObject(enc *gojay.
 
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilitiesCompletion) IsNil() bool { return v == nil }
+
+// Reset reset fields
+func (v *TextDocumentClientCapabilitiesCompletion) Reset() {
+	v.DynamicRegistration = false
+	TextDocumentClientCapabilitiesCompletionItemPool.Put(v.CompletionItem)
+	v.CompletionItem = nil
+	v.ContextSupport = false
+}
 
 // MarkupKinds represents a slice of MarkupKind.
 type MarkupKinds []MarkupKind
@@ -437,6 +480,15 @@ func (v *TextDocumentClientCapabilitiesCompletionItem) MarshalJSONObject(enc *go
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilitiesCompletionItem) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *TextDocumentClientCapabilitiesCompletionItem) Reset() {
+	v.SnippetSupport = false
+	v.CommitCharactersSupport = false
+	v.DocumentationFormat = nil
+	v.DeprecatedSupport = false
+	v.PreselectSupport = false
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesHover) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
@@ -459,6 +511,12 @@ func (v *TextDocumentClientCapabilitiesHover) MarshalJSONObject(enc *gojay.Encod
 
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilitiesHover) IsNil() bool { return v == nil }
+
+// Reset reset fields
+func (v *TextDocumentClientCapabilitiesHover) Reset() {
+	v.DynamicRegistration = false
+	v.ContentFormat = nil
+}
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesSignatureHelp) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
@@ -486,6 +544,13 @@ func (v *TextDocumentClientCapabilitiesSignatureHelp) MarshalJSONObject(enc *goj
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilitiesSignatureHelp) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *TextDocumentClientCapabilitiesSignatureHelp) Reset() {
+	v.DynamicRegistration = false
+	TextDocumentClientCapabilitiesSignatureInformationPool.Put(v.SignatureInformation)
+	v.SignatureInformation = nil
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesSignatureInformation) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyDocumentationFormat {
@@ -504,6 +569,13 @@ func (v *TextDocumentClientCapabilitiesSignatureInformation) MarshalJSONObject(e
 
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilitiesSignatureInformation) IsNil() bool { return v == nil }
+
+// Reset reset fields
+func (v *TextDocumentClientCapabilitiesSignatureInformation) Reset() {
+	v.DocumentationFormat = nil
+	TextDocumentClientCapabilitiesParameterInformationPool.Put(v.ParameterInformation)
+	v.ParameterInformation = nil
+}
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesReferences) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
@@ -524,6 +596,11 @@ func (v *TextDocumentClientCapabilitiesReferences) MarshalJSONObject(enc *gojay.
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilitiesReferences) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *TextDocumentClientCapabilitiesReferences) Reset() {
+	v.DynamicRegistration = false
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesDocumentHighlight) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyDynamicRegistration {
@@ -542,6 +619,11 @@ func (v *TextDocumentClientCapabilitiesDocumentHighlight) MarshalJSONObject(enc 
 
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilitiesDocumentHighlight) IsNil() bool { return v == nil }
+
+// Reset reset fields
+func (v *TextDocumentClientCapabilitiesDocumentHighlight) Reset() {
+	v.DynamicRegistration = false
+}
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesDocumentSymbol) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
@@ -572,6 +654,14 @@ func (v *TextDocumentClientCapabilitiesDocumentSymbol) MarshalJSONObject(enc *go
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilitiesDocumentSymbol) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *TextDocumentClientCapabilitiesDocumentSymbol) Reset() {
+	v.DynamicRegistration = false
+	WorkspaceClientCapabilitiesSymbolKindPool.Put(v.SymbolKind)
+	v.SymbolKind = nil
+	v.HierarchicalDocumentSymbolSupport = false
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesFormatting) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyDynamicRegistration {
@@ -590,6 +680,11 @@ func (v *TextDocumentClientCapabilitiesFormatting) MarshalJSONObject(enc *gojay.
 
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilitiesFormatting) IsNil() bool { return v == nil }
+
+// Reset reset fields
+func (v *TextDocumentClientCapabilitiesFormatting) Reset() {
+	v.DynamicRegistration = false
+}
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesRangeFormatting) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
@@ -610,6 +705,11 @@ func (v *TextDocumentClientCapabilitiesRangeFormatting) MarshalJSONObject(enc *g
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilitiesRangeFormatting) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *TextDocumentClientCapabilitiesRangeFormatting) Reset() {
+	v.DynamicRegistration = false
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesOnTypeFormatting) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyDynamicRegistration {
@@ -628,6 +728,11 @@ func (v *TextDocumentClientCapabilitiesOnTypeFormatting) MarshalJSONObject(enc *
 
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilitiesOnTypeFormatting) IsNil() bool { return v == nil }
+
+// Reset reset fields
+func (v *TextDocumentClientCapabilitiesOnTypeFormatting) Reset() {
+	v.DynamicRegistration = false
+}
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesDeclaration) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
@@ -652,6 +757,12 @@ func (v *TextDocumentClientCapabilitiesDeclaration) MarshalJSONObject(enc *gojay
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilitiesDeclaration) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *TextDocumentClientCapabilitiesDeclaration) Reset() {
+	v.DynamicRegistration = false
+	v.LinkSupport = false
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesDefinition) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
@@ -674,6 +785,12 @@ func (v *TextDocumentClientCapabilitiesDefinition) MarshalJSONObject(enc *gojay.
 
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilitiesDefinition) IsNil() bool { return v == nil }
+
+// Reset reset fields
+func (v *TextDocumentClientCapabilitiesDefinition) Reset() {
+	v.DynamicRegistration = false
+	v.LinkSupport = false
+}
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesTypeDefinition) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
@@ -698,6 +815,12 @@ func (v *TextDocumentClientCapabilitiesTypeDefinition) MarshalJSONObject(enc *go
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilitiesTypeDefinition) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *TextDocumentClientCapabilitiesTypeDefinition) Reset() {
+	v.DynamicRegistration = false
+	v.LinkSupport = false
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesImplementation) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
@@ -720,6 +843,12 @@ func (v *TextDocumentClientCapabilitiesImplementation) MarshalJSONObject(enc *go
 
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilitiesImplementation) IsNil() bool { return v == nil }
+
+// Reset reset fields
+func (v *TextDocumentClientCapabilitiesImplementation) Reset() {
+	v.DynamicRegistration = false
+	v.LinkSupport = false
+}
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesCodeAction) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
@@ -747,6 +876,13 @@ func (v *TextDocumentClientCapabilitiesCodeAction) MarshalJSONObject(enc *gojay.
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilitiesCodeAction) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *TextDocumentClientCapabilitiesCodeAction) Reset() {
+	v.DynamicRegistration = false
+	TextDocumentClientCapabilitiesCodeActionLiteralSupportPool.Put(v.CodeActionLiteralSupport)
+	v.CodeActionLiteralSupport = nil
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesCodeActionLiteralSupport) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyCodeActionKind {
@@ -768,6 +904,12 @@ func (v *TextDocumentClientCapabilitiesCodeActionLiteralSupport) MarshalJSONObje
 
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilitiesCodeActionLiteralSupport) IsNil() bool { return v == nil }
+
+// Reset reset fields
+func (v *TextDocumentClientCapabilitiesCodeActionLiteralSupport) Reset() {
+	TextDocumentClientCapabilitiesCodeActionKindPool.Put(v.CodeActionKind)
+	v.CodeActionKind = nil
+}
 
 // CodeActionKinds represents a slice of CodeActionKind.
 type CodeActionKinds []CodeActionKind
@@ -813,6 +955,11 @@ func (v *TextDocumentClientCapabilitiesCodeActionKind) MarshalJSONObject(enc *go
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilitiesCodeActionKind) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *TextDocumentClientCapabilitiesCodeActionKind) Reset() {
+	v.ValueSet = nil
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesCodeLens) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyDynamicRegistration {
@@ -831,6 +978,11 @@ func (v *TextDocumentClientCapabilitiesCodeLens) MarshalJSONObject(enc *gojay.En
 
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilitiesCodeLens) IsNil() bool { return v == nil }
+
+// Reset reset fields
+func (v *TextDocumentClientCapabilitiesCodeLens) Reset() {
+	v.DynamicRegistration = false
+}
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesDocumentLink) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
@@ -851,6 +1003,11 @@ func (v *TextDocumentClientCapabilitiesDocumentLink) MarshalJSONObject(enc *goja
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilitiesDocumentLink) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *TextDocumentClientCapabilitiesDocumentLink) Reset() {
+	v.DynamicRegistration = false
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesColorProvider) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyDynamicRegistration {
@@ -869,6 +1026,11 @@ func (v *TextDocumentClientCapabilitiesColorProvider) MarshalJSONObject(enc *goj
 
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilitiesColorProvider) IsNil() bool { return v == nil }
+
+// Reset reset fields
+func (v *TextDocumentClientCapabilitiesColorProvider) Reset() {
+	v.DynamicRegistration = false
+}
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesRename) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
@@ -893,6 +1055,12 @@ func (v *TextDocumentClientCapabilitiesRename) MarshalJSONObject(enc *gojay.Enco
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilitiesRename) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *TextDocumentClientCapabilitiesRename) Reset() {
+	v.DynamicRegistration = false
+	v.PrepareSupport = false
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesPublishDiagnostics) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyRelatedInformation {
@@ -911,6 +1079,11 @@ func (v *TextDocumentClientCapabilitiesPublishDiagnostics) MarshalJSONObject(enc
 
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilitiesPublishDiagnostics) IsNil() bool { return v == nil }
+
+// Reset reset fields
+func (v *TextDocumentClientCapabilitiesPublishDiagnostics) Reset() {
+	v.RelatedInformation = false
+}
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesFoldingRange) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
@@ -938,114 +1111,163 @@ func (v *TextDocumentClientCapabilitiesFoldingRange) MarshalJSONObject(enc *goja
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilitiesFoldingRange) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *TextDocumentClientCapabilitiesFoldingRange) Reset() {
+	v.DynamicRegistration = false
+	v.RangeLimit = 0.0
+	v.LineFoldingOnly = false
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keySynchronization:
-		if v.Synchronization == nil {
-			v.Synchronization = &TextDocumentClientCapabilitiesSynchronization{}
+		var value = TextDocumentClientCapabilitiesSynchronizationPool.Get().(*TextDocumentClientCapabilitiesSynchronization)
+		err := dec.Object(value)
+		if err == nil {
+			v.Synchronization = value
 		}
-		return dec.Object(v.Synchronization)
+		return err
 	case keyCompletion:
-		if v.Completion == nil {
-			v.Completion = &TextDocumentClientCapabilitiesCompletion{}
+		var value = TextDocumentClientCapabilitiesCompletionPool.Get().(*TextDocumentClientCapabilitiesCompletion)
+		err := dec.Object(value)
+		if err == nil {
+			v.Completion = value
 		}
-		return dec.Object(v.Completion)
+		return err
 	case keyHover:
-		if v.Hover == nil {
-			v.Hover = &TextDocumentClientCapabilitiesHover{}
+		var value = TextDocumentClientCapabilitiesHoverPool.Get().(*TextDocumentClientCapabilitiesHover)
+		err := dec.Object(value)
+		if err == nil {
+			v.Hover = value
 		}
-		return dec.Object(v.Hover)
+		return err
 	case keySignatureHelp:
-		if v.SignatureHelp == nil {
-			v.SignatureHelp = &TextDocumentClientCapabilitiesSignatureHelp{}
+		var value = TextDocumentClientCapabilitiesSignatureHelpPool.Get().(*TextDocumentClientCapabilitiesSignatureHelp)
+		err := dec.Object(value)
+		if err == nil {
+			v.SignatureHelp = value
 		}
-		return dec.Object(v.SignatureHelp)
+		return err
 	case keyReferences:
-		if v.References == nil {
-			v.References = &TextDocumentClientCapabilitiesReferences{}
+		var value = TextDocumentClientCapabilitiesReferencesPool.Get().(*TextDocumentClientCapabilitiesReferences)
+		err := dec.Object(value)
+		if err == nil {
+			v.References = value
 		}
-		return dec.Object(v.References)
+		return err
 	case keyDocumentHighlight:
-		if v.DocumentHighlight == nil {
-			v.DocumentHighlight = &TextDocumentClientCapabilitiesDocumentHighlight{}
+		var value = TextDocumentClientCapabilitiesDocumentHighlightPool.Get().(*TextDocumentClientCapabilitiesDocumentHighlight)
+		err := dec.Object(value)
+		if err == nil {
+			v.DocumentHighlight = value
 		}
-		return dec.Object(v.DocumentHighlight)
+		return err
 	case keyDocumentSymbol:
-		if v.DocumentSymbol == nil {
-			v.DocumentSymbol = &TextDocumentClientCapabilitiesDocumentSymbol{}
+		var value = TextDocumentClientCapabilitiesDocumentSymbolPool.Get().(*TextDocumentClientCapabilitiesDocumentSymbol)
+		err := dec.Object(value)
+		if err == nil {
+			v.DocumentSymbol = value
 		}
-		return dec.Object(v.DocumentSymbol)
+		return err
 	case keyFormatting:
-		if v.Formatting == nil {
-			v.Formatting = &TextDocumentClientCapabilitiesFormatting{}
+		var value = TextDocumentClientCapabilitiesFormattingPool.Get().(*TextDocumentClientCapabilitiesFormatting)
+		err := dec.Object(value)
+		if err == nil {
+			v.Formatting = value
 		}
-		return dec.Object(v.Formatting)
+		return err
 	case keyRangeFormatting:
-		if v.RangeFormatting == nil {
-			v.RangeFormatting = &TextDocumentClientCapabilitiesRangeFormatting{}
+		var value = TextDocumentClientCapabilitiesRangeFormattingPool.Get().(*TextDocumentClientCapabilitiesRangeFormatting)
+		err := dec.Object(value)
+		if err == nil {
+			v.RangeFormatting = value
 		}
-		return dec.Object(v.RangeFormatting)
+		return err
 	case keyOnTypeFormatting:
-		if v.OnTypeFormatting == nil {
-			v.OnTypeFormatting = &TextDocumentClientCapabilitiesOnTypeFormatting{}
+		var value = TextDocumentClientCapabilitiesOnTypeFormattingPool.Get().(*TextDocumentClientCapabilitiesOnTypeFormatting)
+		err := dec.Object(value)
+		if err == nil {
+			v.OnTypeFormatting = value
 		}
-		return dec.Object(v.OnTypeFormatting)
+		return err
 	case keyDeclaration:
-		if v.Declaration == nil {
-			v.Declaration = &TextDocumentClientCapabilitiesDeclaration{}
+		var value = TextDocumentClientCapabilitiesDeclarationPool.Get().(*TextDocumentClientCapabilitiesDeclaration)
+		err := dec.Object(value)
+		if err == nil {
+			v.Declaration = value
 		}
-		return dec.Object(v.Declaration)
+		return err
 	case keyDefinition:
-		if v.Definition == nil {
-			v.Definition = &TextDocumentClientCapabilitiesDefinition{}
+		var value = TextDocumentClientCapabilitiesDefinitionPool.Get().(*TextDocumentClientCapabilitiesDefinition)
+		err := dec.Object(value)
+		if err == nil {
+			v.Definition = value
 		}
-		return dec.Object(v.Definition)
+		return err
 	case keyTypeDefinition:
-		if v.TypeDefinition == nil {
-			v.TypeDefinition = &TextDocumentClientCapabilitiesTypeDefinition{}
+		var value = TextDocumentClientCapabilitiesTypeDefinitionPool.Get().(*TextDocumentClientCapabilitiesTypeDefinition)
+		err := dec.Object(value)
+		if err == nil {
+			v.TypeDefinition = value
 		}
-		return dec.Object(v.TypeDefinition)
+		return err
 	case keyImplementation:
-		if v.Implementation == nil {
-			v.Implementation = &TextDocumentClientCapabilitiesImplementation{}
+		var value = TextDocumentClientCapabilitiesImplementationPool.Get().(*TextDocumentClientCapabilitiesImplementation)
+		err := dec.Object(value)
+		if err == nil {
+			v.Implementation = value
 		}
-		return dec.Object(v.Implementation)
+		return err
 	case keyCodeAction:
-		if v.CodeAction == nil {
-			v.CodeAction = &TextDocumentClientCapabilitiesCodeAction{}
+		var value = TextDocumentClientCapabilitiesCodeActionPool.Get().(*TextDocumentClientCapabilitiesCodeAction)
+		err := dec.Object(value)
+		if err == nil {
+			v.CodeAction = value
 		}
-		return dec.Object(v.CodeAction)
+		return err
 	case keyCodeLens:
-		if v.CodeLens == nil {
-			v.CodeLens = &TextDocumentClientCapabilitiesCodeLens{}
+		var value = TextDocumentClientCapabilitiesCodeLensPool.Get().(*TextDocumentClientCapabilitiesCodeLens)
+		err := dec.Object(value)
+		if err == nil {
+			v.CodeLens = value
 		}
-		return dec.Object(v.CodeLens)
+		return err
 	case keyDocumentLink:
-		if v.DocumentLink == nil {
-			v.DocumentLink = &TextDocumentClientCapabilitiesDocumentLink{}
+		var value = TextDocumentClientCapabilitiesDocumentLinkPool.Get().(*TextDocumentClientCapabilitiesDocumentLink)
+		err := dec.Object(value)
+		if err == nil {
+			v.DocumentLink = value
 		}
-		return dec.Object(v.DocumentLink)
+		return err
 	case keyColorProvider:
-		if v.ColorProvider == nil {
-			v.ColorProvider = &TextDocumentClientCapabilitiesColorProvider{}
+		var value = TextDocumentClientCapabilitiesColorProviderPool.Get().(*TextDocumentClientCapabilitiesColorProvider)
+		err := dec.Object(value)
+		if err == nil {
+			v.ColorProvider = value
 		}
-		return dec.Object(v.ColorProvider)
+		return err
 	case keyRename:
-		if v.Rename == nil {
-			v.Rename = &TextDocumentClientCapabilitiesRename{}
+		var value = TextDocumentClientCapabilitiesRenamePool.Get().(*TextDocumentClientCapabilitiesRename)
+		err := dec.Object(value)
+		if err == nil {
+			v.Rename = value
 		}
-		return dec.Object(v.Rename)
+		return err
 	case keyPublishDiagnostics:
-		if v.PublishDiagnostics == nil {
-			v.PublishDiagnostics = &TextDocumentClientCapabilitiesPublishDiagnostics{}
+		var value = TextDocumentClientCapabilitiesPublishDiagnosticsPool.Get().(*TextDocumentClientCapabilitiesPublishDiagnostics)
+		err := dec.Object(value)
+		if err == nil {
+			v.PublishDiagnostics = value
 		}
-		return dec.Object(v.PublishDiagnostics)
+		return err
 	case keyFoldingRange:
-		if v.FoldingRange == nil {
-			v.FoldingRange = &TextDocumentClientCapabilitiesFoldingRange{}
+		var value = TextDocumentClientCapabilitiesFoldingRangePool.Get().(*TextDocumentClientCapabilitiesFoldingRange)
+		err := dec.Object(value)
+		if err == nil {
+			v.FoldingRange = value
 		}
-		return dec.Object(v.FoldingRange)
+		return err
 	}
 	return nil
 }
@@ -1081,6 +1303,52 @@ func (v *TextDocumentClientCapabilities) MarshalJSONObject(enc *gojay.Encoder) {
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentClientCapabilities) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *TextDocumentClientCapabilities) Reset() {
+	TextDocumentClientCapabilitiesSynchronizationPool.Put(v.Synchronization)
+	v.Synchronization = nil
+	TextDocumentClientCapabilitiesCompletionPool.Put(v.Completion)
+	v.Completion = nil
+	TextDocumentClientCapabilitiesHoverPool.Put(v.Hover)
+	v.Hover = nil
+	TextDocumentClientCapabilitiesSignatureHelpPool.Put(v.SignatureHelp)
+	v.SignatureHelp = nil
+	TextDocumentClientCapabilitiesReferencesPool.Put(v.References)
+	v.References = nil
+	TextDocumentClientCapabilitiesDocumentHighlightPool.Put(v.DocumentHighlight)
+	v.DocumentHighlight = nil
+	TextDocumentClientCapabilitiesDocumentSymbolPool.Put(v.DocumentSymbol)
+	v.DocumentSymbol = nil
+	TextDocumentClientCapabilitiesFormattingPool.Put(v.Formatting)
+	v.Formatting = nil
+	TextDocumentClientCapabilitiesRangeFormattingPool.Put(v.RangeFormatting)
+	v.RangeFormatting = nil
+	TextDocumentClientCapabilitiesOnTypeFormattingPool.Put(v.OnTypeFormatting)
+	v.OnTypeFormatting = nil
+	TextDocumentClientCapabilitiesDeclarationPool.Put(v.Declaration)
+	v.Declaration = nil
+	TextDocumentClientCapabilitiesDefinitionPool.Put(v.Definition)
+	v.Definition = nil
+	TextDocumentClientCapabilitiesTypeDefinitionPool.Put(v.TypeDefinition)
+	v.TypeDefinition = nil
+	TextDocumentClientCapabilitiesImplementationPool.Put(v.Implementation)
+	v.Implementation = nil
+	TextDocumentClientCapabilitiesCodeActionPool.Put(v.CodeAction)
+	v.CodeAction = nil
+	TextDocumentClientCapabilitiesCodeLensPool.Put(v.CodeLens)
+	v.CodeLens = nil
+	TextDocumentClientCapabilitiesDocumentLinkPool.Put(v.DocumentLink)
+	v.DocumentLink = nil
+	TextDocumentClientCapabilitiesColorProviderPool.Put(v.ColorProvider)
+	v.ColorProvider = nil
+	TextDocumentClientCapabilitiesRenamePool.Put(v.Rename)
+	v.Rename = nil
+	TextDocumentClientCapabilitiesPublishDiagnosticsPool.Put(v.PublishDiagnostics)
+	v.PublishDiagnostics = nil
+	TextDocumentClientCapabilitiesFoldingRangePool.Put(v.FoldingRange)
+	v.FoldingRange = nil
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ClientCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
@@ -1113,6 +1381,14 @@ func (v *ClientCapabilities) MarshalJSONObject(enc *gojay.Encoder) {
 // IsNil returns wether the structure is nil value or not.
 func (v *ClientCapabilities) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *ClientCapabilities) Reset() {
+	WorkspaceClientCapabilitiesPool.Put(v.Workspace)
+	v.Workspace = nil
+	TextDocumentClientCapabilitiesPool.Put(v.TextDocument)
+	v.TextDocument = nil
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *InitializeResult) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyCapabilities {
@@ -1132,6 +1408,12 @@ func (v *InitializeResult) MarshalJSONObject(enc *gojay.Encoder) {
 // IsNil returns wether the structure is nil value or not.
 func (v *InitializeResult) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *InitializeResult) Reset() {
+	(&v.Capabilities).Reset()
+	ServerCapabilitiesPool.Put(&v.Capabilities)
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *InitializeError) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyRetry {
@@ -1150,6 +1432,11 @@ func (v *InitializeError) MarshalJSONObject(enc *gojay.Encoder) {
 
 // IsNil returns wether the structure is nil value or not.
 func (v *InitializeError) IsNil() bool { return v == nil }
+
+// Reset reset fields
+func (v *InitializeError) Reset() {
+	v.Retry = false
+}
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *CompletionOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
@@ -1177,10 +1464,21 @@ func (v *CompletionOptions) MarshalJSONObject(enc *gojay.Encoder) {
 // IsNil returns wether the structure is nil value or not.
 func (v *CompletionOptions) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *CompletionOptions) Reset() {
+	v.ResolveProvider = false
+	v.TriggerCharacters = nil
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *SignatureHelpOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	if k == keyCodeActionKinds {
-		return dec.Array((*Strings)(&v.TriggerCharacters))
+	if k == keyTriggerCharacters {
+		var values Strings
+		err := dec.Array(&values)
+		if err == nil && len(values) > 0 {
+			v.TriggerCharacters = []string(values)
+		}
+		return err
 	}
 	return nil
 }
@@ -1195,6 +1493,11 @@ func (v *SignatureHelpOptions) MarshalJSONObject(enc *gojay.Encoder) {
 
 // IsNil returns wether the structure is nil value or not.
 func (v *SignatureHelpOptions) IsNil() bool { return v == nil }
+
+// Reset reset fields
+func (v *SignatureHelpOptions) Reset() {
+	v.TriggerCharacters = nil
+}
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *CodeActionOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
@@ -1215,6 +1518,11 @@ func (v *CodeActionOptions) MarshalJSONObject(enc *gojay.Encoder) {
 // IsNil returns wether the structure is nil value or not.
 func (v *CodeActionOptions) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *CodeActionOptions) Reset() {
+	v.CodeActionKinds = nil
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *CodeLensOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyResolveProvider {
@@ -1234,13 +1542,23 @@ func (v *CodeLensOptions) MarshalJSONObject(enc *gojay.Encoder) {
 // IsNil returns wether the structure is nil value or not.
 func (v *CodeLensOptions) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *CodeLensOptions) Reset() {
+	v.ResolveProvider = false
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *DocumentOnTypeFormattingOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keyFirstTriggerCharacter:
 		return dec.String(&v.FirstTriggerCharacter)
 	case keyMoreTriggerCharacter:
-		return dec.Array((*Strings)(&v.MoreTriggerCharacter))
+		var values Strings
+		err := dec.Array(&values)
+		if err == nil && len(values) > 0 {
+			v.MoreTriggerCharacter = []string(values)
+		}
+		return err
 	}
 	return nil
 }
@@ -1256,6 +1574,12 @@ func (v *DocumentOnTypeFormattingOptions) MarshalJSONObject(enc *gojay.Encoder) 
 
 // IsNil returns wether the structure is nil value or not.
 func (v *DocumentOnTypeFormattingOptions) IsNil() bool { return v == nil }
+
+// Reset reset fields
+func (v *DocumentOnTypeFormattingOptions) Reset() {
+	v.FirstTriggerCharacter = ""
+	v.MoreTriggerCharacter = nil
+}
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *RenameOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
@@ -1276,6 +1600,11 @@ func (v *RenameOptions) MarshalJSONObject(enc *gojay.Encoder) {
 // IsNil returns wether the structure is nil value or not.
 func (v *RenameOptions) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *RenameOptions) Reset() {
+	v.PrepareProvider = false
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *DocumentLinkOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyResolveProvider {
@@ -1294,6 +1623,11 @@ func (v *DocumentLinkOptions) MarshalJSONObject(enc *gojay.Encoder) {
 
 // IsNil returns wether the structure is nil value or not.
 func (v *DocumentLinkOptions) IsNil() bool { return v == nil }
+
+// Reset reset fields
+func (v *DocumentLinkOptions) Reset() {
+	v.ResolveProvider = false
+}
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ExecuteCommandOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
@@ -1314,6 +1648,11 @@ func (v *ExecuteCommandOptions) MarshalJSONObject(enc *gojay.Encoder) {
 // IsNil returns wether the structure is nil value or not.
 func (v *ExecuteCommandOptions) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *ExecuteCommandOptions) Reset() {
+	v.Commands = nil
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *SaveOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyIncludeText {
@@ -1333,6 +1672,11 @@ func (v *SaveOptions) MarshalJSONObject(enc *gojay.Encoder) {
 // IsNil returns wether the structure is nil value or not.
 func (v *SaveOptions) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *SaveOptions) Reset() {
+	v.IncludeText = false
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ColorProviderOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	return nil
@@ -1346,6 +1690,9 @@ func (v *ColorProviderOptions) MarshalJSONObject(enc *gojay.Encoder) {}
 
 // IsNil returns wether the structure is nil value or not.
 func (v *ColorProviderOptions) IsNil() bool { return v == nil }
+
+// Reset reset fields
+func (v *ColorProviderOptions) Reset() {}
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *FoldingRangeProviderOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
@@ -1361,6 +1708,9 @@ func (v *FoldingRangeProviderOptions) MarshalJSONObject(enc *gojay.Encoder) {}
 // IsNil returns wether the structure is nil value or not.
 func (v *FoldingRangeProviderOptions) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *FoldingRangeProviderOptions) Reset() {}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentSyncOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
@@ -1373,10 +1723,12 @@ func (v *TextDocumentSyncOptions) UnmarshalJSONObject(dec *gojay.Decoder, k stri
 	case keyWillSaveWaitUntil:
 		return dec.Bool(&v.WillSaveWaitUntil)
 	case keySave:
-		if v.Save == nil {
-			v.Save = &SaveOptions{}
+		var value = SaveOptionsPool.Get().(*SaveOptions)
+		err := dec.Object(value)
+		if err == nil {
+			v.Save = value
 		}
-		return dec.Object(v.Save)
+		return err
 	}
 	return nil
 }
@@ -1395,6 +1747,16 @@ func (v *TextDocumentSyncOptions) MarshalJSONObject(enc *gojay.Encoder) {
 
 // IsNil returns wether the structure is nil value or not.
 func (v *TextDocumentSyncOptions) IsNil() bool { return v == nil }
+
+// Reset reset fields
+func (v *TextDocumentSyncOptions) Reset() {
+	v.OpenClose = false
+	v.Change = 0.0
+	v.WillSave = false
+	v.WillSaveWaitUntil = false
+	SaveOptionsPool.Put(v.Save)
+	v.Save = nil
+}
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *StaticRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
@@ -1415,13 +1777,20 @@ func (v *StaticRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
 // IsNil returns wether the structure is nil value or not.
 func (v *StaticRegistrationOptions) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *StaticRegistrationOptions) Reset() {
+	v.ID = ""
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ServerCapabilitiesWorkspace) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyWorkspaceFolders {
-		if v.WorkspaceFolders == nil {
-			v.WorkspaceFolders = &ServerCapabilitiesWorkspaceFolders{}
+		var value = ServerCapabilitiesWorkspaceFoldersPool.Get().(*ServerCapabilitiesWorkspaceFolders)
+		err := dec.Object(value)
+		if err == nil {
+			v.WorkspaceFolders = value
 		}
-		return dec.Object(v.WorkspaceFolders)
+		return err
 	}
 	return nil
 }
@@ -1436,6 +1805,12 @@ func (v *ServerCapabilitiesWorkspace) MarshalJSONObject(enc *gojay.Encoder) {
 
 // IsNil returns wether the structure is nil value or not.
 func (v *ServerCapabilitiesWorkspace) IsNil() bool { return v == nil }
+
+// Reset reset fields
+func (v *ServerCapabilitiesWorkspace) Reset() {
+	ServerCapabilitiesWorkspaceFoldersPool.Put(v.WorkspaceFolders)
+	v.WorkspaceFolders = nil
+}
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ServerCapabilitiesWorkspaceFolders) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
@@ -1460,6 +1835,12 @@ func (v *ServerCapabilitiesWorkspaceFolders) MarshalJSONObject(enc *gojay.Encode
 // IsNil returns wether the structure is nil value or not.
 func (v *ServerCapabilitiesWorkspaceFolders) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *ServerCapabilitiesWorkspaceFolders) Reset() {
+	v.Supported = false
+	v.ChangeNotifications = nil
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ServerCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
@@ -1468,15 +1849,19 @@ func (v *ServerCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) e
 	case keyHoverProvider:
 		return dec.Bool(&v.HoverProvider)
 	case keyCompletionProvider:
-		if v.CompletionProvider == nil {
-			v.CompletionProvider = &CompletionOptions{}
+		var value = CompletionOptionsPool.Get().(*CompletionOptions)
+		err := dec.Object(value)
+		if err == nil {
+			v.CompletionProvider = value
 		}
-		return dec.Object(v.CompletionProvider)
+		return err
 	case keySignatureHelpProvider:
-		if v.SignatureHelpProvider == nil {
-			v.SignatureHelpProvider = &SignatureHelpOptions{}
+		var value = SignatureHelpOptionsPool.Get().(*SignatureHelpOptions)
+		err := dec.Object(value)
+		if err == nil {
+			v.SignatureHelpProvider = value
 		}
-		return dec.Object(v.SignatureHelpProvider)
+		return err
 	case keyDefinitionProvider:
 		return dec.Bool(&v.DefinitionProvider)
 	case keyTypeDefinitionProvider:
@@ -1494,40 +1879,50 @@ func (v *ServerCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) e
 	case keyCodeActionProvider:
 		return dec.Bool(&v.CodeActionProvider)
 	case keyCodeLensProvider:
-		if v.CodeLensProvider == nil {
-			v.CodeLensProvider = &CodeLensOptions{}
+		var value = CodeLensOptionsPool.Get().(*CodeLensOptions)
+		err := dec.Object(value)
+		if err == nil {
+			v.CodeLensProvider = value
 		}
-		return dec.Object(v.CodeLensProvider)
+		return err
 	case keyDocumentFormattingProvider:
 		return dec.Bool(&v.DocumentFormattingProvider)
 	case keyDocumentRangeFormattingProvider:
 		return dec.Bool(&v.DocumentRangeFormattingProvider)
 	case keyDocumentOnTypeFormattingProvider:
-		if v.DocumentOnTypeFormattingProvider == nil {
-			v.DocumentOnTypeFormattingProvider = &DocumentOnTypeFormattingOptions{}
+		var value = DocumentOnTypeFormattingOptionsPool.Get().(*DocumentOnTypeFormattingOptions)
+		err := dec.Object(value)
+		if err == nil {
+			v.DocumentOnTypeFormattingProvider = value
 		}
-		return dec.Object(v.DocumentOnTypeFormattingProvider)
+		return err
 	case keyRenameProvider:
 		return dec.Bool(&v.RenameProvider)
 	case keyDocumentLinkProvider:
-		if v.DocumentLinkProvider == nil {
-			v.DocumentLinkProvider = &DocumentLinkOptions{}
+		var value = DocumentLinkOptionsPool.Get().(*DocumentLinkOptions)
+		err := dec.Object(value)
+		if err == nil {
+			v.DocumentLinkProvider = value
 		}
-		return dec.Object(v.DocumentLinkProvider)
+		return err
 	case keyColorProvider:
 		return dec.Interface(&v.ColorProvider)
 	case keyFoldingRangeProvider:
 		return dec.Interface(&v.FoldingRangeProvider)
 	case keyExecuteCommandProvider:
-		if v.ExecuteCommandProvider == nil {
-			v.ExecuteCommandProvider = &ExecuteCommandOptions{}
+		var value = ExecuteCommandOptionsPool.Get().(*ExecuteCommandOptions)
+		err := dec.Object(value)
+		if err == nil {
+			v.ExecuteCommandProvider = value
 		}
-		return dec.Object(v.ExecuteCommandProvider)
+		return err
 	case keyWorkspace:
-		if v.Workspace == nil {
-			v.Workspace = &ServerCapabilitiesWorkspace{}
+		var value = ServerCapabilitiesWorkspacePool.Get().(*ServerCapabilitiesWorkspace)
+		err := dec.Object(value)
+		if err == nil {
+			v.Workspace = value
 		}
-		return dec.Object(v.Workspace)
+		return err
 	case keyExperimental:
 		return dec.Interface(&v.Experimental)
 	}
@@ -1567,6 +1962,34 @@ func (v *ServerCapabilities) MarshalJSONObject(enc *gojay.Encoder) {
 // IsNil returns wether the structure is nil value or not.
 func (v *ServerCapabilities) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *ServerCapabilities) Reset() {
+	v.HoverProvider = false
+	CompletionOptionsPool.Put(v.CompletionProvider)
+	v.CompletionProvider = nil
+	SignatureHelpOptionsPool.Put(v.SignatureHelpProvider)
+	v.SignatureHelpProvider = nil
+	v.DefinitionProvider = false
+	v.ReferencesProvider = false
+	v.DocumentHighlightProvider = false
+	v.DocumentSymbolProvider = false
+	v.WorkspaceSymbolProvider = false
+	v.CodeActionProvider = false
+	CodeLensOptionsPool.Put(v.CodeLensProvider)
+	v.CodeLensProvider = nil
+	v.DocumentFormattingProvider = false
+	v.DocumentRangeFormattingProvider = false
+	DocumentOnTypeFormattingOptionsPool.Put(v.DocumentOnTypeFormattingProvider)
+	v.DocumentOnTypeFormattingProvider = nil
+	v.RenameProvider = false
+	DocumentLinkOptionsPool.Put(v.DocumentLinkProvider)
+	v.DocumentLinkProvider = nil
+	ExecuteCommandOptionsPool.Put(v.ExecuteCommandProvider)
+	v.ExecuteCommandProvider = nil
+	ServerCapabilitiesWorkspacePool.Put(v.Workspace)
+	v.Workspace = nil
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *DocumentLinkRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
@@ -1590,6 +2013,13 @@ func (v *DocumentLinkRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) 
 // IsNil returns wether the structure is nil value or not.
 func (v *DocumentLinkRegistrationOptions) IsNil() bool { return v == nil }
 
+// Reset reset fields
+func (v *DocumentLinkRegistrationOptions) Reset() {
+	DocumentSelectorPool.Put(v.DocumentSelector)
+	v.DocumentSelector = nil
+	v.ResolveProvider = false
+}
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *InitializedParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	return nil
@@ -1603,3 +2033,6 @@ func (v *InitializedParams) MarshalJSONObject(enc *gojay.Encoder) {}
 
 // IsNil returns wether the structure is nil value or not.
 func (v *InitializedParams) IsNil() bool { return v == nil }
+
+// Reset reset fields
+func (v *InitializedParams) Reset() {}
