@@ -1484,11 +1484,11 @@ func (v *SignatureHelpOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string)
 }
 
 // NKeys returns the number of keys to unmarshal.
-func (v *SignatureHelpOptions) NKeys() int { return 0 }
+func (v *SignatureHelpOptions) NKeys() int { return 1 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *SignatureHelpOptions) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKeyOmitEmpty(keyCodeActionKinds, (*Strings)(&v.TriggerCharacters))
+	enc.ArrayKeyOmitEmpty(keyTriggerCharacters, (*Strings)(&v.TriggerCharacters))
 }
 
 // IsNil returns wether the structure is nil value or not.
