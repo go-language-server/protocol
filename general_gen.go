@@ -79,7 +79,7 @@ func (v *WorkspaceClientCapabilitiesWorkspaceEdit) UnmarshalJSONObject(dec *goja
 	case keyFailureHandling:
 		return dec.String(&v.FailureHandling)
 	case keyResourceOperations:
-		return dec.Array((*stringSlice)(&v.ResourceOperations))
+		return dec.Array((*Strings)(&v.ResourceOperations))
 	}
 	return nil
 }
@@ -91,7 +91,7 @@ func (v *WorkspaceClientCapabilitiesWorkspaceEdit) NKeys() int { return 3 }
 func (v *WorkspaceClientCapabilitiesWorkspaceEdit) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKeyOmitEmpty(keyDocumentChanges, v.DocumentChanges)
 	enc.StringKeyOmitEmpty(keyFailureHandling, v.FailureHandling)
-	enc.ArrayKeyOmitEmpty(keyResourceOperations, (*stringSlice)(&v.ResourceOperations))
+	enc.ArrayKeyOmitEmpty(keyResourceOperations, (*Strings)(&v.ResourceOperations))
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -1120,9 +1120,9 @@ func (v *CompletionOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) er
 		return dec.Bool(&v.ResolveProvider)
 	case keyTriggerCharacters:
 		if v.TriggerCharacters == nil {
-			v.TriggerCharacters = stringSlice{}
+			v.TriggerCharacters = Strings{}
 		}
-		return dec.Array((*stringSlice)(&v.TriggerCharacters))
+		return dec.Array((*Strings)(&v.TriggerCharacters))
 	}
 	return nil
 }
@@ -1133,7 +1133,7 @@ func (v *CompletionOptions) NKeys() int { return 2 }
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *CompletionOptions) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKeyOmitEmpty(keyResolveProvider, v.ResolveProvider)
-	enc.ArrayKeyOmitEmpty(keyTriggerCharacters, (*stringSlice)(&v.TriggerCharacters))
+	enc.ArrayKeyOmitEmpty(keyTriggerCharacters, (*Strings)(&v.TriggerCharacters))
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -1142,7 +1142,7 @@ func (v *CompletionOptions) IsNil() bool { return v == nil }
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *SignatureHelpOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyCodeActionKinds {
-		return dec.Array((*stringSlice)(&v.TriggerCharacters))
+		return dec.Array((*Strings)(&v.TriggerCharacters))
 	}
 	return nil
 }
@@ -1152,7 +1152,7 @@ func (v *SignatureHelpOptions) NKeys() int { return 0 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *SignatureHelpOptions) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKeyOmitEmpty(keyCodeActionKinds, (*stringSlice)(&v.TriggerCharacters))
+	enc.ArrayKeyOmitEmpty(keyCodeActionKinds, (*Strings)(&v.TriggerCharacters))
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -1202,7 +1202,7 @@ func (v *DocumentOnTypeFormattingOptions) UnmarshalJSONObject(dec *gojay.Decoder
 	case keyFirstTriggerCharacter:
 		return dec.String(&v.FirstTriggerCharacter)
 	case keyMoreTriggerCharacter:
-		return dec.Array((*stringSlice)(&v.MoreTriggerCharacter))
+		return dec.Array((*Strings)(&v.MoreTriggerCharacter))
 	}
 	return nil
 }
@@ -1213,7 +1213,7 @@ func (v *DocumentOnTypeFormattingOptions) NKeys() int { return 2 }
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *DocumentOnTypeFormattingOptions) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey(keyFirstTriggerCharacter, v.FirstTriggerCharacter)
-	enc.ArrayKeyOmitEmpty(keyMoreTriggerCharacter, (*stringSlice)(&v.MoreTriggerCharacter))
+	enc.ArrayKeyOmitEmpty(keyMoreTriggerCharacter, (*Strings)(&v.MoreTriggerCharacter))
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -1260,7 +1260,7 @@ func (v *DocumentLinkOptions) IsNil() bool { return v == nil }
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ExecuteCommandOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyCommands {
-		return dec.Array((*stringSlice)(&v.Commands))
+		return dec.Array((*Strings)(&v.Commands))
 	}
 	return nil
 }
@@ -1270,7 +1270,7 @@ func (v *ExecuteCommandOptions) NKeys() int { return 1 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ExecuteCommandOptions) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKey(keyCommands, (*stringSlice)(&v.Commands))
+	enc.ArrayKey(keyCommands, (*Strings)(&v.Commands))
 }
 
 // IsNil returns wether the structure is nil value or not.

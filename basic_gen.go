@@ -280,7 +280,7 @@ func (v *Command) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	case keyCommand:
 		return dec.String(&v.Command)
 	case keyArguments:
-		return dec.Array((*interfaces)(&v.Arguments))
+		return dec.Array((*Interfaces)(&v.Arguments))
 	}
 	return nil
 }
@@ -292,7 +292,7 @@ func (v *Command) NKeys() int { return 3 }
 func (v *Command) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey(keyTitle, v.Title)
 	enc.StringKey(keyCommand, v.Command)
-	enc.ArrayKeyOmitEmpty(keyArguments, (*interfaces)(&v.Arguments))
+	enc.ArrayKeyOmitEmpty(keyArguments, (*Interfaces)(&v.Arguments))
 }
 
 // IsNil returns wether the structure is nil value or not.

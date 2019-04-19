@@ -328,7 +328,7 @@ func (v *ExecuteCommandParams) UnmarshalJSONObject(dec *gojay.Decoder, k string)
 	case keyCommand:
 		return dec.String(&v.Command)
 	case keyArguments:
-		return dec.Array((*interfaces)(&v.Arguments))
+		return dec.Array((*Interfaces)(&v.Arguments))
 	}
 	return nil
 }
@@ -339,7 +339,7 @@ func (v *ExecuteCommandParams) NKeys() int { return 2 }
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ExecuteCommandParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey(keyCommand, v.Command)
-	enc.ArrayKeyOmitEmpty(keyArguments, (*interfaces)(&v.Arguments))
+	enc.ArrayKeyOmitEmpty(keyArguments, (*Interfaces)(&v.Arguments))
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -348,7 +348,7 @@ func (v *ExecuteCommandParams) IsNil() bool { return v == nil }
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ExecuteCommandRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyCommands {
-		return dec.Array((*stringSlice)(&v.Commands))
+		return dec.Array((*Strings)(&v.Commands))
 	}
 	return nil
 }
@@ -358,7 +358,7 @@ func (v *ExecuteCommandRegistrationOptions) NKeys() int { return 1 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ExecuteCommandRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKey(keyCommands, (*stringSlice)(&v.Commands))
+	enc.ArrayKey(keyCommands, (*Strings)(&v.Commands))
 }
 
 // IsNil returns wether the structure is nil value or not.

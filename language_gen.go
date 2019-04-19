@@ -119,7 +119,7 @@ func (v *CompletionItem) UnmarshalJSONObject(dec *gojay.Decoder, k string) error
 	case keyCommand:
 		return dec.Object(v.Command)
 	case keyCommitCharacters:
-		return dec.Array((*stringSlice)(&v.CommitCharacters))
+		return dec.Array((*Strings)(&v.CommitCharacters))
 	case keyData:
 		return dec.Interface(&v.Data)
 	case keyDeprecated:
@@ -158,7 +158,7 @@ func (v *CompletionItem) NKeys() int { return 15 }
 func (v *CompletionItem) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.AddArrayKeyOmitEmpty(keyAdditionalTextEdits, (*TextEdits)(&v.AdditionalTextEdits))
 	enc.ObjectKeyOmitEmpty(keyCommand, v.Command)
-	enc.AddArrayKeyOmitEmpty(keyCommitCharacters, (*stringSlice)(&v.CommitCharacters))
+	enc.AddArrayKeyOmitEmpty(keyCommitCharacters, (*Strings)(&v.CommitCharacters))
 	enc.AddInterfaceKeyOmitEmpty(keyData, &v.Data)
 	enc.BoolKeyOmitEmpty(keyDeprecated, v.Deprecated)
 	enc.StringKeyOmitEmpty(keyDetail, v.Detail)
@@ -182,7 +182,7 @@ func (v *CompletionRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, 
 	case keyDocumentSelector:
 		return dec.Array(&v.DocumentSelector)
 	case keyTriggerCharacters:
-		return dec.Array((*stringSlice)(&v.TriggerCharacters))
+		return dec.Array((*Strings)(&v.TriggerCharacters))
 	case keyResolveProvider:
 		return dec.Bool(&v.ResolveProvider)
 	}
@@ -195,7 +195,7 @@ func (v *CompletionRegistrationOptions) NKeys() int { return 3 }
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *CompletionRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ArrayKey(keyDocumentSelector, &v.DocumentSelector)
-	enc.AddArrayKeyOmitEmpty(keyTriggerCharacters, (*stringSlice)(&v.TriggerCharacters))
+	enc.AddArrayKeyOmitEmpty(keyTriggerCharacters, (*Strings)(&v.TriggerCharacters))
 	enc.BoolKeyOmitEmpty(keyResolveProvider, v.ResolveProvider)
 }
 
@@ -334,7 +334,7 @@ func (v *SignatureHelpRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decode
 	case keyDocumentSelector:
 		return dec.Array(&v.DocumentSelector)
 	case keyTriggerCharacters:
-		return dec.Array((*stringSlice)(&v.TriggerCharacters))
+		return dec.Array((*Strings)(&v.TriggerCharacters))
 	}
 	return nil
 }
@@ -345,7 +345,7 @@ func (v *SignatureHelpRegistrationOptions) NKeys() int { return 2 }
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *SignatureHelpRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ArrayKey(keyDocumentSelector, &v.DocumentSelector)
-	enc.AddArrayKeyOmitEmpty(keyTriggerCharacters, (*stringSlice)(&v.TriggerCharacters))
+	enc.AddArrayKeyOmitEmpty(keyTriggerCharacters, (*Strings)(&v.TriggerCharacters))
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -1003,7 +1003,7 @@ func (v *DocumentOnTypeFormattingRegistrationOptions) UnmarshalJSONObject(dec *g
 	case keyFirstTriggerCharacter:
 		return dec.String(&v.FirstTriggerCharacter)
 	case keyMoreTriggerCharacter:
-		return dec.Array((*stringSlice)(&v.MoreTriggerCharacter))
+		return dec.Array((*Strings)(&v.MoreTriggerCharacter))
 	}
 	return nil
 }
@@ -1015,7 +1015,7 @@ func (v *DocumentOnTypeFormattingRegistrationOptions) NKeys() int { return 3 }
 func (v *DocumentOnTypeFormattingRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ArrayKey(keyDocumentSelector, &v.DocumentSelector)
 	enc.StringKey(keyFirstTriggerCharacter, v.FirstTriggerCharacter)
-	enc.ArrayKeyOmitEmpty(keyMoreTriggerCharacter, (*stringSlice)(&v.MoreTriggerCharacter))
+	enc.ArrayKeyOmitEmpty(keyMoreTriggerCharacter, (*Strings)(&v.MoreTriggerCharacter))
 }
 
 // IsNil returns wether the structure is nil value or not.
