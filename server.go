@@ -5,11 +5,13 @@
 package protocol
 
 import (
+	"bytes"
 	"context"
 
-	"github.com/francoispqt/gojay"
 	"github.com/go-language-server/jsonrpc2"
 	"go.uber.org/zap"
+
+	"github.com/go-language-server/protocol/internal/gojaypool"
 )
 
 // ServerInterface represents a Language Server Protocol server.
@@ -595,15 +597,15 @@ func (s *Server) WillSaveWaitUntil(ctx context.Context, params *WillSaveTextDocu
 }
 
 // ServerHandler returns the client handler.
-func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler {
+func ServerHandler(ctx context.Context, server ServerInterface, logger *zap.Logger) jsonrpc2.Handler {
 	return func(ctx context.Context, conn *jsonrpc2.Conn, r *jsonrpc2.Request) {
-		logger.Debug("ServerHandler", zap.String("r.Method", r.Method))
-		dec := gojay.Unsafe
+		dec := gojaypool.BorrowSizedDecoder(bytes.NewReader(*r.Params), len(*r.Params))
+		defer dec.Release()
 
 		switch r.Method {
 		case MethodInitialize:
 			var params InitializeParams
-			if err := dec.Unmarshal(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -614,7 +616,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodInitialized:
 			var params InitializedParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -642,7 +644,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodCancelRequest:
 			var params CancelParams
-			if err := dec.Unmarshal(*r.Params, &params); err != nil {
+			if err := dec.Decode(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -650,7 +652,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodTextDocumentCodeAction:
 			var params CodeActionParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -661,7 +663,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodTextDocumentCodeLens:
 			var params CodeLensParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -672,7 +674,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodCodeLensResolve:
 			var params CodeLens
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -683,7 +685,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodTextDocumentColorPresentation:
 			var params ColorPresentationParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -694,7 +696,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodTextDocumentCompletion:
 			var params CompletionParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -705,7 +707,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodCompletionItemResolve:
 			var params CompletionItem
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -716,7 +718,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodTextDocumentDefinition:
 			var params TextDocumentPositionParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -727,7 +729,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodTextDocumentDidChange:
 			var params DidChangeTextDocumentParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -737,7 +739,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodWorkspaceDidChangeConfiguration:
 			var params DidChangeConfigurationParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -747,7 +749,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodWorkspaceDidChangeWatchedFiles:
 			var params DidChangeWatchedFilesParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -757,7 +759,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodWorkspaceDidChangeWorkspaceFolders:
 			var params DidChangeWorkspaceFoldersParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -767,7 +769,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodTextDocumentDidClose:
 			var params DidCloseTextDocumentParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -777,7 +779,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodTextDocumentDidOpen:
 			var params DidOpenTextDocumentParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -787,7 +789,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodTextDocumentDidSave:
 			var params DidSaveTextDocumentParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -797,7 +799,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodTextDocumentDocumentColor:
 			var params DocumentColorParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -808,7 +810,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodTextDocumentDocumentHighlight:
 			var params TextDocumentPositionParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -819,7 +821,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodTextDocumentDocumentLink:
 			var params DocumentLinkParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -830,7 +832,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodDocumentLinkResolve:
 			var params DocumentLink
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -841,7 +843,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodTextDocumentDocumentSymbol:
 			var params DocumentSymbolParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -852,7 +854,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodWorkspaceExecuteCommand:
 			var params ExecuteCommandParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -863,7 +865,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodTextDocumentFoldingRange:
 			var params FoldingRangeParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -874,7 +876,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodTextDocumentFormatting:
 			var params DocumentFormattingParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -885,7 +887,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodTextDocumentHover:
 			var params TextDocumentPositionParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -896,7 +898,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodTextDocumentImplementation:
 			var params TextDocumentPositionParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -907,7 +909,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodTextDocumentOnTypeFormatting:
 			var params DocumentOnTypeFormattingParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -918,7 +920,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodTextDocumentRangeFormatting:
 			var params DocumentRangeFormattingParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -929,7 +931,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodTextDocumentReferences:
 			var params ReferenceParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -940,7 +942,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodTextDocumentRename:
 			var params RenameParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -951,7 +953,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodTextDocumentSignatureHelp:
 			var params TextDocumentPositionParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -962,7 +964,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodWorkspaceSymbol:
 			var params WorkspaceSymbolParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -973,7 +975,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodTextDocumentTypeDefinition:
 			var params TextDocumentPositionParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -984,7 +986,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodTextDocumentWillSave:
 			var params WillSaveTextDocumentParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -994,7 +996,7 @@ func ServerHandler(server ServerInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodTextDocumentWillSaveWaitUntil:
 			var params WillSaveTextDocumentParams
-			if err := dec.UnmarshalJSONObject(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
