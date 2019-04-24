@@ -5,11 +5,13 @@
 package protocol
 
 import (
+	"bytes"
 	"context"
 
-	"github.com/francoispqt/gojay"
 	"github.com/go-language-server/jsonrpc2"
 	"go.uber.org/zap"
+
+	"github.com/go-language-server/protocol/internal/gojaypool"
 )
 
 // ClientInterface represents a Language Server Protocol client.
@@ -166,14 +168,15 @@ func (c *Client) WorkspaceFolders(ctx context.Context) (result []WorkspaceFolder
 }
 
 // ClientHandler returns the client handler.
-func ClientHandler(client ClientInterface, logger *zap.Logger) jsonrpc2.Handler {
+func ClientHandler(ctx context.Context, client ClientInterface, logger *zap.Logger) jsonrpc2.Handler {
 	return func(ctx context.Context, conn *jsonrpc2.Conn, r *jsonrpc2.Request) {
-		logger.Debug("ClientHandler", zap.Any("conn", conn), zap.String("r.Method", r.Method))
+		dec := gojaypool.BorrowSizedDecoder(bytes.NewReader(*r.Params), len(*r.Params))
+		defer dec.Release()
 
 		switch r.Method {
 		case MethodCancelRequest:
 			var params CancelParams
-			if err := gojay.Unsafe.Unmarshal(*r.Params, &params); err != nil {
+			if err := dec.Decode(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -181,7 +184,7 @@ func ClientHandler(client ClientInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodClientRegisterCapability:
 			var params RegistrationParams
-			if err := gojay.Unsafe.Unmarshal(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -192,7 +195,7 @@ func ClientHandler(client ClientInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodClientUnregisterCapability:
 			var params UnregistrationParams
-			if err := gojay.Unsafe.Unmarshal(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -203,7 +206,7 @@ func ClientHandler(client ClientInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodTelemetryEvent:
 			var params interface{}
-			if err := gojay.Unsafe.Unmarshal(*r.Params, &params); err != nil {
+			if err := dec.Decode(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -214,7 +217,7 @@ func ClientHandler(client ClientInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodTextDocumentPublishDiagnostics:
 			var params PublishDiagnosticsParams
-			if err := gojay.Unsafe.Unmarshal(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -225,7 +228,7 @@ func ClientHandler(client ClientInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodWindowLogMessage:
 			var params LogMessageParams
-			if err := gojay.Unsafe.Unmarshal(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -236,7 +239,7 @@ func ClientHandler(client ClientInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodWindowShowMessage:
 			var params ShowMessageParams
-			if err := gojay.Unsafe.Unmarshal(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -247,7 +250,7 @@ func ClientHandler(client ClientInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodWindowShowMessageRequest:
 			var params ShowMessageRequestParams
-			if err := gojay.Unsafe.Unmarshal(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -259,7 +262,7 @@ func ClientHandler(client ClientInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodWorkspaceApplyEdit:
 			var params ApplyWorkspaceEditParams
-			if err := gojay.Unsafe.Unmarshal(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
@@ -271,7 +274,7 @@ func ClientHandler(client ClientInterface, logger *zap.Logger) jsonrpc2.Handler 
 
 		case MethodWorkspaceConfiguration:
 			var params ConfigurationParams
-			if err := gojay.Unsafe.Unmarshal(*r.Params, &params); err != nil {
+			if err := dec.DecodeObject(&params); err != nil {
 				ReplyError(ctx, err, conn, r, logger)
 				return
 			}
