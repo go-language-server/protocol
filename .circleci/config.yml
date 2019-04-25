@@ -1,8 +1,7 @@
 version: 2.1
 
 orbs:
-  golang: cci-orb/golang@0.0.4
-  github: cci-orb/github@dev:0.0.1
+  golang: cci-orb/golang@0.0.7
   codecov: codecov/codecov@volatile
 
 defaults: &defaults
@@ -10,19 +9,14 @@ defaults: &defaults
   executor: golang/stretch
   environment:
     GO111MODULE: "on"
-  shell: /bin/bash -euo pipefail
 
 jobs:
   test:
     <<: *defaults
     steps:
       - checkout
-      - github/token
-      - golang/gomod
-      - run:
-          name: Run go mod vendor
-          command: |
-            go mod vendor -v
+      - golang/gomod:
+          file: "go.mod"
       - run:
           name: Test and collect coverages
           command: |
@@ -40,12 +34,8 @@ jobs:
     <<: *defaults
     steps:
       - checkout
-      - github/token
-      - golang/gomod
-      - run:
-          name: Run go mod vendor
-          command: |
-            go mod vendor -v
+      - golang/gomod:
+          file: "go.mod"
       - run:
           name: Run lint for sources
           command: |
