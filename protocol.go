@@ -27,23 +27,19 @@ func Canceller(ctx context.Context, conn *jsonrpc2.Conn, req *jsonrpc2.Request) 
 // NewClient returns the new Client, Server and jsonrpc2.Conn.
 func NewClient(ctx context.Context, client ClientInterface, stream jsonrpc2.Stream, logger *zap.Logger, options ...jsonrpc2.Options) (*jsonrpc2.Conn, ServerInterface) {
 	clientLogger := logger.Named("client")
-	serverLogger := logger.Named("server")
 
 	conn := jsonrpc2.NewConn(stream, options...)
 	conn.Handler = ClientHandler(ctx, client, clientLogger.Named("handler"))
 
-	return conn, &Server{Conn: conn, logger: serverLogger}
+	return conn, &Server{Conn: conn, logger: logger.Named("server")}
 }
 
 // NewServer returns the new Server, Client and jsonrpc2.Conn.
-func NewServer(server ServerInterface, stream jsonrpc2.Stream, logger *zap.Logger, options ...jsonrpc2.Options) (*jsonrpc2.Conn, ClientInterface) {
+func NewServer(ctx context.Context, server ServerInterface, stream jsonrpc2.Stream, logger *zap.Logger, options ...jsonrpc2.Options) (*jsonrpc2.Conn, ClientInterface) {
+	serverLogger := logger.Named("server")
+
 	conn := jsonrpc2.NewConn(stream, options...)
-	conn.Handler = ServerHandler(server, logger.Named("handler"))
-	conn.Logger = logger.Named("jsonrpc2")
+	conn.Handler = ServerHandler(ctx, server, serverLogger.Named("handler"))
 
-	clientConn := jsonrpc2.NewConn(stream, options...)
-	c := &Client{Conn: clientConn, logger: logger.Named("client")}
-	clientConn.Handler = ClientHandler(c, c.Logger.Named("handler"))
-
-	return conn, c
+	return conn, &Client{Conn: conn, logger: logger.Named("client")}
 }
