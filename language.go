@@ -96,6 +96,7 @@ type CompletionItem struct {
 	Data interface{} `json:"data"`
 
 	// Deprecated indicates if this item is deprecated.
+	//nolint:gocritic
 	Deprecated bool `json:"deprecated,omitempty"`
 
 	// Detail a human-readable string with additional information
@@ -439,6 +440,7 @@ type DocumentSymbol struct {
 	Kind SymbolKind `json:"kind"`
 
 	// Deprecated indicates if this symbol is deprecated.
+	//nolint:gocritic
 	Deprecated bool `json:"deprecated,omitempty"`
 
 	// Range is the range enclosing this symbol not including leading/trailing whitespace but everything else
@@ -465,6 +467,7 @@ type SymbolInformation struct {
 	Kind float64 `json:"kind"`
 
 	// Deprecated indicates if this symbol is deprecated.
+	//nolint:gocritic
 	Deprecated bool `json:"deprecated,omitempty"`
 
 	// Location is the location of this symbol. The location's range is used by a tool
