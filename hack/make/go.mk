@@ -184,12 +184,12 @@ mod/install/static:  ## Install the module vendor package as an object file with
 
 .PHONY: mod/update
 mod/update: mod/goget mod/tidy mod/vendor mod/install  ## Updates all of vendor packages.
-	@sed -i ':a;N;$$!ba;s|go 1\.12\n\n||g' go.mod
+	@GO111MODULE=on go mod edit -go 1.12
 
 .PHONY: mod
 mod: mod/init mod/tidy mod/vendor mod/install
 mod:  ## Updates the vendoring directory using go mod.
-	@sed -i ':a;N;$$!ba;s|go 1\.12\n\n||g' go.mod
+	@GO111MODULE=on go mod edit -go 1.12
 
 
 ## clean
