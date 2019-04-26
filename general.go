@@ -25,6 +25,8 @@ type InitializeParams struct {
 
 	// RootPath is the rootPath of the workspace. Is null
 	// if no folder is open.
+	//
+	// Deprecated: Use RootURI instead.
 	RootPath string `json:"rootPath,omitempty"`
 
 	// RootURI is the rootUri of the workspace. Is null if no
