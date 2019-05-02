@@ -87,6 +87,18 @@ const (
 	TextFormatSnippet InsertTextFormat = 2
 )
 
+// String implements fmt.Stringer.
+func (tf InsertTextFormat) String() string {
+	switch tf {
+	case TextFormatPlainText:
+		return "PlainText"
+	case TextFormatSnippet:
+		return "Snippet"
+	default:
+		return strconv.FormatFloat(float64(tf), 'f', -10, 64)
+	}
+}
+
 // CompletionItem item of CompletionList.
 type CompletionItem struct {
 
