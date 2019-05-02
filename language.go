@@ -246,6 +246,64 @@ const (
 	TypeParameterCompletion CompletionItemKind = 25
 )
 
+// String implements fmt.Stringer.
+func (k CompletionItemKind) String() string {
+	switch k {
+	case TextCompletion:
+		return "Text"
+	case MethodCompletion:
+		return "Method"
+	case FunctionCompletion:
+		return "Function"
+	case ConstructorCompletion:
+		return "Constructor"
+	case FieldCompletion:
+		return "Field"
+	case VariableCompletion:
+		return "Variable"
+	case ClassCompletion:
+		return "Class"
+	case InterfaceCompletion:
+		return "Interface"
+	case ModuleCompletion:
+		return "Module"
+	case PropertyCompletion:
+		return "Property"
+	case UnitCompletion:
+		return "Unit"
+	case ValueCompletion:
+		return "Value"
+	case EnumCompletion:
+		return "Enum"
+	case KeywordCompletion:
+		return "Keyword"
+	case SnippetCompletion:
+		return "Snippet"
+	case ColorCompletion:
+		return "Color"
+	case FileCompletion:
+		return "File"
+	case ReferenceCompletion:
+		return "Reference"
+	case FolderCompletion:
+		return "Folder"
+	case EnumMemberCompletion:
+		return "EnumMember"
+	case ConstantCompletion:
+		return "Constant"
+	case StructCompletion:
+		return "Struct"
+	case EventCompletion:
+		return "Event"
+	case OperatorCompletion:
+		return "Operator"
+	case TypeParameterCompletion:
+		return "TypeParameter"
+	default:
+		return strconv.FormatInt(int64(k), 64)
+	}
+}
+
 // CompletionRegistrationOptions CompletionRegistration options.
 type CompletionRegistrationOptions struct {
 	TextDocumentRegistrationOptions
