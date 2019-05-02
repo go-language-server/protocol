@@ -4,6 +4,10 @@
 
 package protocol
 
+import (
+	"strconv"
+)
+
 // CompletionParams params of Completion Request.
 type CompletionParams struct {
 	TextDocumentPositionParams
@@ -28,6 +32,20 @@ const (
 	// TriggerForIncompleteCompletions completion was re-triggered as the current completion list is incomplete.
 	TriggerForIncompleteCompletions CompletionTriggerKind = 3
 )
+
+// String implements fmt.Stringer.
+func (k CompletionTriggerKind) String() string {
+	switch k {
+	case Invoked:
+		return "Invoked"
+	case TriggerCharacter:
+		return "TriggerCharacter"
+	case TriggerForIncompleteCompletions:
+		return "TriggerForIncompleteCompletions"
+	default:
+		return strconv.FormatFloat(float64(k), 'f', -10, 64)
+	}
+}
 
 // CompletionContext contains additional information about the context in which a completion request is triggered.
 type CompletionContext struct {
