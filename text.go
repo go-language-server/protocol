@@ -4,6 +4,10 @@
 
 package protocol
 
+import (
+	"strconv"
+)
+
 // DidOpenTextDocumentParams params of DidOpenTextDocument Notification.
 type DidOpenTextDocumentParams struct {
 
@@ -72,6 +76,20 @@ const (
 	// FocusOut when the editor lost focus.
 	FocusOut TextDocumentSaveReason = 3
 )
+
+// String implements fmt.Stringer.
+func (t TextDocumentSaveReason) String() string {
+	switch t {
+	case Manual:
+		return "Manual"
+	case AfterDelay:
+		return "AfterDelay"
+	case FocusOut:
+		return "FocusOut"
+	default:
+		return strconv.FormatFloat(float64(t), 'f', -10, 64)
+	}
+}
 
 // DidSaveTextDocumentParams params of DidSaveTextDocument Notification.
 type DidSaveTextDocumentParams struct {
