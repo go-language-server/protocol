@@ -526,6 +526,66 @@ const (
 	TypeParameterSymbol SymbolKind = 26
 )
 
+// String implements fmt.Stringer.
+func (k SymbolKind) String() string {
+	switch k {
+	case FileSymbol:
+		return "File"
+	case ModuleSymbol:
+		return "Module"
+	case NamespaceSymbol:
+		return "Namespace"
+	case PackageSymbol:
+		return "Package"
+	case ClassSymbol:
+		return "Class"
+	case MethodSymbol:
+		return "Method"
+	case PropertySymbol:
+		return "Property"
+	case FieldSymbol:
+		return "Field"
+	case ConstructorSymbol:
+		return "Constructor"
+	case EnumSymbol:
+		return "Enum"
+	case InterfaceSymbol:
+		return "Interface"
+	case FunctionSymbol:
+		return "Function"
+	case VariableSymbol:
+		return "Variable"
+	case ConstantSymbol:
+		return "Constant"
+	case StringSymbol:
+		return "String"
+	case NumberSymbol:
+		return "Number"
+	case BooleanSymbol:
+		return "Boolean"
+	case ArraySymbol:
+		return "Array"
+	case ObjectSymbol:
+		return "Object"
+	case KeySymbol:
+		return "Key"
+	case NullSymbol:
+		return "Null"
+	case EnumMemberSymbol:
+		return "EnumMember"
+	case StructSymbol:
+		return "Struct"
+	case EventSymbol:
+		return "Event"
+	case OperatorSymbol:
+		return "Operator"
+	case TypeParameterSymbol:
+		return "TypeParameter"
+	default:
+		return strconv.FormatFloat(float64(k), 'f', -10, 64)
+	}
+}
+
 // DocumentSymbol represents programming constructs like variables, classes, interfaces etc. that appear in a document. Document symbols can be
 // hierarchical and they have two ranges: one that encloses its definition and one that points to its most interesting range,
 // e.g. the range of an identifier.
