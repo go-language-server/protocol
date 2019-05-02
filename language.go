@@ -439,6 +439,20 @@ const (
 	Write DocumentHighlightKind = 3
 )
 
+// String implements fmt.Stringer.
+func (k DocumentHighlightKind) String() string {
+	switch k {
+	case Text:
+		return "Text"
+	case Read:
+		return "Read"
+	case Write:
+		return "Write"
+	default:
+		return strconv.FormatInt(int64(k), 64)
+	}
+}
+
 // DocumentSymbolParams params of Document Symbols Request.
 type DocumentSymbolParams struct {
 
