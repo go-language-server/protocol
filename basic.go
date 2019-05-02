@@ -4,7 +4,9 @@
 
 package protocol
 
-import "strconv"
+import (
+	"strconv"
+)
 
 // DocumentURI represents an URI of a document.
 //
