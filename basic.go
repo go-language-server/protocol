@@ -4,6 +4,8 @@
 
 package protocol
 
+import "strconv"
+
 // DocumentURI represents an URI of a document.
 //
 // Many of the interfaces contain fields that correspond to the URI of a document.
@@ -111,6 +113,22 @@ const (
 	// SeverityHint reports a hint.
 	SeverityHint DiagnosticSeverity = 4
 )
+
+// String implements fmt.Stringer.
+func (d DiagnosticSeverity) String() string {
+	switch d {
+	case SeverityError:
+		return "Error"
+	case SeverityWarning:
+		return "Warning"
+	case SeverityInformation:
+		return "Information"
+	case SeverityHint:
+		return "Hint"
+	default:
+		return strconv.FormatFloat(float64(d), 'f', -10, 64)
+	}
+}
 
 // DiagnosticRelatedInformation represents a related message and source code location for a diagnostic.
 //
