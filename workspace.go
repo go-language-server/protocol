@@ -4,6 +4,10 @@
 
 package protocol
 
+import (
+	"strconv"
+)
+
 // WorkspaceFolder response of Workspace folders request.
 type WorkspaceFolder struct {
 
@@ -87,6 +91,20 @@ const (
 	Deleted FileChangeType = 3
 )
 
+// String implements fmt.Stringer.
+func (t FileChangeType) String() string {
+	switch t {
+	case Created:
+		return "Created"
+	case Changed:
+		return "Changed"
+	case Deleted:
+		return "Deleted"
+	default:
+		return strconv.FormatFloat(float64(t), 'f', -10, 64)
+	}
+}
+
 // DidChangeWatchedFilesRegistrationOptions describe options to be used when registering for file system change events.
 type DidChangeWatchedFilesRegistrationOptions struct {
 
@@ -127,6 +145,20 @@ const (
 	// DeleteWatch interested in delete events
 	DeleteWatch WatchKind = 4
 )
+
+// String implements fmt.Stringer.
+func (k WatchKind) String() string {
+	switch k {
+	case CreateWatch:
+		return "Create"
+	case ChangeWatch:
+		return "Change"
+	case DeleteWatch:
+		return "Delete"
+	default:
+		return strconv.FormatFloat(float64(k), 'f', -10, 64)
+	}
+}
 
 // WorkspaceSymbolParams is the parameters of a Workspace Symbol Request.
 type WorkspaceSymbolParams struct {
