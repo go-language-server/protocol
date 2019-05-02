@@ -5,6 +5,8 @@
 package protocol
 
 import (
+	"strconv"
+
 	"github.com/go-language-server/jsonrpc2"
 )
 
@@ -569,6 +571,20 @@ const (
 	// send.
 	Incremental TextDocumentSyncKind = 2
 )
+
+// String implements fmt.Stringer.
+func (k TextDocumentSyncKind) String() string {
+	switch k {
+	case None:
+		return "None"
+	case Full:
+		return "Full"
+	case Incremental:
+		return "Incremental"
+	default:
+		return strconv.FormatFloat(float64(k), 'f', -10, 64)
+	}
+}
 
 // CompletionOptions Completion options.
 type CompletionOptions struct {
