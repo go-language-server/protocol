@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  golang: cci-orb/golang@0.0.8
+  golang: cci-orb/golang@volatile
   codecov: codecov/codecov@volatile
 
 defaults: &defaults
