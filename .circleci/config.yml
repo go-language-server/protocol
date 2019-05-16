@@ -9,6 +9,8 @@ defaults: &defaults
   executor: golang/stretch
   environment:
     GO111MODULE: "on"
+    GOPROXY: "https://proxy.golang.org"
+    GOSUMDB: "sum.golang.org"
 
 jobs:
   test:
