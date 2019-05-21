@@ -28,7 +28,7 @@ type ServerInterface interface {
 	Completion(ctx context.Context, params *CompletionParams) (result *CompletionList, err error)
 	CompletionResolve(ctx context.Context, params *CompletionItem) (result *CompletionItem, err error)
 	Declaration(ctx context.Context, params *TextDocumentPositionParams) (result []LocationLink, err error)
-	Definition(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error)
+	Definition(ctx context.Context, params *TextDocumentPositionParams) (result []LocationLink, err error)
 	DidChange(ctx context.Context, params *DidChangeTextDocumentParams) (err error)
 	DidChangeConfiguration(ctx context.Context, params *DidChangeConfigurationParams) (err error)
 	DidChangeWatchedFiles(ctx context.Context, params *DidChangeWatchedFilesParams) (err error)
@@ -45,7 +45,7 @@ type ServerInterface interface {
 	FoldingRanges(ctx context.Context, params *FoldingRangeParams) (result []FoldingRange, err error)
 	Formatting(ctx context.Context, params *DocumentFormattingParams) (result []TextEdit, err error)
 	Hover(ctx context.Context, params *TextDocumentPositionParams) (result *Hover, err error)
-	Implementation(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error)
+	Implementation(ctx context.Context, params *TextDocumentPositionParams) (result []LocationLink, err error)
 	OnTypeFormatting(ctx context.Context, params *DocumentOnTypeFormattingParams) (result []TextEdit, err error)
 	PrepareRename(ctx context.Context, params *TextDocumentPositionParams) (result *Range, err error)
 	RangeFormatting(ctx context.Context, params *DocumentRangeFormattingParams) (result []TextEdit, err error)
@@ -53,7 +53,7 @@ type ServerInterface interface {
 	Rename(ctx context.Context, params *RenameParams) (result []WorkspaceEdit, err error)
 	SignatureHelp(ctx context.Context, params *TextDocumentPositionParams) (result *SignatureHelp, err error)
 	Symbols(ctx context.Context, params *WorkspaceSymbolParams) (result []SymbolInformation, err error)
-	TypeDefinition(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error)
+	TypeDefinition(ctx context.Context, params *TextDocumentPositionParams) (result []LocationLink, err error)
 	WillSave(ctx context.Context, params *WillSaveTextDocumentParams) (err error)
 	WillSaveWaitUntil(ctx context.Context, params *WillSaveTextDocumentParams) (result []TextEdit, err error)
 }
@@ -344,7 +344,7 @@ func (s *Server) Declaration(ctx context.Context, params *TextDocumentPositionPa
 // The result type `[]LocationLink` got introduce with version 3.14.0 and depends in the corresponding client capability `clientCapabilities.textDocument.definition.linkSupport`.
 //
 // Since version 3.14.0.
-func (s *Server) Definition(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
+func (s *Server) Definition(ctx context.Context, params *TextDocumentPositionParams) (result []LocationLink, err error) {
 	s.logger.Debug("call " + MethodTextDocumentDefinition)
 	defer s.logger.Debug("end " + MethodTextDocumentDefinition)
 
@@ -514,7 +514,7 @@ func (s *Server) Hover(ctx context.Context, params *TextDocumentPositionParams) 
 // Implementation sends the request from the client to the server to resolve the implementation location of a symbol at a given text document position.
 //
 // The result type `[]LocationLink` got introduce with version 3.14.0 and depends in the corresponding client capability `clientCapabilities.implementation.typeDefinition.linkSupport`.
-func (s *Server) Implementation(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
+func (s *Server) Implementation(ctx context.Context, params *TextDocumentPositionParams) (result []LocationLink, err error) {
 	err = s.Conn.Call(ctx, MethodTextDocumentImplementation, params, &result)
 
 	return result, err
@@ -577,7 +577,7 @@ func (s *Server) Symbols(ctx context.Context, params *WorkspaceSymbolParams) (re
 // The result type `[]LocationLink` got introduce with version 3.14.0 and depends in the corresponding client capability `clientCapabilities.textDocument.typeDefinition.linkSupport`.
 //
 // Since version 3.6.0.
-func (s *Server) TypeDefinition(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
+func (s *Server) TypeDefinition(ctx context.Context, params *TextDocumentPositionParams) (result []LocationLink, err error) {
 	err = s.Conn.Call(ctx, MethodTextDocumentTypeDefinition, params, &result)
 
 	return result, err
