@@ -16,3 +16,5 @@ include hack/make/go.mk
 
 # ----------------------------------------------------------------------------
 # overlays
+
+coverage/ci: GO_BUILDTAGS+=gojay
