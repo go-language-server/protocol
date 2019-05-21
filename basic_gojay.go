@@ -774,7 +774,7 @@ func (v *VersionedTextDocumentIdentifier) UnmarshalJSONObject(dec *gojay.Decoder
 		return dec.String((*string)(&v.URI))
 	case keyVersion:
 		version := &v.Version
-		return dec.Uint64Null(&version)
+		return dec.Uint64Null(version)
 	}
 	return nil
 }
@@ -785,7 +785,7 @@ func (v *VersionedTextDocumentIdentifier) NKeys() int { return 2 }
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *VersionedTextDocumentIdentifier) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey(keyURI, string(v.URI))
-	enc.Uint64KeyNullEmpty(keyVersion, v.Version)
+	enc.Uint64KeyNullEmpty(keyVersion, *v.Version)
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -794,7 +794,7 @@ func (v *VersionedTextDocumentIdentifier) IsNil() bool { return v == nil }
 // Reset reset fields.
 func (v *VersionedTextDocumentIdentifier) Reset() {
 	v.URI = DocumentURI("")
-	v.Version = 0
+	v.Version = nil
 }
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.

@@ -533,7 +533,7 @@ type VersionedTextDocumentIdentifier struct {
 	//
 	// The version number of a document will increase after each change, including
 	// undo/redo. The number doesn't need to be consecutive.
-	Version uint64 `json:"version"`
+	Version *uint64 `json:"version"`
 }
 
 // TextDocumentPositionParams is a parameter literal used in requests to pass a text document and a position inside that document.
