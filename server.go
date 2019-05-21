@@ -27,7 +27,7 @@ type ServerInterface interface {
 	ColorPresentation(ctx context.Context, params *ColorPresentationParams) (result []ColorPresentation, err error)
 	Completion(ctx context.Context, params *CompletionParams) (result *CompletionList, err error)
 	CompletionResolve(ctx context.Context, params *CompletionItem) (result *CompletionItem, err error)
-	// Declaration() // TODO(zchee): implements
+	Declaration(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error)
 	Definition(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error)
 	DidChange(ctx context.Context, params *DidChangeTextDocumentParams) (err error)
 	DidChangeConfiguration(ctx context.Context, params *DidChangeConfigurationParams) (err error)
@@ -47,7 +47,7 @@ type ServerInterface interface {
 	Hover(ctx context.Context, params *TextDocumentPositionParams) (result *Hover, err error)
 	Implementation(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error)
 	OnTypeFormatting(ctx context.Context, params *DocumentOnTypeFormattingParams) (result []TextEdit, err error)
-	// PrepareRename(ctx context.Context) // TODO(zchee): implements
+	PrepareRename(ctx context.Context, params *TextDocumentPositionParams) (result *Range, err error)
 	RangeFormatting(ctx context.Context, params *DocumentRangeFormattingParams) (result []TextEdit, err error)
 	References(ctx context.Context, params *ReferenceParams) (result []Location, err error)
 	Rename(ctx context.Context, params *RenameParams) (result []WorkspaceEdit, err error)
@@ -333,9 +333,11 @@ func (s *Server) CompletionResolve(ctx context.Context, params *CompletionItem) 
 // The result type LocationLink[] got introduce with version 3.14.0 and depends in the corresponding client capability `clientCapabilities.textDocument.declaration.linkSupport`.
 //
 // Since version 3.14.0.
-//
-// TODO(zchee): implements
-// func (s *Server) Declaration(ctx context.Context) {}
+func (s *Server) Declaration(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
+	err = s.Conn.Call(ctx, MethodTextDocumentDeclaration, params, &result)
+
+	return result, err
+}
 
 // Definition sends the request from the client to the server to resolve the definition location of a symbol at a given text document position.
 //
@@ -528,9 +530,11 @@ func (s *Server) OnTypeFormatting(ctx context.Context, params *DocumentOnTypeFor
 // PrepareRename sends the request from the client to the server to setup and test the validity of a rename operation at a given location.
 //
 // Since version 3.12.0.
-//
-// TODO(zchee): implements
-// func (s *Server) PrepareRename(ctx context.Context) {}
+func (s *Server) PrepareRename(ctx context.Context, params *TextDocumentPositionParams) (result *Range, err error) {
+	err = s.Conn.Call(ctx, MethodTextDocumentPrepareRename, params, &result)
+
+	return result, err
+}
 
 // RangeFormatting sends the request from the client to the server to format a given range in a document.
 func (s *Server) RangeFormatting(ctx context.Context, params *DocumentRangeFormattingParams) (result []TextEdit, err error) {
@@ -714,6 +718,17 @@ func ServerHandler(ctx context.Context, server ServerInterface, logger *zap.Logg
 			resp, err := server.CompletionResolve(ctx, &params)
 			if err := conn.Reply(ctx, r, resp, err); err != nil {
 				logger.Error(MethodCompletionItemResolve, zap.Error(err))
+			}
+
+		case MethodTextDocumentDeclaration:
+			var params TextDocumentPositionParams
+			if err := dec.DecodeObject(&params); err != nil {
+				ReplyError(ctx, err, conn, r, logger)
+				return
+			}
+			resp, err := server.Declaration(ctx, &params)
+			if err := conn.Reply(ctx, r, resp, err); err != nil {
+				logger.Error(MethodTextDocumentDeclaration, zap.Error(err))
 			}
 
 		case MethodTextDocumentDefinition:
@@ -916,6 +931,17 @@ func ServerHandler(ctx context.Context, server ServerInterface, logger *zap.Logg
 			resp, err := server.OnTypeFormatting(ctx, &params)
 			if err := conn.Reply(ctx, r, resp, err); err != nil {
 				logger.Error(MethodTextDocumentOnTypeFormatting, zap.Error(err))
+			}
+
+		case MethodTextDocumentPrepareRename:
+			var params TextDocumentPositionParams
+			if err := dec.DecodeObject(&params); err != nil {
+				ReplyError(ctx, err, conn, r, logger)
+				return
+			}
+			resp, err := server.PrepareRename(ctx, &params)
+			if err := conn.Reply(ctx, r, resp, err); err != nil {
+				logger.Error(MethodTextDocumentPrepareRename, zap.Error(err))
 			}
 
 		case MethodTextDocumentRangeFormatting:
