@@ -12,3 +12,8 @@ const (
 func ToDocumentURI(s string) DocumentURI {
 	return DocumentURI(fileSchema + s)
 }
+
+// Uint64Ptr converts i to uint64 pointer.
+func Uint64Ptr(i uint64) *uint64 {
+	return &i
+}
