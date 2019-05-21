@@ -7,5 +7,3 @@ require (
 	github.com/google/go-cmp v0.3.0
 	go.uber.org/zap v1.10.1-0.20190430155229-8a2ee5670ced
 )
-
-go 1.13
