@@ -2,15 +2,15 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// +build !gojay
+// +build gojay
 
 package protocol
 
 import (
-	"encoding/json"
 	"strings"
 	"testing"
 
+	"github.com/francoispqt/gojay"
 	"github.com/google/go-cmp/cmp"
 )
 
@@ -122,7 +122,7 @@ func TestPublishDiagnosticsParams(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := json.Marshal(&tt.field)
+				got, err := gojay.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -243,7 +243,8 @@ func TestPublishDiagnosticsParams(t *testing.T) {
 				t.Parallel()
 
 				var got PublishDiagnosticsParams
-				dec := json.NewDecoder(strings.NewReader(tt.field))
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return

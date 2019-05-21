@@ -10,9 +10,6 @@ import (
 	"github.com/francoispqt/gojay"
 )
 
-// WorkspaceFolders represents a slice of WorkspaceFolder.
-type WorkspaceFolders []WorkspaceFolder
-
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
 func (v *WorkspaceFolders) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	var value WorkspaceFolder

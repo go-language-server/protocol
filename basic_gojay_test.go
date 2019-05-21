@@ -2,15 +2,15 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// +build !gojay
+// +build gojay
 
 package protocol
 
 import (
-	"encoding/json"
 	"strings"
 	"testing"
 
+	"github.com/francoispqt/gojay"
 	"github.com/google/go-cmp/cmp"
 )
 
@@ -57,7 +57,7 @@ func TestPosition(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := json.Marshal(&tt.field)
+				got, err := gojay.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -108,7 +108,8 @@ func TestPosition(t *testing.T) {
 				t.Parallel()
 
 				var got Position
-				dec := json.NewDecoder(strings.NewReader(tt.field))
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -177,7 +178,7 @@ func TestRange(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := json.Marshal(&tt.field)
+				got, err := gojay.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -240,7 +241,8 @@ func TestRange(t *testing.T) {
 				t.Parallel()
 
 				got := Range{}
-				dec := json.NewDecoder(strings.NewReader(tt.field))
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -310,7 +312,7 @@ func TestLocation(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := json.Marshal(&tt.field)
+				got, err := gojay.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -379,7 +381,8 @@ func TestLocation(t *testing.T) {
 				t.Parallel()
 
 				got := Location{}
-				dec := json.NewDecoder(strings.NewReader(tt.field))
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -515,7 +518,7 @@ func TestLocationLink(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := json.Marshal(&tt.field)
+				got, err := gojay.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -650,7 +653,8 @@ func TestLocationLink(t *testing.T) {
 				t.Parallel()
 
 				got := LocationLink{}
-				dec := json.NewDecoder(strings.NewReader(tt.field))
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -881,7 +885,7 @@ func TestDiagnostic(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := json.Marshal(&tt.field)
+				got, err := gojay.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -1099,7 +1103,8 @@ func TestDiagnostic(t *testing.T) {
 				t.Parallel()
 
 				got := Diagnostic{}
-				dec := json.NewDecoder(strings.NewReader(tt.field))
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -1175,7 +1180,7 @@ func TestDiagnosticRelatedInformation(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := json.Marshal(&tt.field)
+				got, err := gojay.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -1250,7 +1255,8 @@ func TestDiagnosticRelatedInformation(t *testing.T) {
 				t.Parallel()
 
 				got := DiagnosticRelatedInformation{}
-				dec := json.NewDecoder(strings.NewReader(tt.field))
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -1314,7 +1320,7 @@ func TestCommand(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := json.Marshal(&tt.field)
+				got, err := gojay.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -1377,7 +1383,8 @@ func TestCommand(t *testing.T) {
 				t.Parallel()
 
 				got := Command{}
-				dec := json.NewDecoder(strings.NewReader(tt.field))
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -1447,7 +1454,7 @@ func TestTextEdit(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := json.Marshal(&tt.field)
+				got, err := gojay.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -1516,7 +1523,8 @@ func TestTextEdit(t *testing.T) {
 				t.Parallel()
 
 				got := TextEdit{}
-				dec := json.NewDecoder(strings.NewReader(tt.field))
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -1606,7 +1614,7 @@ func TestTextDocumentEdit(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := json.Marshal(&tt.field)
+				got, err := gojay.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -1695,7 +1703,8 @@ func TestTextDocumentEdit(t *testing.T) {
 				t.Parallel()
 
 				got := TextDocumentEdit{}
-				dec := json.NewDecoder(strings.NewReader(tt.field))
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -1772,7 +1781,7 @@ func TestCreateFileOptions(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := json.Marshal(&tt.field)
+				got, err := gojay.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -1848,7 +1857,8 @@ func TestCreateFileOptions(t *testing.T) {
 				t.Parallel()
 
 				got := CreateFileOptions{}
-				dec := json.NewDecoder(strings.NewReader(tt.field))
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -1918,7 +1928,7 @@ func TestCreateFile(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := json.Marshal(&tt.field)
+				got, err := gojay.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -1987,7 +1997,8 @@ func TestCreateFile(t *testing.T) {
 				t.Parallel()
 
 				got := CreateFile{}
-				dec := json.NewDecoder(strings.NewReader(tt.field))
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -2064,7 +2075,7 @@ func TestRenameFileOptions(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := json.Marshal(&tt.field)
+				got, err := gojay.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -2140,7 +2151,8 @@ func TestRenameFileOptions(t *testing.T) {
 				t.Parallel()
 
 				got := RenameFileOptions{}
-				dec := json.NewDecoder(strings.NewReader(tt.field))
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -2213,7 +2225,7 @@ func TestRenameFile(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := json.Marshal(&tt.field)
+				got, err := gojay.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -2285,7 +2297,8 @@ func TestRenameFile(t *testing.T) {
 				t.Parallel()
 
 				got := RenameFile{}
-				dec := json.NewDecoder(strings.NewReader(tt.field))
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -2362,7 +2375,7 @@ func TestDeleteFileOptions(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := json.Marshal(&tt.field)
+				got, err := gojay.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -2438,7 +2451,8 @@ func TestDeleteFileOptions(t *testing.T) {
 				t.Parallel()
 
 				got := DeleteFileOptions{}
-				dec := json.NewDecoder(strings.NewReader(tt.field))
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -2508,7 +2522,7 @@ func TestDeleteFile(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := json.Marshal(&tt.field)
+				got, err := gojay.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -2577,7 +2591,8 @@ func TestDeleteFile(t *testing.T) {
 				t.Parallel()
 
 				got := DeleteFile{}
-				dec := json.NewDecoder(strings.NewReader(tt.field))
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -2767,7 +2782,7 @@ func TestWorkspaceEdit(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := json.Marshal(&tt.field)
+				got, err := gojay.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -2956,7 +2971,8 @@ func TestWorkspaceEdit(t *testing.T) {
 				t.Parallel()
 
 				got := WorkspaceEdit{}
-				dec := json.NewDecoder(strings.NewReader(tt.field))
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -3013,7 +3029,7 @@ func TestTextDocumentIdentifier(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := json.Marshal(&tt.field)
+				got, err := gojay.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -3062,7 +3078,8 @@ func TestTextDocumentIdentifier(t *testing.T) {
 				t.Parallel()
 
 				got := TextDocumentIdentifier{}
-				dec := json.NewDecoder(strings.NewReader(tt.field))
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -3118,7 +3135,7 @@ func TestTextDocumentItem(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := json.Marshal(&tt.field)
+				got, err := gojay.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -3173,7 +3190,8 @@ func TestTextDocumentItem(t *testing.T) {
 				t.Parallel()
 
 				got := TextDocumentItem{}
-				dec := json.NewDecoder(strings.NewReader(tt.field))
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -3241,7 +3259,7 @@ func TestVersionedTextDocumentIdentifier(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := json.Marshal(&tt.field)
+				got, err := gojay.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -3308,7 +3326,8 @@ func TestVersionedTextDocumentIdentifier(t *testing.T) {
 				t.Parallel()
 
 				got := VersionedTextDocumentIdentifier{}
-				dec := json.NewDecoder(strings.NewReader(tt.field))
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -3370,7 +3389,7 @@ func TestTextDocumentPositionParams(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := json.Marshal(&tt.field)
+				got, err := gojay.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -3431,7 +3450,8 @@ func TestTextDocumentPositionParams(t *testing.T) {
 				t.Parallel()
 
 				got := TextDocumentPositionParams{}
-				dec := json.NewDecoder(strings.NewReader(tt.field))
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -3522,7 +3542,7 @@ func TestDocumentFilter(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := json.Marshal(&tt.field)
+				got, err := gojay.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -3612,7 +3632,8 @@ func TestDocumentFilter(t *testing.T) {
 				t.Parallel()
 
 				got := DocumentFilter{}
-				dec := json.NewDecoder(strings.NewReader(tt.field))
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -3680,7 +3701,7 @@ func TestDocumentSelector(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := json.Marshal(&tt.field)
+				got, err := gojay.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -3747,7 +3768,8 @@ func TestDocumentSelector(t *testing.T) {
 				t.Parallel()
 
 				got := DocumentSelector{}
-				dec := json.NewDecoder(strings.NewReader(tt.field))
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -3799,7 +3821,7 @@ func TestMarkupContent(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := json.Marshal(&tt.field)
+				got, err := gojay.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -3850,7 +3872,8 @@ func TestMarkupContent(t *testing.T) {
 				t.Parallel()
 
 				got := MarkupContent{}
-				dec := json.NewDecoder(strings.NewReader(tt.field))
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
+				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return

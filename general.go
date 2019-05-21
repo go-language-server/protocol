@@ -851,3 +851,6 @@ const (
 	// guarantee that this is succeeding.
 	Undo FailureHandlingKind = "undo"
 )
+
+// WorkspaceFolders represents a slice of WorkspaceFolder.
+type WorkspaceFolders []WorkspaceFolder
