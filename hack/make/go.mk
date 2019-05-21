@@ -8,11 +8,16 @@ GO_PATH ?= $(shell go env GOPATH)
 GO_OS ?= $(shell go env GOOS)
 GO_ARCH ?= $(shell go env GOARCH)
 
+ifneq ($(wildcard vendor),)  # exist vendor directory
 PKG := $(subst $(GO_PATH)/src/,,$(CURDIR))
 GO_PKGS := $(shell go list ./... | grep -v -e '.pb.go')
 GO_APP_PKGS := $(shell go list -f '{{if and (or .GoFiles .CgoFiles) (ne .Name "main")}}{{.ImportPath}}{{end}}' ${PKG}/...)
 GO_TEST_PKGS := $(shell go list -f='{{if or .TestGoFiles .XTestGoFiles}}{{.ImportPath}}{{end}}' ./...)
-GO_VENDOR_PKGS := $(shell go list -f '{{if and (or .GoFiles .CgoFiles) (ne .Name "main")}}./vendor/{{.ImportPath}}{{end}}' ./vendor/...)
+GO_VENDOR_PKGS=
+ifneq ($(wildcard ./vendor),)
+	GO_VENDOR_PKGS = $(shell go list -f '{{if and (or .GoFiles .CgoFiles) (ne .Name "main")}}./vendor/{{.ImportPath}}{{end}}' ./vendor/...)
+endif
+endif
 
 GO_TEST ?= go test
 ifneq ($(shell command -v gotest),)
@@ -23,20 +28,25 @@ GO_TEST_FLAGS ?=
 GO_BENCH_FUNC ?= .
 GO_BENCH_FLAGS ?= -benchmem
 
-CGO_ENABLED ?= 1
+CGO_ENABLED ?= 0
+GO_GCFLAGS=
 GO_LDFLAGS=-s -w
 GO_LDFLAGS_STATIC=-s -w '-extldflags=-static'
 
-ifneq ($(wildcard go.mod),)  # exist go.mod
-ifeq ($(GO111MODULE),off)
-	GO_FLAGS=-mod=vendor
-endif
-endif
-
 GO_BUILDTAGS=osusergo
+ifneq ($(GO_OS),darwin)
+	GO_BUILDTAGS+=netgo
+endif
 GO_BUILDTAGS_STATIC=static static_build
-GO_FLAGS ?= -tags='$(GO_BUILDTAGS)' -ldflags="${GO_LDFLAGS}"
 GO_INSTALLSUFFIX_STATIC=netgo
+GO_FLAGS ?= -tags='$(GO_BUILDTAGS)' -gcflags="${GO_GCFLAGS}" -ldflags="${GO_LDFLAGS}"
+
+GO_MOD_FLAGS =
+ifneq ($(wildcard go.mod),)  # exist go.mod
+ifneq ($(GO111MODULE),off)
+	GO_MOD_FLAGS=-mod=vendor
+endif
+endif
 endif
 
 # ----------------------------------------------------------------------------
@@ -53,6 +63,9 @@ endef
 ## build and install
 
 .PHONY: pkg/install
+pkg/install: GO_FLAGS+=${GO_MOD_FLAGS}
+pkg/install: GO_LDFLAGS=
+pkg/install: GO_BUILDTAGS=
 pkg/install:
 	$(call target)
 	GO111MODULE=on CGO_ENABLED=$(CGO_ENABLED) GOOS=$(GO_OS) GOARCH=$(GO_ARCH) go install -v ${GO_APP_PKGS}
@@ -60,34 +73,43 @@ pkg/install:
 ## test, bench and coverage
 
 .PHONY: test
-test: GO_FLAGS+=-race
+test: CGO_ENABLED=1
+test: GO_FLAGS+=${GO_MOD_FLAGS}
+test: GO_LDFLAGS=${GO_LDFLAGS_STATIC}
+test: GO_BUILDTAGS+=${GO_BUILDTAGS_STATIC}
+test: GO_FLAGS+=-installsuffix ${GO_INSTALLSUFFIX_STATIC}
 test:  ## Runs package test including race condition.
 	$(call target)
-	@GO111MODULE=on $(GO_TEST) -v $(strip $(GO_FLAGS)) -run=$(GO_TEST_FUNC) $(GO_TEST_PKGS)
+	@GO111MODULE=on CGO_ENABLED=$(CGO_ENABLED) $(GO_TEST) -v -race $(strip $(GO_FLAGS)) -run=$(GO_TEST_FUNC) $(GO_TEST_PKGS)
 
 .PHONY: bench
+bench: GO_FLAGS+=${GO_MOD_FLAGS}
+bench: GO_LDFLAGS=${GO_LDFLAGS_STATIC}
+bench: GO_BUILDTAGS+=${GO_BUILDTAGS_STATIC}
+bench: GO_FLAGS+=-installsuffix ${GO_INSTALLSUFFIX_STATIC}
 bench:  ## Take a package benchmark.
 	$(call target)
-	@GO111MODULE=on $(GO_TEST) -v $(strip $(GO_FLAGS)) -run='^$$' -bench=$(GO_BENCH_FUNC) -benchmem $(GO_TEST_PKGS)
+	@GO111MODULE=on CGO_ENABLED=$(CGO_ENABLED) $(GO_TEST) -v $(strip $(GO_FLAGS)) -run='^$$' -bench=$(GO_BENCH_FUNC) -benchmem $(GO_TEST_PKGS)
 
 .PHONY: bench/race
-bench/race: GO_FLAGS+=-race
-bench/race: bench  ## Takes packages benchmarks with the race condition.
+bench/race:  ## Takes packages benchmarks with the race condition.
 	$(call target)
+	@GO111MODULE=on CGO_ENABLED=$(CGO_ENABLED) $(GO_TEST) -v -race $(strip $(GO_FLAGS)) -run='^$$' -bench=$(GO_BENCH_FUNC) -benchmem $(GO_TEST_PKGS)
 
 .PHONY: bench/trace
 bench/trace:  ## Take a package benchmark with take a trace profiling.
 	$(GO_TEST) -v -c -o bench-trace.test $(PKG)
-	GO111MODULE=on GODEBUG=allocfreetrace=1 ./bench-trace.test -test.run=none -test.bench=$(GO_BENCH_FUNC) -test.benchmem -test.benchtime=10ms 2> trace.log
+	GO111MODULE=on CGO_ENABLED=$(CGO_ENABLED) GODEBUG=allocfreetrace=1 ./bench-trace.test -test.run=none -test.bench=$(GO_BENCH_FUNC) -test.benchmem -test.benchtime=10ms 2> trace.log
 
 .PHONY: coverage
+coverage: CGO_ENABLED=1
 coverage: GO_FLAGS+=${GO_MOD_FLAGS}
 coverage: GO_LDFLAGS=${GO_LDFLAGS_STATIC}
 coverage: GO_BUILDTAGS+=${GO_BUILDTAGS_STATIC}
 coverage: GO_FLAGS+=-installsuffix ${GO_INSTALLSUFFIX_STATIC}
 coverage:  ## Takes packages test coverage.
 	$(call target)
-	GO111MODULE=on $(GO_TEST) -v -race $(strip $(GO_FLAGS)) -covermode=atomic -coverpkg=$(PKG)/pkg/... -coverprofile=coverage.out $(GO_PKGS)
+	GO111MODULE=on CGO_ENABLED=$(CGO_ENABLED) $(GO_TEST) -v -race $(strip $(GO_FLAGS)) -covermode=atomic -coverpkg=$(PKG)/... -coverprofile=coverage.out $(GO_PKGS)
 
 $(GO_PATH)/bin/go-junit-report:
 	@GO111MODULE=off go get -u github.com/jstemmer/go-junit-report
@@ -96,6 +118,7 @@ $(GO_PATH)/bin/go-junit-report:
 cmd/go-junit-report: $(GO_PATH)/bin/go-junit-report  # go get 'go-junit-report' binary
 
 .PHONY: coverage/ci
+coverage/ci: CGO_ENABLED=1
 coverage/ci: GO_FLAGS+=${GO_MOD_FLAGS}
 coverage/ci: GO_LDFLAGS=${GO_LDFLAGS_STATIC}
 coverage/ci: GO_BUILDTAGS+=${GO_BUILDTAGS_STATIC}
@@ -104,7 +127,7 @@ coverage/ci: cmd/go-junit-report
 coverage/ci:  ## Takes packages test coverage, and output coverage results to CI artifacts.
 	$(call target)
 	@mkdir -p /tmp/ci/artifacts /tmp/ci/test-results
-	GO111MODULE=on $(GO_TEST) -a -v -race $(strip $(GO_FLAGS)) -covermode=atomic -coverpkg=$(PKG)/... -coverprofile=/tmp/ci/artifacts/coverage.out $(GO_PKGS) 2>&1 | tee /dev/stderr | go-junit-report -set-exit-code > /tmp/ci/test-results/junit.xml
+	GO111MODULE=on CGO_ENABLED=$(CGO_ENABLED) $(GO_TEST) -a -v -race $(strip $(GO_FLAGS)) -covermode=atomic -coverpkg=$(PKG)/... -coverprofile=/tmp/ci/artifacts/coverage.out $(GO_PKGS) 2>&1 | tee /dev/stderr | go-junit-report -set-exit-code > /tmp/ci/test-results/junit.xml
 	@if [[ -f '/tmp/ci/artifacts/coverage.out' ]]; then go tool cover -html=/tmp/ci/artifacts/coverage.out -o /tmp/ci/artifacts/coverage.html; fi
 
 
@@ -133,7 +156,7 @@ cmd/golangci-lint: $(GO_PATH)/bin/golangci-lint  # go get 'golangci-lint' binary
 .PHONY: lint/golangci-lint
 lint/golangci-lint: cmd/golangci-lint .golangci.yml  ## Run golangci-lint.
 	$(call target)
-	@GO111MODULE=on golangci-lint run ./...
+	@GO111MODULE=on GOGC=off golangci-lint run ./...
 
 
 ## mod
@@ -146,7 +169,7 @@ mod/init:  ## Initializes and writes a new `go.mod` to the current directory.
 .PHONY: mod/get
 mod/get:  ## Updates all module packages and go.mod.
 	$(call target)
-	@GO111MODULE=on go get -u -m -v -x ./...
+	@GO111MODULE=on go get -u -m -v -x
 
 .PHONY: mod/tidy
 mod/tidy:  ## Makes sure go.mod matches the source code in the module.
@@ -163,27 +186,14 @@ mod/graph:  ## Prints the module requirement graph with replacements applied.
 	$(call target)
 	@GO111MODULE=on go mod graph
 
-.PHONY: mod/clean
-mod/clean:  ## Cleanups go.sum and vendor/modules.txt files.
-	$(call target)
-	@$(RM) -r go.sum $(shell find vendor -maxdepth 1 -path "vendor/*" -type d)
-
 .PHONY: mod/install
 mod/install: mod/tidy mod/vendor
 mod/install:  ## Install the module vendor package as an object file.
 	$(call target)
 	@GO111MODULE=off go install -v $(strip $(GO_FLAGS)) $(GO_VENDOR_PKGS) || GO111MODULE=on go install -mod=vendor -v $(strip $(GO_FLAGS)) $(GO_VENDOR_PKGS)
 
-.PHONY: mod/install/static
-mod/install/static: GO_LDFLAGS=${GO_LDFLAGS_STATIC}
-mod/install/static: GO_BUILDTAGS+=${GO_BUILDTAGS_STATIC}
-mod/install/static: GO_FLAGS+=-installsuffix ${GO_INSTALLSUFFIX_STATIC}
-mod/install/static: mod/install
-mod/install/static:  ## Install the module vendor package as an object file with static build.
-
-
 .PHONY: mod/update
-mod/update: mod/goget mod/tidy mod/vendor mod/install  ## Updates all of vendor packages.
+mod/update: mod/get mod/tidy mod/vendor mod/install  ## Updates all of vendor packages.
 	@GO111MODULE=on go mod edit -go 1.12
 
 .PHONY: mod
@@ -203,12 +213,16 @@ clean:  ## Cleanups binaries and extra files in the package.
 ## boilerplate
 
 .PHONY: boilerplate/go/%
-boilerplate/go/%: BOILERPLATE_PKG_DIR=$(shell printf $@ | cut -d'/' -f3- | rev | cut -d'/' -f2- | rev)
-boilerplate/go/%: BOILERPLATE_PKG_NAME=$(if $(findstring main,$@),main,$(shell printf $@ | rev | cut -d/ -f2 | rev))
+boilerplate/go/%: BOILERPLATE_PKG_DIR=$(shell printf $@ | cut -d'/' -f3- | rev | cut -d'/' -f2- | rev | awk -F. '{print $$1}')
+boilerplate/go/%: BOILERPLATE_PKG_NAME=$(if $(findstring .go,$(suffix $(BOILERPLATE_PKG_DIR))),$(basename ${@F}),$(shell printf $@ | rev | cut -d/ -f2 | rev))
 boilerplate/go/%: hack/boilerplate/boilerplate.go.txt
 boilerplate/go/%:  ## Creates a go file based on boilerplate.go.txt in % location.
-	@if [[ ! ${BOILERPLATE_PKG_DIR} == *'.go'* ]] && [ ! -d ${BOILERPLATE_PKG_DIR} ]; then mkdir -p ${BOILERPLATE_PKG_DIR}; fi
-	@cat hack/boilerplate/boilerplate.go.txt <(printf "package ${BOILERPLATE_PKG_NAME}\\n") > $*
+	@if [ -n ${BOILERPLATE_PKG_DIR} ] && [ ! -d ${BOILERPLATE_PKG_DIR} ]; then mkdir -p ${BOILERPLATE_PKG_DIR}; fi
+	@if [[ ${@F} == *'.go'* ]] || [[ ${BOILERPLATE_PKG_DIR} == *'cmd'* ]] || [ -z ${BOILERPLATE_PKG_DIR} ]; then \
+			cat hack/boilerplate/boilerplate.go.txt <(printf "\npackage $(basename ${@F})\\n") > $*; \
+		else \
+			cat hack/boilerplate/boilerplate.go.txt <(printf "\npackage ${BOILERPLATE_PKG_NAME}\\n") > $*; \
+		fi
 	@sed -i "s|YEAR|$(shell date '+%Y')|g" $*
 
 
