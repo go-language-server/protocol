@@ -124,13 +124,13 @@ func (c *Client) Telemetry(ctx context.Context, params interface{}) (err error) 
 // A client opts in via the dynamicRegistration property on the specific client capabilities.
 // A client can even provide dynamic registration for capability A but not for capability B (see TextDocumentClientCapabilities as an example).
 func (c *Client) RegisterCapability(ctx context.Context, params *RegistrationParams) (err error) {
-	err = c.Conn.Notify(ctx, MethodClientRegisterCapability, params)
+	err = c.Conn.Call(ctx, MethodClientRegisterCapability, params, nil)
 	return
 }
 
 // UnregisterCapability sends the request from the server to the client to unregister a previously registered capability.
 func (c *Client) UnregisterCapability(ctx context.Context, params *UnregistrationParams) (err error) {
-	err = c.Conn.Notify(ctx, MethodClientUnregisterCapability, params)
+	err = c.Conn.Call(ctx, MethodClientUnregisterCapability, params, nil)
 	return
 }
 
