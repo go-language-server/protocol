@@ -38,7 +38,8 @@ func ClientHandler(ctx context.Context, client ClientInterface, logger *zap.Logg
 				return
 			}
 
-			if err := client.RegisterCapability(ctx, &params); err != nil {
+			err := client.RegisterCapability(ctx, &params)
+			if err := conn.Reply(ctx, r, nil, err); err != nil {
 				logger.Error(MethodClientRegisterCapability, zap.Error(err))
 			}
 
@@ -49,7 +50,8 @@ func ClientHandler(ctx context.Context, client ClientInterface, logger *zap.Logg
 				return
 			}
 
-			if err := client.UnregisterCapability(ctx, &params); err != nil {
+			err := client.UnregisterCapability(ctx, &params)
+			if err := conn.Reply(ctx, r, nil, err); err != nil {
 				logger.Error(MethodClientUnregisterCapability, zap.Error(err))
 			}
 
