@@ -7,7 +7,6 @@
 package protocol
 
 import (
-	"encoding/json"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -2865,17 +2864,14 @@ func TestClientCapabilities(t *testing.T) {
 		t.Parallel()
 
 		tests := []struct {
-			name               string
-			marshalFunc        marshalFunc
-			compareMarshalFunc marshalFunc
-			field              ClientCapabilities
-			want               string
-			wantMarshalErr     bool
-			wantErr            bool
+			name           string
+			field          ClientCapabilities
+			want           string
+			wantMarshalErr bool
+			wantErr        bool
 		}{
 			{
 				name:           "Valid",
-				marshalFunc:    gojay.Marshal,
 				field:          wantType,
 				want:           want,
 				wantMarshalErr: false,
@@ -2883,28 +2879,10 @@ func TestClientCapabilities(t *testing.T) {
 			},
 			{
 				name:           "ValidNilAll",
-				marshalFunc:    gojay.Marshal,
 				field:          ClientCapabilities{},
 				want:           emptyData,
 				wantMarshalErr: false,
 				wantErr:        false,
-			},
-			{
-				name:           "jsonValid",
-				marshalFunc:    json.Marshal,
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:               "Compare",
-				marshalFunc:        gojay.Marshal,
-				compareMarshalFunc: json.Marshal,
-				field:              wantType,
-				want:               want,
-				wantMarshalErr:     false,
-				wantErr:            false,
 			},
 		}
 
@@ -2913,20 +2891,9 @@ func TestClientCapabilities(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := tt.marshalFunc(&tt.field)
+				got, err := gojay.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
-					return
-				}
-				if tt.compareMarshalFunc != nil {
-					got2, err := tt.compareMarshalFunc(&tt.field)
-					if (err != nil) != tt.wantMarshalErr {
-						t.Error(err)
-						return
-					}
-					if diff := cmp.Diff(string(got), string(got2)); (diff != "") != tt.wantErr {
-						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-					}
 					return
 				}
 
@@ -2941,17 +2908,14 @@ func TestClientCapabilities(t *testing.T) {
 		t.Parallel()
 
 		tests := []struct {
-			name                 string
-			unmarshalFunc        unmarshalFunc
-			compareUnmarshalFunc unmarshalFunc
-			field                []byte
-			want                 ClientCapabilities
-			wantUnmarshalErr     bool
-			wantErr              bool
+			name             string
+			field            []byte
+			want             ClientCapabilities
+			wantUnmarshalErr bool
+			wantErr          bool
 		}{
 			{
 				name:             "Valid",
-				unmarshalFunc:    gojay.Unsafe.Unmarshal,
 				field:            []byte(want),
 				want:             wantType,
 				wantUnmarshalErr: false,
@@ -2959,7 +2923,6 @@ func TestClientCapabilities(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				unmarshalFunc:    gojay.Unsafe.Unmarshal,
 				field:            []byte(emptyData),
 				want:             ClientCapabilities{},
 				wantUnmarshalErr: false,
@@ -2967,20 +2930,17 @@ func TestClientCapabilities(t *testing.T) {
 			},
 			{
 				name:             "jsonValid",
-				unmarshalFunc:    json.Unmarshal,
 				field:            []byte(want),
 				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
 			{
-				name:                 "compare",
-				unmarshalFunc:        gojay.Unsafe.Unmarshal,
-				compareUnmarshalFunc: json.Unmarshal,
-				field:                []byte(want),
-				want:                 wantType,
-				wantUnmarshalErr:     false,
-				wantErr:              false,
+				name:             "compare",
+				field:            []byte(want),
+				want:             wantType,
+				wantUnmarshalErr: false,
+				wantErr:          false,
 			},
 		}
 
@@ -2990,19 +2950,8 @@ func TestClientCapabilities(t *testing.T) {
 				t.Parallel()
 
 				var got ClientCapabilities
-				if err := tt.unmarshalFunc(tt.field, &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := gojay.Unsafe.Unmarshal(tt.field, &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
-					return
-				}
-				if tt.compareUnmarshalFunc != nil {
-					var got2 ClientCapabilities
-					if err := tt.compareUnmarshalFunc(tt.field, &got2); (err != nil) != tt.wantUnmarshalErr {
-						t.Error(err)
-						return
-					}
-					if diff := cmp.Diff(got, got2); (diff != "") != tt.wantErr {
-						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-					}
 					return
 				}
 
