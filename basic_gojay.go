@@ -773,6 +773,9 @@ func (v *VersionedTextDocumentIdentifier) UnmarshalJSONObject(dec *gojay.Decoder
 	case keyURI:
 		return dec.String((*string)(&v.URI))
 	case keyVersion:
+		if &v.Version == nil {
+			v.Version = Uint64Ptr(0)
+		}
 		version := &v.Version
 		return dec.Uint64Null(version)
 	}
