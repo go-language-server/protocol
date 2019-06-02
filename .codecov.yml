@@ -1,21 +1,47 @@
 coverage:
-  precision: 2
+  precision: 1
   round: down
   range: "70...100"
 
   status:
     project:
-      default:
+      default: off
+      json:
+        flags: json
         target: auto
         threshold: 10%
+        if_not_found: success
+        if_ci_failed: error
+      gojay:
+        flags: gojay
+        target: auto
+        threshold: 10%
+        if_not_found: success
+        if_ci_failed: error
     patch:
-      default:
+      default: off
+      json:
+        flags: json
         only_pulls: true
         target: 50%
         threshold: 10%
+      gojay:
+        flags: gojay
+        only_pulls: true
+        target: 50%
+        threshold: 10%
+    changes: false
   ignore:
     - "internal/cmd"
     - "vendor"
+
+flags:
+  json:
+    paths:
+      - /
+  gojay:
+    paths:
+      - /
 
 comment:
   behavior: default
