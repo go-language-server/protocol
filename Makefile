@@ -6,9 +6,6 @@
 # ----------------------------------------------------------------------------
 # target
 
-test/gojay: GO_BUILDTAGS+=gojay
-test/gojay: test
-
 # ----------------------------------------------------------------------------
 # include
 
@@ -17,4 +14,9 @@ include hack/make/go.mk
 # ----------------------------------------------------------------------------
 # overlays
 
-coverage/ci: GO_BUILDTAGS+=gojay
+test/gojay: GO_BUILDTAGS+=gojay
+test/gojay: test
+
+coverage/ci/gojay: GO_BUILDTAGS+=gojay
+coverage/ci/gojay: coverage/ci
+	$(call target)
