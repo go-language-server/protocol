@@ -2,7 +2,7 @@
 
 [![CircleCI][circleci-badge]][circleci] [![godoc.org][godoc-badge]][godoc] [![codecov.io][codecov-badge]][codecov] [![Releases][release-badge]][release] [![GA][ga-badge]][ga]
 
-Package protocol implements a Language Server Protocol Specification.
+Package protocol implements the Language Server Protocol for Go.
 
 
 <!-- badge links -->
