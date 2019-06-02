@@ -3,6 +3,8 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/francoispqt/gojay v1.2.11-0.20190329162224-e46791d21b5e h1:6aHWrF+JAGwrXrcmGqWSmkV6GOGiTmKqOkEmGFuuA5k=
 github.com/francoispqt/gojay v1.2.11-0.20190329162224-e46791d21b5e/go.mod h1:H8Wgri1Asi1VevY3ySdpIK5+KCpqzToVswNq8g2xZj4=
+github.com/francoispqt/gojay v1.2.11 h1:cdwGjHLNUp8mIp1k80HX9yumoh5/PeonPKveG0knwxQ=
+github.com/francoispqt/gojay v1.2.11/go.mod h1:H8Wgri1Asi1VevY3ySdpIK5+KCpqzToVswNq8g2xZj4=
 github.com/go-language-server/jsonrpc2 v0.1.4-0.20190528003553-92c50cd35914 h1:e6sZ23HF+lVWOSMYnUV3mjfiHzwYHcKNr3OarU4v8U4=
 github.com/go-language-server/jsonrpc2 v0.1.4-0.20190528003553-92c50cd35914/go.mod h1:p1p+fzJy6uFAsuWZOzb+IcieI4OfS/WvwjaPOPnEgFc=
 github.com/google/go-cmp v0.3.0 h1:crn/baboCvb5fXaQ0IJ1SGTsTVrWpDsCWC8EGETZijY=
