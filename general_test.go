@@ -3144,8 +3144,12 @@ func TestDocumentLinkRegistrationOptions(t *testing.T) {
 				wantErr:        false,
 			},
 			{
-				name:           "ValidNilAll",
-				field:          DocumentLinkRegistrationOptions{},
+				name: "ValidNilAll",
+				field: DocumentLinkRegistrationOptions{
+					TextDocumentRegistrationOptions: TextDocumentRegistrationOptions{
+						DocumentSelector: DocumentSelector{},
+					},
+				},
 				want:           wantNil,
 				wantMarshalErr: false,
 				wantErr:        false,
@@ -3199,9 +3203,13 @@ func TestDocumentLinkRegistrationOptions(t *testing.T) {
 				wantErr:          false,
 			},
 			{
-				name:             "ValidNilAll",
-				field:            strings.NewReader(wantNil),
-				want:             DocumentLinkRegistrationOptions{},
+				name:  "ValidNilAll",
+				field: strings.NewReader(wantNil),
+				want: DocumentLinkRegistrationOptions{
+					TextDocumentRegistrationOptions: TextDocumentRegistrationOptions{
+						DocumentSelector: DocumentSelector{},
+					},
+				},
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
