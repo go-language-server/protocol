@@ -15,6 +15,7 @@ defaults: &defaults
 jobs:
   test:
     <<: *defaults
+    parallelism: 2
     steps:
       - checkout
       - golang/gomod:
@@ -22,9 +23,10 @@ jobs:
       - run:
           name: Test and collect coverages
           command: |
-            make coverage/ci
+            make $(circleci tests split .circleci/coverage-targets)
       - codecov/upload:
           file: "/tmp/ci/artifacts/coverage.out"
+          flags: $(if [ $CIRCLE_NODE_INDEX == 0 ]; then echo "json"; else echo "gojay"; fi)
       - store_artifacts:
           path: /tmp/ci/artifacts
       - store_artifacts:
