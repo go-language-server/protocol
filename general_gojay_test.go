@@ -2964,7 +2964,7 @@ func TestClientCapabilities(t *testing.T) {
 }
 
 func TestInitializeResult(t *testing.T) {
-	const want = `{"capabilities":{"hoverProvider":true,"completionProvider":{"resolveProvider":true,"triggerCharacters":["Tab"]},"signatureHelpProvider":{"triggerCharacters":["C-K"]},"definitionProvider":true,"referencesProvider":true,"documentHighlightProvider":true,"documentSymbolProvider":true,"workspaceSymbolProvider":true,"codeActionProvider":true,"codeLensProvider":{"resolveProvider":true},"documentFormattingProvider":true,"documentRangeFormattingProvider":true,"documentOnTypeFormattingProvider":{"firstTriggerCharacter":"<Space>","moreTriggerCharacter":["f"]},"renameProvider":true,"documentLinkProvider":{"resolveProvider":true},"executeCommandProvider":{"commands":["test","command"]},"workspace":{"workspaceFolders":{"supported":true}}}}`
+	const want = `{"capabilities":{"hoverProvider":true,"completionProvider":{"resolveProvider":true,"triggerCharacters":["Tab"]},"signatureHelpProvider":{"triggerCharacters":["C-K"]},"definitionProvider":true,"referencesProvider":true,"documentHighlightProvider":true,"documentSymbolProvider":true,"workspaceSymbolProvider":true,"codeActionProvider":true,"codeLensProvider":{"resolveProvider":true},"documentFormattingProvider":true,"documentRangeFormattingProvider":true,"documentOnTypeFormattingProvider":{"firstTriggerCharacter":".","moreTriggerCharacter":["f"]},"renameProvider":true,"documentLinkProvider":{"resolveProvider":true},"executeCommandProvider":{"commands":["test","command"]},"workspace":{"workspaceFolders":{"supported":true}}}}`
 	const wantNil = `{"capabilities":{}}`
 
 	t.Run("Marshal", func(t *testing.T) {
@@ -3004,7 +3004,7 @@ func TestInitializeResult(t *testing.T) {
 						DocumentFormattingProvider:      true,
 						DocumentRangeFormattingProvider: true,
 						DocumentOnTypeFormattingProvider: &DocumentOnTypeFormattingOptions{
-							FirstTriggerCharacter: "<Space>",
+							FirstTriggerCharacter: ".",
 							MoreTriggerCharacter:  []string{"f"},
 						},
 						RenameProvider: true,
@@ -3095,7 +3095,7 @@ func TestInitializeResult(t *testing.T) {
 						DocumentFormattingProvider:      true,
 						DocumentRangeFormattingProvider: true,
 						DocumentOnTypeFormattingProvider: &DocumentOnTypeFormattingOptions{
-							FirstTriggerCharacter: "<Space>",
+							FirstTriggerCharacter: ".",
 							MoreTriggerCharacter:  []string{"f"},
 						},
 						RenameProvider: true,
