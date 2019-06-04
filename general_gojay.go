@@ -2014,7 +2014,7 @@ func (v *DocumentLinkRegistrationOptions) IsNil() bool { return v == nil }
 
 // Reset reset fields
 func (v *DocumentLinkRegistrationOptions) Reset() {
-	DocumentSelectorPool.Put(v.DocumentSelector)
+	DocumentSelectorPool.Put(&v.DocumentSelector)
 	v.DocumentSelector = nil
 	v.ResolveProvider = false
 }
