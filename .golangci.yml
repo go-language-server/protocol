@@ -52,7 +52,27 @@ linters-settings:
 
 linters:
   enable:
-  enable-all: true
+    - deadcode
+    - depguard
+    - errcheck
+    - goconst
+    - gocritic
+    - gofmt
+    - goimports
+    - golint
+    - ineffassign
+    - misspell
+    - prealloc
+    - structcheck
+    - typecheck
+    - unconvert
+    - varcheck
+    - gosimple
+    - govet
+    - interfacer
+    - staticcheck
+    - stylecheck
+    - unparam
   disable:
     - dupl
     - gochecknoglobals
@@ -63,6 +83,7 @@ linters:
     - maligned
     - nakedret
     - scopelint
+    - unused
   fast: true
 
 issues:
