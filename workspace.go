@@ -10,7 +10,6 @@ import (
 
 // WorkspaceFolder response of Workspace folders request.
 type WorkspaceFolder struct {
-
 	// URI is the associated URI for this workspace folder.
 	URI string `json:"uri"`
 
@@ -21,14 +20,12 @@ type WorkspaceFolder struct {
 
 // DidChangeWorkspaceFoldersParams params of DidChangeWorkspaceFolders Notification.
 type DidChangeWorkspaceFoldersParams struct {
-
 	// Event is the actual workspace folder change event.
 	Event WorkspaceFoldersChangeEvent `json:"event"`
 }
 
 // WorkspaceFoldersChangeEvent is the workspace folder change event.
 type WorkspaceFoldersChangeEvent struct {
-
 	// Added is the array of added workspace folders
 	Added []WorkspaceFolder `json:"added"`
 
@@ -38,7 +35,6 @@ type WorkspaceFoldersChangeEvent struct {
 
 // DidChangeConfigurationParams params of DidChangeConfiguration Notification.
 type DidChangeConfigurationParams struct {
-
 	// Settings is the actual changed settings
 	Settings interface{} `json:"settings,omitempty"`
 }
@@ -54,7 +50,6 @@ type ConfigurationParams struct {
 // It is up to the client to do the necessary conversion. If a scope URI is provided the client should return the setting scoped to the provided resource.
 // If the client for example uses EditorConfig to manage its settings the configuration should be returned for the passed resource URI. If the client can’t provide a configuration setting for a given scope then null need to be present in the returned array.
 type ConfigurationItem struct {
-
 	// ScopeURI is the scope to get the configuration section for.
 	ScopeURI string `json:"scopeUri,omitempty"`
 
@@ -64,14 +59,12 @@ type ConfigurationItem struct {
 
 // DidChangeWatchedFilesParams params of DidChangeWatchedFiles Notification.
 type DidChangeWatchedFilesParams struct {
-
 	// Changes is the actual file events.
 	Changes []*FileEvent `json:"changes,omitempty"`
 }
 
 // FileEvent an event describing a file change.
 type FileEvent struct {
-
 	// Type is the change type.
 	Type FileChangeType `json:"type"`
 
@@ -107,14 +100,12 @@ func (t FileChangeType) String() string {
 
 // DidChangeWatchedFilesRegistrationOptions describe options to be used when registering for file system change events.
 type DidChangeWatchedFilesRegistrationOptions struct {
-
 	// Watchers is the watchers to register.
 	Watchers []FileSystemWatcher `json:"watchers"`
 }
 
 // FileSystemWatcher watchers of DidChangeWatchedFiles Registration options.
 type FileSystemWatcher struct {
-
 	// GlobPattern is the glob pattern to watch.
 	//
 	// Glob patterns can have the following syntax:
@@ -162,14 +153,12 @@ func (k WatchKind) String() string {
 
 // WorkspaceSymbolParams is the parameters of a Workspace Symbol Request.
 type WorkspaceSymbolParams struct {
-
 	// Query a non-empty query string
 	Query string `json:"query"`
 }
 
 // ExecuteCommandParams params of Execute a command.
 type ExecuteCommandParams struct {
-
 	// Command is the identifier of the actual command handler.
 	Command string `json:"command"`
 
@@ -179,14 +168,12 @@ type ExecuteCommandParams struct {
 
 // ExecuteCommandRegistrationOptions execute command registration options.
 type ExecuteCommandRegistrationOptions struct {
-
 	// Commands is the commands to be executed on the server
 	Commands []string `json:"commands"`
 }
 
 // ApplyWorkspaceEditParams params of Applies a WorkspaceEdit.
 type ApplyWorkspaceEditParams struct {
-
 	// Label an optional label of the workspace edit. This label is
 	// presented in the user interface for example on an undo
 	// stack to undo the workspace edit.
@@ -198,7 +185,6 @@ type ApplyWorkspaceEditParams struct {
 
 // ApplyWorkspaceEditResponse response of Applies a WorkspaceEdit.
 type ApplyWorkspaceEditResponse struct {
-
 	// Applied indicates whether the edit was applied or not.
 	Applied bool `json:"applied"`
 }
