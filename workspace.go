@@ -73,7 +73,7 @@ type DidChangeWatchedFilesParams struct {
 type FileEvent struct {
 
 	// Type is the change type.
-	Type float64 `json:"type"`
+	Type FileChangeType `json:"type"`
 
 	// URI is the file's URI.
 	URI DocumentURI `json:"uri"`

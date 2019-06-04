@@ -217,7 +217,7 @@ func (v *DidChangeWatchedFilesParams) IsNil() bool { return v == nil }
 func (v *FileEvent) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keyType:
-		return dec.Float64(&v.Type)
+		return dec.Float64((*float64)(&v.Type))
 	case keyURI:
 		return dec.String((*string)(&v.URI))
 	}
@@ -229,7 +229,7 @@ func (v *FileEvent) NKeys() int { return 2 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *FileEvent) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.Float64Key(keyType, v.Type)
+	enc.Float64Key(keyType, float64(v.Type))
 	enc.StringKey(keyURI, string(v.URI))
 }
 
