@@ -27,6 +27,7 @@ GO_TEST_FUNC ?= .
 GO_TEST_FLAGS ?=
 GO_BENCH_FUNC ?= .
 GO_BENCH_FLAGS ?= -benchmem
+GO_LINT_FLAGS ?=
 
 CGO_ENABLED ?= 0
 GO_GCFLAGS=
@@ -134,18 +135,7 @@ coverage/ci:  ## Takes packages test coverage, and output coverage results to CI
 ## lint
 
 .PHONY: lint
-lint: lint/vet lint/golangci-lint  ## Run all linters.
-
-$(GO_PATH)/bin/vet:
-	@GO111MODULE=off go get -u golang.org/x/tools/go/analysis/cmd/vet golang.org/x/tools/go/analysis/passes/...
-
-.PHONY: cmd/vet
-cmd/vet: $(GO_PATH)/bin/vet  # go get 'vet' binary
-
-.PHONY: lint/vet
-lint/vet: cmd/vet
-	$(call target)
-	@GO111MODULE=on vet -asmdecl -assign -atomic -atomicalign -bools -buildtag -cgocall -compositewhitelist -copylocks -errorsas -httpresponse -loopclosure -lostcancel -methods -nilfunc -printfuncs -rangeloops -shift -source -stdmethods -structtag -tests -unmarshal -unreachable -unsafeptr $(GO_PKGS)
+lint: lint/golangci-lint  ## Run all linters.
 
 $(GO_PATH)/bin/golangci-lint:
 	@GO111MODULE=off go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
@@ -156,7 +146,7 @@ cmd/golangci-lint: $(GO_PATH)/bin/golangci-lint  # go get 'golangci-lint' binary
 .PHONY: lint/golangci-lint
 lint/golangci-lint: cmd/golangci-lint .golangci.yml  ## Run golangci-lint.
 	$(call target)
-	@GO111MODULE=on GOGC=off golangci-lint run ./...
+	@GO111MODULE=on GOGC=off golangci-lint run $(strip ${GO_LINT_FLAGS}) ./...
 
 
 ## mod

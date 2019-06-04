@@ -18,8 +18,7 @@ jobs:
     parallelism: 2
     steps:
       - checkout
-      - golang/gomod:
-          file: "go.mod"
+      - golang/gomod
       - run:
           name: Test and collect coverages
           command: |
@@ -36,14 +35,14 @@ jobs:
 
   lint:
     <<: *defaults
+    parallelism: 2
     steps:
       - checkout
-      - golang/gomod:
-          file: "go.mod"
+      - golang/gomod
       - run:
           name: Run lint for sources
           command: |
-            make lint
+            make lint GO_LINT_FLAGS=$(circleci tests split .circleci/lint-buildtags)
 
 workflows:
   version: 2
