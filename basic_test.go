@@ -11,6 +11,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/go-language-server/uri"
 	"github.com/google/go-cmp/cmp"
 )
 
@@ -268,7 +269,7 @@ func TestLocation(t *testing.T) {
 			{
 				name: "Valid",
 				field: Location{
-					URI: "file:///Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go",
+					URI: uri.File("/Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go"),
 					Range: Range{
 						Start: Position{
 							Line:      25,
@@ -287,7 +288,7 @@ func TestLocation(t *testing.T) {
 			{
 				name: "Invalid",
 				field: Location{
-					URI: "file:///Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go",
+					URI: uri.File("/Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go"),
 					Range: Range{
 						Start: Position{
 							Line:      25,
@@ -337,7 +338,7 @@ func TestLocation(t *testing.T) {
 				name:  "Valid",
 				field: `{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`,
 				want: Location{
-					URI: "file:///path/to/basic.go",
+					URI: uri.File("/path/to/basic.go"),
 					Range: Range{
 						Start: Position{
 							Line:      25,
@@ -356,7 +357,7 @@ func TestLocation(t *testing.T) {
 				name:  "Invalid",
 				field: `{"uri":"file:///path/to/basic.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}}`,
 				want: Location{
-					URI: "file:///path/to/basic.go",
+					URI: uri.File("/path/to/basic.go"),
 					Range: Range{
 						Start: Position{
 							Line:      25,
@@ -445,7 +446,7 @@ func TestLocationLink(t *testing.T) {
 			{
 				name: "ValidNilOriginSelectionRange",
 				field: LocationLink{
-					TargetURI: "file:///path/to/test.go",
+					TargetURI: string(uri.File("/path/to/test.go")),
 					TargetRange: Range{
 						Start: Position{
 							Line:      25,
@@ -483,7 +484,7 @@ func TestLocationLink(t *testing.T) {
 							Character: 3,
 						},
 					},
-					TargetURI: "file:///path/to/test.go",
+					TargetURI: string(uri.File("/path/to/test.go")),
 					TargetRange: Range{
 						Start: Position{
 							Line:      25,
@@ -552,7 +553,7 @@ func TestLocationLink(t *testing.T) {
 							Character: 3,
 						},
 					},
-					TargetURI: "file:///path/to/test.go",
+					TargetURI: string(uri.File("/path/to/test.go")),
 					TargetRange: Range{
 						Start: Position{
 							Line:      25,
@@ -580,7 +581,7 @@ func TestLocationLink(t *testing.T) {
 				name:  "ValidNilOriginSelectionRange",
 				field: `{"targetUri":"file:///path/to/test.go","targetRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"targetSelectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`,
 				want: LocationLink{
-					TargetURI: "file:///path/to/test.go",
+					TargetURI: string(uri.File("/path/to/test.go")),
 					TargetRange: Range{
 						Start: Position{
 							Line:      25,
@@ -618,7 +619,7 @@ func TestLocationLink(t *testing.T) {
 							Character: 3,
 						},
 					},
-					TargetURI: "file:///path/to/test.go",
+					TargetURI: string(uri.File("/path/to/test.go")),
 					TargetRange: Range{
 						Start: Position{
 							Line:      25,
@@ -695,7 +696,7 @@ func TestDiagnostic(t *testing.T) {
 					RelatedInformation: []DiagnosticRelatedInformation{
 						{
 							Location: Location{
-								URI: "file:///path/to/basic.go",
+								URI: uri.File("/path/to/basic.go"),
 								Range: Range{
 									Start: Position{
 										Line:      25,
@@ -734,7 +735,7 @@ func TestDiagnostic(t *testing.T) {
 					RelatedInformation: []DiagnosticRelatedInformation{
 						{
 							Location: Location{
-								URI: "file:///path/to/basic.go",
+								URI: uri.File("/path/to/basic.go"),
 								Range: Range{
 									Start: Position{
 										Line:      25,
@@ -773,7 +774,7 @@ func TestDiagnostic(t *testing.T) {
 					RelatedInformation: []DiagnosticRelatedInformation{
 						{
 							Location: Location{
-								URI: "file:///path/to/basic.go",
+								URI: uri.File("/path/to/basic.go"),
 								Range: Range{
 									Start: Position{
 										Line:      25,
@@ -854,7 +855,7 @@ func TestDiagnostic(t *testing.T) {
 					RelatedInformation: []DiagnosticRelatedInformation{
 						{
 							Location: Location{
-								URI: "file:///path/to/basic.go",
+								URI: uri.File("/path/to/basic.go"),
 								Range: Range{
 									Start: Position{
 										Line:      25,
@@ -924,7 +925,7 @@ func TestDiagnostic(t *testing.T) {
 					Message:  "foo bar",
 					RelatedInformation: []DiagnosticRelatedInformation{
 						{
-							Location: Location{URI: "file:///path/to/basic.go", Range: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
+							Location: Location{URI: uri.File("/path/to/basic.go"), Range: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
 							Message:  "basic_gen.go",
 						},
 					},
@@ -952,7 +953,7 @@ func TestDiagnostic(t *testing.T) {
 					RelatedInformation: []DiagnosticRelatedInformation{
 						{
 							Location: Location{
-								URI: "file:///path/to/basic.go",
+								URI: uri.File("/path/to/basic.go"),
 								Range: Range{
 									Start: Position{
 										Line:      25,
@@ -991,7 +992,7 @@ func TestDiagnostic(t *testing.T) {
 					RelatedInformation: []DiagnosticRelatedInformation{
 						{
 							Location: Location{
-								URI: "file:///path/to/basic.go",
+								URI: uri.File("/path/to/basic.go"),
 								Range: Range{
 									Start: Position{
 										Line:      25,
@@ -1072,7 +1073,7 @@ func TestDiagnostic(t *testing.T) {
 					RelatedInformation: []DiagnosticRelatedInformation{
 						{
 							Location: Location{
-								URI: "file:///path/to/basic.go",
+								URI: uri.File("/path/to/basic.go"),
 								Range: Range{
 									Start: Position{
 										Line:      25,
@@ -1128,7 +1129,7 @@ func TestDiagnosticRelatedInformation(t *testing.T) {
 				name: "Valid",
 				field: DiagnosticRelatedInformation{
 					Location: Location{
-						URI: "file:///path/to/basic.go",
+						URI: uri.File("/path/to/basic.go"),
 						Range: Range{
 							Start: Position{
 								Line:      25,
@@ -1150,7 +1151,7 @@ func TestDiagnosticRelatedInformation(t *testing.T) {
 				name: "Invalid",
 				field: DiagnosticRelatedInformation{
 					Location: Location{
-						URI: "file:///path/to/basic.go",
+						URI: uri.File("/path/to/basic.go"),
 						Range: Range{
 							Start: Position{
 								Line:      25,
@@ -2605,8 +2606,8 @@ func TestWorkspaceEdit(t *testing.T) {
 			{
 				name: "Valid",
 				field: WorkspaceEdit{
-					Changes: map[DocumentURI][]TextEdit{
-						"file:///path/to/basic.go": {
+					Changes: map[uri.URI][]TextEdit{
+						uri.File("/path/to/basic.go"): {
 							{
 								Range: Range{
 									Start: Position{
@@ -2626,7 +2627,7 @@ func TestWorkspaceEdit(t *testing.T) {
 						{
 							TextDocument: VersionedTextDocumentIdentifier{
 								TextDocumentIdentifier: TextDocumentIdentifier{
-									URI: "file:///path/to/basic.go",
+									URI: uri.File("/path/to/basic.go"),
 								},
 								Version: Uint64Ptr(10),
 							},
@@ -2659,7 +2660,7 @@ func TestWorkspaceEdit(t *testing.T) {
 						{
 							TextDocument: VersionedTextDocumentIdentifier{
 								TextDocumentIdentifier: TextDocumentIdentifier{
-									URI: "file:///path/to/basic.go",
+									URI: uri.File("/path/to/basic.go"),
 								},
 								Version: Uint64Ptr(10),
 							},
@@ -2688,8 +2689,8 @@ func TestWorkspaceEdit(t *testing.T) {
 			{
 				name: "ValidNilDocumentChanges",
 				field: WorkspaceEdit{
-					Changes: map[DocumentURI][]TextEdit{
-						"file:///path/to/basic.go": {
+					Changes: map[uri.URI][]TextEdit{
+						uri.File("/path/to/basic.go"): {
 							{
 								Range: Range{
 									Start: Position{
@@ -2713,8 +2714,8 @@ func TestWorkspaceEdit(t *testing.T) {
 			{
 				name: "Invalid",
 				field: WorkspaceEdit{
-					Changes: map[DocumentURI][]TextEdit{
-						"file:///path/to/basic.go": {
+					Changes: map[uri.URI][]TextEdit{
+						uri.File("/path/to/basic.go"): {
 							{
 								Range: Range{
 									Start: Position{
@@ -2734,7 +2735,7 @@ func TestWorkspaceEdit(t *testing.T) {
 						{
 							TextDocument: VersionedTextDocumentIdentifier{
 								TextDocumentIdentifier: TextDocumentIdentifier{
-									URI: "file:///path/to/basic.go",
+									URI: uri.File("/path/to/basic.go"),
 								},
 								Version: Uint64Ptr(10),
 							},
@@ -2794,8 +2795,8 @@ func TestWorkspaceEdit(t *testing.T) {
 				name:  "Valid",
 				field: `{"changes":{"file:///path/to/basic.go":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]},"documentChanges":[{"textDocument":{"uri":"file:///path/to/basic.go","version":10},"edits":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}]}`,
 				want: WorkspaceEdit{
-					Changes: map[DocumentURI][]TextEdit{
-						"file:///path/to/basic.go": {
+					Changes: map[uri.URI][]TextEdit{
+						uri.File("/path/to/basic.go"): {
 							{
 								Range: Range{
 									Start: Position{
@@ -2815,7 +2816,7 @@ func TestWorkspaceEdit(t *testing.T) {
 						{
 							TextDocument: VersionedTextDocumentIdentifier{
 								TextDocumentIdentifier: TextDocumentIdentifier{
-									URI: "file:///path/to/basic.go",
+									URI: uri.File("/path/to/basic.go"),
 								},
 								Version: Uint64Ptr(10),
 							},
@@ -2848,7 +2849,7 @@ func TestWorkspaceEdit(t *testing.T) {
 						{
 							TextDocument: VersionedTextDocumentIdentifier{
 								TextDocumentIdentifier: TextDocumentIdentifier{
-									URI: "file:///path/to/basic.go",
+									URI: uri.File("/path/to/basic.go"),
 								},
 								Version: Uint64Ptr(10),
 							},
@@ -2877,8 +2878,8 @@ func TestWorkspaceEdit(t *testing.T) {
 				name:  "ValidNilDocumentChanges",
 				field: `{"changes":{"file:///path/to/basic.go":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}}`,
 				want: WorkspaceEdit{
-					Changes: map[DocumentURI][]TextEdit{
-						"file:///path/to/basic.go": {
+					Changes: map[uri.URI][]TextEdit{
+						uri.File("/path/to/basic.go"): {
 							{
 								Range: Range{
 									Start: Position{
@@ -2902,8 +2903,8 @@ func TestWorkspaceEdit(t *testing.T) {
 				name:  "Invalid",
 				field: `{"changes":{"file:///path/to/basic.go":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]},"documentChanges":[{"textDocument":{"uri":"file:///path/to/basic.go","version":10},"edits":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}]}`,
 				want: WorkspaceEdit{
-					Changes: map[DocumentURI][]TextEdit{
-						"file:///path/to/basic.go": {
+					Changes: map[uri.URI][]TextEdit{
+						uri.File("/path/to/basic.go"): {
 							{
 								Range: Range{
 									Start: Position{
@@ -2984,7 +2985,7 @@ func TestTextDocumentIdentifier(t *testing.T) {
 			{
 				name: "Valid",
 				field: TextDocumentIdentifier{
-					URI: "file:///path/to/basic.go",
+					URI: uri.File("/path/to/basic.go"),
 				},
 				want:           `{"uri":"file:///path/to/basic.go"}`,
 				wantMarshalErr: false,
@@ -2993,7 +2994,7 @@ func TestTextDocumentIdentifier(t *testing.T) {
 			{
 				name: "Invalid",
 				field: TextDocumentIdentifier{
-					URI: "file:///path/to/basic.go",
+					URI: uri.File("/path/to/basic.go"),
 				},
 				want:           `{"uri":"file:///path/to/unknown.go"}`,
 				wantMarshalErr: false,
@@ -3040,7 +3041,7 @@ func TestTextDocumentIdentifier(t *testing.T) {
 				name:  "Valid",
 				field: `{"uri":"file:///path/to/basic.go"}`,
 				want: TextDocumentIdentifier{
-					URI: "file:///path/to/basic.go",
+					URI: uri.File("/path/to/basic.go"),
 				},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -3049,7 +3050,7 @@ func TestTextDocumentIdentifier(t *testing.T) {
 				name:  "Invalid",
 				field: `{"uri":"file:///path/to/basic.go"}`,
 				want: TextDocumentIdentifier{
-					URI: "file:///path/to/unknown.go",
+					URI: uri.File("file:///path/to/unknown.go"),
 				},
 				wantUnmarshalErr: false,
 				wantErr:          true,
@@ -3090,7 +3091,7 @@ func TestTextDocumentItem(t *testing.T) {
 			{
 				name: "Valid",
 				field: TextDocumentItem{
-					URI:        "file:///path/to/basic.go",
+					URI:        uri.File("/path/to/basic.go"),
 					LanguageID: GoLanguage,
 					Version:    float64(10),
 					Text:       "Go Language",
@@ -3102,7 +3103,7 @@ func TestTextDocumentItem(t *testing.T) {
 			{
 				name: "Invalid",
 				field: TextDocumentItem{
-					URI:        "file:///path/to/basic.go",
+					URI:        uri.File("/path/to/basic.go"),
 					LanguageID: GoLanguage,
 					Version:    float64(10),
 					Text:       "Go Language",
@@ -3145,7 +3146,7 @@ func TestTextDocumentItem(t *testing.T) {
 				name:  "Valid",
 				field: `{"uri":"file:///path/to/basic.go","languageId":"go","version":10,"text":"Go Language"}`,
 				want: TextDocumentItem{
-					URI:        "file:///path/to/basic.go",
+					URI:        uri.File("/path/to/basic.go"),
 					LanguageID: GoLanguage,
 					Version:    float64(10),
 					Text:       "Go Language",
@@ -3157,7 +3158,7 @@ func TestTextDocumentItem(t *testing.T) {
 				name:  "Valid",
 				field: `{"uri":"file:///path/to/basic.go","languageId":"go","version":10,"text":"Go Language"}`,
 				want: TextDocumentItem{
-					URI:        "file:///path/to/basic_gen.go",
+					URI:        uri.File("/path/to/basic_gen.go"),
 					LanguageID: CppLanguage,
 					Version:    float64(10),
 					Text:       "C++ Language",
@@ -3202,7 +3203,7 @@ func TestVersionedTextDocumentIdentifier(t *testing.T) {
 				name: "Valid",
 				field: VersionedTextDocumentIdentifier{
 					TextDocumentIdentifier: TextDocumentIdentifier{
-						URI: "file:///path/to/basic.go",
+						URI: uri.File("/path/to/basic.go"),
 					},
 					Version: Uint64Ptr(10),
 				},
@@ -3214,7 +3215,7 @@ func TestVersionedTextDocumentIdentifier(t *testing.T) {
 				name: "ValidNullVersion",
 				field: VersionedTextDocumentIdentifier{
 					TextDocumentIdentifier: TextDocumentIdentifier{
-						URI: "file:///path/to/basic.go",
+						URI: uri.File("/path/to/basic.go"),
 					},
 				},
 				want:           `{"uri":"file:///path/to/basic.go","version":null}`,
@@ -3225,7 +3226,7 @@ func TestVersionedTextDocumentIdentifier(t *testing.T) {
 				name: "Invalid",
 				field: VersionedTextDocumentIdentifier{
 					TextDocumentIdentifier: TextDocumentIdentifier{
-						URI: "file:///path/to/basic.go",
+						URI: uri.File("/path/to/basic.go"),
 					},
 					Version: Uint64Ptr(10),
 				},
@@ -3268,7 +3269,7 @@ func TestVersionedTextDocumentIdentifier(t *testing.T) {
 				field: `{"uri":"file:///path/to/basic.go","version":10}`,
 				want: VersionedTextDocumentIdentifier{
 					TextDocumentIdentifier: TextDocumentIdentifier{
-						URI: "file:///path/to/basic.go",
+						URI: uri.File("/path/to/basic.go"),
 					},
 					Version: Uint64Ptr(10),
 				},
@@ -3280,7 +3281,7 @@ func TestVersionedTextDocumentIdentifier(t *testing.T) {
 				field: `{"uri":"file:///path/to/basic.go","version":null}`,
 				want: VersionedTextDocumentIdentifier{
 					TextDocumentIdentifier: TextDocumentIdentifier{
-						URI: "file:///path/to/basic.go",
+						URI: uri.File("/path/to/basic.go"),
 					},
 				},
 				wantUnmarshalErr: false,
@@ -3291,7 +3292,7 @@ func TestVersionedTextDocumentIdentifier(t *testing.T) {
 				field: `{"uri":"file:///path/to/basic.go","version":10}`,
 				want: VersionedTextDocumentIdentifier{
 					TextDocumentIdentifier: TextDocumentIdentifier{
-						URI: "file:///path/to/basic_gen.go",
+						URI: uri.File("file:///path/to/basic_gen.go"),
 					},
 					Version: Uint64Ptr(50),
 				},
@@ -3335,7 +3336,7 @@ func TestTextDocumentPositionParams(t *testing.T) {
 				name: "Valid",
 				field: TextDocumentPositionParams{
 					TextDocument: TextDocumentIdentifier{
-						URI: "file:///path/to/basic.go",
+						URI: uri.File("/path/to/basic.go"),
 					},
 					Position: Position{
 						Line:      25,
@@ -3350,7 +3351,7 @@ func TestTextDocumentPositionParams(t *testing.T) {
 				name: "Invalid",
 				field: TextDocumentPositionParams{
 					TextDocument: TextDocumentIdentifier{
-						URI: "file:///path/to/basic.go",
+						URI: uri.File("/path/to/basic.go"),
 					},
 					Position: Position{
 						Line:      25,
@@ -3396,7 +3397,7 @@ func TestTextDocumentPositionParams(t *testing.T) {
 				field: `{"textDocument":{"uri":"file:///path/to/basic.go"},"position":{"line":25,"character":1}}`,
 				want: TextDocumentPositionParams{
 					TextDocument: TextDocumentIdentifier{
-						URI: "file:///path/to/basic.go",
+						URI: uri.File("/path/to/basic.go"),
 					},
 					Position: Position{
 						Line:      25,
@@ -3411,7 +3412,7 @@ func TestTextDocumentPositionParams(t *testing.T) {
 				field: `{"textDocument":{"uri":"file:///path/to/basic.go"},"position":{"line":25,"character":1}}`,
 				want: TextDocumentPositionParams{
 					TextDocument: TextDocumentIdentifier{
-						URI: "file:///path/to/basic_gen.go",
+						URI: uri.File("/path/to/basic_gen.go"),
 					},
 					Position: Position{
 						Line:      2,
