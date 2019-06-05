@@ -6,6 +6,8 @@ package protocol
 
 import (
 	"strconv"
+
+	"github.com/go-language-server/uri"
 )
 
 // WorkspaceFolder response of Workspace folders request.
@@ -69,7 +71,7 @@ type FileEvent struct {
 	Type FileChangeType `json:"type"`
 
 	// URI is the file's URI.
-	URI DocumentURI `json:"uri"`
+	URI uri.URI `json:"uri"`
 }
 
 // FileChangeType is the file event type.

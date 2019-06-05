@@ -6,6 +6,8 @@ package protocol
 
 import (
 	"strconv"
+
+	"github.com/go-language-server/uri"
 )
 
 // CompletionParams params of Completion Request.
@@ -810,7 +812,7 @@ type DocumentLink struct {
 	Range *Range `json:"range,omitempty"`
 
 	// Target is the uri this link points to. If missing a resolve request is sent later.
-	Target DocumentURI `json:"target,omitempty"`
+	Target uri.URI `json:"target,omitempty"`
 
 	// Data is a data entry field that is preserved on a document link between a
 	// DocumentLinkRequest and a DocumentLinkResolveRequest.

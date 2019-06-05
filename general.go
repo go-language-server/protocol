@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/go-language-server/jsonrpc2"
+	"github.com/go-language-server/uri"
 )
 
 // CancelParams params of cancelRequest.
@@ -34,7 +35,7 @@ type InitializeParams struct {
 	// RootURI is the rootUri of the workspace. Is null if no
 	// folder is open. If both `rootPath` and `rootUri` are set
 	// `rootUri` wins.
-	RootURI DocumentURI `json:"rootUri"`
+	RootURI uri.URI `json:"rootUri"`
 
 	// InitializationOptions user provided initialization options.
 	InitializationOptions interface{} `json:"initializationOptions,omitempty"`

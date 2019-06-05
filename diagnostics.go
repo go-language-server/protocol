@@ -4,10 +4,14 @@
 
 package protocol
 
+import (
+	"github.com/go-language-server/uri"
+)
+
 // PublishDiagnosticsParams represents a params of PublishDiagnostics Notification.
 type PublishDiagnosticsParams struct {
 	// URI is the URI for which diagnostic information is reported.
-	URI DocumentURI `json:"uri"`
+	URI uri.URI `json:"uri"`
 
 	// Diagnostics an array of diagnostic information items.
 	Diagnostics []Diagnostic `json:"diagnostics"`

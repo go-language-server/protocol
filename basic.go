@@ -6,16 +6,9 @@ package protocol
 
 import (
 	"strconv"
-)
 
-// DocumentURI represents an URI of a document.
-//
-// Many of the interfaces contain fields that correspond to the URI of a document.
-// For clarity, the type of such a field is declared as a DocumentURI.
-//
-// Over the wire, it will still be transferred as a string, but this guarantees
-// that the contents of that string can be parsed as a valid URI.
-type DocumentURI string
+	"github.com/go-language-server/uri"
+)
 
 // EOL denotes represents the character offset.
 var EOL = []string{"\n", "\r\n", "\r"}
@@ -49,8 +42,8 @@ type Range struct {
 
 // Location represents a location inside a resource, such as a line inside a text file.
 type Location struct {
-	URI   DocumentURI `json:"uri"`
-	Range Range       `json:"range"`
+	URI   uri.URI `json:"uri"`
+	Range Range   `json:"range"`
 }
 
 // LocationLink represents a link between a source and a target location.
@@ -256,7 +249,7 @@ type DeleteFile struct {
 // If the client can handle versioned document edits and if documentChanges are present, the latter are preferred over changes.
 type WorkspaceEdit struct {
 	// Changes holds changes to existing resources.
-	Changes map[DocumentURI][]TextEdit `json:"changes,omitempty"`
+	Changes map[uri.URI][]TextEdit `json:"changes,omitempty"`
 
 	// DocumentChanges depending on the client capability `workspace.workspaceEdit.resourceOperations` document changes
 	// are either an array of `TextDocumentEdit`s to express changes to n different text documents
@@ -274,13 +267,13 @@ type WorkspaceEdit struct {
 // TextDocumentIdentifier indicates the using a URI. On the protocol level, URIs are passed as strings.
 type TextDocumentIdentifier struct {
 	// URI is the text document's URI.
-	URI DocumentURI `json:"uri"`
+	URI uri.URI `json:"uri"`
 }
 
 // TextDocumentItem represent an item to transfer a text document from the client to the server.
 type TextDocumentItem struct {
 	// URI is the text document's URI.
-	URI DocumentURI `json:"uri"`
+	URI uri.URI `json:"uri"`
 
 	// LanguageID is the text document's language identifier.
 	LanguageID LanguageIdentifier `json:"languageId"`

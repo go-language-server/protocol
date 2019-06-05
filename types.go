@@ -4,13 +4,17 @@
 
 package protocol
 
+import (
+	"github.com/go-language-server/uri"
+)
+
 const (
 	fileSchema = "file://"
 )
 
 // ToDocumentURI returns the new DocumentURI from s.
-func ToDocumentURI(s string) DocumentURI {
-	return DocumentURI(fileSchema + s)
+func ToDocumentURI(s string) uri.URI {
+	return uri.File(s)
 }
 
 // Uint64Ptr converts i to uint64 pointer.
