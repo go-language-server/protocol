@@ -12,6 +12,7 @@ import (
 	"testing"
 
 	"github.com/francoispqt/gojay"
+	"github.com/go-language-server/uri"
 	"github.com/google/go-cmp/cmp"
 )
 
@@ -19,11 +20,11 @@ func Test_WorkspaceFolders(t *testing.T) {
 	const want = `[{"uri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol","name":"protocol"},{"uri":"file:///Users/zchee/go/src/github.com/go-language-server/jsonrpc2","name":"jsonrpc2"}]`
 	var wantType = WorkspaceFolders{
 		{
-			URI:  string(ToDocumentURI("/Users/zchee/go/src/github.com/go-language-server/protocol")),
+			URI:  string(uri.File("/Users/zchee/go/src/github.com/go-language-server/protocol")),
 			Name: "protocol",
 		},
 		{
-			URI:  string(ToDocumentURI("/Users/zchee/go/src/github.com/go-language-server/jsonrpc2")),
+			URI:  string(uri.File("/Users/zchee/go/src/github.com/go-language-server/jsonrpc2")),
 			Name: "jsonrpc2",
 		},
 	}
@@ -109,18 +110,18 @@ func TestInitializeParams(t *testing.T) {
 	var wantType = InitializeParams{
 		ProcessID:             25556,
 		RootPath:              "~/go/src/github.com/go-language-server/protocol",
-		RootURI:               "file:///Users/zchee/go/src/github.com/go-language-server/protocol",
+		RootURI:               uri.File("/Users/zchee/go/src/github.com/go-language-server/protocol"),
 		InitializationOptions: "testdata",
 		Capabilities:          ClientCapabilities{},
 		Trace:                 "on",
 		WorkspaceFolders: []WorkspaceFolder{
 			{
 				Name: filepath.Base("/Users/zchee/go/src/github.com/go-language-server/protocol"),
-				URI:  string(ToDocumentURI("/Users/zchee/go/src/github.com/go-language-server/protocol")),
+				URI:  string(uri.File("/Users/zchee/go/src/github.com/go-language-server/protocol")),
 			},
 			{
 				Name: filepath.Base("/Users/zchee/go/src/github.com/go-language-server/jsonrpc2"),
-				URI:  string(ToDocumentURI("/Users/zchee/go/src/github.com/go-language-server/jsonrpc2")),
+				URI:  string(uri.File("/Users/zchee/go/src/github.com/go-language-server/jsonrpc2")),
 			},
 		},
 	}
@@ -146,7 +147,7 @@ func TestInitializeParams(t *testing.T) {
 				name: "ValidNilAll",
 				field: InitializeParams{
 					ProcessID:    25556,
-					RootURI:      "file:///Users/zchee/go/src/github.com/go-language-server/protocol",
+					RootURI:      uri.File("//Users/zchee/go/src/github.com/go-language-server/protocol"),
 					Capabilities: ClientCapabilities{},
 				},
 				want:           wantNil,

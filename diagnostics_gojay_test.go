@@ -11,6 +11,7 @@ import (
 	"testing"
 
 	"github.com/francoispqt/gojay"
+	"github.com/go-language-server/uri"
 	"github.com/google/go-cmp/cmp"
 )
 
@@ -28,7 +29,7 @@ func TestPublishDiagnosticsParams(t *testing.T) {
 			{
 				name: "Valid",
 				field: PublishDiagnosticsParams{
-					URI: "file:///path/to/diagnostics.go",
+					URI: uri.File("/path/to/diagnostics.go"),
 					Diagnostics: []Diagnostic{
 						{
 							Range: Range{
@@ -48,7 +49,7 @@ func TestPublishDiagnosticsParams(t *testing.T) {
 							RelatedInformation: []DiagnosticRelatedInformation{
 								{
 									Location: Location{
-										URI: "file:///path/to/diagnostics.go",
+										URI: uri.File("/path/to/diagnostics.go"),
 										Range: Range{
 											Start: Position{
 												Line:      25,
@@ -73,7 +74,7 @@ func TestPublishDiagnosticsParams(t *testing.T) {
 			{
 				name: "Invalid",
 				field: PublishDiagnosticsParams{
-					URI: "file:///path/to/diagnostics.go",
+					URI: uri.File("/path/to/diagnostics.go"),
 					Diagnostics: []Diagnostic{
 						{
 							Range: Range{
@@ -93,7 +94,7 @@ func TestPublishDiagnosticsParams(t *testing.T) {
 							RelatedInformation: []DiagnosticRelatedInformation{
 								{
 									Location: Location{
-										URI: "file:///path/to/diagnostics.go",
+										URI: uri.File("/path/to/diagnostics.go"),
 										Range: Range{
 											Start: Position{
 												Line:      25,
@@ -149,7 +150,7 @@ func TestPublishDiagnosticsParams(t *testing.T) {
 				name:  "Valid",
 				field: `{"uri":"file:///path/to/diagnostics.go","diagnostics":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/diagnostics.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"diagnostics.go"}]}]}`,
 				want: PublishDiagnosticsParams{
-					URI: "file:///path/to/diagnostics.go",
+					URI: uri.File("/path/to/diagnostics.go"),
 					Diagnostics: []Diagnostic{
 						{
 							Range: Range{
@@ -169,7 +170,7 @@ func TestPublishDiagnosticsParams(t *testing.T) {
 							RelatedInformation: []DiagnosticRelatedInformation{
 								{
 									Location: Location{
-										URI: "file:///path/to/diagnostics.go",
+										URI: uri.File("/path/to/diagnostics.go"),
 										Range: Range{
 											Start: Position{
 												Line:      25,
@@ -194,7 +195,7 @@ func TestPublishDiagnosticsParams(t *testing.T) {
 				name:  "Invalid",
 				field: `{"uri":"file:///path/to/diagnostics.go","diagnostics":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/diagnostics.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"diagnostics.go"}]}]}`,
 				want: PublishDiagnosticsParams{
-					URI: "file:///path/to/diagnostics_gen.go",
+					URI: uri.File("file:///path/to/diagnostics_gen.go"),
 					Diagnostics: []Diagnostic{
 						{
 							Range: Range{
@@ -214,7 +215,7 @@ func TestPublishDiagnosticsParams(t *testing.T) {
 							RelatedInformation: []DiagnosticRelatedInformation{
 								{
 									Location: Location{
-										URI: "file:///path/to/diagnostics_gen.go",
+										URI: uri.File("file:///path/to/diagnostics_gen.go"),
 										Range: Range{
 											Start: Position{
 												Line:      2,

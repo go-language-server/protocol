@@ -8,6 +8,7 @@ package protocol
 
 import (
 	"github.com/francoispqt/gojay"
+	"github.com/go-language-server/uri"
 )
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
@@ -608,7 +609,7 @@ func (v *DeleteFile) Reset() {
 }
 
 // TextEditsMap represents a map of WorkspaceEdit.Changes.
-type TextEditsMap map[DocumentURI][]TextEdit
+type TextEditsMap map[uri.URI][]TextEdit
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v TextEditsMap) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
@@ -617,7 +618,7 @@ func (v TextEditsMap) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if err != nil {
 		return err
 	}
-	v[DocumentURI(k)] = TextEdits(edits)
+	v[uri.URI(k)] = TextEdits(edits)
 	return nil
 }
 
@@ -668,7 +669,7 @@ func (v *WorkspaceEdit) UnmarshalJSONObject(dec *gojay.Decoder, k string) error 
 	switch k {
 	case keyChanges:
 		if v.Changes == nil {
-			v.Changes = make(map[DocumentURI][]TextEdit)
+			v.Changes = make(map[uri.URI][]TextEdit)
 		}
 		return dec.Object(TextEditsMap(v.Changes))
 	case keyDocumentChanges:
@@ -727,7 +728,7 @@ func (v *TextDocumentIdentifier) IsNil() bool { return v == nil }
 
 // Reset reset fields.
 func (v *TextDocumentIdentifier) Reset() {
-	v.URI = DocumentURI("")
+	v.URI = uri.URI("")
 }
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
@@ -761,7 +762,7 @@ func (v *TextDocumentItem) IsNil() bool { return v == nil }
 
 // Reset reset fields.
 func (v *TextDocumentItem) Reset() {
-	v.URI = DocumentURI("")
+	v.URI = uri.URI("")
 	v.LanguageID = LanguageIdentifier("")
 	v.Version = 0.0
 	v.Text = ""
@@ -793,7 +794,7 @@ func (v *VersionedTextDocumentIdentifier) IsNil() bool { return v == nil }
 
 // Reset reset fields.
 func (v *VersionedTextDocumentIdentifier) Reset() {
-	v.URI = DocumentURI("")
+	v.URI = uri.URI("")
 	v.Version = nil
 }
 

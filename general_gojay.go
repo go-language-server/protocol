@@ -1566,7 +1566,7 @@ func (v *DocumentOnTypeFormattingOptions) UnmarshalJSONObject(dec *gojay.Decoder
 func (v *DocumentOnTypeFormattingOptions) NKeys() int { return 2 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
-func (v *DocumentOnTypeFormattingOptions) MarshalJSONObject(enc *gojay.Encoder) {
+func (v DocumentOnTypeFormattingOptions) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey(keyFirstTriggerCharacter, v.FirstTriggerCharacter)
 	enc.ArrayKeyOmitEmpty(keyMoreTriggerCharacter, (*Strings)(&v.MoreTriggerCharacter))
 }
@@ -2014,7 +2014,7 @@ func (v *DocumentLinkRegistrationOptions) IsNil() bool { return v == nil }
 
 // Reset reset fields
 func (v *DocumentLinkRegistrationOptions) Reset() {
-	DocumentSelectorPool.Put(&v.DocumentSelector)
+	DocumentSelectorPool.Put(v.DocumentSelector)
 	v.DocumentSelector = nil
 	v.ResolveProvider = false
 }

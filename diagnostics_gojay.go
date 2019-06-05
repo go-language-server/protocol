@@ -8,6 +8,7 @@ package protocol
 
 import (
 	"github.com/francoispqt/gojay"
+	"github.com/go-language-server/uri"
 )
 
 // Diagnostics represents a slice of Diagnostics.
@@ -63,7 +64,7 @@ func (v *PublishDiagnosticsParams) IsNil() bool { return v == nil }
 
 // Reset reset fields.
 func (v *PublishDiagnosticsParams) Reset() {
-	v.URI = DocumentURI("")
+	v.URI = uri.URI("")
 	for i := range v.Diagnostics {
 		v.Diagnostics[i].Reset()
 		DiagnosticPool.Put(&v.Diagnostics[i])
