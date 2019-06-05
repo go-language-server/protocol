@@ -8,10 +8,6 @@ import (
 	"github.com/go-language-server/uri"
 )
 
-const (
-	fileSchema = "file://"
-)
-
 // ToDocumentURI returns the new DocumentURI from s.
 func ToDocumentURI(s string) uri.URI {
 	return uri.File(s)
