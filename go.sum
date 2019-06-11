@@ -7,8 +7,8 @@ github.com/francoispqt/gojay v1.2.11 h1:cdwGjHLNUp8mIp1k80HX9yumoh5/PeonPKveG0kn
 github.com/francoispqt/gojay v1.2.11/go.mod h1:H8Wgri1Asi1VevY3ySdpIK5+KCpqzToVswNq8g2xZj4=
 github.com/go-language-server/jsonrpc2 v0.1.4-0.20190528003553-92c50cd35914 h1:e6sZ23HF+lVWOSMYnUV3mjfiHzwYHcKNr3OarU4v8U4=
 github.com/go-language-server/jsonrpc2 v0.1.4-0.20190528003553-92c50cd35914/go.mod h1:p1p+fzJy6uFAsuWZOzb+IcieI4OfS/WvwjaPOPnEgFc=
-github.com/go-language-server/uri v0.1.0 h1:wpJ/vkRXHYiXvpnChgPnycb0D1rrT+PUGdHl7Es9e64=
-github.com/go-language-server/uri v0.1.0/go.mod h1:ysWm3wt9ZSV14TVYJlqcyI6ulGx/SEQ0bfdxQm94xKY=
+github.com/go-language-server/uri v0.1.1 h1:vfNhN1cOR3qYj0FLruIqPnJ7OIf1jW/8dlMDzkf/IDo=
+github.com/go-language-server/uri v0.1.1/go.mod h1:ysWm3wt9ZSV14TVYJlqcyI6ulGx/SEQ0bfdxQm94xKY=
 github.com/google/go-cmp v0.3.0 h1:crn/baboCvb5fXaQ0IJ1SGTsTVrWpDsCWC8EGETZijY=
 github.com/google/go-cmp v0.3.0/go.mod h1:8QqcDgzrUqlUb/G2PQTWiueGozuR1884gddMywk6iLU=
 github.com/pkg/errors v0.8.2-0.20190227000051-27936f6d90f9 h1:PCj9X21C4pet4sEcElTfAi6LSl5ShkjE8doieLc+cbU=
