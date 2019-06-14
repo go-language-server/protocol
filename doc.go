@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package protocol implements the Language Server Protocol for Go.
+// Package protocol implements Language Server Protocol specification in Go.
 //
 // This package contains the structs that map directly to the wire format
 // of the Language Server Protocol.
