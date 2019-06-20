@@ -47,7 +47,7 @@ type ServerInterface interface {
 	PrepareRename(ctx context.Context, params *TextDocumentPositionParams) (result *Range, err error)
 	RangeFormatting(ctx context.Context, params *DocumentRangeFormattingParams) (result []TextEdit, err error)
 	References(ctx context.Context, params *ReferenceParams) (result []Location, err error)
-	Rename(ctx context.Context, params *RenameParams) (result []WorkspaceEdit, err error)
+	Rename(ctx context.Context, params *RenameParams) (result *WorkspaceEdit, err error)
 	SignatureHelp(ctx context.Context, params *TextDocumentPositionParams) (result *SignatureHelp, err error)
 	Symbols(ctx context.Context, params *WorkspaceSymbolParams) (result []SymbolInformation, err error)
 	TypeDefinition(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error)
@@ -548,7 +548,7 @@ func (s *Server) References(ctx context.Context, params *ReferenceParams) (resul
 }
 
 // Rename sends the request from the client to the server to perform a workspace-wide rename of a symbol.
-func (s *Server) Rename(ctx context.Context, params *RenameParams) (result []WorkspaceEdit, err error) {
+func (s *Server) Rename(ctx context.Context, params *RenameParams) (result *WorkspaceEdit, err error) {
 	err = s.Conn.Call(ctx, MethodTextDocumentRename, params, &result)
 
 	return result, err
