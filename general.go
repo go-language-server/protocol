@@ -781,7 +781,7 @@ type ServerCapabilities struct {
 	// RenameProvider is the server provides rename support. RenameOptions may only be
 	// specified if the client states that it supports
 	// `prepareSupport` in its initial `initialize` request.
-	RenameProvider *RenameOptions `json:"renameProvider,omitempty"`
+	RenameProvider interface{} `json:"renameProvider,omitempty"` // boolean | RenameOptions
 
 	// The server provides document link support.
 	DocumentLinkProvider *DocumentLinkOptions `json:"documentLinkProvider,omitempty"`

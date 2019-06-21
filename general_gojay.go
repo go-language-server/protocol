@@ -1896,7 +1896,7 @@ func (v *ServerCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) e
 		}
 		return err
 	case keyRenameProvider:
-		return dec.Object(v.RenameProvider)
+		return dec.Interface(&v.RenameProvider)
 	case keyDocumentLinkProvider:
 		var value = DocumentLinkOptionsPool.Get().(*DocumentLinkOptions)
 		err := dec.Object(value)
@@ -1949,7 +1949,7 @@ func (v *ServerCapabilities) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKeyOmitEmpty(keyDocumentFormattingProvider, v.DocumentFormattingProvider)
 	enc.BoolKeyOmitEmpty(keyDocumentRangeFormattingProvider, v.DocumentRangeFormattingProvider)
 	enc.ObjectKeyOmitEmpty(keyDocumentOnTypeFormattingProvider, v.DocumentOnTypeFormattingProvider)
-	enc.ObjectKeyOmitEmpty(keyRenameProvider, v.RenameProvider)
+	enc.AddInterfaceKeyOmitEmpty(keyRenameProvider, v.RenameProvider)
 	enc.ObjectKeyOmitEmpty(keyDocumentLinkProvider, v.DocumentLinkProvider)
 	enc.AddInterfaceKeyOmitEmpty(keyColorProvider, v.ColorProvider)
 	enc.AddInterfaceKeyOmitEmpty(keyFoldingRangeProvider, v.FoldingRangeProvider)
