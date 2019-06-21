@@ -4,9 +4,7 @@
 
 package protocol
 
-import (
-	"strconv"
-)
+import "strconv"
 
 // ShowMessageParams params of ShowMessage Notification.
 type ShowMessageParams struct {

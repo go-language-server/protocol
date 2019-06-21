@@ -17,7 +17,7 @@ import (
 
 func Test_WorkspaceFolders(t *testing.T) {
 	const want = `[{"uri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol","name":"protocol"},{"uri":"file:///Users/zchee/go/src/github.com/go-language-server/jsonrpc2","name":"jsonrpc2"}]`
-	var wantType = WorkspaceFolders{
+	wantType := WorkspaceFolders{
 		{
 			URI:  string(ToDocumentURI("/Users/zchee/go/src/github.com/go-language-server/protocol")),
 			Name: "protocol",
@@ -106,7 +106,7 @@ func Test_WorkspaceFolders(t *testing.T) {
 func TestInitializeParams(t *testing.T) {
 	const want = `{"processId":25556,"rootPath":"~/go/src/github.com/go-language-server/protocol","rootUri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol","initializationOptions":"testdata","capabilities":{},"trace":"on","workspaceFolders":[{"uri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol","name":"protocol"},{"uri":"file:///Users/zchee/go/src/github.com/go-language-server/jsonrpc2","name":"jsonrpc2"}]}`
 	const wantNil = `{"processId":25556,"rootUri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol","capabilities":{}}`
-	var wantType = InitializeParams{
+	wantType := InitializeParams{
 		ProcessID:             25556,
 		RootPath:              "~/go/src/github.com/go-language-server/protocol",
 		RootURI:               "file:///Users/zchee/go/src/github.com/go-language-server/protocol",
@@ -214,7 +214,7 @@ func TestInitializeParams(t *testing.T) {
 
 func TestWorkspaceClientCapabilities(t *testing.T) {
 	const want = `{"applyEdit":true,"workspaceEdit":{"documentChanges":true,"failureHandling":"FailureHandling","resourceOperations":["ResourceOperations"]},"didChangeConfiguration":{"dynamicRegistration":true},"didChangeWatchedFiles":{"dynamicRegistration":true},"symbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]}},"executeCommand":{"dynamicRegistration":true},"workspaceFolders":true,"configuration":true}`
-	var wantType = WorkspaceClientCapabilities{
+	wantType := WorkspaceClientCapabilities{
 		ApplyEdit: true,
 		WorkspaceEdit: &WorkspaceClientCapabilitiesWorkspaceEdit{
 			DocumentChanges:    true,
@@ -325,7 +325,7 @@ func TestWorkspaceClientCapabilities(t *testing.T) {
 
 func TestTextDocumentClientCapabilitiesSynchronization(t *testing.T) {
 	const want = `{"didSave":true,"dynamicRegistration":true,"willSave":true,"willSaveWaitUntil":true}`
-	var wantType = TextDocumentClientCapabilitiesSynchronization{
+	wantType := TextDocumentClientCapabilitiesSynchronization{
 		DidSave:             true,
 		DynamicRegistration: true,
 		WillSave:            true,
@@ -2468,7 +2468,7 @@ func TestTextDocumentClientCapabilitiesFoldingRange(t *testing.T) {
 
 func TestTextDocumentClientCapabilities(t *testing.T) {
 	const want = `{"synchronization":{"didSave":true,"dynamicRegistration":true,"willSave":true,"willSaveWaitUntil":true},"completion":{"dynamicRegistration":true,"completionItem":{"snippetSupport":true,"commitCharactersSupport":true,"documentationFormat":["plaintext","markdown"],"deprecatedSupport":true,"preselectSupport":true},"completionItemKind":1,"contextSupport":true},"hover":{"dynamicRegistration":true,"contentFormat":["plaintext","markdown"]},"signatureHelp":{"dynamicRegistration":true,"signatureInformation":{"documentationFormat":["plaintext","markdown"]}},"references":{"dynamicRegistration":true},"documentHighlight":{"dynamicRegistration":true},"documentSymbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]},"hierarchicalDocumentSymbolSupport":true},"formatting":{"dynamicRegistration":true},"rangeFormatting":{"dynamicRegistration":true},"onTypeFormatting":{"dynamicRegistration":true},"declaration":{"dynamicRegistration":true,"linkSupport":true},"definition":{"dynamicRegistration":true,"linkSupport":true},"typeDefinition":{"dynamicRegistration":true,"linkSupport":true},"implementation":{"dynamicRegistration":true,"linkSupport":true},"codeAction":{"dynamicRegistration":true,"codeActionLiteralSupport":{"codeActionKind":{"valueSet":["quickfix","refactor","refactor.extract","refactor.rewrite","source","source.organizeImports"]}}},"codeLens":{"dynamicRegistration":true},"documentLink":{"dynamicRegistration":true},"colorProvider":{"dynamicRegistration":true},"rename":{"dynamicRegistration":true,"prepareSupport":true},"publishDiagnostics":{"relatedInformation":true},"foldingRange":{"dynamicRegistration":true,"rangeLimit":0.5,"lineFoldingOnly":true}}`
-	var wantType = TextDocumentClientCapabilities{
+	wantType := TextDocumentClientCapabilities{
 		Synchronization: &TextDocumentClientCapabilitiesSynchronization{
 			DidSave:             true,
 			DynamicRegistration: true,
@@ -2681,7 +2681,7 @@ func TestTextDocumentClientCapabilities(t *testing.T) {
 
 func TestClientCapabilities(t *testing.T) {
 	const want = `{"workspace":{"applyEdit":true,"workspaceEdit":{"documentChanges":true,"failureHandling":"FailureHandling","resourceOperations":["ResourceOperations"]},"didChangeConfiguration":{"dynamicRegistration":true},"didChangeWatchedFiles":{"dynamicRegistration":true},"symbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]}},"executeCommand":{"dynamicRegistration":true},"workspaceFolders":true,"configuration":true},"textDocument":{"synchronization":{"didSave":true,"dynamicRegistration":true,"willSave":true,"willSaveWaitUntil":true},"completion":{"dynamicRegistration":true,"completionItem":{"snippetSupport":true,"commitCharactersSupport":true,"documentationFormat":["plaintext","markdown"],"deprecatedSupport":true,"preselectSupport":true},"completionItemKind":1,"contextSupport":true},"hover":{"dynamicRegistration":true,"contentFormat":["plaintext","markdown"]},"signatureHelp":{"dynamicRegistration":true,"signatureInformation":{"documentationFormat":["plaintext","markdown"]}},"references":{"dynamicRegistration":true},"documentHighlight":{"dynamicRegistration":true},"documentSymbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]},"hierarchicalDocumentSymbolSupport":true},"formatting":{"dynamicRegistration":true},"rangeFormatting":{"dynamicRegistration":true},"onTypeFormatting":{"dynamicRegistration":true},"declaration":{"dynamicRegistration":true,"linkSupport":true},"definition":{"dynamicRegistration":true,"linkSupport":true},"typeDefinition":{"dynamicRegistration":true,"linkSupport":true},"implementation":{"dynamicRegistration":true,"linkSupport":true},"codeAction":{"dynamicRegistration":true,"codeActionLiteralSupport":{"codeActionKind":{"valueSet":["quickfix","refactor","refactor.extract","refactor.rewrite","source","source.organizeImports"]}}},"codeLens":{"dynamicRegistration":true},"documentLink":{"dynamicRegistration":true},"colorProvider":{"dynamicRegistration":true},"rename":{"dynamicRegistration":true,"prepareSupport":true},"publishDiagnostics":{"relatedInformation":true},"foldingRange":{"dynamicRegistration":true,"rangeLimit":0.5,"lineFoldingOnly":true}}}`
-	var wantType = ClientCapabilities{
+	wantType := ClientCapabilities{
 		Workspace: &WorkspaceClientCapabilities{
 			ApplyEdit: true,
 			WorkspaceEdit: &WorkspaceClientCapabilitiesWorkspaceEdit{

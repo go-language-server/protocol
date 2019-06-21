@@ -4,9 +4,7 @@
 
 package protocol
 
-import (
-	"github.com/go-language-server/uri"
-)
+import "github.com/go-language-server/uri"
 
 // PublishDiagnosticsParams represents a params of PublishDiagnostics Notification.
 type PublishDiagnosticsParams struct {

@@ -16,7 +16,7 @@ import (
 
 func TestShowMessageParams(t *testing.T) {
 	const want = `{"message":"error message","type":1}`
-	var wantType = ShowMessageParams{
+	wantType := ShowMessageParams{
 		Message: "error message",
 		Type:    Error,
 	}
@@ -119,7 +119,7 @@ func TestShowMessageParams(t *testing.T) {
 
 func TestShowMessageRequestParams(t *testing.T) {
 	const want = `{"actions":[{"title":"Retry"}],"message":"error message","type":1}`
-	var wantType = ShowMessageRequestParams{
+	wantType := ShowMessageRequestParams{
 		Actions: []MessageActionItem{
 			{
 				Title: "Retry",
@@ -129,7 +129,7 @@ func TestShowMessageRequestParams(t *testing.T) {
 		Type:    Error,
 	}
 	const wantUnknown = `{"actions":[{"title":"Retry"}],"message":"unknown message","type":0}`
-	var wantTypeUnkonwn = ShowMessageRequestParams{
+	wantTypeUnkonwn := ShowMessageRequestParams{
 		Actions: []MessageActionItem{
 			{
 				Title: "Retry",

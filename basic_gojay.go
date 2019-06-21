@@ -77,7 +77,7 @@ func (v *Location) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	case keyURI:
 		return dec.String((*string)(&v.URI))
 	case keyRange:
-		var value = RangePool.Get().(*Range)
+		value := RangePool.Get().(*Range)
 		err := dec.Object(value)
 		if err == nil {
 			v.Range = *value
@@ -109,7 +109,7 @@ func (v *Location) Reset() {
 func (v *LocationLink) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keyOriginSelectionRange:
-		var value = RangePool.Get().(*Range)
+		value := RangePool.Get().(*Range)
 		err := dec.Object(value)
 		if err == nil {
 			v.OriginSelectionRange = value
@@ -118,14 +118,14 @@ func (v *LocationLink) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	case keyTargetURI:
 		return dec.String(&v.TargetURI)
 	case keyTargetRange:
-		var value = RangePool.Get().(*Range)
+		value := RangePool.Get().(*Range)
 		err := dec.Object(value)
 		if err == nil {
 			v.TargetRange = *value
 		}
 		return err
 	case keyTargetSelectionRange:
-		var value = RangePool.Get().(*Range)
+		value := RangePool.Get().(*Range)
 		err := dec.Object(value)
 		if err == nil {
 			v.TargetSelectionRange = *value
@@ -164,7 +164,7 @@ func (v *LocationLink) Reset() {
 func (v *Diagnostic) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keyRange:
-		var value = RangePool.Get().(*Range)
+		value := RangePool.Get().(*Range)
 		err := dec.Object(value)
 		if err == nil {
 			v.Range = *value
@@ -179,7 +179,7 @@ func (v *Diagnostic) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	case keyMessage:
 		return dec.String(&v.Message)
 	case keyRelatedInformation:
-		var values = DiagnosticRelatedInformations{}
+		values := DiagnosticRelatedInformations{}
 		err := dec.Array(&values)
 		if err == nil && len(values) > 0 {
 			v.RelatedInformation = []DiagnosticRelatedInformation(values)
@@ -255,7 +255,7 @@ type DiagnosticRelatedInformations []DiagnosticRelatedInformation
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
 func (v *DiagnosticRelatedInformations) UnmarshalJSONArray(dec *gojay.Decoder) error {
-	var value = DiagnosticRelatedInformation{}
+	value := DiagnosticRelatedInformation{}
 	if err := dec.Object(&value); err != nil {
 		return err
 	}
@@ -312,7 +312,7 @@ func (v *Command) Reset() {
 func (v *TextEdit) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keyRange:
-		var value = RangePool.Get().(*Range)
+		value := RangePool.Get().(*Range)
 		err := dec.Object(value)
 		if err == nil {
 			v.Range = *value
@@ -348,7 +348,7 @@ type TextEdits []TextEdit
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
 func (v *TextEdits) UnmarshalJSONArray(dec *gojay.Decoder) error {
-	var value = TextEdit{}
+	value := TextEdit{}
 	if err := dec.Object(&value); err != nil {
 		return err
 	}
@@ -437,7 +437,7 @@ func (v *CreateFile) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	case keyURI:
 		return dec.String(&v.URI)
 	case keyOptions:
-		var value = CreateFileOptionsPool.Get().(*CreateFileOptions)
+		value := CreateFileOptionsPool.Get().(*CreateFileOptions)
 		err := dec.Object(value)
 		if err == nil {
 			v.Options = value
@@ -507,7 +507,7 @@ func (v *RenameFile) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	case keyNewURI:
 		return dec.String(&v.NewURI)
 	case keyOptions:
-		var value = RenameFileOptionsPool.Get().(*RenameFileOptions)
+		value := RenameFileOptionsPool.Get().(*RenameFileOptions)
 		err := dec.Object(value)
 		if err == nil {
 			v.Options = value
@@ -577,7 +577,7 @@ func (v *DeleteFile) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	case keyURI:
 		return dec.String(&v.URI)
 	case keyOptions:
-		var value = DeleteFileOptionsPool.Get().(*DeleteFileOptions)
+		value := DeleteFileOptionsPool.Get().(*DeleteFileOptions)
 		err := dec.Object(value)
 		if err == nil {
 			v.Options = value
@@ -863,7 +863,7 @@ func (v *DocumentFilter) Reset() {
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
 func (v *DocumentSelector) UnmarshalJSONArray(dec *gojay.Decoder) error {
-	var value = &DocumentFilter{}
+	value := &DocumentFilter{}
 	if err := dec.Object(value); err != nil {
 		return err
 	}

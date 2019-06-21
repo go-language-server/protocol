@@ -6,9 +6,7 @@
 
 package protocol
 
-import (
-	"sync"
-)
+import "sync"
 
 var (
 	// basic

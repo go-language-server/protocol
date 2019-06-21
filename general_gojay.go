@@ -6,9 +6,7 @@
 
 package protocol
 
-import (
-	"github.com/francoispqt/gojay"
-)
+import "github.com/francoispqt/gojay"
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
 func (v *WorkspaceFolders) UnmarshalJSONArray(dec *gojay.Decoder) error {
@@ -167,7 +165,7 @@ func (v *WorkspaceClientCapabilitiesSymbol) UnmarshalJSONObject(dec *gojay.Decod
 	case keyDynamicRegistration:
 		return dec.Bool(&v.DynamicRegistration)
 	case keySymbolKind:
-		var value = WorkspaceClientCapabilitiesSymbolKindPool.Get().(*WorkspaceClientCapabilitiesSymbolKind)
+		value := WorkspaceClientCapabilitiesSymbolKindPool.Get().(*WorkspaceClientCapabilitiesSymbolKind)
 		err := dec.Object(value)
 		if err == nil {
 			v.SymbolKind = value
@@ -1121,147 +1119,147 @@ func (v *TextDocumentClientCapabilitiesFoldingRange) Reset() {
 func (v *TextDocumentClientCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keySynchronization:
-		var value = TextDocumentClientCapabilitiesSynchronizationPool.Get().(*TextDocumentClientCapabilitiesSynchronization)
+		value := TextDocumentClientCapabilitiesSynchronizationPool.Get().(*TextDocumentClientCapabilitiesSynchronization)
 		err := dec.Object(value)
 		if err == nil {
 			v.Synchronization = value
 		}
 		return err
 	case keyCompletion:
-		var value = TextDocumentClientCapabilitiesCompletionPool.Get().(*TextDocumentClientCapabilitiesCompletion)
+		value := TextDocumentClientCapabilitiesCompletionPool.Get().(*TextDocumentClientCapabilitiesCompletion)
 		err := dec.Object(value)
 		if err == nil {
 			v.Completion = value
 		}
 		return err
 	case keyHover:
-		var value = TextDocumentClientCapabilitiesHoverPool.Get().(*TextDocumentClientCapabilitiesHover)
+		value := TextDocumentClientCapabilitiesHoverPool.Get().(*TextDocumentClientCapabilitiesHover)
 		err := dec.Object(value)
 		if err == nil {
 			v.Hover = value
 		}
 		return err
 	case keySignatureHelp:
-		var value = TextDocumentClientCapabilitiesSignatureHelpPool.Get().(*TextDocumentClientCapabilitiesSignatureHelp)
+		value := TextDocumentClientCapabilitiesSignatureHelpPool.Get().(*TextDocumentClientCapabilitiesSignatureHelp)
 		err := dec.Object(value)
 		if err == nil {
 			v.SignatureHelp = value
 		}
 		return err
 	case keyReferences:
-		var value = TextDocumentClientCapabilitiesReferencesPool.Get().(*TextDocumentClientCapabilitiesReferences)
+		value := TextDocumentClientCapabilitiesReferencesPool.Get().(*TextDocumentClientCapabilitiesReferences)
 		err := dec.Object(value)
 		if err == nil {
 			v.References = value
 		}
 		return err
 	case keyDocumentHighlight:
-		var value = TextDocumentClientCapabilitiesDocumentHighlightPool.Get().(*TextDocumentClientCapabilitiesDocumentHighlight)
+		value := TextDocumentClientCapabilitiesDocumentHighlightPool.Get().(*TextDocumentClientCapabilitiesDocumentHighlight)
 		err := dec.Object(value)
 		if err == nil {
 			v.DocumentHighlight = value
 		}
 		return err
 	case keyDocumentSymbol:
-		var value = TextDocumentClientCapabilitiesDocumentSymbolPool.Get().(*TextDocumentClientCapabilitiesDocumentSymbol)
+		value := TextDocumentClientCapabilitiesDocumentSymbolPool.Get().(*TextDocumentClientCapabilitiesDocumentSymbol)
 		err := dec.Object(value)
 		if err == nil {
 			v.DocumentSymbol = value
 		}
 		return err
 	case keyFormatting:
-		var value = TextDocumentClientCapabilitiesFormattingPool.Get().(*TextDocumentClientCapabilitiesFormatting)
+		value := TextDocumentClientCapabilitiesFormattingPool.Get().(*TextDocumentClientCapabilitiesFormatting)
 		err := dec.Object(value)
 		if err == nil {
 			v.Formatting = value
 		}
 		return err
 	case keyRangeFormatting:
-		var value = TextDocumentClientCapabilitiesRangeFormattingPool.Get().(*TextDocumentClientCapabilitiesRangeFormatting)
+		value := TextDocumentClientCapabilitiesRangeFormattingPool.Get().(*TextDocumentClientCapabilitiesRangeFormatting)
 		err := dec.Object(value)
 		if err == nil {
 			v.RangeFormatting = value
 		}
 		return err
 	case keyOnTypeFormatting:
-		var value = TextDocumentClientCapabilitiesOnTypeFormattingPool.Get().(*TextDocumentClientCapabilitiesOnTypeFormatting)
+		value := TextDocumentClientCapabilitiesOnTypeFormattingPool.Get().(*TextDocumentClientCapabilitiesOnTypeFormatting)
 		err := dec.Object(value)
 		if err == nil {
 			v.OnTypeFormatting = value
 		}
 		return err
 	case keyDeclaration:
-		var value = TextDocumentClientCapabilitiesDeclarationPool.Get().(*TextDocumentClientCapabilitiesDeclaration)
+		value := TextDocumentClientCapabilitiesDeclarationPool.Get().(*TextDocumentClientCapabilitiesDeclaration)
 		err := dec.Object(value)
 		if err == nil {
 			v.Declaration = value
 		}
 		return err
 	case keyDefinition:
-		var value = TextDocumentClientCapabilitiesDefinitionPool.Get().(*TextDocumentClientCapabilitiesDefinition)
+		value := TextDocumentClientCapabilitiesDefinitionPool.Get().(*TextDocumentClientCapabilitiesDefinition)
 		err := dec.Object(value)
 		if err == nil {
 			v.Definition = value
 		}
 		return err
 	case keyTypeDefinition:
-		var value = TextDocumentClientCapabilitiesTypeDefinitionPool.Get().(*TextDocumentClientCapabilitiesTypeDefinition)
+		value := TextDocumentClientCapabilitiesTypeDefinitionPool.Get().(*TextDocumentClientCapabilitiesTypeDefinition)
 		err := dec.Object(value)
 		if err == nil {
 			v.TypeDefinition = value
 		}
 		return err
 	case keyImplementation:
-		var value = TextDocumentClientCapabilitiesImplementationPool.Get().(*TextDocumentClientCapabilitiesImplementation)
+		value := TextDocumentClientCapabilitiesImplementationPool.Get().(*TextDocumentClientCapabilitiesImplementation)
 		err := dec.Object(value)
 		if err == nil {
 			v.Implementation = value
 		}
 		return err
 	case keyCodeAction:
-		var value = TextDocumentClientCapabilitiesCodeActionPool.Get().(*TextDocumentClientCapabilitiesCodeAction)
+		value := TextDocumentClientCapabilitiesCodeActionPool.Get().(*TextDocumentClientCapabilitiesCodeAction)
 		err := dec.Object(value)
 		if err == nil {
 			v.CodeAction = value
 		}
 		return err
 	case keyCodeLens:
-		var value = TextDocumentClientCapabilitiesCodeLensPool.Get().(*TextDocumentClientCapabilitiesCodeLens)
+		value := TextDocumentClientCapabilitiesCodeLensPool.Get().(*TextDocumentClientCapabilitiesCodeLens)
 		err := dec.Object(value)
 		if err == nil {
 			v.CodeLens = value
 		}
 		return err
 	case keyDocumentLink:
-		var value = TextDocumentClientCapabilitiesDocumentLinkPool.Get().(*TextDocumentClientCapabilitiesDocumentLink)
+		value := TextDocumentClientCapabilitiesDocumentLinkPool.Get().(*TextDocumentClientCapabilitiesDocumentLink)
 		err := dec.Object(value)
 		if err == nil {
 			v.DocumentLink = value
 		}
 		return err
 	case keyColorProvider:
-		var value = TextDocumentClientCapabilitiesColorProviderPool.Get().(*TextDocumentClientCapabilitiesColorProvider)
+		value := TextDocumentClientCapabilitiesColorProviderPool.Get().(*TextDocumentClientCapabilitiesColorProvider)
 		err := dec.Object(value)
 		if err == nil {
 			v.ColorProvider = value
 		}
 		return err
 	case keyRename:
-		var value = TextDocumentClientCapabilitiesRenamePool.Get().(*TextDocumentClientCapabilitiesRename)
+		value := TextDocumentClientCapabilitiesRenamePool.Get().(*TextDocumentClientCapabilitiesRename)
 		err := dec.Object(value)
 		if err == nil {
 			v.Rename = value
 		}
 		return err
 	case keyPublishDiagnostics:
-		var value = TextDocumentClientCapabilitiesPublishDiagnosticsPool.Get().(*TextDocumentClientCapabilitiesPublishDiagnostics)
+		value := TextDocumentClientCapabilitiesPublishDiagnosticsPool.Get().(*TextDocumentClientCapabilitiesPublishDiagnostics)
 		err := dec.Object(value)
 		if err == nil {
 			v.PublishDiagnostics = value
 		}
 		return err
 	case keyFoldingRange:
-		var value = TextDocumentClientCapabilitiesFoldingRangePool.Get().(*TextDocumentClientCapabilitiesFoldingRange)
+		value := TextDocumentClientCapabilitiesFoldingRangePool.Get().(*TextDocumentClientCapabilitiesFoldingRange)
 		err := dec.Object(value)
 		if err == nil {
 			v.FoldingRange = value
@@ -1722,7 +1720,7 @@ func (v *TextDocumentSyncOptions) UnmarshalJSONObject(dec *gojay.Decoder, k stri
 	case keyWillSaveWaitUntil:
 		return dec.Bool(&v.WillSaveWaitUntil)
 	case keySave:
-		var value = SaveOptionsPool.Get().(*SaveOptions)
+		value := SaveOptionsPool.Get().(*SaveOptions)
 		err := dec.Object(value)
 		if err == nil {
 			v.Save = value
@@ -1784,7 +1782,7 @@ func (v *StaticRegistrationOptions) Reset() {
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ServerCapabilitiesWorkspace) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyWorkspaceFolders {
-		var value = ServerCapabilitiesWorkspaceFoldersPool.Get().(*ServerCapabilitiesWorkspaceFolders)
+		value := ServerCapabilitiesWorkspaceFoldersPool.Get().(*ServerCapabilitiesWorkspaceFolders)
 		err := dec.Object(value)
 		if err == nil {
 			v.WorkspaceFolders = value
@@ -1848,14 +1846,14 @@ func (v *ServerCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) e
 	case keyHoverProvider:
 		return dec.Bool(&v.HoverProvider)
 	case keyCompletionProvider:
-		var value = CompletionOptionsPool.Get().(*CompletionOptions)
+		value := CompletionOptionsPool.Get().(*CompletionOptions)
 		err := dec.Object(value)
 		if err == nil {
 			v.CompletionProvider = value
 		}
 		return err
 	case keySignatureHelpProvider:
-		var value = SignatureHelpOptionsPool.Get().(*SignatureHelpOptions)
+		value := SignatureHelpOptionsPool.Get().(*SignatureHelpOptions)
 		err := dec.Object(value)
 		if err == nil {
 			v.SignatureHelpProvider = value
@@ -1878,7 +1876,7 @@ func (v *ServerCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) e
 	case keyCodeActionProvider:
 		return dec.Bool(&v.CodeActionProvider)
 	case keyCodeLensProvider:
-		var value = CodeLensOptionsPool.Get().(*CodeLensOptions)
+		value := CodeLensOptionsPool.Get().(*CodeLensOptions)
 		err := dec.Object(value)
 		if err == nil {
 			v.CodeLensProvider = value
@@ -1889,7 +1887,7 @@ func (v *ServerCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) e
 	case keyDocumentRangeFormattingProvider:
 		return dec.Bool(&v.DocumentRangeFormattingProvider)
 	case keyDocumentOnTypeFormattingProvider:
-		var value = DocumentOnTypeFormattingOptionsPool.Get().(*DocumentOnTypeFormattingOptions)
+		value := DocumentOnTypeFormattingOptionsPool.Get().(*DocumentOnTypeFormattingOptions)
 		err := dec.Object(value)
 		if err == nil {
 			v.DocumentOnTypeFormattingProvider = value
@@ -1898,7 +1896,7 @@ func (v *ServerCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) e
 	case keyRenameProvider:
 		return dec.Interface(&v.RenameProvider)
 	case keyDocumentLinkProvider:
-		var value = DocumentLinkOptionsPool.Get().(*DocumentLinkOptions)
+		value := DocumentLinkOptionsPool.Get().(*DocumentLinkOptions)
 		err := dec.Object(value)
 		if err == nil {
 			v.DocumentLinkProvider = value
@@ -1909,14 +1907,14 @@ func (v *ServerCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) e
 	case keyFoldingRangeProvider:
 		return dec.Interface(&v.FoldingRangeProvider)
 	case keyExecuteCommandProvider:
-		var value = ExecuteCommandOptionsPool.Get().(*ExecuteCommandOptions)
+		value := ExecuteCommandOptionsPool.Get().(*ExecuteCommandOptions)
 		err := dec.Object(value)
 		if err == nil {
 			v.ExecuteCommandProvider = value
 		}
 		return err
 	case keyWorkspace:
-		var value = ServerCapabilitiesWorkspacePool.Get().(*ServerCapabilitiesWorkspace)
+		value := ServerCapabilitiesWorkspacePool.Get().(*ServerCapabilitiesWorkspace)
 		err := dec.Object(value)
 		if err == nil {
 			v.Workspace = value

@@ -16,7 +16,7 @@ type Diagnostics []Diagnostic
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
 func (v *Diagnostics) UnmarshalJSONArray(dec *gojay.Decoder) error {
-	var value = Diagnostic{}
+	value := Diagnostic{}
 	if err := dec.Object(&value); err != nil {
 		return err
 	}
@@ -40,7 +40,7 @@ func (v *PublishDiagnosticsParams) UnmarshalJSONObject(dec *gojay.Decoder, k str
 	case keyURI:
 		return dec.String((*string)(&v.URI))
 	case keyDiagnostics:
-		var value = Diagnostics{}
+		value := Diagnostics{}
 		err := dec.Array(&value)
 		if err == nil && len(value) > 0 {
 			v.Diagnostics = []Diagnostic(value)

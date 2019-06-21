@@ -6,9 +6,7 @@
 
 package protocol
 
-import (
-	"github.com/francoispqt/gojay"
-)
+import "github.com/francoispqt/gojay"
 
 // Interfaces represents a slice of interface.
 type Interfaces []interface{}

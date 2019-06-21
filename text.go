@@ -4,9 +4,7 @@
 
 package protocol
 
-import (
-	"strconv"
-)
+import "strconv"
 
 // DidOpenTextDocumentParams params of DidOpenTextDocument Notification.
 type DidOpenTextDocumentParams struct {

@@ -6,9 +6,7 @@
 
 package protocol
 
-import (
-	"github.com/francoispqt/gojay"
-)
+import "github.com/francoispqt/gojay"
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *WorkspaceFolder) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {

@@ -11,10 +11,8 @@ import (
 	"go.uber.org/zap"
 )
 
-const (
-	// Version is the version of the language-server-protocol specification being implemented.
-	Version = "3.14.0"
-)
+// Version is the version of the language-server-protocol specification being implemented.
+const Version = "3.14.0"
 
 // DefaultBufferSize default message buffer size.
 const DefaultBufferSize = 20
