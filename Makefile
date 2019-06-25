@@ -15,6 +15,7 @@ include hack/make/go.mk
 # overlays
 
 test/gojay: GO_BUILDTAGS+=gojay
+test/gojay: TARGET=test/gojay
 test/gojay: test
 
 coverage/ci/gojay: GO_BUILDTAGS+=gojay
