@@ -58,7 +58,7 @@ func TestPosition(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -179,7 +179,7 @@ func TestRange(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -313,7 +313,7 @@ func TestLocation(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -519,7 +519,7 @@ func TestLocationLink(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -886,7 +886,7 @@ func TestDiagnostic(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -1181,7 +1181,7 @@ func TestDiagnosticRelatedInformation(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -1321,7 +1321,7 @@ func TestCommand(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -1455,7 +1455,7 @@ func TestTextEdit(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -1615,7 +1615,7 @@ func TestTextDocumentEdit(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -1782,7 +1782,7 @@ func TestCreateFileOptions(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -1929,7 +1929,7 @@ func TestCreateFile(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -2076,7 +2076,7 @@ func TestRenameFileOptions(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -2226,7 +2226,7 @@ func TestRenameFile(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -2376,7 +2376,7 @@ func TestDeleteFileOptions(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -2523,7 +2523,7 @@ func TestDeleteFile(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -2783,7 +2783,7 @@ func TestWorkspaceEdit(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -3030,7 +3030,7 @@ func TestTextDocumentIdentifier(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -3136,7 +3136,7 @@ func TestTextDocumentItem(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -3260,7 +3260,7 @@ func TestVersionedTextDocumentIdentifier(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -3390,7 +3390,7 @@ func TestTextDocumentPositionParams(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -3543,7 +3543,7 @@ func TestDocumentFilter(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -3822,7 +3822,7 @@ func TestMarkupContent(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return

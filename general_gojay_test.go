@@ -161,7 +161,7 @@ func TestInitializeParams(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -273,7 +273,7 @@ func TestWorkspaceClientCapabilities(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -366,7 +366,7 @@ func TestTextDocumentClientCapabilitiesSynchronization(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -474,7 +474,7 @@ func TestTextDocumentClientCapabilitiesCompletion(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -588,7 +588,7 @@ func TestTextDocumentClientCapabilitiesHover(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -696,7 +696,7 @@ func TestTextDocumentClientCapabilitiesSignatureHelp(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -800,7 +800,7 @@ func TestTextDocumentClientCapabilitiesReferences(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -898,7 +898,7 @@ func TestTextDocumentClientCapabilitiesDocumentHighlight(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -1007,7 +1007,7 @@ func TestTextDocumentClientCapabilitiesDocumentSymbol(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -1116,7 +1116,7 @@ func TestTextDocumentClientCapabilitiesFormatting(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -1214,7 +1214,7 @@ func TestTextDocumentClientCapabilitiesRangeFormatting(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -1312,7 +1312,7 @@ func TestTextDocumentClientCapabilitiesOnTypeFormatting(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -1411,7 +1411,7 @@ func TestTextDocumentClientCapabilitiesDeclaration(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -1511,7 +1511,7 @@ func TestTextDocumentClientCapabilitiesDefinition(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -1611,7 +1611,7 @@ func TestTextDocumentClientCapabilitiesTypeDefinition(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -1711,7 +1711,7 @@ func TestTextDocumentClientCapabilitiesImplementation(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -1822,7 +1822,7 @@ func TestTextDocumentClientCapabilitiesCodeAction(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -1932,7 +1932,7 @@ func TestTextDocumentClientCapabilitiesCodeLens(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -2030,7 +2030,7 @@ func TestTextDocumentClientCapabilitiesDocumentLink(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -2128,7 +2128,7 @@ func TestTextDocumentClientCapabilitiesColorProvider(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -2227,7 +2227,7 @@ func TestTextDocumentClientCapabilitiesRename(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -2326,7 +2326,7 @@ func TestTextDocumentClientCapabilitiesPublishDiagnostics(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -2426,7 +2426,7 @@ func TestTextDocumentClientCapabilitiesFoldingRange(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -2644,7 +2644,7 @@ func TestTextDocumentClientCapabilities(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -2892,7 +2892,7 @@ func TestClientCapabilities(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -3044,7 +3044,7 @@ func TestInitializeResult(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -3196,7 +3196,7 @@ func TestDocumentLinkRegistrationOptions(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
@@ -3294,7 +3294,7 @@ func TestInitializedParams(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return

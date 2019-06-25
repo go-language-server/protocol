@@ -123,7 +123,7 @@ func TestPublishDiagnosticsParams(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := gojay.Marshal(&tt.field)
+				got, err := gojay.MarshalJSONObject(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Error(err)
 					return
