@@ -18,8 +18,8 @@ const Version = "3.14.0"
 const DefaultBufferSize = 20
 
 // Canceller returns the default canceler function.
-func Canceller(ctx context.Context, conn *jsonrpc2.Conn, req *jsonrpc2.Request) {
-	conn.Notify(ctx, MethodCancelRequest, &CancelParams{ID: *req.ID})
+func Canceller(ctx context.Context, conn *jsonrpc2.Conn, id jsonrpc2.ID) {
+	conn.Notify(ctx, MethodCancelRequest, &CancelParams{ID: id})
 }
 
 // NewClient returns the new Client, Server and jsonrpc2.Conn.

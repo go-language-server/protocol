@@ -18,7 +18,7 @@ import (
 
 // ClientHandler returns the client handler.
 func ClientHandler(ctx context.Context, client ClientInterface, logger *zap.Logger) jsonrpc2.Handler {
-	return func(ctx context.Context, conn *jsonrpc2.Conn, r *jsonrpc2.Request) {
+	return func(ctx context.Context, r *jsonrpc2.Request) {
 		dec := gojaypool.BorrowSizedDecoder(bytes.NewReader(*r.Params), len(*r.Params))
 		defer dec.Release()
 
@@ -26,39 +26,39 @@ func ClientHandler(ctx context.Context, client ClientInterface, logger *zap.Logg
 		case MethodCancelRequest:
 			var params CancelParams
 			if err := dec.Decode(&params); err != nil {
-				ReplyError(ctx, err, conn, r, logger)
+				ReplyError(ctx, err, r, logger)
 				return
 			}
-			conn.Cancel(params.ID)
+			r.Conn().Cancel(params.ID)
 
 		case MethodClientRegisterCapability:
 			var params RegistrationParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, conn, r, logger)
+				ReplyError(ctx, err, r, logger)
 				return
 			}
 
 			err := client.RegisterCapability(ctx, &params)
-			if err := conn.Reply(ctx, r, nil, err); err != nil {
+			if err := r.Reply(ctx, nil, err); err != nil {
 				logger.Error(MethodClientRegisterCapability, zap.Error(err))
 			}
 
 		case MethodClientUnregisterCapability:
 			var params UnregistrationParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, conn, r, logger)
+				ReplyError(ctx, err, r, logger)
 				return
 			}
 
 			err := client.UnregisterCapability(ctx, &params)
-			if err := conn.Reply(ctx, r, nil, err); err != nil {
+			if err := r.Reply(ctx, nil, err); err != nil {
 				logger.Error(MethodClientUnregisterCapability, zap.Error(err))
 			}
 
 		case MethodTelemetryEvent:
 			var params interface{}
 			if err := dec.Decode(&params); err != nil {
-				ReplyError(ctx, err, conn, r, logger)
+				ReplyError(ctx, err, r, logger)
 				return
 			}
 
@@ -69,7 +69,7 @@ func ClientHandler(ctx context.Context, client ClientInterface, logger *zap.Logg
 		case MethodTextDocumentPublishDiagnostics:
 			var params PublishDiagnosticsParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, conn, r, logger)
+				ReplyError(ctx, err, r, logger)
 				return
 			}
 
@@ -80,7 +80,7 @@ func ClientHandler(ctx context.Context, client ClientInterface, logger *zap.Logg
 		case MethodWindowLogMessage:
 			var params LogMessageParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, conn, r, logger)
+				ReplyError(ctx, err, r, logger)
 				return
 			}
 
@@ -91,7 +91,7 @@ func ClientHandler(ctx context.Context, client ClientInterface, logger *zap.Logg
 		case MethodWindowShowMessage:
 			var params ShowMessageParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, conn, r, logger)
+				ReplyError(ctx, err, r, logger)
 				return
 			}
 
@@ -102,53 +102,53 @@ func ClientHandler(ctx context.Context, client ClientInterface, logger *zap.Logg
 		case MethodWindowShowMessageRequest:
 			var params ShowMessageRequestParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, conn, r, logger)
+				ReplyError(ctx, err, r, logger)
 				return
 			}
 
 			resp, err := client.ShowMessageRequest(ctx, &params)
-			if err := conn.Reply(ctx, r, resp, err); err != nil {
+			if err := r.Reply(ctx, resp, err); err != nil {
 				logger.Error(MethodWindowShowMessageRequest, zap.Error(err))
 			}
 
 		case MethodWorkspaceApplyEdit:
 			var params ApplyWorkspaceEditParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, conn, r, logger)
+				ReplyError(ctx, err, r, logger)
 				return
 			}
 
 			resp, err := client.WorkspaceApplyEdit(ctx, &params)
-			if err := conn.Reply(ctx, r, resp, err); err != nil {
+			if err := r.Reply(ctx, resp, err); err != nil {
 				logger.Error(MethodWorkspaceApplyEdit, zap.Error(err))
 			}
 
 		case MethodWorkspaceConfiguration:
 			var params ConfigurationParams
 			if err := dec.DecodeObject(&params); err != nil {
-				ReplyError(ctx, err, conn, r, logger)
+				ReplyError(ctx, err, r, logger)
 				return
 			}
 
 			resp, err := client.WorkspaceConfiguration(ctx, &params)
-			if err := conn.Reply(ctx, r, resp, err); err != nil {
+			if err := r.Reply(ctx, resp, err); err != nil {
 				logger.Error(MethodWorkspaceConfiguration, zap.Error(err))
 			}
 
 		case MethodWorkspaceWorkspaceFolders:
 			if r.Params != nil {
-				conn.Reply(ctx, r, nil, jsonrpc2.Errorf(jsonrpc2.CodeInvalidParams, "Expected no params"))
+				r.Reply(ctx, nil, jsonrpc2.Errorf(jsonrpc2.InvalidParams, "Expected no params"))
 				return
 			}
 
 			resp, err := client.WorkspaceFolders(ctx)
-			if err := conn.Reply(ctx, r, resp, err); err != nil {
+			if err := r.Reply(ctx, resp, err); err != nil {
 				logger.Error(MethodWorkspaceWorkspaceFolders, zap.Error(err))
 			}
 
 		default:
 			if r.IsNotify() {
-				conn.Reply(ctx, r, nil, jsonrpc2.Errorf(jsonrpc2.CodeMethodNotFound, "method %q not found", r.Method))
+				r.Reply(ctx, nil, jsonrpc2.Errorf(jsonrpc2.MethodNotFound, "method %q not found", r.Method))
 			}
 		}
 	}

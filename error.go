@@ -12,12 +12,12 @@ import (
 )
 
 // ReplyError replies error message.
-func ReplyError(ctx context.Context, err error, conn *jsonrpc2.Conn, req *jsonrpc2.Request, logger *zap.Logger) {
+func ReplyError(ctx context.Context, err error, req *jsonrpc2.Request, logger *zap.Logger) {
 	if _, ok := err.(*jsonrpc2.Error); !ok {
-		err = jsonrpc2.NewError(jsonrpc2.CodeUnknownError, err)
+		err = jsonrpc2.NewError(jsonrpc2.UnknownError, err)
 	}
 
-	if err := conn.Reply(ctx, req, nil, err); err != nil {
+	if err := req.Reply(ctx, nil, err); err != nil {
 		logger.Error("ReplyError", zap.Error(err))
 	}
 }
