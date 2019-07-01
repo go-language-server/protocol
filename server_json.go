@@ -44,7 +44,9 @@ func ServerHandler(ctx context.Context, server ServerInterface, logger *zap.Logg
 
 		case MethodShutdown:
 			if r.Params != nil {
-				r.Reply(ctx, nil, jsonrpc2.Errorf(jsonrpc2.InvalidParams, "Expected no params"))
+				if err := r.Reply(ctx, nil, jsonrpc2.Errorf(jsonrpc2.InvalidParams, "Expected no params")); err != nil {
+					logger.Error(MethodShutdown, zap.Error(err))
+				}
 				return
 			}
 			if err := server.Shutdown(ctx); err != nil {
@@ -53,7 +55,9 @@ func ServerHandler(ctx context.Context, server ServerInterface, logger *zap.Logg
 
 		case MethodExit:
 			if r.Params != nil {
-				r.Reply(ctx, nil, jsonrpc2.Errorf(jsonrpc2.InvalidParams, "Expected no params"))
+				if err := r.Reply(ctx, nil, jsonrpc2.Errorf(jsonrpc2.InvalidParams, "Expected no params")); err != nil {
+					logger.Error(MethodExit, zap.Error(err))
+				}
 				return
 			}
 			if err := server.Exit(ctx); err != nil {
@@ -447,7 +451,9 @@ func ServerHandler(ctx context.Context, server ServerInterface, logger *zap.Logg
 
 		default:
 			if r.IsNotify() {
-				r.Reply(ctx, nil, jsonrpc2.Errorf(jsonrpc2.MethodNotFound, "method %q not found", r.Method))
+				if err := r.Reply(ctx, nil, jsonrpc2.Errorf(jsonrpc2.MethodNotFound, "method %q not found", r.Method)); err != nil {
+					logger.Error("IsNotify", zap.Error(err))
+				}
 			}
 		}
 	}
