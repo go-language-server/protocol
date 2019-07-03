@@ -137,7 +137,9 @@ func ClientHandler(ctx context.Context, client ClientInterface, logger *zap.Logg
 
 		case MethodWorkspaceWorkspaceFolders:
 			if r.Params != nil {
-				r.Reply(ctx, nil, jsonrpc2.Errorf(jsonrpc2.InvalidParams, "Expected no params"))
+				if err := r.Reply(ctx, nil, jsonrpc2.Errorf(jsonrpc2.InvalidParams, "Expected no params")); err != nil {
+					logger.Error(MethodWorkspaceWorkspaceFolders, zap.Error(err))
+				}
 				return
 			}
 
@@ -148,7 +150,9 @@ func ClientHandler(ctx context.Context, client ClientInterface, logger *zap.Logg
 
 		default:
 			if r.IsNotify() {
-				r.Reply(ctx, nil, jsonrpc2.Errorf(jsonrpc2.MethodNotFound, "method %q not found", r.Method))
+				if err := r.Reply(ctx, nil, jsonrpc2.Errorf(jsonrpc2.MethodNotFound, "method %q not found", r.Method)); err != nil {
+					logger.Error("IsNotify", zap.Error(err))
+				}
 			}
 		}
 	}
