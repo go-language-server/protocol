@@ -27,8 +27,8 @@ github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeME
 github.com/gliderlabs/ssh v0.1.1/go.mod h1:U7qILu1NlMHj9FlMhZLlkCdDnU1DBEAqr0aevW3Awn0=
 github.com/go-errors/errors v1.0.1 h1:LUHzmkK3GUKUrL/1gfBUxAHzcev3apQlezX/+O7ma6w=
 github.com/go-errors/errors v1.0.1/go.mod h1:f4zRHt4oKfwPJE5k8C9vpYG+aDHdBFUsgrm6/TyX73Q=
-github.com/go-language-server/jsonrpc2 v0.2.0 h1:sRASUbdlnWaiTaLGpRQZA8CHsCTjoVk3VBryg15PWcE=
-github.com/go-language-server/jsonrpc2 v0.2.0/go.mod h1:WeVDqZMgmOWk/MeTR/vRYrEbLWSwzy9HarY212/8/cA=
+github.com/go-language-server/jsonrpc2 v0.2.1 h1:fmFe5peUS6G5FJXK7RbbrbKwnFYTBZ29r2GmT7pOxUQ=
+github.com/go-language-server/jsonrpc2 v0.2.1/go.mod h1:WeVDqZMgmOWk/MeTR/vRYrEbLWSwzy9HarY212/8/cA=
 github.com/go-language-server/uri v0.1.1 h1:vfNhN1cOR3qYj0FLruIqPnJ7OIf1jW/8dlMDzkf/IDo=
 github.com/go-language-server/uri v0.1.1/go.mod h1:ysWm3wt9ZSV14TVYJlqcyI6ulGx/SEQ0bfdxQm94xKY=
 github.com/gogo/protobuf v1.1.1/go.mod h1:r8qH/GZQm5c6nD/R0oafs1akxWv10x8SbQlK7atdtwQ=
