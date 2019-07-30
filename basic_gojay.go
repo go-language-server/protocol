@@ -116,7 +116,7 @@ func (v *LocationLink) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 		}
 		return err
 	case keyTargetURI:
-		return dec.String(&v.TargetURI)
+		return dec.String((*string)(&v.TargetURI))
 	case keyTargetRange:
 		value := RangePool.Get().(*Range)
 		err := dec.Object(value)
@@ -141,7 +141,7 @@ func (v *LocationLink) NKeys() int { return 4 }
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *LocationLink) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKeyOmitEmpty(keyOriginSelectionRange, v.OriginSelectionRange)
-	enc.StringKey(keyTargetURI, v.TargetURI)
+	enc.StringKey(keyTargetURI, string(v.TargetURI))
 	enc.ObjectKey(keyTargetRange, &v.TargetRange)
 	enc.ObjectKey(keyTargetSelectionRange, &v.TargetSelectionRange)
 }
@@ -435,7 +435,7 @@ func (v *CreateFile) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	case keyKind:
 		return dec.String((*string)(&v.Kind))
 	case keyURI:
-		return dec.String(&v.URI)
+		return dec.String((*string)(&v.URI))
 	case keyOptions:
 		value := CreateFileOptionsPool.Get().(*CreateFileOptions)
 		err := dec.Object(value)
@@ -453,7 +453,7 @@ func (v *CreateFile) NKeys() int { return 3 }
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *CreateFile) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey(keyKind, string(v.Kind))
-	enc.StringKey(keyURI, v.URI)
+	enc.StringKey(keyURI, string(v.URI))
 	enc.ObjectKeyOmitEmpty(keyOptions, v.Options)
 }
 
@@ -503,9 +503,9 @@ func (v *RenameFile) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	case keyKind:
 		return dec.String((*string)(&v.Kind))
 	case keyOldURI:
-		return dec.String(&v.OldURI)
+		return dec.String((*string)(&v.OldURI))
 	case keyNewURI:
-		return dec.String(&v.NewURI)
+		return dec.String((*string)(&v.NewURI))
 	case keyOptions:
 		value := RenameFileOptionsPool.Get().(*RenameFileOptions)
 		err := dec.Object(value)
@@ -523,8 +523,8 @@ func (v *RenameFile) NKeys() int { return 4 }
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *RenameFile) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey(keyKind, string(v.Kind))
-	enc.StringKey(keyOldURI, v.OldURI)
-	enc.StringKey(keyNewURI, v.NewURI)
+	enc.StringKey(keyOldURI, string(v.OldURI))
+	enc.StringKey(keyNewURI, string(v.NewURI))
 	enc.ObjectKeyOmitEmpty(keyOptions, v.Options)
 }
 
@@ -575,7 +575,7 @@ func (v *DeleteFile) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	case keyKind:
 		return dec.String((*string)(&v.Kind))
 	case keyURI:
-		return dec.String(&v.URI)
+		return dec.String((*string)(&v.URI))
 	case keyOptions:
 		value := DeleteFileOptionsPool.Get().(*DeleteFileOptions)
 		err := dec.Object(value)
@@ -593,7 +593,7 @@ func (v *DeleteFile) NKeys() int { return 3 }
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *DeleteFile) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey(keyKind, string(v.Kind))
-	enc.StringKey(keyURI, v.URI)
+	enc.StringKey(keyURI, string(v.URI))
 	enc.ObjectKeyOmitEmpty(keyOptions, v.Options)
 }
 

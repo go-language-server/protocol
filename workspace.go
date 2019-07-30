@@ -53,7 +53,7 @@ type ConfigurationParams struct {
 // If the client for example uses EditorConfig to manage its settings the configuration should be returned for the passed resource URI. If the client can’t provide a configuration setting for a given scope then null need to be present in the returned array.
 type ConfigurationItem struct {
 	// ScopeURI is the scope to get the configuration section for.
-	ScopeURI string `json:"scopeUri,omitempty"`
+	ScopeURI uri.URI `json:"scopeUri,omitempty"`
 
 	// Section is the configuration section asked for.
 	Section string `json:"section,omitempty"`

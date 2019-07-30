@@ -54,7 +54,7 @@ type LocationLink struct {
 	OriginSelectionRange *Range `json:"originSelectionRange,omitempty"`
 
 	// TargetURI is the target resource identifier of this link.
-	TargetURI string `json:"targetUri"`
+	TargetURI uri.URI `json:"targetUri"`
 
 	// TargetRange is the full target range of this link. If the target for example is a symbol then target range is the
 	// range enclosing this symbol not including leading/trailing whitespace but everything else
@@ -206,7 +206,7 @@ type CreateFile struct {
 	Kind ResourceOperationKind `json:"kind"` // should be `create`
 
 	// URI is the resource to create.
-	URI string `json:"uri"`
+	URI uri.URI `json:"uri"`
 
 	// Options additional options.
 	Options *CreateFileOptions `json:"options,omitempty"`
@@ -227,10 +227,10 @@ type RenameFile struct {
 	Kind ResourceOperationKind `json:"kind"` // should be `rename`
 
 	// OldURI is the old (existing) location.
-	OldURI string `json:"oldUri"`
+	OldURI uri.URI `json:"oldUri"`
 
 	// NewURI is the new location.
-	NewURI string `json:"newUri"`
+	NewURI uri.URI `json:"newUri"`
 
 	// Options rename options.
 	Options *RenameFileOptions `json:"options,omitempty"`
@@ -251,7 +251,7 @@ type DeleteFile struct {
 	Kind ResourceOperationKind `json:"kind"` // should be `delete`
 
 	// URI is the file to delete.
-	URI string `json:"uri"`
+	URI uri.URI `json:"uri"`
 
 	// Options delete options.
 	Options *DeleteFileOptions `json:"options,omitempty"`

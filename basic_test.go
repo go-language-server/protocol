@@ -446,7 +446,7 @@ func TestLocationLink(t *testing.T) {
 			{
 				name: "ValidNilOriginSelectionRange",
 				field: LocationLink{
-					TargetURI: string(uri.File("/path/to/test.go")),
+					TargetURI: uri.File("/path/to/test.go"),
 					TargetRange: Range{
 						Start: Position{
 							Line:      25,
@@ -484,7 +484,7 @@ func TestLocationLink(t *testing.T) {
 							Character: 3,
 						},
 					},
-					TargetURI: string(uri.File("/path/to/test.go")),
+					TargetURI: uri.File("/path/to/test.go"),
 					TargetRange: Range{
 						Start: Position{
 							Line:      25,
@@ -553,7 +553,7 @@ func TestLocationLink(t *testing.T) {
 							Character: 3,
 						},
 					},
-					TargetURI: string(uri.File("/path/to/test.go")),
+					TargetURI: uri.File("/path/to/test.go"),
 					TargetRange: Range{
 						Start: Position{
 							Line:      25,
@@ -581,7 +581,7 @@ func TestLocationLink(t *testing.T) {
 				name:  "ValidNilOriginSelectionRange",
 				field: `{"targetUri":"file:///path/to/test.go","targetRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"targetSelectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`,
 				want: LocationLink{
-					TargetURI: string(uri.File("/path/to/test.go")),
+					TargetURI: uri.File("/path/to/test.go"),
 					TargetRange: Range{
 						Start: Position{
 							Line:      25,
@@ -619,7 +619,7 @@ func TestLocationLink(t *testing.T) {
 							Character: 3,
 						},
 					},
-					TargetURI: string(uri.File("/path/to/test.go")),
+					TargetURI: uri.File("/path/to/test.go"),
 					TargetRange: Range{
 						Start: Position{
 							Line:      25,

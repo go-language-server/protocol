@@ -143,7 +143,7 @@ func (v *ConfigurationParams) IsNil() bool { return v == nil }
 func (v *ConfigurationItem) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keyScopeURI:
-		return dec.String(&v.ScopeURI)
+		return dec.String((*string)(&v.ScopeURI))
 	case keySection:
 		return dec.String(&v.Section)
 	}
@@ -155,7 +155,7 @@ func (v *ConfigurationItem) NKeys() int { return 2 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ConfigurationItem) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.StringKeyOmitEmpty(keyScopeURI, v.ScopeURI)
+	enc.StringKeyOmitEmpty(keyScopeURI, string(v.ScopeURI))
 	enc.StringKeyOmitEmpty(keySection, v.Section)
 }
 
