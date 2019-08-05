@@ -12,6 +12,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/go-language-server/uri"
 	"github.com/google/go-cmp/cmp"
 )
 
@@ -19,12 +20,12 @@ func Test_WorkspaceFolders(t *testing.T) {
 	const want = `[{"uri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol","name":"protocol"},{"uri":"file:///Users/zchee/go/src/github.com/go-language-server/jsonrpc2","name":"jsonrpc2"}]`
 	wantType := WorkspaceFolders{
 		{
-			URI:  string(ToDocumentURI("/Users/zchee/go/src/github.com/go-language-server/protocol")),
 			Name: "protocol",
+			URI:  string(uri.File("/Users/zchee/go/src/github.com/go-language-server/protocol")),
 		},
 		{
-			URI:  string(ToDocumentURI("/Users/zchee/go/src/github.com/go-language-server/jsonrpc2")),
 			Name: "jsonrpc2",
+			URI:  string(uri.File("/Users/zchee/go/src/github.com/go-language-server/jsonrpc2")),
 		},
 	}
 
@@ -104,8 +105,10 @@ func Test_WorkspaceFolders(t *testing.T) {
 }
 
 func TestInitializeParams(t *testing.T) {
-	const want = `{"processId":25556,"rootPath":"~/go/src/github.com/go-language-server/protocol","rootUri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol","initializationOptions":"testdata","capabilities":{},"trace":"on","workspaceFolders":[{"uri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol","name":"protocol"},{"uri":"file:///Users/zchee/go/src/github.com/go-language-server/jsonrpc2","name":"jsonrpc2"}]}`
-	const wantNil = `{"processId":25556,"rootUri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol","capabilities":{}}`
+	const (
+		want    = `{"processId":25556,"rootPath":"~/go/src/github.com/go-language-server/protocol","rootUri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol","initializationOptions":"testdata","capabilities":{},"trace":"on","workspaceFolders":[{"uri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol","name":"protocol"},{"uri":"file:///Users/zchee/go/src/github.com/go-language-server/jsonrpc2","name":"jsonrpc2"}]}`
+		wantNil = `{"processId":25556,"rootUri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol","capabilities":{}}`
+	)
 	wantType := InitializeParams{
 		ProcessID:             25556,
 		RootPath:              "~/go/src/github.com/go-language-server/protocol",
@@ -115,12 +118,12 @@ func TestInitializeParams(t *testing.T) {
 		Trace:                 "on",
 		WorkspaceFolders: []WorkspaceFolder{
 			{
+				URI:  string(uri.File("/Users/zchee/go/src/github.com/go-language-server/protocol")),
 				Name: filepath.Base("/Users/zchee/go/src/github.com/go-language-server/protocol"),
-				URI:  string(ToDocumentURI("/Users/zchee/go/src/github.com/go-language-server/protocol")),
 			},
 			{
+				URI:  string(uri.File("/Users/zchee/go/src/github.com/go-language-server/jsonrpc2")),
 				Name: filepath.Base("/Users/zchee/go/src/github.com/go-language-server/jsonrpc2"),
-				URI:  string(ToDocumentURI("/Users/zchee/go/src/github.com/go-language-server/jsonrpc2")),
 			},
 		},
 	}
@@ -178,14 +181,14 @@ func TestInitializeParams(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             InitializeParams
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:             "Valid",
-				field:            strings.NewReader(want),
+				field:            want,
 				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -198,7 +201,7 @@ func TestInitializeParams(t *testing.T) {
 				t.Parallel()
 
 				var got InitializeParams
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -289,14 +292,14 @@ func TestWorkspaceClientCapabilities(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             WorkspaceClientCapabilities
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:             "Valid",
-				field:            strings.NewReader(want),
+				field:            want,
 				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -309,7 +312,7 @@ func TestWorkspaceClientCapabilities(t *testing.T) {
 				t.Parallel()
 
 				var got WorkspaceClientCapabilities
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -381,21 +384,21 @@ func TestTextDocumentClientCapabilitiesSynchronization(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesSynchronization
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:             "Valid",
-				field:            strings.NewReader(want),
+				field:            want,
 				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesSynchronization{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -408,7 +411,7 @@ func TestTextDocumentClientCapabilitiesSynchronization(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesSynchronization
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -424,6 +427,21 @@ func TestTextDocumentClientCapabilitiesSynchronization(t *testing.T) {
 
 func TestTextDocumentClientCapabilitiesCompletion(t *testing.T) {
 	const want = `{"dynamicRegistration":true,"completionItem":{"snippetSupport":true,"commitCharactersSupport":true,"documentationFormat":["plaintext","markdown"],"deprecatedSupport":true,"preselectSupport":true},"completionItemKind":1,"contextSupport":true}`
+	wantType := TextDocumentClientCapabilitiesCompletion{
+		DynamicRegistration: true,
+		CompletionItem: &TextDocumentClientCapabilitiesCompletionItem{
+			SnippetSupport:          true,
+			CommitCharactersSupport: true,
+			DocumentationFormat: []MarkupKind{
+				PlainText,
+				Markdown,
+			},
+			DeprecatedSupport: true,
+			PreselectSupport:  true,
+		},
+		CompletionItemKind: TextCompletion,
+		ContextSupport:     true,
+	}
 
 	t.Run("Marshal", func(t *testing.T) {
 		t.Parallel()
@@ -436,22 +454,8 @@ func TestTextDocumentClientCapabilitiesCompletion(t *testing.T) {
 			wantErr        bool
 		}{
 			{
-				name: "Valid",
-				field: TextDocumentClientCapabilitiesCompletion{
-					DynamicRegistration: true,
-					CompletionItem: &TextDocumentClientCapabilitiesCompletionItem{
-						SnippetSupport:          true,
-						CommitCharactersSupport: true,
-						DocumentationFormat: []MarkupKind{
-							PlainText,
-							Markdown,
-						},
-						DeprecatedSupport: true,
-						PreselectSupport:  true,
-					},
-					CompletionItemKind: TextCompletion,
-					ContextSupport:     true,
-				},
+				name:           "Valid",
+				field:          wantType,
 				want:           want,
 				wantMarshalErr: false,
 				wantErr:        false,
@@ -488,35 +492,21 @@ func TestTextDocumentClientCapabilitiesCompletion(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesCompletion
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
-				name:  "Valid",
-				field: strings.NewReader(want),
-				want: TextDocumentClientCapabilitiesCompletion{
-					DynamicRegistration: true,
-					CompletionItem: &TextDocumentClientCapabilitiesCompletionItem{
-						SnippetSupport:          true,
-						CommitCharactersSupport: true,
-						DocumentationFormat: []MarkupKind{
-							PlainText,
-							Markdown,
-						},
-						DeprecatedSupport: true,
-						PreselectSupport:  true,
-					},
-					CompletionItemKind: TextCompletion,
-					ContextSupport:     true,
-				},
+				name:             "Valid",
+				field:            want,
+				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesCompletion{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -529,7 +519,7 @@ func TestTextDocumentClientCapabilitiesCompletion(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesCompletion
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -601,14 +591,14 @@ func TestTextDocumentClientCapabilitiesHover(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesHover
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesHover{
 					DynamicRegistration: true,
 					ContentFormat: []MarkupKind{
@@ -621,7 +611,7 @@ func TestTextDocumentClientCapabilitiesHover(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesHover{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -634,7 +624,7 @@ func TestTextDocumentClientCapabilitiesHover(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesHover
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -708,14 +698,14 @@ func TestTextDocumentClientCapabilitiesSignatureHelp(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesSignatureHelp
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesSignatureHelp{
 					DynamicRegistration: true,
 					SignatureInformation: &TextDocumentClientCapabilitiesSignatureInformation{
@@ -730,7 +720,7 @@ func TestTextDocumentClientCapabilitiesSignatureHelp(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesSignatureHelp{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -743,7 +733,7 @@ func TestTextDocumentClientCapabilitiesSignatureHelp(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesSignatureHelp
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -811,14 +801,14 @@ func TestTextDocumentClientCapabilitiesReferences(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesReferences
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesReferences{
 					DynamicRegistration: true,
 				},
@@ -827,7 +817,7 @@ func TestTextDocumentClientCapabilitiesReferences(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesReferences{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -840,7 +830,7 @@ func TestTextDocumentClientCapabilitiesReferences(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesReferences
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -908,14 +898,14 @@ func TestTextDocumentClientCapabilitiesDocumentHighlight(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesDocumentHighlight
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesDocumentHighlight{
 					DynamicRegistration: true,
 				},
@@ -924,7 +914,7 @@ func TestTextDocumentClientCapabilitiesDocumentHighlight(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesDocumentHighlight{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -937,7 +927,7 @@ func TestTextDocumentClientCapabilitiesDocumentHighlight(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesDocumentHighlight
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -1016,14 +1006,14 @@ func TestTextDocumentClientCapabilitiesDocumentSymbol(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesDocumentSymbol
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesDocumentSymbol{
 					DynamicRegistration: true,
 					SymbolKind: &WorkspaceClientCapabilitiesSymbolKind{
@@ -1043,7 +1033,7 @@ func TestTextDocumentClientCapabilitiesDocumentSymbol(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesDocumentSymbol{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -1056,7 +1046,7 @@ func TestTextDocumentClientCapabilitiesDocumentSymbol(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesDocumentSymbol
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -1124,14 +1114,14 @@ func TestTextDocumentClientCapabilitiesFormatting(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesFormatting
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesFormatting{
 					DynamicRegistration: true,
 				},
@@ -1140,7 +1130,7 @@ func TestTextDocumentClientCapabilitiesFormatting(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesFormatting{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -1153,7 +1143,7 @@ func TestTextDocumentClientCapabilitiesFormatting(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesFormatting
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -1221,14 +1211,14 @@ func TestTextDocumentClientCapabilitiesRangeFormatting(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesRangeFormatting
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesRangeFormatting{
 					DynamicRegistration: true,
 				},
@@ -1237,7 +1227,7 @@ func TestTextDocumentClientCapabilitiesRangeFormatting(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesRangeFormatting{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -1250,7 +1240,7 @@ func TestTextDocumentClientCapabilitiesRangeFormatting(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesRangeFormatting
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -1318,14 +1308,14 @@ func TestTextDocumentClientCapabilitiesOnTypeFormatting(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesOnTypeFormatting
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesOnTypeFormatting{
 					DynamicRegistration: true,
 				},
@@ -1334,7 +1324,7 @@ func TestTextDocumentClientCapabilitiesOnTypeFormatting(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesOnTypeFormatting{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -1347,7 +1337,7 @@ func TestTextDocumentClientCapabilitiesOnTypeFormatting(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesOnTypeFormatting
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -1416,14 +1406,14 @@ func TestTextDocumentClientCapabilitiesDeclaration(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesDeclaration
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesDeclaration{
 					DynamicRegistration: true,
 					LinkSupport:         true,
@@ -1433,7 +1423,7 @@ func TestTextDocumentClientCapabilitiesDeclaration(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesDeclaration{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -1446,7 +1436,7 @@ func TestTextDocumentClientCapabilitiesDeclaration(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesDeclaration
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -1515,14 +1505,14 @@ func TestTextDocumentClientCapabilitiesDefinition(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesDefinition
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesDefinition{
 					DynamicRegistration: true,
 					LinkSupport:         true,
@@ -1532,7 +1522,7 @@ func TestTextDocumentClientCapabilitiesDefinition(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesDefinition{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -1545,7 +1535,7 @@ func TestTextDocumentClientCapabilitiesDefinition(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesDefinition
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -1614,14 +1604,14 @@ func TestTextDocumentClientCapabilitiesTypeDefinition(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesTypeDefinition
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesTypeDefinition{
 					DynamicRegistration: true,
 					LinkSupport:         true,
@@ -1631,7 +1621,7 @@ func TestTextDocumentClientCapabilitiesTypeDefinition(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesTypeDefinition{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -1644,7 +1634,7 @@ func TestTextDocumentClientCapabilitiesTypeDefinition(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesTypeDefinition
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -1713,14 +1703,14 @@ func TestTextDocumentClientCapabilitiesImplementation(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesImplementation
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesImplementation{
 					DynamicRegistration: true,
 					LinkSupport:         true,
@@ -1730,7 +1720,7 @@ func TestTextDocumentClientCapabilitiesImplementation(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesImplementation{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -1743,7 +1733,7 @@ func TestTextDocumentClientCapabilitiesImplementation(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesImplementation
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -1823,14 +1813,14 @@ func TestTextDocumentClientCapabilitiesCodeAction(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesCodeAction
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesCodeAction{
 					DynamicRegistration: true,
 					CodeActionLiteralSupport: &TextDocumentClientCapabilitiesCodeActionLiteralSupport{
@@ -1851,7 +1841,7 @@ func TestTextDocumentClientCapabilitiesCodeAction(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesCodeAction{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -1864,7 +1854,7 @@ func TestTextDocumentClientCapabilitiesCodeAction(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesCodeAction
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -1932,14 +1922,14 @@ func TestTextDocumentClientCapabilitiesCodeLens(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesCodeLens
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesCodeLens{
 					DynamicRegistration: true,
 				},
@@ -1948,7 +1938,7 @@ func TestTextDocumentClientCapabilitiesCodeLens(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesCodeLens{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -1961,7 +1951,7 @@ func TestTextDocumentClientCapabilitiesCodeLens(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesCodeLens
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -2029,14 +2019,14 @@ func TestTextDocumentClientCapabilitiesDocumentLink(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesDocumentLink
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesDocumentLink{
 					DynamicRegistration: true,
 				},
@@ -2045,7 +2035,7 @@ func TestTextDocumentClientCapabilitiesDocumentLink(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesDocumentLink{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -2058,7 +2048,7 @@ func TestTextDocumentClientCapabilitiesDocumentLink(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesDocumentLink
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -2126,14 +2116,14 @@ func TestTextDocumentClientCapabilitiesColorProvider(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesColorProvider
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesColorProvider{
 					DynamicRegistration: true,
 				},
@@ -2142,7 +2132,7 @@ func TestTextDocumentClientCapabilitiesColorProvider(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesColorProvider{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -2155,7 +2145,7 @@ func TestTextDocumentClientCapabilitiesColorProvider(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesColorProvider
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -2224,14 +2214,14 @@ func TestTextDocumentClientCapabilitiesRename(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesRename
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesRename{
 					DynamicRegistration: true,
 					PrepareSupport:      true,
@@ -2241,7 +2231,7 @@ func TestTextDocumentClientCapabilitiesRename(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesRename{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -2254,7 +2244,7 @@ func TestTextDocumentClientCapabilitiesRename(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesRename
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -2322,14 +2312,14 @@ func TestTextDocumentClientCapabilitiesPublishDiagnostics(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesPublishDiagnostics
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesPublishDiagnostics{
 					RelatedInformation: true,
 				},
@@ -2338,7 +2328,7 @@ func TestTextDocumentClientCapabilitiesPublishDiagnostics(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesPublishDiagnostics{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -2351,7 +2341,7 @@ func TestTextDocumentClientCapabilitiesPublishDiagnostics(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesPublishDiagnostics
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -2421,14 +2411,14 @@ func TestTextDocumentClientCapabilitiesFoldingRange(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesFoldingRange
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesFoldingRange{
 					DynamicRegistration: true,
 					RangeLimit:          float64(0.5),
@@ -2439,7 +2429,7 @@ func TestTextDocumentClientCapabilitiesFoldingRange(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesFoldingRange{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -2452,7 +2442,7 @@ func TestTextDocumentClientCapabilitiesFoldingRange(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesFoldingRange
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -2638,21 +2628,21 @@ func TestTextDocumentClientCapabilities(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilities
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:             "Valid",
-				field:            strings.NewReader(want),
+				field:            want,
 				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilities{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -2665,7 +2655,7 @@ func TestTextDocumentClientCapabilities(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilities
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -2885,21 +2875,21 @@ func TestClientCapabilities(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             ClientCapabilities
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:             "Valid",
-				field:            strings.NewReader(want),
+				field:            want,
 				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             ClientCapabilities{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -2912,7 +2902,7 @@ func TestClientCapabilities(t *testing.T) {
 				t.Parallel()
 
 				var got ClientCapabilities
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -2927,8 +2917,10 @@ func TestClientCapabilities(t *testing.T) {
 }
 
 func TestInitializeResult(t *testing.T) {
-	const want = `{"capabilities":{"hoverProvider":true,"completionProvider":{"resolveProvider":true,"triggerCharacters":["Tab"]},"signatureHelpProvider":{"triggerCharacters":["C-K"]},"definitionProvider":true,"referencesProvider":true,"documentHighlightProvider":true,"documentSymbolProvider":true,"workspaceSymbolProvider":true,"codeActionProvider":true,"codeLensProvider":{"resolveProvider":true},"documentFormattingProvider":true,"documentRangeFormattingProvider":true,"documentOnTypeFormattingProvider":{"firstTriggerCharacter":".","moreTriggerCharacter":["f"]},"renameProvider":true,"documentLinkProvider":{"resolveProvider":true},"executeCommandProvider":{"commands":["test","command"]},"workspace":{"workspaceFolders":{"supported":true}}}}`
-	const wantNil = `{"capabilities":{}}`
+	const (
+		want    = `{"capabilities":{"hoverProvider":true,"completionProvider":{"resolveProvider":true,"triggerCharacters":["Tab"]},"signatureHelpProvider":{"triggerCharacters":["C-K"]},"definitionProvider":true,"referencesProvider":true,"documentHighlightProvider":true,"documentSymbolProvider":true,"workspaceSymbolProvider":true,"codeActionProvider":true,"codeLensProvider":{"resolveProvider":true},"documentFormattingProvider":true,"documentRangeFormattingProvider":true,"documentOnTypeFormattingProvider":{"firstTriggerCharacter":".","moreTriggerCharacter":["f"]},"renameProvider":true,"documentLinkProvider":{"resolveProvider":true},"executeCommandProvider":{"commands":["test","command"]},"workspace":{"workspaceFolders":{"supported":true}}}}`
+		wantNil = `{"capabilities":{}}`
+	)
 
 	t.Run("Marshal", func(t *testing.T) {
 		t.Parallel()
@@ -3025,14 +3017,14 @@ func TestInitializeResult(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             InitializeResult
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: InitializeResult{
 					Capabilities: ServerCapabilities{
 						TextDocumentSync: nil,
@@ -3084,7 +3076,7 @@ func TestInitializeResult(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(wantNil),
+				field:            wantNil,
 				want:             InitializeResult{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -3097,7 +3089,7 @@ func TestInitializeResult(t *testing.T) {
 				t.Parallel()
 
 				var got InitializeResult
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -3112,8 +3104,10 @@ func TestInitializeResult(t *testing.T) {
 }
 
 func TestDocumentLinkRegistrationOptions(t *testing.T) {
-	const want = `{"documentSelector":[{"language":"go","scheme":"file","pattern":"*"}],"resolveProvider":true}`
-	const wantNil = `{"documentSelector":[]}`
+	const (
+		want    = `{"documentSelector":[{"language":"go","scheme":"file","pattern":"*"}],"resolveProvider":true}`
+		wantNil = `{"documentSelector":[]}`
+	)
 
 	t.Run("Marshal", func(t *testing.T) {
 		t.Parallel()
@@ -3179,14 +3173,14 @@ func TestDocumentLinkRegistrationOptions(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             DocumentLinkRegistrationOptions
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: DocumentLinkRegistrationOptions{
 					TextDocumentRegistrationOptions: TextDocumentRegistrationOptions{
 						DocumentSelector: DocumentSelector{
@@ -3204,7 +3198,7 @@ func TestDocumentLinkRegistrationOptions(t *testing.T) {
 			},
 			{
 				name:  "ValidNilAll",
-				field: strings.NewReader(wantNil),
+				field: wantNil,
 				want: DocumentLinkRegistrationOptions{
 					TextDocumentRegistrationOptions: TextDocumentRegistrationOptions{
 						DocumentSelector: DocumentSelector{},
@@ -3221,7 +3215,7 @@ func TestDocumentLinkRegistrationOptions(t *testing.T) {
 				t.Parallel()
 
 				var got DocumentLinkRegistrationOptions
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return
@@ -3280,14 +3274,14 @@ func TestInitializedParams(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             InitializedParams
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:             "Valid",
-				field:            strings.NewReader(want),
+				field:            want,
 				want:             InitializedParams{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -3300,7 +3294,7 @@ func TestInitializedParams(t *testing.T) {
 				t.Parallel()
 
 				var got InitializedParams
-				dec := json.NewDecoder(tt.field)
+				dec := json.NewDecoder(strings.NewReader(tt.field))
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
 					return

@@ -179,14 +179,14 @@ func TestInitializeParams(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             InitializeParams
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:             "Valid",
-				field:            strings.NewReader(want),
+				field:            want,
 				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -199,7 +199,7 @@ func TestInitializeParams(t *testing.T) {
 				t.Parallel()
 
 				var got InitializeParams
-				dec := gojay.BorrowDecoder(tt.field)
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -291,14 +291,14 @@ func TestWorkspaceClientCapabilities(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             WorkspaceClientCapabilities
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:             "Valid",
-				field:            strings.NewReader(want),
+				field:            want,
 				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -311,7 +311,7 @@ func TestWorkspaceClientCapabilities(t *testing.T) {
 				t.Parallel()
 
 				var got WorkspaceClientCapabilities
-				dec := gojay.BorrowDecoder(tt.field)
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -384,21 +384,21 @@ func TestTextDocumentClientCapabilitiesSynchronization(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesSynchronization
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:             "Valid",
-				field:            strings.NewReader(want),
+				field:            want,
 				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesSynchronization{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -411,7 +411,7 @@ func TestTextDocumentClientCapabilitiesSynchronization(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesSynchronization
-				dec := gojay.BorrowDecoder(tt.field)
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -492,14 +492,14 @@ func TestTextDocumentClientCapabilitiesCompletion(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesCompletion
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesCompletion{
 					DynamicRegistration: true,
 					CompletionItem: &TextDocumentClientCapabilitiesCompletionItem{
@@ -520,7 +520,7 @@ func TestTextDocumentClientCapabilitiesCompletion(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesCompletion{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -533,7 +533,7 @@ func TestTextDocumentClientCapabilitiesCompletion(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesCompletion
-				dec := gojay.BorrowDecoder(tt.field)
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -606,14 +606,14 @@ func TestTextDocumentClientCapabilitiesHover(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesHover
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesHover{
 					DynamicRegistration: true,
 					ContentFormat: []MarkupKind{
@@ -626,7 +626,7 @@ func TestTextDocumentClientCapabilitiesHover(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesHover{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -639,7 +639,7 @@ func TestTextDocumentClientCapabilitiesHover(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesHover
-				dec := gojay.BorrowDecoder(tt.field)
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -714,14 +714,14 @@ func TestTextDocumentClientCapabilitiesSignatureHelp(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesSignatureHelp
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesSignatureHelp{
 					DynamicRegistration: true,
 					SignatureInformation: &TextDocumentClientCapabilitiesSignatureInformation{
@@ -736,7 +736,7 @@ func TestTextDocumentClientCapabilitiesSignatureHelp(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesSignatureHelp{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -749,7 +749,7 @@ func TestTextDocumentClientCapabilitiesSignatureHelp(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesSignatureHelp
-				dec := gojay.BorrowDecoder(tt.field)
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -818,14 +818,14 @@ func TestTextDocumentClientCapabilitiesReferences(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesReferences
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesReferences{
 					DynamicRegistration: true,
 				},
@@ -834,7 +834,7 @@ func TestTextDocumentClientCapabilitiesReferences(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesReferences{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -847,7 +847,7 @@ func TestTextDocumentClientCapabilitiesReferences(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesReferences
-				dec := gojay.BorrowDecoder(tt.field)
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -916,14 +916,14 @@ func TestTextDocumentClientCapabilitiesDocumentHighlight(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesDocumentHighlight
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesDocumentHighlight{
 					DynamicRegistration: true,
 				},
@@ -932,7 +932,7 @@ func TestTextDocumentClientCapabilitiesDocumentHighlight(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesDocumentHighlight{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -945,7 +945,7 @@ func TestTextDocumentClientCapabilitiesDocumentHighlight(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesDocumentHighlight
-				dec := gojay.BorrowDecoder(tt.field)
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -1025,14 +1025,14 @@ func TestTextDocumentClientCapabilitiesDocumentSymbol(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesDocumentSymbol
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesDocumentSymbol{
 					DynamicRegistration: true,
 					SymbolKind: &WorkspaceClientCapabilitiesSymbolKind{
@@ -1052,7 +1052,7 @@ func TestTextDocumentClientCapabilitiesDocumentSymbol(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesDocumentSymbol{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -1065,7 +1065,7 @@ func TestTextDocumentClientCapabilitiesDocumentSymbol(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesDocumentSymbol
-				dec := gojay.BorrowDecoder(tt.field)
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -1134,14 +1134,14 @@ func TestTextDocumentClientCapabilitiesFormatting(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesFormatting
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesFormatting{
 					DynamicRegistration: true,
 				},
@@ -1150,7 +1150,7 @@ func TestTextDocumentClientCapabilitiesFormatting(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesFormatting{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -1163,7 +1163,7 @@ func TestTextDocumentClientCapabilitiesFormatting(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesFormatting
-				dec := gojay.BorrowDecoder(tt.field)
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -1232,14 +1232,14 @@ func TestTextDocumentClientCapabilitiesRangeFormatting(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesRangeFormatting
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesRangeFormatting{
 					DynamicRegistration: true,
 				},
@@ -1248,7 +1248,7 @@ func TestTextDocumentClientCapabilitiesRangeFormatting(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesRangeFormatting{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -1261,7 +1261,7 @@ func TestTextDocumentClientCapabilitiesRangeFormatting(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesRangeFormatting
-				dec := gojay.BorrowDecoder(tt.field)
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -1330,14 +1330,14 @@ func TestTextDocumentClientCapabilitiesOnTypeFormatting(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesOnTypeFormatting
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesOnTypeFormatting{
 					DynamicRegistration: true,
 				},
@@ -1346,7 +1346,7 @@ func TestTextDocumentClientCapabilitiesOnTypeFormatting(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesOnTypeFormatting{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -1359,7 +1359,7 @@ func TestTextDocumentClientCapabilitiesOnTypeFormatting(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesOnTypeFormatting
-				dec := gojay.BorrowDecoder(tt.field)
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -1429,14 +1429,14 @@ func TestTextDocumentClientCapabilitiesDeclaration(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesDeclaration
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesDeclaration{
 					DynamicRegistration: true,
 					LinkSupport:         true,
@@ -1446,7 +1446,7 @@ func TestTextDocumentClientCapabilitiesDeclaration(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesDeclaration{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -1459,7 +1459,7 @@ func TestTextDocumentClientCapabilitiesDeclaration(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesDeclaration
-				dec := gojay.BorrowDecoder(tt.field)
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -1529,14 +1529,14 @@ func TestTextDocumentClientCapabilitiesDefinition(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesDefinition
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesDefinition{
 					DynamicRegistration: true,
 					LinkSupport:         true,
@@ -1546,7 +1546,7 @@ func TestTextDocumentClientCapabilitiesDefinition(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesDefinition{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -1559,7 +1559,7 @@ func TestTextDocumentClientCapabilitiesDefinition(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesDefinition
-				dec := gojay.BorrowDecoder(tt.field)
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -1629,14 +1629,14 @@ func TestTextDocumentClientCapabilitiesTypeDefinition(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesTypeDefinition
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesTypeDefinition{
 					DynamicRegistration: true,
 					LinkSupport:         true,
@@ -1646,7 +1646,7 @@ func TestTextDocumentClientCapabilitiesTypeDefinition(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesTypeDefinition{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -1659,7 +1659,7 @@ func TestTextDocumentClientCapabilitiesTypeDefinition(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesTypeDefinition
-				dec := gojay.BorrowDecoder(tt.field)
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -1729,14 +1729,14 @@ func TestTextDocumentClientCapabilitiesImplementation(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesImplementation
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesImplementation{
 					DynamicRegistration: true,
 					LinkSupport:         true,
@@ -1746,7 +1746,7 @@ func TestTextDocumentClientCapabilitiesImplementation(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesImplementation{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -1759,7 +1759,7 @@ func TestTextDocumentClientCapabilitiesImplementation(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesImplementation
-				dec := gojay.BorrowDecoder(tt.field)
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -1840,14 +1840,14 @@ func TestTextDocumentClientCapabilitiesCodeAction(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesCodeAction
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesCodeAction{
 					DynamicRegistration: true,
 					CodeActionLiteralSupport: &TextDocumentClientCapabilitiesCodeActionLiteralSupport{
@@ -1868,7 +1868,7 @@ func TestTextDocumentClientCapabilitiesCodeAction(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesCodeAction{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -1881,7 +1881,7 @@ func TestTextDocumentClientCapabilitiesCodeAction(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesCodeAction
-				dec := gojay.BorrowDecoder(tt.field)
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -1950,14 +1950,14 @@ func TestTextDocumentClientCapabilitiesCodeLens(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesCodeLens
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesCodeLens{
 					DynamicRegistration: true,
 				},
@@ -1966,7 +1966,7 @@ func TestTextDocumentClientCapabilitiesCodeLens(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesCodeLens{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -1979,7 +1979,7 @@ func TestTextDocumentClientCapabilitiesCodeLens(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesCodeLens
-				dec := gojay.BorrowDecoder(tt.field)
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -2048,14 +2048,14 @@ func TestTextDocumentClientCapabilitiesDocumentLink(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesDocumentLink
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesDocumentLink{
 					DynamicRegistration: true,
 				},
@@ -2064,7 +2064,7 @@ func TestTextDocumentClientCapabilitiesDocumentLink(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesDocumentLink{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -2077,7 +2077,7 @@ func TestTextDocumentClientCapabilitiesDocumentLink(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesDocumentLink
-				dec := gojay.BorrowDecoder(tt.field)
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -2146,14 +2146,14 @@ func TestTextDocumentClientCapabilitiesColorProvider(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesColorProvider
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesColorProvider{
 					DynamicRegistration: true,
 				},
@@ -2162,7 +2162,7 @@ func TestTextDocumentClientCapabilitiesColorProvider(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesColorProvider{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -2175,7 +2175,7 @@ func TestTextDocumentClientCapabilitiesColorProvider(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesColorProvider
-				dec := gojay.BorrowDecoder(tt.field)
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -2245,14 +2245,14 @@ func TestTextDocumentClientCapabilitiesRename(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesRename
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesRename{
 					DynamicRegistration: true,
 					PrepareSupport:      true,
@@ -2262,7 +2262,7 @@ func TestTextDocumentClientCapabilitiesRename(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesRename{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -2275,7 +2275,7 @@ func TestTextDocumentClientCapabilitiesRename(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesRename
-				dec := gojay.BorrowDecoder(tt.field)
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -2344,14 +2344,14 @@ func TestTextDocumentClientCapabilitiesPublishDiagnostics(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesPublishDiagnostics
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesPublishDiagnostics{
 					RelatedInformation: true,
 				},
@@ -2360,7 +2360,7 @@ func TestTextDocumentClientCapabilitiesPublishDiagnostics(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesPublishDiagnostics{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -2373,7 +2373,7 @@ func TestTextDocumentClientCapabilitiesPublishDiagnostics(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesPublishDiagnostics
-				dec := gojay.BorrowDecoder(tt.field)
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -2444,14 +2444,14 @@ func TestTextDocumentClientCapabilitiesFoldingRange(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilitiesFoldingRange
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: TextDocumentClientCapabilitiesFoldingRange{
 					DynamicRegistration: true,
 					RangeLimit:          float64(0.5),
@@ -2462,7 +2462,7 @@ func TestTextDocumentClientCapabilitiesFoldingRange(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilitiesFoldingRange{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -2475,7 +2475,7 @@ func TestTextDocumentClientCapabilitiesFoldingRange(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilitiesFoldingRange
-				dec := gojay.BorrowDecoder(tt.field)
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -2662,21 +2662,21 @@ func TestTextDocumentClientCapabilities(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             TextDocumentClientCapabilities
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:             "Valid",
-				field:            strings.NewReader(want),
+				field:            want,
 				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(emptyData),
+				field:            emptyData,
 				want:             TextDocumentClientCapabilities{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -2689,7 +2689,7 @@ func TestTextDocumentClientCapabilities(t *testing.T) {
 				t.Parallel()
 
 				var got TextDocumentClientCapabilities
-				dec := gojay.BorrowDecoder(tt.field)
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -3063,14 +3063,14 @@ func TestInitializeResult(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             InitializeResult
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: InitializeResult{
 					Capabilities: ServerCapabilities{
 						TextDocumentSync: nil,
@@ -3122,7 +3122,7 @@ func TestInitializeResult(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(wantNil),
+				field:            wantNil,
 				want:             InitializeResult{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -3135,7 +3135,7 @@ func TestInitializeResult(t *testing.T) {
 				t.Parallel()
 
 				var got InitializeResult
-				dec := gojay.BorrowDecoder(tt.field)
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -3214,14 +3214,14 @@ func TestDocumentLinkRegistrationOptions(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             DocumentLinkRegistrationOptions
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:  "Valid",
-				field: strings.NewReader(want),
+				field: want,
 				want: DocumentLinkRegistrationOptions{
 					TextDocumentRegistrationOptions: TextDocumentRegistrationOptions{
 						DocumentSelector: DocumentSelector{
@@ -3239,7 +3239,7 @@ func TestDocumentLinkRegistrationOptions(t *testing.T) {
 			},
 			{
 				name:             "ValidNilAll",
-				field:            strings.NewReader(wantNil),
+				field:            wantNil,
 				want:             DocumentLinkRegistrationOptions{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -3252,7 +3252,7 @@ func TestDocumentLinkRegistrationOptions(t *testing.T) {
 				t.Parallel()
 
 				var got DocumentLinkRegistrationOptions
-				dec := gojay.BorrowDecoder(tt.field)
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
@@ -3312,14 +3312,14 @@ func TestInitializedParams(t *testing.T) {
 
 		tests := []struct {
 			name             string
-			field            *strings.Reader
+			field            string
 			want             InitializedParams
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:             "Valid",
-				field:            strings.NewReader(want),
+				field:            want,
 				want:             InitializedParams{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -3332,7 +3332,7 @@ func TestInitializedParams(t *testing.T) {
 				t.Parallel()
 
 				var got InitializedParams
-				dec := gojay.BorrowDecoder(tt.field)
+				dec := gojay.BorrowDecoder(strings.NewReader(tt.field))
 				defer dec.Release()
 				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
 					t.Error(err)
