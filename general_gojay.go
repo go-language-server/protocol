@@ -1060,18 +1060,22 @@ func (v *TextDocumentClientCapabilitiesRename) Reset() {
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesPublishDiagnostics) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	if k == keyRelatedInformation {
+	switch k {
+	case keyRelatedInformation:
 		return dec.Bool(&v.RelatedInformation)
+	case keyTagSupport:
+		return dec.Bool(&v.TagSupport)
 	}
 	return nil
 }
 
 // NKeys returns the number of keys to unmarshal.
-func (v *TextDocumentClientCapabilitiesPublishDiagnostics) NKeys() int { return 1 }
+func (v *TextDocumentClientCapabilitiesPublishDiagnostics) NKeys() int { return 2 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesPublishDiagnostics) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKeyOmitEmpty(keyRelatedInformation, v.RelatedInformation)
+	enc.BoolKeyOmitEmpty(keyTagSupport, v.TagSupport)
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -1080,6 +1084,7 @@ func (v *TextDocumentClientCapabilitiesPublishDiagnostics) IsNil() bool { return
 // Reset reset fields
 func (v *TextDocumentClientCapabilitiesPublishDiagnostics) Reset() {
 	v.RelatedInformation = false
+	v.TagSupport = false
 }
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.

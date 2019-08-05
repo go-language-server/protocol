@@ -441,6 +441,9 @@ type TextDocumentClientCapabilitiesPublishDiagnostics struct {
 
 	// RelatedInformation whether the clients accepts diagnostics with related information.
 	RelatedInformation bool `json:"relatedInformation,omitempty"`
+
+	// TagSupport client supports the tag property to provide meta data about a diagnostic.
+	TagSupport bool `json:"tagSupport,omitempty"`
 }
 
 // TextDocumentClientCapabilitiesFoldingRange capabilities specific to `textDocument/foldingRange` requests.
