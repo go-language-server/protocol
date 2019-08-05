@@ -817,20 +817,6 @@ type DocumentLinkRegistrationOptions struct {
 // InitializedParams params of Initialized Notification.
 type InitializedParams struct{}
 
-// ResourceOperationKind is the file event type.
-type ResourceOperationKind string
-
-const (
-	// CreateResourceOperation supports creating new files and folders.
-	CreateResourceOperation ResourceOperationKind = "create"
-
-	// RenameResourceOperation supports renaming existing files and folders.
-	RenameResourceOperation ResourceOperationKind = "rename"
-
-	// DeleteResourceOperation supports deleting existing files and folders.
-	DeleteResourceOperation ResourceOperationKind = "delete"
-)
-
 // FailureHandlingKind is the kind of failure handling .
 type FailureHandlingKind string
 

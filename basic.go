@@ -177,6 +177,20 @@ type TextDocumentEdit struct {
 	Edits []TextEdit `json:"edits"`
 }
 
+// ResourceOperationKind is the file event type.
+type ResourceOperationKind string
+
+const (
+	// CreateResourceOperation supports creating new files and folders.
+	CreateResourceOperation ResourceOperationKind = "create"
+
+	// RenameResourceOperation supports renaming existing files and folders.
+	RenameResourceOperation ResourceOperationKind = "rename"
+
+	// DeleteResourceOperation supports deleting existing files and folders.
+	DeleteResourceOperation ResourceOperationKind = "delete"
+)
+
 // CreateFileOptions represents an options to create a file.
 type CreateFileOptions struct {
 	// Overwrite existing file. Overwrite wins over `ignoreIfExists`.
@@ -189,7 +203,7 @@ type CreateFileOptions struct {
 // CreateFile represents a create file operation.
 type CreateFile struct {
 	// Kind a create.
-	Kind string `json:"kind"` // should be `create`
+	Kind ResourceOperationKind `json:"kind"` // should be `create`
 
 	// URI is the resource to create.
 	URI string `json:"uri"`
@@ -210,7 +224,7 @@ type RenameFileOptions struct {
 // RenameFile represents a rename file operation.
 type RenameFile struct {
 	// Kind a rename.
-	Kind string `json:"kind"` // should be `rename`
+	Kind ResourceOperationKind `json:"kind"` // should be `rename`
 
 	// OldURI is the old (existing) location.
 	OldURI string `json:"oldUri"`
@@ -234,7 +248,7 @@ type DeleteFileOptions struct {
 // DeleteFile represents a delete file operation.
 type DeleteFile struct {
 	// Kind is a delete.
-	Kind string `json:"kind"` // should be `delete`
+	Kind ResourceOperationKind `json:"kind"` // should be `delete`
 
 	// URI is the file to delete.
 	URI string `json:"uri"`
