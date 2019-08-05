@@ -39,6 +39,8 @@ func (v *PublishDiagnosticsParams) UnmarshalJSONObject(dec *gojay.Decoder, k str
 	switch k {
 	case keyURI:
 		return dec.String((*string)(&v.URI))
+	case keyVersion:
+		return dec.Float64(&v.Version)
 	case keyDiagnostics:
 		value := Diagnostics{}
 		err := dec.Array(&value)
@@ -51,11 +53,12 @@ func (v *PublishDiagnosticsParams) UnmarshalJSONObject(dec *gojay.Decoder, k str
 }
 
 // NKeys returns the number of keys to unmarshal.
-func (v *PublishDiagnosticsParams) NKeys() int { return 2 }
+func (v *PublishDiagnosticsParams) NKeys() int { return 3 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *PublishDiagnosticsParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey(keyURI, string(v.URI))
+	enc.Float64KeyOmitEmpty(keyVersion, v.Version)
 	enc.ArrayKey(keyDiagnostics, Diagnostics(v.Diagnostics))
 }
 
