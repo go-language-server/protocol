@@ -44,7 +44,7 @@ func (v *InitializeParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) err
 	case keyCapabilities:
 		return dec.Object(&v.Capabilities)
 	case keyTrace:
-		return dec.String(&v.Trace)
+		return dec.String((*string)(&v.Trace))
 	case keyWorkspaceFolders:
 		var values WorkspaceFolders
 		err := dec.Array(&values)
@@ -66,7 +66,7 @@ func (v *InitializeParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey(keyRootURI, string(v.RootURI))
 	enc.AddInterfaceKey(keyInitializationOptions, v.InitializationOptions)
 	enc.ObjectKey(keyCapabilities, &v.Capabilities)
-	enc.StringKeyOmitEmpty(keyTrace, v.Trace)
+	enc.StringKeyOmitEmpty(keyTrace, string(v.Trace))
 	enc.ArrayKeyOmitEmpty(keyWorkspaceFolders, WorkspaceFolders(v.WorkspaceFolders))
 }
 

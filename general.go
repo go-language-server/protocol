@@ -18,6 +18,20 @@ type CancelParams struct {
 	ID jsonrpc2.ID `json:"id"`
 }
 
+// TraceMode represents a InitializeParams Trace mode.
+type TraceMode string
+
+const (
+	// TraceOff disable tracing.
+	TraceOff TraceMode = "off"
+
+	// TraceMessage normal tracing mode.
+	TraceMessage TraceMode = "message"
+
+	// TraceVerbose verbose tracing mode.
+	TraceVerbose TraceMode = "verbose"
+)
+
 // InitializeParams params of Initialize Request.
 type InitializeParams struct {
 
@@ -44,7 +58,7 @@ type InitializeParams struct {
 	Capabilities ClientCapabilities `json:"capabilities"`
 
 	// Trace is the initial trace setting. If omitted trace is disabled ('off').
-	Trace string `json:"trace,omitempty"`
+	Trace TraceMode `json:"trace,omitempty"`
 
 	// WorkspaceFolders is the workspace folders configured in the client when the server starts.
 	// This property is only available if the client supports workspace folders.
