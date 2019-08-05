@@ -79,6 +79,77 @@ func (v *DidChangeTextDocumentParams) MarshalJSONObject(enc *gojay.Encoder) {
 func (v *DidChangeTextDocumentParams) IsNil() bool { return v == nil }
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
+func (v *TextDocument) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	switch k {
+	case keyURI:
+		return dec.String((*string)(&v.URI))
+	case keyLanguageID:
+		return dec.String(&v.LanguageID)
+	case keyVersion:
+		return dec.Float64(&v.Version)
+	case keyLineCount:
+		return dec.Float64(&v.LineCount)
+	}
+	return nil
+}
+
+// NKeys returns the number of keys to unmarshal.
+func (v *TextDocument) NKeys() int { return 4 }
+
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
+func (v *TextDocument) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.StringKey(keyURI, string(v.URI))
+	enc.StringKey(keyLanguageID, v.LanguageID)
+	enc.Float64Key(keyVersion, v.Version)
+	enc.Float64Key(keyLineCount, v.LineCount)
+}
+
+// IsNil returns wether the structure is nil value or not.
+func (v *TextDocument) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
+func (v *TextDocumentChangeEvent) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	if k == keyDocument {
+		return dec.Object(&v.Document)
+	}
+	return nil
+}
+
+// NKeys returns the number of keys to unmarshal.
+func (v *TextDocumentChangeEvent) NKeys() int { return 1 }
+
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
+func (v *TextDocumentChangeEvent) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.ObjectKey(keyDocument, &v.Document)
+}
+
+// IsNil returns wether the structure is nil value or not.
+func (v *TextDocumentChangeEvent) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
+func (v *TextDocumentWillSaveEvent) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	switch k {
+	case keyDocument:
+		return dec.Object(&v.Document)
+	case keyReason:
+		return dec.Float64((*float64)(&v.Reason))
+	}
+	return nil
+}
+
+// NKeys returns the number of keys to unmarshal.
+func (v *TextDocumentWillSaveEvent) NKeys() int { return 2 }
+
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
+func (v *TextDocumentWillSaveEvent) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.ObjectKey(keyDocument, &v.Document)
+	enc.Float64Key(keyReason, float64(v.Reason))
+}
+
+// IsNil returns wether the structure is nil value or not.
+func (v *TextDocumentWillSaveEvent) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentContentChangeEvent) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keyRange:
