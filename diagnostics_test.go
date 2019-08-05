@@ -11,10 +11,56 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/go-language-server/uri"
 	"github.com/google/go-cmp/cmp"
 )
 
 func TestPublishDiagnosticsParams(t *testing.T) {
+	const (
+		want        = `{"uri":"file:///path/to/diagnostics.go","version":1,"diagnostics":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/diagnostics.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"diagnostics.go"}]}]}`
+		wantInvalid = `{"uri":"file:///path/to/diagnostics_gen.go","version":2,"diagnostics":[{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/diagnostics_gen.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}},"message":"diagnostics_gen.go"}]}]}`
+	)
+	wantType := PublishDiagnosticsParams{
+		URI:     uri.File("/path/to/diagnostics.go"),
+		Version: 1,
+		Diagnostics: []Diagnostic{
+			{
+				Range: Range{
+					Start: Position{
+						Line:      25,
+						Character: 1,
+					},
+					End: Position{
+						Line:      27,
+						Character: 3,
+					},
+				},
+				Severity: SeverityError,
+				Code:     "foo/bar",
+				Source:   "test foo bar",
+				Message:  "foo bar",
+				RelatedInformation: []DiagnosticRelatedInformation{
+					{
+						Location: Location{
+							URI: uri.File("/path/to/diagnostics.go"),
+							Range: Range{
+								Start: Position{
+									Line:      25,
+									Character: 1,
+								},
+								End: Position{
+									Line:      27,
+									Character: 3,
+								},
+							},
+						},
+						Message: "diagnostics.go",
+					},
+				},
+			},
+		},
+	}
+
 	t.Run("Marshal", func(t *testing.T) {
 		t.Parallel()
 
@@ -26,92 +72,16 @@ func TestPublishDiagnosticsParams(t *testing.T) {
 			wantErr        bool
 		}{
 			{
-				name: "Valid",
-				field: PublishDiagnosticsParams{
-					URI: "file:///path/to/diagnostics.go",
-					Diagnostics: []Diagnostic{
-						{
-							Range: Range{
-								Start: Position{
-									Line:      25,
-									Character: 1,
-								},
-								End: Position{
-									Line:      27,
-									Character: 3,
-								},
-							},
-							Severity: SeverityError,
-							Code:     "foo/bar",
-							Source:   "test foo bar",
-							Message:  "foo bar",
-							RelatedInformation: []DiagnosticRelatedInformation{
-								{
-									Location: Location{
-										URI: "file:///path/to/diagnostics.go",
-										Range: Range{
-											Start: Position{
-												Line:      25,
-												Character: 1,
-											},
-											End: Position{
-												Line:      27,
-												Character: 3,
-											},
-										},
-									},
-									Message: "diagnostics.go",
-								},
-							},
-						},
-					},
-				},
-				want:           `{"uri":"file:///path/to/diagnostics.go","diagnostics":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/diagnostics.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"diagnostics.go"}]}]}`,
+				name:           "Valid",
+				field:          wantType,
+				want:           want,
 				wantMarshalErr: false,
 				wantErr:        false,
 			},
 			{
-				name: "Invalid",
-				field: PublishDiagnosticsParams{
-					URI: "file:///path/to/diagnostics.go",
-					Diagnostics: []Diagnostic{
-						{
-							Range: Range{
-								Start: Position{
-									Line:      25,
-									Character: 1,
-								},
-								End: Position{
-									Line:      27,
-									Character: 3,
-								},
-							},
-							Severity: SeverityError,
-							Code:     "foo/bar",
-							Source:   "test foo bar",
-							Message:  "foo bar",
-							RelatedInformation: []DiagnosticRelatedInformation{
-								{
-									Location: Location{
-										URI: "file:///path/to/diagnostics.go",
-										Range: Range{
-											Start: Position{
-												Line:      25,
-												Character: 1,
-											},
-											End: Position{
-												Line:      27,
-												Character: 3,
-											},
-										},
-									},
-									Message: "diagnostics.go",
-								},
-							},
-						},
-					},
-				},
-				want:           `{"uri":"file:///path/to/diagnostics_gen.go","diagnostics":[{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/diagnostics_gen.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}},"message":"diagnostics_gen.go"}]}]}`,
+				name:           "Invalid",
+				field:          wantType,
+				want:           wantInvalid,
 				wantMarshalErr: false,
 				wantErr:        true,
 			},
@@ -146,92 +116,16 @@ func TestPublishDiagnosticsParams(t *testing.T) {
 			wantErr          bool
 		}{
 			{
-				name:  "Valid",
-				field: `{"uri":"file:///path/to/diagnostics.go","diagnostics":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/diagnostics.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"diagnostics.go"}]}]}`,
-				want: PublishDiagnosticsParams{
-					URI: "file:///path/to/diagnostics.go",
-					Diagnostics: []Diagnostic{
-						{
-							Range: Range{
-								Start: Position{
-									Line:      25,
-									Character: 1,
-								},
-								End: Position{
-									Line:      27,
-									Character: 3,
-								},
-							},
-							Severity: SeverityError,
-							Code:     "foo/bar",
-							Source:   "test foo bar",
-							Message:  "foo bar",
-							RelatedInformation: []DiagnosticRelatedInformation{
-								{
-									Location: Location{
-										URI: "file:///path/to/diagnostics.go",
-										Range: Range{
-											Start: Position{
-												Line:      25,
-												Character: 1,
-											},
-											End: Position{
-												Line:      27,
-												Character: 3,
-											},
-										},
-									},
-									Message: "diagnostics.go",
-								},
-							},
-						},
-					},
-				},
+				name:             "Valid",
+				field:            want,
+				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
 			{
-				name:  "Invalid",
-				field: `{"uri":"file:///path/to/diagnostics.go","diagnostics":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/diagnostics.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"diagnostics.go"}]}]}`,
-				want: PublishDiagnosticsParams{
-					URI: "file:///path/to/diagnostics_gen.go",
-					Diagnostics: []Diagnostic{
-						{
-							Range: Range{
-								Start: Position{
-									Line:      2,
-									Character: 1,
-								},
-								End: Position{
-									Line:      3,
-									Character: 2,
-								},
-							},
-							Severity: SeverityError,
-							Code:     "foo/bar",
-							Source:   "test foo bar",
-							Message:  "foo bar",
-							RelatedInformation: []DiagnosticRelatedInformation{
-								{
-									Location: Location{
-										URI: "file:///path/to/diagnostics_gen.go",
-										Range: Range{
-											Start: Position{
-												Line:      2,
-												Character: 1,
-											},
-											End: Position{
-												Line:      3,
-												Character: 2,
-											},
-										},
-									},
-									Message: "diagnostics_gen.go",
-								},
-							},
-						},
-					},
-				},
+				name:             "Invalid",
+				field:            wantInvalid,
+				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          true,
 			},
