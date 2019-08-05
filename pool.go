@@ -186,6 +186,9 @@ var (
 	// TextDocumentClientCapabilitiesFoldingRangePool represents a pool the TextDocumentClientCapabilitiesFoldingRange.
 	TextDocumentClientCapabilitiesFoldingRangePool *sync.Pool
 
+	// TextDocumentClientCapabilitiesSelectionRangePool represents a pool the TextDocumentClientCapabilitiesSelectionRange.
+	TextDocumentClientCapabilitiesSelectionRangePool *sync.Pool
+
 	// TextDocumentClientCapabilitiesPool represents a pool the TextDocumentClientCapabilities.
 	TextDocumentClientCapabilitiesPool *sync.Pool
 
@@ -531,6 +534,11 @@ func init() {
 	TextDocumentClientCapabilitiesFoldingRangePool = &sync.Pool{
 		New: func() interface{} {
 			return &TextDocumentClientCapabilitiesFoldingRange{}
+		},
+	}
+	TextDocumentClientCapabilitiesSelectionRangePool = &sync.Pool{
+		New: func() interface{} {
+			return &TextDocumentClientCapabilitiesSelectionRange{}
 		},
 	}
 	TextDocumentClientCapabilitiesPool = &sync.Pool{

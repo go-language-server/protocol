@@ -458,9 +458,18 @@ type TextDocumentClientCapabilitiesFoldingRange struct {
 	// RangeLimit is the maximum number of folding ranges that the client prefers to receive per document. The value serves as a
 	// hint, servers are free to follow the limit.
 	RangeLimit float64 `json:"rangeLimit,omitempty"`
+
 	// LineFoldingOnly if set, the client signals that it only supports folding complete lines. If set, client will
 	// ignore specified `startCharacter` and `endCharacter` properties in a FoldingRange.
 	LineFoldingOnly bool `json:"lineFoldingOnly,omitempty"`
+}
+
+// TextDocumentClientCapabilitiesSelectionRange capabilities specific to `textDocument/selectionRange` requests.
+type TextDocumentClientCapabilitiesSelectionRange struct {
+	// DynamicRegistration whether implementation supports dynamic registration for selection range providers. If this is set to `true`
+	// the client supports the new `(SelectionRangeProviderOptions & TextDocumentRegistrationOptions & StaticRegistrationOptions)`
+	// return value for the corresponding server capability as well.
+	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
 }
 
 // TextDocumentClientCapabilities Text document specific client capabilities.
@@ -538,6 +547,9 @@ type TextDocumentClientCapabilities struct {
 	//
 	// Since 3.10.0
 	FoldingRange *TextDocumentClientCapabilitiesFoldingRange `json:"foldingRange,omitempty"`
+
+	// SelectionRange capabilities specific to `textDocument/selectionRange` requests.
+	SelectionRange *TextDocumentClientCapabilitiesSelectionRange `json:"selectionRange,omitempty"`
 }
 
 // ClientCapabilities now define capabilities for dynamic registration, workspace and text document features the client supports.
@@ -812,6 +824,9 @@ type ServerCapabilities struct {
 	//
 	// Since 3.10.0
 	FoldingRangeProvider interface{} `json:"foldingRangeProvider,omitempty"`
+
+	// SelectionRangeProvider is the server provides selection range support.
+	SelectionRangeProvider interface{} `json:"selectionRangeProvider,omitempty"` // boolean || (TextDocumentRegistrationOptions || StaticRegistrationOptions || SelectionRangeProviderOptions)
 
 	// ExecuteCommandProvider is the server provides execute command support.
 	ExecuteCommandProvider *ExecuteCommandOptions `json:"executeCommandProvider,omitempty"`

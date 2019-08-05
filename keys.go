@@ -164,6 +164,7 @@ const (
 	keyScopeURI                          = "scopeUri"
 	keySection                           = "section"
 	keySelectionRange                    = "selectionRange"
+	keySelectionRangeProvider            = "selectionRangeProvider"
 	keySettings                          = "settings"
 	keySeverity                          = "severity"
 	keySignatureHelp                     = "signatureHelp"

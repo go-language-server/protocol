@@ -1121,6 +1121,30 @@ func (v *TextDocumentClientCapabilitiesFoldingRange) Reset() {
 }
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
+func (v *TextDocumentClientCapabilitiesSelectionRange) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	if k == keyDynamicRegistration {
+		return dec.Bool(&v.DynamicRegistration)
+	}
+	return nil
+}
+
+// NKeys returns the number of keys to unmarshal.
+func (v *TextDocumentClientCapabilitiesSelectionRange) NKeys() int { return 1 }
+
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
+func (v *TextDocumentClientCapabilitiesSelectionRange) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.BoolKeyOmitEmpty(keyDynamicRegistration, v.DynamicRegistration)
+}
+
+// IsNil returns wether the structure is nil value or not.
+func (v *TextDocumentClientCapabilitiesSelectionRange) IsNil() bool { return v == nil }
+
+// Reset reset fields
+func (v *TextDocumentClientCapabilitiesSelectionRange) Reset() {
+	v.DynamicRegistration = false
+}
+
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keySynchronization:
@@ -1270,12 +1294,19 @@ func (v *TextDocumentClientCapabilities) UnmarshalJSONObject(dec *gojay.Decoder,
 			v.FoldingRange = value
 		}
 		return err
+	case keySelectionRange:
+		value := TextDocumentClientCapabilitiesSelectionRangePool.Get().(*TextDocumentClientCapabilitiesSelectionRange)
+		err := dec.Object(value)
+		if err == nil {
+			v.SelectionRange = value
+		}
+		return err
 	}
 	return nil
 }
 
 // NKeys returns the number of keys to unmarshal.
-func (v *TextDocumentClientCapabilities) NKeys() int { return 21 }
+func (v *TextDocumentClientCapabilities) NKeys() int { return 22 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilities) MarshalJSONObject(enc *gojay.Encoder) {
@@ -1300,6 +1331,7 @@ func (v *TextDocumentClientCapabilities) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKeyOmitEmpty(keyRename, v.Rename)
 	enc.ObjectKeyOmitEmpty(keyPublishDiagnostics, v.PublishDiagnostics)
 	enc.ObjectKeyOmitEmpty(keyFoldingRange, v.FoldingRange)
+	enc.ObjectKeyOmitEmpty(keySelectionRange, v.SelectionRange)
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -1911,6 +1943,8 @@ func (v *ServerCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) e
 		return dec.Interface(&v.ColorProvider)
 	case keyFoldingRangeProvider:
 		return dec.Interface(&v.FoldingRangeProvider)
+	case keySelectionRangeProvider:
+		return dec.Interface(&v.SelectionRangeProvider)
 	case keyExecuteCommandProvider:
 		value := ExecuteCommandOptionsPool.Get().(*ExecuteCommandOptions)
 		err := dec.Object(value)
@@ -1932,7 +1966,7 @@ func (v *ServerCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) e
 }
 
 // NKeys returns the number of keys to unmarshal.
-func (v *ServerCapabilities) NKeys() int { return 23 }
+func (v *ServerCapabilities) NKeys() int { return 24 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ServerCapabilities) MarshalJSONObject(enc *gojay.Encoder) {
@@ -1956,6 +1990,7 @@ func (v *ServerCapabilities) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKeyOmitEmpty(keyDocumentLinkProvider, v.DocumentLinkProvider)
 	enc.AddInterfaceKeyOmitEmpty(keyColorProvider, v.ColorProvider)
 	enc.AddInterfaceKeyOmitEmpty(keyFoldingRangeProvider, v.FoldingRangeProvider)
+	enc.AddInterfaceKeyOmitEmpty(keySelectionRangeProvider, v.SelectionRangeProvider)
 	enc.ObjectKeyOmitEmpty(keyExecuteCommandProvider, v.ExecuteCommandProvider)
 	enc.ObjectKeyOmitEmpty(keyWorkspace, v.Workspace)
 	enc.AddInterfaceKeyOmitEmpty(keyExperimental, v.Experimental)
