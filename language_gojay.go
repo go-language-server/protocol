@@ -766,10 +766,7 @@ func (v *DocumentLinkParams) IsNil() bool { return v == nil }
 func (v *DocumentLink) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keyRange:
-		if v.Range == nil {
-			v.Range = &Range{}
-		}
-		return dec.Object(v.Range)
+		return dec.Object(&v.Range)
 	case keyTarget:
 		return dec.String((*string)(&v.Target))
 	case keyData:
@@ -783,7 +780,7 @@ func (v *DocumentLink) NKeys() int { return 3 }
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *DocumentLink) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ObjectKeyOmitEmpty(keyRange, v.Range)
+	enc.ObjectKey(keyRange, &v.Range)
 	enc.StringKeyOmitEmpty(keyTarget, string(v.Target))
 	enc.AddInterfaceKeyOmitEmpty(keyData, &v.Data)
 }

@@ -809,7 +809,7 @@ type DocumentLinkParams struct {
 type DocumentLink struct {
 
 	// Range is the range this link applies to.
-	Range *Range `json:"range,omitempty"`
+	Range Range `json:"range"`
 
 	// Target is the uri this link points to. If missing a resolve request is sent later.
 	Target uri.URI `json:"target,omitempty"`
