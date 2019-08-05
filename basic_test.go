@@ -20,6 +20,10 @@ func TestPosition(t *testing.T) {
 		want        = `{"line":25,"character":1}`
 		wantInvalid = `{"line":2,"character":0}`
 	)
+	wantType := Position{
+		Line:      25,
+		Character: 1,
+	}
 
 	t.Run("Marshal", func(t *testing.T) {
 		t.Parallel()
@@ -32,21 +36,15 @@ func TestPosition(t *testing.T) {
 			wantErr        bool
 		}{
 			{
-				name: "Valid",
-				field: Position{
-					Line:      25,
-					Character: 1,
-				},
+				name:           "Valid",
+				field:          wantType,
 				want:           want,
 				wantMarshalErr: false,
 				wantErr:        false,
 			},
 			{
-				name: "Invalid",
-				field: Position{
-					Line:      25,
-					Character: 1,
-				},
+				name:           "Invalid",
+				field:          wantType,
 				want:           wantInvalid,
 				wantMarshalErr: false,
 				wantErr:        true,
@@ -82,22 +80,16 @@ func TestPosition(t *testing.T) {
 			wantErr          bool
 		}{
 			{
-				name:  "Valid",
-				field: want,
-				want: Position{
-					Line:      25,
-					Character: 1,
-				},
+				name:             "Valid",
+				field:            want,
+				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
 			{
-				name:  "Invalid",
-				field: wantInvalid,
-				want: Position{
-					Line:      25,
-					Character: 1,
-				},
+				name:             "Invalid",
+				field:            wantInvalid,
+				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          true,
 			},
@@ -128,6 +120,16 @@ func TestRange(t *testing.T) {
 		want        = `{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}`
 		wantInvalid = `{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}`
 	)
+	wantType := Range{
+		Start: Position{
+			Line:      25,
+			Character: 1,
+		},
+		End: Position{
+			Line:      27,
+			Character: 3,
+		},
+	}
 
 	t.Run("Marshal", func(t *testing.T) {
 		t.Parallel()
@@ -140,33 +142,15 @@ func TestRange(t *testing.T) {
 			wantErr        bool
 		}{
 			{
-				name: "Valid",
-				field: Range{
-					Start: Position{
-						Line:      25,
-						Character: 1,
-					},
-					End: Position{
-						Line:      27,
-						Character: 3,
-					},
-				},
+				name:           "Valid",
+				field:          wantType,
 				want:           want,
 				wantMarshalErr: false,
 				wantErr:        false,
 			},
 			{
-				name: "Invalid",
-				field: Range{
-					Start: Position{
-						Line:      25,
-						Character: 1,
-					},
-					End: Position{
-						Line:      27,
-						Character: 3,
-					},
-				},
+				name:           "Invalid",
+				field:          wantType,
 				want:           wantInvalid,
 				wantMarshalErr: false,
 				wantErr:        true,
@@ -202,34 +186,16 @@ func TestRange(t *testing.T) {
 			wantErr          bool
 		}{
 			{
-				name:  "Valid",
-				field: want,
-				want: Range{
-					Start: Position{
-						Line:      25,
-						Character: 1,
-					},
-					End: Position{
-						Line:      27,
-						Character: 3,
-					},
-				},
+				name:             "Valid",
+				field:            want,
+				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
 			{
-				name:  "Invalid",
-				field: wantInvalid,
-				want: Range{
-					Start: Position{
-						Line:      25,
-						Character: 1,
-					},
-					End: Position{
-						Line:      27,
-						Character: 3,
-					},
-				},
+				name:             "Invalid",
+				field:            wantInvalid,
+				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          true,
 			},
@@ -256,6 +222,24 @@ func TestRange(t *testing.T) {
 }
 
 func TestLocation(t *testing.T) {
+	const (
+		want        = `{"uri":"file:///Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`
+		wantInvalid = `{"uri":"file:///Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}}`
+	)
+	wantType := Location{
+		URI: uri.File("/Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go"),
+		Range: Range{
+			Start: Position{
+				Line:      25,
+				Character: 1,
+			},
+			End: Position{
+				Line:      27,
+				Character: 3,
+			},
+		},
+	}
+
 	t.Run("Marshal", func(t *testing.T) {
 		t.Parallel()
 
@@ -267,40 +251,16 @@ func TestLocation(t *testing.T) {
 			wantErr        bool
 		}{
 			{
-				name: "Valid",
-				field: Location{
-					URI: uri.File("/Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go"),
-					Range: Range{
-						Start: Position{
-							Line:      25,
-							Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-				},
-				want:           `{"uri":"file:///Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`,
+				name:           "Valid",
+				field:          wantType,
+				want:           want,
 				wantMarshalErr: false,
 				wantErr:        false,
 			},
 			{
-				name: "Invalid",
-				field: Location{
-					URI: uri.File("/Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go"),
-					Range: Range{
-						Start: Position{
-							Line:      25,
-							Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-				},
-				want:           `{"uri":"file:///Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}}`,
+				name:           "Invalid",
+				field:          wantType,
+				want:           wantInvalid,
 				wantMarshalErr: false,
 				wantErr:        true,
 			},
@@ -335,40 +295,16 @@ func TestLocation(t *testing.T) {
 			wantErr          bool
 		}{
 			{
-				name:  "Valid",
-				field: `{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`,
-				want: Location{
-					URI: uri.File("/path/to/basic.go"),
-					Range: Range{
-						Start: Position{
-							Line:      25,
-							Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-				},
+				name:             "Valid",
+				field:            want,
+				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
 			{
-				name:  "Invalid",
-				field: `{"uri":"file:///path/to/basic.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}}`,
-				want: Location{
-					URI: uri.File("/path/to/basic.go"),
-					Range: Range{
-						Start: Position{
-							Line:      25,
-							Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-				},
+				name:             "Invalid",
+				field:            wantInvalid,
+				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          true,
 			},
@@ -395,6 +331,66 @@ func TestLocation(t *testing.T) {
 }
 
 func TestLocationLink(t *testing.T) {
+	const (
+		want        = `{"originSelectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"targetUri":"file:///path/to/test.go","targetRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"targetSelectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`
+		wantNil     = `{"targetUri":"file:///path/to/test.go","targetRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"targetSelectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`
+		wantInvalid = `{"originSelectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"targetUri":"file:///path/to/test.go","targetRange":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"targetSelectionRange":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}}`
+	)
+	wantType := LocationLink{
+		OriginSelectionRange: &Range{
+			Start: Position{
+				Line:      25,
+				Character: 1,
+			},
+			End: Position{
+				Line:      27,
+				Character: 3,
+			},
+		},
+		TargetURI: "file:///path/to/test.go",
+		TargetRange: Range{
+			Start: Position{
+				Line:      25,
+				Character: 1,
+			},
+			End: Position{
+				Line:      27,
+				Character: 3,
+			},
+		},
+		TargetSelectionRange: Range{
+			Start: Position{
+				Line: 25, Character: 1,
+			},
+			End: Position{
+				Line:      27,
+				Character: 3,
+			},
+		},
+	}
+	wantTypeNil := LocationLink{
+		TargetURI: uri.File("/path/to/test.go"),
+		TargetRange: Range{
+			Start: Position{
+				Line:      25,
+				Character: 1,
+			},
+			End: Position{
+				Line:      27,
+				Character: 3,
+			},
+		},
+		TargetSelectionRange: Range{
+			Start: Position{
+				Line: 25, Character: 1,
+			},
+			End: Position{
+				Line:      27,
+				Character: 3,
+			},
+		},
+	}
+
 	t.Run("Marshal", func(t *testing.T) {
 		t.Parallel()
 
@@ -406,106 +402,23 @@ func TestLocationLink(t *testing.T) {
 			wantErr        bool
 		}{
 			{
-				name: "Valid",
-				field: LocationLink{
-					OriginSelectionRange: &Range{
-						Start: Position{
-							Line:      25,
-							Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-					TargetURI: "file:///path/to/test.go",
-					TargetRange: Range{
-						Start: Position{
-							Line:      25,
-							Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-					TargetSelectionRange: Range{
-						Start: Position{
-							Line: 25, Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-				},
-				want:           `{"originSelectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"targetUri":"file:///path/to/test.go","targetRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"targetSelectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`,
+				name:           "Valid",
+				field:          wantType,
+				want:           want,
 				wantMarshalErr: false,
 				wantErr:        false,
 			},
 			{
-				name: "ValidNilOriginSelectionRange",
-				field: LocationLink{
-					TargetURI: uri.File("/path/to/test.go"),
-					TargetRange: Range{
-						Start: Position{
-							Line:      25,
-							Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-					TargetSelectionRange: Range{
-						Start: Position{
-							Line: 25, Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-				},
-				want:           `{"targetUri":"file:///path/to/test.go","targetRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"targetSelectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`,
+				name:           "ValidNilOriginSelectionRange",
+				field:          wantTypeNil,
+				want:           wantNil,
 				wantMarshalErr: false,
 				wantErr:        false,
 			},
 			{
-				name: "Invalid",
-				field: LocationLink{
-					OriginSelectionRange: &Range{
-						Start: Position{
-							Line:      25,
-							Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-					TargetURI: uri.File("/path/to/test.go"),
-					TargetRange: Range{
-						Start: Position{
-							Line:      25,
-							Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-					TargetSelectionRange: Range{
-						Start: Position{
-							Line: 25, Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-				},
-				want:           `{"originSelectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"targetUri":"file:///path/to/test.go","targetRange":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"targetSelectionRange":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}}`,
+				name:           "Invalid",
+				field:          wantType,
+				want:           wantInvalid,
 				wantMarshalErr: false,
 				wantErr:        true,
 			},
@@ -541,7 +454,7 @@ func TestLocationLink(t *testing.T) {
 		}{
 			{
 				name:  "Valid",
-				field: `{"originSelectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"targetUri":"file:///path/to/test.go","targetRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"targetSelectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`,
+				field: want,
 				want: LocationLink{
 					OriginSelectionRange: &Range{
 						Start: Position{
@@ -578,68 +491,16 @@ func TestLocationLink(t *testing.T) {
 				wantErr:          false,
 			},
 			{
-				name:  "ValidNilOriginSelectionRange",
-				field: `{"targetUri":"file:///path/to/test.go","targetRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"targetSelectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`,
-				want: LocationLink{
-					TargetURI: uri.File("/path/to/test.go"),
-					TargetRange: Range{
-						Start: Position{
-							Line:      25,
-							Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-					TargetSelectionRange: Range{
-						Start: Position{
-							Line: 25, Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-				},
+				name:             "ValidNilOriginSelectionRange",
+				field:            wantNil,
+				want:             wantTypeNil,
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
 			{
-				name:  "Invalid",
-				field: `{"originSelectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"targetUri":"file:///path/to/test.go","targetRange":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"targetSelectionRange":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}}`,
-				want: LocationLink{
-					OriginSelectionRange: &Range{
-						Start: Position{
-							Line:      25,
-							Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-					TargetURI: uri.File("/path/to/test.go"),
-					TargetRange: Range{
-						Start: Position{
-							Line:      25,
-							Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-					TargetSelectionRange: Range{
-						Start: Position{
-							Line: 25, Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-				},
+				name:             "Invalid",
+				field:            wantInvalid,
+				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          true,
 			},
@@ -666,6 +527,144 @@ func TestLocationLink(t *testing.T) {
 }
 
 func TestDiagnostic(t *testing.T) {
+	const (
+		want                      = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}]}`
+		wantNilSeverity           = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}]}`
+		wantNilCode               = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}]}`
+		wantNilRelatedInformation = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar"}`
+		wantNilAll                = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"message":"foo bar"}`
+		wantInvalid               = `{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}},"message":"basic_gen.go"}]}`
+	)
+	wantType := Diagnostic{
+		Range: Range{
+			Start: Position{
+				Line:      25,
+				Character: 1,
+			},
+			End: Position{
+				Line:      27,
+				Character: 3,
+			},
+		},
+		Severity: SeverityError,
+		Code:     "foo/bar",
+		Source:   "test foo bar",
+		Message:  "foo bar",
+		RelatedInformation: []DiagnosticRelatedInformation{
+			{
+				Location: Location{
+					URI: uri.File("/path/to/basic.go"),
+					Range: Range{
+						Start: Position{
+							Line:      25,
+							Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+				},
+				Message: "basic_gen.go",
+			},
+		},
+	}
+	wantTypeNilSeverity := Diagnostic{
+		Range: Range{
+			Start: Position{
+				Line:      25,
+				Character: 1,
+			},
+			End: Position{
+				Line:      27,
+				Character: 3,
+			},
+		},
+		Code:    "foo/bar",
+		Source:  "test foo bar",
+		Message: "foo bar",
+		RelatedInformation: []DiagnosticRelatedInformation{
+			{
+				Location: Location{
+					URI: uri.File("/path/to/basic.go"),
+					Range: Range{
+						Start: Position{
+							Line:      25,
+							Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+				},
+				Message: "basic_gen.go",
+			},
+		},
+	}
+	wantTypeNilCode := Diagnostic{
+		Range: Range{
+			Start: Position{
+				Line:      25,
+				Character: 1,
+			},
+			End: Position{
+				Line:      27,
+				Character: 3,
+			},
+		},
+		Severity: SeverityError,
+		Source:   "test foo bar",
+		Message:  "foo bar",
+		RelatedInformation: []DiagnosticRelatedInformation{
+			{
+				Location: Location{
+					URI: uri.File("/path/to/basic.go"),
+					Range: Range{
+						Start: Position{
+							Line:      25,
+							Character: 1,
+						},
+						End: Position{
+							Line:      27,
+							Character: 3,
+						},
+					},
+				},
+				Message: "basic_gen.go",
+			},
+		},
+	}
+	wantTypeNilRelatedInformation := Diagnostic{
+		Range: Range{
+			Start: Position{
+				Line:      25,
+				Character: 1,
+			},
+			End: Position{
+				Line:      27,
+				Character: 3,
+			},
+		},
+		Severity: SeverityError,
+		Code:     "foo/bar",
+		Source:   "test foo bar",
+		Message:  "foo bar",
+	}
+	wantTypeNilAll := Diagnostic{
+		Range: Range{
+			Start: Position{
+				Line:      25,
+				Character: 1,
+			},
+			End: Position{
+				Line:      27,
+				Character: 3,
+			},
+		},
+		Message: "foo bar",
+	}
+
 	t.Run("Marshal", func(t *testing.T) {
 		t.Parallel()
 
@@ -677,201 +676,44 @@ func TestDiagnostic(t *testing.T) {
 			wantErr        bool
 		}{
 			{
-				name: "Valid",
-				field: Diagnostic{
-					Range: Range{
-						Start: Position{
-							Line:      25,
-							Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-					Severity: SeverityError,
-					Code:     "foo/bar",
-					Source:   "test foo bar",
-					Message:  "foo bar",
-					RelatedInformation: []DiagnosticRelatedInformation{
-						{
-							Location: Location{
-								URI: uri.File("/path/to/basic.go"),
-								Range: Range{
-									Start: Position{
-										Line:      25,
-										Character: 1,
-									},
-									End: Position{
-										Line:      27,
-										Character: 3,
-									},
-								},
-							},
-							Message: "basic_gen.go",
-						},
-					},
-				},
-				want:           `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}]}`,
+				name:           "Valid",
+				field:          wantType,
+				want:           want,
 				wantMarshalErr: false,
 				wantErr:        false,
 			},
 			{
-				name: "ValidNilSeverity",
-				field: Diagnostic{
-					Range: Range{
-						Start: Position{
-							Line:      25,
-							Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-					Code:    "foo/bar",
-					Source:  "test foo bar",
-					Message: "foo bar",
-					RelatedInformation: []DiagnosticRelatedInformation{
-						{
-							Location: Location{
-								URI: uri.File("/path/to/basic.go"),
-								Range: Range{
-									Start: Position{
-										Line:      25,
-										Character: 1,
-									},
-									End: Position{
-										Line:      27,
-										Character: 3,
-									},
-								},
-							},
-							Message: "basic_gen.go",
-						},
-					},
-				},
-				want:           `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}]}`,
+				name:           "ValidNilSeverity",
+				field:          wantTypeNilSeverity,
+				want:           wantNilSeverity,
 				wantMarshalErr: false,
 				wantErr:        false,
 			},
 			{
-				name: "ValidNilCode",
-				field: Diagnostic{
-					Range: Range{
-						Start: Position{
-							Line:      25,
-							Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-					Severity: SeverityError,
-					Source:   "test foo bar",
-					Message:  "foo bar",
-					RelatedInformation: []DiagnosticRelatedInformation{
-						{
-							Location: Location{
-								URI: uri.File("/path/to/basic.go"),
-								Range: Range{
-									Start: Position{
-										Line:      25,
-										Character: 1,
-									},
-									End: Position{
-										Line:      27,
-										Character: 3,
-									},
-								},
-							},
-							Message: "basic_gen.go",
-						},
-					},
-				},
-				want:           `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}]}`,
+				name:           "ValidNilCode",
+				field:          wantTypeNilCode,
+				want:           wantNilCode,
 				wantMarshalErr: false,
 				wantErr:        false,
 			},
 			{
-				name: "ValidNilRelatedInformation",
-				field: Diagnostic{
-					Range: Range{
-						Start: Position{
-							Line:      25,
-							Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-					Severity: SeverityError,
-					Code:     "foo/bar",
-					Source:   "test foo bar",
-					Message:  "foo bar",
-				},
-				want:           `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar"}`,
+				name:           "ValidNilRelatedInformation",
+				field:          wantTypeNilRelatedInformation,
+				want:           wantNilRelatedInformation,
 				wantMarshalErr: false,
 				wantErr:        false,
 			},
 			{
-				name: "ValidNilAll",
-				field: Diagnostic{
-					Range: Range{
-						Start: Position{
-							Line:      25,
-							Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-					Message: "foo bar",
-				},
-				want:           `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"message":"foo bar"}`,
+				name:           "ValidNilAll",
+				field:          wantTypeNilAll,
+				want:           wantNilAll,
 				wantMarshalErr: false,
 				wantErr:        false,
 			},
 			{
-				name: "Invalid",
-				field: Diagnostic{
-					Range: Range{
-						Start: Position{
-							Line:      2,
-							Character: 1,
-						},
-						End: Position{
-							Line:      3,
-							Character: 2,
-						},
-					},
-					Severity: SeverityError,
-					Code:     "foo/bar",
-					Source:   "test foo bar",
-					Message:  "foo bar",
-					RelatedInformation: []DiagnosticRelatedInformation{
-						{
-							Location: Location{
-								URI: uri.File("/path/to/basic.go"),
-								Range: Range{
-									Start: Position{
-										Line:      25,
-										Character: 1,
-									},
-									End: Position{
-										Line:      27,
-										Character: 3,
-									},
-								},
-							},
-							Message: "basic_gen.go",
-						},
-					},
-				},
-				want:           `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}]}`,
+				name:           "Invalid",
+				field:          wantType,
+				want:           wantInvalid,
 				wantMarshalErr: false,
 				wantErr:        true,
 			},
@@ -906,189 +748,44 @@ func TestDiagnostic(t *testing.T) {
 			wantErr          bool
 		}{
 			{
-				name:  "Valid",
-				field: `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}]}`,
-				want: Diagnostic{
-					Range: Range{
-						Start: Position{
-							Line:      25,
-							Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-					Severity: SeverityError,
-					Code:     "foo/bar",
-					Source:   "test foo bar",
-					Message:  "foo bar",
-					RelatedInformation: []DiagnosticRelatedInformation{
-						{
-							Location: Location{URI: uri.File("/path/to/basic.go"), Range: Range{Start: Position{Line: 25, Character: 1}, End: Position{Line: 27, Character: 3}}},
-							Message:  "basic_gen.go",
-						},
-					},
-				},
+				name:             "Valid",
+				field:            want,
+				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
 			{
-				name:  "ValidNilSeverity",
-				field: `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}]}`,
-				want: Diagnostic{
-					Range: Range{
-						Start: Position{
-							Line:      25,
-							Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-					Code:    "foo/bar",
-					Source:  "test foo bar",
-					Message: "foo bar",
-					RelatedInformation: []DiagnosticRelatedInformation{
-						{
-							Location: Location{
-								URI: uri.File("/path/to/basic.go"),
-								Range: Range{
-									Start: Position{
-										Line:      25,
-										Character: 1,
-									},
-									End: Position{
-										Line:      27,
-										Character: 3,
-									},
-								},
-							},
-							Message: "basic_gen.go",
-						},
-					},
-				},
+				name:             "ValidNilSeverity",
+				field:            wantNilSeverity,
+				want:             wantTypeNilSeverity,
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
 			{
-				name:  "ValidNilCode",
-				field: `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}]}`,
-				want: Diagnostic{
-					Range: Range{
-						Start: Position{
-							Line:      25,
-							Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-					Severity: SeverityError,
-					Source:   "test foo bar",
-					Message:  "foo bar",
-					RelatedInformation: []DiagnosticRelatedInformation{
-						{
-							Location: Location{
-								URI: uri.File("/path/to/basic.go"),
-								Range: Range{
-									Start: Position{
-										Line:      25,
-										Character: 1,
-									},
-									End: Position{
-										Line:      27,
-										Character: 3,
-									},
-								},
-							},
-							Message: "basic_gen.go",
-						},
-					},
-				},
+				name:             "ValidNilCode",
+				field:            wantNilCode,
+				want:             wantTypeNilCode,
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
 			{
-				name:  "ValidNilRelatedInformation",
-				field: `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar"}`,
-				want: Diagnostic{
-					Range: Range{
-						Start: Position{
-							Line:      25,
-							Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-					Severity: SeverityError,
-					Code:     "foo/bar",
-					Source:   "test foo bar",
-					Message:  "foo bar",
-				},
+				name:             "ValidNilRelatedInformation",
+				field:            wantNilRelatedInformation,
+				want:             wantTypeNilRelatedInformation,
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
 			{
-				name:  "ValidNilAll",
-				field: `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"message":"foo bar"}`,
-				want: Diagnostic{
-					Range: Range{
-						Start: Position{
-							Line:      25,
-							Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-					Message: "foo bar",
-				},
+				name:             "ValidNilAll",
+				field:            wantNilAll,
+				want:             wantTypeNilAll,
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
 			{
-				name:  "Invalid",
-				field: `{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}},"message":"basic_gen.go"}]}`,
-				want: Diagnostic{
-					Range: Range{
-						Start: Position{
-							Line:      25,
-							Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-					Severity: SeverityError,
-					Code:     "foo/bar",
-					Source:   "test foo bar",
-					Message:  "foo bar",
-					RelatedInformation: []DiagnosticRelatedInformation{
-						{
-							Location: Location{
-								URI: uri.File("/path/to/basic.go"),
-								Range: Range{
-									Start: Position{
-										Line:      25,
-										Character: 1,
-									},
-									End: Position{
-										Line:      27,
-										Character: 3,
-									},
-								},
-							},
-							Message: "basic_gen.go",
-						},
-					},
-				},
+				name:             "Invalid",
+				field:            wantInvalid,
+				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          true,
 			},
@@ -1878,7 +1575,7 @@ func TestCreateFile(t *testing.T) {
 				name: "Valid",
 				field: CreateFile{
 					Kind: "create",
-					URI:  "file:///path/to/basic.go",
+					URI:  uri.File("/path/to/basic.go"),
 					Options: &CreateFileOptions{
 						Overwrite:      true,
 						IgnoreIfExists: true,
@@ -1892,7 +1589,7 @@ func TestCreateFile(t *testing.T) {
 				name: "ValidNilOptions",
 				field: CreateFile{
 					Kind: "create",
-					URI:  "file:///path/to/basic.go",
+					URI:  uri.File("/path/to/basic.go"),
 				},
 				want:           `{"kind":"create","uri":"file:///path/to/basic.go"}`,
 				wantMarshalErr: false,
@@ -1902,7 +1599,7 @@ func TestCreateFile(t *testing.T) {
 				name: "Invalid",
 				field: CreateFile{
 					Kind: "create",
-					URI:  "file:///path/to/basic.go",
+					URI:  uri.File("/path/to/basic.go"),
 					Options: &CreateFileOptions{
 						Overwrite:      true,
 						IgnoreIfExists: true,
@@ -1947,7 +1644,7 @@ func TestCreateFile(t *testing.T) {
 				field: `{"kind":"create","uri":"file:///path/to/basic.go","options":{"overwrite":true,"ignoreIfExists":true}}`,
 				want: CreateFile{
 					Kind: "create",
-					URI:  "file:///path/to/basic.go",
+					URI:  uri.File("/path/to/basic.go"),
 					Options: &CreateFileOptions{
 						Overwrite:      true,
 						IgnoreIfExists: true,
@@ -1961,7 +1658,7 @@ func TestCreateFile(t *testing.T) {
 				field: `{"kind":"create","uri":"file:///path/to/basic.go"}`,
 				want: CreateFile{
 					Kind: "create",
-					URI:  "file:///path/to/basic.go",
+					URI:  uri.File("/path/to/basic.go"),
 				},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -1971,7 +1668,7 @@ func TestCreateFile(t *testing.T) {
 				field: `{"kind":"create","uri":"file:///path/to/basic.go","options":{"overwrite":true,"ignoreIfExists":true}}`,
 				want: CreateFile{
 					Kind: "create",
-					URI:  "file:///path/to/basic_gen.go",
+					URI:  uri.File("/path/to/basic_gen.go"),
 					Options: &CreateFileOptions{
 						Overwrite:      false,
 						IgnoreIfExists: false,
@@ -2170,8 +1867,8 @@ func TestRenameFile(t *testing.T) {
 				name: "Valid",
 				field: RenameFile{
 					Kind:   "rename",
-					OldURI: "file:///path/to/old.go",
-					NewURI: "file:///path/to/new.go",
+					OldURI: uri.File("/path/to/old.go"),
+					NewURI: uri.File("/path/to/new.go"),
 					Options: &RenameFileOptions{
 						Overwrite:      true,
 						IgnoreIfExists: true,
@@ -2185,8 +1882,8 @@ func TestRenameFile(t *testing.T) {
 				name: "ValidNilOptions",
 				field: RenameFile{
 					Kind:   "rename",
-					OldURI: "file:///path/to/old.go",
-					NewURI: "file:///path/to/new.go",
+					OldURI: uri.File("/path/to/old.go"),
+					NewURI: uri.File("/path/to/new.go"),
 				},
 				want:           `{"kind":"rename","oldUri":"file:///path/to/old.go","newUri":"file:///path/to/new.go"}`,
 				wantMarshalErr: false,
@@ -2196,8 +1893,8 @@ func TestRenameFile(t *testing.T) {
 				name: "Invalid",
 				field: RenameFile{
 					Kind:   "rename",
-					OldURI: "file:///path/to/old.go",
-					NewURI: "file:///path/to/new.go",
+					OldURI: uri.File("/path/to/old.go"),
+					NewURI: uri.File("/path/to/new.go"),
 					Options: &RenameFileOptions{
 						Overwrite:      true,
 						IgnoreIfExists: true,
@@ -2242,8 +1939,8 @@ func TestRenameFile(t *testing.T) {
 				field: `{"kind":"rename","oldUri":"file:///path/to/old.go","newUri":"file:///path/to/new.go","options":{"overwrite":true,"ignoreIfExists":true}}`,
 				want: RenameFile{
 					Kind:   "rename",
-					OldURI: "file:///path/to/old.go",
-					NewURI: "file:///path/to/new.go",
+					OldURI: uri.File("/path/to/old.go"),
+					NewURI: uri.File("/path/to/new.go"),
 					Options: &RenameFileOptions{
 						Overwrite:      true,
 						IgnoreIfExists: true,
@@ -2257,8 +1954,8 @@ func TestRenameFile(t *testing.T) {
 				field: `{"kind":"rename","oldUri":"file:///path/to/old.go","newUri":"file:///path/to/new.go"}`,
 				want: RenameFile{
 					Kind:   "rename",
-					OldURI: "file:///path/to/old.go",
-					NewURI: "file:///path/to/new.go",
+					OldURI: uri.File("/path/to/old.go"),
+					NewURI: uri.File("/path/to/new.go"),
 				},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -2268,8 +1965,8 @@ func TestRenameFile(t *testing.T) {
 				field: `{"kind":"rename","oldUri":"file:///path/to/old.go","newUri":"file:///path/to/new.go","options":{"overwrite":true,"ignoreIfExists":true}}`,
 				want: RenameFile{
 					Kind:   "rename",
-					OldURI: "file:///path/to/old2.go",
-					NewURI: "file:///path/to/new2.go",
+					OldURI: uri.File("/path/to/old.go"),
+					NewURI: uri.File("/path/to/new.go"),
 					Options: &RenameFileOptions{
 						Overwrite:      false,
 						IgnoreIfExists: false,
@@ -2468,7 +2165,7 @@ func TestDeleteFile(t *testing.T) {
 				name: "Valid",
 				field: DeleteFile{
 					Kind: "delete",
-					URI:  "file:///path/to/delete.go",
+					URI:  uri.File("/path/to/delete.go"),
 					Options: &DeleteFileOptions{
 						Recursive:         true,
 						IgnoreIfNotExists: true,
@@ -2482,7 +2179,7 @@ func TestDeleteFile(t *testing.T) {
 				name: "ValidNilOptions",
 				field: DeleteFile{
 					Kind: "delete",
-					URI:  "file:///path/to/delete.go",
+					URI:  uri.File("/path/to/delete.go"),
 				},
 				want:           `{"kind":"delete","uri":"file:///path/to/delete.go"}`,
 				wantMarshalErr: false,
@@ -2492,7 +2189,7 @@ func TestDeleteFile(t *testing.T) {
 				name: "Invalid",
 				field: DeleteFile{
 					Kind: "delete",
-					URI:  "file:///path/to/delete.go",
+					URI:  uri.File("/path/to/delete.go"),
 					Options: &DeleteFileOptions{
 						Recursive:         true,
 						IgnoreIfNotExists: true,
@@ -2537,7 +2234,7 @@ func TestDeleteFile(t *testing.T) {
 				field: `{"kind":"delete","uri":"file:///path/to/delete.go","options":{"recursive":true,"ignoreIfNotExists":true}}`,
 				want: DeleteFile{
 					Kind: "delete",
-					URI:  "file:///path/to/delete.go",
+					URI:  uri.File("/path/to/delete.go"),
 					Options: &DeleteFileOptions{
 						Recursive:         true,
 						IgnoreIfNotExists: true,
@@ -2551,7 +2248,7 @@ func TestDeleteFile(t *testing.T) {
 				field: `{"kind":"delete","uri":"file:///path/to/delete.go"}`,
 				want: DeleteFile{
 					Kind: "delete",
-					URI:  "file:///path/to/delete.go",
+					URI:  uri.File("/path/to/delete.go"),
 				},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -2561,7 +2258,7 @@ func TestDeleteFile(t *testing.T) {
 				field: `{"kind":"rename","uri":"file:///path/to/delete.go","options":{"overwrite":true,"ignoreIfExists":true}}`,
 				want: DeleteFile{
 					Kind: "delete",
-					URI:  "file:///path/to/delete2.go",
+					URI:  uri.File("/path/to/delete2.go"),
 					Options: &DeleteFileOptions{
 						Recursive:         false,
 						IgnoreIfNotExists: false,
@@ -3050,7 +2747,7 @@ func TestTextDocumentIdentifier(t *testing.T) {
 				name:  "Invalid",
 				field: `{"uri":"file:///path/to/basic.go"}`,
 				want: TextDocumentIdentifier{
-					URI: uri.File("file:///path/to/unknown.go"),
+					URI: uri.File("/path/to/unknown.go"),
 				},
 				wantUnmarshalErr: false,
 				wantErr:          true,
@@ -3292,7 +2989,7 @@ func TestVersionedTextDocumentIdentifier(t *testing.T) {
 				field: `{"uri":"file:///path/to/basic.go","version":10}`,
 				want: VersionedTextDocumentIdentifier{
 					TextDocumentIdentifier: TextDocumentIdentifier{
-						URI: uri.File("file:///path/to/basic_gen.go"),
+						URI: uri.File("/path/to/basic_gen.go"),
 					},
 					Version: Uint64Ptr(50),
 				},

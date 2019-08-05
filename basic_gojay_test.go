@@ -421,7 +421,7 @@ func TestLocationLink(t *testing.T) {
 							Character: 3,
 						},
 					},
-					TargetURI: "file:///path/to/test.go",
+					TargetURI: uri.File("/path/to/test.go"),
 					TargetRange: Range{
 						Start: Position{
 							Line:      25,
@@ -449,7 +449,7 @@ func TestLocationLink(t *testing.T) {
 			{
 				name: "ValidNilOriginSelectionRange",
 				field: LocationLink{
-					TargetURI: "file:///path/to/test.go",
+					TargetURI: uri.File("/path/to/test.go"),
 					TargetRange: Range{
 						Start: Position{
 							Line:      25,
@@ -487,7 +487,7 @@ func TestLocationLink(t *testing.T) {
 							Character: 3,
 						},
 					},
-					TargetURI: "file:///path/to/test.go",
+					TargetURI: uri.File("/path/to/test.go"),
 					TargetRange: Range{
 						Start: Position{
 							Line:      25,
@@ -556,7 +556,7 @@ func TestLocationLink(t *testing.T) {
 							Character: 3,
 						},
 					},
-					TargetURI: "file:///path/to/test.go",
+					TargetURI: uri.File("/path/to/test.go"),
 					TargetRange: Range{
 						Start: Position{
 							Line:      25,
@@ -584,7 +584,7 @@ func TestLocationLink(t *testing.T) {
 				name:  "ValidNilOriginSelectionRange",
 				field: `{"targetUri":"file:///path/to/test.go","targetRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"targetSelectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`,
 				want: LocationLink{
-					TargetURI: "file:///path/to/test.go",
+					TargetURI: uri.File("/path/to/test.go"),
 					TargetRange: Range{
 						Start: Position{
 							Line:      25,
@@ -622,7 +622,7 @@ func TestLocationLink(t *testing.T) {
 							Character: 3,
 						},
 					},
-					TargetURI: "file:///path/to/test.go",
+					TargetURI: uri.File("/path/to/test.go"),
 					TargetRange: Range{
 						Start: Position{
 							Line:      25,
@@ -1888,7 +1888,7 @@ func TestCreateFile(t *testing.T) {
 				name: "Valid",
 				field: CreateFile{
 					Kind: "create",
-					URI:  "file:///path/to/basic.go",
+					URI:  uri.File("/path/to/basic.go"),
 					Options: &CreateFileOptions{
 						Overwrite:      true,
 						IgnoreIfExists: true,
@@ -1902,7 +1902,7 @@ func TestCreateFile(t *testing.T) {
 				name: "ValidNilOptions",
 				field: CreateFile{
 					Kind: "create",
-					URI:  "file:///path/to/basic.go",
+					URI:  uri.File("/path/to/basic.go"),
 				},
 				want:           `{"kind":"create","uri":"file:///path/to/basic.go"}`,
 				wantMarshalErr: false,
@@ -1912,7 +1912,7 @@ func TestCreateFile(t *testing.T) {
 				name: "Invalid",
 				field: CreateFile{
 					Kind: "create",
-					URI:  "file:///path/to/basic.go",
+					URI:  uri.File("/path/to/basic.go"),
 					Options: &CreateFileOptions{
 						Overwrite:      true,
 						IgnoreIfExists: true,
@@ -1957,7 +1957,7 @@ func TestCreateFile(t *testing.T) {
 				field: `{"kind":"create","uri":"file:///path/to/basic.go","options":{"overwrite":true,"ignoreIfExists":true}}`,
 				want: CreateFile{
 					Kind: "create",
-					URI:  "file:///path/to/basic.go",
+					URI:  uri.File("/path/to/basic.go"),
 					Options: &CreateFileOptions{
 						Overwrite:      true,
 						IgnoreIfExists: true,
@@ -1971,7 +1971,7 @@ func TestCreateFile(t *testing.T) {
 				field: `{"kind":"create","uri":"file:///path/to/basic.go"}`,
 				want: CreateFile{
 					Kind: "create",
-					URI:  "file:///path/to/basic.go",
+					URI:  uri.File("/path/to/basic.go"),
 				},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -1981,7 +1981,7 @@ func TestCreateFile(t *testing.T) {
 				field: `{"kind":"create","uri":"file:///path/to/basic.go","options":{"overwrite":true,"ignoreIfExists":true}}`,
 				want: CreateFile{
 					Kind: "create",
-					URI:  "file:///path/to/basic_gen.go",
+					URI:  uri.File("/path/to/basic_gen.go"),
 					Options: &CreateFileOptions{
 						Overwrite:      false,
 						IgnoreIfExists: false,
@@ -2182,8 +2182,8 @@ func TestRenameFile(t *testing.T) {
 				name: "Valid",
 				field: RenameFile{
 					Kind:   "rename",
-					OldURI: "file:///path/to/old.go",
-					NewURI: "file:///path/to/new.go",
+					OldURI: uri.File("/path/to/old.go"),
+					NewURI: uri.File("/path/to/new.go"),
 					Options: &RenameFileOptions{
 						Overwrite:      true,
 						IgnoreIfExists: true,
@@ -2197,8 +2197,8 @@ func TestRenameFile(t *testing.T) {
 				name: "ValidNilOptions",
 				field: RenameFile{
 					Kind:   "rename",
-					OldURI: "file:///path/to/old.go",
-					NewURI: "file:///path/to/new.go",
+					OldURI: uri.File("/path/to/old.go"),
+					NewURI: uri.File("/path/to/new.go"),
 				},
 				want:           `{"kind":"rename","oldUri":"file:///path/to/old.go","newUri":"file:///path/to/new.go"}`,
 				wantMarshalErr: false,
@@ -2208,8 +2208,8 @@ func TestRenameFile(t *testing.T) {
 				name: "Invalid",
 				field: RenameFile{
 					Kind:   "rename",
-					OldURI: "file:///path/to/old.go",
-					NewURI: "file:///path/to/new.go",
+					OldURI: uri.File("/path/to/old.go"),
+					NewURI: uri.File("/path/to/new.go"),
 					Options: &RenameFileOptions{
 						Overwrite:      true,
 						IgnoreIfExists: true,
@@ -2254,8 +2254,8 @@ func TestRenameFile(t *testing.T) {
 				field: `{"kind":"rename","oldUri":"file:///path/to/old.go","newUri":"file:///path/to/new.go","options":{"overwrite":true,"ignoreIfExists":true}}`,
 				want: RenameFile{
 					Kind:   "rename",
-					OldURI: "file:///path/to/old.go",
-					NewURI: "file:///path/to/new.go",
+					OldURI: uri.File("/path/to/old.go"),
+					NewURI: uri.File("/path/to/new.go"),
 					Options: &RenameFileOptions{
 						Overwrite:      true,
 						IgnoreIfExists: true,
@@ -2269,8 +2269,8 @@ func TestRenameFile(t *testing.T) {
 				field: `{"kind":"rename","oldUri":"file:///path/to/old.go","newUri":"file:///path/to/new.go"}`,
 				want: RenameFile{
 					Kind:   "rename",
-					OldURI: "file:///path/to/old.go",
-					NewURI: "file:///path/to/new.go",
+					OldURI: uri.File("/path/to/old.go"),
+					NewURI: uri.File("/path/to/new.go"),
 				},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -2280,8 +2280,8 @@ func TestRenameFile(t *testing.T) {
 				field: `{"kind":"rename","oldUri":"file:///path/to/old.go","newUri":"file:///path/to/new.go","options":{"overwrite":true,"ignoreIfExists":true}}`,
 				want: RenameFile{
 					Kind:   "rename",
-					OldURI: "file:///path/to/old2.go",
-					NewURI: "file:///path/to/new2.go",
+					OldURI: uri.File("/path/to/old.go"),
+					NewURI: uri.File("/path/to/new.go"),
 					Options: &RenameFileOptions{
 						Overwrite:      false,
 						IgnoreIfExists: false,
@@ -2482,7 +2482,7 @@ func TestDeleteFile(t *testing.T) {
 				name: "Valid",
 				field: DeleteFile{
 					Kind: "delete",
-					URI:  "file:///path/to/delete.go",
+					URI:  uri.File("/path/to/delete.go"),
 					Options: &DeleteFileOptions{
 						Recursive:         true,
 						IgnoreIfNotExists: true,
@@ -2496,7 +2496,7 @@ func TestDeleteFile(t *testing.T) {
 				name: "ValidNilOptions",
 				field: DeleteFile{
 					Kind: "delete",
-					URI:  "file:///path/to/delete.go",
+					URI:  uri.File("/path/to/delete.go"),
 				},
 				want:           `{"kind":"delete","uri":"file:///path/to/delete.go"}`,
 				wantMarshalErr: false,
@@ -2506,7 +2506,7 @@ func TestDeleteFile(t *testing.T) {
 				name: "Invalid",
 				field: DeleteFile{
 					Kind: "delete",
-					URI:  "file:///path/to/delete.go",
+					URI:  uri.File("/path/to/delete.go"),
 					Options: &DeleteFileOptions{
 						Recursive:         true,
 						IgnoreIfNotExists: true,
@@ -2551,7 +2551,7 @@ func TestDeleteFile(t *testing.T) {
 				field: `{"kind":"delete","uri":"file:///path/to/delete.go","options":{"recursive":true,"ignoreIfNotExists":true}}`,
 				want: DeleteFile{
 					Kind: "delete",
-					URI:  "file:///path/to/delete.go",
+					URI:  uri.File("/path/to/delete.go"),
 					Options: &DeleteFileOptions{
 						Recursive:         true,
 						IgnoreIfNotExists: true,
@@ -2565,7 +2565,7 @@ func TestDeleteFile(t *testing.T) {
 				field: `{"kind":"delete","uri":"file:///path/to/delete.go"}`,
 				want: DeleteFile{
 					Kind: "delete",
-					URI:  "file:///path/to/delete.go",
+					URI:  uri.File("/path/to/delete.go"),
 				},
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -2575,7 +2575,7 @@ func TestDeleteFile(t *testing.T) {
 				field: `{"kind":"rename","uri":"file:///path/to/delete.go","options":{"overwrite":true,"ignoreIfExists":true}}`,
 				want: DeleteFile{
 					Kind: "delete",
-					URI:  "file:///path/to/delete2.go",
+					URI:  uri.File("/path/to/delete2.go"),
 					Options: &DeleteFileOptions{
 						Recursive:         false,
 						IgnoreIfNotExists: false,
