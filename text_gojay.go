@@ -34,17 +34,14 @@ var _ gojay.UnmarshalerJSONObject = (*DidOpenTextDocumentParams)(nil)
 type textDocumentContentChangeEvents []TextDocumentContentChangeEvent
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
-func (v *textDocumentContentChangeEvents) MarshalJSONArray(enc *gojay.Encoder) {
-	vv := *v
-	for i := range vv {
-		enc.ObjectOmitEmpty(&vv[i])
+func (v textDocumentContentChangeEvents) MarshalJSONArray(enc *gojay.Encoder) {
+	for i := range v {
+		enc.ObjectOmitEmpty(&v[i])
 	}
 }
 
 // IsNil implements gojay's MarshalerJSONArray.
-func (v *textDocumentContentChangeEvents) IsNil() bool {
-	return *v == nil || len(*v) == 0
-}
+func (v textDocumentContentChangeEvents) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
 func (v *textDocumentContentChangeEvents) UnmarshalJSONArray(dec *gojay.Decoder) error {

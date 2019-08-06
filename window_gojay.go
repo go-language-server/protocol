@@ -38,16 +38,14 @@ var _ gojay.UnmarshalerJSONObject = (*ShowMessageParams)(nil)
 type actions []MessageActionItem
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
-func (v *actions) MarshalJSONArray(enc *gojay.Encoder) {
-	for _, t := range *v {
+func (v actions) MarshalJSONArray(enc *gojay.Encoder) {
+	for _, t := range v {
 		enc.ObjectOmitEmpty(&t)
 	}
 }
 
 // IsNil implements gojay's MarshalerJSONArray.
-func (v *actions) IsNil() bool {
-	return *v == nil || len(*v) == 0
-}
+func (v actions) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
 func (v *actions) UnmarshalJSONArray(dec *gojay.Decoder) error {

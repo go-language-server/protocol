@@ -111,17 +111,14 @@ var _ gojay.UnmarshalerJSONObject = (*DidChangeConfigurationParams)(nil)
 type configurationItem []ConfigurationItem
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
-func (v *configurationItem) MarshalJSONArray(enc *gojay.Encoder) {
-	vv := *v
-	for i := range vv {
-		enc.ObjectOmitEmpty(&vv[i])
+func (v configurationItem) MarshalJSONArray(enc *gojay.Encoder) {
+	for i := range v {
+		enc.ObjectOmitEmpty(&v[i])
 	}
 }
 
 // IsNil implements gojay's MarshalerJSONArray.
-func (v *configurationItem) IsNil() bool {
-	return *v == nil || len(*v) == 0
-}
+func (v configurationItem) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
 func (v *configurationItem) UnmarshalJSONArray(dec *gojay.Decoder) error {
@@ -190,16 +187,14 @@ var _ gojay.UnmarshalerJSONObject = (*ConfigurationItem)(nil)
 type fileEvents []*FileEvent
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
-func (v *fileEvents) MarshalJSONArray(enc *gojay.Encoder) {
-	for _, t := range *v {
+func (v fileEvents) MarshalJSONArray(enc *gojay.Encoder) {
+	for _, t := range v {
 		enc.ObjectOmitEmpty(t)
 	}
 }
 
 // IsNil implements gojay's MarshalerJSONArray.
-func (v *fileEvents) IsNil() bool {
-	return *v == nil || len(*v) == 0
-}
+func (v fileEvents) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
 func (v *fileEvents) UnmarshalJSONArray(dec *gojay.Decoder) error {
@@ -271,16 +266,14 @@ var _ gojay.UnmarshalerJSONObject = (*FileEvent)(nil)
 type fileSystemWatchers []FileSystemWatcher
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
-func (v *fileSystemWatchers) MarshalJSONArray(enc *gojay.Encoder) {
-	for _, t := range *v {
+func (v fileSystemWatchers) MarshalJSONArray(enc *gojay.Encoder) {
+	for _, t := range v {
 		enc.ObjectOmitEmpty(&t)
 	}
 }
 
 // IsNil implements gojay's MarshalerJSONArray.
-func (v *fileSystemWatchers) IsNil() bool {
-	return *v == nil || len(*v) == 0
-}
+func (v fileSystemWatchers) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
 func (v *fileSystemWatchers) UnmarshalJSONArray(dec *gojay.Decoder) error {

@@ -12,16 +12,14 @@ import "github.com/francoispqt/gojay"
 type Interfaces []interface{}
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
-func (v *Interfaces) MarshalJSONArray(enc *gojay.Encoder) {
-	for _, t := range *v {
+func (v Interfaces) MarshalJSONArray(enc *gojay.Encoder) {
+	for _, t := range v {
 		enc.AddInterface(t)
 	}
 }
 
 // IsNil implements gojay's MarshalerJSONArray.
-func (v *Interfaces) IsNil() bool {
-	return len(*v) == 0
-}
+func (v Interfaces) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray decodes JSON array elements into slice
 func (v *Interfaces) UnmarshalJSONArray(dec *gojay.Decoder) error {
@@ -41,16 +39,14 @@ var _ gojay.UnmarshalerJSONArray = (*Interfaces)(nil)
 type Strings []string
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
-func (v *Strings) MarshalJSONArray(enc *gojay.Encoder) {
-	for _, t := range *v {
+func (v Strings) MarshalJSONArray(enc *gojay.Encoder) {
+	for _, t := range v {
 		enc.String(t)
 	}
 }
 
 // IsNil implements gojay's MarshalerJSONArray.
-func (v *Strings) IsNil() bool {
-	return len(*v) == 0
-}
+func (v Strings) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray decodes JSON array elements into slice
 func (v *Strings) UnmarshalJSONArray(dec *gojay.Decoder) error {

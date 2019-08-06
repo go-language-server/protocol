@@ -285,9 +285,7 @@ func (v DiagnosticRelatedInformations) MarshalJSONArray(enc *gojay.Encoder) {
 }
 
 // IsNil implements gojay's MarshalerJSONArray.
-func (v DiagnosticRelatedInformations) IsNil() bool {
-	return len(v) == 0
-}
+func (v DiagnosticRelatedInformations) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
 func (v *DiagnosticRelatedInformations) UnmarshalJSONArray(dec *gojay.Decoder) error {
@@ -390,9 +388,7 @@ func (v TextEdits) MarshalJSONArray(enc *gojay.Encoder) {
 }
 
 // IsNil returns wether the structure is nil value or not.
-func (v TextEdits) IsNil() bool {
-	return len(v) == 0
-}
+func (v TextEdits) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
 func (v *TextEdits) UnmarshalJSONArray(dec *gojay.Decoder) error {
@@ -715,9 +711,7 @@ func (v documentChanges) MarshalJSONArray(enc *gojay.Encoder) {
 }
 
 // IsNil implements gojay's MarshalerJSONArray.
-func (v documentChanges) IsNil() bool {
-	return v == nil || len(v) == 0
-}
+func (v documentChanges) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
 func (v *documentChanges) UnmarshalJSONArray(dec *gojay.Decoder) error {
@@ -962,9 +956,7 @@ func (v DocumentSelector) MarshalJSONArray(enc *gojay.Encoder) {
 }
 
 // IsNil implements gojay's MarshalerJSONArray.
-func (v DocumentSelector) IsNil() bool {
-	return v == nil || len(v) == 0
-}
+func (v DocumentSelector) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
 func (v *DocumentSelector) UnmarshalJSONArray(dec *gojay.Decoder) error {

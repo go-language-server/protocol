@@ -16,9 +16,7 @@ func (v WorkspaceFolders) MarshalJSONArray(enc *gojay.Encoder) {
 }
 
 // IsNil implements gojay's MarshalerJSONArray.
-func (v WorkspaceFolders) IsNil() bool {
-	return len(v) == 0
-}
+func (v WorkspaceFolders) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
 func (v *WorkspaceFolders) UnmarshalJSONArray(dec *gojay.Decoder) error {
@@ -229,9 +227,7 @@ func (v SymbolKinds) MarshalJSONArray(enc *gojay.Encoder) {
 }
 
 // IsNil implements gojay's MarshalerJSONArray.
-func (v SymbolKinds) IsNil() bool {
-	return len(v) == 0
-}
+func (v SymbolKinds) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray decodes JSON array elements into slice
 func (v *SymbolKinds) UnmarshalJSONArray(dec *gojay.Decoder) error {
@@ -479,9 +475,7 @@ func (v MarkupKinds) MarshalJSONArray(enc *gojay.Encoder) {
 }
 
 // IsNil implements gojay's MarshalerJSONArray.
-func (v MarkupKinds) IsNil() bool {
-	return len(v) == 0
-}
+func (v MarkupKinds) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray decodes JSON array elements into slice
 func (v *MarkupKinds) UnmarshalJSONArray(dec *gojay.Decoder) error {
@@ -1035,9 +1029,7 @@ func (v CodeActionKinds) MarshalJSONArray(enc *gojay.Encoder) {
 }
 
 // IsNil implements gojay's MarshalerJSONArray.
-func (v CodeActionKinds) IsNil() bool {
-	return len(v) == 0
-}
+func (v CodeActionKinds) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
 func (v *CodeActionKinds) UnmarshalJSONArray(dec *gojay.Decoder) error {

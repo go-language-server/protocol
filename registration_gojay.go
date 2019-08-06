@@ -41,17 +41,14 @@ var _ gojay.UnmarshalerJSONObject = (*Registration)(nil)
 type registrations []Registration
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
-func (v *registrations) MarshalJSONArray(enc *gojay.Encoder) {
-	vv := *v
-	for i := range vv {
-		enc.ObjectOmitEmpty(&vv[i])
+func (v registrations) MarshalJSONArray(enc *gojay.Encoder) {
+	for i := range v {
+		enc.ObjectOmitEmpty(&v[i])
 	}
 }
 
 // IsNil implements gojay's MarshalerJSONArray.
-func (v *registrations) IsNil() bool {
-	return *v == nil || len(*v) == 0
-}
+func (v registrations) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
 func (v *registrations) UnmarshalJSONArray(dec *gojay.Decoder) error {
@@ -143,17 +140,14 @@ var _ gojay.UnmarshalerJSONObject = (*Unregistration)(nil)
 type unregisterations []Unregistration
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
-func (v *unregisterations) MarshalJSONArray(enc *gojay.Encoder) {
-	vv := *v
-	for i := range vv {
-		enc.ObjectOmitEmpty(&vv[i])
+func (v unregisterations) MarshalJSONArray(enc *gojay.Encoder) {
+	for i := range v {
+		enc.ObjectOmitEmpty(&v[i])
 	}
 }
 
 // IsNil implements gojay's MarshalerJSONArray.
-func (v *unregisterations) IsNil() bool {
-	return *v == nil || len(*v) == 0
-}
+func (v unregisterations) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
 func (v *unregisterations) UnmarshalJSONArray(dec *gojay.Decoder) error {

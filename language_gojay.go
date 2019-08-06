@@ -71,17 +71,14 @@ var _ gojay.UnmarshalerJSONObject = (*CompletionContext)(nil)
 type items []CompletionItem
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
-func (v *items) MarshalJSONArray(enc *gojay.Encoder) {
-	vv := *v
-	for i := range vv {
-		enc.ObjectOmitEmpty(&vv[i])
+func (v items) MarshalJSONArray(enc *gojay.Encoder) {
+	for i := range v {
+		enc.ObjectOmitEmpty(&v[i])
 	}
 }
 
 // IsNil implements gojay's MarshalerJSONArray.
-func (v *items) IsNil() bool {
-	return *v == nil || len(*v) == 0
-}
+func (v items) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
 func (v *items) UnmarshalJSONArray(dec *gojay.Decoder) error {
@@ -253,17 +250,14 @@ var _ gojay.UnmarshalerJSONObject = (*CompletionRegistrationOptions)(nil)
 type signatures []SignatureInformation
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
-func (v *signatures) MarshalJSONArray(enc *gojay.Encoder) {
-	vv := *v
-	for i := range vv {
-		enc.ObjectOmitEmpty(&vv[i])
+func (v signatures) MarshalJSONArray(enc *gojay.Encoder) {
+	for i := range v {
+		enc.ObjectOmitEmpty(&v[i])
 	}
 }
 
 // IsNil implements gojay's MarshalerJSONArray.
-func (v *signatures) IsNil() bool {
-	return *v == nil || len(*v) == 0
-}
+func (v signatures) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
 func (v *signatures) UnmarshalJSONArray(dec *gojay.Decoder) error {
@@ -499,17 +493,14 @@ var _ gojay.UnmarshalerJSONObject = (*DocumentSymbolParams)(nil)
 type documentSymbols []DocumentSymbol
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
-func (v *documentSymbols) MarshalJSONArray(enc *gojay.Encoder) {
-	vv := *v
-	for i := range vv {
-		enc.ObjectOmitEmpty(&vv[i])
+func (v documentSymbols) MarshalJSONArray(enc *gojay.Encoder) {
+	for i := range v {
+		enc.ObjectOmitEmpty(&v[i])
 	}
 }
 
 // IsNil implements gojay's MarshalerJSONArray.
-func (v *documentSymbols) IsNil() bool {
-	return *v == nil || len(*v) == 0
-}
+func (v documentSymbols) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
 func (v *documentSymbols) UnmarshalJSONArray(dec *gojay.Decoder) error {
