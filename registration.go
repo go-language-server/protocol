@@ -6,7 +6,6 @@ package protocol
 
 // Registration general parameters to register for a capability.
 type Registration struct {
-
 	// ID is the id used to register the request. The id can be used to deregister
 	// the request again.
 	ID string `json:"id"`
@@ -33,7 +32,6 @@ type TextDocumentRegistrationOptions struct {
 
 // Unregistration general parameters to unregister a capability.
 type Unregistration struct {
-
 	// ID is the id used to unregister the request or notification. Usually an id
 	// provided during the register request.
 	ID string `json:"id"`

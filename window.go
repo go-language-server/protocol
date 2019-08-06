@@ -8,7 +8,6 @@ import "strconv"
 
 // ShowMessageParams params of ShowMessage Notification.
 type ShowMessageParams struct {
-
 	// Message is the actual message.
 	Message string `json:"message"`
 
@@ -71,7 +70,6 @@ func ToMessageType(level string) MessageType {
 
 // ShowMessageRequestParams params of ShowMessage Request.
 type ShowMessageRequestParams struct {
-
 	// Actions is the message action items to present.
 	Actions []MessageActionItem `json:"actions"`
 
@@ -84,14 +82,12 @@ type ShowMessageRequestParams struct {
 
 // MessageActionItem item of ShowMessageRequestParams action.
 type MessageActionItem struct {
-
 	// Title a short title like 'Retry', 'Open Log' etc.
 	Title string `json:"title"`
 }
 
 // LogMessageParams params of LogMessage Notification.
 type LogMessageParams struct {
-
 	// Message is the actual message
 	Message string `json:"message"`
 

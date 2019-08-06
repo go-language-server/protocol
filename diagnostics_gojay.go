@@ -38,6 +38,16 @@ func (v Diagnostics) IsNil() bool { return len(v) == 0 }
 var _ gojay.MarshalerJSONArray = (*Diagnostics)(nil)
 var _ gojay.UnmarshalerJSONArray = (*Diagnostics)(nil)
 
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
+func (v *PublishDiagnosticsParams) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.StringKey(keyURI, string(v.URI))
+	enc.Float64KeyOmitEmpty(keyVersion, v.Version)
+	enc.ArrayKey(keyDiagnostics, Diagnostics(v.Diagnostics))
+}
+
+// IsNil returns wether the structure is nil value or not.
+func (v *PublishDiagnosticsParams) IsNil() bool { return v == nil }
+
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *PublishDiagnosticsParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
@@ -58,16 +68,6 @@ func (v *PublishDiagnosticsParams) UnmarshalJSONObject(dec *gojay.Decoder, k str
 
 // NKeys returns the number of keys to unmarshal.
 func (v *PublishDiagnosticsParams) NKeys() int { return 3 }
-
-// MarshalJSONObject implements gojay's MarshalerJSONObject.
-func (v *PublishDiagnosticsParams) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.StringKey(keyURI, string(v.URI))
-	enc.Float64KeyOmitEmpty(keyVersion, v.Version)
-	enc.ArrayKey(keyDiagnostics, Diagnostics(v.Diagnostics))
-}
-
-// IsNil returns wether the structure is nil value or not.
-func (v *PublishDiagnosticsParams) IsNil() bool { return v == nil }
 
 // Reset reset fields.
 func (v *PublishDiagnosticsParams) Reset() {

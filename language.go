@@ -51,7 +51,6 @@ func (k CompletionTriggerKind) String() string {
 
 // CompletionContext contains additional information about the context in which a completion request is triggered.
 type CompletionContext struct {
-
 	// TriggerCharacter is the trigger character (a single character) that has trigger code complete.
 	// Is undefined if `triggerKind !== CompletionTriggerKind.TriggerCharacter`
 	TriggerCharacter string `json:"triggerCharacter,omitempty"`
@@ -63,7 +62,6 @@ type CompletionContext struct {
 // CompletionList represents a collection of [completion items](#CompletionItem) to be presented
 // in the editor.
 type CompletionList struct {
-
 	// IsIncomplete this list it not complete. Further typing should result in recomputing
 	// this list.
 	IsIncomplete bool `json:"isIncomplete"`
@@ -103,7 +101,6 @@ func (tf InsertTextFormat) String() string {
 
 // CompletionItem item of CompletionList.
 type CompletionItem struct {
-
 	// AdditionalTextEdits an optional array of additional text edits that are applied when
 	// selecting this completion. Edits must not overlap (including the same insert position)
 	// with the main edit nor with themselves.
@@ -339,7 +336,6 @@ type Hover struct {
 // callable. There can be multiple signature but only one
 // active and only one active parameter.
 type SignatureHelp struct {
-
 	// Signatures one or more signatures.
 	Signatures []SignatureInformation `json:"signatures"`
 
@@ -365,7 +361,6 @@ type SignatureHelp struct {
 // SignatureInformation is the client supports the following `SignatureInformation`
 // specific properties.
 type SignatureInformation struct {
-
 	// DocumentationFormat is the client supports the follow content formats for the documentation
 	// property. The order describes the preferred format of the client.
 	DocumentationFormat []MarkupKind `json:"documentationFormat,omitempty"`
@@ -377,7 +372,6 @@ type SignatureInformation struct {
 // ParameterInformation represents a parameter of a callable-signature. A parameter can
 // have a label and a doc-comment.
 type ParameterInformation struct {
-
 	// Label is the label of this parameter information.
 	//
 	// Either a string or an inclusive start and exclusive end offsets within its containing
@@ -411,7 +405,6 @@ type ReferenceParams struct {
 
 // ReferenceContext context of ReferenceParams.
 type ReferenceContext struct {
-
 	// IncludeDeclaration include the declaration of the current symbol.
 	IncludeDeclaration bool `json:"includeDeclaration"`
 }
@@ -457,7 +450,6 @@ func (k DocumentHighlightKind) String() string {
 
 // DocumentSymbolParams params of Document Symbols Request.
 type DocumentSymbolParams struct {
-
 	// TextDocument is the text document.
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
 }
@@ -592,7 +584,6 @@ func (k SymbolKind) String() string {
 // hierarchical and they have two ranges: one that encloses its definition and one that points to its most interesting range,
 // e.g. the range of an identifier.
 type DocumentSymbol struct {
-
 	// Name is the name of this symbol. Will be displayed in the user interface and therefore must not be
 	// an empty string or a string only consisting of white spaces.
 	Name string `json:"name"`
@@ -623,7 +614,6 @@ type DocumentSymbol struct {
 // SymbolInformation represents information about programming constructs like variables, classes,
 // interfaces etc.
 type SymbolInformation struct {
-
 	// Name is the name of this symbol.
 	Name string `json:"name"`
 
@@ -654,7 +644,6 @@ type SymbolInformation struct {
 
 // CodeActionParams params for the CodeActionRequest.
 type CodeActionParams struct {
-
 	// TextDocument is the document in which the command was invoked.
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
 
@@ -724,7 +713,6 @@ const (
 // CodeActionContext contains additional diagnostic information about the context in which
 // a code action is run.
 type CodeActionContext struct {
-
 	// Diagnostics is an array of diagnostics.
 	Diagnostics []Diagnostic `json:"diagnostics"`
 
@@ -737,7 +725,6 @@ type CodeActionContext struct {
 
 // CodeAction capabilities specific to the `textDocument/codeAction`.
 type CodeAction struct {
-
 	// Title is a short, human-readable, title for this code action.
 	Title string `json:"title"`
 
@@ -766,7 +753,6 @@ type CodeActionRegistrationOptions struct {
 
 // CodeLensParams params of Code Lens Request.
 type CodeLensParams struct {
-
 	// TextDocument is the document to request code lens for.
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
 }
@@ -777,7 +763,6 @@ type CodeLensParams struct {
 // A code lens is _unresolved_ when no command is associated to it. For performance
 // reasons the creation of a code lens and resolving should be done in two stages.
 type CodeLens struct {
-
 	// Range is the range in which this code lens is valid. Should only span a single line.
 	Range Range `json:"range"`
 
@@ -799,7 +784,6 @@ type CodeLensRegistrationOptions struct {
 
 // DocumentLinkParams params of Document Link Request.
 type DocumentLinkParams struct {
-
 	// TextDocument is the document to provide document links for.
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
 }
@@ -807,7 +791,6 @@ type DocumentLinkParams struct {
 // DocumentLink is a document link is a range in a text document that links to an internal or external resource, like another
 // text document or a web site.
 type DocumentLink struct {
-
 	// Range is the range this link applies to.
 	Range Range `json:"range"`
 
@@ -821,14 +804,12 @@ type DocumentLink struct {
 
 // DocumentColorParams params of Document Color Request.
 type DocumentColorParams struct {
-
 	// TextDocument is the document to format.
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
 }
 
 // ColorInformation response of Document Color Request.
 type ColorInformation struct {
-
 	// Range is the range in the document where this color appears.
 	Range Range `json:"range"`
 
@@ -838,7 +819,6 @@ type ColorInformation struct {
 
 // Color represents a color in RGBA space.
 type Color struct {
-
 	// Alpha is the alpha component of this color in the range [0-1].
 	Alpha float64 `json:"alpha"`
 
@@ -854,7 +834,6 @@ type Color struct {
 
 // ColorPresentationParams params of Color Presentation Request.
 type ColorPresentationParams struct {
-
 	// TextDocument is the text document.
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
 
@@ -867,7 +846,6 @@ type ColorPresentationParams struct {
 
 // ColorPresentation response of Color Presentation Request.
 type ColorPresentation struct {
-
 	// Label is the label of this color presentation. It will be shown on the color
 	// picker header. By default this is also the text that is inserted when selecting
 	// this color presentation.
@@ -884,7 +862,6 @@ type ColorPresentation struct {
 
 // DocumentFormattingParams params of Document Formatting Request.
 type DocumentFormattingParams struct {
-
 	// Options is the format options.
 	Options FormattingOptions `json:"options"`
 
@@ -894,7 +871,6 @@ type DocumentFormattingParams struct {
 
 // FormattingOptions value-object describing what options formatting should use.
 type FormattingOptions struct {
-
 	// InsertSpaces prefer spaces over tabs.
 	InsertSpaces bool `json:"insertSpaces"`
 
@@ -904,7 +880,6 @@ type FormattingOptions struct {
 
 // DocumentRangeFormattingParams params of Document Range Formatting Request.
 type DocumentRangeFormattingParams struct {
-
 	// TextDocument is the document to format.
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
 
@@ -917,7 +892,6 @@ type DocumentRangeFormattingParams struct {
 
 // DocumentOnTypeFormattingParams params of Document on Type Formatting Request.
 type DocumentOnTypeFormattingParams struct {
-
 	// TextDocument is the document to format.
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
 
@@ -944,7 +918,6 @@ type DocumentOnTypeFormattingRegistrationOptions struct {
 
 // RenameParams params of Rename Request.
 type RenameParams struct {
-
 	// TextDocument is the document to rename.
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
 
@@ -967,7 +940,6 @@ type RenameRegistrationOptions struct {
 
 // FoldingRangeParams params of Folding Range Request.
 type FoldingRangeParams struct {
-
 	// TextDocument is the text document.
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
 }
@@ -990,7 +962,6 @@ const (
 //
 // Since 3.10.0
 type FoldingRange struct {
-
 	// StartLine is the zero-based line number from where the folded range starts.
 	StartLine float64 `json:"startLine"`
 
