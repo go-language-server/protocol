@@ -8,6 +8,11 @@ package protocol
 
 import "sync"
 
+// Pooler represents a poolable interface.
+type Pooler interface {
+	Reset()
+}
+
 var (
 	// basic
 
