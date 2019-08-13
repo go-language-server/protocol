@@ -32,8 +32,10 @@ func (v *Interfaces) UnmarshalJSONArray(dec *gojay.Decoder) error {
 }
 
 // compile time check whether the Interfaces implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interface.
-var _ gojay.MarshalerJSONArray = (*Interfaces)(nil)
-var _ gojay.UnmarshalerJSONArray = (*Interfaces)(nil)
+var (
+	_ gojay.MarshalerJSONArray   = (*Interfaces)(nil)
+	_ gojay.UnmarshalerJSONArray = (*Interfaces)(nil)
+)
 
 // Strings represents a slice of string.
 type Strings []string
@@ -59,5 +61,7 @@ func (v *Strings) UnmarshalJSONArray(dec *gojay.Decoder) error {
 }
 
 // compile time check whether the Strings implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interface.
-var _ gojay.MarshalerJSONArray = (*Strings)(nil)
-var _ gojay.UnmarshalerJSONArray = (*Strings)(nil)
+var (
+	_ gojay.MarshalerJSONArray   = (*Strings)(nil)
+	_ gojay.UnmarshalerJSONArray = (*Strings)(nil)
+)

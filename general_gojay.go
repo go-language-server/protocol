@@ -28,9 +28,11 @@ func (v *WorkspaceFolders) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	return nil
 }
 
-// compile time check whether the WorkspaceFolders implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interface.
-var _ gojay.MarshalerJSONArray = (*WorkspaceFolders)(nil)
-var _ gojay.UnmarshalerJSONArray = (*WorkspaceFolders)(nil)
+// compile time check whether the WorkspaceFolders implements a gojay.MarshalerJSONArray, gojay.UnmarshalerJSONArray and Pooler interface.
+var (
+	_ gojay.MarshalerJSONArray   = (*WorkspaceFolders)(nil)
+	_ gojay.UnmarshalerJSONArray = (*WorkspaceFolders)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *InitializeParams) MarshalJSONObject(enc *gojay.Encoder) {
@@ -75,9 +77,12 @@ func (v *InitializeParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) err
 // NKeys returns the number of keys to unmarshal.
 func (v *InitializeParams) NKeys() int { return 7 }
 
-// compile time check whether the InitializeParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*InitializeParams)(nil)
-var _ gojay.UnmarshalerJSONObject = (*InitializeParams)(nil)
+// compile time check whether the InitializeParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*InitializeParams)(nil)
+	_ gojay.UnmarshalerJSONObject = (*InitializeParams)(nil)
+	// _ Pooler                      = (*InitializeParams)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *WorkspaceClientCapabilitiesWorkspaceEdit) MarshalJSONObject(enc *gojay.Encoder) {
@@ -117,9 +122,12 @@ func (v *WorkspaceClientCapabilitiesWorkspaceEdit) Reset() {
 	v.ResourceOperations = nil
 }
 
-// compile time check whether the WorkspaceClientCapabilitiesWorkspaceEdit implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*WorkspaceClientCapabilitiesWorkspaceEdit)(nil)
-var _ gojay.UnmarshalerJSONObject = (*WorkspaceClientCapabilitiesWorkspaceEdit)(nil)
+// compile time check whether the WorkspaceClientCapabilitiesWorkspaceEdit implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*WorkspaceClientCapabilitiesWorkspaceEdit)(nil)
+	_ gojay.UnmarshalerJSONObject = (*WorkspaceClientCapabilitiesWorkspaceEdit)(nil)
+	_ Pooler                      = (*WorkspaceClientCapabilitiesWorkspaceEdit)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *WorkspaceClientCapabilitiesDidChangeConfiguration) MarshalJSONObject(enc *gojay.Encoder) {
@@ -145,9 +153,12 @@ func (v *WorkspaceClientCapabilitiesDidChangeConfiguration) Reset() {
 	v.DynamicRegistration = false
 }
 
-// compile time check whether the WorkspaceClientCapabilitiesDidChangeConfiguration implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*WorkspaceClientCapabilitiesDidChangeConfiguration)(nil)
-var _ gojay.UnmarshalerJSONObject = (*WorkspaceClientCapabilitiesDidChangeConfiguration)(nil)
+// compile time check whether the WorkspaceClientCapabilitiesDidChangeConfiguration implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*WorkspaceClientCapabilitiesDidChangeConfiguration)(nil)
+	_ gojay.UnmarshalerJSONObject = (*WorkspaceClientCapabilitiesDidChangeConfiguration)(nil)
+	_ Pooler                      = (*WorkspaceClientCapabilitiesDidChangeConfiguration)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *WorkspaceClientCapabilitiesDidChangeWatchedFiles) MarshalJSONObject(enc *gojay.Encoder) {
@@ -173,9 +184,12 @@ func (v *WorkspaceClientCapabilitiesDidChangeWatchedFiles) Reset() {
 	v.DynamicRegistration = false
 }
 
-// compile time check whether the WorkspaceClientCapabilitiesDidChangeWatchedFiles implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*WorkspaceClientCapabilitiesDidChangeWatchedFiles)(nil)
-var _ gojay.UnmarshalerJSONObject = (*WorkspaceClientCapabilitiesDidChangeWatchedFiles)(nil)
+// compile time check whether the WorkspaceClientCapabilitiesDidChangeWatchedFiles implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*WorkspaceClientCapabilitiesDidChangeWatchedFiles)(nil)
+	_ gojay.UnmarshalerJSONObject = (*WorkspaceClientCapabilitiesDidChangeWatchedFiles)(nil)
+	_ Pooler                      = (*WorkspaceClientCapabilitiesDidChangeWatchedFiles)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *WorkspaceClientCapabilitiesSymbol) MarshalJSONObject(enc *gojay.Encoder) {
@@ -212,9 +226,12 @@ func (v *WorkspaceClientCapabilitiesSymbol) Reset() {
 	v.SymbolKind = nil
 }
 
-// compile time check whether the WorkspaceClientCapabilitiesSymbol implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*WorkspaceClientCapabilitiesSymbol)(nil)
-var _ gojay.UnmarshalerJSONObject = (*WorkspaceClientCapabilitiesSymbol)(nil)
+// compile time check whether the WorkspaceClientCapabilitiesSymbol implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*WorkspaceClientCapabilitiesSymbol)(nil)
+	_ gojay.UnmarshalerJSONObject = (*WorkspaceClientCapabilitiesSymbol)(nil)
+	_ Pooler                      = (*WorkspaceClientCapabilitiesSymbol)(nil)
+)
 
 // SymbolKinds represents a slice of SymbolKind.
 type SymbolKinds []SymbolKind
@@ -239,9 +256,11 @@ func (v *SymbolKinds) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	return nil
 }
 
-// compile time check whether the SymbolKinds implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interface.
-var _ gojay.MarshalerJSONArray = (*SymbolKinds)(nil)
-var _ gojay.UnmarshalerJSONArray = (*SymbolKinds)(nil)
+// compile time check whether the SymbolKinds implements a gojay.MarshalerJSONArray, gojay.UnmarshalerJSONArray and Pooler interface.
+var (
+	_ gojay.MarshalerJSONArray   = (*SymbolKinds)(nil)
+	_ gojay.UnmarshalerJSONArray = (*SymbolKinds)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *WorkspaceClientCapabilitiesSymbolKind) MarshalJSONObject(enc *gojay.Encoder) {
@@ -270,9 +289,12 @@ func (v *WorkspaceClientCapabilitiesSymbolKind) Reset() {
 	v.ValueSet = nil
 }
 
-// compile time check whether the WorkspaceClientCapabilitiesSymbolKind implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*WorkspaceClientCapabilitiesSymbolKind)(nil)
-var _ gojay.UnmarshalerJSONObject = (*WorkspaceClientCapabilitiesSymbolKind)(nil)
+// compile time check whether the WorkspaceClientCapabilitiesSymbolKind implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*WorkspaceClientCapabilitiesSymbolKind)(nil)
+	_ gojay.UnmarshalerJSONObject = (*WorkspaceClientCapabilitiesSymbolKind)(nil)
+	_ Pooler                      = (*WorkspaceClientCapabilitiesSymbolKind)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *WorkspaceClientCapabilitiesExecuteCommand) MarshalJSONObject(enc *gojay.Encoder) {
@@ -298,9 +320,12 @@ func (v *WorkspaceClientCapabilitiesExecuteCommand) Reset() {
 	v.DynamicRegistration = false
 }
 
-// compile time check whether the WorkspaceClientCapabilitiesExecuteCommand implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*WorkspaceClientCapabilitiesExecuteCommand)(nil)
-var _ gojay.UnmarshalerJSONObject = (*WorkspaceClientCapabilitiesExecuteCommand)(nil)
+// compile time check whether the WorkspaceClientCapabilitiesExecuteCommand implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*WorkspaceClientCapabilitiesExecuteCommand)(nil)
+	_ gojay.UnmarshalerJSONObject = (*WorkspaceClientCapabilitiesExecuteCommand)(nil)
+	_ Pooler                      = (*WorkspaceClientCapabilitiesExecuteCommand)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *WorkspaceClientCapabilities) MarshalJSONObject(enc *gojay.Encoder) {
@@ -375,9 +400,12 @@ func (v *WorkspaceClientCapabilities) Reset() {
 	v.Configuration = false
 }
 
-// compile time check whether the WorkspaceClientCapabilities implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*WorkspaceClientCapabilities)(nil)
-var _ gojay.UnmarshalerJSONObject = (*WorkspaceClientCapabilities)(nil)
+// compile time check whether the WorkspaceClientCapabilities implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*WorkspaceClientCapabilities)(nil)
+	_ gojay.UnmarshalerJSONObject = (*WorkspaceClientCapabilities)(nil)
+	_ Pooler                      = (*WorkspaceClientCapabilities)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesSynchronization) MarshalJSONObject(enc *gojay.Encoder) {
@@ -416,9 +444,12 @@ func (v *TextDocumentClientCapabilitiesSynchronization) Reset() {
 	v.WillSaveWaitUntil = false
 }
 
-// compile time check whether the TextDocumentClientCapabilitiesSynchronization implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentClientCapabilitiesSynchronization)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesSynchronization)(nil)
+// compile time check whether the TextDocumentClientCapabilitiesSynchronization implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesSynchronization)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesSynchronization)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilitiesSynchronization)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesCompletion) MarshalJSONObject(enc *gojay.Encoder) {
@@ -460,9 +491,12 @@ func (v *TextDocumentClientCapabilitiesCompletion) Reset() {
 	v.ContextSupport = false
 }
 
-// compile time check whether the TextDocumentClientCapabilitiesCompletion implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentClientCapabilitiesCompletion)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesCompletion)(nil)
+// compile time check whether the TextDocumentClientCapabilitiesCompletion implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesCompletion)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesCompletion)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilitiesCompletion)(nil)
+)
 
 // MarkupKinds represents a slice of MarkupKind.
 type MarkupKinds []MarkupKind
@@ -487,9 +521,11 @@ func (v *MarkupKinds) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	return nil
 }
 
-// compile time check whether the MarkupKinds implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interface.
-var _ gojay.MarshalerJSONArray = (*MarkupKinds)(nil)
-var _ gojay.UnmarshalerJSONArray = (*MarkupKinds)(nil)
+// compile time check whether the MarkupKinds implements a gojay.MarshalerJSONArray, gojay.UnmarshalerJSONArray and Pooler interface.
+var (
+	_ gojay.MarshalerJSONArray   = (*MarkupKinds)(nil)
+	_ gojay.UnmarshalerJSONArray = (*MarkupKinds)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesCompletionItem) MarshalJSONObject(enc *gojay.Encoder) {
@@ -532,9 +568,12 @@ func (v *TextDocumentClientCapabilitiesCompletionItem) Reset() {
 	v.PreselectSupport = false
 }
 
-// compile time check whether the TextDocumentClientCapabilitiesCompletionItem implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentClientCapabilitiesCompletionItem)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesCompletionItem)(nil)
+// compile time check whether the TextDocumentClientCapabilitiesCompletionItem implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesCompletionItem)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesCompletionItem)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilitiesCompletionItem)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesHover) MarshalJSONObject(enc *gojay.Encoder) {
@@ -565,9 +604,12 @@ func (v *TextDocumentClientCapabilitiesHover) Reset() {
 	v.ContentFormat = nil
 }
 
-// compile time check whether the TextDocumentClientCapabilitiesHover implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentClientCapabilitiesHover)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesHover)(nil)
+// compile time check whether the TextDocumentClientCapabilitiesHover implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesHover)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesHover)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilitiesHover)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesSignatureHelp) MarshalJSONObject(enc *gojay.Encoder) {
@@ -602,9 +644,12 @@ func (v *TextDocumentClientCapabilitiesSignatureHelp) Reset() {
 	v.SignatureInformation = nil
 }
 
-// compile time check whether the TextDocumentClientCapabilitiesSignatureHelp implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentClientCapabilitiesSignatureHelp)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesSignatureHelp)(nil)
+// compile time check whether the TextDocumentClientCapabilitiesSignatureHelp implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesSignatureHelp)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesSignatureHelp)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilitiesSignatureHelp)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesSignatureInformation) MarshalJSONObject(enc *gojay.Encoder) {
@@ -632,9 +677,12 @@ func (v *TextDocumentClientCapabilitiesSignatureInformation) Reset() {
 	v.ParameterInformation = nil
 }
 
-// compile time check whether the TextDocumentClientCapabilitiesSignatureInformation implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentClientCapabilitiesSignatureInformation)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesSignatureInformation)(nil)
+// compile time check whether the TextDocumentClientCapabilitiesSignatureInformation implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesSignatureInformation)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesSignatureInformation)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilitiesSignatureInformation)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesReferences) MarshalJSONObject(enc *gojay.Encoder) {
@@ -660,9 +708,12 @@ func (v *TextDocumentClientCapabilitiesReferences) Reset() {
 	v.DynamicRegistration = false
 }
 
-// compile time check whether the TextDocumentClientCapabilitiesReferences implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentClientCapabilitiesReferences)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesReferences)(nil)
+// compile time check whether the TextDocumentClientCapabilitiesReferences implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesReferences)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesReferences)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilitiesReferences)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesDocumentHighlight) MarshalJSONObject(enc *gojay.Encoder) {
@@ -688,9 +739,12 @@ func (v *TextDocumentClientCapabilitiesDocumentHighlight) Reset() {
 	v.DynamicRegistration = false
 }
 
-// compile time check whether the TextDocumentClientCapabilitiesDocumentHighlight implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentClientCapabilitiesDocumentHighlight)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesDocumentHighlight)(nil)
+// compile time check whether the TextDocumentClientCapabilitiesDocumentHighlight implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesDocumentHighlight)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesDocumentHighlight)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilitiesDocumentHighlight)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesDocumentSymbol) MarshalJSONObject(enc *gojay.Encoder) {
@@ -729,9 +783,12 @@ func (v *TextDocumentClientCapabilitiesDocumentSymbol) Reset() {
 	v.HierarchicalDocumentSymbolSupport = false
 }
 
-// compile time check whether the TextDocumentClientCapabilitiesDocumentSymbol implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentClientCapabilitiesDocumentSymbol)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesDocumentSymbol)(nil)
+// compile time check whether the TextDocumentClientCapabilitiesDocumentSymbol implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesDocumentSymbol)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesDocumentSymbol)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilitiesDocumentSymbol)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesFormatting) MarshalJSONObject(enc *gojay.Encoder) {
@@ -757,9 +814,12 @@ func (v *TextDocumentClientCapabilitiesFormatting) Reset() {
 	v.DynamicRegistration = false
 }
 
-// compile time check whether the TextDocumentClientCapabilitiesFormatting implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentClientCapabilitiesFormatting)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesFormatting)(nil)
+// compile time check whether the TextDocumentClientCapabilitiesFormatting implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesFormatting)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesFormatting)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilitiesFormatting)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesRangeFormatting) MarshalJSONObject(enc *gojay.Encoder) {
@@ -785,9 +845,12 @@ func (v *TextDocumentClientCapabilitiesRangeFormatting) Reset() {
 	v.DynamicRegistration = false
 }
 
-// compile time check whether the TextDocumentClientCapabilitiesFormatting implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentClientCapabilitiesRangeFormatting)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesRangeFormatting)(nil)
+// compile time check whether the TextDocumentClientCapabilitiesFormatting implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesRangeFormatting)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesRangeFormatting)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilitiesRangeFormatting)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesOnTypeFormatting) MarshalJSONObject(enc *gojay.Encoder) {
@@ -813,9 +876,12 @@ func (v *TextDocumentClientCapabilitiesOnTypeFormatting) Reset() {
 	v.DynamicRegistration = false
 }
 
-// compile time check whether the TextDocumentClientCapabilitiesOnTypeFormatting implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentClientCapabilitiesOnTypeFormatting)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesOnTypeFormatting)(nil)
+// compile time check whether the TextDocumentClientCapabilitiesOnTypeFormatting implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesOnTypeFormatting)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesOnTypeFormatting)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilitiesOnTypeFormatting)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesDeclaration) MarshalJSONObject(enc *gojay.Encoder) {
@@ -846,9 +912,12 @@ func (v *TextDocumentClientCapabilitiesDeclaration) Reset() {
 	v.LinkSupport = false
 }
 
-// compile time check whether the TextDocumentClientCapabilitiesDeclaration implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentClientCapabilitiesDeclaration)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesDeclaration)(nil)
+// compile time check whether the TextDocumentClientCapabilitiesDeclaration implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesDeclaration)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesDeclaration)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilitiesDeclaration)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesDefinition) MarshalJSONObject(enc *gojay.Encoder) {
@@ -879,9 +948,12 @@ func (v *TextDocumentClientCapabilitiesDefinition) Reset() {
 	v.LinkSupport = false
 }
 
-// compile time check whether the TextDocumentClientCapabilitiesDefinition implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentClientCapabilitiesDefinition)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesDefinition)(nil)
+// compile time check whether the TextDocumentClientCapabilitiesDefinition implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesDefinition)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesDefinition)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilitiesDefinition)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesTypeDefinition) MarshalJSONObject(enc *gojay.Encoder) {
@@ -912,9 +984,12 @@ func (v *TextDocumentClientCapabilitiesTypeDefinition) Reset() {
 	v.LinkSupport = false
 }
 
-// compile time check whether the TextDocumentClientCapabilitiesTypeDefinition implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentClientCapabilitiesTypeDefinition)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesTypeDefinition)(nil)
+// compile time check whether the TextDocumentClientCapabilitiesTypeDefinition implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesTypeDefinition)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesTypeDefinition)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilitiesTypeDefinition)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesImplementation) MarshalJSONObject(enc *gojay.Encoder) {
@@ -945,9 +1020,12 @@ func (v *TextDocumentClientCapabilitiesImplementation) Reset() {
 	v.LinkSupport = false
 }
 
-// compile time check whether the TextDocumentClientCapabilitiesImplementation implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentClientCapabilitiesImplementation)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesImplementation)(nil)
+// compile time check whether the TextDocumentClientCapabilitiesImplementation implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesImplementation)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesImplementation)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilitiesImplementation)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesCodeAction) MarshalJSONObject(enc *gojay.Encoder) {
@@ -982,9 +1060,12 @@ func (v *TextDocumentClientCapabilitiesCodeAction) Reset() {
 	v.CodeActionLiteralSupport = nil
 }
 
-// compile time check whether the TextDocumentClientCapabilitiesCodeAction implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentClientCapabilitiesCodeAction)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesCodeAction)(nil)
+// compile time check whether the TextDocumentClientCapabilitiesCodeAction implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesCodeAction)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesCodeAction)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilitiesCodeAction)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesCodeActionLiteralSupport) MarshalJSONObject(enc *gojay.Encoder) {
@@ -1014,9 +1095,12 @@ func (v *TextDocumentClientCapabilitiesCodeActionLiteralSupport) Reset() {
 	v.CodeActionKind = nil
 }
 
-// compile time check whether the TextDocumentClientCapabilitiesCodeActionLiteralSupport implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentClientCapabilitiesCodeActionLiteralSupport)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesCodeActionLiteralSupport)(nil)
+// compile time check whether the TextDocumentClientCapabilitiesCodeActionLiteralSupport implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesCodeActionLiteralSupport)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesCodeActionLiteralSupport)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilitiesCodeActionLiteralSupport)(nil)
+)
 
 // CodeActionKinds represents a slice of CodeActionKind.
 type CodeActionKinds []CodeActionKind
@@ -1041,9 +1125,11 @@ func (v *CodeActionKinds) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	return nil
 }
 
-// compile time check whether the CodeActionKinds implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interface.
-var _ gojay.MarshalerJSONArray = (*CodeActionKinds)(nil)
-var _ gojay.UnmarshalerJSONArray = (*CodeActionKinds)(nil)
+// compile time check whether the CodeActionKinds implements a gojay.MarshalerJSONArray, gojay.UnmarshalerJSONArray and Pooler interface.
+var (
+	_ gojay.MarshalerJSONArray   = (*CodeActionKinds)(nil)
+	_ gojay.UnmarshalerJSONArray = (*CodeActionKinds)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesCodeActionKind) MarshalJSONObject(enc *gojay.Encoder) {
@@ -1069,9 +1155,12 @@ func (v *TextDocumentClientCapabilitiesCodeActionKind) Reset() {
 	v.ValueSet = nil
 }
 
-// compile time check whether the TextDocumentClientCapabilitiesCodeActionKind implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentClientCapabilitiesCodeActionKind)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesCodeActionKind)(nil)
+// compile time check whether the TextDocumentClientCapabilitiesCodeActionKind implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesCodeActionKind)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesCodeActionKind)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilitiesCodeActionKind)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesCodeLens) MarshalJSONObject(enc *gojay.Encoder) {
@@ -1097,9 +1186,12 @@ func (v *TextDocumentClientCapabilitiesCodeLens) Reset() {
 	v.DynamicRegistration = false
 }
 
-// compile time check whether the TextDocumentClientCapabilitiesCodeLens implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentClientCapabilitiesCodeLens)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesCodeLens)(nil)
+// compile time check whether the TextDocumentClientCapabilitiesCodeLens implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesCodeLens)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesCodeLens)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilitiesCodeLens)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesDocumentLink) MarshalJSONObject(enc *gojay.Encoder) {
@@ -1125,9 +1217,12 @@ func (v *TextDocumentClientCapabilitiesDocumentLink) Reset() {
 	v.DynamicRegistration = false
 }
 
-// compile time check whether the TextDocumentClientCapabilitiesDocumentLink implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentClientCapabilitiesDocumentLink)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesDocumentLink)(nil)
+// compile time check whether the TextDocumentClientCapabilitiesDocumentLink implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesDocumentLink)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesDocumentLink)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilitiesDocumentLink)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesColorProvider) MarshalJSONObject(enc *gojay.Encoder) {
@@ -1153,9 +1248,12 @@ func (v *TextDocumentClientCapabilitiesColorProvider) Reset() {
 	v.DynamicRegistration = false
 }
 
-// compile time check whether the TextDocumentClientCapabilitiesColorProvider implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentClientCapabilitiesColorProvider)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesColorProvider)(nil)
+// compile time check whether the TextDocumentClientCapabilitiesColorProvider implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesColorProvider)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesColorProvider)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilitiesColorProvider)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesRename) MarshalJSONObject(enc *gojay.Encoder) {
@@ -1186,9 +1284,12 @@ func (v *TextDocumentClientCapabilitiesRename) Reset() {
 	v.PrepareSupport = false
 }
 
-// compile time check whether the TextDocumentClientCapabilitiesRename implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentClientCapabilitiesRename)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesRename)(nil)
+// compile time check whether the TextDocumentClientCapabilitiesRename implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesRename)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesRename)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilitiesRename)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesPublishDiagnostics) MarshalJSONObject(enc *gojay.Encoder) {
@@ -1219,9 +1320,12 @@ func (v *TextDocumentClientCapabilitiesPublishDiagnostics) Reset() {
 	v.TagSupport = false
 }
 
-// compile time check whether the TextDocumentClientCapabilitiesPublishDiagnostics implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentClientCapabilitiesPublishDiagnostics)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesPublishDiagnostics)(nil)
+// compile time check whether the TextDocumentClientCapabilitiesPublishDiagnostics implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesPublishDiagnostics)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesPublishDiagnostics)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilitiesPublishDiagnostics)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesFoldingRange) MarshalJSONObject(enc *gojay.Encoder) {
@@ -1256,9 +1360,12 @@ func (v *TextDocumentClientCapabilitiesFoldingRange) Reset() {
 	v.LineFoldingOnly = false
 }
 
-// compile time check whether the TextDocumentClientCapabilitiesFoldingRange implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentClientCapabilitiesFoldingRange)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesFoldingRange)(nil)
+// compile time check whether the TextDocumentClientCapabilitiesFoldingRange implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesFoldingRange)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesFoldingRange)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilitiesFoldingRange)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesSelectionRange) MarshalJSONObject(enc *gojay.Encoder) {
@@ -1284,9 +1391,12 @@ func (v *TextDocumentClientCapabilitiesSelectionRange) Reset() {
 	v.DynamicRegistration = false
 }
 
-// compile time check whether the TextDocumentClientCapabilitiesSelectionRange implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentClientCapabilitiesSelectionRange)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesSelectionRange)(nil)
+// compile time check whether the TextDocumentClientCapabilitiesSelectionRange implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesSelectionRange)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesSelectionRange)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilitiesSelectionRange)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentClientCapabilities) MarshalJSONObject(enc *gojay.Encoder) {
@@ -1527,9 +1637,12 @@ func (v *TextDocumentClientCapabilities) Reset() {
 	v.FoldingRange = nil
 }
 
-// compile time check whether the TextDocumentClientCapabilities implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentClientCapabilities)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilities)(nil)
+// compile time check whether the TextDocumentClientCapabilities implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilities)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilities)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilities)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ClientCapabilities) MarshalJSONObject(enc *gojay.Encoder) {
@@ -1571,9 +1684,12 @@ func (v *ClientCapabilities) Reset() {
 	v.TextDocument = nil
 }
 
-// compile time check whether the ClientCapabilities implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*ClientCapabilities)(nil)
-var _ gojay.UnmarshalerJSONObject = (*ClientCapabilities)(nil)
+// compile time check whether the ClientCapabilities implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*ClientCapabilities)(nil)
+	_ gojay.UnmarshalerJSONObject = (*ClientCapabilities)(nil)
+	_ Pooler                      = (*ClientCapabilities)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *InitializeResult) MarshalJSONObject(enc *gojay.Encoder) {
@@ -1600,9 +1716,12 @@ func (v *InitializeResult) Reset() {
 	ServerCapabilitiesPool.Put(&v.Capabilities)
 }
 
-// compile time check whether the InitializeResult implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*InitializeResult)(nil)
-var _ gojay.UnmarshalerJSONObject = (*InitializeResult)(nil)
+// compile time check whether the InitializeResult implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*InitializeResult)(nil)
+	_ gojay.UnmarshalerJSONObject = (*InitializeResult)(nil)
+	_ Pooler                      = (*InitializeResult)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *InitializeError) MarshalJSONObject(enc *gojay.Encoder) {
@@ -1628,9 +1747,12 @@ func (v *InitializeError) Reset() {
 	v.Retry = false
 }
 
-// compile time check whether the InitializeError implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*InitializeError)(nil)
-var _ gojay.UnmarshalerJSONObject = (*InitializeError)(nil)
+// compile time check whether the InitializeError implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*InitializeError)(nil)
+	_ gojay.UnmarshalerJSONObject = (*InitializeError)(nil)
+	_ Pooler                      = (*InitializeError)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *CompletionOptions) MarshalJSONObject(enc *gojay.Encoder) {
@@ -1664,9 +1786,12 @@ func (v *CompletionOptions) Reset() {
 	v.TriggerCharacters = nil
 }
 
-// compile time check whether the CompletionOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*CompletionOptions)(nil)
-var _ gojay.UnmarshalerJSONObject = (*CompletionOptions)(nil)
+// compile time check whether the CompletionOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*CompletionOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*CompletionOptions)(nil)
+	_ Pooler                      = (*CompletionOptions)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *SignatureHelpOptions) MarshalJSONObject(enc *gojay.Encoder) {
@@ -1697,9 +1822,12 @@ func (v *SignatureHelpOptions) Reset() {
 	v.TriggerCharacters = nil
 }
 
-// compile time check whether the SignatureHelpOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*SignatureHelpOptions)(nil)
-var _ gojay.UnmarshalerJSONObject = (*SignatureHelpOptions)(nil)
+// compile time check whether the SignatureHelpOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*SignatureHelpOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*SignatureHelpOptions)(nil)
+	_ Pooler                      = (*SignatureHelpOptions)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *CodeActionOptions) MarshalJSONObject(enc *gojay.Encoder) {
@@ -1725,9 +1853,12 @@ func (v *CodeActionOptions) Reset() {
 	v.CodeActionKinds = nil
 }
 
-// compile time check whether the CodeActionOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*CodeActionOptions)(nil)
-var _ gojay.UnmarshalerJSONObject = (*CodeActionOptions)(nil)
+// compile time check whether the CodeActionOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*CodeActionOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*CodeActionOptions)(nil)
+	_ Pooler                      = (*CodeActionOptions)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *CodeLensOptions) MarshalJSONObject(enc *gojay.Encoder) {
@@ -1753,9 +1884,12 @@ func (v *CodeLensOptions) Reset() {
 	v.ResolveProvider = false
 }
 
-// compile time check whether the CodeLensOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*CodeLensOptions)(nil)
-var _ gojay.UnmarshalerJSONObject = (*CodeLensOptions)(nil)
+// compile time check whether the CodeLensOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*CodeLensOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*CodeLensOptions)(nil)
+	_ Pooler                      = (*CodeLensOptions)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v DocumentOnTypeFormattingOptions) MarshalJSONObject(enc *gojay.Encoder) {
@@ -1791,9 +1925,12 @@ func (v *DocumentOnTypeFormattingOptions) Reset() {
 	v.MoreTriggerCharacter = nil
 }
 
-// compile time check whether the DocumentOnTypeFormattingOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*DocumentOnTypeFormattingOptions)(nil)
-var _ gojay.UnmarshalerJSONObject = (*DocumentOnTypeFormattingOptions)(nil)
+// compile time check whether the DocumentOnTypeFormattingOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*DocumentOnTypeFormattingOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*DocumentOnTypeFormattingOptions)(nil)
+	_ Pooler                      = (*DocumentOnTypeFormattingOptions)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *RenameOptions) MarshalJSONObject(enc *gojay.Encoder) {
@@ -1819,9 +1956,12 @@ func (v *RenameOptions) Reset() {
 	v.PrepareProvider = false
 }
 
-// compile time check whether the RenameOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*RenameOptions)(nil)
-var _ gojay.UnmarshalerJSONObject = (*RenameOptions)(nil)
+// compile time check whether the RenameOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*RenameOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*RenameOptions)(nil)
+	_ Pooler                      = (*RenameOptions)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *DocumentLinkOptions) MarshalJSONObject(enc *gojay.Encoder) {
@@ -1847,9 +1987,12 @@ func (v *DocumentLinkOptions) Reset() {
 	v.ResolveProvider = false
 }
 
-// compile time check whether the DocumentLinkOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*DocumentLinkOptions)(nil)
-var _ gojay.UnmarshalerJSONObject = (*DocumentLinkOptions)(nil)
+// compile time check whether the DocumentLinkOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*DocumentLinkOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*DocumentLinkOptions)(nil)
+	_ Pooler                      = (*DocumentLinkOptions)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ExecuteCommandOptions) MarshalJSONObject(enc *gojay.Encoder) {
@@ -1875,9 +2018,12 @@ func (v *ExecuteCommandOptions) Reset() {
 	v.Commands = nil
 }
 
-// compile time check whether the ExecuteCommandOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*ExecuteCommandOptions)(nil)
-var _ gojay.UnmarshalerJSONObject = (*ExecuteCommandOptions)(nil)
+// compile time check whether the ExecuteCommandOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*ExecuteCommandOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*ExecuteCommandOptions)(nil)
+	_ Pooler                      = (*ExecuteCommandOptions)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *SaveOptions) MarshalJSONObject(enc *gojay.Encoder) {
@@ -1903,9 +2049,12 @@ func (v *SaveOptions) Reset() {
 	v.IncludeText = false
 }
 
-// compile time check whether the SaveOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*SaveOptions)(nil)
-var _ gojay.UnmarshalerJSONObject = (*SaveOptions)(nil)
+// compile time check whether the SaveOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*SaveOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*SaveOptions)(nil)
+	_ Pooler                      = (*SaveOptions)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ColorProviderOptions) MarshalJSONObject(enc *gojay.Encoder) {}
@@ -1924,9 +2073,12 @@ func (v *ColorProviderOptions) NKeys() int { return 0 }
 // Reset reset fields
 func (v *ColorProviderOptions) Reset() {}
 
-// compile time check whether the ColorProviderOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*ColorProviderOptions)(nil)
-var _ gojay.UnmarshalerJSONObject = (*ColorProviderOptions)(nil)
+// compile time check whether the ColorProviderOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*ColorProviderOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*ColorProviderOptions)(nil)
+	_ Pooler                      = (*ColorProviderOptions)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *FoldingRangeProviderOptions) MarshalJSONObject(enc *gojay.Encoder) {}
@@ -1945,9 +2097,12 @@ func (v *FoldingRangeProviderOptions) NKeys() int { return 0 }
 // Reset reset fields
 func (v *FoldingRangeProviderOptions) Reset() {}
 
-// compile time check whether the FoldingRangeProviderOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*FoldingRangeProviderOptions)(nil)
-var _ gojay.UnmarshalerJSONObject = (*FoldingRangeProviderOptions)(nil)
+// compile time check whether the FoldingRangeProviderOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*FoldingRangeProviderOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*FoldingRangeProviderOptions)(nil)
+	_ Pooler                      = (*FoldingRangeProviderOptions)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentSyncOptions) MarshalJSONObject(enc *gojay.Encoder) {
@@ -1996,9 +2151,12 @@ func (v *TextDocumentSyncOptions) Reset() {
 	v.Save = nil
 }
 
-// compile time check whether the TextDocumentSyncOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentSyncOptions)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentSyncOptions)(nil)
+// compile time check whether the TextDocumentSyncOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentSyncOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentSyncOptions)(nil)
+	_ Pooler                      = (*TextDocumentSyncOptions)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *StaticRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
@@ -2024,9 +2182,12 @@ func (v *StaticRegistrationOptions) Reset() {
 	v.ID = ""
 }
 
-// compile time check whether the StaticRegistrationOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*StaticRegistrationOptions)(nil)
-var _ gojay.UnmarshalerJSONObject = (*StaticRegistrationOptions)(nil)
+// compile time check whether the StaticRegistrationOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*StaticRegistrationOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*StaticRegistrationOptions)(nil)
+	_ Pooler                      = (*StaticRegistrationOptions)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ServerCapabilitiesWorkspace) MarshalJSONObject(enc *gojay.Encoder) {
@@ -2058,9 +2219,12 @@ func (v *ServerCapabilitiesWorkspace) Reset() {
 	v.WorkspaceFolders = nil
 }
 
-// compile time check whether the ServerCapabilitiesWorkspace implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*ServerCapabilitiesWorkspace)(nil)
-var _ gojay.UnmarshalerJSONObject = (*ServerCapabilitiesWorkspace)(nil)
+// compile time check whether the ServerCapabilitiesWorkspace implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*ServerCapabilitiesWorkspace)(nil)
+	_ gojay.UnmarshalerJSONObject = (*ServerCapabilitiesWorkspace)(nil)
+	_ Pooler                      = (*ServerCapabilitiesWorkspace)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ServerCapabilitiesWorkspaceFolders) MarshalJSONObject(enc *gojay.Encoder) {
@@ -2091,9 +2255,12 @@ func (v *ServerCapabilitiesWorkspaceFolders) Reset() {
 	v.ChangeNotifications = nil
 }
 
-// compile time check whether the ServerCapabilitiesWorkspaceFolders implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*ServerCapabilitiesWorkspaceFolders)(nil)
-var _ gojay.UnmarshalerJSONObject = (*ServerCapabilitiesWorkspaceFolders)(nil)
+// compile time check whether the ServerCapabilitiesWorkspaceFolders implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*ServerCapabilitiesWorkspaceFolders)(nil)
+	_ gojay.UnmarshalerJSONObject = (*ServerCapabilitiesWorkspaceFolders)(nil)
+	_ Pooler                      = (*ServerCapabilitiesWorkspaceFolders)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ServerCapabilities) MarshalJSONObject(enc *gojay.Encoder) {
@@ -2247,9 +2414,12 @@ func (v *ServerCapabilities) Reset() {
 	v.Workspace = nil
 }
 
-// compile time check whether the ServerCapabilities implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*ServerCapabilities)(nil)
-var _ gojay.UnmarshalerJSONObject = (*ServerCapabilities)(nil)
+// compile time check whether the ServerCapabilities implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*ServerCapabilities)(nil)
+	_ gojay.UnmarshalerJSONObject = (*ServerCapabilities)(nil)
+	_ Pooler                      = (*ServerCapabilities)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *DocumentLinkRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
@@ -2281,9 +2451,12 @@ func (v *DocumentLinkRegistrationOptions) Reset() {
 	v.ResolveProvider = false
 }
 
-// compile time check whether the DocumentLinkRegistrationOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*DocumentLinkRegistrationOptions)(nil)
-var _ gojay.UnmarshalerJSONObject = (*DocumentLinkRegistrationOptions)(nil)
+// compile time check whether the DocumentLinkRegistrationOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*DocumentLinkRegistrationOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*DocumentLinkRegistrationOptions)(nil)
+	_ Pooler                      = (*DocumentLinkRegistrationOptions)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *InitializedParams) MarshalJSONObject(enc *gojay.Encoder) {}
@@ -2302,6 +2475,9 @@ func (v *InitializedParams) NKeys() int { return 0 }
 // Reset reset fields
 func (v *InitializedParams) Reset() {}
 
-// compile time check whether the InitializedParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*InitializedParams)(nil)
-var _ gojay.UnmarshalerJSONObject = (*InitializedParams)(nil)
+// compile time check whether the InitializedParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*InitializedParams)(nil)
+	_ gojay.UnmarshalerJSONObject = (*InitializedParams)(nil)
+	_ Pooler                      = (*InitializedParams)(nil)
+)

@@ -34,9 +34,12 @@ func (v *Registration) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 // NKeys returns the number of keys to unmarshal.
 func (v *Registration) NKeys() int { return 3 }
 
-// compile time check whether the Registration implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*Registration)(nil)
-var _ gojay.UnmarshalerJSONObject = (*Registration)(nil)
+// compile time check whether the Registration implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*Registration)(nil)
+	_ gojay.UnmarshalerJSONObject = (*Registration)(nil)
+	// _ Pooler                      = (*Registration)(nil)
+)
 
 type registrations []Registration
 
@@ -60,9 +63,11 @@ func (v *registrations) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	return nil
 }
 
-// compile time check whether the registrations implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interface.
-var _ gojay.MarshalerJSONArray = (*registrations)(nil)
-var _ gojay.UnmarshalerJSONArray = (*registrations)(nil)
+// compile time check whether the registrations implements a gojay.MarshalerJSONArray, gojay.UnmarshalerJSONArray and Pooler interface.
+var (
+	_ gojay.MarshalerJSONArray   = (*registrations)(nil)
+	_ gojay.UnmarshalerJSONArray = (*registrations)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *RegistrationParams) MarshalJSONObject(enc *gojay.Encoder) {
@@ -83,9 +88,12 @@ func (v *RegistrationParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) e
 // NKeys returns the number of keys to unmarshal.
 func (v *RegistrationParams) NKeys() int { return 1 }
 
-// compile time check whether the RegistrationParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*RegistrationParams)(nil)
-var _ gojay.UnmarshalerJSONObject = (*RegistrationParams)(nil)
+// compile time check whether the RegistrationParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*RegistrationParams)(nil)
+	_ gojay.UnmarshalerJSONObject = (*RegistrationParams)(nil)
+	// _ Pooler                      = (*RegistrationParams)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *TextDocumentRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
@@ -106,9 +114,12 @@ func (v *TextDocumentRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentRegistrationOptions) NKeys() int { return 1 }
 
-// compile time check whether the TextDocumentRegistrationOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*TextDocumentRegistrationOptions)(nil)
-var _ gojay.UnmarshalerJSONObject = (*TextDocumentRegistrationOptions)(nil)
+// compile time check whether the TextDocumentRegistrationOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentRegistrationOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentRegistrationOptions)(nil)
+	// _ Pooler                      = (*TextDocumentRegistrationOptions)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *Unregistration) MarshalJSONObject(enc *gojay.Encoder) {
@@ -133,9 +144,12 @@ func (v *Unregistration) UnmarshalJSONObject(dec *gojay.Decoder, k string) error
 // NKeys returns the number of keys to unmarshal.
 func (v *Unregistration) NKeys() int { return 2 }
 
-// compile time check whether the Unregistration implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*Unregistration)(nil)
-var _ gojay.UnmarshalerJSONObject = (*Unregistration)(nil)
+// compile time check whether the Unregistration implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*Unregistration)(nil)
+	_ gojay.UnmarshalerJSONObject = (*Unregistration)(nil)
+	// _ Pooler                      = (*Unregistration)(nil)
+)
 
 type unregisterations []Unregistration
 
@@ -159,9 +173,11 @@ func (v *unregisterations) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	return nil
 }
 
-// compile time check whether the unregisterations implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interface.
-var _ gojay.MarshalerJSONArray = (*unregisterations)(nil)
-var _ gojay.UnmarshalerJSONArray = (*unregisterations)(nil)
+// compile time check whether the unregisterations implements a gojay.MarshalerJSONArray, gojay.UnmarshalerJSONArray and Pooler interface.
+var (
+	_ gojay.MarshalerJSONArray   = (*unregisterations)(nil)
+	_ gojay.UnmarshalerJSONArray = (*unregisterations)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *UnregistrationParams) MarshalJSONObject(enc *gojay.Encoder) {
@@ -182,6 +198,9 @@ func (v *UnregistrationParams) UnmarshalJSONObject(dec *gojay.Decoder, k string)
 // NKeys returns the number of keys to unmarshal.
 func (v *UnregistrationParams) NKeys() int { return 1 }
 
-// compile time check whether the UnregistrationParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*UnregistrationParams)(nil)
-var _ gojay.UnmarshalerJSONObject = (*UnregistrationParams)(nil)
+// compile time check whether the UnregistrationParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*UnregistrationParams)(nil)
+	_ gojay.UnmarshalerJSONObject = (*UnregistrationParams)(nil)
+	// _ Pooler                      = (*UnregistrationParams)(nil)
+)

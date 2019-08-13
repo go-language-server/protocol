@@ -31,9 +31,12 @@ func (v *ShowMessageParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) er
 // NKeys returns the number of keys to unmarshal.
 func (v *ShowMessageParams) NKeys() int { return 2 }
 
-// compile time check whether the ShowMessageParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*ShowMessageParams)(nil)
-var _ gojay.UnmarshalerJSONObject = (*ShowMessageParams)(nil)
+// compile time check whether the ShowMessageParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*ShowMessageParams)(nil)
+	_ gojay.UnmarshalerJSONObject = (*ShowMessageParams)(nil)
+	// _ Pooler                      = (*ShowMessageParams)(nil)
+)
 
 type actions []MessageActionItem
 
@@ -57,9 +60,11 @@ func (v *actions) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	return nil
 }
 
-// compile time check whether the actions implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interface.
-var _ gojay.MarshalerJSONArray = (*actions)(nil)
-var _ gojay.UnmarshalerJSONArray = (*actions)(nil)
+// compile time check whether the actions implements a gojay.MarshalerJSONArray, gojay.UnmarshalerJSONArray and Pooler interface.
+var (
+	_ gojay.MarshalerJSONArray   = (*actions)(nil)
+	_ gojay.UnmarshalerJSONArray = (*actions)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ShowMessageRequestParams) MarshalJSONObject(enc *gojay.Encoder) {
@@ -87,9 +92,12 @@ func (v *ShowMessageRequestParams) UnmarshalJSONObject(dec *gojay.Decoder, k str
 // NKeys returns the number of keys to unmarshal.
 func (v *ShowMessageRequestParams) NKeys() int { return 3 }
 
-// compile time check whether the ShowMessageRequestParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*ShowMessageRequestParams)(nil)
-var _ gojay.UnmarshalerJSONObject = (*ShowMessageRequestParams)(nil)
+// compile time check whether the ShowMessageRequestParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*ShowMessageRequestParams)(nil)
+	_ gojay.UnmarshalerJSONObject = (*ShowMessageRequestParams)(nil)
+	// _ Pooler                      = (*ShowMessageRequestParams)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *MessageActionItem) MarshalJSONObject(enc *gojay.Encoder) {
@@ -110,9 +118,12 @@ func (v *MessageActionItem) UnmarshalJSONObject(dec *gojay.Decoder, k string) er
 // NKeys returns the number of keys to unmarshal.
 func (v *MessageActionItem) NKeys() int { return 1 }
 
-// compile time check whether the MessageActionItem implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*MessageActionItem)(nil)
-var _ gojay.UnmarshalerJSONObject = (*MessageActionItem)(nil)
+// compile time check whether the MessageActionItem implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*MessageActionItem)(nil)
+	_ gojay.UnmarshalerJSONObject = (*MessageActionItem)(nil)
+	// _ Pooler                      = (*MessageActionItem)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *LogMessageParams) MarshalJSONObject(enc *gojay.Encoder) {
@@ -137,6 +148,9 @@ func (v *LogMessageParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) err
 // NKeys returns the number of keys to unmarshal.
 func (v *LogMessageParams) NKeys() int { return 2 }
 
-// compile time check whether the LogMessageParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*LogMessageParams)(nil)
-var _ gojay.UnmarshalerJSONObject = (*LogMessageParams)(nil)
+// compile time check whether the LogMessageParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*LogMessageParams)(nil)
+	_ gojay.UnmarshalerJSONObject = (*LogMessageParams)(nil)
+	// _ Pooler                      = (*LogMessageParams)(nil)
+)

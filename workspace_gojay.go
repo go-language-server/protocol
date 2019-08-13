@@ -32,8 +32,11 @@ func (v *WorkspaceFolder) UnmarshalJSONObject(dec *gojay.Decoder, k string) erro
 func (v *WorkspaceFolder) NKeys() int { return 2 }
 
 // compile time check whether the WorkspaceFolder implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*WorkspaceFolder)(nil)
-var _ gojay.UnmarshalerJSONObject = (*WorkspaceFolder)(nil)
+var (
+	_ gojay.MarshalerJSONObject   = (*WorkspaceFolder)(nil)
+	_ gojay.UnmarshalerJSONObject = (*WorkspaceFolder)(nil)
+	// _ Pooler                      = (*WorkspaceFolder)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *DidChangeWorkspaceFoldersParams) MarshalJSONObject(enc *gojay.Encoder) {
@@ -55,8 +58,11 @@ func (v *DidChangeWorkspaceFoldersParams) UnmarshalJSONObject(dec *gojay.Decoder
 func (v *DidChangeWorkspaceFoldersParams) NKeys() int { return 1 }
 
 // compile time check whether the DidChangeWorkspaceFoldersParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*DidChangeWorkspaceFoldersParams)(nil)
-var _ gojay.UnmarshalerJSONObject = (*DidChangeWorkspaceFoldersParams)(nil)
+var (
+	_ gojay.MarshalerJSONObject   = (*DidChangeWorkspaceFoldersParams)(nil)
+	_ gojay.UnmarshalerJSONObject = (*DidChangeWorkspaceFoldersParams)(nil)
+	// _ Pooler                      = (*DidChangeWorkspaceFoldersParams)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *WorkspaceFoldersChangeEvent) MarshalJSONObject(enc *gojay.Encoder) {
@@ -82,8 +88,11 @@ func (v *WorkspaceFoldersChangeEvent) UnmarshalJSONObject(dec *gojay.Decoder, k 
 func (v *WorkspaceFoldersChangeEvent) NKeys() int { return 2 }
 
 // compile time check whether the WorkspaceFoldersChangeEvent implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*WorkspaceFoldersChangeEvent)(nil)
-var _ gojay.UnmarshalerJSONObject = (*WorkspaceFoldersChangeEvent)(nil)
+var (
+	_ gojay.MarshalerJSONObject   = (*WorkspaceFoldersChangeEvent)(nil)
+	_ gojay.UnmarshalerJSONObject = (*WorkspaceFoldersChangeEvent)(nil)
+	// _ Pooler                      = (*WorkspaceFoldersChangeEvent)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *DidChangeConfigurationParams) MarshalJSONObject(enc *gojay.Encoder) {
@@ -105,8 +114,11 @@ func (v *DidChangeConfigurationParams) UnmarshalJSONObject(dec *gojay.Decoder, k
 func (v *DidChangeConfigurationParams) NKeys() int { return 1 }
 
 // compile time check whether the DidChangeConfigurationParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*DidChangeConfigurationParams)(nil)
-var _ gojay.UnmarshalerJSONObject = (*DidChangeConfigurationParams)(nil)
+var (
+	_ gojay.MarshalerJSONObject   = (*DidChangeConfigurationParams)(nil)
+	_ gojay.UnmarshalerJSONObject = (*DidChangeConfigurationParams)(nil)
+	// _ Pooler                      = (*DidChangeConfigurationParams)(nil)
+)
 
 type configurationItem []ConfigurationItem
 
@@ -131,8 +143,10 @@ func (v *configurationItem) UnmarshalJSONArray(dec *gojay.Decoder) error {
 }
 
 // compile time check whether the configurationItem implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interface.
-var _ gojay.MarshalerJSONArray = (*configurationItem)(nil)
-var _ gojay.UnmarshalerJSONArray = (*configurationItem)(nil)
+var (
+	_ gojay.MarshalerJSONArray   = (*configurationItem)(nil)
+	_ gojay.UnmarshalerJSONArray = (*configurationItem)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ConfigurationParams) MarshalJSONObject(enc *gojay.Encoder) {
@@ -154,8 +168,11 @@ func (v *ConfigurationParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) 
 func (v *ConfigurationParams) NKeys() int { return 1 }
 
 // compile time check whether the ConfigurationParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*ConfigurationParams)(nil)
-var _ gojay.UnmarshalerJSONObject = (*ConfigurationParams)(nil)
+var (
+	_ gojay.MarshalerJSONObject   = (*ConfigurationParams)(nil)
+	_ gojay.UnmarshalerJSONObject = (*ConfigurationParams)(nil)
+	// _ Pooler                      = (*ConfigurationParams)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ConfigurationItem) MarshalJSONObject(enc *gojay.Encoder) {
@@ -181,8 +198,11 @@ func (v *ConfigurationItem) UnmarshalJSONObject(dec *gojay.Decoder, k string) er
 func (v *ConfigurationItem) NKeys() int { return 2 }
 
 // compile time check whether the ConfigurationItem implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*ConfigurationItem)(nil)
-var _ gojay.UnmarshalerJSONObject = (*ConfigurationItem)(nil)
+var (
+	_ gojay.MarshalerJSONObject   = (*ConfigurationItem)(nil)
+	_ gojay.UnmarshalerJSONObject = (*ConfigurationItem)(nil)
+	// _ Pooler                      = (*ConfigurationItem)(nil)
+)
 
 type FileEvents []*FileEvent
 
@@ -235,8 +255,11 @@ func (v *DidChangeWatchedFilesParams) UnmarshalJSONObject(dec *gojay.Decoder, k 
 func (v *DidChangeWatchedFilesParams) NKeys() int { return 1 }
 
 // compile time check whether the DidChangeWatchedFilesParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*DidChangeWatchedFilesParams)(nil)
-var _ gojay.UnmarshalerJSONObject = (*DidChangeWatchedFilesParams)(nil)
+var (
+	_ gojay.MarshalerJSONObject   = (*DidChangeWatchedFilesParams)(nil)
+	_ gojay.UnmarshalerJSONObject = (*DidChangeWatchedFilesParams)(nil)
+	// _ Pooler                      = (*DidChangeWatchedFilesParams)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *FileEvent) MarshalJSONObject(enc *gojay.Encoder) {
@@ -262,8 +285,11 @@ func (v *FileEvent) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 func (v *FileEvent) NKeys() int { return 2 }
 
 // compile time check whether the FileEvent implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*FileEvent)(nil)
-var _ gojay.UnmarshalerJSONObject = (*FileEvent)(nil)
+var (
+	_ gojay.MarshalerJSONObject   = (*FileEvent)(nil)
+	_ gojay.UnmarshalerJSONObject = (*FileEvent)(nil)
+	// _ Pooler                      = (*FileEvent)(nil)
+)
 
 type fileSystemWatchers []FileSystemWatcher
 
@@ -288,8 +314,10 @@ func (v *fileSystemWatchers) UnmarshalJSONArray(dec *gojay.Decoder) error {
 }
 
 // compile time check whether the fileSystemWatchers implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interface.
-var _ gojay.MarshalerJSONArray = (*fileSystemWatchers)(nil)
-var _ gojay.UnmarshalerJSONArray = (*fileSystemWatchers)(nil)
+var (
+	_ gojay.MarshalerJSONArray   = (*fileSystemWatchers)(nil)
+	_ gojay.UnmarshalerJSONArray = (*fileSystemWatchers)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *DidChangeWatchedFilesRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
@@ -311,8 +339,11 @@ func (v *DidChangeWatchedFilesRegistrationOptions) UnmarshalJSONObject(dec *goja
 func (v *DidChangeWatchedFilesRegistrationOptions) NKeys() int { return 1 }
 
 // compile time check whether the DidChangeWatchedFilesRegistrationOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*DidChangeWatchedFilesRegistrationOptions)(nil)
-var _ gojay.UnmarshalerJSONObject = (*DidChangeWatchedFilesRegistrationOptions)(nil)
+var (
+	_ gojay.MarshalerJSONObject   = (*DidChangeWatchedFilesRegistrationOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*DidChangeWatchedFilesRegistrationOptions)(nil)
+	// _ Pooler                      = (*DidChangeWatchedFilesRegistrationOptions)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *FileSystemWatcher) MarshalJSONObject(enc *gojay.Encoder) {
@@ -338,8 +369,11 @@ func (v *FileSystemWatcher) UnmarshalJSONObject(dec *gojay.Decoder, k string) er
 func (v *FileSystemWatcher) NKeys() int { return 2 }
 
 // compile time check whether the FileSystemWatcher implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*FileSystemWatcher)(nil)
-var _ gojay.UnmarshalerJSONObject = (*FileSystemWatcher)(nil)
+var (
+	_ gojay.MarshalerJSONObject   = (*FileSystemWatcher)(nil)
+	_ gojay.UnmarshalerJSONObject = (*FileSystemWatcher)(nil)
+	// _ Pooler                      = (*FileSystemWatcher)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *WorkspaceSymbolParams) MarshalJSONObject(enc *gojay.Encoder) {
@@ -361,8 +395,11 @@ func (v *WorkspaceSymbolParams) UnmarshalJSONObject(dec *gojay.Decoder, k string
 func (v *WorkspaceSymbolParams) NKeys() int { return 1 }
 
 // compile time check whether the WorkspaceSymbolParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*WorkspaceSymbolParams)(nil)
-var _ gojay.UnmarshalerJSONObject = (*WorkspaceSymbolParams)(nil)
+var (
+	_ gojay.MarshalerJSONObject   = (*WorkspaceSymbolParams)(nil)
+	_ gojay.UnmarshalerJSONObject = (*WorkspaceSymbolParams)(nil)
+	// _ Pooler                      = (*WorkspaceSymbolParams)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ExecuteCommandParams) MarshalJSONObject(enc *gojay.Encoder) {
@@ -388,8 +425,11 @@ func (v *ExecuteCommandParams) UnmarshalJSONObject(dec *gojay.Decoder, k string)
 func (v *ExecuteCommandParams) NKeys() int { return 2 }
 
 // compile time check whether the ExecuteCommandParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*ExecuteCommandParams)(nil)
-var _ gojay.UnmarshalerJSONObject = (*ExecuteCommandParams)(nil)
+var (
+	_ gojay.MarshalerJSONObject   = (*ExecuteCommandParams)(nil)
+	_ gojay.UnmarshalerJSONObject = (*ExecuteCommandParams)(nil)
+	// _ Pooler                      = (*ExecuteCommandParams)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ExecuteCommandRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
@@ -411,8 +451,11 @@ func (v *ExecuteCommandRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decod
 func (v *ExecuteCommandRegistrationOptions) NKeys() int { return 1 }
 
 // compile time check whether the ExecuteCommandRegistrationOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*ExecuteCommandRegistrationOptions)(nil)
-var _ gojay.UnmarshalerJSONObject = (*ExecuteCommandRegistrationOptions)(nil)
+var (
+	_ gojay.MarshalerJSONObject   = (*ExecuteCommandRegistrationOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*ExecuteCommandRegistrationOptions)(nil)
+	// _ Pooler                      = (*ExecuteCommandRegistrationOptions)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ApplyWorkspaceEditParams) MarshalJSONObject(enc *gojay.Encoder) {
@@ -438,8 +481,11 @@ func (v *ApplyWorkspaceEditParams) UnmarshalJSONObject(dec *gojay.Decoder, k str
 func (v *ApplyWorkspaceEditParams) NKeys() int { return 2 }
 
 // compile time check whether the ApplyWorkspaceEditParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*ApplyWorkspaceEditParams)(nil)
-var _ gojay.UnmarshalerJSONObject = (*ApplyWorkspaceEditParams)(nil)
+var (
+	_ gojay.MarshalerJSONObject   = (*ApplyWorkspaceEditParams)(nil)
+	_ gojay.UnmarshalerJSONObject = (*ApplyWorkspaceEditParams)(nil)
+	// _ Pooler                      = (*ApplyWorkspaceEditParams)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ApplyWorkspaceEditResponse) MarshalJSONObject(enc *gojay.Encoder) {
@@ -461,5 +507,8 @@ func (v *ApplyWorkspaceEditResponse) UnmarshalJSONObject(dec *gojay.Decoder, k s
 func (v *ApplyWorkspaceEditResponse) NKeys() int { return 1 }
 
 // compile time check whether the ApplyWorkspaceEditResponse implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*ApplyWorkspaceEditResponse)(nil)
-var _ gojay.UnmarshalerJSONObject = (*ApplyWorkspaceEditResponse)(nil)
+var (
+	_ gojay.MarshalerJSONObject   = (*ApplyWorkspaceEditResponse)(nil)
+	_ gojay.UnmarshalerJSONObject = (*ApplyWorkspaceEditResponse)(nil)
+	// _ Pooler                      = (*ApplyWorkspaceEditResponse)(nil)
+)

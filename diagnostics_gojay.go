@@ -34,9 +34,11 @@ func (v *Diagnostics) UnmarshalJSONArray(dec *gojay.Decoder) error {
 // IsNil implements gojay's MarshalerJSONArray.
 func (v Diagnostics) IsNil() bool { return len(v) == 0 }
 
-// compile time check whether the Diagnostics implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interface.
-var _ gojay.MarshalerJSONArray = (*Diagnostics)(nil)
-var _ gojay.UnmarshalerJSONArray = (*Diagnostics)(nil)
+// compile time check whether the Diagnostics implements a gojay.MarshalerJSONArray, gojay.UnmarshalerJSONArray and Pooler interface.
+var (
+	_ gojay.MarshalerJSONArray   = (*Diagnostics)(nil)
+	_ gojay.UnmarshalerJSONArray = (*Diagnostics)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *PublishDiagnosticsParams) MarshalJSONObject(enc *gojay.Encoder) {
@@ -79,6 +81,9 @@ func (v *PublishDiagnosticsParams) Reset() {
 	v.Diagnostics = nil
 }
 
-// compile time check whether the PublishDiagnosticsParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var _ gojay.MarshalerJSONObject = (*PublishDiagnosticsParams)(nil)
-var _ gojay.UnmarshalerJSONObject = (*PublishDiagnosticsParams)(nil)
+// compile time check whether the PublishDiagnosticsParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*PublishDiagnosticsParams)(nil)
+	_ gojay.UnmarshalerJSONObject = (*PublishDiagnosticsParams)(nil)
+	_ Pooler                      = (*PublishDiagnosticsParams)(nil)
+)
