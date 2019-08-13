@@ -81,7 +81,7 @@ test: GO_BUILDTAGS+=${GO_BUILDTAGS_STATIC}
 test: GO_FLAGS+=-installsuffix ${GO_INSTALLSUFFIX_STATIC}
 test:  ## Runs package test including race condition.
 	$(call target,${TARGET})
-	@GO111MODULE=on CGO_ENABLED=$(CGO_ENABLED) $(GO_TEST) -v -race $(strip $(GO_FLAGS)) -run=$(GO_TEST_FUNC) $(GO_TEST_PKGS)
+	@GO111MODULE=on CGO_ENABLED=$(CGO_ENABLED) $(GO_TEST) -v -race -count 1 $(strip $(GO_FLAGS)) -run=$(GO_TEST_FUNC) $(GO_TEST_PKGS)
 
 .PHONY: bench
 bench: GO_FLAGS+=${GO_MOD_FLAGS}
