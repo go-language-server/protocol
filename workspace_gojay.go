@@ -292,20 +292,21 @@ var (
 	// _ Pooler                      = (*FileEvent)(nil)
 )
 
-type fileSystemWatchers []FileSystemWatcher
+// FileSystemWatchers represents a FileSystemWatcher slice.
+type FileSystemWatchers []FileSystemWatcher
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
-func (v fileSystemWatchers) MarshalJSONArray(enc *gojay.Encoder) {
+func (v FileSystemWatchers) MarshalJSONArray(enc *gojay.Encoder) {
 	for _, t := range v {
 		enc.ObjectOmitEmpty(&t)
 	}
 }
 
 // IsNil implements gojay's MarshalerJSONArray.
-func (v fileSystemWatchers) IsNil() bool { return len(v) == 0 }
+func (v FileSystemWatchers) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
-func (v *fileSystemWatchers) UnmarshalJSONArray(dec *gojay.Decoder) error {
+func (v *FileSystemWatchers) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	t := FileSystemWatcher{}
 	if err := dec.Object(&t); err != nil {
 		return err
@@ -316,13 +317,13 @@ func (v *fileSystemWatchers) UnmarshalJSONArray(dec *gojay.Decoder) error {
 
 // compile time check whether the fileSystemWatchers implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interface.
 var (
-	_ gojay.MarshalerJSONArray   = (*fileSystemWatchers)(nil)
-	_ gojay.UnmarshalerJSONArray = (*fileSystemWatchers)(nil)
+	_ gojay.MarshalerJSONArray   = (*FileSystemWatchers)(nil)
+	_ gojay.UnmarshalerJSONArray = (*FileSystemWatchers)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *DidChangeWatchedFilesRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKey(keyWatchers, (*fileSystemWatchers)(&v.Watchers))
+	enc.ArrayKey(keyWatchers, (*FileSystemWatchers)(&v.Watchers))
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -331,7 +332,7 @@ func (v *DidChangeWatchedFilesRegistrationOptions) IsNil() bool { return v == ni
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *DidChangeWatchedFilesRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyWatchers {
-		return dec.Array((*fileSystemWatchers)(&v.Watchers))
+		return dec.Array((*FileSystemWatchers)(&v.Watchers))
 	}
 	return nil
 }
