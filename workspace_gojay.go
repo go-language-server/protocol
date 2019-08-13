@@ -184,20 +184,20 @@ func (v *ConfigurationItem) NKeys() int { return 2 }
 var _ gojay.MarshalerJSONObject = (*ConfigurationItem)(nil)
 var _ gojay.UnmarshalerJSONObject = (*ConfigurationItem)(nil)
 
-type fileEvents []*FileEvent
+type FileEvents []*FileEvent
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
-func (v fileEvents) MarshalJSONArray(enc *gojay.Encoder) {
+func (v FileEvents) MarshalJSONArray(enc *gojay.Encoder) {
 	for _, t := range v {
 		enc.ObjectOmitEmpty(t)
 	}
 }
 
 // IsNil implements gojay's MarshalerJSONArray.
-func (v fileEvents) IsNil() bool { return len(v) == 0 }
+func (v FileEvents) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
-func (v *fileEvents) UnmarshalJSONArray(dec *gojay.Decoder) error {
+func (v *FileEvents) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	t := &FileEvent{}
 	if err := dec.Object(t); err != nil {
 		return err
@@ -206,13 +206,15 @@ func (v *fileEvents) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	return nil
 }
 
-// compile time check whether the fileEvents implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interface.
-var _ gojay.MarshalerJSONArray = (*fileEvents)(nil)
-var _ gojay.UnmarshalerJSONArray = (*fileEvents)(nil)
+// compile time check whether the FileEvents implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interface.
+var (
+	_ gojay.MarshalerJSONArray   = (*FileEvents)(nil)
+	_ gojay.UnmarshalerJSONArray = (*FileEvents)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *DidChangeWatchedFilesParams) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKeyOmitEmpty(keyChanges, (*fileEvents)(&v.Changes))
+	enc.ArrayKeyOmitEmpty(keyChanges, (*FileEvents)(&v.Changes))
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -224,7 +226,7 @@ func (v *DidChangeWatchedFilesParams) UnmarshalJSONObject(dec *gojay.Decoder, k 
 		if v.Changes == nil {
 			v.Changes = []*FileEvent{}
 		}
-		return dec.Array((*fileEvents)(&v.Changes))
+		return dec.Array((*FileEvents)(&v.Changes))
 	}
 	return nil
 }
