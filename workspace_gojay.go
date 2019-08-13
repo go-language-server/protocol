@@ -204,6 +204,7 @@ var (
 	// _ Pooler                      = (*ConfigurationItem)(nil)
 )
 
+// FileEvents represents a FileEvent pointer slice.
 type FileEvents []*FileEvent
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.

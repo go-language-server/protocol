@@ -750,6 +750,7 @@ func (v TextEditsMap) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 // NKeys returns the number of keys to unmarshal.
 func (v TextEditsMap) NKeys() int { return 0 }
 
+// TextDocumentEdits represents a TextDocumentEdit slice.
 type TextDocumentEdits []TextDocumentEdit
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
