@@ -701,20 +701,20 @@ func (v TextEditsMap) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 // NKeys returns the number of keys to unmarshal.
 func (v TextEditsMap) NKeys() int { return 0 }
 
-type documentChanges []TextDocumentEdit
+type TextDocumentEdits []TextDocumentEdit
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
-func (v documentChanges) MarshalJSONArray(enc *gojay.Encoder) {
+func (v TextDocumentEdits) MarshalJSONArray(enc *gojay.Encoder) {
 	for i := range v {
 		enc.ObjectOmitEmpty(&v[i])
 	}
 }
 
 // IsNil implements gojay's MarshalerJSONArray.
-func (v documentChanges) IsNil() bool { return len(v) == 0 }
+func (v TextDocumentEdits) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
-func (v *documentChanges) UnmarshalJSONArray(dec *gojay.Decoder) error {
+func (v *TextDocumentEdits) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	t := TextDocumentEdit{}
 	if err := dec.Object(&t); err != nil {
 		return err
@@ -724,13 +724,15 @@ func (v *documentChanges) UnmarshalJSONArray(dec *gojay.Decoder) error {
 }
 
 // compile time check whether the documentChanges implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interface.
-var _ gojay.MarshalerJSONArray = (*documentChanges)(nil)
-var _ gojay.UnmarshalerJSONArray = (*documentChanges)(nil)
+var (
+	_ gojay.MarshalerJSONArray   = (*TextDocumentEdits)(nil)
+	_ gojay.UnmarshalerJSONArray = (*TextDocumentEdits)(nil)
+)
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *WorkspaceEdit) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKeyOmitEmpty(keyChanges, (*TextEditsMap)(&v.Changes))
-	enc.ArrayKeyOmitEmpty(keyDocumentChanges, (*documentChanges)(&v.DocumentChanges))
+	enc.ArrayKeyOmitEmpty(keyDocumentChanges, (*TextDocumentEdits)(&v.DocumentChanges))
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -748,7 +750,7 @@ func (v *WorkspaceEdit) UnmarshalJSONObject(dec *gojay.Decoder, k string) error 
 		if v.DocumentChanges == nil {
 			v.DocumentChanges = []TextDocumentEdit{}
 		}
-		return dec.Array((*documentChanges)(&v.DocumentChanges))
+		return dec.Array((*TextDocumentEdits)(&v.DocumentChanges))
 	}
 	return nil
 }
