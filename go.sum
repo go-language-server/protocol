@@ -27,8 +27,8 @@ github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeME
 github.com/gliderlabs/ssh v0.1.1/go.mod h1:U7qILu1NlMHj9FlMhZLlkCdDnU1DBEAqr0aevW3Awn0=
 github.com/go-errors/errors v1.0.1 h1:LUHzmkK3GUKUrL/1gfBUxAHzcev3apQlezX/+O7ma6w=
 github.com/go-errors/errors v1.0.1/go.mod h1:f4zRHt4oKfwPJE5k8C9vpYG+aDHdBFUsgrm6/TyX73Q=
-github.com/go-language-server/jsonrpc2 v0.2.1 h1:fmFe5peUS6G5FJXK7RbbrbKwnFYTBZ29r2GmT7pOxUQ=
-github.com/go-language-server/jsonrpc2 v0.2.1/go.mod h1:WeVDqZMgmOWk/MeTR/vRYrEbLWSwzy9HarY212/8/cA=
+github.com/go-language-server/jsonrpc2 v0.2.5 h1:wzfLvaeOS6v1SIkn8jdUq0ba7zaLlqE3Elc8OKeTyT8=
+github.com/go-language-server/jsonrpc2 v0.2.5/go.mod h1:jjm36vITOiff99IzXjH0MClOWXmKF5k3rgdMMV+gw8g=
 github.com/go-language-server/uri v0.1.1 h1:vfNhN1cOR3qYj0FLruIqPnJ7OIf1jW/8dlMDzkf/IDo=
 github.com/go-language-server/uri v0.1.1/go.mod h1:ysWm3wt9ZSV14TVYJlqcyI6ulGx/SEQ0bfdxQm94xKY=
 github.com/gogo/protobuf v1.1.1/go.mod h1:r8qH/GZQm5c6nD/R0oafs1akxWv10x8SbQlK7atdtwQ=
@@ -164,6 +164,8 @@ golang.org/x/tools v0.0.0-20190114222345-bf090417da8b/go.mod h1:n7NCudcB/nEzxVGm
 golang.org/x/tools v0.0.0-20190226205152-f727befe758c/go.mod h1:9Yl7xja0Znq3iFh3HoIrodX9oNMXvdceNzlUR8zjMvY=
 golang.org/x/xerrors v0.0.0-20190516184347-8115aa61538e h1:GZc5hJQaj9QwsCgIB16JPWkpIiZB3PjXyUrl01otLII=
 golang.org/x/xerrors v0.0.0-20190516184347-8115aa61538e/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
+golang.org/x/xerrors v0.0.0-20190717185122-a985d3407aa7 h1:9zdDQZ7Thm29KFXgAX/+yaf3eVbP7djjWp/dXAppNCc=
+golang.org/x/xerrors v0.0.0-20190717185122-a985d3407aa7/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
 google.golang.org/api v0.0.0-20180910000450-7ca32eb868bf/go.mod h1:4mhQ8q/RsB7i+udVvVy5NUi08OU8ZlA0gRVgrF7VFY0=
 google.golang.org/api v0.0.0-20181030000543-1d582fd0359e/go.mod h1:4mhQ8q/RsB7i+udVvVy5NUi08OU8ZlA0gRVgrF7VFY0=
 google.golang.org/api v0.1.0/go.mod h1:UGEZY7KEX120AnNLIHFMKIo4obdJhkp2tPbaPlQx13Y=
