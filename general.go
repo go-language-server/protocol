@@ -179,11 +179,26 @@ type TextDocumentClientCapabilitiesCompletion struct {
 	// capabilities.
 	CompletionItem *TextDocumentClientCapabilitiesCompletionItem `json:"completionItem,omitempty"`
 
-	CompletionItemKind CompletionItemKind `json:"completionItemKind,omitempty"`
+	CompletionItemKind *TextDocumentClientCapabilitiesCompletionItemKind `json:"completionItemKind,omitempty"`
 
 	// ContextSupport is the client supports to send additional context information for a
 	// `textDocument/completion` request.
 	ContextSupport bool `json:"contextSupport,omitempty"`
+}
+
+// TextDocumentClientCapabilitiesCompletionItemKind specific capabilities for the `CompletionItemKind ` in the `textDocument/completion` request.
+type TextDocumentClientCapabilitiesCompletionItemKind struct {
+	//
+	// The completion item kind values the client supports. When this
+	// property exists the client also guarantees that it will
+	// handle values outside its set gracefully and falls back
+	// to a default value when unknown.
+	//
+	// If this property is not present the client only supports
+	// the completion items kinds from `Text` to `Reference` as defined in
+	// the initial version of the protocol.
+	//
+	ValueSet []CompletionItemKind `json:"valueSet,omitempty"`
 }
 
 // TextDocumentClientCapabilitiesCompletionItem is the client supports the following `CompletionItem` specific

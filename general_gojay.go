@@ -455,7 +455,7 @@ var (
 func (v *TextDocumentClientCapabilitiesCompletion) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKeyOmitEmpty(keyDynamicRegistration, v.DynamicRegistration)
 	enc.ObjectKeyOmitEmpty(keyCompletionItem, v.CompletionItem)
-	enc.IntKeyOmitEmpty(keyCompletionItemKind, int(v.CompletionItemKind))
+	enc.ObjectKeyOmitEmpty(keyCompletionItemKind, v.CompletionItemKind)
 	enc.BoolKeyOmitEmpty(keyContextSupport, v.ContextSupport)
 }
 
@@ -473,7 +473,10 @@ func (v *TextDocumentClientCapabilitiesCompletion) UnmarshalJSONObject(dec *goja
 		}
 		return dec.Object(v.CompletionItem)
 	case keyCompletionItemKind:
-		return dec.Int((*int)(&v.CompletionItemKind))
+		if v.CompletionItemKind == nil {
+			v.CompletionItemKind = &TextDocumentClientCapabilitiesCompletionItemKind{}
+		}
+		return dec.Object(v.CompletionItemKind)
 	case keyContextSupport:
 		return dec.Bool(&v.ContextSupport)
 	}
@@ -496,6 +499,66 @@ var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesCompletion)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesCompletion)(nil)
 	_ Pooler                      = (*TextDocumentClientCapabilitiesCompletion)(nil)
+)
+
+// CompletionItemKinds represents a slice of CompletionItemKind.
+type CompletionItemKinds []CompletionItemKind
+
+// MarshalJSONArray implements gojay's MarshalerJSONArray.
+func (v CompletionItemKinds) MarshalJSONArray(enc *gojay.Encoder) {
+	for i := range v {
+		enc.Int(int(v[i]))
+	}
+}
+
+// IsNil implements gojay's MarshalerJSONArray.
+func (v CompletionItemKinds) IsNil() bool { return len(v) == 0 }
+
+// UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
+func (v *CompletionItemKinds) UnmarshalJSONArray(dec *gojay.Decoder) error {
+	var value CompletionItemKind
+	if err := dec.Int((*int)(&value)); err != nil {
+		return err
+	}
+	*v = append(*v, value)
+	return nil
+}
+
+// compile time check whether the CompletionItemKinds implements a gojay.MarshalerJSONArray, gojay.UnmarshalerJSONArray and Pooler interface.
+var (
+	_ gojay.MarshalerJSONArray   = (*CompletionItemKinds)(nil)
+	_ gojay.UnmarshalerJSONArray = (*CompletionItemKinds)(nil)
+)
+
+// MarshalJSONObject implements gojay's MarshalerJSONObject.
+func (v *TextDocumentClientCapabilitiesCompletionItemKind) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.ArrayKey(keyValueSet, (*CompletionItemKinds)(&v.ValueSet))
+}
+
+// IsNil returns wether the structure is nil value or not.
+func (v *TextDocumentClientCapabilitiesCompletionItemKind) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
+func (v *TextDocumentClientCapabilitiesCompletionItemKind) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	if k == keyValueSet {
+		return dec.Array((*CompletionItemKinds)(&v.ValueSet))
+	}
+	return nil
+}
+
+// NKeys returns the number of keys to unmarshal.
+func (v *TextDocumentClientCapabilitiesCompletionItemKind) NKeys() int { return 1 }
+
+// Reset reset fields
+func (v *TextDocumentClientCapabilitiesCompletionItemKind) Reset() {
+	v.ValueSet = nil
+}
+
+// compile time check whether the TextDocumentClientCapabilitiesCompletion implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesCompletionItemKind)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesCompletionItemKind)(nil)
+	_ Pooler                      = (*TextDocumentClientCapabilitiesCompletionItemKind)(nil)
 )
 
 // MarkupKinds represents a slice of MarkupKind.
