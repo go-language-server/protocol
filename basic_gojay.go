@@ -34,17 +34,10 @@ func (v *Position) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 // NKeys returns the number of keys to unmarshal.
 func (v *Position) NKeys() int { return 2 }
 
-// Reset reset fields.
-func (v *Position) Reset() {
-	v.Line = 0.0
-	v.Character = 0.0
-}
-
 // compile time check whether the Position implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*Position)(nil)
 	_ gojay.UnmarshalerJSONObject = (*Position)(nil)
-	_ Pooler                      = (*Position)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -70,19 +63,10 @@ func (v *Range) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 // NKeys returns the number of keys to unmarshal.
 func (v *Range) NKeys() int { return 2 }
 
-// Reset reset fields.
-func (v *Range) Reset() {
-	(&v.Start).Reset()
-	LocationPool.Put(&v.Start)
-	(&v.End).Reset()
-	LocationPool.Put(&v.End)
-}
-
 // compile time check whether the Range implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*Range)(nil)
 	_ gojay.UnmarshalerJSONObject = (*Range)(nil)
-	_ Pooler                      = (*Range)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -100,12 +84,7 @@ func (v *Location) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	case keyURI:
 		return dec.String((*string)(&v.URI))
 	case keyRange:
-		value := RangePool.Get().(*Range)
-		err := dec.Object(value)
-		if err == nil {
-			v.Range = *value
-		}
-		return err
+		return dec.Object(&v.Range)
 	}
 	return nil
 }
@@ -113,17 +92,10 @@ func (v *Location) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 // NKeys returns the number of keys to unmarshal.
 func (v *Location) NKeys() int { return 2 }
 
-// Reset reset fields.
-func (v *Location) Reset() {
-	(&v.Range).Reset()
-	RangePool.Put(&v.Range)
-}
-
 // compile time check whether the Location implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*Location)(nil)
 	_ gojay.UnmarshalerJSONObject = (*Location)(nil)
-	_ Pooler                      = (*Location)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -141,28 +113,16 @@ func (v *LocationLink) IsNil() bool { return v == nil }
 func (v *LocationLink) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keyOriginSelectionRange:
-		value := RangePool.Get().(*Range)
-		err := dec.Object(value)
-		if err == nil {
-			v.OriginSelectionRange = value
+		if v.OriginSelectionRange == nil {
+			v.OriginSelectionRange = &Range{}
 		}
-		return err
+		return dec.Object(v.OriginSelectionRange)
 	case keyTargetURI:
 		return dec.String((*string)(&v.TargetURI))
 	case keyTargetRange:
-		value := RangePool.Get().(*Range)
-		err := dec.Object(value)
-		if err == nil {
-			v.TargetRange = *value
-		}
-		return err
+		return dec.Object(&v.TargetRange)
 	case keyTargetSelectionRange:
-		value := RangePool.Get().(*Range)
-		err := dec.Object(value)
-		if err == nil {
-			v.TargetSelectionRange = *value
-		}
-		return err
+		return dec.Object(&v.TargetSelectionRange)
 	}
 	return nil
 }
@@ -170,22 +130,10 @@ func (v *LocationLink) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 // NKeys returns the number of keys to unmarshal.
 func (v *LocationLink) NKeys() int { return 4 }
 
-// Reset reset fields.
-func (v *LocationLink) Reset() {
-	RangePool.Put(v.OriginSelectionRange)
-	v.OriginSelectionRange = nil
-	v.TargetURI = ""
-	(&v.TargetRange).Reset()
-	RangePool.Put(&v.TargetRange)
-	(&v.TargetSelectionRange).Reset()
-	RangePool.Put(&v.TargetSelectionRange)
-}
-
 // compile time check whether the LocationLink implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*LocationLink)(nil)
 	_ gojay.UnmarshalerJSONObject = (*LocationLink)(nil)
-	_ Pooler                      = (*LocationLink)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -205,12 +153,7 @@ func (v *Diagnostic) IsNil() bool { return v == nil }
 func (v *Diagnostic) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keyRange:
-		value := RangePool.Get().(*Range)
-		err := dec.Object(value)
-		if err == nil {
-			v.Range = *value
-		}
-		return err
+		return dec.Object(&v.Range)
 	case keySeverity:
 		return dec.Float64((*float64)(&v.Severity))
 	case keyCode:
@@ -233,26 +176,10 @@ func (v *Diagnostic) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 // NKeys returns the number of keys to unmarshal.
 func (v *Diagnostic) NKeys() int { return 6 }
 
-// Reset reset fields.
-func (v *Diagnostic) Reset() {
-	(&v.Range).Reset()
-	RangePool.Put(&v.Range)
-	v.Severity = 0.0
-	v.Code = nil
-	v.Source = ""
-	v.Message = ""
-	for i := range v.RelatedInformation {
-		v.RelatedInformation[i].Reset()
-		DiagnosticRelatedInformationPool.Put(&v.RelatedInformation[i])
-	}
-	v.RelatedInformation = nil
-}
-
 // compile time check whether the Diagnostic implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*Diagnostic)(nil)
 	_ gojay.UnmarshalerJSONObject = (*Diagnostic)(nil)
-	_ Pooler                      = (*Diagnostic)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -278,18 +205,10 @@ func (v *DiagnosticRelatedInformation) UnmarshalJSONObject(dec *gojay.Decoder, k
 // NKeys returns the number of keys to unmarshal.
 func (v *DiagnosticRelatedInformation) NKeys() int { return 2 }
 
-// Reset reset fields.
-func (v *DiagnosticRelatedInformation) Reset() {
-	(&v.Location).Reset()
-	LocationPool.Put(&v.Location)
-	v.Message = ""
-}
-
 // compile time check whether the DiagnosticRelatedInformation implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*DiagnosticRelatedInformation)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DiagnosticRelatedInformation)(nil)
-	_ Pooler                      = (*DiagnosticRelatedInformation)(nil)
 )
 
 // DiagnosticRelatedInformations represents a slice of DiagnosticRelatedInformation.
@@ -347,18 +266,10 @@ func (v *Command) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 // NKeys returns the number of keys to unmarshal.
 func (v *Command) NKeys() int { return 3 }
 
-// Reset reset fields.
-func (v *Command) Reset() {
-	v.Title = ""
-	v.Command = ""
-	v.Arguments = nil
-}
-
 // compile time check whether the Command implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*Command)(nil)
 	_ gojay.UnmarshalerJSONObject = (*Command)(nil)
-	_ Pooler                      = (*Command)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -374,12 +285,7 @@ func (v *TextEdit) IsNil() bool { return v == nil }
 func (v *TextEdit) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keyRange:
-		value := RangePool.Get().(*Range)
-		err := dec.Object(value)
-		if err == nil {
-			v.Range = *value
-		}
-		return err
+		return dec.Object(&v.Range)
 	case keyNewText:
 		return dec.String(&v.NewText)
 	}
@@ -389,18 +295,10 @@ func (v *TextEdit) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 // NKeys returns the number of keys to unmarshal.
 func (v *TextEdit) NKeys() int { return 2 }
 
-// Reset reset fields.
-func (v *TextEdit) Reset() {
-	(&v.Range).Reset()
-	RangePool.Put(&v.Range)
-	v.NewText = ""
-}
-
 // compile time check whether the TextEdit implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextEdit)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextEdit)(nil)
-	_ Pooler                      = (*TextEdit)(nil)
 )
 
 // TextEdits represents a slice of TextEdit.
@@ -455,20 +353,10 @@ func (v *TextDocumentEdit) UnmarshalJSONObject(dec *gojay.Decoder, k string) err
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentEdit) NKeys() int { return 2 }
 
-// Reset reset fields.
-func (v *TextDocumentEdit) Reset() {
-	for i := range v.Edits {
-		v.Edits[i].Reset()
-		TextEditPool.Put(&v.Edits[i])
-	}
-	v.Edits = nil
-}
-
 // compile time check whether the TextDocumentEdit implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentEdit)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentEdit)(nil)
-	_ Pooler                      = (*TextDocumentEdit)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -494,17 +382,10 @@ func (v *CreateFileOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) er
 // NKeys returns the number of keys to unmarshal.
 func (v *CreateFileOptions) NKeys() int { return 2 }
 
-// Reset reset fields.
-func (v *CreateFileOptions) Reset() {
-	v.Overwrite = false
-	v.IgnoreIfExists = false
-}
-
 // compile time check whether the CreateFileOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*CreateFileOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*CreateFileOptions)(nil)
-	_ Pooler                      = (*CreateFileOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -525,12 +406,10 @@ func (v *CreateFile) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	case keyURI:
 		return dec.String((*string)(&v.URI))
 	case keyOptions:
-		value := CreateFileOptionsPool.Get().(*CreateFileOptions)
-		err := dec.Object(value)
-		if err == nil {
-			v.Options = value
+		if v.Options == nil {
+			v.Options = &CreateFileOptions{}
 		}
-		return err
+		return dec.Object(v.Options)
 	}
 	return nil
 }
@@ -538,19 +417,10 @@ func (v *CreateFile) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 // NKeys returns the number of keys to unmarshal.
 func (v *CreateFile) NKeys() int { return 3 }
 
-// Reset reset fields.
-func (v *CreateFile) Reset() {
-	v.Kind = ""
-	v.URI = ""
-	CreateFileOptionsPool.Put(v.Options)
-	v.Options = nil
-}
-
 // compile time check whether the CreateFile implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*CreateFile)(nil)
 	_ gojay.UnmarshalerJSONObject = (*CreateFile)(nil)
-	_ Pooler                      = (*CreateFile)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -576,17 +446,10 @@ func (v *RenameFileOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) er
 // NKeys returns the number of keys to unmarshal.
 func (v *RenameFileOptions) NKeys() int { return 2 }
 
-// Reset reset fields.
-func (v *RenameFileOptions) Reset() {
-	v.Overwrite = false
-	v.IgnoreIfExists = false
-}
-
 // compile time check whether the RenameFileOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*RenameFileOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*RenameFileOptions)(nil)
-	_ Pooler                      = (*RenameFileOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -610,12 +473,10 @@ func (v *RenameFile) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	case keyNewURI:
 		return dec.String((*string)(&v.NewURI))
 	case keyOptions:
-		value := RenameFileOptionsPool.Get().(*RenameFileOptions)
-		err := dec.Object(value)
-		if err == nil {
-			v.Options = value
+		if v.Options == nil {
+			v.Options = &RenameFileOptions{}
 		}
-		return err
+		return dec.Object(v.Options)
 	}
 	return nil
 }
@@ -623,20 +484,10 @@ func (v *RenameFile) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 // NKeys returns the number of keys to unmarshal.
 func (v *RenameFile) NKeys() int { return 4 }
 
-// Reset reset fields.
-func (v *RenameFile) Reset() {
-	v.Kind = ""
-	v.OldURI = ""
-	v.NewURI = ""
-	RenameFileOptionsPool.Put(v.Options)
-	v.Options = nil
-}
-
 // compile time check whether the RenameFile implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*RenameFile)(nil)
 	_ gojay.UnmarshalerJSONObject = (*RenameFile)(nil)
-	_ Pooler                      = (*RenameFile)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -662,17 +513,10 @@ func (v *DeleteFileOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) er
 // NKeys returns the number of keys to unmarshal.
 func (v *DeleteFileOptions) NKeys() int { return 2 }
 
-// Reset reset fields.
-func (v *DeleteFileOptions) Reset() {
-	v.Recursive = false
-	v.IgnoreIfNotExists = false
-}
-
 // compile time check whether the DeleteFileOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*DeleteFileOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DeleteFileOptions)(nil)
-	_ Pooler                      = (*DeleteFileOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -693,12 +537,10 @@ func (v *DeleteFile) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	case keyURI:
 		return dec.String((*string)(&v.URI))
 	case keyOptions:
-		value := DeleteFileOptionsPool.Get().(*DeleteFileOptions)
-		err := dec.Object(value)
-		if err == nil {
-			v.Options = value
+		if v.Options == nil {
+			v.Options = &DeleteFileOptions{}
 		}
-		return err
+		return dec.Object(v.Options)
 	}
 	return nil
 }
@@ -706,19 +548,10 @@ func (v *DeleteFile) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 // NKeys returns the number of keys to unmarshal.
 func (v *DeleteFile) NKeys() int { return 3 }
 
-// Reset reset fields.
-func (v *DeleteFile) Reset() {
-	v.Kind = ""
-	v.URI = ""
-	DeleteFileOptionsPool.Put(v.Options)
-	v.Options = nil
-}
-
 // compile time check whether the DeleteFile implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*DeleteFile)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DeleteFile)(nil)
-	_ Pooler                      = (*DeleteFile)(nil)
 )
 
 // TextEditsMap represents a map of WorkspaceEdit.Changes.
@@ -808,25 +641,10 @@ func (v *WorkspaceEdit) UnmarshalJSONObject(dec *gojay.Decoder, k string) error 
 // NKeys returns the number of keys to unmarshal.
 func (v *WorkspaceEdit) NKeys() int { return 2 }
 
-// Reset reset fields.
-func (v *WorkspaceEdit) Reset() {
-	for k := range v.Changes {
-		for i := range v.Changes[k] {
-			v.Changes[k][i].Reset()
-			TextEditPool.Put(&v.Changes[k][i])
-		}
-	}
-	for i := range v.DocumentChanges {
-		v.DocumentChanges[i].Reset()
-		TextDocumentEditPool.Put(&v.DocumentChanges[i])
-	}
-}
-
 // compile time check whether the WorkspaceEdit implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*WorkspaceEdit)(nil)
 	_ gojay.UnmarshalerJSONObject = (*WorkspaceEdit)(nil)
-	_ Pooler                      = (*WorkspaceEdit)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -848,16 +666,10 @@ func (v *TextDocumentIdentifier) UnmarshalJSONObject(dec *gojay.Decoder, k strin
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentIdentifier) NKeys() int { return 1 }
 
-// Reset reset fields.
-func (v *TextDocumentIdentifier) Reset() {
-	v.URI = uri.URI("")
-}
-
 // compile time check whether the TextDocumentIdentifier implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentIdentifier)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentIdentifier)(nil)
-	_ Pooler                      = (*TextDocumentIdentifier)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -889,19 +701,10 @@ func (v *TextDocumentItem) UnmarshalJSONObject(dec *gojay.Decoder, k string) err
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentItem) NKeys() int { return 4 }
 
-// Reset reset fields.
-func (v *TextDocumentItem) Reset() {
-	v.URI = uri.URI("")
-	v.LanguageID = LanguageIdentifier("")
-	v.Version = 0.0
-	v.Text = ""
-}
-
 // compile time check whether the TextDocumentItem implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentItem)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentItem)(nil)
-	_ Pooler                      = (*TextDocumentItem)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -928,17 +731,10 @@ func (v *VersionedTextDocumentIdentifier) UnmarshalJSONObject(dec *gojay.Decoder
 // NKeys returns the number of keys to unmarshal.
 func (v *VersionedTextDocumentIdentifier) NKeys() int { return 2 }
 
-// Reset reset fields.
-func (v *VersionedTextDocumentIdentifier) Reset() {
-	v.URI = uri.URI("")
-	v.Version = nil
-}
-
 // compile time check whether the VersionedTextDocumentIdentifier implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*VersionedTextDocumentIdentifier)(nil)
 	_ gojay.UnmarshalerJSONObject = (*VersionedTextDocumentIdentifier)(nil)
-	_ Pooler                      = (*VersionedTextDocumentIdentifier)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -964,18 +760,10 @@ func (v *TextDocumentPositionParams) UnmarshalJSONObject(dec *gojay.Decoder, k s
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentPositionParams) NKeys() int { return 2 }
 
-// Reset reset fields.
-func (v *TextDocumentPositionParams) Reset() {
-	v.TextDocument.Reset()
-	(&v.Position).Reset()
-	PositionPool.Put(&v.Position)
-}
-
 // compile time check whether the TextDocumentPositionParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentPositionParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentPositionParams)(nil)
-	_ Pooler                      = (*TextDocumentPositionParams)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1004,18 +792,10 @@ func (v *DocumentFilter) UnmarshalJSONObject(dec *gojay.Decoder, k string) error
 // NKeys returns the number of keys to unmarshal.
 func (v *DocumentFilter) NKeys() int { return 3 }
 
-// Reset reset fields.
-func (v *DocumentFilter) Reset() {
-	v.Language = ""
-	v.Scheme = ""
-	v.Pattern = ""
-}
-
 // compile time check whether the DocumentFilter implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*DocumentFilter)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DocumentFilter)(nil)
-	_ Pooler                      = (*DocumentFilter)(nil)
 )
 
 // MarshalJSONArray implements gojay's MarshalerJSONArray.
@@ -1038,20 +818,10 @@ func (v *DocumentSelector) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	return nil
 }
 
-// Reset reset fields.
-func (v *DocumentSelector) Reset() {
-	values := *v
-	for i := range values {
-		values[i].Reset()
-		DocumentFilterPool.Put(&values[i])
-	}
-}
-
 // compile time check whether the DocumentSelector implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interface.
 var (
 	_ gojay.MarshalerJSONArray   = (*DocumentSelector)(nil)
 	_ gojay.UnmarshalerJSONArray = (*DocumentSelector)(nil)
-	_ Pooler                     = (*DocumentSelector)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1077,15 +847,8 @@ func (v *MarkupContent) UnmarshalJSONObject(dec *gojay.Decoder, k string) error 
 // NKeys returns the number of keys to unmarshal.
 func (v *MarkupContent) NKeys() int { return 2 }
 
-// Reset reset fields.
-func (v *MarkupContent) Reset() {
-	v.Kind = MarkupKind("")
-	v.Value = ""
-}
-
 // compile time check whether the MarkupContent implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*MarkupContent)(nil)
 	_ gojay.UnmarshalerJSONObject = (*MarkupContent)(nil)
-	_ Pooler                      = (*MarkupContent)(nil)
 )

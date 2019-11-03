@@ -81,7 +81,6 @@ func (v *InitializeParams) NKeys() int { return 7 }
 var (
 	_ gojay.MarshalerJSONObject   = (*InitializeParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*InitializeParams)(nil)
-	// _ Pooler                      = (*InitializeParams)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -115,18 +114,10 @@ func (v *WorkspaceClientCapabilitiesWorkspaceEdit) UnmarshalJSONObject(dec *goja
 // NKeys returns the number of keys to unmarshal.
 func (v *WorkspaceClientCapabilitiesWorkspaceEdit) NKeys() int { return 3 }
 
-// Reset reset fields
-func (v *WorkspaceClientCapabilitiesWorkspaceEdit) Reset() {
-	v.DocumentChanges = false
-	v.FailureHandling = ""
-	v.ResourceOperations = nil
-}
-
 // compile time check whether the WorkspaceClientCapabilitiesWorkspaceEdit implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*WorkspaceClientCapabilitiesWorkspaceEdit)(nil)
 	_ gojay.UnmarshalerJSONObject = (*WorkspaceClientCapabilitiesWorkspaceEdit)(nil)
-	_ Pooler                      = (*WorkspaceClientCapabilitiesWorkspaceEdit)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -148,16 +139,10 @@ func (v *WorkspaceClientCapabilitiesDidChangeConfiguration) UnmarshalJSONObject(
 // NKeys returns the number of keys to unmarshal.
 func (v *WorkspaceClientCapabilitiesDidChangeConfiguration) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *WorkspaceClientCapabilitiesDidChangeConfiguration) Reset() {
-	v.DynamicRegistration = false
-}
-
 // compile time check whether the WorkspaceClientCapabilitiesDidChangeConfiguration implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*WorkspaceClientCapabilitiesDidChangeConfiguration)(nil)
 	_ gojay.UnmarshalerJSONObject = (*WorkspaceClientCapabilitiesDidChangeConfiguration)(nil)
-	_ Pooler                      = (*WorkspaceClientCapabilitiesDidChangeConfiguration)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -179,16 +164,10 @@ func (v *WorkspaceClientCapabilitiesDidChangeWatchedFiles) UnmarshalJSONObject(d
 // NKeys returns the number of keys to unmarshal.
 func (v *WorkspaceClientCapabilitiesDidChangeWatchedFiles) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *WorkspaceClientCapabilitiesDidChangeWatchedFiles) Reset() {
-	v.DynamicRegistration = false
-}
-
 // compile time check whether the WorkspaceClientCapabilitiesDidChangeWatchedFiles implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*WorkspaceClientCapabilitiesDidChangeWatchedFiles)(nil)
 	_ gojay.UnmarshalerJSONObject = (*WorkspaceClientCapabilitiesDidChangeWatchedFiles)(nil)
-	_ Pooler                      = (*WorkspaceClientCapabilitiesDidChangeWatchedFiles)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -206,12 +185,10 @@ func (v *WorkspaceClientCapabilitiesSymbol) UnmarshalJSONObject(dec *gojay.Decod
 	case keyDynamicRegistration:
 		return dec.Bool(&v.DynamicRegistration)
 	case keySymbolKind:
-		value := WorkspaceClientCapabilitiesSymbolKindPool.Get().(*WorkspaceClientCapabilitiesSymbolKind)
-		err := dec.Object(value)
-		if err == nil {
-			v.SymbolKind = value
+		if v.SymbolKind == nil {
+			v.SymbolKind = &WorkspaceClientCapabilitiesSymbolKind{}
 		}
-		return err
+		return dec.Object(v.SymbolKind)
 	}
 	return nil
 }
@@ -219,18 +196,10 @@ func (v *WorkspaceClientCapabilitiesSymbol) UnmarshalJSONObject(dec *gojay.Decod
 // NKeys returns the number of keys to unmarshal.
 func (v *WorkspaceClientCapabilitiesSymbol) NKeys() int { return 2 }
 
-// Reset reset fields
-func (v *WorkspaceClientCapabilitiesSymbol) Reset() {
-	v.DynamicRegistration = false
-	WorkspaceClientCapabilitiesSymbolKindPool.Put(v.SymbolKind)
-	v.SymbolKind = nil
-}
-
 // compile time check whether the WorkspaceClientCapabilitiesSymbol implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*WorkspaceClientCapabilitiesSymbol)(nil)
 	_ gojay.UnmarshalerJSONObject = (*WorkspaceClientCapabilitiesSymbol)(nil)
-	_ Pooler                      = (*WorkspaceClientCapabilitiesSymbol)(nil)
 )
 
 // SymbolKinds represents a slice of SymbolKind.
@@ -273,9 +242,6 @@ func (v *WorkspaceClientCapabilitiesSymbolKind) IsNil() bool { return v == nil }
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *WorkspaceClientCapabilitiesSymbolKind) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyValueSet {
-		if v.ValueSet == nil {
-			v.ValueSet = []SymbolKind{}
-		}
 		return dec.Array((*SymbolKinds)(&v.ValueSet))
 	}
 	return nil
@@ -284,16 +250,10 @@ func (v *WorkspaceClientCapabilitiesSymbolKind) UnmarshalJSONObject(dec *gojay.D
 // NKeys returns the number of keys to unmarshal.
 func (v *WorkspaceClientCapabilitiesSymbolKind) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *WorkspaceClientCapabilitiesSymbolKind) Reset() {
-	v.ValueSet = nil
-}
-
 // compile time check whether the WorkspaceClientCapabilitiesSymbolKind implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*WorkspaceClientCapabilitiesSymbolKind)(nil)
 	_ gojay.UnmarshalerJSONObject = (*WorkspaceClientCapabilitiesSymbolKind)(nil)
-	_ Pooler                      = (*WorkspaceClientCapabilitiesSymbolKind)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -315,16 +275,10 @@ func (v *WorkspaceClientCapabilitiesExecuteCommand) UnmarshalJSONObject(dec *goj
 // NKeys returns the number of keys to unmarshal.
 func (v *WorkspaceClientCapabilitiesExecuteCommand) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *WorkspaceClientCapabilitiesExecuteCommand) Reset() {
-	v.DynamicRegistration = false
-}
-
 // compile time check whether the WorkspaceClientCapabilitiesExecuteCommand implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*WorkspaceClientCapabilitiesExecuteCommand)(nil)
 	_ gojay.UnmarshalerJSONObject = (*WorkspaceClientCapabilitiesExecuteCommand)(nil)
-	_ Pooler                      = (*WorkspaceClientCapabilitiesExecuteCommand)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -383,28 +337,10 @@ func (v *WorkspaceClientCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k 
 // NKeys returns the number of keys to unmarshal.
 func (v *WorkspaceClientCapabilities) NKeys() int { return 8 }
 
-// Reset reset fields
-func (v *WorkspaceClientCapabilities) Reset() {
-	v.ApplyEdit = false
-	WorkspaceClientCapabilitiesWorkspaceEditPool.Put(v.WorkspaceEdit)
-	v.WorkspaceEdit = nil
-	WorkspaceClientCapabilitiesDidChangeConfigurationPool.Put(v.DidChangeConfiguration)
-	v.DidChangeConfiguration = nil
-	WorkspaceClientCapabilitiesDidChangeWatchedFilesPool.Put(v.DidChangeWatchedFiles)
-	v.DidChangeWatchedFiles = nil
-	WorkspaceClientCapabilitiesSymbolPool.Put(v.Symbol)
-	v.Symbol = nil
-	WorkspaceClientCapabilitiesExecuteCommandPool.Put(v.ExecuteCommand)
-	v.ExecuteCommand = nil
-	v.WorkspaceFolders = false
-	v.Configuration = false
-}
-
 // compile time check whether the WorkspaceClientCapabilities implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*WorkspaceClientCapabilities)(nil)
 	_ gojay.UnmarshalerJSONObject = (*WorkspaceClientCapabilities)(nil)
-	_ Pooler                      = (*WorkspaceClientCapabilities)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -436,19 +372,10 @@ func (v *TextDocumentClientCapabilitiesSynchronization) UnmarshalJSONObject(dec 
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilitiesSynchronization) NKeys() int { return 4 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilitiesSynchronization) Reset() {
-	v.DidSave = false
-	v.DynamicRegistration = false
-	v.WillSave = false
-	v.WillSaveWaitUntil = false
-}
-
 // compile time check whether the TextDocumentClientCapabilitiesSynchronization implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesSynchronization)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesSynchronization)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilitiesSynchronization)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -486,19 +413,10 @@ func (v *TextDocumentClientCapabilitiesCompletion) UnmarshalJSONObject(dec *goja
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilitiesCompletion) NKeys() int { return 4 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilitiesCompletion) Reset() {
-	v.DynamicRegistration = false
-	TextDocumentClientCapabilitiesCompletionItemPool.Put(v.CompletionItem)
-	v.CompletionItem = nil
-	v.ContextSupport = false
-}
-
 // compile time check whether the TextDocumentClientCapabilitiesCompletion implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesCompletion)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesCompletion)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilitiesCompletion)(nil)
 )
 
 // CompletionItemKinds represents a slice of CompletionItemKind.
@@ -549,16 +467,10 @@ func (v *TextDocumentClientCapabilitiesCompletionItemKind) UnmarshalJSONObject(d
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilitiesCompletionItemKind) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilitiesCompletionItemKind) Reset() {
-	v.ValueSet = nil
-}
-
 // compile time check whether the TextDocumentClientCapabilitiesCompletion implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesCompletionItemKind)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesCompletionItemKind)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilitiesCompletionItemKind)(nil)
 )
 
 // MarkupKinds represents a slice of MarkupKind.
@@ -622,20 +534,10 @@ func (v *TextDocumentClientCapabilitiesCompletionItem) UnmarshalJSONObject(dec *
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilitiesCompletionItem) NKeys() int { return 5 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilitiesCompletionItem) Reset() {
-	v.SnippetSupport = false
-	v.CommitCharactersSupport = false
-	v.DocumentationFormat = nil
-	v.DeprecatedSupport = false
-	v.PreselectSupport = false
-}
-
 // compile time check whether the TextDocumentClientCapabilitiesCompletionItem implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesCompletionItem)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesCompletionItem)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilitiesCompletionItem)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -661,17 +563,10 @@ func (v *TextDocumentClientCapabilitiesHover) UnmarshalJSONObject(dec *gojay.Dec
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilitiesHover) NKeys() int { return 2 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilitiesHover) Reset() {
-	v.DynamicRegistration = false
-	v.ContentFormat = nil
-}
-
 // compile time check whether the TextDocumentClientCapabilitiesHover implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesHover)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesHover)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilitiesHover)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -700,18 +595,10 @@ func (v *TextDocumentClientCapabilitiesSignatureHelp) UnmarshalJSONObject(dec *g
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilitiesSignatureHelp) NKeys() int { return 2 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilitiesSignatureHelp) Reset() {
-	v.DynamicRegistration = false
-	TextDocumentClientCapabilitiesSignatureInformationPool.Put(v.SignatureInformation)
-	v.SignatureInformation = nil
-}
-
 // compile time check whether the TextDocumentClientCapabilitiesSignatureHelp implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesSignatureHelp)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesSignatureHelp)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilitiesSignatureHelp)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -733,18 +620,10 @@ func (v *TextDocumentClientCapabilitiesSignatureInformation) UnmarshalJSONObject
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilitiesSignatureInformation) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilitiesSignatureInformation) Reset() {
-	v.DocumentationFormat = nil
-	TextDocumentClientCapabilitiesParameterInformationPool.Put(v.ParameterInformation)
-	v.ParameterInformation = nil
-}
-
 // compile time check whether the TextDocumentClientCapabilitiesSignatureInformation implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesSignatureInformation)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesSignatureInformation)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilitiesSignatureInformation)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -766,16 +645,10 @@ func (v *TextDocumentClientCapabilitiesReferences) UnmarshalJSONObject(dec *goja
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilitiesReferences) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilitiesReferences) Reset() {
-	v.DynamicRegistration = false
-}
-
 // compile time check whether the TextDocumentClientCapabilitiesReferences implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesReferences)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesReferences)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilitiesReferences)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -797,16 +670,10 @@ func (v *TextDocumentClientCapabilitiesDocumentHighlight) UnmarshalJSONObject(de
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilitiesDocumentHighlight) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilitiesDocumentHighlight) Reset() {
-	v.DynamicRegistration = false
-}
-
 // compile time check whether the TextDocumentClientCapabilitiesDocumentHighlight implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesDocumentHighlight)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesDocumentHighlight)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilitiesDocumentHighlight)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -838,19 +705,10 @@ func (v *TextDocumentClientCapabilitiesDocumentSymbol) UnmarshalJSONObject(dec *
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilitiesDocumentSymbol) NKeys() int { return 3 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilitiesDocumentSymbol) Reset() {
-	v.DynamicRegistration = false
-	WorkspaceClientCapabilitiesSymbolKindPool.Put(v.SymbolKind)
-	v.SymbolKind = nil
-	v.HierarchicalDocumentSymbolSupport = false
-}
-
 // compile time check whether the TextDocumentClientCapabilitiesDocumentSymbol implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesDocumentSymbol)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesDocumentSymbol)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilitiesDocumentSymbol)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -872,16 +730,10 @@ func (v *TextDocumentClientCapabilitiesFormatting) UnmarshalJSONObject(dec *goja
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilitiesFormatting) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilitiesFormatting) Reset() {
-	v.DynamicRegistration = false
-}
-
 // compile time check whether the TextDocumentClientCapabilitiesFormatting implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesFormatting)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesFormatting)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilitiesFormatting)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -903,16 +755,10 @@ func (v *TextDocumentClientCapabilitiesRangeFormatting) UnmarshalJSONObject(dec 
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilitiesRangeFormatting) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilitiesRangeFormatting) Reset() {
-	v.DynamicRegistration = false
-}
-
 // compile time check whether the TextDocumentClientCapabilitiesFormatting implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesRangeFormatting)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesRangeFormatting)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilitiesRangeFormatting)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -934,16 +780,10 @@ func (v *TextDocumentClientCapabilitiesOnTypeFormatting) UnmarshalJSONObject(dec
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilitiesOnTypeFormatting) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilitiesOnTypeFormatting) Reset() {
-	v.DynamicRegistration = false
-}
-
 // compile time check whether the TextDocumentClientCapabilitiesOnTypeFormatting implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesOnTypeFormatting)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesOnTypeFormatting)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilitiesOnTypeFormatting)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -969,17 +809,10 @@ func (v *TextDocumentClientCapabilitiesDeclaration) UnmarshalJSONObject(dec *goj
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilitiesDeclaration) NKeys() int { return 2 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilitiesDeclaration) Reset() {
-	v.DynamicRegistration = false
-	v.LinkSupport = false
-}
-
 // compile time check whether the TextDocumentClientCapabilitiesDeclaration implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesDeclaration)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesDeclaration)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilitiesDeclaration)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1005,17 +838,10 @@ func (v *TextDocumentClientCapabilitiesDefinition) UnmarshalJSONObject(dec *goja
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilitiesDefinition) NKeys() int { return 2 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilitiesDefinition) Reset() {
-	v.DynamicRegistration = false
-	v.LinkSupport = false
-}
-
 // compile time check whether the TextDocumentClientCapabilitiesDefinition implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesDefinition)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesDefinition)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilitiesDefinition)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1041,17 +867,10 @@ func (v *TextDocumentClientCapabilitiesTypeDefinition) UnmarshalJSONObject(dec *
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilitiesTypeDefinition) NKeys() int { return 2 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilitiesTypeDefinition) Reset() {
-	v.DynamicRegistration = false
-	v.LinkSupport = false
-}
-
 // compile time check whether the TextDocumentClientCapabilitiesTypeDefinition implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesTypeDefinition)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesTypeDefinition)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilitiesTypeDefinition)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1077,17 +896,10 @@ func (v *TextDocumentClientCapabilitiesImplementation) UnmarshalJSONObject(dec *
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilitiesImplementation) NKeys() int { return 2 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilitiesImplementation) Reset() {
-	v.DynamicRegistration = false
-	v.LinkSupport = false
-}
-
 // compile time check whether the TextDocumentClientCapabilitiesImplementation implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesImplementation)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesImplementation)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilitiesImplementation)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1116,18 +928,10 @@ func (v *TextDocumentClientCapabilitiesCodeAction) UnmarshalJSONObject(dec *goja
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilitiesCodeAction) NKeys() int { return 2 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilitiesCodeAction) Reset() {
-	v.DynamicRegistration = false
-	TextDocumentClientCapabilitiesCodeActionLiteralSupportPool.Put(v.CodeActionLiteralSupport)
-	v.CodeActionLiteralSupport = nil
-}
-
 // compile time check whether the TextDocumentClientCapabilitiesCodeAction implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesCodeAction)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesCodeAction)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilitiesCodeAction)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1152,17 +956,10 @@ func (v *TextDocumentClientCapabilitiesCodeActionLiteralSupport) UnmarshalJSONOb
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilitiesCodeActionLiteralSupport) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilitiesCodeActionLiteralSupport) Reset() {
-	TextDocumentClientCapabilitiesCodeActionKindPool.Put(v.CodeActionKind)
-	v.CodeActionKind = nil
-}
-
 // compile time check whether the TextDocumentClientCapabilitiesCodeActionLiteralSupport implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesCodeActionLiteralSupport)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesCodeActionLiteralSupport)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilitiesCodeActionLiteralSupport)(nil)
 )
 
 // CodeActionKinds represents a slice of CodeActionKind.
@@ -1213,16 +1010,10 @@ func (v *TextDocumentClientCapabilitiesCodeActionKind) UnmarshalJSONObject(dec *
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilitiesCodeActionKind) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilitiesCodeActionKind) Reset() {
-	v.ValueSet = nil
-}
-
 // compile time check whether the TextDocumentClientCapabilitiesCodeActionKind implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesCodeActionKind)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesCodeActionKind)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilitiesCodeActionKind)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1244,16 +1035,10 @@ func (v *TextDocumentClientCapabilitiesCodeLens) UnmarshalJSONObject(dec *gojay.
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilitiesCodeLens) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilitiesCodeLens) Reset() {
-	v.DynamicRegistration = false
-}
-
 // compile time check whether the TextDocumentClientCapabilitiesCodeLens implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesCodeLens)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesCodeLens)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilitiesCodeLens)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1275,16 +1060,10 @@ func (v *TextDocumentClientCapabilitiesDocumentLink) UnmarshalJSONObject(dec *go
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilitiesDocumentLink) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilitiesDocumentLink) Reset() {
-	v.DynamicRegistration = false
-}
-
 // compile time check whether the TextDocumentClientCapabilitiesDocumentLink implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesDocumentLink)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesDocumentLink)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilitiesDocumentLink)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1306,16 +1085,10 @@ func (v *TextDocumentClientCapabilitiesColorProvider) UnmarshalJSONObject(dec *g
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilitiesColorProvider) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilitiesColorProvider) Reset() {
-	v.DynamicRegistration = false
-}
-
 // compile time check whether the TextDocumentClientCapabilitiesColorProvider implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesColorProvider)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesColorProvider)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilitiesColorProvider)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1341,17 +1114,10 @@ func (v *TextDocumentClientCapabilitiesRename) UnmarshalJSONObject(dec *gojay.De
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilitiesRename) NKeys() int { return 2 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilitiesRename) Reset() {
-	v.DynamicRegistration = false
-	v.PrepareSupport = false
-}
-
 // compile time check whether the TextDocumentClientCapabilitiesRename implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesRename)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesRename)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilitiesRename)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1377,17 +1143,10 @@ func (v *TextDocumentClientCapabilitiesPublishDiagnostics) UnmarshalJSONObject(d
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilitiesPublishDiagnostics) NKeys() int { return 2 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilitiesPublishDiagnostics) Reset() {
-	v.RelatedInformation = false
-	v.TagSupport = false
-}
-
 // compile time check whether the TextDocumentClientCapabilitiesPublishDiagnostics implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesPublishDiagnostics)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesPublishDiagnostics)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilitiesPublishDiagnostics)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1416,18 +1175,10 @@ func (v *TextDocumentClientCapabilitiesFoldingRange) UnmarshalJSONObject(dec *go
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilitiesFoldingRange) NKeys() int { return 3 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilitiesFoldingRange) Reset() {
-	v.DynamicRegistration = false
-	v.RangeLimit = 0.0
-	v.LineFoldingOnly = false
-}
-
 // compile time check whether the TextDocumentClientCapabilitiesFoldingRange implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesFoldingRange)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesFoldingRange)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilitiesFoldingRange)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1449,16 +1200,10 @@ func (v *TextDocumentClientCapabilitiesSelectionRange) UnmarshalJSONObject(dec *
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilitiesSelectionRange) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilitiesSelectionRange) Reset() {
-	v.DynamicRegistration = false
-}
-
 // compile time check whether the TextDocumentClientCapabilitiesSelectionRange implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesSelectionRange)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesSelectionRange)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilitiesSelectionRange)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1494,159 +1239,115 @@ func (v *TextDocumentClientCapabilities) IsNil() bool { return v == nil }
 func (v *TextDocumentClientCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keySynchronization:
-		value := TextDocumentClientCapabilitiesSynchronizationPool.Get().(*TextDocumentClientCapabilitiesSynchronization)
-		err := dec.Object(value)
-		if err == nil {
-			v.Synchronization = value
+		if v.Synchronization == nil {
+			v.Synchronization = &TextDocumentClientCapabilitiesSynchronization{}
 		}
-		return err
+		return dec.Object(v.Synchronization)
 	case keyCompletion:
-		value := TextDocumentClientCapabilitiesCompletionPool.Get().(*TextDocumentClientCapabilitiesCompletion)
-		err := dec.Object(value)
-		if err == nil {
-			v.Completion = value
+		if v.Completion == nil {
+			v.Completion = &TextDocumentClientCapabilitiesCompletion{}
 		}
-		return err
+		return dec.Object(v.Completion)
 	case keyHover:
-		value := TextDocumentClientCapabilitiesHoverPool.Get().(*TextDocumentClientCapabilitiesHover)
-		err := dec.Object(value)
-		if err == nil {
-			v.Hover = value
+		if v.Hover == nil {
+			v.Hover = &TextDocumentClientCapabilitiesHover{}
 		}
-		return err
+		return dec.Object(v.Hover)
 	case keySignatureHelp:
-		value := TextDocumentClientCapabilitiesSignatureHelpPool.Get().(*TextDocumentClientCapabilitiesSignatureHelp)
-		err := dec.Object(value)
-		if err == nil {
-			v.SignatureHelp = value
+		if v.SignatureHelp == nil {
+			v.SignatureHelp = &TextDocumentClientCapabilitiesSignatureHelp{}
 		}
-		return err
+		return dec.Object(v.SignatureHelp)
 	case keyReferences:
-		value := TextDocumentClientCapabilitiesReferencesPool.Get().(*TextDocumentClientCapabilitiesReferences)
-		err := dec.Object(value)
-		if err == nil {
-			v.References = value
+		if v.References == nil {
+			v.References = &TextDocumentClientCapabilitiesReferences{}
 		}
-		return err
+		return dec.Object(v.References)
 	case keyDocumentHighlight:
-		value := TextDocumentClientCapabilitiesDocumentHighlightPool.Get().(*TextDocumentClientCapabilitiesDocumentHighlight)
-		err := dec.Object(value)
-		if err == nil {
-			v.DocumentHighlight = value
+		if v.DocumentHighlight == nil {
+			v.DocumentHighlight = &TextDocumentClientCapabilitiesDocumentHighlight{}
 		}
-		return err
+		return dec.Object(v.DocumentHighlight)
 	case keyDocumentSymbol:
-		value := TextDocumentClientCapabilitiesDocumentSymbolPool.Get().(*TextDocumentClientCapabilitiesDocumentSymbol)
-		err := dec.Object(value)
-		if err == nil {
-			v.DocumentSymbol = value
+		if v.DocumentSymbol == nil {
+			v.DocumentSymbol = &TextDocumentClientCapabilitiesDocumentSymbol{}
 		}
-		return err
+		return dec.Object(v.DocumentSymbol)
 	case keyFormatting:
-		value := TextDocumentClientCapabilitiesFormattingPool.Get().(*TextDocumentClientCapabilitiesFormatting)
-		err := dec.Object(value)
-		if err == nil {
-			v.Formatting = value
+		if v.Formatting == nil {
+			v.Formatting = &TextDocumentClientCapabilitiesFormatting{}
 		}
-		return err
+		return dec.Object(v.Formatting)
 	case keyRangeFormatting:
-		value := TextDocumentClientCapabilitiesRangeFormattingPool.Get().(*TextDocumentClientCapabilitiesRangeFormatting)
-		err := dec.Object(value)
-		if err == nil {
-			v.RangeFormatting = value
+		if v.RangeFormatting == nil {
+			v.RangeFormatting = &TextDocumentClientCapabilitiesRangeFormatting{}
 		}
-		return err
+		return dec.Object(v.RangeFormatting)
 	case keyOnTypeFormatting:
-		value := TextDocumentClientCapabilitiesOnTypeFormattingPool.Get().(*TextDocumentClientCapabilitiesOnTypeFormatting)
-		err := dec.Object(value)
-		if err == nil {
-			v.OnTypeFormatting = value
+		if v.OnTypeFormatting == nil {
+			v.OnTypeFormatting = &TextDocumentClientCapabilitiesOnTypeFormatting{}
 		}
-		return err
+		return dec.Object(v.OnTypeFormatting)
 	case keyDeclaration:
-		value := TextDocumentClientCapabilitiesDeclarationPool.Get().(*TextDocumentClientCapabilitiesDeclaration)
-		err := dec.Object(value)
-		if err == nil {
-			v.Declaration = value
+		if v.Declaration == nil {
+			v.Declaration = &TextDocumentClientCapabilitiesDeclaration{}
 		}
-		return err
+		return dec.Object(v.Declaration)
 	case keyDefinition:
-		value := TextDocumentClientCapabilitiesDefinitionPool.Get().(*TextDocumentClientCapabilitiesDefinition)
-		err := dec.Object(value)
-		if err == nil {
-			v.Definition = value
+		if v.Definition == nil {
+			v.Definition = &TextDocumentClientCapabilitiesDefinition{}
 		}
-		return err
+		return dec.Object(v.Definition)
 	case keyTypeDefinition:
-		value := TextDocumentClientCapabilitiesTypeDefinitionPool.Get().(*TextDocumentClientCapabilitiesTypeDefinition)
-		err := dec.Object(value)
-		if err == nil {
-			v.TypeDefinition = value
+		if v.TypeDefinition == nil {
+			v.TypeDefinition = &TextDocumentClientCapabilitiesTypeDefinition{}
 		}
-		return err
+		return dec.Object(v.TypeDefinition)
 	case keyImplementation:
-		value := TextDocumentClientCapabilitiesImplementationPool.Get().(*TextDocumentClientCapabilitiesImplementation)
-		err := dec.Object(value)
-		if err == nil {
-			v.Implementation = value
+		if v.Implementation == nil {
+			v.Implementation = &TextDocumentClientCapabilitiesImplementation{}
 		}
-		return err
+		return dec.Object(v.Implementation)
 	case keyCodeAction:
-		value := TextDocumentClientCapabilitiesCodeActionPool.Get().(*TextDocumentClientCapabilitiesCodeAction)
-		err := dec.Object(value)
-		if err == nil {
-			v.CodeAction = value
+		if v.CodeAction == nil {
+			v.CodeAction = &TextDocumentClientCapabilitiesCodeAction{}
 		}
-		return err
+		return dec.Object(v.CodeAction)
 	case keyCodeLens:
-		value := TextDocumentClientCapabilitiesCodeLensPool.Get().(*TextDocumentClientCapabilitiesCodeLens)
-		err := dec.Object(value)
-		if err == nil {
-			v.CodeLens = value
+		if v.CodeLens == nil {
+			v.CodeLens = &TextDocumentClientCapabilitiesCodeLens{}
 		}
-		return err
+		return dec.Object(v.CodeLens)
 	case keyDocumentLink:
-		value := TextDocumentClientCapabilitiesDocumentLinkPool.Get().(*TextDocumentClientCapabilitiesDocumentLink)
-		err := dec.Object(value)
-		if err == nil {
-			v.DocumentLink = value
+		if v.DocumentLink == nil {
+			v.DocumentLink = &TextDocumentClientCapabilitiesDocumentLink{}
 		}
-		return err
+		return dec.Object(v.DocumentLink)
 	case keyColorProvider:
-		value := TextDocumentClientCapabilitiesColorProviderPool.Get().(*TextDocumentClientCapabilitiesColorProvider)
-		err := dec.Object(value)
-		if err == nil {
-			v.ColorProvider = value
+		if v.ColorProvider == nil {
+			v.ColorProvider = &TextDocumentClientCapabilitiesColorProvider{}
 		}
-		return err
+		return dec.Object(v.ColorProvider)
 	case keyRename:
-		value := TextDocumentClientCapabilitiesRenamePool.Get().(*TextDocumentClientCapabilitiesRename)
-		err := dec.Object(value)
-		if err == nil {
-			v.Rename = value
+		if v.Rename == nil {
+			v.Rename = &TextDocumentClientCapabilitiesRename{}
 		}
-		return err
+		return dec.Object(v.Rename)
 	case keyPublishDiagnostics:
-		value := TextDocumentClientCapabilitiesPublishDiagnosticsPool.Get().(*TextDocumentClientCapabilitiesPublishDiagnostics)
-		err := dec.Object(value)
-		if err == nil {
-			v.PublishDiagnostics = value
+		if v.PublishDiagnostics == nil {
+			v.PublishDiagnostics = &TextDocumentClientCapabilitiesPublishDiagnostics{}
 		}
-		return err
+		return dec.Object(v.PublishDiagnostics)
 	case keyFoldingRange:
-		value := TextDocumentClientCapabilitiesFoldingRangePool.Get().(*TextDocumentClientCapabilitiesFoldingRange)
-		err := dec.Object(value)
-		if err == nil {
-			v.FoldingRange = value
+		if v.FoldingRange == nil {
+			v.FoldingRange = &TextDocumentClientCapabilitiesFoldingRange{}
 		}
-		return err
+		return dec.Object(v.FoldingRange)
 	case keySelectionRange:
-		value := TextDocumentClientCapabilitiesSelectionRangePool.Get().(*TextDocumentClientCapabilitiesSelectionRange)
-		err := dec.Object(value)
-		if err == nil {
-			v.SelectionRange = value
+		if v.SelectionRange == nil {
+			v.SelectionRange = &TextDocumentClientCapabilitiesSelectionRange{}
 		}
-		return err
+		return dec.Object(v.SelectionRange)
 	}
 	return nil
 }
@@ -1654,57 +1355,10 @@ func (v *TextDocumentClientCapabilities) UnmarshalJSONObject(dec *gojay.Decoder,
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentClientCapabilities) NKeys() int { return 22 }
 
-// Reset reset fields
-func (v *TextDocumentClientCapabilities) Reset() {
-	TextDocumentClientCapabilitiesSynchronizationPool.Put(v.Synchronization)
-	v.Synchronization = nil
-	TextDocumentClientCapabilitiesCompletionPool.Put(v.Completion)
-	v.Completion = nil
-	TextDocumentClientCapabilitiesHoverPool.Put(v.Hover)
-	v.Hover = nil
-	TextDocumentClientCapabilitiesSignatureHelpPool.Put(v.SignatureHelp)
-	v.SignatureHelp = nil
-	TextDocumentClientCapabilitiesReferencesPool.Put(v.References)
-	v.References = nil
-	TextDocumentClientCapabilitiesDocumentHighlightPool.Put(v.DocumentHighlight)
-	v.DocumentHighlight = nil
-	TextDocumentClientCapabilitiesDocumentSymbolPool.Put(v.DocumentSymbol)
-	v.DocumentSymbol = nil
-	TextDocumentClientCapabilitiesFormattingPool.Put(v.Formatting)
-	v.Formatting = nil
-	TextDocumentClientCapabilitiesRangeFormattingPool.Put(v.RangeFormatting)
-	v.RangeFormatting = nil
-	TextDocumentClientCapabilitiesOnTypeFormattingPool.Put(v.OnTypeFormatting)
-	v.OnTypeFormatting = nil
-	TextDocumentClientCapabilitiesDeclarationPool.Put(v.Declaration)
-	v.Declaration = nil
-	TextDocumentClientCapabilitiesDefinitionPool.Put(v.Definition)
-	v.Definition = nil
-	TextDocumentClientCapabilitiesTypeDefinitionPool.Put(v.TypeDefinition)
-	v.TypeDefinition = nil
-	TextDocumentClientCapabilitiesImplementationPool.Put(v.Implementation)
-	v.Implementation = nil
-	TextDocumentClientCapabilitiesCodeActionPool.Put(v.CodeAction)
-	v.CodeAction = nil
-	TextDocumentClientCapabilitiesCodeLensPool.Put(v.CodeLens)
-	v.CodeLens = nil
-	TextDocumentClientCapabilitiesDocumentLinkPool.Put(v.DocumentLink)
-	v.DocumentLink = nil
-	TextDocumentClientCapabilitiesColorProviderPool.Put(v.ColorProvider)
-	v.ColorProvider = nil
-	TextDocumentClientCapabilitiesRenamePool.Put(v.Rename)
-	v.Rename = nil
-	TextDocumentClientCapabilitiesPublishDiagnosticsPool.Put(v.PublishDiagnostics)
-	v.PublishDiagnostics = nil
-	TextDocumentClientCapabilitiesFoldingRangePool.Put(v.FoldingRange)
-	v.FoldingRange = nil
-}
-
 // compile time check whether the TextDocumentClientCapabilities implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilities)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilities)(nil)
-	_ Pooler                      = (*TextDocumentClientCapabilities)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1739,19 +1393,10 @@ func (v *ClientCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) e
 // NKeys returns the number of keys to unmarshal.
 func (v *ClientCapabilities) NKeys() int { return 3 }
 
-// Reset reset fields
-func (v *ClientCapabilities) Reset() {
-	WorkspaceClientCapabilitiesPool.Put(v.Workspace)
-	v.Workspace = nil
-	TextDocumentClientCapabilitiesPool.Put(v.TextDocument)
-	v.TextDocument = nil
-}
-
 // compile time check whether the ClientCapabilities implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*ClientCapabilities)(nil)
 	_ gojay.UnmarshalerJSONObject = (*ClientCapabilities)(nil)
-	_ Pooler                      = (*ClientCapabilities)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1773,17 +1418,10 @@ func (v *InitializeResult) UnmarshalJSONObject(dec *gojay.Decoder, k string) err
 // NKeys returns the number of keys to unmarshal.
 func (v *InitializeResult) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *InitializeResult) Reset() {
-	(&v.Capabilities).Reset()
-	ServerCapabilitiesPool.Put(&v.Capabilities)
-}
-
 // compile time check whether the InitializeResult implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*InitializeResult)(nil)
 	_ gojay.UnmarshalerJSONObject = (*InitializeResult)(nil)
-	_ Pooler                      = (*InitializeResult)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1805,16 +1443,10 @@ func (v *InitializeError) UnmarshalJSONObject(dec *gojay.Decoder, k string) erro
 // NKeys returns the number of keys to unmarshal.
 func (v *InitializeError) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *InitializeError) Reset() {
-	v.Retry = false
-}
-
 // compile time check whether the InitializeError implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*InitializeError)(nil)
 	_ gojay.UnmarshalerJSONObject = (*InitializeError)(nil)
-	_ Pooler                      = (*InitializeError)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1843,17 +1475,10 @@ func (v *CompletionOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) er
 // NKeys returns the number of keys to unmarshal.
 func (v *CompletionOptions) NKeys() int { return 2 }
 
-// Reset reset fields
-func (v *CompletionOptions) Reset() {
-	v.ResolveProvider = false
-	v.TriggerCharacters = nil
-}
-
 // compile time check whether the CompletionOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*CompletionOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*CompletionOptions)(nil)
-	_ Pooler                      = (*CompletionOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1880,16 +1505,10 @@ func (v *SignatureHelpOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string)
 // NKeys returns the number of keys to unmarshal.
 func (v *SignatureHelpOptions) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *SignatureHelpOptions) Reset() {
-	v.TriggerCharacters = nil
-}
-
 // compile time check whether the SignatureHelpOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*SignatureHelpOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*SignatureHelpOptions)(nil)
-	_ Pooler                      = (*SignatureHelpOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1911,16 +1530,10 @@ func (v *CodeActionOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) er
 // NKeys returns the number of keys to unmarshal.
 func (v *CodeActionOptions) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *CodeActionOptions) Reset() {
-	v.CodeActionKinds = nil
-}
-
 // compile time check whether the CodeActionOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*CodeActionOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*CodeActionOptions)(nil)
-	_ Pooler                      = (*CodeActionOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1942,16 +1555,10 @@ func (v *CodeLensOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) erro
 // NKeys returns the number of keys to unmarshal.
 func (v *CodeLensOptions) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *CodeLensOptions) Reset() {
-	v.ResolveProvider = false
-}
-
 // compile time check whether the CodeLensOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*CodeLensOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*CodeLensOptions)(nil)
-	_ Pooler                      = (*CodeLensOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1982,17 +1589,10 @@ func (v *DocumentOnTypeFormattingOptions) UnmarshalJSONObject(dec *gojay.Decoder
 // NKeys returns the number of keys to unmarshal.
 func (v *DocumentOnTypeFormattingOptions) NKeys() int { return 2 }
 
-// Reset reset fields
-func (v *DocumentOnTypeFormattingOptions) Reset() {
-	v.FirstTriggerCharacter = ""
-	v.MoreTriggerCharacter = nil
-}
-
 // compile time check whether the DocumentOnTypeFormattingOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*DocumentOnTypeFormattingOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DocumentOnTypeFormattingOptions)(nil)
-	_ Pooler                      = (*DocumentOnTypeFormattingOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -2014,16 +1614,10 @@ func (v *RenameOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error 
 // NKeys returns the number of keys to unmarshal.
 func (v *RenameOptions) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *RenameOptions) Reset() {
-	v.PrepareProvider = false
-}
-
 // compile time check whether the RenameOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*RenameOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*RenameOptions)(nil)
-	_ Pooler                      = (*RenameOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -2045,16 +1639,10 @@ func (v *DocumentLinkOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) 
 // NKeys returns the number of keys to unmarshal.
 func (v *DocumentLinkOptions) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *DocumentLinkOptions) Reset() {
-	v.ResolveProvider = false
-}
-
 // compile time check whether the DocumentLinkOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*DocumentLinkOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DocumentLinkOptions)(nil)
-	_ Pooler                      = (*DocumentLinkOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -2076,16 +1664,10 @@ func (v *ExecuteCommandOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string
 // NKeys returns the number of keys to unmarshal.
 func (v *ExecuteCommandOptions) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *ExecuteCommandOptions) Reset() {
-	v.Commands = nil
-}
-
 // compile time check whether the ExecuteCommandOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*ExecuteCommandOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*ExecuteCommandOptions)(nil)
-	_ Pooler                      = (*ExecuteCommandOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -2107,16 +1689,10 @@ func (v *SaveOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 // NKeys returns the number of keys to unmarshal.
 func (v *SaveOptions) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *SaveOptions) Reset() {
-	v.IncludeText = false
-}
-
 // compile time check whether the SaveOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*SaveOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*SaveOptions)(nil)
-	_ Pooler                      = (*SaveOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -2133,14 +1709,10 @@ func (v *ColorProviderOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string)
 // NKeys returns the number of keys to unmarshal.
 func (v *ColorProviderOptions) NKeys() int { return 0 }
 
-// Reset reset fields
-func (v *ColorProviderOptions) Reset() {}
-
 // compile time check whether the ColorProviderOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*ColorProviderOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*ColorProviderOptions)(nil)
-	_ Pooler                      = (*ColorProviderOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -2157,14 +1729,10 @@ func (v *FoldingRangeProviderOptions) UnmarshalJSONObject(dec *gojay.Decoder, k 
 // NKeys returns the number of keys to unmarshal.
 func (v *FoldingRangeProviderOptions) NKeys() int { return 0 }
 
-// Reset reset fields
-func (v *FoldingRangeProviderOptions) Reset() {}
-
 // compile time check whether the FoldingRangeProviderOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*FoldingRangeProviderOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*FoldingRangeProviderOptions)(nil)
-	_ Pooler                      = (*FoldingRangeProviderOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -2191,12 +1759,7 @@ func (v *TextDocumentSyncOptions) UnmarshalJSONObject(dec *gojay.Decoder, k stri
 	case keyWillSaveWaitUntil:
 		return dec.Bool(&v.WillSaveWaitUntil)
 	case keySave:
-		value := SaveOptionsPool.Get().(*SaveOptions)
-		err := dec.Object(value)
-		if err == nil {
-			v.Save = value
-		}
-		return err
+		return dec.Object(v.Save)
 	}
 	return nil
 }
@@ -2204,21 +1767,10 @@ func (v *TextDocumentSyncOptions) UnmarshalJSONObject(dec *gojay.Decoder, k stri
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentSyncOptions) NKeys() int { return 5 }
 
-// Reset reset fields
-func (v *TextDocumentSyncOptions) Reset() {
-	v.OpenClose = false
-	v.Change = 0.0
-	v.WillSave = false
-	v.WillSaveWaitUntil = false
-	SaveOptionsPool.Put(v.Save)
-	v.Save = nil
-}
-
 // compile time check whether the TextDocumentSyncOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentSyncOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentSyncOptions)(nil)
-	_ Pooler                      = (*TextDocumentSyncOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -2240,16 +1792,10 @@ func (v *StaticRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k st
 // NKeys returns the number of keys to unmarshal.
 func (v *StaticRegistrationOptions) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *StaticRegistrationOptions) Reset() {
-	v.ID = ""
-}
-
 // compile time check whether the StaticRegistrationOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*StaticRegistrationOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*StaticRegistrationOptions)(nil)
-	_ Pooler                      = (*StaticRegistrationOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -2263,12 +1809,10 @@ func (v *ServerCapabilitiesWorkspace) IsNil() bool { return v == nil }
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ServerCapabilitiesWorkspace) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyWorkspaceFolders {
-		value := ServerCapabilitiesWorkspaceFoldersPool.Get().(*ServerCapabilitiesWorkspaceFolders)
-		err := dec.Object(value)
-		if err == nil {
-			v.WorkspaceFolders = value
+		if v.WorkspaceFolders == nil {
+			v.WorkspaceFolders = &ServerCapabilitiesWorkspaceFolders{}
 		}
-		return err
+		return dec.Object(v.WorkspaceFolders)
 	}
 	return nil
 }
@@ -2276,17 +1820,10 @@ func (v *ServerCapabilitiesWorkspace) UnmarshalJSONObject(dec *gojay.Decoder, k 
 // NKeys returns the number of keys to unmarshal.
 func (v *ServerCapabilitiesWorkspace) NKeys() int { return 1 }
 
-// Reset reset fields
-func (v *ServerCapabilitiesWorkspace) Reset() {
-	ServerCapabilitiesWorkspaceFoldersPool.Put(v.WorkspaceFolders)
-	v.WorkspaceFolders = nil
-}
-
 // compile time check whether the ServerCapabilitiesWorkspace implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*ServerCapabilitiesWorkspace)(nil)
 	_ gojay.UnmarshalerJSONObject = (*ServerCapabilitiesWorkspace)(nil)
-	_ Pooler                      = (*ServerCapabilitiesWorkspace)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -2312,17 +1849,10 @@ func (v *ServerCapabilitiesWorkspaceFolders) UnmarshalJSONObject(dec *gojay.Deco
 // NKeys returns the number of keys to unmarshal.
 func (v *ServerCapabilitiesWorkspaceFolders) NKeys() int { return 2 }
 
-// Reset reset fields
-func (v *ServerCapabilitiesWorkspaceFolders) Reset() {
-	v.Supported = false
-	v.ChangeNotifications = nil
-}
-
 // compile time check whether the ServerCapabilitiesWorkspaceFolders implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*ServerCapabilitiesWorkspaceFolders)(nil)
 	_ gojay.UnmarshalerJSONObject = (*ServerCapabilitiesWorkspaceFolders)(nil)
-	_ Pooler                      = (*ServerCapabilitiesWorkspaceFolders)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -2364,19 +1894,15 @@ func (v *ServerCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) e
 	case keyHoverProvider:
 		return dec.Bool(&v.HoverProvider)
 	case keyCompletionProvider:
-		value := CompletionOptionsPool.Get().(*CompletionOptions)
-		err := dec.Object(value)
-		if err == nil {
-			v.CompletionProvider = value
+		if v.CompletionProvider == nil {
+			v.CompletionProvider = &CompletionOptions{}
 		}
-		return err
+		return dec.Object(v.CompletionProvider)
 	case keySignatureHelpProvider:
-		value := SignatureHelpOptionsPool.Get().(*SignatureHelpOptions)
-		err := dec.Object(value)
-		if err == nil {
-			v.SignatureHelpProvider = value
+		if v.SignatureHelpProvider == nil {
+			v.SignatureHelpProvider = &SignatureHelpOptions{}
 		}
-		return err
+		return dec.Object(v.SignatureHelpProvider)
 	case keyDefinitionProvider:
 		return dec.Bool(&v.DefinitionProvider)
 	case keyTypeDefinitionProvider:
@@ -2394,32 +1920,26 @@ func (v *ServerCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) e
 	case keyCodeActionProvider:
 		return dec.Bool(&v.CodeActionProvider)
 	case keyCodeLensProvider:
-		value := CodeLensOptionsPool.Get().(*CodeLensOptions)
-		err := dec.Object(value)
-		if err == nil {
-			v.CodeLensProvider = value
+		if v.CodeLensProvider == nil {
+			v.CodeLensProvider = &CodeLensOptions{}
 		}
-		return err
+		return dec.Object(v.CodeLensProvider)
 	case keyDocumentFormattingProvider:
 		return dec.Bool(&v.DocumentFormattingProvider)
 	case keyDocumentRangeFormattingProvider:
 		return dec.Bool(&v.DocumentRangeFormattingProvider)
 	case keyDocumentOnTypeFormattingProvider:
-		value := DocumentOnTypeFormattingOptionsPool.Get().(*DocumentOnTypeFormattingOptions)
-		err := dec.Object(value)
-		if err == nil {
-			v.DocumentOnTypeFormattingProvider = value
+		if v.DocumentOnTypeFormattingProvider == nil {
+			v.DocumentOnTypeFormattingProvider = &DocumentOnTypeFormattingOptions{}
 		}
-		return err
+		return dec.Object(v.DocumentOnTypeFormattingProvider)
 	case keyRenameProvider:
 		return dec.Interface(&v.RenameProvider)
 	case keyDocumentLinkProvider:
-		value := DocumentLinkOptionsPool.Get().(*DocumentLinkOptions)
-		err := dec.Object(value)
-		if err == nil {
-			v.DocumentLinkProvider = value
+		if v.DocumentLinkProvider == nil {
+			v.DocumentLinkProvider = &DocumentLinkOptions{}
 		}
-		return err
+		return dec.Object(v.DocumentLinkProvider)
 	case keyColorProvider:
 		return dec.Interface(&v.ColorProvider)
 	case keyFoldingRangeProvider:
@@ -2427,19 +1947,15 @@ func (v *ServerCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) e
 	case keySelectionRangeProvider:
 		return dec.Interface(&v.SelectionRangeProvider)
 	case keyExecuteCommandProvider:
-		value := ExecuteCommandOptionsPool.Get().(*ExecuteCommandOptions)
-		err := dec.Object(value)
-		if err == nil {
-			v.ExecuteCommandProvider = value
+		if v.ExecuteCommandProvider == nil {
+			v.ExecuteCommandProvider = &ExecuteCommandOptions{}
 		}
-		return err
+		return dec.Object(v.ExecuteCommandProvider)
 	case keyWorkspace:
-		value := ServerCapabilitiesWorkspacePool.Get().(*ServerCapabilitiesWorkspace)
-		err := dec.Object(value)
-		if err == nil {
-			v.Workspace = value
+		if v.Workspace == nil {
+			v.Workspace = &ServerCapabilitiesWorkspace{}
 		}
-		return err
+		return dec.Object(v.Workspace)
 	case keyExperimental:
 		return dec.Interface(&v.Experimental)
 	}
@@ -2449,39 +1965,10 @@ func (v *ServerCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) e
 // NKeys returns the number of keys to unmarshal.
 func (v *ServerCapabilities) NKeys() int { return 24 }
 
-// Reset reset fields
-func (v *ServerCapabilities) Reset() {
-	v.HoverProvider = false
-	CompletionOptionsPool.Put(v.CompletionProvider)
-	v.CompletionProvider = nil
-	SignatureHelpOptionsPool.Put(v.SignatureHelpProvider)
-	v.SignatureHelpProvider = nil
-	v.DefinitionProvider = false
-	v.ReferencesProvider = false
-	v.DocumentHighlightProvider = false
-	v.DocumentSymbolProvider = false
-	v.WorkspaceSymbolProvider = false
-	v.CodeActionProvider = false
-	CodeLensOptionsPool.Put(v.CodeLensProvider)
-	v.CodeLensProvider = nil
-	v.DocumentFormattingProvider = false
-	v.DocumentRangeFormattingProvider = false
-	DocumentOnTypeFormattingOptionsPool.Put(v.DocumentOnTypeFormattingProvider)
-	v.DocumentOnTypeFormattingProvider = nil
-	v.RenameProvider = nil
-	DocumentLinkOptionsPool.Put(v.DocumentLinkProvider)
-	v.DocumentLinkProvider = nil
-	ExecuteCommandOptionsPool.Put(v.ExecuteCommandProvider)
-	v.ExecuteCommandProvider = nil
-	ServerCapabilitiesWorkspacePool.Put(v.Workspace)
-	v.Workspace = nil
-}
-
 // compile time check whether the ServerCapabilities implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*ServerCapabilities)(nil)
 	_ gojay.UnmarshalerJSONObject = (*ServerCapabilities)(nil)
-	_ Pooler                      = (*ServerCapabilities)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -2507,18 +1994,10 @@ func (v *DocumentLinkRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder
 // NKeys returns the number of keys to unmarshal.
 func (v *DocumentLinkRegistrationOptions) NKeys() int { return 2 }
 
-// Reset reset fields
-func (v *DocumentLinkRegistrationOptions) Reset() {
-	DocumentSelectorPool.Put(&v.DocumentSelector)
-	v.DocumentSelector = nil
-	v.ResolveProvider = false
-}
-
 // compile time check whether the DocumentLinkRegistrationOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*DocumentLinkRegistrationOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DocumentLinkRegistrationOptions)(nil)
-	_ Pooler                      = (*DocumentLinkRegistrationOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -2535,12 +2014,8 @@ func (v *InitializedParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) er
 // NKeys returns the number of keys to unmarshal.
 func (v *InitializedParams) NKeys() int { return 0 }
 
-// Reset reset fields
-func (v *InitializedParams) Reset() {}
-
 // compile time check whether the InitializedParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*InitializedParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*InitializedParams)(nil)
-	_ Pooler                      = (*InitializedParams)(nil)
 )

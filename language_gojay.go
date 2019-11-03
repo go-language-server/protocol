@@ -41,7 +41,6 @@ func (v *CompletionParams) NKeys() int { return 3 }
 var (
 	_ gojay.MarshalerJSONObject   = (*CompletionParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*CompletionParams)(nil)
-	// _ Pooler = (*CompletionParams)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -71,7 +70,6 @@ func (v *CompletionContext) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*CompletionContext)(nil)
 	_ gojay.UnmarshalerJSONObject = (*CompletionContext)(nil)
-	// _ Pooler = (*CompletionContext)(nil)
 )
 
 type items []CompletionItem
@@ -100,7 +98,6 @@ func (v *items) UnmarshalJSONArray(dec *gojay.Decoder) error {
 var (
 	_ gojay.MarshalerJSONArray   = (*items)(nil)
 	_ gojay.UnmarshalerJSONArray = (*items)(nil)
-	// _ Pooler = (*items)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -130,7 +127,6 @@ func (v *CompletionList) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*CompletionList)(nil)
 	_ gojay.UnmarshalerJSONObject = (*CompletionList)(nil)
-	// _ Pooler = (*CompletionList)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -202,7 +198,6 @@ func (v *CompletionItem) IsNil() bool { return v == nil }
 var (
 	_ gojay.MarshalerJSONObject   = (*CompletionItem)(nil)
 	_ gojay.UnmarshalerJSONObject = (*CompletionItem)(nil)
-	// _ Pooler = (*CompletionItem)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -235,7 +230,6 @@ func (v *CompletionRegistrationOptions) IsNil() bool { return v == nil }
 var (
 	_ gojay.MarshalerJSONObject   = (*CompletionRegistrationOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*CompletionRegistrationOptions)(nil)
-	// _ Pooler = (*CompletionRegistrationOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -265,7 +259,6 @@ func (v *Hover) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*CompletionRegistrationOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*CompletionRegistrationOptions)(nil)
-	// _ Pooler = (*CompletionRegistrationOptions)(nil)
 )
 
 type signatures []SignatureInformation
@@ -294,7 +287,6 @@ func (v *signatures) UnmarshalJSONArray(dec *gojay.Decoder) error {
 var (
 	_ gojay.MarshalerJSONArray   = (*signatures)(nil)
 	_ gojay.UnmarshalerJSONArray = (*signatures)(nil)
-	// _ Pooler = (*signatures)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -327,7 +319,6 @@ func (v *SignatureHelp) NKeys() int { return 3 }
 var (
 	_ gojay.MarshalerJSONObject   = (*SignatureHelp)(nil)
 	_ gojay.UnmarshalerJSONObject = (*SignatureHelp)(nil)
-	// _ Pooler = (*SignatureHelp)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -360,7 +351,6 @@ func (v *SignatureInformation) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*SignatureInformation)(nil)
 	_ gojay.UnmarshalerJSONObject = (*SignatureInformation)(nil)
-	// _ Pooler = (*SignatureInformation)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -390,7 +380,6 @@ func (v *ParameterInformation) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*ParameterInformation)(nil)
 	_ gojay.UnmarshalerJSONObject = (*ParameterInformation)(nil)
-	// _ Pooler = (*ParameterInformation)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -420,7 +409,6 @@ func (v *SignatureHelpRegistrationOptions) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*SignatureHelpRegistrationOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*SignatureHelpRegistrationOptions)(nil)
-	// _ Pooler = (*SignatureHelpRegistrationOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -446,7 +434,6 @@ func (v *ReferenceContext) NKeys() int { return 1 }
 var (
 	_ gojay.MarshalerJSONObject   = (*ReferenceContext)(nil)
 	_ gojay.UnmarshalerJSONObject = (*ReferenceContext)(nil)
-	// _ Pooler = (*ReferenceContext)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -479,7 +466,6 @@ func (v *ReferenceParams) NKeys() int { return 3 }
 var (
 	_ gojay.MarshalerJSONObject   = (*ReferenceParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*ReferenceParams)(nil)
-	// _ Pooler = (*ReferenceParams)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -509,7 +495,6 @@ func (v *DocumentHighlight) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*DocumentHighlight)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DocumentHighlight)(nil)
-	// _ Pooler = (*DocumentHighlight)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -535,7 +520,6 @@ func (v *DocumentSymbolParams) NKeys() int { return 1 }
 var (
 	_ gojay.MarshalerJSONObject   = (*DocumentSymbolParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DocumentSymbolParams)(nil)
-	// _ Pooler = (*DocumentSymbolParams)(nil)
 )
 
 type documentSymbols []DocumentSymbol
@@ -564,7 +548,6 @@ func (v *documentSymbols) UnmarshalJSONArray(dec *gojay.Decoder) error {
 var (
 	_ gojay.MarshalerJSONArray   = (*documentSymbols)(nil)
 	_ gojay.UnmarshalerJSONArray = (*documentSymbols)(nil)
-	// _ Pooler = (*documentSymbols)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -612,7 +595,6 @@ func (v *DocumentSymbol) NKeys() int { return 7 }
 var (
 	_ gojay.MarshalerJSONObject   = (*DocumentSymbol)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DocumentSymbol)(nil)
-	// _ Pooler = (*DocumentSymbol)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -642,7 +624,6 @@ func (v *DocumentFormattingParams) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*DocumentFormattingParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DocumentFormattingParams)(nil)
-	// _ Pooler = (*DocumentFormattingParams)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -681,7 +662,6 @@ func (v *SymbolInformation) NKeys() int { return 5 }
 var (
 	_ gojay.MarshalerJSONObject   = (*SymbolInformation)(nil)
 	_ gojay.UnmarshalerJSONObject = (*SymbolInformation)(nil)
-	// _ Pooler = (*SymbolInformation)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -714,7 +694,6 @@ func (v *CodeActionParams) NKeys() int { return 3 }
 var (
 	_ gojay.MarshalerJSONObject   = (*CodeActionParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*CodeActionParams)(nil)
-	// _ Pooler = (*CodeActionParams)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -744,7 +723,6 @@ func (v *CodeActionContext) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*CodeActionContext)(nil)
 	_ gojay.UnmarshalerJSONObject = (*CodeActionContext)(nil)
-	// _ Pooler = (*CodeActionContext)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -789,7 +767,6 @@ func (v *CodeAction) NKeys() int { return 5 }
 var (
 	_ gojay.MarshalerJSONObject   = (*CodeAction)(nil)
 	_ gojay.UnmarshalerJSONObject = (*CodeAction)(nil)
-	// _ Pooler = (*CodeAction)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -819,7 +796,6 @@ func (v *CodeActionRegistrationOptions) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*CodeActionRegistrationOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*CodeActionRegistrationOptions)(nil)
-	// _ Pooler = (*CodeActionRegistrationOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -845,7 +821,6 @@ func (v *CodeLensParams) NKeys() int { return 1 }
 var (
 	_ gojay.MarshalerJSONObject   = (*CodeLensParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*CodeLensParams)(nil)
-	// _ Pooler = (*CodeLensParams)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -881,7 +856,6 @@ func (v *CodeLens) NKeys() int { return 3 }
 var (
 	_ gojay.MarshalerJSONObject   = (*CodeLens)(nil)
 	_ gojay.UnmarshalerJSONObject = (*CodeLens)(nil)
-	// _ Pooler = (*CodeLens)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -911,7 +885,6 @@ func (v *CodeLensRegistrationOptions) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*CodeLensRegistrationOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*CodeLensRegistrationOptions)(nil)
-	// _ Pooler = (*CodeLensRegistrationOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -937,7 +910,6 @@ func (v *DocumentLinkParams) NKeys() int { return 1 }
 var (
 	_ gojay.MarshalerJSONObject   = (*DocumentLinkParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DocumentLinkParams)(nil)
-	// _ Pooler = (*DocumentLinkParams)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -970,7 +942,6 @@ func (v *DocumentLink) NKeys() int { return 3 }
 var (
 	_ gojay.MarshalerJSONObject   = (*DocumentLink)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DocumentLink)(nil)
-	// _ Pooler = (*DocumentLink)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -996,7 +967,6 @@ func (v *DocumentColorParams) NKeys() int { return 1 }
 var (
 	_ gojay.MarshalerJSONObject   = (*DocumentColorParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DocumentColorParams)(nil)
-	// _ Pooler = (*DocumentColorParams)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1026,7 +996,6 @@ func (v *ColorInformation) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*ColorInformation)(nil)
 	_ gojay.UnmarshalerJSONObject = (*ColorInformation)(nil)
-	// _ Pooler = (*ColorInformation)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1062,7 +1031,6 @@ func (v *Color) NKeys() int { return 4 }
 var (
 	_ gojay.MarshalerJSONObject   = (*Color)(nil)
 	_ gojay.UnmarshalerJSONObject = (*Color)(nil)
-	// _ Pooler = (*Color)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1095,7 +1063,6 @@ func (v *ColorPresentationParams) NKeys() int { return 3 }
 var (
 	_ gojay.MarshalerJSONObject   = (*ColorPresentationParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*ColorPresentationParams)(nil)
-	// _ Pooler = (*ColorPresentationParams)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1131,7 +1098,6 @@ func (v *ColorPresentation) NKeys() int { return 3 }
 var (
 	_ gojay.MarshalerJSONObject   = (*ColorPresentation)(nil)
 	_ gojay.UnmarshalerJSONObject = (*ColorPresentation)(nil)
-	// _ Pooler = (*ColorPresentation)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1161,7 +1127,6 @@ func (v *FormattingOptions) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*FormattingOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*FormattingOptions)(nil)
-	// _ Pooler = (*FormattingOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1194,7 +1159,6 @@ func (v *DocumentRangeFormattingParams) NKeys() int { return 3 }
 var (
 	_ gojay.MarshalerJSONObject   = (*DocumentRangeFormattingParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DocumentRangeFormattingParams)(nil)
-	// _ Pooler = (*DocumentRangeFormattingParams)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1230,7 +1194,6 @@ func (v *DocumentOnTypeFormattingParams) NKeys() int { return 4 }
 var (
 	_ gojay.MarshalerJSONObject   = (*DocumentOnTypeFormattingParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DocumentOnTypeFormattingParams)(nil)
-	// _ Pooler = (*DocumentOnTypeFormattingParams)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1263,7 +1226,6 @@ func (v *DocumentOnTypeFormattingRegistrationOptions) NKeys() int { return 3 }
 var (
 	_ gojay.MarshalerJSONObject   = (*DocumentOnTypeFormattingRegistrationOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DocumentOnTypeFormattingRegistrationOptions)(nil)
-	// _ Pooler = (*DocumentOnTypeFormattingRegistrationOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1296,7 +1258,6 @@ func (v *RenameParams) NKeys() int { return 3 }
 var (
 	_ gojay.MarshalerJSONObject   = (*RenameParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*RenameParams)(nil)
-	// _ Pooler = (*RenameParams)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1326,7 +1287,6 @@ func (v *RenameRegistrationOptions) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*RenameRegistrationOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*RenameRegistrationOptions)(nil)
-	// _ Pooler = (*RenameRegistrationOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1352,7 +1312,6 @@ func (v *FoldingRangeParams) NKeys() int { return 1 }
 var (
 	_ gojay.MarshalerJSONObject   = (*FoldingRangeParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*FoldingRangeParams)(nil)
-	// _ Pooler = (*FoldingRangeParams)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -1391,5 +1350,4 @@ func (v *FoldingRange) NKeys() int { return 5 }
 var (
 	_ gojay.MarshalerJSONObject   = (*FoldingRange)(nil)
 	_ gojay.UnmarshalerJSONObject = (*FoldingRange)(nil)
-	// _ Pooler = (*FoldingRange)(nil)
 )

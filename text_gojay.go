@@ -31,7 +31,6 @@ func (v *DidOpenTextDocumentParams) NKeys() int { return 1 }
 var (
 	_ gojay.MarshalerJSONObject   = (*DidOpenTextDocumentParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DidOpenTextDocumentParams)(nil)
-	// _ Pooler                      = (*DidOpenTextDocumentParams)(nil)
 )
 
 type textDocumentContentChangeEvents []TextDocumentContentChangeEvent
@@ -89,7 +88,6 @@ func (v *DidChangeTextDocumentParams) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*DidChangeTextDocumentParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DidChangeTextDocumentParams)(nil)
-	// _ Pooler                      = (*DidChangeTextDocumentParams)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -125,7 +123,6 @@ func (v *TextDocument) NKeys() int { return 4 }
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocument)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocument)(nil)
-	// _ Pooler                      = (*TextDocument)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -151,7 +148,6 @@ func (v *TextDocumentChangeEvent) NKeys() int { return 1 }
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentChangeEvent)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentChangeEvent)(nil)
-	// _ Pooler                      = (*TextDocumentChangeEvent)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -181,7 +177,6 @@ func (v *TextDocumentWillSaveEvent) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentWillSaveEvent)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentWillSaveEvent)(nil)
-	// _ Pooler                      = (*TextDocumentWillSaveEvent)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -217,7 +212,6 @@ func (v *TextDocumentContentChangeEvent) NKeys() int { return 3 }
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentContentChangeEvent)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentContentChangeEvent)(nil)
-	// _ Pooler                      = (*TextDocumentContentChangeEvent)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -247,7 +241,6 @@ func (v *TextDocumentChangeRegistrationOptions) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentChangeRegistrationOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentChangeRegistrationOptions)(nil)
-	// _ Pooler                      = (*TextDocumentChangeRegistrationOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -277,7 +270,6 @@ func (v *WillSaveTextDocumentParams) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*WillSaveTextDocumentParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*WillSaveTextDocumentParams)(nil)
-	// _ Pooler                      = (*WillSaveTextDocumentParams)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -307,7 +299,6 @@ func (v *DidSaveTextDocumentParams) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*DidSaveTextDocumentParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DidSaveTextDocumentParams)(nil)
-	// _ Pooler                      = (*DidSaveTextDocumentParams)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -337,7 +328,6 @@ func (v *TextDocumentSaveRegistrationOptions) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentSaveRegistrationOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentSaveRegistrationOptions)(nil)
-	// _ Pooler                      = (*TextDocumentSaveRegistrationOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -363,5 +353,4 @@ func (v *DidCloseTextDocumentParams) NKeys() int { return 1 }
 var (
 	_ gojay.MarshalerJSONObject   = (*DidCloseTextDocumentParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DidCloseTextDocumentParams)(nil)
-	// _ Pooler                      = (*DidCloseTextDocumentParams)(nil)
 )

@@ -35,7 +35,6 @@ func (v *WorkspaceFolder) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*WorkspaceFolder)(nil)
 	_ gojay.UnmarshalerJSONObject = (*WorkspaceFolder)(nil)
-	// _ Pooler                      = (*WorkspaceFolder)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -61,7 +60,6 @@ func (v *DidChangeWorkspaceFoldersParams) NKeys() int { return 1 }
 var (
 	_ gojay.MarshalerJSONObject   = (*DidChangeWorkspaceFoldersParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DidChangeWorkspaceFoldersParams)(nil)
-	// _ Pooler                      = (*DidChangeWorkspaceFoldersParams)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -91,7 +89,6 @@ func (v *WorkspaceFoldersChangeEvent) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*WorkspaceFoldersChangeEvent)(nil)
 	_ gojay.UnmarshalerJSONObject = (*WorkspaceFoldersChangeEvent)(nil)
-	// _ Pooler                      = (*WorkspaceFoldersChangeEvent)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -117,7 +114,6 @@ func (v *DidChangeConfigurationParams) NKeys() int { return 1 }
 var (
 	_ gojay.MarshalerJSONObject   = (*DidChangeConfigurationParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DidChangeConfigurationParams)(nil)
-	// _ Pooler                      = (*DidChangeConfigurationParams)(nil)
 )
 
 type configurationItem []ConfigurationItem
@@ -171,7 +167,6 @@ func (v *ConfigurationParams) NKeys() int { return 1 }
 var (
 	_ gojay.MarshalerJSONObject   = (*ConfigurationParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*ConfigurationParams)(nil)
-	// _ Pooler                      = (*ConfigurationParams)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -201,7 +196,6 @@ func (v *ConfigurationItem) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*ConfigurationItem)(nil)
 	_ gojay.UnmarshalerJSONObject = (*ConfigurationItem)(nil)
-	// _ Pooler                      = (*ConfigurationItem)(nil)
 )
 
 // FileEvents represents a FileEvent pointer slice.
@@ -259,7 +253,6 @@ func (v *DidChangeWatchedFilesParams) NKeys() int { return 1 }
 var (
 	_ gojay.MarshalerJSONObject   = (*DidChangeWatchedFilesParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DidChangeWatchedFilesParams)(nil)
-	// _ Pooler                      = (*DidChangeWatchedFilesParams)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -289,7 +282,6 @@ func (v *FileEvent) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*FileEvent)(nil)
 	_ gojay.UnmarshalerJSONObject = (*FileEvent)(nil)
-	// _ Pooler                      = (*FileEvent)(nil)
 )
 
 // FileSystemWatchers represents a FileSystemWatcher slice.
@@ -344,7 +336,6 @@ func (v *DidChangeWatchedFilesRegistrationOptions) NKeys() int { return 1 }
 var (
 	_ gojay.MarshalerJSONObject   = (*DidChangeWatchedFilesRegistrationOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DidChangeWatchedFilesRegistrationOptions)(nil)
-	// _ Pooler                      = (*DidChangeWatchedFilesRegistrationOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -374,7 +365,6 @@ func (v *FileSystemWatcher) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*FileSystemWatcher)(nil)
 	_ gojay.UnmarshalerJSONObject = (*FileSystemWatcher)(nil)
-	// _ Pooler                      = (*FileSystemWatcher)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -400,7 +390,6 @@ func (v *WorkspaceSymbolParams) NKeys() int { return 1 }
 var (
 	_ gojay.MarshalerJSONObject   = (*WorkspaceSymbolParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*WorkspaceSymbolParams)(nil)
-	// _ Pooler                      = (*WorkspaceSymbolParams)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -430,7 +419,6 @@ func (v *ExecuteCommandParams) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*ExecuteCommandParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*ExecuteCommandParams)(nil)
-	// _ Pooler                      = (*ExecuteCommandParams)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -456,7 +444,6 @@ func (v *ExecuteCommandRegistrationOptions) NKeys() int { return 1 }
 var (
 	_ gojay.MarshalerJSONObject   = (*ExecuteCommandRegistrationOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*ExecuteCommandRegistrationOptions)(nil)
-	// _ Pooler                      = (*ExecuteCommandRegistrationOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -486,7 +473,6 @@ func (v *ApplyWorkspaceEditParams) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*ApplyWorkspaceEditParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*ApplyWorkspaceEditParams)(nil)
-	// _ Pooler                      = (*ApplyWorkspaceEditParams)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -512,5 +498,4 @@ func (v *ApplyWorkspaceEditResponse) NKeys() int { return 1 }
 var (
 	_ gojay.MarshalerJSONObject   = (*ApplyWorkspaceEditResponse)(nil)
 	_ gojay.UnmarshalerJSONObject = (*ApplyWorkspaceEditResponse)(nil)
-	// _ Pooler                      = (*ApplyWorkspaceEditResponse)(nil)
 )

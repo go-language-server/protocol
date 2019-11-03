@@ -8,7 +8,6 @@ package protocol
 
 import (
 	"github.com/francoispqt/gojay"
-	"github.com/go-language-server/uri"
 )
 
 // Diagnostics represents a slice of Diagnostics.
@@ -71,19 +70,8 @@ func (v *PublishDiagnosticsParams) UnmarshalJSONObject(dec *gojay.Decoder, k str
 // NKeys returns the number of keys to unmarshal.
 func (v *PublishDiagnosticsParams) NKeys() int { return 3 }
 
-// Reset reset fields.
-func (v *PublishDiagnosticsParams) Reset() {
-	v.URI = uri.URI("")
-	for i := range v.Diagnostics {
-		v.Diagnostics[i].Reset()
-		DiagnosticPool.Put(&v.Diagnostics[i])
-	}
-	v.Diagnostics = nil
-}
-
 // compile time check whether the PublishDiagnosticsParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
 var (
 	_ gojay.MarshalerJSONObject   = (*PublishDiagnosticsParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*PublishDiagnosticsParams)(nil)
-	_ Pooler                      = (*PublishDiagnosticsParams)(nil)
 )

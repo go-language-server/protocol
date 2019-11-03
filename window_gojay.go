@@ -35,7 +35,6 @@ func (v *ShowMessageParams) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*ShowMessageParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*ShowMessageParams)(nil)
-	// _ Pooler                      = (*ShowMessageParams)(nil)
 )
 
 type actions []MessageActionItem
@@ -96,7 +95,6 @@ func (v *ShowMessageRequestParams) NKeys() int { return 3 }
 var (
 	_ gojay.MarshalerJSONObject   = (*ShowMessageRequestParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*ShowMessageRequestParams)(nil)
-	// _ Pooler                      = (*ShowMessageRequestParams)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -122,7 +120,6 @@ func (v *MessageActionItem) NKeys() int { return 1 }
 var (
 	_ gojay.MarshalerJSONObject   = (*MessageActionItem)(nil)
 	_ gojay.UnmarshalerJSONObject = (*MessageActionItem)(nil)
-	// _ Pooler                      = (*MessageActionItem)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -152,5 +149,4 @@ func (v *LogMessageParams) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*LogMessageParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*LogMessageParams)(nil)
-	// _ Pooler                      = (*LogMessageParams)(nil)
 )

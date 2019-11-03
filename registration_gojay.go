@@ -38,7 +38,6 @@ func (v *Registration) NKeys() int { return 3 }
 var (
 	_ gojay.MarshalerJSONObject   = (*Registration)(nil)
 	_ gojay.UnmarshalerJSONObject = (*Registration)(nil)
-	// _ Pooler                      = (*Registration)(nil)
 )
 
 type registrations []Registration
@@ -92,7 +91,6 @@ func (v *RegistrationParams) NKeys() int { return 1 }
 var (
 	_ gojay.MarshalerJSONObject   = (*RegistrationParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*RegistrationParams)(nil)
-	// _ Pooler                      = (*RegistrationParams)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -118,7 +116,6 @@ func (v *TextDocumentRegistrationOptions) NKeys() int { return 1 }
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentRegistrationOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentRegistrationOptions)(nil)
-	// _ Pooler                      = (*TextDocumentRegistrationOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
@@ -148,7 +145,6 @@ func (v *Unregistration) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*Unregistration)(nil)
 	_ gojay.UnmarshalerJSONObject = (*Unregistration)(nil)
-	// _ Pooler                      = (*Unregistration)(nil)
 )
 
 type unregisterations []Unregistration
@@ -202,5 +198,4 @@ func (v *UnregistrationParams) NKeys() int { return 1 }
 var (
 	_ gojay.MarshalerJSONObject   = (*UnregistrationParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*UnregistrationParams)(nil)
-	// _ Pooler                      = (*UnregistrationParams)(nil)
 )
