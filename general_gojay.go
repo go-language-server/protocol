@@ -1984,6 +1984,9 @@ func (v *DocumentLinkRegistrationOptions) IsNil() bool { return v == nil }
 func (v *DocumentLinkRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keyDocumentSelector:
+		if v.DocumentSelector == nil {
+			v.DocumentSelector = DocumentSelector{}
+		}
 		return dec.Array(&v.DocumentSelector)
 	case keyResolveProvider:
 		return dec.Bool(&v.ResolveProvider)
