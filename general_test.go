@@ -2145,9 +2145,10 @@ func testTextDocumentClientCapabilitiesRename(t *testing.T, marshal marshalFunc,
 }
 
 func testTextDocumentClientCapabilitiesPublishDiagnostics(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const want = `{"relatedInformation":true}`
+	const want = `{"relatedInformation":true,"tagSupport":true}`
 	wantType := TextDocumentClientCapabilitiesPublishDiagnostics{
 		RelatedInformation: true,
+		TagSupport:         true,
 	}
 
 	t.Run("Marshal", func(t *testing.T) {
