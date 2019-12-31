@@ -228,6 +228,10 @@ AUTHORS:  ## Creates AUTHORS file.
 TODO:  ## Print the all of (TODO|BUG|XXX|FIXME|NOTE) in packages.
 	@rg -e '(TODO|BUG|XXX|FIXME|NOTE)(\(.+\):|:)' --follow --hidden --glob='!.git' --glob='!vendor' --glob='!internal' --glob='!Makefile' --glob='!snippets' --glob='!indent'
 
+.PHONY: nolint
+nolint:  ## Print the all of //nolint:... pragma in packages.
+	@rg -t go -C 3 -e '//nolint.+' --follow --hidden --glob='!vendor' --glob='!internal'
+
 .PHONY: help
 help:  ## Show make target help.
 	@perl -nle 'BEGIN {printf "Usage:\n  make \033[33m<target>\033[0m\n\nTargets:\n"} printf "  \033[36m%-30s\033[0m %s\n", $$1, $$2 if /^([a-zA-Z\/_-].+)+:.*?\s+## (.*)/' ${MAKEFILE_LIST}
