@@ -2,28 +2,25 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// +build gojay
+// +build !gojay
 
 package protocol
 
 import (
+	"encoding/json"
 	"testing"
-
-	"github.com/francoispqt/gojay"
 )
 
-func TestShowMessageParams(t *testing.T) {
-	testShowMessageParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
-}
+func TestShowMessageParams(t *testing.T) { testShowMessageParams(t, json.Marshal, json.Unmarshal) }
 
 func TestShowMessageRequestParams(t *testing.T) {
-	testShowMessageRequestParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+	testShowMessageRequestParams(t, json.Marshal, json.Unmarshal)
 }
 
 func TestMessageActionItem(t *testing.T) {
-	testMessageActionItem(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+	testMessageActionItem(t, json.Marshal, json.Unmarshal)
 }
 
 func TestLogMessageParams(t *testing.T) {
-	testLogMessageParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+	testLogMessageParams(t, json.Marshal, json.Unmarshal)
 }
