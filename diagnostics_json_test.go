@@ -2,16 +2,15 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// +build gojay
+// +build !gojay
 
 package protocol
 
 import (
+	"encoding/json"
 	"testing"
-
-	"github.com/francoispqt/gojay"
 )
 
 func TestPublishDiagnosticsParams(t *testing.T) {
-	testPublishDiagnosticsParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+	testPublishDiagnosticsParams(t, json.Marshal, json.Unmarshal)
 }

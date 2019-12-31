@@ -2,20 +2,16 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// +build !gojay
-
 package protocol
 
 import (
-	"encoding/json"
-	"strings"
 	"testing"
 
 	"github.com/go-language-server/uri"
 	"github.com/google/go-cmp/cmp"
 )
 
-func TestPublishDiagnosticsParams(t *testing.T) {
+func testPublishDiagnosticsParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
 		want        = `{"uri":"file:///path/to/diagnostics.go","version":1,"diagnostics":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/diagnostics.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"diagnostics.go"}]}]}`
 		wantInvalid = `{"uri":"file:///path/to/diagnostics_gen.go","version":2,"diagnostics":[{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/diagnostics_gen.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}},"message":"diagnostics_gen.go"}]}]}`
@@ -92,10 +88,9 @@ func TestPublishDiagnosticsParams(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := json.Marshal(&tt.field)
+				got, err := marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
-					t.Error(err)
-					return
+					t.Fatal(err)
 				}
 
 				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
@@ -137,12 +132,9 @@ func TestPublishDiagnosticsParams(t *testing.T) {
 				t.Parallel()
 
 				var got PublishDiagnosticsParams
-				dec := json.NewDecoder(strings.NewReader(tt.field))
-				if err := dec.Decode(&got); (err != nil) != tt.wantUnmarshalErr {
-					t.Error(err)
-					return
+				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+					t.Fatal(err)
 				}
-
 				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
 					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
 				}
