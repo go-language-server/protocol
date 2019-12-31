@@ -2936,6 +2936,45 @@ func testInitializeResult(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 	})
 }
 
+func TestTextDocumentSyncKind_String(t *testing.T) {
+	tests := []struct {
+		name string
+		k    TextDocumentSyncKind
+		want string
+	}{
+		{
+			name: "NoneKind",
+			k:    None,
+			want: "None",
+		},
+		{
+			name: "FullKind",
+			k:    Full,
+			want: "Full",
+		},
+		{
+			name: "IncrementalKind",
+			k:    Incremental,
+			want: "Incremental",
+		},
+		{
+			name: "UnknownKind",
+			k:    TextDocumentSyncKind(99),
+			want: "99",
+		},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			if got := tt.k.String(); got != tt.want {
+				t.Errorf("TextDocumentSyncKind.String() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func testDocumentLinkRegistrationOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
 		want    = `{"documentSelector":[{"language":"go","scheme":"file","pattern":"*"}],"resolveProvider":true}`
