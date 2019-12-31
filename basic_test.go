@@ -739,6 +739,50 @@ func testDiagnostic(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 	})
 }
 
+func TestDiagnosticSeverity_String(t *testing.T) {
+	tests := []struct {
+		name string
+		d    DiagnosticSeverity
+		want string
+	}{
+		{
+			name: "Error",
+			d:    SeverityError,
+			want: "Error",
+		},
+		{
+			name: "Warning",
+			d:    SeverityWarning,
+			want: "Warning",
+		},
+		{
+			name: "Information",
+			d:    SeverityInformation,
+			want: "Information",
+		},
+		{
+			name: "Hint",
+			d:    SeverityHint,
+			want: "Hint",
+		},
+		{
+			name: "Unknown",
+			d:    DiagnosticSeverity(0),
+			want: "0",
+		},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			if got := tt.d.String(); got != tt.want {
+				t.Errorf("DiagnosticSeverity.String() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func testDiagnosticRelatedInformation(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
 		want        = `{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}`
