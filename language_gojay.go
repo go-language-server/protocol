@@ -141,7 +141,7 @@ func (v *CompletionItem) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKeyOmitEmpty(keyFilterText, v.FilterText)
 	enc.StringKeyOmitEmpty(keyInsertText, v.InsertText)
 	enc.Float64KeyOmitEmpty(keyInsertTextFormat, float64(v.InsertTextFormat))
-	enc.Float64KeyOmitEmpty(keyKind, v.Kind)
+	enc.IntKeyOmitEmpty(keyKind, int(v.Kind))
 	enc.StringKeyOmitEmpty(keyLabel, v.Label)
 	enc.BoolKeyOmitEmpty(keyPreselect, v.Preselect)
 	enc.StringKeyOmitEmpty(keySortText, v.SortText)
@@ -175,7 +175,7 @@ func (v *CompletionItem) UnmarshalJSONObject(dec *gojay.Decoder, k string) error
 	case keyInsertTextFormat:
 		return dec.Float64((*float64)(&v.InsertTextFormat))
 	case keyKind:
-		return dec.Float64(&v.Kind)
+		return dec.Int((*int)(&v.Kind))
 	case keyLabel:
 		return dec.String(&v.Label)
 	case keyPreselect:

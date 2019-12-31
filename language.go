@@ -155,7 +155,7 @@ type CompletionItem struct {
 
 	// Kind is the kind of this completion item. Based of the kind
 	// an icon is chosen by the editor.
-	Kind float64 `json:"kind,omitempty"`
+	Kind CompletionItemKind `json:"kind,omitempty"`
 
 	// Label is the label of this completion item. By default
 	// also the text that is inserted when selecting
