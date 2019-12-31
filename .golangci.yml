@@ -1,41 +1,85 @@
 run:
-  concurrency: 12
-  deadline: 5m
   issues-exit-code: 1
-  tests: true
+  tests: false
+  build-tags:
+    - gojay
   skip-dirs:
-    - "internal"
+    - "vendor$"
+    - "internal$"
   skip-files:
     - ".*\\.pb\\.go"
+    - ".*(.|_)gen\\.go"
   modules-download-mode: vendor
 
 linters-settings:
+  dupl:
+    threshold: 400
   errcheck:
     check-type-assertions: false
     check-blank: true
     exclude: .errcheckignore
+  gocognit:
+    min-complexity: 20
   goconst:
     min-len: 3
     min-occurrences: 3
   gofmt:
     simplify: true
   goimports:
-    local-prefixes: github.com/go-language-server/protocol/
+    local-prefixes: github.com/go-language-server/protocol
   golint:
     min-confidence: 0.3
   govet:
-    check-shadowing: false
+    enable:
+      -  asmdecl
+      -  assign
+      -  atomic
+      -  atomicalign
+      -  bools
+      -  buildssa
+      -  buildtag
+      -  cgocall
+      -  composite
+      -  copylock
+      -  ctrlflow
+      -  deepequalerrors
+      -  errorsas
+      -  findcall
+      -  httpresponse
+      -  inspect
+      -  loopclosure
+      -  lostcancel
+      -  nilfunc
+      -  nilness
+      -  pkgfact
+      -  printf
+      -  shift
+      -  sortslice
+      -  stdmethods
+      -  structtag
+      -  tests
+      -  unmarshal
+      -  unreachable
+      -  unsafeptr
+      -  unusedresult
+    disable:
+      -  shadow
   gocritic:
     enabled-tags:
       - diagnostic
-      - style
-      - performance
       - experimental
+      - opinionated
+      - performance
+      - style
     settings:
-      captLocal:
-        paramsOnly: true
+      hugeParam:
+        sizeThreshold: 80
+      rangeExprCopy:
+        sizeThreshold: 512
       rangeValCopy:
-        sizeThreshold: 32
+        sizeThreshold: 128
+  maligned:
+    suggest-new: true
   misspell:
     locale: US
   nakedret:
@@ -48,46 +92,70 @@ linters-settings:
     algo: cha
     check-exported: true
   unused:
-    check-exported: true
+    check-exported: false
 
 linters:
+  # disabled:
+  #   - funlen
+  #   - gochecknoglobals
+  #   - gochecknoinits
+  #   - gocyclo
+  #   - godox
+  #   - gomnd
+  #   - gosec
+  #   - lll
+  #   - maligned
+  #   - nakedret
+  #   - scopelint
+  #   - unused
+  #   - wsl
+  disable-all: true
   enable:
+    - bodyclose
     - deadcode
     - depguard
+    - dogsled
+    - dupl
     - errcheck
+    - gocognit
     - goconst
     - gocritic
     - gofmt
     - goimports
     - golint
-    - ineffassign
-    - misspell
-    - prealloc
-    - structcheck
-    - typecheck
-    - unconvert
-    - varcheck
     - gosimple
     - govet
+    - ineffassign
     - interfacer
+    - megacheck
+    - misspell
+    - prealloc
     - staticcheck
+    - structcheck
     - stylecheck
+    - typecheck
+    - unconvert
     - unparam
-  disable:
-    - dupl
-    - gochecknoglobals
-    - gochecknoinits
-    - gocyclo
-    - gosec
-    - lll
-    - maligned
-    - nakedret
-    - scopelint
     - unused
-  fast: true
+    - varcheck
+    - whitespace
 
 issues:
-  exclude-use-default: false
+  exclude-use-default: true
+  exclude-rules:
+    - path: language.go
+      text: "deprecatedComment"
+      linters:
+        - gocritic
+    - linters:
+        - gocognit
+      text: "ClientHandler"
+    - linters:
+        - gocognit
+      text: "ServerHandler"
+    - linters:
+        - gocognit
+      text: "TextDocumentClientCapabilities"
 
 output:
   format: colored-line-number
