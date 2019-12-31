@@ -185,7 +185,7 @@ const (
 	keySynchronization                   = "synchronization"
 	keySyncKind                          = "syncKind"
 	keyTabSize                           = "tabSize"
-	keyTagSupport                        = "keyTagSupport"
+	keyTagSupport                        = "tagSupport"
 	keyTarget                            = "target"
 	keyTargetRange                       = "targetRange"
 	keyTargetSelectionRange              = "targetSelectionRange"
