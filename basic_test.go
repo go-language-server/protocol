@@ -2517,6 +2517,40 @@ func testTextDocumentItem(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 	})
 }
 
+func TestToLanguageIdentifier(t *testing.T) {
+	tests := []struct {
+		name string
+		ft   string
+		want LanguageIdentifier
+	}{
+		{
+			name: "Go",
+			ft:   "go",
+			want: GoLanguage,
+		},
+		{
+			name: "C",
+			ft:   "c",
+			want: CLanguage,
+		},
+		{
+			name: "lsif",
+			ft:   "lsif",
+			want: LanguageIdentifier("lsif"),
+		},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			if got := ToLanguageIdentifier(tt.ft); got != tt.want {
+				t.Errorf("ToLanguageIdentifier(%v) = %v, want %v", tt.ft, got, tt.want)
+			}
+		})
+	}
+}
+
 func testVersionedTextDocumentIdentifier(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
 		want            = `{"uri":"file:///path/to/basic.go","version":10}`
