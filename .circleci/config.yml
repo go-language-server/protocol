@@ -6,7 +6,7 @@ orbs:
 
 defaults: &defaults
   working_directory: /go/src/github.com/go-language-server/protocol
-  executor: golang/stretch
+  executor: golang/buster
   resource_class: large
   environment:
     GO111MODULE: "on"
