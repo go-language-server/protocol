@@ -1,8 +1,6 @@
 run:
   issues-exit-code: 1
   tests: false
-  build-tags:
-    - gojay
   skip-dirs:
     - "vendor$"
     - "internal$"
