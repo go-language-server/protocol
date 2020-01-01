@@ -303,6 +303,9 @@ func (v *SignatureHelp) IsNil() bool { return v == nil }
 func (v *SignatureHelp) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keySignatures:
+		if v.Signatures == nil {
+			v.Signatures = []SignatureInformation{}
+		}
 		return dec.Array((*signatures)(&v.Signatures))
 	case keyActiveParameter:
 		return dec.Float64(&v.ActiveParameter)
