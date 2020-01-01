@@ -298,7 +298,7 @@ func (k CompletionItemKind) String() string {
 	case TypeParameterCompletion:
 		return "TypeParameter"
 	default:
-		return strconv.FormatInt(int64(k), 64)
+		return strconv.FormatInt(int64(k), 10)
 	}
 }
 
