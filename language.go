@@ -122,7 +122,7 @@ type CompletionItem struct {
 
 	// Data an data entry field that is preserved on a completion item between
 	// a completion and a completion resolve request.
-	Data interface{} `json:"data"`
+	Data interface{} `json:"data,omitempty"`
 
 	// Deprecated indicates if this item is deprecated.
 	Deprecated bool `json:"deprecated,omitempty"`
