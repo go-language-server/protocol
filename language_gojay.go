@@ -356,7 +356,7 @@ var (
 // MarshalJSONObject implements gojay's MarshalerJSONObject.
 func (v *ParameterInformation) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey(keyLabel, v.Label)
-	enc.AddInterfaceKeyOmitEmpty(keyDocumentation, &v.Documentation)
+	enc.AddInterfaceKeyOmitEmpty(keyDocumentation, v.Documentation)
 }
 
 // IsNil returns wether the structure is nil value or not.
