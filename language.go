@@ -443,7 +443,7 @@ func (k DocumentHighlightKind) String() string {
 	case Write:
 		return "Write"
 	default:
-		return strconv.FormatInt(int64(k), 64)
+		return strconv.FormatInt(int64(k), 10)
 	}
 }
 
