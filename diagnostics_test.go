@@ -17,7 +17,7 @@ func testPublishDiagnosticsParams(t *testing.T, marshal marshalFunc, unmarshal u
 		wantInvalid = `{"uri":"file:///path/to/diagnostics_gen.go","version":2,"diagnostics":[{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/diagnostics_gen.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}},"message":"diagnostics_gen.go"}]}]}`
 	)
 	wantType := PublishDiagnosticsParams{
-		URI:     uri.File("/path/to/diagnostics.go"),
+		URI:     DocumentURI("file:///path/to/diagnostics.go"),
 		Version: 1,
 		Diagnostics: []Diagnostic{
 			{
