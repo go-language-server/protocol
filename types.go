@@ -6,8 +6,8 @@ package protocol
 
 import "github.com/go-language-server/uri"
 
-// ToDocumentURI returns the new DocumentURI from s.
-func ToDocumentURI(s string) uri.URI {
+// ToURI returns the new DocumentURI from s.
+func ToURI(s string) uri.URI {
 	return uri.File(s)
 }
 
