@@ -10,6 +10,14 @@ import (
 	"github.com/go-language-server/uri"
 )
 
+// DocumentURI represents the URI of a document.
+//
+// Many of the interfaces contain fields that correspond to the URI of a document.
+// For clarity, the type of such a field is declared as a DocumentURI.
+// Over the wire, it will still be transferred as a string, but this guarantees
+// that the contents of that string can be parsed as a valid URI.
+type DocumentURI string
+
 // EOL denotes represents the character offset.
 var EOL = []string{"\n", "\r\n", "\r"}
 
