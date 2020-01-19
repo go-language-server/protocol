@@ -12,7 +12,17 @@ import "github.com/francoispqt/gojay"
 func (v *Registration) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey(keyID, v.ID)
 	enc.StringKey(keyMethod, v.Method)
-	enc.AddInterfaceKeyOmitEmpty(keyRegisterOptions, &v.RegisterOptions)
+
+	switch registerOptions := v.RegisterOptions.(type) {
+	case []interface{}:
+		enc.ArrayKeyOmitEmpty(keyRegisterOptions, Interfaces(registerOptions))
+	case map[string]string:
+		enc.ObjectKeyOmitEmpty(keyRegisterOptions, StringStringMap(registerOptions))
+	case map[string]interface{}:
+		enc.ObjectKeyOmitEmpty(keyRegisterOptions, StringInterfaceMap(registerOptions))
+	default:
+		enc.AddInterfaceKeyOmitEmpty(keyRegisterOptions, registerOptions)
+	}
 }
 
 // IsNil returns wether the structure is nil value or not.
