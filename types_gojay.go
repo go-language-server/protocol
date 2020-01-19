@@ -65,3 +65,77 @@ var (
 	_ gojay.MarshalerJSONArray   = (*Strings)(nil)
 	_ gojay.UnmarshalerJSONArray = (*Strings)(nil)
 )
+
+// StringInterfaceMap represents a string key and interface value map.
+type StringInterfaceMap map[string]interface{}
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (m StringInterfaceMap) MarshalJSONObject(enc *gojay.Encoder) {
+	for k, v := range m {
+		enc.AddInterfaceKey(k, v)
+	}
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (m StringInterfaceMap) IsNil() bool {
+	return m == nil
+}
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (m StringInterfaceMap) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	var iface interface{}
+	err := dec.Interface(&iface)
+	if err != nil {
+		return err
+	}
+	m[k] = iface
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (m StringInterfaceMap) NKeys() int {
+	return 0
+}
+
+// compile time check whether the Interfaces implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*StringInterfaceMap)(nil)
+	_ gojay.UnmarshalerJSONObject = (*StringInterfaceMap)(nil)
+)
+
+// StringStringMap represents a string key and string value map.
+type StringStringMap map[string]string
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (m StringStringMap) MarshalJSONObject(enc *gojay.Encoder) {
+	for k, v := range m {
+		enc.StringKey(k, v)
+	}
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (m StringStringMap) IsNil() bool {
+	return m == nil
+}
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (m StringStringMap) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	s := ""
+	err := dec.String(&s)
+	if err != nil {
+		return err
+	}
+	m[k] = s
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (m StringStringMap) NKeys() int {
+	return 0
+}
+
+// compile time check whether the Interfaces implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*StringStringMap)(nil)
+	_ gojay.UnmarshalerJSONObject = (*StringStringMap)(nil)
+)
