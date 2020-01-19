@@ -157,6 +157,9 @@ func (v *CompletionItem) UnmarshalJSONObject(dec *gojay.Decoder, k string) error
 	case keyAdditionalTextEdits:
 		return dec.Array((*TextEdits)(&v.AdditionalTextEdits))
 	case keyCommand:
+		if v.Command == nil {
+			v.Command = &Command{}
+		}
 		return dec.Object(v.Command)
 	case keyCommitCharacters:
 		return dec.Array((*Strings)(&v.CommitCharacters))
