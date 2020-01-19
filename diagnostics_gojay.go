@@ -13,14 +13,14 @@ import (
 // Diagnostics represents a slice of Diagnostics.
 type Diagnostics []Diagnostic
 
-// MarshalJSONArray implements gojay's MarshalerJSONArray.
+// MarshalJSONArray implements gojay.MarshalerJSONArray.
 func (v Diagnostics) MarshalJSONArray(enc *gojay.Encoder) {
 	for i := range v {
 		enc.Object(&v[i])
 	}
 }
 
-// UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
+// UnmarshalJSONArray implements gojay.UnmarshalerJSONArray.
 func (v *Diagnostics) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	value := Diagnostic{}
 	if err := dec.Object(&value); err != nil {
@@ -30,16 +30,16 @@ func (v *Diagnostics) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	return nil
 }
 
-// IsNil implements gojay's MarshalerJSONArray.
+// IsNil implements gojay.MarshalerJSONArray.
 func (v Diagnostics) IsNil() bool { return len(v) == 0 }
 
-// compile time check whether the Diagnostics implements a gojay.MarshalerJSONArray, gojay.UnmarshalerJSONArray and Pooler interface.
+// compile time check whether the Diagnostics implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
 var (
 	_ gojay.MarshalerJSONArray   = (*Diagnostics)(nil)
 	_ gojay.UnmarshalerJSONArray = (*Diagnostics)(nil)
 )
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject.
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *PublishDiagnosticsParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey(keyURI, string(v.URI))
 	enc.Float64KeyOmitEmpty(keyVersion, v.Version)
@@ -70,7 +70,7 @@ func (v *PublishDiagnosticsParams) UnmarshalJSONObject(dec *gojay.Decoder, k str
 // NKeys returns the number of keys to unmarshal.
 func (v *PublishDiagnosticsParams) NKeys() int { return 3 }
 
-// compile time check whether the PublishDiagnosticsParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+// compile time check whether the PublishDiagnosticsParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
 	_ gojay.MarshalerJSONObject   = (*PublishDiagnosticsParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*PublishDiagnosticsParams)(nil)

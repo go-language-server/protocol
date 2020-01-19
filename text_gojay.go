@@ -8,7 +8,7 @@ package protocol
 
 import "github.com/francoispqt/gojay"
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject.
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *DidOpenTextDocumentParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey(keyTextDocument, &v.TextDocument)
 }
@@ -27,7 +27,7 @@ func (v *DidOpenTextDocumentParams) UnmarshalJSONObject(dec *gojay.Decoder, k st
 // NKeys returns the number of keys to unmarshal.
 func (v *DidOpenTextDocumentParams) NKeys() int { return 1 }
 
-// compile time check whether the DidOpenTextDocumentParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+// compile time check whether the DidOpenTextDocumentParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
 	_ gojay.MarshalerJSONObject   = (*DidOpenTextDocumentParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DidOpenTextDocumentParams)(nil)
@@ -35,17 +35,17 @@ var (
 
 type textDocumentContentChangeEvents []TextDocumentContentChangeEvent
 
-// MarshalJSONArray implements gojay's MarshalerJSONArray.
+// MarshalJSONArray implements gojay.MarshalerJSONArray.
 func (v textDocumentContentChangeEvents) MarshalJSONArray(enc *gojay.Encoder) {
 	for i := range v {
 		enc.ObjectOmitEmpty(&v[i])
 	}
 }
 
-// IsNil implements gojay's MarshalerJSONArray.
+// IsNil implements gojay.MarshalerJSONArray.
 func (v textDocumentContentChangeEvents) IsNil() bool { return len(v) == 0 }
 
-// UnmarshalJSONArray implements gojay's UnmarshalerJSONArray.
+// UnmarshalJSONArray implements gojay.UnmarshalerJSONArray.
 func (v *textDocumentContentChangeEvents) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	t := TextDocumentContentChangeEvent{}
 	if err := dec.Object(&t); err != nil {
@@ -55,13 +55,13 @@ func (v *textDocumentContentChangeEvents) UnmarshalJSONArray(dec *gojay.Decoder)
 	return nil
 }
 
-// compile time check whether the textDocumentContentChangeEvents implements a gojay.MarshalerJSONArray, gojay.UnmarshalerJSONArray and Pooler interface.
+// compile time check whether the textDocumentContentChangeEvents implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
 var (
 	_ gojay.MarshalerJSONArray   = (*textDocumentContentChangeEvents)(nil)
 	_ gojay.UnmarshalerJSONArray = (*textDocumentContentChangeEvents)(nil)
 )
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject.
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *DidChangeTextDocumentParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey(keyTextDocument, &v.TextDocument)
 	enc.ArrayKey(keyContentChanges, (*textDocumentContentChangeEvents)(&v.ContentChanges))
@@ -84,13 +84,13 @@ func (v *DidChangeTextDocumentParams) UnmarshalJSONObject(dec *gojay.Decoder, k 
 // NKeys returns the number of keys to unmarshal.
 func (v *DidChangeTextDocumentParams) NKeys() int { return 2 }
 
-// compile time check whether the DidChangeTextDocumentParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+// compile time check whether the DidChangeTextDocumentParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
 	_ gojay.MarshalerJSONObject   = (*DidChangeTextDocumentParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DidChangeTextDocumentParams)(nil)
 )
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject.
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *TextDocument) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey(keyURI, string(v.URI))
 	enc.StringKey(keyLanguageID, v.LanguageID)
@@ -119,13 +119,13 @@ func (v *TextDocument) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocument) NKeys() int { return 4 }
 
-// compile time check whether the TextDocument implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+// compile time check whether the TextDocument implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocument)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocument)(nil)
 )
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject.
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *TextDocumentChangeEvent) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey(keyDocument, &v.Document)
 }
@@ -144,13 +144,13 @@ func (v *TextDocumentChangeEvent) UnmarshalJSONObject(dec *gojay.Decoder, k stri
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentChangeEvent) NKeys() int { return 1 }
 
-// compile time check whether the TextDocumentChangeEvent implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+// compile time check whether the TextDocumentChangeEvent implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentChangeEvent)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentChangeEvent)(nil)
 )
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject.
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *TextDocumentWillSaveEvent) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey(keyDocument, &v.Document)
 	enc.Float64Key(keyReason, float64(v.Reason))
@@ -173,13 +173,13 @@ func (v *TextDocumentWillSaveEvent) UnmarshalJSONObject(dec *gojay.Decoder, k st
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentWillSaveEvent) NKeys() int { return 2 }
 
-// compile time check whether the TextDocumentWillSaveEvent implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+// compile time check whether the TextDocumentWillSaveEvent implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentWillSaveEvent)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentWillSaveEvent)(nil)
 )
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject.
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *TextDocumentContentChangeEvent) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKeyOmitEmpty(keyRange, v.Range)
 	enc.Float64KeyOmitEmpty(keyRangeLength, v.RangeLength)
@@ -208,13 +208,13 @@ func (v *TextDocumentContentChangeEvent) UnmarshalJSONObject(dec *gojay.Decoder,
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentContentChangeEvent) NKeys() int { return 3 }
 
-// compile time check whether the TextDocumentContentChangeEvent implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+// compile time check whether the TextDocumentContentChangeEvent implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentContentChangeEvent)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentContentChangeEvent)(nil)
 )
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject.
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *TextDocumentChangeRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ArrayKey(keyDocumentSelector, &v.DocumentSelector)
 	enc.Float64Key(keySyncKind, v.SyncKind)
@@ -237,13 +237,13 @@ func (v *TextDocumentChangeRegistrationOptions) UnmarshalJSONObject(dec *gojay.D
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentChangeRegistrationOptions) NKeys() int { return 2 }
 
-// compile time check whether the TextDocumentChangeRegistrationOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+// compile time check whether the TextDocumentChangeRegistrationOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentChangeRegistrationOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentChangeRegistrationOptions)(nil)
 )
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject.
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *WillSaveTextDocumentParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey(keyTextDocument, &v.TextDocument)
 	enc.Float64Key(keyReason, float64(v.Reason))
@@ -266,13 +266,13 @@ func (v *WillSaveTextDocumentParams) UnmarshalJSONObject(dec *gojay.Decoder, k s
 // NKeys returns the number of keys to unmarshal.
 func (v *WillSaveTextDocumentParams) NKeys() int { return 2 }
 
-// compile time check whether the WillSaveTextDocumentParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+// compile time check whether the WillSaveTextDocumentParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
 	_ gojay.MarshalerJSONObject   = (*WillSaveTextDocumentParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*WillSaveTextDocumentParams)(nil)
 )
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject.
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *DidSaveTextDocumentParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKeyOmitEmpty(keyText, v.Text)
 	enc.ObjectKey(keyTextDocument, &v.TextDocument)
@@ -295,13 +295,13 @@ func (v *DidSaveTextDocumentParams) UnmarshalJSONObject(dec *gojay.Decoder, k st
 // NKeys returns the number of keys to unmarshal.
 func (v *DidSaveTextDocumentParams) NKeys() int { return 2 }
 
-// compile time check whether the DidSaveTextDocumentParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+// compile time check whether the DidSaveTextDocumentParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
 	_ gojay.MarshalerJSONObject   = (*DidSaveTextDocumentParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DidSaveTextDocumentParams)(nil)
 )
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject.
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *TextDocumentSaveRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ArrayKey(keyDocumentSelector, &v.DocumentSelector)
 	enc.BoolKeyOmitEmpty(keyIncludeText, v.IncludeText)
@@ -324,13 +324,13 @@ func (v *TextDocumentSaveRegistrationOptions) UnmarshalJSONObject(dec *gojay.Dec
 // NKeys returns the number of keys to unmarshal.
 func (v *TextDocumentSaveRegistrationOptions) NKeys() int { return 2 }
 
-// compile time check whether the TextDocumentSaveRegistrationOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+// compile time check whether the TextDocumentSaveRegistrationOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentSaveRegistrationOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentSaveRegistrationOptions)(nil)
 )
 
-// MarshalJSONObject implements gojay's MarshalerJSONObject.
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *DidCloseTextDocumentParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey(keyTextDocument, &v.TextDocument)
 }
@@ -349,7 +349,7 @@ func (v *DidCloseTextDocumentParams) UnmarshalJSONObject(dec *gojay.Decoder, k s
 // NKeys returns the number of keys to unmarshal.
 func (v *DidCloseTextDocumentParams) NKeys() int { return 1 }
 
-// compile time check whether the DidCloseTextDocumentParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject and Pooler interface.
+// compile time check whether the DidCloseTextDocumentParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
 	_ gojay.MarshalerJSONObject   = (*DidCloseTextDocumentParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DidCloseTextDocumentParams)(nil)
