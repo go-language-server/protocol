@@ -833,7 +833,7 @@ var (
 func (v *CodeLens) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey(keyRange, &v.Range)
 	enc.ObjectKeyOmitEmpty(keyCommand, v.Command)
-	enc.AddInterfaceKeyOmitEmpty(keyData, &v.Data)
+	enc.AddInterfaceKeyOmitEmpty(keyData, v.Data)
 }
 
 // IsNil returns wether the structure is nil value or not.
