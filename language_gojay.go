@@ -1074,7 +1074,7 @@ var (
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *ColorPresentation) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey(keyLabel, v.Label)
-	enc.ObjectKey(keyTextEdit, v.TextEdit)
+	enc.ObjectKeyOmitEmpty(keyTextEdit, v.TextEdit)
 	enc.AddArrayKeyOmitEmpty(keyAdditionalTextEdits, (*TextEdits)(&v.AdditionalTextEdits))
 }
 
