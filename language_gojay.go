@@ -922,7 +922,7 @@ var (
 func (v *DocumentLink) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey(keyRange, &v.Range)
 	enc.StringKeyOmitEmpty(keyTarget, string(v.Target))
-	enc.AddInterfaceKeyOmitEmpty(keyData, &v.Data)
+	enc.AddInterfaceKeyOmitEmpty(keyData, v.Data)
 }
 
 // IsNil returns wether the structure is nil value or not.
