@@ -246,7 +246,7 @@ var (
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *WillSaveTextDocumentParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey(keyTextDocument, &v.TextDocument)
-	enc.Float64Key(keyReason, float64(v.Reason))
+	enc.Float64KeyOmitEmpty(keyReason, float64(v.Reason))
 }
 
 // IsNil returns wether the structure is nil value or not.
