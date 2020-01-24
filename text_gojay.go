@@ -33,20 +33,27 @@ var (
 	_ gojay.UnmarshalerJSONObject = (*DidOpenTextDocumentParams)(nil)
 )
 
-type textDocumentContentChangeEvents []TextDocumentContentChangeEvent
+// TextDocumentContentChangeEvents represents a slice of TextDocumentContentChangeEvent.
+type TextDocumentContentChangeEvents []TextDocumentContentChangeEvent
+
+// compile time check whether the TextDocumentContentChangeEvents implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
+var (
+	_ gojay.MarshalerJSONArray   = (*TextDocumentContentChangeEvents)(nil)
+	_ gojay.UnmarshalerJSONArray = (*TextDocumentContentChangeEvents)(nil)
+)
 
 // MarshalJSONArray implements gojay.MarshalerJSONArray.
-func (v textDocumentContentChangeEvents) MarshalJSONArray(enc *gojay.Encoder) {
+func (v TextDocumentContentChangeEvents) MarshalJSONArray(enc *gojay.Encoder) {
 	for i := range v {
 		enc.ObjectOmitEmpty(&v[i])
 	}
 }
 
 // IsNil implements gojay.MarshalerJSONArray.
-func (v textDocumentContentChangeEvents) IsNil() bool { return len(v) == 0 }
+func (v TextDocumentContentChangeEvents) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray implements gojay.UnmarshalerJSONArray.
-func (v *textDocumentContentChangeEvents) UnmarshalJSONArray(dec *gojay.Decoder) error {
+func (v *TextDocumentContentChangeEvents) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	t := TextDocumentContentChangeEvent{}
 	if err := dec.Object(&t); err != nil {
 		return err
@@ -55,16 +62,10 @@ func (v *textDocumentContentChangeEvents) UnmarshalJSONArray(dec *gojay.Decoder)
 	return nil
 }
 
-// compile time check whether the textDocumentContentChangeEvents implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
-var (
-	_ gojay.MarshalerJSONArray   = (*textDocumentContentChangeEvents)(nil)
-	_ gojay.UnmarshalerJSONArray = (*textDocumentContentChangeEvents)(nil)
-)
-
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *DidChangeTextDocumentParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey(keyTextDocument, &v.TextDocument)
-	enc.ArrayKey(keyContentChanges, (*textDocumentContentChangeEvents)(&v.ContentChanges))
+	enc.ArrayKey(keyContentChanges, (*TextDocumentContentChangeEvents)(&v.ContentChanges))
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -76,7 +77,7 @@ func (v *DidChangeTextDocumentParams) UnmarshalJSONObject(dec *gojay.Decoder, k 
 	case keyTextDocument:
 		return dec.Object(&v.TextDocument)
 	case keyContentChanges:
-		return dec.Array((*textDocumentContentChangeEvents)(&v.ContentChanges))
+		return dec.Array((*TextDocumentContentChangeEvents)(&v.ContentChanges))
 	}
 	return nil
 }

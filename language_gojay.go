@@ -72,20 +72,27 @@ var (
 	_ gojay.UnmarshalerJSONObject = (*CompletionContext)(nil)
 )
 
-type items []CompletionItem
+// CompletionItems represents a slice of CompletionItem.
+type CompletionItems []CompletionItem
+
+// compile time check whether the CompletionItems implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
+var (
+	_ gojay.MarshalerJSONArray   = (*CompletionItems)(nil)
+	_ gojay.UnmarshalerJSONArray = (*CompletionItems)(nil)
+)
 
 // MarshalJSONArray implements gojay.MarshalerJSONArray.
-func (v items) MarshalJSONArray(enc *gojay.Encoder) {
+func (v CompletionItems) MarshalJSONArray(enc *gojay.Encoder) {
 	for i := range v {
 		enc.ObjectOmitEmpty(&v[i])
 	}
 }
 
 // IsNil implements gojay.MarshalerJSONArray.
-func (v items) IsNil() bool { return len(v) == 0 }
+func (v CompletionItems) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray implements gojay.UnmarshalerJSONArray.
-func (v *items) UnmarshalJSONArray(dec *gojay.Decoder) error {
+func (v *CompletionItems) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	t := CompletionItem{}
 	if err := dec.Object(&t); err != nil {
 		return err
@@ -94,16 +101,10 @@ func (v *items) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	return nil
 }
 
-// compile time check whether the items implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
-var (
-	_ gojay.MarshalerJSONArray   = (*items)(nil)
-	_ gojay.UnmarshalerJSONArray = (*items)(nil)
-)
-
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *CompletionList) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKey(keyIsIncomplete, v.IsIncomplete)
-	enc.ArrayKey(keyItems, (*items)(&v.Items))
+	enc.ArrayKey(keyItems, (*CompletionItems)(&v.Items))
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -115,7 +116,7 @@ func (v *CompletionList) UnmarshalJSONObject(dec *gojay.Decoder, k string) error
 	case keyIsIncomplete:
 		return dec.Bool(&v.IsIncomplete)
 	case keyItems:
-		return dec.Array((*items)(&v.Items))
+		return dec.Array((*CompletionItems)(&v.Items))
 	}
 	return nil
 }
@@ -264,20 +265,27 @@ var (
 	_ gojay.UnmarshalerJSONObject = (*CompletionRegistrationOptions)(nil)
 )
 
-type signatures []SignatureInformation
+// SignatureInformations represents a slice of SignatureInformation.
+type SignatureInformations []SignatureInformation
+
+// compile time check whether the SignatureInformations implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
+var (
+	_ gojay.MarshalerJSONArray   = (*SignatureInformations)(nil)
+	_ gojay.UnmarshalerJSONArray = (*SignatureInformations)(nil)
+)
 
 // MarshalJSONArray implements gojay.MarshalerJSONArray.
-func (v signatures) MarshalJSONArray(enc *gojay.Encoder) {
+func (v SignatureInformations) MarshalJSONArray(enc *gojay.Encoder) {
 	for i := range v {
 		enc.ObjectOmitEmpty(&v[i])
 	}
 }
 
 // IsNil implements gojay.MarshalerJSONArray.
-func (v signatures) IsNil() bool { return len(v) == 0 }
+func (v SignatureInformations) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray implements gojay.UnmarshalerJSONArray.
-func (v *signatures) UnmarshalJSONArray(dec *gojay.Decoder) error {
+func (v *SignatureInformations) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	t := SignatureInformation{}
 	if err := dec.Object(&t); err != nil {
 		return err
@@ -286,15 +294,9 @@ func (v *signatures) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	return nil
 }
 
-// compile time check whether the signatures implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
-var (
-	_ gojay.MarshalerJSONArray   = (*signatures)(nil)
-	_ gojay.UnmarshalerJSONArray = (*signatures)(nil)
-)
-
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *SignatureHelp) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKey(keySignatures, (*signatures)(&v.Signatures))
+	enc.ArrayKey(keySignatures, (*SignatureInformations)(&v.Signatures))
 	enc.Float64KeyOmitEmpty(keyActiveParameter, v.ActiveParameter)
 	enc.Float64KeyOmitEmpty(keyActiveSignature, v.ActiveSignature)
 }
@@ -309,7 +311,7 @@ func (v *SignatureHelp) UnmarshalJSONObject(dec *gojay.Decoder, k string) error 
 		if v.Signatures == nil {
 			v.Signatures = []SignatureInformation{}
 		}
-		return dec.Array((*signatures)(&v.Signatures))
+		return dec.Array((*SignatureInformations)(&v.Signatures))
 	case keyActiveParameter:
 		return dec.Float64(&v.ActiveParameter)
 	case keyActiveSignature:
@@ -528,20 +530,27 @@ var (
 	_ gojay.UnmarshalerJSONObject = (*DocumentSymbolParams)(nil)
 )
 
-type documentSymbols []DocumentSymbol
+// DocumentSymbols represents a slice of DocumentSymbol.
+type DocumentSymbols []DocumentSymbol
+
+// compile time check whether the DocumentSymbols implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
+var (
+	_ gojay.MarshalerJSONArray   = (*DocumentSymbols)(nil)
+	_ gojay.UnmarshalerJSONArray = (*DocumentSymbols)(nil)
+)
 
 // MarshalJSONArray implements gojay.MarshalerJSONArray.
-func (v documentSymbols) MarshalJSONArray(enc *gojay.Encoder) {
+func (v DocumentSymbols) MarshalJSONArray(enc *gojay.Encoder) {
 	for i := range v {
 		enc.ObjectOmitEmpty(&v[i])
 	}
 }
 
 // IsNil implements gojay.MarshalerJSONArray.
-func (v documentSymbols) IsNil() bool { return len(v) == 0 }
+func (v DocumentSymbols) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray implements gojay.UnmarshalerJSONArray.
-func (v *documentSymbols) UnmarshalJSONArray(dec *gojay.Decoder) error {
+func (v *DocumentSymbols) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	t := DocumentSymbol{}
 	if err := dec.Object(&t); err != nil {
 		return err
@@ -549,12 +558,6 @@ func (v *documentSymbols) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	*v = append(*v, t)
 	return nil
 }
-
-// compile time check whether the documentSymbols implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
-var (
-	_ gojay.MarshalerJSONArray   = (*documentSymbols)(nil)
-	_ gojay.UnmarshalerJSONArray = (*documentSymbols)(nil)
-)
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *DocumentSymbol) MarshalJSONObject(enc *gojay.Encoder) {
@@ -564,7 +567,7 @@ func (v *DocumentSymbol) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKeyOmitEmpty(keyDeprecated, v.Deprecated)
 	enc.ObjectKey(keyRange, &v.Range)
 	enc.ObjectKey(keySelectionRange, &v.SelectionRange)
-	enc.ArrayKeyOmitEmpty(keyChildren, (*documentSymbols)(&v.Children))
+	enc.ArrayKeyOmitEmpty(keyChildren, (*DocumentSymbols)(&v.Children))
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -589,7 +592,7 @@ func (v *DocumentSymbol) UnmarshalJSONObject(dec *gojay.Decoder, k string) error
 		if v.Children == nil {
 			v.Children = []DocumentSymbol{}
 		}
-		return dec.Array((*documentSymbols)(&v.Children))
+		return dec.Array((*DocumentSymbols)(&v.Children))
 	}
 	return nil
 }

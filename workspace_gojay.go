@@ -116,20 +116,21 @@ var (
 	_ gojay.UnmarshalerJSONObject = (*DidChangeConfigurationParams)(nil)
 )
 
-type configurationItem []ConfigurationItem
+// ConfigurationItems represents a slice of ConfigurationItem.
+type ConfigurationItems []ConfigurationItem
 
 // MarshalJSONArray implements gojay.MarshalerJSONArray.
-func (v configurationItem) MarshalJSONArray(enc *gojay.Encoder) {
+func (v ConfigurationItems) MarshalJSONArray(enc *gojay.Encoder) {
 	for i := range v {
 		enc.ObjectOmitEmpty(&v[i])
 	}
 }
 
 // IsNil implements gojay.MarshalerJSONArray.
-func (v configurationItem) IsNil() bool { return len(v) == 0 }
+func (v ConfigurationItems) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray implements gojay.UnmarshalerJSONArray.
-func (v *configurationItem) UnmarshalJSONArray(dec *gojay.Decoder) error {
+func (v *ConfigurationItems) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	t := ConfigurationItem{}
 	if err := dec.Object(&t); err != nil {
 		return err
@@ -140,13 +141,13 @@ func (v *configurationItem) UnmarshalJSONArray(dec *gojay.Decoder) error {
 
 // compile time check whether the configurationItem implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
 var (
-	_ gojay.MarshalerJSONArray   = (*configurationItem)(nil)
-	_ gojay.UnmarshalerJSONArray = (*configurationItem)(nil)
+	_ gojay.MarshalerJSONArray   = (*ConfigurationItems)(nil)
+	_ gojay.UnmarshalerJSONArray = (*ConfigurationItems)(nil)
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *ConfigurationParams) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKey(keyItems, (*configurationItem)(&v.Items))
+	enc.ArrayKey(keyItems, (*ConfigurationItems)(&v.Items))
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -158,7 +159,7 @@ func (v *ConfigurationParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) 
 		if v.Items == nil {
 			v.Items = []ConfigurationItem{}
 		}
-		return dec.Array((*configurationItem)(&v.Items))
+		return dec.Array((*ConfigurationItems)(&v.Items))
 	}
 	return nil
 }

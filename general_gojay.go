@@ -205,6 +205,12 @@ var (
 // SymbolKinds represents a slice of SymbolKind.
 type SymbolKinds []SymbolKind
 
+// compile time check whether the SymbolKinds implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
+var (
+	_ gojay.MarshalerJSONArray   = (*SymbolKinds)(nil)
+	_ gojay.UnmarshalerJSONArray = (*SymbolKinds)(nil)
+)
+
 // MarshalJSONArray implements gojay.MarshalerJSONArray.
 func (v SymbolKinds) MarshalJSONArray(enc *gojay.Encoder) {
 	for i := range v {
@@ -224,12 +230,6 @@ func (v *SymbolKinds) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	*v = append(*v, value)
 	return nil
 }
-
-// compile time check whether the SymbolKinds implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
-var (
-	_ gojay.MarshalerJSONArray   = (*SymbolKinds)(nil)
-	_ gojay.UnmarshalerJSONArray = (*SymbolKinds)(nil)
-)
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *WorkspaceClientCapabilitiesSymbolKind) MarshalJSONObject(enc *gojay.Encoder) {
@@ -422,6 +422,12 @@ var (
 // CompletionItemKinds represents a slice of CompletionItemKind.
 type CompletionItemKinds []CompletionItemKind
 
+// compile time check whether the CompletionItemKinds implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
+var (
+	_ gojay.MarshalerJSONArray   = (*CompletionItemKinds)(nil)
+	_ gojay.UnmarshalerJSONArray = (*CompletionItemKinds)(nil)
+)
+
 // MarshalJSONArray implements gojay.MarshalerJSONArray.
 func (v CompletionItemKinds) MarshalJSONArray(enc *gojay.Encoder) {
 	for i := range v {
@@ -441,12 +447,6 @@ func (v *CompletionItemKinds) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	*v = append(*v, value)
 	return nil
 }
-
-// compile time check whether the CompletionItemKinds implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
-var (
-	_ gojay.MarshalerJSONArray   = (*CompletionItemKinds)(nil)
-	_ gojay.UnmarshalerJSONArray = (*CompletionItemKinds)(nil)
-)
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesCompletionItemKind) MarshalJSONObject(enc *gojay.Encoder) {
@@ -476,6 +476,12 @@ var (
 // MarkupKinds represents a slice of MarkupKind.
 type MarkupKinds []MarkupKind
 
+// compile time check whether the MarkupKinds implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
+var (
+	_ gojay.MarshalerJSONArray   = (*MarkupKinds)(nil)
+	_ gojay.UnmarshalerJSONArray = (*MarkupKinds)(nil)
+)
+
 // MarshalJSONArray implements gojay.MarshalerJSONArray.
 func (v MarkupKinds) MarshalJSONArray(enc *gojay.Encoder) {
 	for i := range v {
@@ -495,12 +501,6 @@ func (v *MarkupKinds) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	*v = append(*v, value)
 	return nil
 }
-
-// compile time check whether the MarkupKinds implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
-var (
-	_ gojay.MarshalerJSONArray   = (*MarkupKinds)(nil)
-	_ gojay.UnmarshalerJSONArray = (*MarkupKinds)(nil)
-)
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesCompletionItem) MarshalJSONObject(enc *gojay.Encoder) {
@@ -965,6 +965,12 @@ var (
 // CodeActionKinds represents a slice of CodeActionKind.
 type CodeActionKinds []CodeActionKind
 
+// compile time check whether the CodeActionKinds implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
+var (
+	_ gojay.MarshalerJSONArray   = (*CodeActionKinds)(nil)
+	_ gojay.UnmarshalerJSONArray = (*CodeActionKinds)(nil)
+)
+
 // MarshalJSONArray implements gojay.MarshalerJSONArray.
 func (v CodeActionKinds) MarshalJSONArray(enc *gojay.Encoder) {
 	for i := range v {
@@ -984,12 +990,6 @@ func (v *CodeActionKinds) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	*v = append(*v, value)
 	return nil
 }
-
-// compile time check whether the CodeActionKinds implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
-var (
-	_ gojay.MarshalerJSONArray   = (*CodeActionKinds)(nil)
-	_ gojay.UnmarshalerJSONArray = (*CodeActionKinds)(nil)
-)
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesCodeActionKind) MarshalJSONObject(enc *gojay.Encoder) {

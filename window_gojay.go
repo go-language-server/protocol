@@ -37,20 +37,27 @@ var (
 	_ gojay.UnmarshalerJSONObject = (*ShowMessageParams)(nil)
 )
 
-type actions []MessageActionItem
+// MessageActionItems represents a slice of MessageActionItem.
+type MessageActionItems []MessageActionItem
+
+// compile time check whether the MessageActionItems implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
+var (
+	_ gojay.MarshalerJSONArray   = (*MessageActionItems)(nil)
+	_ gojay.UnmarshalerJSONArray = (*MessageActionItems)(nil)
+)
 
 // MarshalJSONArray implements gojay.MarshalerJSONArray.
-func (v actions) MarshalJSONArray(enc *gojay.Encoder) {
+func (v MessageActionItems) MarshalJSONArray(enc *gojay.Encoder) {
 	for i := range v {
 		enc.ObjectOmitEmpty(&v[i])
 	}
 }
 
 // IsNil implements gojay.MarshalerJSONArray.
-func (v actions) IsNil() bool { return len(v) == 0 }
+func (v MessageActionItems) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray implements gojay.UnmarshalerJSONArray.
-func (v *actions) UnmarshalJSONArray(dec *gojay.Decoder) error {
+func (v *MessageActionItems) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	t := MessageActionItem{}
 	if err := dec.Object(&t); err != nil {
 		return err
@@ -59,15 +66,9 @@ func (v *actions) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	return nil
 }
 
-// compile time check whether the actions implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
-var (
-	_ gojay.MarshalerJSONArray   = (*actions)(nil)
-	_ gojay.UnmarshalerJSONArray = (*actions)(nil)
-)
-
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *ShowMessageRequestParams) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKey(keyActions, (*actions)(&v.Actions))
+	enc.ArrayKey(keyActions, (*MessageActionItems)(&v.Actions))
 	enc.StringKey(keyMessage, v.Message)
 	enc.Float64Key(keyType, float64(v.Type))
 }
@@ -79,7 +80,7 @@ func (v *ShowMessageRequestParams) IsNil() bool { return v == nil }
 func (v *ShowMessageRequestParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keyActions:
-		return dec.Array((*actions)(&v.Actions))
+		return dec.Array((*MessageActionItems)(&v.Actions))
 	case keyMessage:
 		return dec.String(&v.Message)
 	case keyType:

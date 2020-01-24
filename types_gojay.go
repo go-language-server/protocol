@@ -11,6 +11,12 @@ import "github.com/francoispqt/gojay"
 // Interfaces represents a slice of interface.
 type Interfaces []interface{}
 
+// compile time check whether the Interfaces implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
+var (
+	_ gojay.MarshalerJSONArray   = (*Interfaces)(nil)
+	_ gojay.UnmarshalerJSONArray = (*Interfaces)(nil)
+)
+
 // MarshalJSONArray implements gojay.MarshalerJSONArray.
 func (v Interfaces) MarshalJSONArray(enc *gojay.Encoder) {
 	for i := range v {
@@ -31,14 +37,14 @@ func (v *Interfaces) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	return nil
 }
 
-// compile time check whether the Interfaces implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
-var (
-	_ gojay.MarshalerJSONArray   = (*Interfaces)(nil)
-	_ gojay.UnmarshalerJSONArray = (*Interfaces)(nil)
-)
-
 // Strings represents a slice of string.
 type Strings []string
+
+// compile time check whether the Strings implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
+var (
+	_ gojay.MarshalerJSONArray   = (*Strings)(nil)
+	_ gojay.UnmarshalerJSONArray = (*Strings)(nil)
+)
 
 // MarshalJSONArray implements gojay.MarshalerJSONArray.
 func (v Strings) MarshalJSONArray(enc *gojay.Encoder) {
@@ -60,14 +66,14 @@ func (v *Strings) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	return nil
 }
 
-// compile time check whether the Strings implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
-var (
-	_ gojay.MarshalerJSONArray   = (*Strings)(nil)
-	_ gojay.UnmarshalerJSONArray = (*Strings)(nil)
-)
-
 // StringInterfaceMap represents a string key and interface value map.
 type StringInterfaceMap map[string]interface{}
+
+// compile time check whether the Interfaces implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*StringInterfaceMap)(nil)
+	_ gojay.UnmarshalerJSONObject = (*StringInterfaceMap)(nil)
+)
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (m StringInterfaceMap) MarshalJSONObject(enc *gojay.Encoder) {
@@ -97,14 +103,14 @@ func (m StringInterfaceMap) NKeys() int {
 	return 0
 }
 
-// compile time check whether the Interfaces implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var (
-	_ gojay.MarshalerJSONObject   = (*StringInterfaceMap)(nil)
-	_ gojay.UnmarshalerJSONObject = (*StringInterfaceMap)(nil)
-)
-
 // StringStringMap represents a string key and string value map.
 type StringStringMap map[string]string
+
+// compile time check whether the Interfaces implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
+var (
+	_ gojay.MarshalerJSONObject   = (*StringStringMap)(nil)
+	_ gojay.UnmarshalerJSONObject = (*StringStringMap)(nil)
+)
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (m StringStringMap) MarshalJSONObject(enc *gojay.Encoder) {
@@ -133,9 +139,3 @@ func (m StringStringMap) UnmarshalJSONObject(dec *gojay.Decoder, k string) error
 func (m StringStringMap) NKeys() int {
 	return 0
 }
-
-// compile time check whether the Interfaces implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interface.
-var (
-	_ gojay.MarshalerJSONObject   = (*StringStringMap)(nil)
-	_ gojay.UnmarshalerJSONObject = (*StringStringMap)(nil)
-)

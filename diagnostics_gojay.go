@@ -13,6 +13,12 @@ import (
 // Diagnostics represents a slice of Diagnostics.
 type Diagnostics []Diagnostic
 
+// compile time check whether the Diagnostics implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
+var (
+	_ gojay.MarshalerJSONArray   = (*Diagnostics)(nil)
+	_ gojay.UnmarshalerJSONArray = (*Diagnostics)(nil)
+)
+
 // MarshalJSONArray implements gojay.MarshalerJSONArray.
 func (v Diagnostics) MarshalJSONArray(enc *gojay.Encoder) {
 	for i := range v {
@@ -32,12 +38,6 @@ func (v *Diagnostics) UnmarshalJSONArray(dec *gojay.Decoder) error {
 
 // IsNil implements gojay.MarshalerJSONArray.
 func (v Diagnostics) IsNil() bool { return len(v) == 0 }
-
-// compile time check whether the Diagnostics implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
-var (
-	_ gojay.MarshalerJSONArray   = (*Diagnostics)(nil)
-	_ gojay.UnmarshalerJSONArray = (*Diagnostics)(nil)
-)
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *PublishDiagnosticsParams) MarshalJSONObject(enc *gojay.Encoder) {

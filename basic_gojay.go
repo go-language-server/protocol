@@ -557,6 +557,12 @@ var (
 // TextEditsMap represents a map of WorkspaceEdit.Changes.
 type TextEditsMap map[uri.URI][]TextEdit
 
+// compile time check whether the TextEditsMap implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextEditsMap)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextEditsMap)(nil)
+)
+
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v TextEditsMap) MarshalJSONObject(enc *gojay.Encoder) {
 	for key, value := range v {
@@ -586,6 +592,12 @@ func (v TextEditsMap) NKeys() int { return 0 }
 // TextDocumentEdits represents a TextDocumentEdit slice.
 type TextDocumentEdits []TextDocumentEdit
 
+// compile time check whether the documentChanges implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
+var (
+	_ gojay.MarshalerJSONArray   = (*TextDocumentEdits)(nil)
+	_ gojay.UnmarshalerJSONArray = (*TextDocumentEdits)(nil)
+)
+
 // MarshalJSONArray implements gojay.MarshalerJSONArray.
 func (v TextDocumentEdits) MarshalJSONArray(enc *gojay.Encoder) {
 	for i := range v {
@@ -605,12 +617,6 @@ func (v *TextDocumentEdits) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	*v = append(*v, t)
 	return nil
 }
-
-// compile time check whether the documentChanges implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
-var (
-	_ gojay.MarshalerJSONArray   = (*TextDocumentEdits)(nil)
-	_ gojay.UnmarshalerJSONArray = (*TextDocumentEdits)(nil)
-)
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *WorkspaceEdit) MarshalJSONObject(enc *gojay.Encoder) {

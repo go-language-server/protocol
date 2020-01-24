@@ -50,20 +50,27 @@ var (
 	_ gojay.UnmarshalerJSONObject = (*Registration)(nil)
 )
 
-type registrations []Registration
+// Registrations represents a slice of Registration.
+type Registrations []Registration
+
+// compile time check whether the Registrations implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
+var (
+	_ gojay.MarshalerJSONArray   = (*Registrations)(nil)
+	_ gojay.UnmarshalerJSONArray = (*Registrations)(nil)
+)
 
 // MarshalJSONArray implements gojay.MarshalerJSONArray.
-func (v registrations) MarshalJSONArray(enc *gojay.Encoder) {
+func (v Registrations) MarshalJSONArray(enc *gojay.Encoder) {
 	for i := range v {
 		enc.ObjectOmitEmpty(&v[i])
 	}
 }
 
 // IsNil implements gojay.MarshalerJSONArray.
-func (v registrations) IsNil() bool { return len(v) == 0 }
+func (v Registrations) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray implements gojay.UnmarshalerJSONArray.
-func (v *registrations) UnmarshalJSONArray(dec *gojay.Decoder) error {
+func (v *Registrations) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	t := Registration{}
 	if err := dec.Object(&t); err != nil {
 		return err
@@ -72,15 +79,9 @@ func (v *registrations) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	return nil
 }
 
-// compile time check whether the registrations implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
-var (
-	_ gojay.MarshalerJSONArray   = (*registrations)(nil)
-	_ gojay.UnmarshalerJSONArray = (*registrations)(nil)
-)
-
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *RegistrationParams) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKey(keyRegistrations, (*registrations)(&v.Registrations))
+	enc.ArrayKey(keyRegistrations, (*Registrations)(&v.Registrations))
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -89,7 +90,7 @@ func (v *RegistrationParams) IsNil() bool { return v == nil }
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *RegistrationParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyRegistrations {
-		return dec.Array((*registrations)(&v.Registrations))
+		return dec.Array((*Registrations)(&v.Registrations))
 	}
 	return nil
 }
@@ -157,20 +158,27 @@ var (
 	_ gojay.UnmarshalerJSONObject = (*Unregistration)(nil)
 )
 
-type unregisterations []Unregistration
+// Unregisterations represents a slice of Unregistration.
+type Unregisterations []Unregistration
+
+// compile time check whether the Unregisterations implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
+var (
+	_ gojay.MarshalerJSONArray   = (*Unregisterations)(nil)
+	_ gojay.UnmarshalerJSONArray = (*Unregisterations)(nil)
+)
 
 // MarshalJSONArray implements gojay.MarshalerJSONArray.
-func (v unregisterations) MarshalJSONArray(enc *gojay.Encoder) {
+func (v Unregisterations) MarshalJSONArray(enc *gojay.Encoder) {
 	for i := range v {
 		enc.ObjectOmitEmpty(&v[i])
 	}
 }
 
 // IsNil implements gojay.MarshalerJSONArray.
-func (v unregisterations) IsNil() bool { return len(v) == 0 }
+func (v Unregisterations) IsNil() bool { return len(v) == 0 }
 
 // UnmarshalJSONArray implements gojay.UnmarshalerJSONArray.
-func (v *unregisterations) UnmarshalJSONArray(dec *gojay.Decoder) error {
+func (v *Unregisterations) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	t := Unregistration{}
 	if err := dec.Object(&t); err != nil {
 		return err
@@ -179,15 +187,9 @@ func (v *unregisterations) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	return nil
 }
 
-// compile time check whether the unregisterations implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
-var (
-	_ gojay.MarshalerJSONArray   = (*unregisterations)(nil)
-	_ gojay.UnmarshalerJSONArray = (*unregisterations)(nil)
-)
-
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *UnregistrationParams) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKey(keyUnregisterations, (*unregisterations)(&v.Unregisterations))
+	enc.ArrayKey(keyUnregisterations, (*Unregisterations)(&v.Unregisterations))
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -196,7 +198,7 @@ func (v *UnregistrationParams) IsNil() bool { return v == nil }
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *UnregistrationParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyUnregisterations {
-		return dec.Array((*unregisterations)(&v.Unregisterations))
+		return dec.Array((*Unregisterations)(&v.Unregisterations))
 	}
 	return nil
 }
