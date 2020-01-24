@@ -13,8 +13,8 @@ type Interfaces []interface{}
 
 // MarshalJSONArray implements gojay.MarshalerJSONArray.
 func (v Interfaces) MarshalJSONArray(enc *gojay.Encoder) {
-	for _, t := range v {
-		enc.AddInterface(t)
+	for i := range v {
+		enc.AddInterface(v[i])
 	}
 }
 
@@ -42,8 +42,8 @@ type Strings []string
 
 // MarshalJSONArray implements gojay.MarshalerJSONArray.
 func (v Strings) MarshalJSONArray(enc *gojay.Encoder) {
-	for _, t := range v {
-		enc.String(t)
+	for i := range v {
+		enc.String(v[i])
 	}
 }
 

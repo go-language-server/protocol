@@ -41,8 +41,8 @@ type actions []MessageActionItem
 
 // MarshalJSONArray implements gojay.MarshalerJSONArray.
 func (v actions) MarshalJSONArray(enc *gojay.Encoder) {
-	for _, t := range v {
-		enc.ObjectOmitEmpty(&t)
+	for i := range v {
+		enc.ObjectOmitEmpty(&v[i])
 	}
 }
 

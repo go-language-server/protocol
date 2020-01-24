@@ -206,8 +206,8 @@ type FileEvents []*FileEvent
 
 // MarshalJSONArray implements gojay.MarshalerJSONArray.
 func (v FileEvents) MarshalJSONArray(enc *gojay.Encoder) {
-	for _, t := range v {
-		enc.ObjectOmitEmpty(t)
+	for i := range v {
+		enc.ObjectOmitEmpty(v[i])
 	}
 }
 
@@ -292,8 +292,8 @@ type FileSystemWatchers []FileSystemWatcher
 
 // MarshalJSONArray implements gojay.MarshalerJSONArray.
 func (v FileSystemWatchers) MarshalJSONArray(enc *gojay.Encoder) {
-	for _, t := range v {
-		enc.ObjectOmitEmpty(&t)
+	for i := range v {
+		enc.ObjectOmitEmpty(&v[i])
 	}
 }
 
