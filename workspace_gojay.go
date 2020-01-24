@@ -93,7 +93,7 @@ var (
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *DidChangeConfigurationParams) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.AddInterfaceKeyOmitEmpty(keySettings, &v.Settings)
+	enc.AddInterfaceKeyOmitEmpty(keySettings, v.Settings)
 }
 
 // IsNil returns wether the structure is nil value or not.
