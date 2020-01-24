@@ -155,6 +155,9 @@ func (v *ConfigurationParams) IsNil() bool { return v == nil }
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ConfigurationParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyItems {
+		if v.Items == nil {
+			v.Items = []ConfigurationItem{}
+		}
 		return dec.Array((*configurationItem)(&v.Items))
 	}
 	return nil
