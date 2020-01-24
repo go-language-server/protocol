@@ -12,15 +12,31 @@ import (
 
 func testRegistration(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"id":"1","method":"testMethod","registerOptions":{"foo":"bar"}}`
-		wantNil     = `{"id":"1","method":"testMethod"}`
-		wantInvalid = `{"id":"2","method":"invalidMethod","registerOptions":{"baz":"qux"}}`
+		want           = `{"id":"1","method":"testMethod","registerOptions":{"foo":"bar"}}`
+		wantInterfaces = `{"id":"1","method":"testMethod","registerOptions":["foo","bar"]}`
+		wantNil        = `{"id":"1","method":"testMethod"}`
+		wantInvalid    = `{"id":"2","method":"invalidMethod","registerOptions":{"baz":"qux"}}`
 	)
-	wantType := Registration{
+	wantTypeStringInterface := Registration{
 		ID:     "1",
 		Method: "testMethod",
 		RegisterOptions: map[string]interface{}{
 			"foo": "bar",
+		},
+	}
+	wantTypeStringString := Registration{
+		ID:     "1",
+		Method: "testMethod",
+		RegisterOptions: map[string]string{
+			"foo": "bar",
+		},
+	}
+	wantTypeInterfaces := Registration{
+		ID:     "1",
+		Method: "testMethod",
+		RegisterOptions: []interface{}{
+			"foo",
+			"bar",
 		},
 	}
 	wantTypeNil := Registration{
@@ -37,9 +53,23 @@ func testRegistration(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc
 			wantErr        bool
 		}{
 			{
-				name:           "Valid",
-				field:          wantType,
+				name:           "ValidStringInterface",
+				field:          wantTypeStringInterface,
 				want:           want,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name:           "ValidStringString",
+				field:          wantTypeStringString,
+				want:           want,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name:           "ValidInterfaces",
+				field:          wantTypeInterfaces,
+				want:           wantInterfaces,
 				wantMarshalErr: false,
 				wantErr:        false,
 			},
@@ -52,7 +82,7 @@ func testRegistration(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc
 			},
 			{
 				name:           "Invalid",
-				field:          wantType,
+				field:          wantTypeStringInterface,
 				want:           wantInvalid,
 				wantMarshalErr: false,
 				wantErr:        true,
@@ -84,9 +114,16 @@ func testRegistration(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc
 			wantErr          bool
 		}{
 			{
-				name:             "Valid",
+				name:             "ValidStringInterface",
 				field:            want,
-				want:             wantType,
+				want:             wantTypeStringInterface,
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:             "ValidInterfaces",
+				field:            wantInterfaces,
+				want:             wantTypeInterfaces,
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
@@ -100,7 +137,7 @@ func testRegistration(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc
 			{
 				name:             "Invalid",
 				field:            wantInvalid,
-				want:             wantType,
+				want:             wantTypeStringInterface,
 				wantUnmarshalErr: false,
 				wantErr:          true,
 			},
