@@ -11,6 +11,41 @@ import (
 	"go.uber.org/zap"
 )
 
+// serverHandler represents a server handler.
+type serverHandler struct {
+	server ServerInterface
+}
+
+// compile time check whether the serverHandler implements jsonrpc2.Handler interface.
+var _ jsonrpc2.Handler = (*serverHandler)(nil)
+
+// Cancel implements Handler interface.
+func (serverHandler) Cancel(ctx context.Context, conn *jsonrpc2.Conn, id jsonrpc2.ID, canceled bool) bool {
+	return false
+}
+
+// Request implements Handler interface.
+func (serverHandler) Request(ctx context.Context, conn *jsonrpc2.Conn, direction jsonrpc2.Direction, r *jsonrpc2.WireRequest) context.Context {
+	return ctx
+}
+
+// Response implements Handler interface.
+func (serverHandler) Response(ctx context.Context, conn *jsonrpc2.Conn, direction jsonrpc2.Direction, r *jsonrpc2.WireResponse) context.Context {
+	return ctx
+}
+
+// Done implements Handler interface.
+func (serverHandler) Done(ctx context.Context, err error) {}
+
+// Read implements Handler interface.
+func (serverHandler) Read(ctx context.Context, bytes int64) context.Context { return ctx }
+
+// Write implements Handler interface.
+func (serverHandler) Write(ctx context.Context, bytes int64) context.Context { return ctx }
+
+// Error implements Handler interface.
+func (serverHandler) Error(ctx context.Context, err error) {}
+
 // ServerInterface represents a Language Server Protocol server.
 type ServerInterface interface {
 	Run(ctx context.Context) (err error)
@@ -177,16 +212,16 @@ const (
 	MethodTextDocumentWillSaveWaitUntil = "textDocument/willSaveWaitUntil"
 )
 
-// Server implements a Language Server Protocol server.
-type Server struct {
+// server implements a Language Server Protocol server.
+type server struct {
 	*jsonrpc2.Conn
 	logger *zap.Logger
 }
 
-var _ ServerInterface = (*Server)(nil)
+var _ ServerInterface = (*server)(nil)
 
 // Run runs the Language Server Protocol server.
-func (s *Server) Run(ctx context.Context) (err error) {
+func (s *server) Run(ctx context.Context) (err error) {
 	err = s.Conn.Run(ctx)
 	return
 }
@@ -204,7 +239,7 @@ func (s *Server) Run(ctx context.Context) (err error) {
 // it has responded with an InitializeResult, with the exception that during the initialize request
 // the server is allowed to send the notifications window/showMessage, window/logMessage and telemetry/event
 // as well as the window/showMessageRequest request to the client.
-func (s *Server) Initialize(ctx context.Context, params *InitializeParams) (result *InitializeResult, err error) {
+func (s *server) Initialize(ctx context.Context, params *InitializeParams) (result *InitializeResult, err error) {
 	s.logger.Debug("call " + MethodInitialize)
 	defer s.logger.Debug("end " + MethodInitialize)
 
@@ -219,7 +254,7 @@ func (s *Server) Initialize(ctx context.Context, params *InitializeParams) (resu
 //
 // The server can use the initialized notification for example to dynamically register capabilities.
 // The initialized notification may only be sent once.
-func (s *Server) Initialized(ctx context.Context, params *InitializedParams) (err error) {
+func (s *server) Initialized(ctx context.Context, params *InitializedParams) (err error) {
 	s.logger.Debug("notify " + MethodInitialized)
 	defer s.logger.Debug("end " + MethodInitialized)
 
@@ -234,7 +269,7 @@ func (s *Server) Initialized(ctx context.Context, params *InitializedParams) (er
 //
 // Clients must not sent any notifications other than `exit` or requests to a server to which they have sent a shutdown requests.
 // If a server receives requests after a shutdown request those requests should be errored with `InvalidRequest`.
-func (s *Server) Shutdown(ctx context.Context) (err error) {
+func (s *server) Shutdown(ctx context.Context) (err error) {
 	s.logger.Debug("call " + MethodShutdown)
 	defer s.logger.Debug("end " + MethodShutdown)
 
@@ -245,7 +280,7 @@ func (s *Server) Shutdown(ctx context.Context) (err error) {
 // Exit a notification to ask the server to exit its process.
 //
 // The server should exit with success code 0 if the shutdown request has been received before; otherwise with error code 1.
-func (s *Server) Exit(ctx context.Context) (err error) {
+func (s *server) Exit(ctx context.Context) (err error) {
 	s.logger.Debug("notify " + MethodExit)
 	defer s.logger.Debug("end " + MethodExit)
 
@@ -261,21 +296,21 @@ func (s *Server) Exit(ctx context.Context) (err error) {
 // To ensure that a server is useful in many clients the commands specified in a code actions should be handled by the
 // server and not by the client (see `workspace/executeCommand` and `ServerCapabilities.executeCommandProvider`).
 // If the client supports providing edits with a code action then the mode should be used.
-func (s *Server) CodeAction(ctx context.Context, params *CodeActionParams) (result []CodeAction, err error) {
+func (s *server) CodeAction(ctx context.Context, params *CodeActionParams) (result []CodeAction, err error) {
 	err = s.Conn.Call(ctx, MethodTextDocumentCodeAction, params, &result)
 
 	return result, err
 }
 
 // CodeLens sends the request from the client to the server to compute code lenses for a given text document.
-func (s *Server) CodeLens(ctx context.Context, params *CodeLensParams) (result []CodeLens, err error) {
+func (s *server) CodeLens(ctx context.Context, params *CodeLensParams) (result []CodeLens, err error) {
 	err = s.Conn.Call(ctx, MethodTextDocumentCodeLens, params, &result)
 
 	return result, err
 }
 
 // CodeLensResolve sends the request from the client to the server to resolve the command for a given code lens item.
-func (s *Server) CodeLensResolve(ctx context.Context, params *CodeLens) (result *CodeLens, err error) {
+func (s *server) CodeLensResolve(ctx context.Context, params *CodeLens) (result *CodeLens, err error) {
 	result = new(CodeLens)
 	err = s.Conn.Call(ctx, MethodCodeLensResolve, params, result)
 
@@ -288,7 +323,7 @@ func (s *Server) CodeLensResolve(ctx context.Context, params *CodeLens) (result 
 //
 // - modify a color reference.
 // - show in a color picker and let users pick one of the presentations
-func (s *Server) ColorPresentation(ctx context.Context, params *ColorPresentationParams) (result []ColorPresentation, err error) {
+func (s *server) ColorPresentation(ctx context.Context, params *ColorPresentationParams) (result []ColorPresentation, err error) {
 	err = s.Conn.Call(ctx, MethodTextDocumentColorPresentation, params, &result)
 
 	return result, err
@@ -307,7 +342,7 @@ func (s *Server) ColorPresentation(ctx context.Context, params *ColorPresentatio
 // The returned completion item should have the documentation property filled in. The request can delay the computation of
 // the `detail` and `documentation` properties. However, properties that are needed for the initial sorting and filtering,
 // like `sortText`, `filterText`, `insertText`, and `textEdit` must be provided in the `textDocument/completion` response and must not be changed during resolve.
-func (s *Server) Completion(ctx context.Context, params *CompletionParams) (result *CompletionList, err error) {
+func (s *server) Completion(ctx context.Context, params *CompletionParams) (result *CompletionList, err error) {
 	s.logger.Debug("call " + MethodTextDocumentCompletion)
 	defer s.logger.Debug("end " + MethodTextDocumentCompletion)
 
@@ -318,7 +353,7 @@ func (s *Server) Completion(ctx context.Context, params *CompletionParams) (resu
 }
 
 // CompletionResolve sends the request from the client to the server to resolve additional information for a given completion item.
-func (s *Server) CompletionResolve(ctx context.Context, params *CompletionItem) (result *CompletionItem, err error) {
+func (s *server) CompletionResolve(ctx context.Context, params *CompletionItem) (result *CompletionItem, err error) {
 	result = new(CompletionItem)
 	err = s.Conn.Call(ctx, MethodCompletionItemResolve, params, result)
 
@@ -330,7 +365,7 @@ func (s *Server) CompletionResolve(ctx context.Context, params *CompletionItem) 
 // The result type LocationLink[] got introduce with version 3.14.0 and depends in the corresponding client capability `clientCapabilities.textDocument.declaration.linkSupport`.
 //
 // Since version 3.14.0.
-func (s *Server) Declaration(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
+func (s *server) Declaration(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
 	err = s.Conn.Call(ctx, MethodTextDocumentDeclaration, params, &result)
 
 	return result, err
@@ -341,7 +376,7 @@ func (s *Server) Declaration(ctx context.Context, params *TextDocumentPositionPa
 // The result type `[]LocationLink` got introduce with version 3.14.0 and depends in the corresponding client capability `clientCapabilities.textDocument.definition.linkSupport`.
 //
 // Since version 3.14.0.
-func (s *Server) Definition(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
+func (s *server) Definition(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
 	s.logger.Debug("call " + MethodTextDocumentDefinition)
 	defer s.logger.Debug("end " + MethodTextDocumentDefinition)
 
@@ -353,7 +388,7 @@ func (s *Server) Definition(ctx context.Context, params *TextDocumentPositionPar
 // DidChange sends the notification from the client to the server to signal changes to a text document.
 //
 // In 2.0 the shape of the params has changed to include proper version numbers and language ids.
-func (s *Server) DidChange(ctx context.Context, params *DidChangeTextDocumentParams) (err error) {
+func (s *server) DidChange(ctx context.Context, params *DidChangeTextDocumentParams) (err error) {
 	s.logger.Debug("notify " + MethodTextDocumentDidChange)
 	defer s.logger.Debug("end " + MethodTextDocumentDidChange)
 
@@ -362,7 +397,7 @@ func (s *Server) DidChange(ctx context.Context, params *DidChangeTextDocumentPar
 }
 
 // DidChangeConfiguration sends the notification from the client to the server to signal the change of configuration settings.
-func (s *Server) DidChangeConfiguration(ctx context.Context, params *DidChangeConfigurationParams) (err error) {
+func (s *server) DidChangeConfiguration(ctx context.Context, params *DidChangeConfigurationParams) (err error) {
 	err = s.Conn.Notify(ctx, MethodWorkspaceDidChangeConfiguration, params)
 	return
 }
@@ -371,7 +406,7 @@ func (s *Server) DidChangeConfiguration(ctx context.Context, params *DidChangeCo
 //
 // It is recommended that servers register for these file events using the registration mechanism.
 // In former implementations clients pushed file events without the server actively asking for it.
-func (s *Server) DidChangeWatchedFiles(ctx context.Context, params *DidChangeWatchedFilesParams) (err error) {
+func (s *server) DidChangeWatchedFiles(ctx context.Context, params *DidChangeWatchedFilesParams) (err error) {
 	err = s.Conn.Notify(ctx, MethodWorkspaceDidChangeWatchedFiles, params)
 	return
 }
@@ -383,7 +418,7 @@ func (s *Server) DidChangeWatchedFiles(ctx context.Context, params *DidChangeWat
 // To register for the workspace/didChangeWorkspaceFolders send a client/registerCapability request from the server to the client.
 //
 // The registration parameter must have a registrations item of the following form, where id is a unique id used to unregister the capability (the example uses a UUID)
-func (s *Server) DidChangeWorkspaceFolders(ctx context.Context, params *DidChangeWorkspaceFoldersParams) (err error) {
+func (s *server) DidChangeWorkspaceFolders(ctx context.Context, params *DidChangeWorkspaceFoldersParams) (err error) {
 	err = s.Conn.Notify(ctx, MethodWorkspaceDidChangeWorkspaceFolders, params)
 	return
 }
@@ -396,7 +431,7 @@ func (s *Server) DidChangeWorkspaceFolders(ctx context.Context, params *DidChang
 //
 // A close notification requires a previous open notification to be sent.
 // Note that a server’s ability to fulfill requests is independent of whether a text document is open or closed.
-func (s *Server) DidClose(ctx context.Context, params *DidCloseTextDocumentParams) (err error) {
+func (s *server) DidClose(ctx context.Context, params *DidCloseTextDocumentParams) (err error) {
 	err = s.Conn.Notify(ctx, MethodTextDocumentDidClose, params)
 	return
 }
@@ -409,7 +444,7 @@ func (s *Server) DidClose(ctx context.Context, params *DidCloseTextDocumentParam
 // An open notification must not be sent more than once without a corresponding close notification send before.
 // This means open and close notification must be balanced and the max open count for a particular textDocument is one.
 // Note that a server’s ability to fulfill requests is independent of whether a text document is open or closed.
-func (s *Server) DidOpen(ctx context.Context, params *DidOpenTextDocumentParams) (err error) {
+func (s *server) DidOpen(ctx context.Context, params *DidOpenTextDocumentParams) (err error) {
 	s.logger.Debug("call " + MethodTextDocumentDidOpen)
 	defer s.logger.Debug("end " + MethodTextDocumentDidOpen)
 
@@ -418,7 +453,7 @@ func (s *Server) DidOpen(ctx context.Context, params *DidOpenTextDocumentParams)
 }
 
 // DidSave sends the notification from the client to the server when the document was saved in the client.
-func (s *Server) DidSave(ctx context.Context, params *DidSaveTextDocumentParams) (err error) {
+func (s *server) DidSave(ctx context.Context, params *DidSaveTextDocumentParams) (err error) {
 	err = s.Conn.Notify(ctx, MethodTextDocumentDidSave, params)
 	return
 }
@@ -432,7 +467,7 @@ func (s *Server) DidSave(ctx context.Context, params *DidSaveTextDocumentParams)
 //
 // - Color boxes showing the actual color next to the reference
 // - Show a color picker when a color reference is edited
-func (s *Server) DocumentColor(ctx context.Context, params *DocumentColorParams) (result []ColorInformation, err error) {
+func (s *server) DocumentColor(ctx context.Context, params *DocumentColorParams) (result []ColorInformation, err error) {
 	err = s.Conn.Call(ctx, MethodTextDocumentDocumentColor, params, &result)
 
 	return result, err
@@ -444,21 +479,21 @@ func (s *Server) DocumentColor(ctx context.Context, params *DocumentColorParams)
 // However we kept ‘textDocument/documentHighlight’ and ‘textDocument/references’ separate requests since the first one is allowed to be more fuzzy.
 //
 // Symbol matches usually have a `DocumentHighlightKind` of `Read` or `Write` whereas fuzzy or textual matches use `Text` as the kind.
-func (s *Server) DocumentHighlight(ctx context.Context, params *TextDocumentPositionParams) (result []DocumentHighlight, err error) {
+func (s *server) DocumentHighlight(ctx context.Context, params *TextDocumentPositionParams) (result []DocumentHighlight, err error) {
 	err = s.Conn.Call(ctx, MethodTextDocumentDocumentHighlight, params, &result)
 
 	return result, err
 }
 
 // DocumentLink sends the request from the client to the server to request the location of links in a document.
-func (s *Server) DocumentLink(ctx context.Context, params *DocumentLinkParams) (result []DocumentLink, err error) {
+func (s *server) DocumentLink(ctx context.Context, params *DocumentLinkParams) (result []DocumentLink, err error) {
 	err = s.Conn.Call(ctx, MethodTextDocumentDocumentLink, params, &result)
 
 	return result, err
 }
 
 // DocumentLinkResolve sends the request from the client to the server to resolve the target of a given document link.
-func (s *Server) DocumentLinkResolve(ctx context.Context, params *DocumentLink) (result *DocumentLink, err error) {
+func (s *server) DocumentLinkResolve(ctx context.Context, params *DocumentLink) (result *DocumentLink, err error) {
 	result = new(DocumentLink)
 	err = s.Conn.Call(ctx, MethodDocumentLinkResolve, params, result)
 
@@ -468,7 +503,7 @@ func (s *Server) DocumentLinkResolve(ctx context.Context, params *DocumentLink) 
 // DocumentSymbol sends the request from the client to the server to return a flat list of all symbols found in a given text document.
 //
 // Neither the symbol’s location range nor the symbol’s container name should be used to infer a hierarchy.
-func (s *Server) DocumentSymbol(ctx context.Context, params *DocumentSymbolParams) (result []DocumentSymbol, err error) {
+func (s *server) DocumentSymbol(ctx context.Context, params *DocumentSymbolParams) (result []DocumentSymbol, err error) {
 	err = s.Conn.Call(ctx, MethodTextDocumentDocumentSymbol, params, &result)
 
 	return result, err
@@ -478,7 +513,7 @@ func (s *Server) DocumentSymbol(ctx context.Context, params *DocumentSymbolParam
 //
 // In most cases the server creates a `WorkspaceEdit` structure and applies the changes to the workspace using the
 // request `workspace/applyEdit` which is sent from the server to the client.
-func (s *Server) ExecuteCommand(ctx context.Context, params *ExecuteCommandParams) (result interface{}, err error) {
+func (s *server) ExecuteCommand(ctx context.Context, params *ExecuteCommandParams) (result interface{}, err error) {
 	err = s.Conn.Call(ctx, MethodWorkspaceExecuteCommand, params, &result)
 
 	return result, err
@@ -487,21 +522,21 @@ func (s *Server) ExecuteCommand(ctx context.Context, params *ExecuteCommandParam
 // FoldingRanges sends the request from the client to the server to return all folding ranges found in a given text document.
 //
 // Since version 3.10.0.
-func (s *Server) FoldingRanges(ctx context.Context, params *FoldingRangeParams) (result []FoldingRange, err error) {
+func (s *server) FoldingRanges(ctx context.Context, params *FoldingRangeParams) (result []FoldingRange, err error) {
 	err = s.Conn.Call(ctx, MethodTextDocumentFoldingRange, params, &result)
 
 	return result, err
 }
 
 // Formatting sends the request from the client to the server to format a whole document.
-func (s *Server) Formatting(ctx context.Context, params *DocumentFormattingParams) (result []TextEdit, err error) {
+func (s *server) Formatting(ctx context.Context, params *DocumentFormattingParams) (result []TextEdit, err error) {
 	err = s.Conn.Call(ctx, MethodTextDocumentFormatting, params, &result)
 
 	return result, err
 }
 
 // Hover sends the request is from the client to the server to request hover information at a given text document position.
-func (s *Server) Hover(ctx context.Context, params *TextDocumentPositionParams) (result *Hover, err error) {
+func (s *server) Hover(ctx context.Context, params *TextDocumentPositionParams) (result *Hover, err error) {
 	result = new(Hover)
 	err = s.Conn.Call(ctx, MethodTextDocumentHover, params, result)
 
@@ -511,14 +546,14 @@ func (s *Server) Hover(ctx context.Context, params *TextDocumentPositionParams) 
 // Implementation sends the request from the client to the server to resolve the implementation location of a symbol at a given text document position.
 //
 // The result type `[]LocationLink` got introduce with version 3.14.0 and depends in the corresponding client capability `clientCapabilities.implementation.typeDefinition.linkSupport`.
-func (s *Server) Implementation(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
+func (s *server) Implementation(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
 	err = s.Conn.Call(ctx, MethodTextDocumentImplementation, params, &result)
 
 	return result, err
 }
 
 // OnTypeFormatting sends the request from the client to the server to format parts of the document during typing.
-func (s *Server) OnTypeFormatting(ctx context.Context, params *DocumentOnTypeFormattingParams) (result []TextEdit, err error) {
+func (s *server) OnTypeFormatting(ctx context.Context, params *DocumentOnTypeFormattingParams) (result []TextEdit, err error) {
 	err = s.Conn.Call(ctx, MethodTextDocumentOnTypeFormatting, params, &result)
 
 	return result, err
@@ -527,35 +562,35 @@ func (s *Server) OnTypeFormatting(ctx context.Context, params *DocumentOnTypeFor
 // PrepareRename sends the request from the client to the server to setup and test the validity of a rename operation at a given location.
 //
 // Since version 3.12.0.
-func (s *Server) PrepareRename(ctx context.Context, params *TextDocumentPositionParams) (result *Range, err error) {
+func (s *server) PrepareRename(ctx context.Context, params *TextDocumentPositionParams) (result *Range, err error) {
 	err = s.Conn.Call(ctx, MethodTextDocumentPrepareRename, params, &result)
 
 	return result, err
 }
 
 // RangeFormatting sends the request from the client to the server to format a given range in a document.
-func (s *Server) RangeFormatting(ctx context.Context, params *DocumentRangeFormattingParams) (result []TextEdit, err error) {
+func (s *server) RangeFormatting(ctx context.Context, params *DocumentRangeFormattingParams) (result []TextEdit, err error) {
 	err = s.Conn.Call(ctx, MethodTextDocumentRangeFormatting, params, &result)
 
 	return result, err
 }
 
 // References sends the request from the client to the server to resolve project-wide references for the symbol denoted by the given text document position.
-func (s *Server) References(ctx context.Context, params *ReferenceParams) (result []Location, err error) {
+func (s *server) References(ctx context.Context, params *ReferenceParams) (result []Location, err error) {
 	err = s.Conn.Call(ctx, MethodTextDocumentReferences, params, &result)
 
 	return result, err
 }
 
 // Rename sends the request from the client to the server to perform a workspace-wide rename of a symbol.
-func (s *Server) Rename(ctx context.Context, params *RenameParams) (result *WorkspaceEdit, err error) {
+func (s *server) Rename(ctx context.Context, params *RenameParams) (result *WorkspaceEdit, err error) {
 	err = s.Conn.Call(ctx, MethodTextDocumentRename, params, &result)
 
 	return result, err
 }
 
 // SignatureHelp sends the request from the client to the server to request signature information at a given cursor position.
-func (s *Server) SignatureHelp(ctx context.Context, params *TextDocumentPositionParams) (result *SignatureHelp, err error) {
+func (s *server) SignatureHelp(ctx context.Context, params *TextDocumentPositionParams) (result *SignatureHelp, err error) {
 	result = new(SignatureHelp)
 	err = s.Conn.Call(ctx, MethodTextDocumentSignatureHelp, params, result)
 
@@ -563,7 +598,7 @@ func (s *Server) SignatureHelp(ctx context.Context, params *TextDocumentPosition
 }
 
 // Symbols sends the request from the client to the server to list project-wide symbols matching the query string.
-func (s *Server) Symbols(ctx context.Context, params *WorkspaceSymbolParams) (result []SymbolInformation, err error) {
+func (s *server) Symbols(ctx context.Context, params *WorkspaceSymbolParams) (result []SymbolInformation, err error) {
 	err = s.Conn.Call(ctx, MethodWorkspaceSymbol, params, &result)
 
 	return result, err
@@ -574,14 +609,14 @@ func (s *Server) Symbols(ctx context.Context, params *WorkspaceSymbolParams) (re
 // The result type `[]LocationLink` got introduce with version 3.14.0 and depends in the corresponding client capability `clientCapabilities.textDocument.typeDefinition.linkSupport`.
 //
 // Since version 3.6.0.
-func (s *Server) TypeDefinition(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
+func (s *server) TypeDefinition(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
 	err = s.Conn.Call(ctx, MethodTextDocumentTypeDefinition, params, &result)
 
 	return result, err
 }
 
 // WillSave sends the notification from the client to the server before the document is actually saved.
-func (s *Server) WillSave(ctx context.Context, params *WillSaveTextDocumentParams) (err error) {
+func (s *server) WillSave(ctx context.Context, params *WillSaveTextDocumentParams) (err error) {
 	err = s.Conn.Notify(ctx, MethodTextDocumentWillSave, params)
 	return
 }
@@ -591,7 +626,7 @@ func (s *Server) WillSave(ctx context.Context, params *WillSaveTextDocumentParam
 // The request can return an array of TextEdits which will be applied to the text document before it is saved.
 // Please note that clients might drop results if computing the text edits took too long or if a server constantly fails on this request.
 // This is done to keep the save fast and reliable.
-func (s *Server) WillSaveWaitUntil(ctx context.Context, params *WillSaveTextDocumentParams) (result []TextEdit, err error) {
+func (s *server) WillSaveWaitUntil(ctx context.Context, params *WillSaveTextDocumentParams) (result []TextEdit, err error) {
 	err = s.Conn.Call(ctx, MethodTextDocumentWillSaveWaitUntil, params, &result)
 
 	return result, err

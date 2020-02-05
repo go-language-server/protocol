@@ -11,30 +11,33 @@ import (
 	"go.uber.org/zap"
 )
 
-// DefaultBufferSize default message buffer size.
-const DefaultBufferSize = 20
-
-// Canceller returns the default canceler function.
-func Canceller(ctx context.Context, conn *jsonrpc2.Conn, id jsonrpc2.ID) {
-	conn.Notify(ctx, MethodCancelRequest, &CancelParams{ID: id})
-}
-
-// NewClient returns the new Client, Server and jsonrpc2.Conn.
-func NewClient(ctx context.Context, client ClientInterface, stream jsonrpc2.Stream, logger *zap.Logger, options ...jsonrpc2.Options) (*jsonrpc2.Conn, ServerInterface) {
-	clientLogger := logger.Named("client")
-
-	conn := jsonrpc2.NewConn(stream, options...)
-	conn.Handler = ClientHandler(ctx, client, clientLogger.Named("handler"))
-
-	return conn, &Server{Conn: conn, logger: logger.Named("server")}
-}
-
 // NewServer returns the new Server, Client and jsonrpc2.Conn.
-func NewServer(ctx context.Context, server ServerInterface, stream jsonrpc2.Stream, logger *zap.Logger, options ...jsonrpc2.Options) (*jsonrpc2.Conn, ClientInterface) {
-	serverLogger := logger.Named("server")
+func NewServer(pctx context.Context, server ServerInterface, stream jsonrpc2.Stream, logger *zap.Logger, options ...jsonrpc2.Options) (ctx context.Context, conn *jsonrpc2.Conn, clientInterface ClientInterface) {
+	conn = jsonrpc2.NewConn(stream, options...)
+	client := &client{
+		Conn:   conn,
+		logger: logger.Named("client"),
+	}
+	ctx = WithClient(pctx, client)
 
-	conn := jsonrpc2.NewConn(stream, options...)
-	conn.Handler = ServerHandler(ctx, server, serverLogger.Named("handler"))
+	conn.AddHandler(&serverHandler{server: server})
+	conn.AddHandler(&canceller{logger: logger.Named("canceller")})
 
-	return conn, &Client{Conn: conn, logger: logger.Named("client")}
+	return ctx, conn, client
+}
+
+// NewClient returns the new context, jsonrpc2.Conn and ServerInterface.
+func NewClient(pctx context.Context, client ClientInterface, stream jsonrpc2.Stream, logger *zap.Logger, options ...jsonrpc2.Options) (ctx context.Context, conn *jsonrpc2.Conn, serverInterface ServerInterface) {
+	ctx = WithClient(pctx, client)
+
+	conn = jsonrpc2.NewConn(stream, options...)
+	conn.AddHandler(&clientHandler{client: client})
+	conn.AddHandler(&canceller{logger: logger.Named("canceller")})
+
+	s := &server{
+		Conn:   conn,
+		logger: logger.Named("server"),
+	}
+
+	return ctx, conn, s
 }

@@ -11,6 +11,41 @@ import (
 	"go.uber.org/zap"
 )
 
+// clientHandler represents a client handler.
+type clientHandler struct {
+	client ClientInterface
+}
+
+// compile time check whether the clientHandler implements jsonrpc2.Handler interface.
+var _ jsonrpc2.Handler = &clientHandler{}
+
+// Cancel implements Handler interface.
+func (clientHandler) Cancel(ctx context.Context, conn *jsonrpc2.Conn, id jsonrpc2.ID, canceled bool) bool {
+	return false
+}
+
+// Request implements Handler interface.
+func (clientHandler) Request(ctx context.Context, conn *jsonrpc2.Conn, direction jsonrpc2.Direction, r *jsonrpc2.WireRequest) context.Context {
+	return ctx
+}
+
+// Response implements Handler interface.
+func (clientHandler) Response(ctx context.Context, conn *jsonrpc2.Conn, direction jsonrpc2.Direction, r *jsonrpc2.WireResponse) context.Context {
+	return ctx
+}
+
+// Done implements Handler interface.
+func (clientHandler) Done(ctx context.Context, err error) {}
+
+// Read implements Handler interface.
+func (clientHandler) Read(ctx context.Context, bytes int64) context.Context { return ctx }
+
+// Write implements Handler interface.
+func (clientHandler) Write(ctx context.Context, bytes int64) context.Context { return ctx }
+
+// Error implements Handler interface.
+func (clientHandler) Error(ctx context.Context, err error) {}
+
 // ClientInterface represents a Language Server Protocol client.
 type ClientInterface interface {
 	Run(ctx context.Context) (err error)
@@ -58,23 +93,23 @@ const (
 	MethodWorkspaceWorkspaceFolders = "workspace/workspaceFolders"
 )
 
-// Client implements a Language Server Protocol client.
-type Client struct {
+// client implements a Language Server Protocol client.
+type client struct {
 	*jsonrpc2.Conn
 	logger *zap.Logger
 }
 
 // compiler time check whether the Client implements ClientInterface interface.
-var _ ClientInterface = (*Client)(nil)
+var _ ClientInterface = (*client)(nil)
 
 // Run runs the Language Server Protocol client.
-func (c *Client) Run(ctx context.Context) (err error) {
+func (c *client) Run(ctx context.Context) (err error) {
 	err = c.Conn.Run(ctx)
 	return
 }
 
 // LogMessage sends the notification from the server to the client to ask the client to log a particular message.
-func (c *Client) LogMessage(ctx context.Context, params *LogMessageParams) (err error) {
+func (c *client) LogMessage(ctx context.Context, params *LogMessageParams) (err error) {
 	err = c.Conn.Notify(ctx, MethodWindowLogMessage, params)
 	return
 }
@@ -89,14 +124,14 @@ func (c *Client) LogMessage(ctx context.Context, params *LogMessageParams) (err 
 // When a file changes it is the server’s responsibility to re-compute diagnostics and push them to the client.
 // If the computed set is empty it has to push the empty array to clear former diagnostics.
 // Newly pushed diagnostics always replace previously pushed diagnostics. There is no merging that happens on the client side.
-func (c *Client) PublishDiagnostics(ctx context.Context, params *PublishDiagnosticsParams) (err error) {
+func (c *client) PublishDiagnostics(ctx context.Context, params *PublishDiagnosticsParams) (err error) {
 	err = c.Conn.Notify(ctx, MethodTextDocumentPublishDiagnostics, params)
 	return
 }
 
 // ShowMessage sends the notification from a server to a client to ask the
 // client to display a particular message in the user interface.
-func (c *Client) ShowMessage(ctx context.Context, params *ShowMessageParams) (err error) {
+func (c *client) ShowMessage(ctx context.Context, params *ShowMessageParams) (err error) {
 	err = c.Conn.Notify(ctx, MethodWindowShowMessage, params)
 	return
 }
@@ -104,7 +139,7 @@ func (c *Client) ShowMessage(ctx context.Context, params *ShowMessageParams) (er
 // ShowMessageRequest sends the request from a server to a client to ask the client to display a particular message in the user interface.
 //
 // In addition to the show message notification the request allows to pass actions and to wait for an answer from the client.
-func (c *Client) ShowMessageRequest(ctx context.Context, params *ShowMessageRequestParams) (result *MessageActionItem, err error) {
+func (c *client) ShowMessageRequest(ctx context.Context, params *ShowMessageRequestParams) (result *MessageActionItem, err error) {
 	result = new(MessageActionItem)
 	err = c.Conn.Call(ctx, MethodWindowShowMessageRequest, params, result)
 
@@ -112,7 +147,7 @@ func (c *Client) ShowMessageRequest(ctx context.Context, params *ShowMessageRequ
 }
 
 // Telemetry sends the notification from the server to the client to ask the client to log a telemetry event.
-func (c *Client) Telemetry(ctx context.Context, params interface{}) (err error) {
+func (c *client) Telemetry(ctx context.Context, params interface{}) (err error) {
 	err = c.Conn.Notify(ctx, MethodTelemetryEvent, params)
 	return
 }
@@ -123,19 +158,19 @@ func (c *Client) Telemetry(ctx context.Context, params interface{}) (err error) 
 //
 // A client opts in via the dynamicRegistration property on the specific client capabilities.
 // A client can even provide dynamic registration for capability A but not for capability B (see TextDocumentClientCapabilities as an example).
-func (c *Client) RegisterCapability(ctx context.Context, params *RegistrationParams) (err error) {
+func (c *client) RegisterCapability(ctx context.Context, params *RegistrationParams) (err error) {
 	err = c.Conn.Call(ctx, MethodClientRegisterCapability, params, nil)
 	return
 }
 
 // UnregisterCapability sends the request from the server to the client to unregister a previously registered capability.
-func (c *Client) UnregisterCapability(ctx context.Context, params *UnregistrationParams) (err error) {
+func (c *client) UnregisterCapability(ctx context.Context, params *UnregistrationParams) (err error) {
 	err = c.Conn.Call(ctx, MethodClientUnregisterCapability, params, nil)
 	return
 }
 
 // WorkspaceApplyEdit sends the request from the server to the client to modify resource on the client side.
-func (c *Client) WorkspaceApplyEdit(ctx context.Context, params *ApplyWorkspaceEditParams) (result bool, err error) {
+func (c *client) WorkspaceApplyEdit(ctx context.Context, params *ApplyWorkspaceEditParams) (result bool, err error) {
 	err = c.Conn.Call(ctx, MethodWorkspaceApplyEdit, params, &result)
 
 	return result, err
@@ -146,7 +181,7 @@ func (c *Client) WorkspaceApplyEdit(ctx context.Context, params *ApplyWorkspaceE
 // The request can fetch several configuration settings in one roundtrip.
 // The order of the returned configuration settings correspond to the order of the
 // passed ConfigurationItems (e.g. the first item in the response is the result for the first configuration item in the params).
-func (c *Client) WorkspaceConfiguration(ctx context.Context, params *ConfigurationParams) ([]interface{}, error) {
+func (c *client) WorkspaceConfiguration(ctx context.Context, params *ConfigurationParams) ([]interface{}, error) {
 	var result []interface{}
 	err := c.Conn.Call(ctx, MethodWorkspaceConfiguration, params, &result)
 
@@ -158,7 +193,7 @@ func (c *Client) WorkspaceConfiguration(ctx context.Context, params *Configurati
 // Returns null in the response if only a single file is open in the tool. Returns an empty array if a workspace is open but no folders are configured.
 //
 // Since version 3.6.0.
-func (c *Client) WorkspaceFolders(ctx context.Context) (result []WorkspaceFolder, err error) {
+func (c *client) WorkspaceFolders(ctx context.Context) (result []WorkspaceFolder, err error) {
 	err = c.Conn.Call(ctx, MethodWorkspaceWorkspaceFolders, nil, &result)
 
 	return result, err
