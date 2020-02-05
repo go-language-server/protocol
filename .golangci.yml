@@ -1,6 +1,6 @@
 run:
   issues-exit-code: 1
-  tests: false
+  tests: true
   skip-dirs:
     - "vendor$"
     - "internal$"
@@ -16,11 +16,28 @@ linters-settings:
     check-type-assertions: false
     check-blank: true
     exclude: .errcheckignore
-  gocognit:
-    min-complexity: 20
+  funlen:
+    lines: 120
+    statements: 40
   goconst:
     min-len: 3
     min-occurrences: 3
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - experimental
+      - opinionated
+      - performance
+      - style
+    settings:
+      hugeParam:
+        sizeThreshold: 80
+      rangeExprCopy:
+        sizeThreshold: 512
+      rangeValCopy:
+        sizeThreshold: 128
+  gocyclo:
+    min-complexity: 10
   gofmt:
     simplify: true
   goimports:
@@ -62,22 +79,11 @@ linters-settings:
       -  unusedresult
     disable:
       -  shadow
-  gocritic:
-    enabled-tags:
-      - diagnostic
-      - experimental
-      - opinionated
-      - performance
-      - style
-    settings:
-      hugeParam:
-        sizeThreshold: 80
-      rangeExprCopy:
-        sizeThreshold: 512
-      rangeValCopy:
-        sizeThreshold: 128
+  lll:
+    line-length: 180
+    tab-width: 1
   maligned:
-    suggest-new: true
+    suggest-new: false
   misspell:
     locale: US
   nakedret:
@@ -93,20 +99,18 @@ linters-settings:
     check-exported: false
 
 linters:
+  fast: false
   # disabled:
-  #   - funlen
-  #   - gochecknoglobals
-  #   - gochecknoinits
-  #   - gocyclo
-  #   - godox
-  #   - gomnd
-  #   - gosec
-  #   - lll
-  #   - maligned
-  #   - nakedret
-  #   - scopelint
-  #   - unused
-  #   - wsl
+    # - funlen
+    # - gochecknoglobals
+    # - gochecknoinits
+    # - godox
+    # - gomnd
+    # - lll
+    # - maligned
+    # - megacheck
+    # - scopelint
+    # - wsl
   disable-all: true
   enable:
     - bodyclose
@@ -118,15 +122,17 @@ linters:
     - gocognit
     - goconst
     - gocritic
+    - gocyclo
     - gofmt
     - goimports
     - golint
+    - gosec
     - gosimple
     - govet
     - ineffassign
     - interfacer
-    - megacheck
     - misspell
+    - nakedret
     - prealloc
     - staticcheck
     - structcheck
@@ -141,19 +147,41 @@ linters:
 issues:
   exclude-use-default: true
   exclude-rules:
+    - path: _test\.go
+      linters:
+        - dupl
+        - funlen
+        - lll
+    - path: _test\.go
+      text: "rangeValCopy"
+      linters:
+        - gocritic
     - path: language.go
       text: "deprecatedComment"
       linters:
         - gocritic
     - linters:
         - gocognit
-      text: "ClientHandler"
+      text: "TextDocumentClientCapabilities"
     - linters:
         - gocognit
+        - gocyclo
       text: "ServerHandler"
     - linters:
         - gocognit
-      text: "TextDocumentClientCapabilities"
+        - gocyclo
+      text: "ClientHandler"
+    - linters:
+        - gocyclo
+      text: "UnmarshalJSONObject"
+    - path: language.go
+      text: "func `\\(SymbolKind\\).String` is high"
+      linters:
+        - gocyclo
+    - path: language.go
+      text: "func `\\(CompletionItemKind\\).String` is high"
+      linters:
+        - gocyclo
 
 output:
   format: colored-line-number
