@@ -66,14 +66,14 @@ func testWorkspaceFolders(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 
 		tests := []struct {
 			name             string
-			field            []byte
+			field            string
 			want             WorkspaceFolders
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:             "Valid",
-				field:            []byte(want),
+				field:            want,
 				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          false,
@@ -2758,21 +2758,21 @@ func testClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 
 		tests := []struct {
 			name             string
-			field            []byte
+			field            string
 			want             ClientCapabilities
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
 			{
 				name:             "Valid",
-				field:            []byte(want),
+				field:            want,
 				want:             wantType,
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
 			{
 				name:             "ValidNilAll",
-				field:            []byte(emptyData),
+				field:            emptyData,
 				want:             ClientCapabilities{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
