@@ -12,7 +12,7 @@ import (
 
 	"gitlab.com/golang-commonmark/markdown"
 
-	"github.com/go-language-server/protocol/internal/cmd/genprotocol/pkg/genprotocol"
+	"go.lsp.dev/protocol/internal/cmd/genprotocol/pkg/genprotocol"
 )
 
 func main() {

@@ -7,7 +7,7 @@ Package protocol implements Language Server Protocol specification in Go.
 
 <!-- badge links -->
 [circleci]: https://app.circleci.com/pipelines/github/go-language-server/protocol
-[pkg.go.dev]: https://pkg.go.dev/github.com/go-language-server/protocol
+[pkg.go.dev]: https://pkg.go.dev/go.lsp.dev/protocol
 [module]: https://github.com/go-language-server/protocol/releases/latest
 [codecov]: https://codecov.io/gh/go-language-server/protocol
 [ga]: https://github.com/go-language-server/protocol

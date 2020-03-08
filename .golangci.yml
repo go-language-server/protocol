@@ -41,7 +41,7 @@ linters-settings:
   gofmt:
     simplify: true
   goimports:
-    local-prefixes: github.com/go-language-server/protocol
+    local-prefixes: go.lsp.dev/protocol
   golint:
     min-confidence: 0.3
   govet:

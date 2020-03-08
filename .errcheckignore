@@ -1,2 +1,2 @@
-(*github.com/go-language-server/jsonrpc2.Request).Reply
-(*github.com/go-language-server/jsonrpc2.Conn).Notify
+(*go.lsp.dev/jsonrpc2.Request).Reply
+(*go.lsp.dev/jsonrpc2.Conn).Notify

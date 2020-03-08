@@ -1,4 +1,4 @@
-module github.com/go-language-server/protocol/internal/cmd/genprotocol
+module go.lsp.dev/protocol/internal/cmd/genprotocol
 
 require (
 	github.com/russross/blackfriday v2.0.0+incompatible // indirect

@@ -13,7 +13,7 @@ import (
 	"github.com/go-language-server/jsonrpc2"
 	"go.uber.org/zap"
 
-	"github.com/go-language-server/protocol/internal/gojaypool"
+	"go.lsp.dev/protocol/internal/gojaypool"
 )
 
 // Deliver implements jsonrpc2.Handler.
