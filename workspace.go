@@ -7,7 +7,7 @@ package protocol
 import (
 	"strconv"
 
-	"github.com/go-language-server/uri"
+	"go.lsp.dev/uri"
 )
 
 // WorkspaceFolder response of Workspace folders request.

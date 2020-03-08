@@ -7,8 +7,8 @@ package protocol
 import (
 	"strconv"
 
-	"github.com/go-language-server/jsonrpc2"
-	"github.com/go-language-server/uri"
+	"go.lsp.dev/jsonrpc2"
+	"go.lsp.dev/uri"
 )
 
 // CancelParams params of cancelRequest.

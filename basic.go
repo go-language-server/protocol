@@ -7,7 +7,7 @@ package protocol
 import (
 	"strconv"
 
-	"github.com/go-language-server/uri"
+	"go.lsp.dev/uri"
 )
 
 // DocumentURI represents the URI of a document.

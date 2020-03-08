@@ -11,7 +11,7 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/go-language-server/jsonrpc2"
+	"go.lsp.dev/jsonrpc2"
 	"go.uber.org/zap"
 )
 

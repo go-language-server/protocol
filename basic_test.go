@@ -7,8 +7,8 @@ package protocol
 import (
 	"testing"
 
-	"github.com/go-language-server/uri"
 	"github.com/google/go-cmp/cmp"
+	"go.lsp.dev/uri"
 )
 
 func testPosition(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
@@ -201,11 +201,11 @@ func testRange(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 
 func testLocation(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"uri":"file:///Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`
-		wantInvalid = `{"uri":"file:///Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}}`
+		want        = `{"uri":"file:///Users/gopher/go/src/go.lsp.dev/protocol/basic_test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`
+		wantInvalid = `{"uri":"file:///Users/gopher/go/src/go.lsp.dev/protocol/basic_test.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}}`
 	)
 	wantType := Location{
-		URI: uri.File("/Users/gopher/go/src/github.com/go-language-server/protocol/basic_test.go"),
+		URI: uri.File("/Users/gopher/go/src/go.lsp.dev/protocol/basic_test.go"),
 		Range: Range{
 			Start: Position{
 				Line:      25,

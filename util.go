@@ -4,7 +4,7 @@
 
 package protocol
 
-import "github.com/go-language-server/uri"
+import "go.lsp.dev/uri"
 
 // ToURI returns the new DocumentURI from s.
 func ToURI(s string) uri.URI {

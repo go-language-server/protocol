@@ -8,19 +8,19 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/go-language-server/uri"
 	"github.com/google/go-cmp/cmp"
+	"go.lsp.dev/uri"
 )
 
 func testWorkspaceFolders(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const want = `[{"uri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol","name":"protocol"},{"uri":"file:///Users/zchee/go/src/github.com/go-language-server/jsonrpc2","name":"jsonrpc2"}]`
+	const want = `[{"uri":"file:///Users/zchee/go/src/go.lsp.dev/protocol","name":"protocol"},{"uri":"file:///Users/zchee/go/src/go.lsp.dev/jsonrpc2","name":"jsonrpc2"}]`
 	wantType := WorkspaceFolders{
 		{
-			URI:  string(uri.File("/Users/zchee/go/src/github.com/go-language-server/protocol")),
+			URI:  string(uri.File("/Users/zchee/go/src/go.lsp.dev/protocol")),
 			Name: "protocol",
 		},
 		{
-			URI:  string(uri.File("/Users/zchee/go/src/github.com/go-language-server/jsonrpc2")),
+			URI:  string(uri.File("/Users/zchee/go/src/go.lsp.dev/jsonrpc2")),
 			Name: "jsonrpc2",
 		},
 	}
@@ -100,30 +100,30 @@ func testWorkspaceFolders(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 
 func testInitializeParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want    = `{"processId":25556,"rootPath":"~/go/src/github.com/go-language-server/protocol","rootUri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol","initializationOptions":"testdata","capabilities":{},"trace":"on","workspaceFolders":[{"uri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol","name":"protocol"},{"uri":"file:///Users/zchee/go/src/github.com/go-language-server/jsonrpc2","name":"jsonrpc2"}]}`
-		wantNil = `{"processId":25556,"rootUri":"file:///Users/zchee/go/src/github.com/go-language-server/protocol","capabilities":{}}`
+		want    = `{"processId":25556,"rootPath":"~/go/src/go.lsp.dev/protocol","rootUri":"file:///Users/zchee/go/src/go.lsp.dev/protocol","initializationOptions":"testdata","capabilities":{},"trace":"on","workspaceFolders":[{"uri":"file:///Users/zchee/go/src/go.lsp.dev/protocol","name":"protocol"},{"uri":"file:///Users/zchee/go/src/go.lsp.dev/jsonrpc2","name":"jsonrpc2"}]}`
+		wantNil = `{"processId":25556,"rootUri":"file:///Users/zchee/go/src/go.lsp.dev/protocol","capabilities":{}}`
 	)
 	wantType := InitializeParams{
 		ProcessID:             25556,
-		RootPath:              "~/go/src/github.com/go-language-server/protocol",
-		RootURI:               uri.File("/Users/zchee/go/src/github.com/go-language-server/protocol"),
+		RootPath:              "~/go/src/go.lsp.dev/protocol",
+		RootURI:               uri.File("/Users/zchee/go/src/go.lsp.dev/protocol"),
 		InitializationOptions: "testdata",
 		Capabilities:          ClientCapabilities{},
 		Trace:                 "on",
 		WorkspaceFolders: []WorkspaceFolder{
 			{
-				Name: filepath.Base("/Users/zchee/go/src/github.com/go-language-server/protocol"),
-				URI:  string(uri.File("/Users/zchee/go/src/github.com/go-language-server/protocol")),
+				Name: filepath.Base("/Users/zchee/go/src/go.lsp.dev/protocol"),
+				URI:  string(uri.File("/Users/zchee/go/src/go.lsp.dev/protocol")),
 			},
 			{
-				Name: filepath.Base("/Users/zchee/go/src/github.com/go-language-server/jsonrpc2"),
-				URI:  string(uri.File("/Users/zchee/go/src/github.com/go-language-server/jsonrpc2")),
+				Name: filepath.Base("/Users/zchee/go/src/go.lsp.dev/jsonrpc2"),
+				URI:  string(uri.File("/Users/zchee/go/src/go.lsp.dev/jsonrpc2")),
 			},
 		},
 	}
 	wantTypeNilAll := InitializeParams{
 		ProcessID:    25556,
-		RootURI:      uri.File("//Users/zchee/go/src/github.com/go-language-server/protocol"),
+		RootURI:      uri.File("//Users/zchee/go/src/go.lsp.dev/protocol"),
 		Capabilities: ClientCapabilities{},
 	}
 

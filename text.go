@@ -7,7 +7,7 @@ package protocol
 import (
 	"strconv"
 
-	"github.com/go-language-server/uri"
+	"go.lsp.dev/uri"
 )
 
 // DidOpenTextDocumentParams params of DidOpenTextDocument Notification.

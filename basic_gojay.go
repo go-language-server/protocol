@@ -8,7 +8,7 @@ package protocol
 
 import (
 	"github.com/francoispqt/gojay"
-	"github.com/go-language-server/uri"
+	"go.lsp.dev/uri"
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.

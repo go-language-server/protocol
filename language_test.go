@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/go-language-server/uri"
 	"github.com/google/go-cmp/cmp"
+	"go.lsp.dev/uri"
 )
 
 func testCompletionParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
