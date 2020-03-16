@@ -1,23 +1,27 @@
 run:
   issues-exit-code: 1
   tests: true
-  skip-dirs:
-    - "vendor$"
-    - "internal$"
+  # skip-dirs:
+  skip-dirs-use-default: true
   skip-files:
     - ".*\\.pb\\.go"
     - ".*(.|_)gen\\.go"
   modules-download-mode: vendor
 
+output:
+  format: colored-line-number
+  print-issued-lines: true
+  print-linter-name: true
+
 linters-settings:
   dupl:
-    threshold: 400
+    threshold: 100
   errcheck:
     check-type-assertions: false
     check-blank: true
     exclude: .errcheckignore
   funlen:
-    lines: 120
+    lines: 60
     statements: 40
   goconst:
     min-len: 3
@@ -37,7 +41,7 @@ linters-settings:
       rangeValCopy:
         sizeThreshold: 128
   gocyclo:
-    min-complexity: 10
+    min-complexity: 15
   gofmt:
     simplify: true
   goimports:
@@ -46,41 +50,45 @@ linters-settings:
     min-confidence: 0.3
   govet:
     enable:
-      -  asmdecl
-      -  assign
-      -  atomic
-      -  atomicalign
-      -  bools
-      -  buildssa
-      -  buildtag
-      -  cgocall
-      -  composite
-      -  copylock
-      -  ctrlflow
-      -  deepequalerrors
-      -  errorsas
-      -  findcall
-      -  httpresponse
-      -  inspect
-      -  loopclosure
-      -  lostcancel
-      -  nilfunc
-      -  nilness
-      -  pkgfact
-      -  printf
-      -  shift
-      -  sortslice
-      -  stdmethods
-      -  structtag
-      -  tests
-      -  unmarshal
-      -  unreachable
-      -  unsafeptr
-      -  unusedresult
+      - asmdecl
+      - assign
+      - atomic
+      - atomicalign
+      - bools
+      - buildtag
+      - cgocall
+      - composite
+      - copylock
+      - deepequalerrors
+      - errorsas
+      - findcall
+      - httpresponse
+      - loopclosure
+      - lostcancel
+      - nilfunc
+      - nilness
+      - printf
+      - shift
+      - sortslice
+      - stdmethods
+      - structtag
+      - testinggoroutine
+      - tests
+      - unmarshal
+      - unreachable
+      - unsafeptr
+      - unusedresult
     disable:
-      -  shadow
+      - shadow
+  depguard:
+    list-type: blacklist
+    include-go-root: false
+    packages:
+      # - github.com/sirupsen/logrus
+    packages-with-error-message:
+      # - github.com/sirupsen/logrus: "logging is allowed only by logutils.Log"
   lll:
-    line-length: 180
+    line-length: 120
     tab-width: 1
   maligned:
     suggest-new: false
@@ -93,10 +101,22 @@ linters-settings:
     range-loops: true
     for-loops: false
   unparam:
-    algo: cha
     check-exported: true
+    algo: cha
   unused:
     check-exported: false
+  whitespace:
+    multi-if: true
+    multi-func: true
+  wsl:
+    strict-append: true
+    allow-assign-and-call: true
+    allow-multiline-assign: true
+    allow-cuddle-declarations: true  # default: false
+    allow-trailing-comment: true  # default: false
+    force-case-trailing-whitespace: 0  # default: 0 = never
+    force-err-cuddling: true  # default: false
+    allow-separated-leading-comment: true  # default: false
 
 linters:
   fast: false
@@ -182,8 +202,3 @@ issues:
       text: "func `\\(CompletionItemKind\\).String` is high"
       linters:
         - gocyclo
-
-output:
-  format: colored-line-number
-  print-issued-lines: true
-  print-linter-name: true
