@@ -211,8 +211,8 @@ func (v *CompletionRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKeyOmitEmpty(keyResolveProvider, v.ResolveProvider)
 }
 
-// NKeys returns the number of keys to unmarshal.
-func (v *CompletionRegistrationOptions) NKeys() int { return 3 }
+// IsNil returns wether the structure is nil value or not.
+func (v *CompletionRegistrationOptions) IsNil() bool { return v == nil }
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *CompletionRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
@@ -227,8 +227,8 @@ func (v *CompletionRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, 
 	return nil
 }
 
-// IsNil returns wether the structure is nil value or not.
-func (v *CompletionRegistrationOptions) IsNil() bool { return v == nil }
+// NKeys returns the number of keys to unmarshal.
+func (v *CompletionRegistrationOptions) NKeys() int { return 3 }
 
 // compile time check whether the CompletionRegistrationOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
@@ -259,10 +259,10 @@ func (v *Hover) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 // NKeys returns the number of keys to unmarshal.
 func (v *Hover) NKeys() int { return 2 }
 
-// compile time check whether the CompletionRegistrationOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+// compile time check whether the Hover implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
-	_ gojay.MarshalerJSONObject   = (*CompletionRegistrationOptions)(nil)
-	_ gojay.UnmarshalerJSONObject = (*CompletionRegistrationOptions)(nil)
+	_ gojay.MarshalerJSONObject   = (*Hover)(nil)
+	_ gojay.UnmarshalerJSONObject = (*Hover)(nil)
 )
 
 // SignatureInformations represents a slice of SignatureInformation.
