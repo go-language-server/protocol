@@ -39,9 +39,11 @@ flags:
   json:
     paths:
       - /
+    carryforward: true
   gojay:
     paths:
       - /
+    carryforward: true
 
 comment:
   layout: "reach, diff, flags, files"
