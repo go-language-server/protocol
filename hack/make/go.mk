@@ -146,7 +146,7 @@ cmd/golangci-lint: $(GO_PATH)/bin/golangci-lint  # go get 'golangci-lint' binary
 .PHONY: lint/golangci-lint
 lint/golangci-lint: cmd/golangci-lint .golangci.yml  ## Run golangci-lint.
 	$(call target)
-	@GO111MODULE=on GOGC=off golangci-lint run $(strip ${GO_LINT_FLAGS}) ./...
+	@GO111MODULE=on golangci-lint run $(strip ${GO_LINT_FLAGS}) ./...
 
 
 ## mod
