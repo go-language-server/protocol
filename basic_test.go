@@ -1988,8 +1988,9 @@ func testDeleteFile(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 		wantNilOptions = `{"kind":"delete","uri":"file:///path/to/delete.go"}`
 		wantInvalid    = `{"kind":"delete","uri":"file:///path/to/delete2.go","options":{"recursive":false,"ignoreIfNotExists":false}}`
 	)
-	wantType := DeleteFile{Kind: "delete",
-		URI: uri.File("/path/to/delete.go"),
+	wantType := DeleteFile{
+		Kind: "delete",
+		URI:  uri.File("/path/to/delete.go"),
 		Options: &DeleteFileOptions{
 			Recursive:         true,
 			IgnoreIfNotExists: true,
