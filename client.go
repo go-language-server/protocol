@@ -10,46 +10,28 @@ import (
 	"go.uber.org/zap"
 
 	"go.lsp.dev/jsonrpc2"
+	"go.lsp.dev/pkg/xcontext"
 )
 
-// clientHandler represents a client handler.
-type clientHandler struct {
-	client ClientInterface
+func ClientHandler(client ClientInterface, handler jsonrpc2.Handler) jsonrpc2.Handler {
+	h := func(ctx context.Context, reply jsonrpc2.Replier, req jsonrpc2.Requester) error {
+		if ctx.Err() != nil {
+			ctx := xcontext.Detach(ctx)
+			return reply(ctx, nil, RequestCancelledError)
+		}
+		handled, err := clientDispatch(ctx, client, reply, req)
+		if handled || err != nil {
+			return err
+		}
+		return handler(ctx, reply, req)
+	}
+
+	return h
 }
-
-// compile time check whether the clientHandler implements jsonrpc2.Handler interface.
-var _ jsonrpc2.Handler = &clientHandler{}
-
-// Cancel implements Handler interface.
-func (clientHandler) Cancel(ctx context.Context, conn *jsonrpc2.Conn, id jsonrpc2.ID, canceled bool) bool {
-	return false
-}
-
-// Request implements Handler interface.
-func (clientHandler) Request(ctx context.Context, conn *jsonrpc2.Conn, direction jsonrpc2.Direction, r *jsonrpc2.WireRequest) context.Context {
-	return ctx
-}
-
-// Response implements Handler interface.
-func (clientHandler) Response(ctx context.Context, conn *jsonrpc2.Conn, direction jsonrpc2.Direction, r *jsonrpc2.WireResponse) context.Context {
-	return ctx
-}
-
-// Done implements Handler interface.
-func (clientHandler) Done(ctx context.Context, err error) {}
-
-// Read implements Handler interface.
-func (clientHandler) Read(ctx context.Context, bytes int64) context.Context { return ctx }
-
-// Write implements Handler interface.
-func (clientHandler) Write(ctx context.Context, bytes int64) context.Context { return ctx }
-
-// Error implements Handler interface.
-func (clientHandler) Error(ctx context.Context, err error) {}
 
 // ClientInterface represents a Language Server Protocol client.
 type ClientInterface interface {
-	Run(ctx context.Context) (err error)
+	// Run(ctx context.Context) (err error)
 	LogMessage(ctx context.Context, params *LogMessageParams) (err error)
 	PublishDiagnostics(ctx context.Context, params *PublishDiagnosticsParams) (err error)
 	ShowMessage(ctx context.Context, params *ShowMessageParams) (err error)
@@ -96,7 +78,7 @@ const (
 
 // client implements a Language Server Protocol client.
 type client struct {
-	*jsonrpc2.Conn
+	jsonrpc2.Conn
 	logger *zap.Logger
 }
 
@@ -104,10 +86,10 @@ type client struct {
 var _ ClientInterface = (*client)(nil)
 
 // Run runs the Language Server Protocol client.
-func (c *client) Run(ctx context.Context) (err error) {
-	err = c.Conn.Run(ctx)
-	return
-}
+// func (c *client) Run(ctx context.Context) (err error) {
+// 	_, err = c.Conn.Run(ctx)
+// 	return
+// }
 
 // LogMessage sends the notification from the server to the client to ask the client to log a particular message.
 func (c *client) LogMessage(ctx context.Context, params *LogMessageParams) (err error) {
@@ -142,7 +124,7 @@ func (c *client) ShowMessage(ctx context.Context, params *ShowMessageParams) (er
 // In addition to the show message notification the request allows to pass actions and to wait for an answer from the client.
 func (c *client) ShowMessageRequest(ctx context.Context, params *ShowMessageRequestParams) (result *MessageActionItem, err error) {
 	result = new(MessageActionItem)
-	err = c.Conn.Call(ctx, MethodWindowShowMessageRequest, params, result)
+	_, err = c.Conn.Call(ctx, MethodWindowShowMessageRequest, params, result)
 
 	return result, err
 }
@@ -160,19 +142,19 @@ func (c *client) Telemetry(ctx context.Context, params interface{}) (err error) 
 // A client opts in via the dynamicRegistration property on the specific client capabilities.
 // A client can even provide dynamic registration for capability A but not for capability B (see TextDocumentClientCapabilities as an example).
 func (c *client) RegisterCapability(ctx context.Context, params *RegistrationParams) (err error) {
-	err = c.Conn.Call(ctx, MethodClientRegisterCapability, params, nil)
+	_, err = c.Conn.Call(ctx, MethodClientRegisterCapability, params, nil)
 	return
 }
 
 // UnregisterCapability sends the request from the server to the client to unregister a previously registered capability.
 func (c *client) UnregisterCapability(ctx context.Context, params *UnregistrationParams) (err error) {
-	err = c.Conn.Call(ctx, MethodClientUnregisterCapability, params, nil)
+	_, err = c.Conn.Call(ctx, MethodClientUnregisterCapability, params, nil)
 	return
 }
 
 // WorkspaceApplyEdit sends the request from the server to the client to modify resource on the client side.
 func (c *client) WorkspaceApplyEdit(ctx context.Context, params *ApplyWorkspaceEditParams) (result bool, err error) {
-	err = c.Conn.Call(ctx, MethodWorkspaceApplyEdit, params, &result)
+	_, err = c.Conn.Call(ctx, MethodWorkspaceApplyEdit, params, &result)
 
 	return result, err
 }
@@ -184,7 +166,7 @@ func (c *client) WorkspaceApplyEdit(ctx context.Context, params *ApplyWorkspaceE
 // passed ConfigurationItems (e.g. the first item in the response is the result for the first configuration item in the params).
 func (c *client) WorkspaceConfiguration(ctx context.Context, params *ConfigurationParams) ([]interface{}, error) {
 	var result []interface{}
-	err := c.Conn.Call(ctx, MethodWorkspaceConfiguration, params, &result)
+	_, err := c.Conn.Call(ctx, MethodWorkspaceConfiguration, params, &result)
 
 	return result, err
 }
@@ -195,7 +177,7 @@ func (c *client) WorkspaceConfiguration(ctx context.Context, params *Configurati
 //
 // Since version 3.6.0.
 func (c *client) WorkspaceFolders(ctx context.Context) (result []WorkspaceFolder, err error) {
-	err = c.Conn.Call(ctx, MethodWorkspaceWorkspaceFolders, nil, &result)
+	_, err = c.Conn.Call(ctx, MethodWorkspaceWorkspaceFolders, nil, &result)
 
 	return result, err
 }

@@ -7,14 +7,13 @@ package protocol
 import (
 	"strconv"
 
-	"go.lsp.dev/jsonrpc2"
 	"go.lsp.dev/uri"
 )
 
 // CancelParams params of cancelRequest.
 type CancelParams struct {
 	// ID is the request id to cancel.
-	ID jsonrpc2.ID `json:"id"`
+	ID interface{} `json:"id"`
 }
 
 // TraceMode represents a InitializeParams Trace mode.
