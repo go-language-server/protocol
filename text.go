@@ -90,28 +90,6 @@ func (t TextDocumentSaveReason) String() string {
 	}
 }
 
-// TextDocumentWillSaveEvent is.
-type TextDocumentWillSaveEvent struct {
-	// Document is the document that will be saved.
-	Document TextDocument `json:"document"`
-
-	// Reason is the reason why save was triggered.
-	Reason TextDocumentSaveReason `json:"reason"`
-}
-
-// TextDocumentContentChangeEvent an event describing a change to a text document. If range and rangeLength are omitted
-// the new text is considered to be the full content of the document.
-type TextDocumentContentChangeEvent struct {
-	// Range is the range of the document that changed.
-	Range *Range `json:"range,omitempty"`
-
-	// RangeLength is the length of the range that got replaced.
-	RangeLength float64 `json:"rangeLength,omitempty"`
-
-	// Text is the new text of the document.
-	Text string `json:"text"`
-}
-
 // TextDocumentChangeRegistrationOptions describe options to be used when registering for text document change events.
 type TextDocumentChangeRegistrationOptions struct {
 	TextDocumentRegistrationOptions
@@ -138,6 +116,19 @@ type DidSaveTextDocumentParams struct {
 
 	// TextDocument is the document that was saved.
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
+}
+
+// TextDocumentContentChangeEvent an event describing a change to a text document. If range and rangeLength are omitted
+// the new text is considered to be the full content of the document.
+type TextDocumentContentChangeEvent struct {
+	// Range is the range of the document that changed.
+	Range *Range `json:"range,omitempty"`
+
+	// RangeLength is the length of the range that got replaced.
+	RangeLength float64 `json:"rangeLength,omitempty"`
+
+	// Text is the new text of the document.
+	Text string `json:"text"`
 }
 
 // TextDocumentSaveRegistrationOptions TextDocumentSave Registration options.

@@ -28,10 +28,6 @@ func TestTextDocumentChangeEvent(t *testing.T) {
 	testTextDocumentChangeEvent(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
-func TestTextDocumentWillSaveEvent(t *testing.T) {
-	testTextDocumentWillSaveEvent(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
-}
-
 func TestTextDocumentContentChangeEvent(t *testing.T) {
 	testTextDocumentContentChangeEvent(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }

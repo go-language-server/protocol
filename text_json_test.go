@@ -27,10 +27,6 @@ func TestTextDocumentChangeEvent(t *testing.T) {
 	testTextDocumentChangeEvent(t, json.Marshal, json.Unmarshal)
 }
 
-func TestTextDocumentWillSaveEvent(t *testing.T) {
-	testTextDocumentWillSaveEvent(t, json.Marshal, json.Unmarshal)
-}
-
 func TestTextDocumentContentChangeEvent(t *testing.T) {
 	testTextDocumentContentChangeEvent(t, json.Marshal, json.Unmarshal)
 }
