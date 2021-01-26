@@ -745,6 +745,7 @@ type CodeAction struct {
 // CodeActionRegistrationOptions CodeAction Registrationi options.
 type CodeActionRegistrationOptions struct {
 	TextDocumentRegistrationOptions
+
 	CodeActionOptions
 }
 
