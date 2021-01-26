@@ -18,19 +18,20 @@ import (
 )
 
 // clientDispatch implements jsonrpc2.Handler.
-func clientDispatch(ctx context.Context, client ClientInterface, reply jsonrpc2.Replier, r jsonrpc2.Requester) (bool, error) {
+//nolint:gocognit,funlen
+func clientDispatch(ctx context.Context, client Client, reply jsonrpc2.Replier, req jsonrpc2.Request) (bool, error) {
 	if ctx.Err() != nil {
-		return true, reply(ctx, nil, RequestCancelledError)
+		return true, reply(ctx, nil, ErrRequestCancelled)
 	}
 
-	dec := json.NewDecoder(bytes.NewReader(r.Params()))
+	dec := json.NewDecoder(bytes.NewReader(req.Params()))
 	logger := LoggerFromContext(ctx)
 
-	switch r.Method() {
+	switch req.Method() {
 	case MethodClientRegisterCapability: // request
 		var params RegistrationParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		err := client.RegisterCapability(ctx, &params)
@@ -46,7 +47,7 @@ func clientDispatch(ctx context.Context, client ClientInterface, reply jsonrpc2.
 	case MethodClientUnregisterCapability: // request
 		var params UnregistrationParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		err := client.UnregisterCapability(ctx, &params)
@@ -62,7 +63,7 @@ func clientDispatch(ctx context.Context, client ClientInterface, reply jsonrpc2.
 	case MethodTelemetryEvent: // notification
 		var params interface{}
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		err := client.Telemetry(ctx, &params)
@@ -78,7 +79,7 @@ func clientDispatch(ctx context.Context, client ClientInterface, reply jsonrpc2.
 	case MethodTextDocumentPublishDiagnostics: // notification
 		var params PublishDiagnosticsParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		err := client.PublishDiagnostics(ctx, &params)
@@ -94,7 +95,7 @@ func clientDispatch(ctx context.Context, client ClientInterface, reply jsonrpc2.
 	case MethodWindowLogMessage: // notification
 		var params LogMessageParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		err := client.LogMessage(ctx, &params)
@@ -110,7 +111,7 @@ func clientDispatch(ctx context.Context, client ClientInterface, reply jsonrpc2.
 	case MethodWindowShowMessage: // notification
 		var params ShowMessageParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		err := client.ShowMessage(ctx, &params)
@@ -126,7 +127,7 @@ func clientDispatch(ctx context.Context, client ClientInterface, reply jsonrpc2.
 	case MethodWindowShowMessageRequest: // request
 		var params ShowMessageRequestParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := client.ShowMessageRequest(ctx, &params)
@@ -142,7 +143,7 @@ func clientDispatch(ctx context.Context, client ClientInterface, reply jsonrpc2.
 	case MethodWorkspaceApplyEdit: // request
 		var params ApplyWorkspaceEditParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := client.WorkspaceApplyEdit(ctx, &params)
@@ -158,7 +159,7 @@ func clientDispatch(ctx context.Context, client ClientInterface, reply jsonrpc2.
 	case MethodWorkspaceConfiguration: // request
 		var params ConfigurationParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := client.WorkspaceConfiguration(ctx, &params)
@@ -172,7 +173,7 @@ func clientDispatch(ctx context.Context, client ClientInterface, reply jsonrpc2.
 		return true, reply(ctx, resp, err)
 
 	case MethodWorkspaceWorkspaceFolders: // request
-		if len(r.Params()) > 0 {
+		if len(req.Params()) > 0 {
 			return true, reply(ctx, nil, fmt.Errorf("%w: expected no params", jsonrpc2.ErrInvalidParams))
 		}
 

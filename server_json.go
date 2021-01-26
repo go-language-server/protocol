@@ -18,11 +18,12 @@ import (
 	"go.lsp.dev/pkg/xcontext"
 )
 
-func ServerHandler(server ServerInterface, handler jsonrpc2.Handler) jsonrpc2.Handler {
-	h := func(ctx context.Context, reply jsonrpc2.Replier, req jsonrpc2.Requester) error {
+// ServerHandler jsonrpc2.Handler of Language Server Prococol Server.
+func ServerHandler(server Server, handler jsonrpc2.Handler) jsonrpc2.Handler {
+	h := func(ctx context.Context, reply jsonrpc2.Replier, req jsonrpc2.Request) error {
 		if ctx.Err() != nil {
-			ctx := xcontext.Detach(ctx)
-			return reply(ctx, nil, RequestCancelledError)
+			xctx := xcontext.Detach(ctx)
+			return reply(xctx, nil, ErrRequestCancelled)
 		}
 		handled, err := serverDispatch(ctx, server, reply, req)
 		if handled || err != nil {
@@ -34,7 +35,7 @@ func ServerHandler(server ServerInterface, handler jsonrpc2.Handler) jsonrpc2.Ha
 		// non standard request should just be a layered handler.
 		var params interface{}
 		if err := json.Unmarshal(req.Params(), &params); err != nil {
-			return sendParseError(ctx, reply, err)
+			return replyParseError(ctx, reply, err)
 		}
 
 		return reply(ctx, nil, err)
@@ -44,19 +45,20 @@ func ServerHandler(server ServerInterface, handler jsonrpc2.Handler) jsonrpc2.Ha
 }
 
 // serverDispatch implements jsonrpc2.Handler.
-func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.Replier, r jsonrpc2.Requester) (bool, error) {
+//nolint:gocognit,funlen
+func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, req jsonrpc2.Request) (bool, error) {
 	if ctx.Err() != nil {
-		return true, reply(ctx, nil, RequestCancelledError)
+		return true, reply(ctx, nil, ErrRequestCancelled)
 	}
 
-	dec := json.NewDecoder(bytes.NewReader(r.Params()))
+	dec := json.NewDecoder(bytes.NewReader(req.Params()))
 	logger := LoggerFromContext(ctx)
 
-	switch r.Method() {
+	switch req.Method() {
 	case MethodInitialize: // request
 		var params InitializeParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := server.Initialize(ctx, &params)
@@ -72,7 +74,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodInitialized: // notification
 		var params InitializedParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		err := server.Initialized(ctx, &params)
@@ -86,7 +88,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 		return true, reply(ctx, nil, err)
 
 	case MethodShutdown: // request
-		if len(r.Params()) > 0 {
+		if len(req.Params()) > 0 {
 			return true, reply(ctx, nil, fmt.Errorf("%w: expected no params", jsonrpc2.ErrInvalidParams))
 		}
 
@@ -101,7 +103,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 		return true, reply(ctx, nil, err)
 
 	case MethodExit: // notification
-		if len(r.Params()) > 0 {
+		if len(req.Params()) > 0 {
 			return true, reply(ctx, nil, fmt.Errorf("%w: expected no params", jsonrpc2.ErrInvalidParams))
 		}
 
@@ -118,7 +120,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodTextDocumentCodeAction: // request
 		var params CodeActionParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := server.CodeAction(ctx, &params)
@@ -134,7 +136,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodTextDocumentCodeLens: // request
 		var params CodeLensParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := server.CodeLens(ctx, &params)
@@ -150,7 +152,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodCodeLensResolve: // request
 		var params CodeLens
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := server.CodeLensResolve(ctx, &params)
@@ -166,7 +168,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodTextDocumentColorPresentation: // request
 		var params ColorPresentationParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := server.ColorPresentation(ctx, &params)
@@ -182,7 +184,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodTextDocumentCompletion: // request
 		var params CompletionParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := server.Completion(ctx, &params)
@@ -198,7 +200,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodCompletionItemResolve: // request
 		var params CompletionItem
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := server.CompletionResolve(ctx, &params)
@@ -214,7 +216,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodTextDocumentDeclaration: // request
 		var params TextDocumentPositionParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := server.Declaration(ctx, &params)
@@ -230,7 +232,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodTextDocumentDefinition: // request
 		var params TextDocumentPositionParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := server.Definition(ctx, &params)
@@ -246,7 +248,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodTextDocumentDidChange: // notification
 		var params DidChangeTextDocumentParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		err := server.DidChange(ctx, &params)
@@ -262,7 +264,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodWorkspaceDidChangeConfiguration: // notification
 		var params DidChangeConfigurationParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		err := server.DidChangeConfiguration(ctx, &params)
@@ -278,7 +280,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodWorkspaceDidChangeWatchedFiles: // notification
 		var params DidChangeWatchedFilesParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		err := server.DidChangeWatchedFiles(ctx, &params)
@@ -294,7 +296,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodWorkspaceDidChangeWorkspaceFolders: // notification
 		var params DidChangeWorkspaceFoldersParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		err := server.DidChangeWorkspaceFolders(ctx, &params)
@@ -310,7 +312,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodTextDocumentDidClose: // notification
 		var params DidCloseTextDocumentParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		err := server.DidClose(ctx, &params)
@@ -326,7 +328,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodTextDocumentDidOpen: // notification
 		var params DidOpenTextDocumentParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		err := server.DidOpen(ctx, &params)
@@ -342,7 +344,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodTextDocumentDidSave: // notification
 		var params DidSaveTextDocumentParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		err := server.DidSave(ctx, &params)
@@ -358,7 +360,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodTextDocumentDocumentColor: // request
 		var params DocumentColorParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := server.DocumentColor(ctx, &params)
@@ -374,7 +376,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodTextDocumentDocumentHighlight: // request
 		var params TextDocumentPositionParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := server.DocumentHighlight(ctx, &params)
@@ -390,7 +392,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodTextDocumentDocumentLink: // request
 		var params DocumentLinkParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := server.DocumentLink(ctx, &params)
@@ -406,7 +408,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodDocumentLinkResolve: // request
 		var params DocumentLink
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := server.DocumentLinkResolve(ctx, &params)
@@ -422,7 +424,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodTextDocumentDocumentSymbol: // request
 		var params DocumentSymbolParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := server.DocumentSymbol(ctx, &params)
@@ -438,7 +440,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodWorkspaceExecuteCommand: // request
 		var params ExecuteCommandParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := server.ExecuteCommand(ctx, &params)
@@ -454,7 +456,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodTextDocumentFoldingRange: // request
 		var params FoldingRangeParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := server.FoldingRanges(ctx, &params)
@@ -470,7 +472,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodTextDocumentFormatting: // request
 		var params DocumentFormattingParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := server.Formatting(ctx, &params)
@@ -486,7 +488,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodTextDocumentHover: // request
 		var params TextDocumentPositionParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := server.Hover(ctx, &params)
@@ -502,7 +504,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodTextDocumentImplementation: // request
 		var params TextDocumentPositionParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := server.Implementation(ctx, &params)
@@ -518,7 +520,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodTextDocumentOnTypeFormatting: // request
 		var params DocumentOnTypeFormattingParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := server.OnTypeFormatting(ctx, &params)
@@ -534,7 +536,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodTextDocumentPrepareRename: // request
 		var params TextDocumentPositionParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := server.PrepareRename(ctx, &params)
@@ -550,7 +552,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodTextDocumentRangeFormatting: // request
 		var params DocumentRangeFormattingParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := server.RangeFormatting(ctx, &params)
@@ -566,7 +568,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodTextDocumentReferences: // request
 		var params ReferenceParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 		resp, err := server.References(ctx, &params)
 		reply = func(ctx context.Context, result interface{}, err error) error {
@@ -581,7 +583,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodTextDocumentRename: // request
 		var params RenameParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 		resp, err := server.Rename(ctx, &params)
 		reply = func(ctx context.Context, result interface{}, err error) error {
@@ -596,7 +598,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodTextDocumentSignatureHelp: // request
 		var params TextDocumentPositionParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 		resp, err := server.SignatureHelp(ctx, &params)
 		reply = func(ctx context.Context, result interface{}, err error) error {
@@ -611,7 +613,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodWorkspaceSymbol: // request
 		var params WorkspaceSymbolParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := server.Symbols(ctx, &params)
@@ -627,7 +629,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodTextDocumentTypeDefinition: // request
 		var params TextDocumentPositionParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := server.TypeDefinition(ctx, &params)
@@ -643,7 +645,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodTextDocumentWillSave: // notification
 		var params WillSaveTextDocumentParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		err := server.WillSave(ctx, &params)
@@ -659,7 +661,7 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	case MethodTextDocumentWillSaveWaitUntil: // request
 		var params WillSaveTextDocumentParams
 		if err := dec.Decode(&params); err != nil {
-			return true, sendParseError(ctx, reply, err)
+			return true, replyParseError(ctx, reply, err)
 		}
 
 		resp, err := server.WillSaveWaitUntil(ctx, &params)
@@ -675,6 +677,6 @@ func serverDispatch(ctx context.Context, server ServerInterface, reply jsonrpc2.
 	default:
 		var params interface{}
 		err := dec.Decode(&params)
-		return true, sendParseError(ctx, nil, err)
+		return true, replyParseError(ctx, nil, err)
 	}
 }

@@ -1,5 +1,5 @@
-// Copyright 2020 The Go Language Server Authors
 // SPDX-License-Identifier: BSD-3-Clause
+// SPDX-FileCopyrightText: Copyright 2021 The Go Language Server Authors
 
 package protocol
 
@@ -12,11 +12,13 @@ import (
 	"go.lsp.dev/pkg/xcontext"
 )
 
+// RequestCancelledCode cancel request code.
 const RequestCancelledCode jsonrpc2.Code = -32800
 
-// RequestCancelledError should be used when a request is canceled early.
-var RequestCancelledError = jsonrpc2.NewError(RequestCancelledCode, "JSON RPC cancelled")
+// ErrRequestCancelled should be used when a request is canceled early.
+var ErrRequestCancelled = jsonrpc2.NewError(RequestCancelledCode, "cancelled JSON-RPC")
 
+// Handlers default jsonrpc2.Handler.
 func Handlers(handler jsonrpc2.Handler) jsonrpc2.Handler {
 	return CancelHandler(
 		jsonrpc2.AsyncHandler(
@@ -25,11 +27,12 @@ func Handlers(handler jsonrpc2.Handler) jsonrpc2.Handler {
 	)
 }
 
+// CancelHandler handler of cancelling.
 func CancelHandler(handler jsonrpc2.Handler) jsonrpc2.Handler {
 	handler, canceller := jsonrpc2.CancelHandler(handler)
 
-	h := func(ctx context.Context, reply jsonrpc2.Replier, req jsonrpc2.Requester) error {
-		if req.Method() != "$/cancelRequest" {
+	h := func(ctx context.Context, reply jsonrpc2.Replier, req jsonrpc2.Request) error {
+		if req.Method() != MethodCancelRequest {
 			// TODO(iancottrell): See if we can generate a reply for the request to be cancelled
 			// at the point of cancellation rather than waiting for gopls to naturally reply.
 			// To do that, we need to keep track of whether a reply has been sent already and
@@ -39,7 +42,7 @@ func CancelHandler(handler jsonrpc2.Handler) jsonrpc2.Handler {
 			reply := func(ctx context.Context, resp interface{}, err error) error {
 				// https://microsoft.github.io/language-server-protocol/specifications/specification-current/#cancelRequest
 				if ctx.Err() != nil && err == nil {
-					err = RequestCancelledError
+					err = ErrRequestCancelled
 				}
 				ctx = xcontext.Detach(ctx)
 				return reply(ctx, resp, err)
@@ -49,7 +52,7 @@ func CancelHandler(handler jsonrpc2.Handler) jsonrpc2.Handler {
 
 		var params CancelParams
 		if err := json.Unmarshal(req.Params(), &params); err != nil {
-			return sendParseError(ctx, reply, err)
+			return replyParseError(ctx, reply, err)
 		}
 
 		switch id := params.ID.(type) {
@@ -58,7 +61,7 @@ func CancelHandler(handler jsonrpc2.Handler) jsonrpc2.Handler {
 		case string:
 			canceller(jsonrpc2.NewStringID(id))
 		default:
-			return sendParseError(ctx, reply, fmt.Errorf("request ID %v malformed", id))
+			return replyParseError(ctx, reply, fmt.Errorf("request ID %v malformed", id))
 		}
 
 		return reply(ctx, nil, nil)
@@ -67,20 +70,21 @@ func CancelHandler(handler jsonrpc2.Handler) jsonrpc2.Handler {
 	return h
 }
 
+// Call calls method to params and result.
 func Call(ctx context.Context, conn jsonrpc2.Conn, method string, params, result interface{}) error {
 	id, err := conn.Call(ctx, method, params, result)
 	if ctx.Err() != nil {
-		cancelCall(ctx, conn, id)
+		notifyCancel(ctx, conn, id)
 	}
 	return err
 }
 
-func cancelCall(ctx context.Context, conn jsonrpc2.Conn, id jsonrpc2.ID) {
+func notifyCancel(ctx context.Context, conn jsonrpc2.Conn, id jsonrpc2.ID) {
 	ctx = xcontext.Detach(ctx)
 	// Note that only *jsonrpc2.ID implements json.Marshaler.
 	conn.Notify(ctx, "$/cancelRequest", &CancelParams{ID: &id})
 }
 
-func sendParseError(ctx context.Context, reply jsonrpc2.Replier, err error) error {
+func replyParseError(ctx context.Context, reply jsonrpc2.Replier, err error) error {
 	return reply(ctx, nil, fmt.Errorf("%s: %w", jsonrpc2.ErrParse, err))
 }

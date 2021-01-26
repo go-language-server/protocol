@@ -12,9 +12,8 @@ import (
 	"go.lsp.dev/jsonrpc2"
 )
 
-// ServerInterface represents a Language Server Protocol server.
-type ServerInterface interface {
-	// Run(ctx context.Context) (err error)
+// Server represents a Language Server Protocol server.
+type Server interface {
 	Initialize(ctx context.Context, params *InitializeParams) (result *InitializeResult, err error)
 	Initialized(ctx context.Context, params *InitializedParams) (err error)
 	Shutdown(ctx context.Context) (err error)
@@ -184,7 +183,7 @@ type server struct {
 	logger *zap.Logger
 }
 
-var _ ServerInterface = (*server)(nil)
+var _ Server = (*server)(nil)
 
 // Run runs the Language Server Protocol server.
 // func (s *server) Run(ctx context.Context) (err error) {
@@ -224,8 +223,7 @@ func (s *server) Initialized(ctx context.Context, params *InitializedParams) (er
 	s.logger.Debug("notify " + MethodInitialized)
 	defer s.logger.Debug("end " + MethodInitialized)
 
-	err = s.Conn.Notify(ctx, MethodInitialized, params)
-	return err
+	return s.Conn.Notify(ctx, MethodInitialized, params)
 }
 
 // Shutdown sents the request from the client to the server.
@@ -250,8 +248,7 @@ func (s *server) Exit(ctx context.Context) (err error) {
 	s.logger.Debug("notify " + MethodExit)
 	defer s.logger.Debug("end " + MethodExit)
 
-	err = s.Conn.Notify(ctx, MethodExit, nil)
-	return err
+	return s.Conn.Notify(ctx, MethodExit, nil)
 }
 
 // CodeAction sends the request is from the client to the server to compute commands for a given text document and range.
@@ -358,14 +355,12 @@ func (s *server) DidChange(ctx context.Context, params *DidChangeTextDocumentPar
 	s.logger.Debug("notify " + MethodTextDocumentDidChange)
 	defer s.logger.Debug("end " + MethodTextDocumentDidChange)
 
-	err = s.Conn.Notify(ctx, MethodTextDocumentDidChange, params)
-	return
+	return s.Conn.Notify(ctx, MethodTextDocumentDidChange, params)
 }
 
 // DidChangeConfiguration sends the notification from the client to the server to signal the change of configuration settings.
 func (s *server) DidChangeConfiguration(ctx context.Context, params *DidChangeConfigurationParams) (err error) {
-	err = s.Conn.Notify(ctx, MethodWorkspaceDidChangeConfiguration, params)
-	return
+	return s.Conn.Notify(ctx, MethodWorkspaceDidChangeConfiguration, params)
 }
 
 // DidChangeWatchedFiles sends the notification from the client to the server when the client detects changes to files watched by the language client.
@@ -373,8 +368,7 @@ func (s *server) DidChangeConfiguration(ctx context.Context, params *DidChangeCo
 // It is recommended that servers register for these file events using the registration mechanism.
 // In former implementations clients pushed file events without the server actively asking for it.
 func (s *server) DidChangeWatchedFiles(ctx context.Context, params *DidChangeWatchedFilesParams) (err error) {
-	err = s.Conn.Notify(ctx, MethodWorkspaceDidChangeWatchedFiles, params)
-	return
+	return s.Conn.Notify(ctx, MethodWorkspaceDidChangeWatchedFiles, params)
 }
 
 // DidChangeWorkspaceFolders sents the notification from the client to the server to inform the server about workspace folder configuration changes.
@@ -385,8 +379,7 @@ func (s *server) DidChangeWatchedFiles(ctx context.Context, params *DidChangeWat
 //
 // The registration parameter must have a registrations item of the following form, where id is a unique id used to unregister the capability (the example uses a UUID).
 func (s *server) DidChangeWorkspaceFolders(ctx context.Context, params *DidChangeWorkspaceFoldersParams) (err error) {
-	err = s.Conn.Notify(ctx, MethodWorkspaceDidChangeWorkspaceFolders, params)
-	return
+	return s.Conn.Notify(ctx, MethodWorkspaceDidChangeWorkspaceFolders, params)
 }
 
 // DidClose sends the notification from the client to the server when the document got closed in the client.
@@ -398,8 +391,7 @@ func (s *server) DidChangeWorkspaceFolders(ctx context.Context, params *DidChang
 // A close notification requires a previous open notification to be sent.
 // Note that a server’s ability to fulfill requests is independent of whether a text document is open or closed.
 func (s *server) DidClose(ctx context.Context, params *DidCloseTextDocumentParams) (err error) {
-	err = s.Conn.Notify(ctx, MethodTextDocumentDidClose, params)
-	return
+	return s.Conn.Notify(ctx, MethodTextDocumentDidClose, params)
 }
 
 // DidOpen sends the open notification from the client to the server to signal newly opened text documents.
@@ -414,14 +406,12 @@ func (s *server) DidOpen(ctx context.Context, params *DidOpenTextDocumentParams)
 	s.logger.Debug("call " + MethodTextDocumentDidOpen)
 	defer s.logger.Debug("end " + MethodTextDocumentDidOpen)
 
-	err = s.Conn.Notify(ctx, MethodTextDocumentDidOpen, params)
-	return
+	return s.Conn.Notify(ctx, MethodTextDocumentDidOpen, params)
 }
 
 // DidSave sends the notification from the client to the server when the document was saved in the client.
 func (s *server) DidSave(ctx context.Context, params *DidSaveTextDocumentParams) (err error) {
-	err = s.Conn.Notify(ctx, MethodTextDocumentDidSave, params)
-	return
+	return s.Conn.Notify(ctx, MethodTextDocumentDidSave, params)
 }
 
 // DocumentColor sends the request from the client to the server to list all color references found in a given text document.
@@ -583,8 +573,7 @@ func (s *server) TypeDefinition(ctx context.Context, params *TextDocumentPositio
 
 // WillSave sends the notification from the client to the server before the document is actually saved.
 func (s *server) WillSave(ctx context.Context, params *WillSaveTextDocumentParams) (err error) {
-	err = s.Conn.Notify(ctx, MethodTextDocumentWillSave, params)
-	return
+	return s.Conn.Notify(ctx, MethodTextDocumentWillSave, params)
 }
 
 // WillSaveWaitUntil sends the request from the client to the server before the document is actually saved.

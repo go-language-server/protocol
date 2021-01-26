@@ -10,11 +10,9 @@ import (
 	"go.uber.org/zap"
 )
 
-type contextKey int
-
-const (
-	ctxLogger contextKey = 1 + iota
-	ctxClient
+var (
+	ctxLogger struct{}
+	ctxClient struct{}
 )
 
 // WithLogger returns the context with zap.Logger value.
@@ -33,6 +31,6 @@ func LoggerFromContext(ctx context.Context) *zap.Logger {
 }
 
 // WithClient returns the context with Client value.
-func WithClient(ctx context.Context, client ClientInterface) context.Context {
+func WithClient(ctx context.Context, client Client) context.Context {
 	return context.WithValue(ctx, ctxClient, client)
 }

@@ -13,11 +13,12 @@ import (
 	"go.lsp.dev/pkg/xcontext"
 )
 
-func ClientHandler(client ClientInterface, handler jsonrpc2.Handler) jsonrpc2.Handler {
-	h := func(ctx context.Context, reply jsonrpc2.Replier, req jsonrpc2.Requester) error {
+// ClientHandler handler of LSP client.
+func ClientHandler(client Client, handler jsonrpc2.Handler) jsonrpc2.Handler {
+	h := func(ctx context.Context, reply jsonrpc2.Replier, req jsonrpc2.Request) error {
 		if ctx.Err() != nil {
-			ctx := xcontext.Detach(ctx)
-			return reply(ctx, nil, RequestCancelledError)
+			xctx := xcontext.Detach(ctx)
+			return reply(xctx, nil, ErrRequestCancelled)
 		}
 		handled, err := clientDispatch(ctx, client, reply, req)
 		if handled || err != nil {
@@ -29,9 +30,8 @@ func ClientHandler(client ClientInterface, handler jsonrpc2.Handler) jsonrpc2.Ha
 	return h
 }
 
-// ClientInterface represents a Language Server Protocol client.
-type ClientInterface interface {
-	// Run(ctx context.Context) (err error)
+// Client represents a Language Server Protocol client.
+type Client interface {
 	LogMessage(ctx context.Context, params *LogMessageParams) (err error)
 	PublishDiagnostics(ctx context.Context, params *PublishDiagnosticsParams) (err error)
 	ShowMessage(ctx context.Context, params *ShowMessageParams) (err error)
@@ -79,22 +79,16 @@ const (
 // client implements a Language Server Protocol client.
 type client struct {
 	jsonrpc2.Conn
+
 	logger *zap.Logger
 }
 
 // compiler time check whether the Client implements ClientInterface interface.
-var _ ClientInterface = (*client)(nil)
-
-// Run runs the Language Server Protocol client.
-// func (c *client) Run(ctx context.Context) (err error) {
-// 	_, err = c.Conn.Run(ctx)
-// 	return
-// }
+var _ Client = (*client)(nil)
 
 // LogMessage sends the notification from the server to the client to ask the client to log a particular message.
 func (c *client) LogMessage(ctx context.Context, params *LogMessageParams) (err error) {
-	err = c.Conn.Notify(ctx, MethodWindowLogMessage, params)
-	return
+	return c.Conn.Notify(ctx, MethodWindowLogMessage, params)
 }
 
 // PublishDiagnostics sends the notification from the server to the client to signal results of validation runs.
@@ -108,15 +102,13 @@ func (c *client) LogMessage(ctx context.Context, params *LogMessageParams) (err 
 // If the computed set is empty it has to push the empty array to clear former diagnostics.
 // Newly pushed diagnostics always replace previously pushed diagnostics. There is no merging that happens on the client side.
 func (c *client) PublishDiagnostics(ctx context.Context, params *PublishDiagnosticsParams) (err error) {
-	err = c.Conn.Notify(ctx, MethodTextDocumentPublishDiagnostics, params)
-	return
+	return c.Conn.Notify(ctx, MethodTextDocumentPublishDiagnostics, params)
 }
 
 // ShowMessage sends the notification from a server to a client to ask the
 // client to display a particular message in the user interface.
 func (c *client) ShowMessage(ctx context.Context, params *ShowMessageParams) (err error) {
-	err = c.Conn.Notify(ctx, MethodWindowShowMessage, params)
-	return
+	return c.Conn.Notify(ctx, MethodWindowShowMessage, params)
 }
 
 // ShowMessageRequest sends the request from a server to a client to ask the client to display a particular message in the user interface.
@@ -131,8 +123,7 @@ func (c *client) ShowMessageRequest(ctx context.Context, params *ShowMessageRequ
 
 // Telemetry sends the notification from the server to the client to ask the client to log a telemetry event.
 func (c *client) Telemetry(ctx context.Context, params interface{}) (err error) {
-	err = c.Conn.Notify(ctx, MethodTelemetryEvent, params)
-	return
+	return c.Conn.Notify(ctx, MethodTelemetryEvent, params)
 }
 
 // RegisterCapability sends the request from the server to the client to register for a new capability on the client side.
