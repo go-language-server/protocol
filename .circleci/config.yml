@@ -6,13 +6,14 @@ orbs:
 
 jobs:
   test:
+    parameters:
+      go-version:
+        type: string
     executor:
       name: golang/buster
-      tag: "1.14-buster"
+      version: "<< parameters.go-version >>"
     working_directory: /go/src/go.lsp.dev/protocol
     resource_class: large
-    environment:
-      GO111MODULE: "on"
     parallelism: 2
     steps:
       - checkout
@@ -32,13 +33,14 @@ jobs:
           path: /tmp/ci/test-results
 
   lint:
+    parameters:
+      go-version:
+        type: string
     executor:
       name: golang/buster
-      tag: "1.14-buster"
+      version: "<< parameters.go-version >>"
     working_directory: /go/src/go.lsp.dev/protocol
     resource_class: large
-    environment:
-      GO111MODULE: "on"
     parallelism: 2
     steps:
       - checkout
@@ -54,5 +56,11 @@ workflows:
     jobs:
       - test:
           context: org-global
+          matrix:
+            parameters:
+              go-version: ["1.15-buster", "1.16-rc-buster"]
       - lint:
           context: org-global
+          matrix:
+            parameters:
+              go-version: ["1.15-buster", "1.16-rc-buster"]
