@@ -10,7 +10,7 @@ jobs:
       go-version:
         type: string
     executor:
-      name: golang/buster
+      name: golang/linux
       version: "<< parameters.go-version >>"
     working_directory: /go/src/go.lsp.dev/protocol
     resource_class: large
@@ -37,7 +37,7 @@ jobs:
       go-version:
         type: string
     executor:
-      name: golang/buster
+      name: golang/linux
       version: "<< parameters.go-version >>"
     working_directory: /go/src/go.lsp.dev/protocol
     resource_class: large
