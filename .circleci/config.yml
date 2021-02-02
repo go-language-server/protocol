@@ -20,17 +20,25 @@ jobs:
       - golang/gomod
       - run:
           name: Test and collect coverages
+          environment:
+            # https://github.com/gotestyourself/gotestsum#format
+            GOTESTSUM_FORMAT: standard-verbose
+            # https://github.com/gotestyourself/gotestsum#junit-xml
+            GOTESTSUM_JUNITFILE: /tmp/test-results/tests.xml
+            # https://github.com/gotestyourself/gotestsum#finding-and-skipping-slow-tests
+            GOTESTSUM_JSONFILE: /tmp/test-results/tests.json
           command: |
+            mkdir -p /tmp/artifacts /tmp/test-results
             make $(circleci tests split .circleci/coverage-targets)
       - codecov/upload:
-          file: "/tmp/ci/artifacts/coverage.out"
+          file: "coverage.out"
           flags: $(if [ $CIRCLE_NODE_INDEX == 0 ]; then echo "json"; else echo "gojay"; fi)
       - store_artifacts:
-          path: /tmp/ci/artifacts
+          path: /tmp/artifacts
       - store_test_results:
-          path: /tmp/ci/artifacts
+          path: /tmp/artifacts
       - store_test_results:
-          path: /tmp/ci/test-results
+          path: /tmp/test-results
 
   lint:
     parameters:
