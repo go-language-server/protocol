@@ -7,8 +7,9 @@ package protocol
 import (
 	"context"
 
-	"go.lsp.dev/jsonrpc2"
 	"go.uber.org/zap"
+
+	"go.lsp.dev/jsonrpc2"
 )
 
 // ReplyError replies error message.

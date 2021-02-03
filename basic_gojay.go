@@ -8,6 +8,7 @@ package protocol
 
 import (
 	"github.com/francoispqt/gojay"
+
 	"go.lsp.dev/uri"
 )
 

@@ -11,8 +11,9 @@ import (
 	"context"
 	"encoding/json"
 
-	"go.lsp.dev/jsonrpc2"
 	"go.uber.org/zap"
+
+	"go.lsp.dev/jsonrpc2"
 )
 
 // Deliver implements jsonrpc2.Handler.

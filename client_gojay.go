@@ -10,8 +10,9 @@ import (
 	"bytes"
 	"context"
 
-	"go.lsp.dev/jsonrpc2"
 	"go.uber.org/zap"
+
+	"go.lsp.dev/jsonrpc2"
 
 	"go.lsp.dev/protocol/internal/gojaypool"
 )
