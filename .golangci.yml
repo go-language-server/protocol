@@ -126,6 +126,7 @@ linters:
     # - gochecknoinits
     # - godox
     # - gomnd
+    # - gosec
     # - lll
     # - maligned
     # - megacheck
@@ -146,7 +147,6 @@ linters:
     - gofmt
     - goimports
     - golint
-    - gosec
     - gosimple
     - govet
     - ineffassign

@@ -29,13 +29,10 @@ GO_TEST_FLAGS ?= -race -count=1
 GO_TEST_FUNC ?= .
 GO_BENCH_FLAGS ?= -benchmem
 GO_BENCH_FUNC ?= .
+GO_LINT_FLAGS ?=
 
 # Set build environment
 JOBS := $(shell getconf _NPROCESSORS_CONF)
-ifeq ($(CIRCLECI),true)
-	# https://circleci.com/changelog#container-cgroup-limits-now-visible-inside-the-docker-executor
-	JOBS := $(shell echo $$(($$(cat /sys/fs/cgroup/cpu/cpu.shares) / 1024)))
-endif
 
 # -----------------------------------------------------------------------------
 # defines
@@ -92,7 +89,7 @@ fmt: tools/goimports tools/gofumpt  ## Run goimports and gofumpt.
 .PHONY: lint/golangci-lint
 lint/golangci-lint: tools/golangci-lint .golangci.yml  ## Run golangci-lint.
 	$(call target)
-	${TOOLS_BIN}/golangci-lint -j ${JOBS} run ./...
+	${TOOLS_BIN}/golangci-lint -j ${JOBS} run $(strip ${GO_LINT_FLAGS}) ./...
 
 
 ##@ tools

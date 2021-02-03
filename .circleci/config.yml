@@ -2,59 +2,138 @@ version: 2.1
 
 orbs:
   golang: cci-orb/golang@volatile
-  codecov: codecov/codecov@volatile
+  codecov: codecov/codecov@1.1.3
+
+command_vars:
+  - cache_key: &cache_key gomod-<< parameters.go-version >>-{{ checksum "go.mod" }}-{{ checksum "go.sum" }}
+  - cache_tools_key: &cache_tools_key tools-<< parameters.go-version >>-{{ checksum "tools/go.mod" }}-{{ checksum "tools/go.sum" }}
+
+commands:
+  restore_dependencies:
+    parameters:
+      go-version:
+        type: string
+    steps:
+      - restore_cache:
+          name: "Restore module dependencies cache"
+          keys:
+            - *cache_key
+      - restore_cache:
+          name: "Restore dependencies tools"
+          keys:
+            - *cache_tools_key
+      - run:
+          name: "Download project modules"
+          command: |
+            go mod download
+
+  save_dependencies:
+    parameters:
+      go-version:
+        type: string
+    steps:
+      - save_cache:
+          name: "Save module cache"
+          key: *cache_key
+          paths:
+            - /go/pkg/mod/cache
+      - save_cache:
+          name: "Save dependencies tools"
+          key: *cache_tools_key
+          paths:
+            - /go/bin/
+      - run:
+          name: "go mod vendor"
+          command: |
+            go mod vendor
+
+  setup:
+    steps:
+      - checkout
+      - run:
+          name: Check versions
+          command: |
+            go version
+            go env
+      - run:
+          name: "Parse CPUs"
+          command: |
+            # https://circleci.com/changelog#container-cgroup-limits-now-visible-inside-the-docker-executor
+            CPUS="$(echo $(($(cat /sys/fs/cgroup/cpu/cpu.shares) / 1024)))"
+            echo "export CPUS=${CPUS}" >> $BASH_ENV
+
+  install_tools:
+    steps:
+      - run:
+          name: "Download project tool dependencies"
+          command: |
+            if [ -z $(find /go/bin/ -mindepth 1 -type f -executable | head -1) ]; then
+              make -j${CPUS} tools GOBIN=/go/bin
+            fi
+
+  set_goflags:
+    steps:
+      - run:
+          name: "Parse CPUs"
+          command: |
+            echo "export GOFLAGS='-p=${CPUS} -cpu=${CPUS}'" >> $BASH_ENV
 
 jobs:
   test:
     parameters:
       go-version:
         type: string
-    executor:
-      name: golang/linux
-      version: "<< parameters.go-version >>"
+    docker:
+      - image: golang:<< parameters.go-version >>
+        auth:
+          username: $DOCKERHUB_USER
+          password: $DOCKERHUB_PASSWORD
     working_directory: /go/src/go.lsp.dev/protocol
-    resource_class: large
+    resource_class: xlarge
     parallelism: 2
     steps:
-      - checkout
-      - golang/gomod
+      - restore_dependencies:
+          go-version: << parameters.go-version >>
+      - install_tools
+      - save_dependencies:
+          go-version: << parameters.go-version >>
+      - set_goflags
       - run:
-          name: Test and collect coverages
+          name: Test and take a coverage
           environment:
-            # https://github.com/gotestyourself/gotestsum#format
             GOTESTSUM_FORMAT: standard-verbose
-            # https://github.com/gotestyourself/gotestsum#junit-xml
             GOTESTSUM_JUNITFILE: /tmp/test-results/tests.xml
-            # https://github.com/gotestyourself/gotestsum#finding-and-skipping-slow-tests
             GOTESTSUM_JSONFILE: /tmp/test-results/tests.json
           command: |
-            mkdir -p /tmp/artifacts /tmp/test-results
+            mkdir -p /tmp/test-results
             make $(circleci tests split .circleci/coverage-targets)
       - codecov/upload:
           file: "coverage.out"
-          flags: $(if [ $CIRCLE_NODE_INDEX == 0 ]; then echo "json"; else echo "gojay"; fi)
-      - store_artifacts:
-          path: /tmp/test-results
-      - store_test_results:
-          path: /tmp/test-results
+          when: on_success
 
   lint:
     parameters:
       go-version:
         type: string
-    executor:
-      name: golang/linux
-      version: "<< parameters.go-version >>"
+    docker:
+      - image: golang:<< parameters.go-version >>
+        auth:
+          username: $DOCKERHUB_USER
+          password: $DOCKERHUB_PASSWORD
     working_directory: /go/src/go.lsp.dev/protocol
     resource_class: large
     parallelism: 2
     steps:
-      - checkout
-      - golang/gomod
+      - restore_dependencies:
+          go-version: << parameters.go-version >>
+      - install_tools
+      - save_dependencies:
+          go-version: << parameters.go-version >>
       - run:
-          name: Run lint for sources
+          name: Run fmt and lint for sources
           command: |
-            make lint GO_LINT_FLAGS=$(circleci tests split .circleci/lint-buildtags)
+            make lint GO_LINT_FLAGS="$(circleci tests split .circleci/lint-buildtags)" JOBS=${CPUS}
+            git add -N . && git diff --exit-code
 
 workflows:
   version: 2
@@ -65,8 +144,18 @@ workflows:
           matrix:
             parameters:
               go-version: ["1.15-buster", "1.16-rc-buster"]
+          pre-steps:
+            - setup
+          post-steps:
+            - store_test_results:
+                path: /tmp/test-results
+            - store_artifacts:
+                path: /tmp/test-results
+
       - lint:
           context: org-global
           matrix:
             parameters:
-              go-version: ["1.15-buster", "1.16-rc-buster"]
+              go-version: ["1.15-buster"]
+          pre-steps:
+            - setup
