@@ -34,9 +34,7 @@ jobs:
           file: "coverage.out"
           flags: $(if [ $CIRCLE_NODE_INDEX == 0 ]; then echo "json"; else echo "gojay"; fi)
       - store_artifacts:
-          path: /tmp/artifacts
-      - store_test_results:
-          path: /tmp/artifacts
+          path: /tmp/test-results
       - store_test_results:
           path: /tmp/test-results
 

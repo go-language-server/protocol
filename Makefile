@@ -21,7 +21,7 @@ TOOLS_DIR := ${CURDIR}/tools
 TOOLS_BIN := ${TOOLS_DIR}/bin
 TOOLS := $(shell cd ${TOOLS_DIR} && go list -v -x -f '{{ join .Imports " " }}' -tags=tools)
 
-GO_PKGS := $(shell go list ./...)
+GO_PKGS := ./...
 
 GO_TEST ?= ${TOOLS_BIN}/gotestsum --
 GO_TEST_PKGS ?= $(shell go list -f='{{if or .TestGoFiles .XTestGoFiles}}{{.ImportPath}}{{end}}' ./...)
@@ -72,8 +72,7 @@ bench:  ## Take a package benchmark.
 coverage: CGO_ENABLED=1
 coverage: tools/bin/gotestsum  ## Takes packages test coverage.
 	$(call target)
-	CGO_ENABLED=${CGO_ENABLED} ${GO_TEST} ${GO_TEST_FLAGS} -covermode=atomic -coverpkg=${PKG}/... -coverprofile=coverage.out $(strip ${GO_FLAGS}) ${GO_PKGS}
-	@if [ -f 'coverage.out' ]; then go tool cover -html='coverage.out' -o /tmp/artifacts/coverage.html; fi
+	CGO_ENABLED=${CGO_ENABLED} ${GO_TEST} ${GO_TEST_FLAGS} -covermode=atomic -coverpkg=./... -coverprofile=coverage.out $(strip ${GO_FLAGS}) ${GO_PKGS}
 
 .PHONY: coverage/gojay
 coverage/gojay: GO_BUILDTAGS+=gojay
