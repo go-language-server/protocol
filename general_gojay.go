@@ -221,7 +221,7 @@ func (v SymbolKinds) MarshalJSONArray(enc *gojay.Encoder) {
 // IsNil implements gojay.MarshalerJSONArray.
 func (v SymbolKinds) IsNil() bool { return len(v) == 0 }
 
-// UnmarshalJSONArray decodes JSON array elements into slice
+// UnmarshalJSONArray decodes JSON array elements into slice.
 func (v *SymbolKinds) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	var value SymbolKind
 	if err := dec.Float64((*float64)(&value)); err != nil {
@@ -492,7 +492,7 @@ func (v MarkupKinds) MarshalJSONArray(enc *gojay.Encoder) {
 // IsNil implements gojay.MarshalerJSONArray.
 func (v MarkupKinds) IsNil() bool { return len(v) == 0 }
 
-// UnmarshalJSONArray decodes JSON array elements into slice
+// UnmarshalJSONArray decodes JSON array elements into slice.
 func (v *MarkupKinds) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	var value MarkupKind
 	if err := dec.String((*string)(&value)); err != nil {
@@ -1236,6 +1236,7 @@ func (v *TextDocumentClientCapabilities) MarshalJSONObject(enc *gojay.Encoder) {
 func (v *TextDocumentClientCapabilities) IsNil() bool { return v == nil }
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
+//nolint:funlen,gocognit
 func (v *TextDocumentClientCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keySynchronization:
@@ -1887,6 +1888,7 @@ func (v *ServerCapabilities) MarshalJSONObject(enc *gojay.Encoder) {
 func (v *ServerCapabilities) IsNil() bool { return v == nil }
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
+//nolint:funlen
 func (v *ServerCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keyTextDocumentSync:

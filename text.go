@@ -90,7 +90,7 @@ func (t TextDocumentSaveReason) String() string {
 	}
 }
 
-// TextDocumentWillSaveEvent is
+// TextDocumentWillSaveEvent is.
 type TextDocumentWillSaveEvent struct {
 	// Document is the document that will be saved.
 	Document TextDocument `json:"document"`

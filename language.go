@@ -395,7 +395,7 @@ type SignatureHelpRegistrationOptions struct {
 	TriggerCharacters []string `json:"triggerCharacters,omitempty"`
 }
 
-// ReferenceParams params of Find References Request
+// ReferenceParams params of Find References Request.
 type ReferenceParams struct {
 	TextDocumentPositionParams
 
@@ -657,12 +657,12 @@ type CodeActionParams struct {
 // to a default value when unknown.
 type CodeActionKind string
 
-// A set of predefined code action kinds
+// A set of predefined code action kinds.
 const (
-	// QuickFix base kind for quickfix actions: 'quickfix'
+	// QuickFix base kind for quickfix actions: 'quickfix'.
 	QuickFix CodeActionKind = "quickfix"
 
-	// Refactor base kind for refactoring actions: 'refactor'
+	// Refactor base kind for refactoring actions: 'refactor'.
 	Refactor CodeActionKind = "refactor"
 
 	// RefactorExtract base kind for refactoring extraction actions: 'refactor.extract'
@@ -703,7 +703,7 @@ const (
 	// Source code actions apply to the entire file.
 	Source CodeActionKind = "source"
 
-	// SourceOrganizeImports base kind for an organize imports source action: `source.organizeImports`
+	// SourceOrganizeImports base kind for an organize imports source action: `source.organizeImports`.
 	SourceOrganizeImports CodeActionKind = "source.organizeImports"
 )
 
@@ -957,7 +957,7 @@ const (
 
 // FoldingRange capabilities specific to `textDocument/foldingRange` requests.
 //
-// Since 3.10.0
+// Since 3.10.0.
 type FoldingRange struct {
 	// StartLine is the zero-based line number from where the folded range starts.
 	StartLine float64 `json:"startLine"`

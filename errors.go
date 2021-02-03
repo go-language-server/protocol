@@ -6,6 +6,7 @@ package protocol
 
 import (
 	"context"
+	"errors"
 
 	"go.uber.org/zap"
 
@@ -14,7 +15,8 @@ import (
 
 // ReplyError replies error message.
 func ReplyError(ctx context.Context, err error, req *jsonrpc2.Request) {
-	if _, ok := err.(*jsonrpc2.Error); !ok {
+	var jrpcErr *jsonrpc2.Error
+	if !errors.As(err, &jrpcErr) {
 		err = jsonrpc2.Errorf(jsonrpc2.ParseError, "%v", err)
 	}
 

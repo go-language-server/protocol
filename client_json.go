@@ -17,6 +17,7 @@ import (
 )
 
 // Deliver implements jsonrpc2.Handler.
+//nolint:funlen,gocognit
 func (h clientHandler) Deliver(ctx context.Context, r *jsonrpc2.Request, delivered bool) bool {
 	if delivered {
 		return false

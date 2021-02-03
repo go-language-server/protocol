@@ -593,10 +593,10 @@ type DocumentSelector []*DocumentFilter
 type MarkupKind string
 
 const (
-	// PlainText is supported as a content format
+	// PlainText is supported as a content format.
 	PlainText MarkupKind = "plaintext"
 
-	// Markdown is supported as a content format
+	// Markdown is supported as a content format.
 	Markdown MarkupKind = "markdown"
 )
 

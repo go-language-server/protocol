@@ -132,10 +132,10 @@ const (
 	// CreateWatch interested in create events.
 	CreateWatch WatchKind = 1
 
-	// ChangeWatch interested in change events
+	// ChangeWatch interested in change events.
 	ChangeWatch WatchKind = 2
 
-	// DeleteWatch interested in delete events
+	// DeleteWatch interested in delete events.
 	DeleteWatch WatchKind = 4
 )
 

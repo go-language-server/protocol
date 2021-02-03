@@ -323,7 +323,7 @@ func (s *server) CodeLensResolve(ctx context.Context, params *CodeLens) (result 
 // Clients can use the result to
 //
 // - modify a color reference.
-// - show in a color picker and let users pick one of the presentations
+// - show in a color picker and let users pick one of the presentations.
 func (s *server) ColorPresentation(ctx context.Context, params *ColorPresentationParams) (result []ColorPresentation, err error) {
 	err = s.Conn.Call(ctx, MethodTextDocumentColorPresentation, params, &result)
 
@@ -418,7 +418,7 @@ func (s *server) DidChangeWatchedFiles(ctx context.Context, params *DidChangeWat
 // or if the server has registered itself to receive this notification.
 // To register for the workspace/didChangeWorkspaceFolders send a client/registerCapability request from the server to the client.
 //
-// The registration parameter must have a registrations item of the following form, where id is a unique id used to unregister the capability (the example uses a UUID)
+// The registration parameter must have a registrations item of the following form, where id is a unique id used to unregister the capability (the example uses a UUID).
 func (s *server) DidChangeWorkspaceFolders(ctx context.Context, params *DidChangeWorkspaceFoldersParams) (err error) {
 	err = s.Conn.Notify(ctx, MethodWorkspaceDidChangeWorkspaceFolders, params)
 	return
@@ -467,7 +467,7 @@ func (s *server) DidSave(ctx context.Context, params *DidSaveTextDocumentParams)
 // For example:
 //
 // - Color boxes showing the actual color next to the reference
-// - Show a color picker when a color reference is edited
+// - Show a color picker when a color reference is edited.
 func (s *server) DocumentColor(ctx context.Context, params *DocumentColorParams) (result []ColorInformation, err error) {
 	err = s.Conn.Call(ctx, MethodTextDocumentDocumentColor, params, &result)
 
