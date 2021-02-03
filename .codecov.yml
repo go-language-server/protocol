@@ -1,5 +1,8 @@
+codecov:
+  allow_coverage_offsets: true
+
 coverage:
-  precision: 0
+  precision: 1
   round: down
   range: "70...100"
 
@@ -43,10 +46,11 @@ flags:
     carryforward: true
 
 ignore:
-  - "internal"
-  - "vendor"
+  - "internal/gojaypool/gojaypool.go"
 
 comment:
-  layout: "reach, diff, flags, files"
-  behavior: new
-  require_changes: true
+  behavior: default
+  show_carryforward_flags: true
+
+github_checks:
+  annotations: true
