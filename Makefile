@@ -83,6 +83,7 @@ lint: fmt lint/golangci-lint  ## Run all linters.
 
 .PHONY: fmt
 fmt: tools/goimports tools/gofumpt  ## Run goimports and gofumpt.
+	$(call target)
 	find . -iname "*.go" -not -path "./vendor/**" | xargs -P ${JOBS} ${TOOLS_BIN}/goimports -local=${PKG},$(subst /protocol,,$(PKG)) -w
 	find . -iname "*.go" -not -path "./vendor/**" | xargs -P ${JOBS} ${TOOLS_BIN}/gofumpt -s -extra -w
 
