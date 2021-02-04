@@ -38,7 +38,8 @@ func ServerHandler(server Server, handler jsonrpc2.Handler) jsonrpc2.Handler {
 			return replyParseError(ctx, reply, err)
 		}
 
-		return reply(ctx, nil, err)
+		resp, err := server.Request(ctx, req.Method(), params)
+		return reply(ctx, resp, err)
 	}
 
 	return h
@@ -46,7 +47,7 @@ func ServerHandler(server Server, handler jsonrpc2.Handler) jsonrpc2.Handler {
 
 // serverDispatch implements jsonrpc2.Handler.
 //nolint:gocognit,funlen
-func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, req jsonrpc2.Request) (bool, error) {
+func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, req jsonrpc2.Request) (handled bool, err error) {
 	if ctx.Err() != nil {
 		return true, reply(ctx, nil, ErrRequestCancelled)
 	}
@@ -56,627 +57,394 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 
 	switch req.Method() {
 	case MethodInitialize: // request
+		defer logger.Debug(MethodInitialize, zap.Error(err))
+
 		var params InitializeParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		resp, err := server.Initialize(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodInitialize, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	case MethodInitialized: // notification
+		defer logger.Debug(MethodInitialized, zap.Error(err))
+
 		var params InitializedParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		err := server.Initialized(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, nil, err)
-			if replyErr != nil {
-				logger.Error(MethodInitialized, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, nil, err)
 
 	case MethodShutdown: // request
-		if len(req.Params()) > 0 {
-			return true, reply(ctx, nil, fmt.Errorf("%w: expected no params", jsonrpc2.ErrInvalidParams))
-		}
+		defer logger.Debug(MethodShutdown, zap.Error(err))
 
-		err := server.Shutdown(ctx)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, nil, err)
-			if replyErr != nil {
-				logger.Error(MethodShutdown, zap.Error(replyErr))
-			}
-			return replyErr
+		if len(req.Params()) > 0 {
+			return true, reply(ctx, nil, fmt.Errorf("expected no params: %w", jsonrpc2.ErrInvalidParams))
 		}
+		err := server.Shutdown(ctx)
 		return true, reply(ctx, nil, err)
 
 	case MethodExit: // notification
-		if len(req.Params()) > 0 {
-			return true, reply(ctx, nil, fmt.Errorf("%w: expected no params", jsonrpc2.ErrInvalidParams))
-		}
+		defer logger.Debug(MethodExit, zap.Error(err))
 
-		err := server.Exit(ctx)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, nil, err)
-			if replyErr != nil {
-				logger.Error(MethodExit, zap.Error(replyErr))
-			}
-			return replyErr
+		if len(req.Params()) > 0 {
+			return true, reply(ctx, nil, fmt.Errorf("expected no params: %w", jsonrpc2.ErrInvalidParams))
 		}
+		err := server.Exit(ctx)
 		return true, reply(ctx, nil, err)
 
 	case MethodTextDocumentCodeAction: // request
+		defer logger.Debug(MethodTextDocumentCodeAction, zap.Error(err))
+
 		var params CodeActionParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		resp, err := server.CodeAction(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodTextDocumentCodeAction, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	case MethodTextDocumentCodeLens: // request
+		defer logger.Debug(MethodTextDocumentCodeLens, zap.Error(err))
+
 		var params CodeLensParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		resp, err := server.CodeLens(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodTextDocumentCodeLens, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	case MethodCodeLensResolve: // request
+		defer logger.Debug(MethodCodeLensResolve, zap.Error(err))
+
 		var params CodeLens
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		resp, err := server.CodeLensResolve(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodCodeLensResolve, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	case MethodTextDocumentColorPresentation: // request
+		defer logger.Debug(MethodTextDocumentColorPresentation, zap.Error(err))
+
 		var params ColorPresentationParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		resp, err := server.ColorPresentation(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodTextDocumentColorPresentation, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	case MethodTextDocumentCompletion: // request
+		defer logger.Debug(MethodTextDocumentCompletion, zap.Error(err))
+
 		var params CompletionParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		resp, err := server.Completion(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodTextDocumentCompletion, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	case MethodCompletionItemResolve: // request
+		defer logger.Debug(MethodCompletionItemResolve, zap.Error(err))
+
 		var params CompletionItem
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		resp, err := server.CompletionResolve(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodCompletionItemResolve, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	case MethodTextDocumentDeclaration: // request
+		defer logger.Debug(MethodTextDocumentDeclaration, zap.Error(err))
+
 		var params TextDocumentPositionParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		resp, err := server.Declaration(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodTextDocumentDeclaration, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	case MethodTextDocumentDefinition: // request
+		defer logger.Debug(MethodTextDocumentDefinition, zap.Error(err))
+
 		var params TextDocumentPositionParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		resp, err := server.Definition(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodTextDocumentDefinition, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	case MethodTextDocumentDidChange: // notification
+		defer logger.Debug(MethodTextDocumentDidChange, zap.Error(err))
+
 		var params DidChangeTextDocumentParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		err := server.DidChange(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, nil, err)
-			if replyErr != nil {
-				logger.Error(MethodTextDocumentDidChange, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, nil, err)
 
 	case MethodWorkspaceDidChangeConfiguration: // notification
+		defer logger.Debug(MethodWorkspaceDidChangeConfiguration, zap.Error(err))
+
 		var params DidChangeConfigurationParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		err := server.DidChangeConfiguration(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, nil, err)
-			if replyErr != nil {
-				logger.Error(MethodWorkspaceDidChangeConfiguration, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, nil, err)
 
 	case MethodWorkspaceDidChangeWatchedFiles: // notification
+		defer logger.Debug(MethodWorkspaceDidChangeWatchedFiles, zap.Error(err))
+
 		var params DidChangeWatchedFilesParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		err := server.DidChangeWatchedFiles(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, nil, err)
-			if replyErr != nil {
-				logger.Error(MethodWorkspaceDidChangeWatchedFiles, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, nil, err)
 
 	case MethodWorkspaceDidChangeWorkspaceFolders: // notification
+		defer logger.Debug(MethodWorkspaceDidChangeWorkspaceFolders, zap.Error(err))
+
 		var params DidChangeWorkspaceFoldersParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		err := server.DidChangeWorkspaceFolders(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, nil, err)
-			if replyErr != nil {
-				logger.Error(MethodWorkspaceDidChangeWorkspaceFolders, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, nil, err)
 
 	case MethodTextDocumentDidClose: // notification
+		defer logger.Debug(MethodTextDocumentDidClose, zap.Error(err))
+
 		var params DidCloseTextDocumentParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		err := server.DidClose(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, nil, err)
-			if replyErr != nil {
-				logger.Error(MethodTextDocumentDidClose, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, nil, err)
 
 	case MethodTextDocumentDidOpen: // notification
+		defer logger.Debug(MethodTextDocumentDidOpen, zap.Error(err))
+
 		var params DidOpenTextDocumentParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		err := server.DidOpen(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, nil, err)
-			if replyErr != nil {
-				logger.Error(MethodTextDocumentDidOpen, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, nil, err)
 
 	case MethodTextDocumentDidSave: // notification
+		defer logger.Debug(MethodTextDocumentDidSave, zap.Error(err))
+
 		var params DidSaveTextDocumentParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		err := server.DidSave(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, nil, err)
-			if replyErr != nil {
-				logger.Error(MethodTextDocumentDidSave, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, nil, err)
 
 	case MethodTextDocumentDocumentColor: // request
+		defer logger.Debug(MethodTextDocumentDocumentColor, zap.Error(err))
+
 		var params DocumentColorParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		resp, err := server.DocumentColor(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodTextDocumentDocumentColor, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	case MethodTextDocumentDocumentHighlight: // request
+		defer logger.Debug(MethodTextDocumentDocumentHighlight, zap.Error(err))
+
 		var params TextDocumentPositionParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		resp, err := server.DocumentHighlight(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodTextDocumentDocumentHighlight, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	case MethodTextDocumentDocumentLink: // request
+		defer logger.Debug(MethodTextDocumentDocumentLink, zap.Error(err))
+
 		var params DocumentLinkParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		resp, err := server.DocumentLink(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodTextDocumentDocumentLink, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	case MethodDocumentLinkResolve: // request
+		defer logger.Debug(MethodDocumentLinkResolve, zap.Error(err))
+
 		var params DocumentLink
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		resp, err := server.DocumentLinkResolve(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodDocumentLinkResolve, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	case MethodTextDocumentDocumentSymbol: // request
+		defer logger.Debug(MethodTextDocumentDocumentSymbol, zap.Error(err))
+
 		var params DocumentSymbolParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		resp, err := server.DocumentSymbol(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodTextDocumentDocumentSymbol, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	case MethodWorkspaceExecuteCommand: // request
+		defer logger.Debug(MethodWorkspaceExecuteCommand, zap.Error(err))
+
 		var params ExecuteCommandParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		resp, err := server.ExecuteCommand(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodWorkspaceExecuteCommand, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	case MethodTextDocumentFoldingRange: // request
+		defer logger.Debug(MethodTextDocumentFoldingRange, zap.Error(err))
+
 		var params FoldingRangeParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		resp, err := server.FoldingRanges(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodTextDocumentFoldingRange, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	case MethodTextDocumentFormatting: // request
+		defer logger.Debug(MethodTextDocumentFormatting, zap.Error(err))
+
 		var params DocumentFormattingParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		resp, err := server.Formatting(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodTextDocumentFormatting, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	case MethodTextDocumentHover: // request
+		defer logger.Debug(MethodTextDocumentHover, zap.Error(err))
+
 		var params TextDocumentPositionParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		resp, err := server.Hover(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodTextDocumentHover, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	case MethodTextDocumentImplementation: // request
+		defer logger.Debug(MethodTextDocumentImplementation, zap.Error(err))
+
 		var params TextDocumentPositionParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		resp, err := server.Implementation(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodTextDocumentImplementation, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	case MethodTextDocumentOnTypeFormatting: // request
+		defer logger.Debug(MethodTextDocumentOnTypeFormatting, zap.Error(err))
+
 		var params DocumentOnTypeFormattingParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		resp, err := server.OnTypeFormatting(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodTextDocumentOnTypeFormatting, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	case MethodTextDocumentPrepareRename: // request
+		defer logger.Debug(MethodTextDocumentPrepareRename, zap.Error(err))
+
 		var params TextDocumentPositionParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		resp, err := server.PrepareRename(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodTextDocumentPrepareRename, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	case MethodTextDocumentRangeFormatting: // request
+		defer logger.Debug(MethodTextDocumentRangeFormatting, zap.Error(err))
+
 		var params DocumentRangeFormattingParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		resp, err := server.RangeFormatting(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodTextDocumentRangeFormatting, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	case MethodTextDocumentReferences: // request
+		defer logger.Debug(MethodTextDocumentReferences, zap.Error(err))
+
 		var params ReferenceParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
 		resp, err := server.References(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodTextDocumentReferences, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	case MethodTextDocumentRename: // request
+		defer logger.Debug(MethodTextDocumentRename, zap.Error(err))
+
 		var params RenameParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
 		resp, err := server.Rename(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodTextDocumentRename, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	case MethodTextDocumentSignatureHelp: // request
+		defer logger.Debug(MethodTextDocumentSignatureHelp, zap.Error(err))
+
 		var params TextDocumentPositionParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
 		resp, err := server.SignatureHelp(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodTextDocumentSignatureHelp, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	case MethodWorkspaceSymbol: // request
+		defer logger.Debug(MethodWorkspaceSymbol, zap.Error(err))
+
 		var params WorkspaceSymbolParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		resp, err := server.Symbols(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodWorkspaceSymbol, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	case MethodTextDocumentTypeDefinition: // request
+		defer logger.Debug(MethodTextDocumentTypeDefinition, zap.Error(err))
+
 		var params TextDocumentPositionParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		resp, err := server.TypeDefinition(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodTextDocumentTypeDefinition, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	case MethodTextDocumentWillSave: // notification
+		defer logger.Debug(MethodTextDocumentWillSave, zap.Error(err))
+
 		var params WillSaveTextDocumentParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		err := server.WillSave(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, nil, err)
-			if replyErr != nil {
-				logger.Error(MethodTextDocumentWillSave, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, nil, err)
 
 	case MethodTextDocumentWillSaveWaitUntil: // request
+		defer logger.Debug(MethodTextDocumentWillSaveWaitUntil, zap.Error(err))
+
 		var params WillSaveTextDocumentParams
 		if err := dec.Decode(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-
 		resp, err := server.WillSaveWaitUntil(ctx, &params)
-		reply = func(ctx context.Context, result interface{}, err error) error {
-			replyErr := reply(ctx, result, err)
-			if replyErr != nil {
-				logger.Error(MethodTextDocumentWillSaveWaitUntil, zap.Error(replyErr))
-			}
-			return replyErr
-		}
 		return true, reply(ctx, resp, err)
 
 	default:
-		var params interface{}
-		err := dec.Decode(&params)
-		return true, replyParseError(ctx, nil, err)
+		return false, nil
 	}
 }
