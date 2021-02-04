@@ -1,13 +1,13 @@
-// SPDX-License-Identifier: BSD-3-Clause
 // SPDX-FileCopyrightText: Copyright 2021 The Go Language Server Authors
+// SPDX-License-Identifier: BSD-3-Clause
 
 package protocol
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io"
-	"strings"
 	"sync"
 	"time"
 
@@ -106,7 +106,6 @@ func (s *loggingStream) logCommon(msg jsonrpc2.Message, isRead bool) {
 	}
 
 	s.logMu.Lock()
-	defer s.logMu.Unlock()
 
 	direction, pastTense := "Received", "Received"
 	get, set := maps.client, maps.setServer
@@ -118,7 +117,7 @@ func (s *loggingStream) logCommon(msg jsonrpc2.Message, isRead bool) {
 	tm := time.Now()
 	tmfmt := tm.Format("15:04:05.000 PM")
 
-	var buf strings.Builder
+	var buf bytes.Buffer
 	fmt.Fprintf(&buf, "[Trace - %s] ", tmfmt) // common beginning
 
 	switch msg := msg.(type) {
@@ -145,5 +144,7 @@ func (s *loggingStream) logCommon(msg jsonrpc2.Message, isRead bool) {
 		fmt.Fprintf(&buf, "Result: %s%s", msg.Result(), eor)
 	}
 
-	s.log.Write([]byte(buf.String()))
+	s.log.Write(buf.Bytes())
+
+	s.logMu.Unlock()
 }
