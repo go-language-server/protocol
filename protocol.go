@@ -1,6 +1,5 @@
-// Copyright 2019 The Go Language Server Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
+// SPDX-FileCopyrightText: Copyright 2019 The Go Language Server Authors
+// SPDX-License-Identifier: BSD-3-Clause
 
 package protocol
 
@@ -12,33 +11,32 @@ import (
 	"go.lsp.dev/jsonrpc2"
 )
 
-// NewServer returns the new Server, Client and jsonrpc2.Conn.
-func NewServer(pctx context.Context, server ServerInterface, stream jsonrpc2.Stream, logger *zap.Logger) (ctx context.Context, conn jsonrpc2.Conn, clientInterface ClientInterface) {
-	conn = jsonrpc2.NewConn(stream)
-	client := &client{
-		Conn:   conn,
-		logger: logger.Named("client"),
-	}
-	ctx = WithClient(pctx, client)
+// NewServer returns the context in which client is embedded, jsonrpc2.Conn, and the Client.
+func NewServer(ctx context.Context, server Server, stream jsonrpc2.Stream, logger *zap.Logger) (context.Context, jsonrpc2.Conn, Client) {
+	conn := jsonrpc2.NewConn(stream)
+	cliint := ClientDispatcher(conn, logger.Named("client"))
+	ctx = WithClient(ctx, cliint)
 
-	// conn.AddHandler(&serverHandler{server: server})
-	// conn.AddHandler(&canceller{logger: logger.Named("canceller")})
+	conn.Go(ctx,
+		Handlers(
+			ServerHandler(server, jsonrpc2.MethodNotFoundHandler),
+		),
+	)
 
-	return ctx, conn, client
+	return ctx, conn, cliint
 }
 
-// NewClient returns the new context, jsonrpc2.Conn and ServerInterface.
-func NewClient(pctx context.Context, client ClientInterface, stream jsonrpc2.Stream, logger *zap.Logger) (ctx context.Context, conn jsonrpc2.Conn, serverInterface ServerInterface) {
-	ctx = WithClient(pctx, client)
+// NewClient returns the context in which Client is embedded, jsonrpc2.Conn, and the Server.
+func NewClient(ctx context.Context, client Client, stream jsonrpc2.Stream, logger *zap.Logger) (context.Context, jsonrpc2.Conn, Server) {
+	ctx = WithClient(ctx, client)
 
-	conn = jsonrpc2.NewConn(stream)
-	// conn.AddHandler(&clientHandler{client: client})
-	// conn.AddHandler(&canceller{logger: logger.Named("canceller")})
+	conn := jsonrpc2.NewConn(stream)
+	conn.Go(ctx,
+		Handlers(
+			ClientHandler(client, jsonrpc2.MethodNotFoundHandler),
+		),
+	)
+	server := ServerDispatcher(conn, logger.Named("server"))
 
-	s := &server{
-		Conn:   conn,
-		logger: logger.Named("server"),
-	}
-
-	return ctx, conn, s
+	return ctx, conn, server
 }
