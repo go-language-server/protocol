@@ -13,6 +13,15 @@ import (
 	"go.lsp.dev/pkg/xcontext"
 )
 
+// ClientDispatcher returns a Client that dispatches LSP requests across the
+// given jsonrpc2 connection.
+func ClientDispatcher(conn jsonrpc2.Conn, logger *zap.Logger) Client {
+	return &client{
+		Conn:   conn,
+		logger: logger,
+	}
+}
+
 // ClientHandler handler of LSP client.
 func ClientHandler(client Client, handler jsonrpc2.Handler) jsonrpc2.Handler {
 	h := func(ctx context.Context, reply jsonrpc2.Replier, req jsonrpc2.Request) error {
@@ -20,6 +29,7 @@ func ClientHandler(client Client, handler jsonrpc2.Handler) jsonrpc2.Handler {
 			xctx := xcontext.Detach(ctx)
 			return reply(xctx, nil, ErrRequestCancelled)
 		}
+
 		handled, err := clientDispatch(ctx, client, reply, req)
 		if handled || err != nil {
 			return err
@@ -88,6 +98,9 @@ var _ Client = (*client)(nil)
 
 // LogMessage sends the notification from the server to the client to ask the client to log a particular message.
 func (c *client) LogMessage(ctx context.Context, params *LogMessageParams) (err error) {
+	c.logger.Debug("call " + MethodWindowLogMessage)
+	defer c.logger.Debug("end "+MethodWindowLogMessage, zap.Error(err))
+
 	return c.Conn.Notify(ctx, MethodWindowLogMessage, params)
 }
 
@@ -102,6 +115,9 @@ func (c *client) LogMessage(ctx context.Context, params *LogMessageParams) (err 
 // If the computed set is empty it has to push the empty array to clear former diagnostics.
 // Newly pushed diagnostics always replace previously pushed diagnostics. There is no merging that happens on the client side.
 func (c *client) PublishDiagnostics(ctx context.Context, params *PublishDiagnosticsParams) (err error) {
+	c.logger.Debug("call " + MethodTextDocumentPublishDiagnostics)
+	defer c.logger.Debug("end "+MethodTextDocumentPublishDiagnostics, zap.Error(err))
+
 	return c.Conn.Notify(ctx, MethodTextDocumentPublishDiagnostics, params)
 }
 
@@ -114,15 +130,22 @@ func (c *client) ShowMessage(ctx context.Context, params *ShowMessageParams) (er
 // ShowMessageRequest sends the request from a server to a client to ask the client to display a particular message in the user interface.
 //
 // In addition to the show message notification the request allows to pass actions and to wait for an answer from the client.
-func (c *client) ShowMessageRequest(ctx context.Context, params *ShowMessageRequestParams) (result *MessageActionItem, err error) {
-	result = new(MessageActionItem)
-	_, err = c.Conn.Call(ctx, MethodWindowShowMessageRequest, params, result)
+func (c *client) ShowMessageRequest(ctx context.Context, params *ShowMessageRequestParams) (_ *MessageActionItem, err error) {
+	c.logger.Debug("call " + MethodWindowShowMessageRequest)
+	defer c.logger.Debug("end "+MethodWindowShowMessageRequest, zap.Error(err))
 
-	return result, err
+	var result *MessageActionItem
+	if err := Call(ctx, c.Conn, MethodWindowShowMessageRequest, params, &result); err != nil {
+		return nil, err
+	}
+	return result, nil
 }
 
 // Telemetry sends the notification from the server to the client to ask the client to log a telemetry event.
 func (c *client) Telemetry(ctx context.Context, params interface{}) (err error) {
+	c.logger.Debug("call " + MethodTelemetryEvent)
+	defer c.logger.Debug("end "+MethodTelemetryEvent, zap.Error(err))
+
 	return c.Conn.Notify(ctx, MethodTelemetryEvent, params)
 }
 
@@ -133,21 +156,29 @@ func (c *client) Telemetry(ctx context.Context, params interface{}) (err error) 
 // A client opts in via the dynamicRegistration property on the specific client capabilities.
 // A client can even provide dynamic registration for capability A but not for capability B (see TextDocumentClientCapabilities as an example).
 func (c *client) RegisterCapability(ctx context.Context, params *RegistrationParams) (err error) {
-	_, err = c.Conn.Call(ctx, MethodClientRegisterCapability, params, nil)
-	return
+	c.logger.Debug("call " + MethodClientRegisterCapability)
+	defer c.logger.Debug("end "+MethodClientRegisterCapability, zap.Error(err))
+
+	return Call(ctx, c.Conn, MethodClientRegisterCapability, params, nil)
 }
 
 // UnregisterCapability sends the request from the server to the client to unregister a previously registered capability.
 func (c *client) UnregisterCapability(ctx context.Context, params *UnregistrationParams) (err error) {
-	_, err = c.Conn.Call(ctx, MethodClientUnregisterCapability, params, nil)
-	return
+	c.logger.Debug("call " + MethodClientUnregisterCapability)
+	defer c.logger.Debug("end "+MethodClientUnregisterCapability, zap.Error(err))
+
+	return Call(ctx, c.Conn, MethodClientUnregisterCapability, params, nil)
 }
 
 // WorkspaceApplyEdit sends the request from the server to the client to modify resource on the client side.
 func (c *client) WorkspaceApplyEdit(ctx context.Context, params *ApplyWorkspaceEditParams) (result bool, err error) {
-	_, err = c.Conn.Call(ctx, MethodWorkspaceApplyEdit, params, &result)
+	c.logger.Debug("call " + MethodWorkspaceApplyEdit)
+	defer c.logger.Debug("end "+MethodWorkspaceApplyEdit, zap.Error(err))
 
-	return result, err
+	if err := Call(ctx, c.Conn, MethodWorkspaceApplyEdit, params, &result); err != nil {
+		return false, err
+	}
+	return result, nil
 }
 
 // WorkspaceConfiguration sends the request from the server to the client to fetch configuration settings from the client.
@@ -155,11 +186,15 @@ func (c *client) WorkspaceApplyEdit(ctx context.Context, params *ApplyWorkspaceE
 // The request can fetch several configuration settings in one roundtrip.
 // The order of the returned configuration settings correspond to the order of the
 // passed ConfigurationItems (e.g. the first item in the response is the result for the first configuration item in the params).
-func (c *client) WorkspaceConfiguration(ctx context.Context, params *ConfigurationParams) ([]interface{}, error) {
-	var result []interface{}
-	_, err := c.Conn.Call(ctx, MethodWorkspaceConfiguration, params, &result)
+func (c *client) WorkspaceConfiguration(ctx context.Context, params *ConfigurationParams) (_ []interface{}, err error) {
+	c.logger.Debug("call " + MethodWorkspaceConfiguration)
+	defer c.logger.Debug("end "+MethodWorkspaceConfiguration, zap.Error(err))
 
-	return result, err
+	var result []interface{}
+	if err := Call(ctx, c.Conn, MethodWorkspaceConfiguration, params, &result); err != nil {
+		return nil, err
+	}
+	return result, nil
 }
 
 // WorkspaceFolders sends the request from the server to the client to fetch the current open list of workspace folders.
@@ -168,7 +203,11 @@ func (c *client) WorkspaceConfiguration(ctx context.Context, params *Configurati
 //
 // Since version 3.6.0.
 func (c *client) WorkspaceFolders(ctx context.Context) (result []WorkspaceFolder, err error) {
-	_, err = c.Conn.Call(ctx, MethodWorkspaceWorkspaceFolders, nil, &result)
+	c.logger.Debug("call " + MethodWorkspaceWorkspaceFolders)
+	defer c.logger.Debug("end "+MethodWorkspaceWorkspaceFolders, zap.Error(err))
 
-	return result, err
+	if err := Call(ctx, c.Conn, MethodWorkspaceWorkspaceFolders, nil, &result); err != nil {
+		return nil, err
+	}
+	return result, nil
 }
