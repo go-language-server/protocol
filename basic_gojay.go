@@ -41,6 +41,35 @@ var (
 	_ gojay.UnmarshalerJSONObject = (*Position)(nil)
 )
 
+// Positions represents a slice of Position.
+type Positions []Position
+
+// MarshalJSONArray implements gojay.MarshalerJSONArray.
+func (v Positions) MarshalJSONArray(enc *gojay.Encoder) {
+	for i := range v {
+		enc.Object(&v[i])
+	}
+}
+
+// IsNil implements gojay.MarshalerJSONArray.
+func (v Positions) IsNil() bool { return len(v) == 0 }
+
+// UnmarshalJSONArray implements gojay.UnmarshalerJSONArray.
+func (v *Positions) UnmarshalJSONArray(dec *gojay.Decoder) error {
+	value := Position{}
+	if err := dec.Object(&value); err != nil {
+		return err
+	}
+	*v = append(*v, value)
+	return nil
+}
+
+// compile time check whether the Positions implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
+var (
+	_ gojay.MarshalerJSONArray   = (*Positions)(nil)
+	_ gojay.UnmarshalerJSONArray = (*Positions)(nil)
+)
+
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *Range) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey(keyStart, &v.Start)
@@ -144,6 +173,7 @@ func (v *Diagnostic) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.AddInterfaceKeyOmitEmpty(keyCode, v.Code)
 	enc.StringKeyOmitEmpty(keySource, v.Source)
 	enc.StringKey(keyMessage, v.Message)
+	enc.ArrayKeyOmitEmpty(keyTags, DiagnosticTags(v.Tags))
 	enc.ArrayKeyOmitEmpty(keyRelatedInformation, DiagnosticRelatedInformations(v.RelatedInformation))
 }
 
@@ -163,6 +193,8 @@ func (v *Diagnostic) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 		return dec.String(&v.Source)
 	case keyMessage:
 		return dec.String(&v.Message)
+	case keyTags:
+		return dec.Array((*DiagnosticTags)(&v.Tags))
 	case keyRelatedInformation:
 		values := DiagnosticRelatedInformations{}
 		err := dec.Array(&values)
@@ -175,12 +207,41 @@ func (v *Diagnostic) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 }
 
 // NKeys returns the number of keys to unmarshal.
-func (v *Diagnostic) NKeys() int { return 6 }
+func (v *Diagnostic) NKeys() int { return 7 }
 
 // compile time check whether the Diagnostic implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
 	_ gojay.MarshalerJSONObject   = (*Diagnostic)(nil)
 	_ gojay.UnmarshalerJSONObject = (*Diagnostic)(nil)
+)
+
+// DiagnosticTags represents a slice of DiagnosticTag.
+type DiagnosticTags []DiagnosticTag
+
+// MarshalJSONArray implements gojay.MarshalerJSONArray.
+func (v DiagnosticTags) MarshalJSONArray(enc *gojay.Encoder) {
+	for i := range v {
+		enc.Float64(float64(v[i]))
+	}
+}
+
+// IsNil implements gojay.MarshalerJSONArray.
+func (v DiagnosticTags) IsNil() bool { return len(v) == 0 }
+
+// UnmarshalJSONArray implements gojay.UnmarshalerJSONArray.
+func (v *DiagnosticTags) UnmarshalJSONArray(dec *gojay.Decoder) error {
+	var value DiagnosticTag
+	if err := dec.Float64((*float64)(&value)); err != nil {
+		return err
+	}
+	*v = append(*v, value)
+	return nil
+}
+
+// compile time check whether the CodeActionKinds implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
+var (
+	_ gojay.MarshalerJSONArray   = (*DiagnosticTags)(nil)
+	_ gojay.UnmarshalerJSONArray = (*DiagnosticTags)(nil)
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
@@ -718,7 +779,7 @@ var (
 func (v *VersionedTextDocumentIdentifier) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey(keyURI, string(v.URI))
 	if v.Version == nil {
-		v.Version = Uint64Ptr(0)
+		v.Version = NewVersion(0)
 	}
 	enc.Uint64KeyNullEmpty(keyVersion, *v.Version)
 }

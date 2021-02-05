@@ -27,14 +27,16 @@ type Server interface {
 	Initialized(ctx context.Context, params *InitializedParams) (err error)
 	Shutdown(ctx context.Context) (err error)
 	Exit(ctx context.Context) (err error)
+	WorkDoneProgressCreate(ctx context.Context, params *WorkDoneProgressCreateParams) error
+	WorkDoneProgressCancel(ctx context.Context, params *WorkDoneProgressCancelParams) error
 	CodeAction(ctx context.Context, params *CodeActionParams) (result []CodeAction, err error)
 	CodeLens(ctx context.Context, params *CodeLensParams) (result []CodeLens, err error)
 	CodeLensResolve(ctx context.Context, params *CodeLens) (result *CodeLens, err error)
 	ColorPresentation(ctx context.Context, params *ColorPresentationParams) (result []ColorPresentation, err error)
 	Completion(ctx context.Context, params *CompletionParams) (result *CompletionList, err error)
 	CompletionResolve(ctx context.Context, params *CompletionItem) (result *CompletionItem, err error)
-	Declaration(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error)
-	Definition(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error)
+	Declaration(ctx context.Context, params *DeclarationParams) (result []Location /* Declaration | DeclarationLink[] | null */, err error)
+	Definition(ctx context.Context, params *DefinitionParams) (result []Location /* Definition | DefinitionLink[] | null */, err error)
 	DidChange(ctx context.Context, params *DidChangeTextDocumentParams) (err error)
 	DidChangeConfiguration(ctx context.Context, params *DidChangeConfigurationParams) (err error)
 	DidChangeWatchedFiles(ctx context.Context, params *DidChangeWatchedFilesParams) (err error)
@@ -43,29 +45,32 @@ type Server interface {
 	DidOpen(ctx context.Context, params *DidOpenTextDocumentParams) (err error)
 	DidSave(ctx context.Context, params *DidSaveTextDocumentParams) (err error)
 	DocumentColor(ctx context.Context, params *DocumentColorParams) (result []ColorInformation, err error)
-	DocumentHighlight(ctx context.Context, params *TextDocumentPositionParams) (result []DocumentHighlight, err error)
+	DocumentHighlight(ctx context.Context, params *DocumentHighlightParams) (result []DocumentHighlight, err error)
 	DocumentLink(ctx context.Context, params *DocumentLinkParams) (result []DocumentLink, err error)
 	DocumentLinkResolve(ctx context.Context, params *DocumentLink) (result *DocumentLink, err error)
-	DocumentSymbol(ctx context.Context, params *DocumentSymbolParams) (result []DocumentSymbol, err error)
+	DocumentSymbol(ctx context.Context, params *DocumentSymbolParams) (result []interface{} /* SymbolInformation[] | DocumentSymbol[] | null */, err error)
 	ExecuteCommand(ctx context.Context, params *ExecuteCommandParams) (result interface{}, err error)
 	FoldingRanges(ctx context.Context, params *FoldingRangeParams) (result []FoldingRange, err error)
 	Formatting(ctx context.Context, params *DocumentFormattingParams) (result []TextEdit, err error)
-	Hover(ctx context.Context, params *TextDocumentPositionParams) (result *Hover, err error)
-	Implementation(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error)
+	Hover(ctx context.Context, params *HoverParams) (result *Hover, err error)
+	Implementation(ctx context.Context, params *ImplementationParams) (result []Location, err error)
 	OnTypeFormatting(ctx context.Context, params *DocumentOnTypeFormattingParams) (result []TextEdit, err error)
-	PrepareRename(ctx context.Context, params *TextDocumentPositionParams) (result *Range, err error)
+	PrepareRename(ctx context.Context, params *PrepareRenameParams) (result *Range, err error)
 	RangeFormatting(ctx context.Context, params *DocumentRangeFormattingParams) (result []TextEdit, err error)
 	References(ctx context.Context, params *ReferenceParams) (result []Location, err error)
 	Rename(ctx context.Context, params *RenameParams) (result *WorkspaceEdit, err error)
-	SignatureHelp(ctx context.Context, params *TextDocumentPositionParams) (result *SignatureHelp, err error)
+	SignatureHelp(ctx context.Context, params *SignatureHelpParams) (result *SignatureHelp, err error)
 	Symbols(ctx context.Context, params *WorkspaceSymbolParams) (result []SymbolInformation, err error)
-	TypeDefinition(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error)
+	TypeDefinition(ctx context.Context, params *TypeDefinitionParams) (result []Location, err error)
 	WillSave(ctx context.Context, params *WillSaveTextDocumentParams) (err error)
 	WillSaveWaitUntil(ctx context.Context, params *WillSaveTextDocumentParams) (result []TextEdit, err error)
 	Request(ctx context.Context, method string, params interface{}) (interface{}, error)
 }
 
 const (
+	// MethodProgress method name of "$/progress".
+	MethodProgress = "$/progress"
+
 	// MethodInitialize method name of "initialize".
 	MethodInitialize = "initialize"
 
@@ -77,6 +82,12 @@ const (
 
 	// MethodExit method name of "exit".
 	MethodExit = "exit"
+
+	// MethodWorkDoneProgressCreate method name of "window/workDoneProgress/create".
+	MethodWorkDoneProgressCreate = "window/workDoneProgress/create"
+
+	// MethodWorkDoneProgressCancel method name of "window/workDoneProgress/cancel".
+	MethodWorkDoneProgressCancel = "window/workDoneProgress/cancel"
 
 	// MethodCancelRequest method name of "$/cancelRequest".
 	MethodCancelRequest = "$/cancelRequest"
@@ -255,6 +266,23 @@ func (s *server) Exit(ctx context.Context) (err error) {
 	return s.Conn.Notify(ctx, MethodExit, nil)
 }
 
+// WorkDoneProgressCreate sends the request is sent from the server to the client to ask the client to create a work done progress.
+func (s *server) WorkDoneProgressCreate(ctx context.Context, params *WorkDoneProgressCreateParams) (err error) {
+	s.logger.Debug("call " + MethodWorkDoneProgressCreate)
+	defer s.logger.Debug("end "+MethodWorkDoneProgressCreate, zap.Error(err))
+
+	return s.Conn.Notify(ctx, MethodWorkDoneProgressCreate, params)
+}
+
+// WorkDoneProgressCancel is the sends notification from the client to the server to cancel a progress initiated on the
+// server side using the "window/workDoneProgress/create".
+func (s *server) WorkDoneProgressCancel(ctx context.Context, params *WorkDoneProgressCancelParams) (err error) {
+	s.logger.Debug("call " + MethodWorkDoneProgressCancel)
+	defer s.logger.Debug("end "+MethodWorkDoneProgressCancel, zap.Error(err))
+
+	return s.Conn.Notify(ctx, MethodWorkDoneProgressCancel, params)
+}
+
 // CodeAction sends the request is from the client to the server to compute commands for a given text document and range.
 //
 // These commands are typically code fixes to either fix problems or to beautify/refactor code. The result of a `textDocument/codeAction`
@@ -353,7 +381,7 @@ func (s *server) CompletionResolve(ctx context.Context, params *CompletionItem) 
 // The result type LocationLink[] got introduce with version 3.14.0 and depends in the corresponding client capability `clientCapabilities.textDocument.declaration.linkSupport`.
 //
 // Since version 3.14.0.
-func (s *server) Declaration(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
+func (s *server) Declaration(ctx context.Context, params *DeclarationParams) (result []Location, err error) {
 	s.logger.Debug("call " + MethodTextDocumentDeclaration)
 	defer s.logger.Debug("end "+MethodTextDocumentDeclaration, zap.Error(err))
 
@@ -368,7 +396,7 @@ func (s *server) Declaration(ctx context.Context, params *TextDocumentPositionPa
 // The result type `[]LocationLink` got introduce with version 3.14.0 and depends in the corresponding client capability `clientCapabilities.textDocument.definition.linkSupport`.
 //
 // Since version 3.14.0.
-func (s *server) Definition(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
+func (s *server) Definition(ctx context.Context, params *DefinitionParams) (result []Location, err error) {
 	s.logger.Debug("call " + MethodTextDocumentDefinition)
 	defer s.logger.Debug("end "+MethodTextDocumentDefinition, zap.Error(err))
 
@@ -390,8 +418,8 @@ func (s *server) DidChange(ctx context.Context, params *DidChangeTextDocumentPar
 
 // DidChangeConfiguration sends the notification from the client to the server to signal the change of configuration settings.
 func (s *server) DidChangeConfiguration(ctx context.Context, params *DidChangeConfigurationParams) (err error) {
-	s.logger.Debug("call " + MethodTextDocumentDeclaration)
-	defer s.logger.Debug("end "+MethodTextDocumentDeclaration, zap.Error(err))
+	s.logger.Debug("call " + MethodWorkspaceDidChangeConfiguration)
+	defer s.logger.Debug("end "+MethodWorkspaceDidChangeConfiguration, zap.Error(err))
 
 	return s.Conn.Notify(ctx, MethodWorkspaceDidChangeConfiguration, params)
 }
@@ -484,7 +512,7 @@ func (s *server) DocumentColor(ctx context.Context, params *DocumentColorParams)
 // However we kept ‘textDocument/documentHighlight’ and ‘textDocument/references’ separate requests since the first one is allowed to be more fuzzy.
 //
 // Symbol matches usually have a `DocumentHighlightKind` of `Read` or `Write` whereas fuzzy or textual matches use `Text` as the kind.
-func (s *server) DocumentHighlight(ctx context.Context, params *TextDocumentPositionParams) (result []DocumentHighlight, err error) {
+func (s *server) DocumentHighlight(ctx context.Context, params *DocumentHighlightParams) (result []DocumentHighlight, err error) {
 	s.logger.Debug("call " + MethodTextDocumentDocumentHighlight)
 	defer s.logger.Debug("end "+MethodTextDocumentDocumentHighlight, zap.Error(err))
 
@@ -520,7 +548,7 @@ func (s *server) DocumentLinkResolve(ctx context.Context, params *DocumentLink) 
 // DocumentSymbol sends the request from the client to the server to return a flat list of all symbols found in a given text document.
 //
 // Neither the symbol’s location range nor the symbol’s container name should be used to infer a hierarchy.
-func (s *server) DocumentSymbol(ctx context.Context, params *DocumentSymbolParams) (result []DocumentSymbol, err error) {
+func (s *server) DocumentSymbol(ctx context.Context, params *DocumentSymbolParams) (result []interface{}, err error) {
 	s.logger.Debug("call " + MethodTextDocumentDocumentSymbol)
 	defer s.logger.Debug("end "+MethodTextDocumentDocumentSymbol, zap.Error(err))
 
@@ -569,7 +597,7 @@ func (s *server) Formatting(ctx context.Context, params *DocumentFormattingParam
 }
 
 // Hover sends the request is from the client to the server to request hover information at a given text document position.
-func (s *server) Hover(ctx context.Context, params *TextDocumentPositionParams) (_ *Hover, err error) {
+func (s *server) Hover(ctx context.Context, params *HoverParams) (_ *Hover, err error) {
 	s.logger.Debug("call " + MethodTextDocumentHover)
 	defer s.logger.Debug("end "+MethodTextDocumentHover, zap.Error(err))
 
@@ -583,7 +611,7 @@ func (s *server) Hover(ctx context.Context, params *TextDocumentPositionParams) 
 // Implementation sends the request from the client to the server to resolve the implementation location of a symbol at a given text document position.
 //
 // The result type `[]LocationLink` got introduce with version 3.14.0 and depends in the corresponding client capability `clientCapabilities.implementation.typeDefinition.linkSupport`.
-func (s *server) Implementation(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
+func (s *server) Implementation(ctx context.Context, params *ImplementationParams) (result []Location, err error) {
 	s.logger.Debug("call " + MethodTextDocumentImplementation)
 	defer s.logger.Debug("end "+MethodTextDocumentImplementation, zap.Error(err))
 
@@ -607,7 +635,7 @@ func (s *server) OnTypeFormatting(ctx context.Context, params *DocumentOnTypeFor
 // PrepareRename sends the request from the client to the server to setup and test the validity of a rename operation at a given location.
 //
 // Since version 3.12.0.
-func (s *server) PrepareRename(ctx context.Context, params *TextDocumentPositionParams) (result *Range, err error) {
+func (s *server) PrepareRename(ctx context.Context, params *PrepareRenameParams) (result *Range, err error) {
 	s.logger.Debug("call " + MethodTextDocumentPrepareRename)
 	defer s.logger.Debug("end "+MethodTextDocumentPrepareRename, zap.Error(err))
 
@@ -651,7 +679,7 @@ func (s *server) Rename(ctx context.Context, params *RenameParams) (result *Work
 }
 
 // SignatureHelp sends the request from the client to the server to request signature information at a given cursor position.
-func (s *server) SignatureHelp(ctx context.Context, params *TextDocumentPositionParams) (_ *SignatureHelp, err error) {
+func (s *server) SignatureHelp(ctx context.Context, params *SignatureHelpParams) (_ *SignatureHelp, err error) {
 	s.logger.Debug("call " + MethodTextDocumentSignatureHelp)
 	defer s.logger.Debug("end "+MethodTextDocumentSignatureHelp, zap.Error(err))
 
@@ -678,7 +706,7 @@ func (s *server) Symbols(ctx context.Context, params *WorkspaceSymbolParams) (re
 // The result type `[]LocationLink` got introduce with version 3.14.0 and depends in the corresponding client capability `clientCapabilities.textDocument.typeDefinition.linkSupport`.
 //
 // Since version 3.6.0.
-func (s *server) TypeDefinition(ctx context.Context, params *TextDocumentPositionParams) (result []Location, err error) {
+func (s *server) TypeDefinition(ctx context.Context, params *TypeDefinitionParams) (result []Location, err error) {
 	s.logger.Debug("call " + MethodTextDocumentTypeDefinition)
 	defer s.logger.Debug("end "+MethodTextDocumentTypeDefinition, zap.Error(err))
 

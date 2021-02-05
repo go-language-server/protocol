@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 
 	"go.lsp.dev/uri"
 )
@@ -1048,10 +1049,20 @@ func TestWatchKind_String(t *testing.T) {
 
 func testWorkspaceSymbolParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"query":"testQuery"}`
-		wantInvalid = `{"query":"invalidQuery"}`
+		wantWorkDoneToken      = "156edea9-9d8d-422f-b7ee-81a84594afbb"
+		wantPartialResultToken = "dd134d84-c134-4d7a-a2a3-f8af3ef4a568"
+	)
+	const (
+		want        = `{"workDoneToken":"` + wantWorkDoneToken + `","partialResultToken":"` + wantPartialResultToken + `","query":"testQuery"}`
+		wantInvalid = `{"workDoneToken":"` + wantPartialResultToken + `","partialResultToken":"` + wantWorkDoneToken + `","query":"invalidQuery"}`
 	)
 	wantType := WorkspaceSymbolParams{
+		WorkDoneProgressParams: WorkDoneProgressParams{
+			WorkDoneToken: NewProgressToken(wantWorkDoneToken),
+		},
+		PartialResultParams: PartialResultParams{
+			PartialResultToken: NewProgressToken(wantPartialResultToken),
+		},
 		Query: "testQuery",
 	}
 
@@ -1128,8 +1139,20 @@ func testWorkspaceSymbolParams(t *testing.T, marshal marshalFunc, unmarshal unma
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+				if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreTypes(WorkDoneProgressParams{}, PartialResultParams{})); (diff != "") != tt.wantErr {
 					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+
+				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
+					if diff := cmp.Diff(workDoneToken.String(), wantWorkDoneToken); (diff != "") != tt.wantErr {
+						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					}
+				}
+
+				if partialResultToken := got.PartialResultToken; partialResultToken != nil {
+					if diff := cmp.Diff(partialResultToken.String(), wantPartialResultToken); (diff != "") != tt.wantErr {
+						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					}
 				}
 			})
 		}
@@ -1138,11 +1161,18 @@ func testWorkspaceSymbolParams(t *testing.T, marshal marshalFunc, unmarshal unma
 
 func testExecuteCommandParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"command":"testCommand","arguments":["testArguments"]}`
+		wantWorkDoneToken    = "156edea9-9d8d-422f-b7ee-81a84594afbb"
+		invalidWorkDoneToken = "dd134d84-c134-4d7a-a2a3-f8af3ef4a568"
+	)
+	const (
+		want        = `{"workDoneToken":"` + wantWorkDoneToken + `","command":"testCommand","arguments":["testArguments"]}`
 		wantNilAll  = `{"command":"testCommand"}`
-		wantInvalid = `{"command":"invalidCommand","arguments":["invalidArguments"]}`
+		wantInvalid = `{"workDoneToken":"` + invalidWorkDoneToken + `","command":"invalidCommand","arguments":["invalidArguments"]}`
 	)
 	wantType := ExecuteCommandParams{
+		WorkDoneProgressParams: WorkDoneProgressParams{
+			WorkDoneToken: NewProgressToken(wantWorkDoneToken),
+		},
 		Command: "testCommand",
 		Arguments: []interface{}{
 			"testArguments",
@@ -1239,8 +1269,14 @@ func testExecuteCommandParams(t *testing.T, marshal marshalFunc, unmarshal unmar
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+				if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreTypes(WorkDoneProgressParams{}, PartialResultParams{})); (diff != "") != tt.wantErr {
 					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+
+				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
+					if diff := cmp.Diff(workDoneToken.String(), wantWorkDoneToken); (diff != "") != tt.wantErr {
+						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					}
 				}
 			})
 		}
@@ -1372,7 +1408,7 @@ func testApplyWorkspaceEditParams(t *testing.T, marshal marshalFunc, unmarshal u
 						TextDocumentIdentifier: TextDocumentIdentifier{
 							URI: uri.File("/path/to/basic.go"),
 						},
-						Version: Uint64Ptr(10),
+						Version: NewVersion(10),
 					},
 					Edits: []TextEdit{
 						{
@@ -1418,7 +1454,7 @@ func testApplyWorkspaceEditParams(t *testing.T, marshal marshalFunc, unmarshal u
 						TextDocumentIdentifier: TextDocumentIdentifier{
 							URI: uri.File("/path/to/basic.go"),
 						},
-						Version: Uint64Ptr(10),
+						Version: NewVersion(10),
 					},
 					Edits: []TextEdit{
 						{

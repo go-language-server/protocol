@@ -11,7 +11,7 @@ func ToURI(s string) uri.URI {
 	return uri.File(s)
 }
 
-// Uint64Ptr converts i to uint64 pointer.
-func Uint64Ptr(i uint64) *uint64 {
+// NewVersion returns the uint64 pointer converted i.
+func NewVersion(i uint64) *uint64 {
 	return &i
 }

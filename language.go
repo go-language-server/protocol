@@ -13,6 +13,8 @@ import (
 // CompletionParams params of Completion Request.
 type CompletionParams struct {
 	TextDocumentPositionParams
+	WorkDoneProgressParams
+	PartialResultParams
 
 	// Context is the completion context. This is only available if the client specifies
 	// to send this using `ClientCapabilities.textDocument.completion.contextSupport === true`
@@ -119,6 +121,11 @@ type CompletionItem struct {
 	// then type that character. *Note* that all commit characters should have `length=1` and that superfluous
 	// characters will be ignored.
 	CommitCharacters []string `json:"commitCharacters,omitempty"`
+
+	// Tags is the tag for this completion item.
+	//
+	// @since 3.15.0.
+	Tags []CompletionItemTag `json:"tags,omitempty"`
 
 	// Data an data entry field that is preserved on a completion item between
 	// a completion and a completion resolve request.
@@ -302,6 +309,28 @@ func (k CompletionItemKind) String() string {
 	}
 }
 
+// CompletionItemTag completion item tags are extra annotations that tweak the rendering of a completion
+// item.
+//
+// @since 3.15.0.
+type CompletionItemTag float64
+
+// list of CompletionItemTag.
+const (
+	// CompletionItemTagDeprecated is the render a completion as obsolete, usually using a strike-out.
+	CompletionItemTagDeprecated CompletionItemTag = 1
+)
+
+// String returns a string representation of the type.
+func (c CompletionItemTag) String() string {
+	switch c {
+	case CompletionItemTagDeprecated:
+		return "Deprecated"
+	default:
+		return strconv.FormatFloat(float64(c), 'f', -10, 64)
+	}
+}
+
 // CompletionRegistrationOptions CompletionRegistration options.
 type CompletionRegistrationOptions struct {
 	TextDocumentRegistrationOptions
@@ -321,6 +350,14 @@ type CompletionRegistrationOptions struct {
 	ResolveProvider bool `json:"resolveProvider,omitempty"`
 }
 
+// HoverParams params of Hover Request.
+//
+// @since 3.15.0.
+type HoverParams struct {
+	TextDocumentPositionParams
+	WorkDoneProgressParams
+}
+
 // Hover is the result of a hover request.
 type Hover struct {
 	// Contents is the hover's content
@@ -329,6 +366,82 @@ type Hover struct {
 	// Range an optional range is a range inside a text document
 	// that is used to visualize a hover, e.g. by changing the background color.
 	Range *Range `json:"range,omitempty"`
+}
+
+// SignatureHelpParams params of SignatureHelp Request.
+//
+// @since 3.15.0.
+type SignatureHelpParams struct {
+	TextDocumentPositionParams
+	WorkDoneProgressParams
+
+	// context is the signature help context.
+	//
+	// This is only available if the client specifies to send this using the
+	// client capability `textDocument.signatureHelp.contextSupport === true`.
+	//
+	// @since 3.15.0.
+	Context *SignatureHelpContext `json:"context,omitempty"`
+}
+
+// SignatureHelpTriggerKind is the how a signature help was triggered.
+//
+// @since 3.15.0.
+type SignatureHelpTriggerKind float64
+
+// list of SignatureHelpTriggerKind.
+const (
+	// SignatureHelpTriggerKindInvoked is the signature help was invoked manually by the user or by a command.
+	SignatureHelpTriggerKindInvoked SignatureHelpTriggerKind = 1
+
+	// SignatureHelpTriggerKindTriggerCharacter is the signature help was triggered by a trigger character.
+	SignatureHelpTriggerKindTriggerCharacter SignatureHelpTriggerKind = 2
+
+	// SignatureHelpTriggerKindContentChange is the signature help was triggered by the cursor moving or
+	// by the document content changing.
+	SignatureHelpTriggerKindContentChange SignatureHelpTriggerKind = 3
+)
+
+// String returns a string representation of the type.
+func (s SignatureHelpTriggerKind) String() string {
+	switch s {
+	case SignatureHelpTriggerKindInvoked:
+		return "Invoked"
+	case SignatureHelpTriggerKindTriggerCharacter:
+		return "TriggerCharacter"
+	case SignatureHelpTriggerKindContentChange:
+		return "ContentChange"
+	default:
+		return strconv.FormatFloat(float64(s), 'f', -10, 64)
+	}
+}
+
+// SignatureHelpContext is the additional information about the context in which a
+// signature help request was triggered.
+//
+// @since 3.15.0.
+type SignatureHelpContext struct {
+	// TriggerKind is the action that caused signature help to be triggered.
+	TriggerKind SignatureHelpTriggerKind `json:"triggerKind"`
+
+	// Character that caused signature help to be triggered.
+	//
+	// This is undefined when
+	//  TriggerKind != SignatureHelpTriggerKindTriggerCharacter
+	TriggerCharacter string `json:"triggerCharacter,omitempty"`
+
+	// IsRetrigger is the `true` if signature help was already showing when it was triggered.
+	//
+	// Retriggers occur when the signature help is already active and can be
+	// caused by actions such as typing a trigger character, a cursor move,
+	// or document content changes.
+	IsRetrigger bool `json:"isRetrigger"`
+
+	// ActiveSignatureHelp is the currently active SignatureHelp.
+	//
+	// The `activeSignatureHelp` has its `SignatureHelp.activeSignature` field
+	// updated based on the user navigating through available signatures.
+	ActiveSignatureHelp *SignatureHelp `json:"activeSignatureHelp,omitempty"`
 }
 
 // SignatureHelp signature help represents the signature of something
@@ -449,6 +562,9 @@ func (k DocumentHighlightKind) String() string {
 
 // DocumentSymbolParams params of Document Symbols Request.
 type DocumentSymbolParams struct {
+	WorkDoneProgressParams
+	PartialResultParams
+
 	// TextDocument is the text document.
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
 }
@@ -641,6 +757,9 @@ type SymbolInformation struct {
 
 // CodeActionParams params for the CodeActionRequest.
 type CodeActionParams struct {
+	WorkDoneProgressParams
+	PartialResultParams
+
 	// TextDocument is the document in which the command was invoked.
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
 
@@ -733,6 +852,15 @@ type CodeAction struct {
 	// Diagnostics is the diagnostics that this code action resolves.
 	Diagnostics []Diagnostic `json:"diagnostics,omitempty"`
 
+	// IsPreferred marks this as a preferred action. Preferred actions are used by the `auto fix` command and can be targeted
+	// by keybindings.
+	//
+	// A quick fix should be marked preferred if it properly addresses the underlying error.
+	// A refactoring should be marked preferred if it is the most reasonable choice of actions to take.
+	//
+	// @since 3.15.0.
+	IsPreferred bool `json:"isPreferred,omitempty"`
+
 	// Edit is the workspace edit this code action performs.
 	Edit *WorkspaceEdit `json:"edit,omitempty"`
 
@@ -751,6 +879,9 @@ type CodeActionRegistrationOptions struct {
 
 // CodeLensParams params of Code Lens Request.
 type CodeLensParams struct {
+	WorkDoneProgressParams
+	PartialResultParams
+
 	// TextDocument is the document to request code lens for.
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
 }
@@ -782,6 +913,9 @@ type CodeLensRegistrationOptions struct {
 
 // DocumentLinkParams params of Document Link Request.
 type DocumentLinkParams struct {
+	WorkDoneProgressParams
+	PartialResultParams
+
 	// TextDocument is the document to provide document links for.
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
 }
@@ -795,6 +929,15 @@ type DocumentLink struct {
 	// Target is the uri this link points to. If missing a resolve request is sent later.
 	Target uri.URI `json:"target,omitempty"`
 
+	// Tooltip is the tooltip text when you hover over this link.
+	//
+	// If a tooltip is provided, is will be displayed in a string that includes instructions on how to
+	// trigger the link, such as `{0} (ctrl + click)`. The specific instructions vary depending on OS,
+	// user settings, and localization.
+	//
+	// @since 3.15.0.
+	Tooltip string `json:"tooltip,omitempty"`
+
 	// Data is a data entry field that is preserved on a document link between a
 	// DocumentLinkRequest and a DocumentLinkResolveRequest.
 	Data interface{} `json:"data,omitempty"`
@@ -802,6 +945,9 @@ type DocumentLink struct {
 
 // DocumentColorParams params of Document Color Request.
 type DocumentColorParams struct {
+	WorkDoneProgressParams
+	PartialResultParams
+
 	// TextDocument is the document to format.
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
 }
@@ -832,6 +978,9 @@ type Color struct {
 
 // ColorPresentationParams params of Color Presentation Request.
 type ColorPresentationParams struct {
+	WorkDoneProgressParams
+	PartialResultParams
+
 	// TextDocument is the text document.
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
 
@@ -860,6 +1009,8 @@ type ColorPresentation struct {
 
 // DocumentFormattingParams params of Document Formatting Request.
 type DocumentFormattingParams struct {
+	WorkDoneProgressParams
+
 	// Options is the format options.
 	Options FormattingOptions `json:"options"`
 
@@ -874,10 +1025,27 @@ type FormattingOptions struct {
 
 	// TabSize size of a tab in spaces.
 	TabSize float64 `json:"tabSize"`
+
+	// TrimTrailingWhitespace trim trailing whitespaces on a line.
+	//
+	// @since 3.15.0.
+	TrimTrailingWhitespace bool `json:"trimTrailingWhitespace,omitempty"`
+
+	// InsertFinalNewlines insert a newline character at the end of the file if one does not exist.
+	//
+	// @since 3.15.0.
+	InsertFinalNewline bool `json:"insertFinalNewline,omitempty"`
+
+	// TrimFinalNewlines trim all newlines after the final newline at the end of the file.
+	//
+	// @since 3.15.0.
+	TrimFinalNewlines bool `json:"trimFinalNewlines,omitempty"`
 }
 
 // DocumentRangeFormattingParams params of Document Range Formatting Request.
 type DocumentRangeFormattingParams struct {
+	WorkDoneProgressParams
+
 	// TextDocument is the document to format.
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
 
@@ -916,11 +1084,8 @@ type DocumentOnTypeFormattingRegistrationOptions struct {
 
 // RenameParams params of Rename Request.
 type RenameParams struct {
-	// TextDocument is the document to rename.
-	TextDocument TextDocumentIdentifier `json:"textDocument"`
-
-	// Position is the position at which this request was sent.
-	Position Position `json:"position"`
+	TextDocumentPositionParams
+	PartialResultParams
 
 	// NewName is the new name of the symbol. If the given name is not valid the
 	// request must return a [ResponseError](#ResponseError) with an
@@ -936,10 +1101,17 @@ type RenameRegistrationOptions struct {
 	PrepareProvider bool `json:"prepareProvider,omitempty"`
 }
 
+// PrepareRenameParams params of PrepareRenameParams request.
+//
+// @since 3.15.0.
+type PrepareRenameParams struct {
+	TextDocumentPositionParams
+}
+
 // FoldingRangeParams params of Folding Range Request.
 type FoldingRangeParams struct {
-	// TextDocument is the text document.
-	TextDocument TextDocumentIdentifier `json:"textDocument"`
+	TextDocumentPositionParams
+	PartialResultParams
 }
 
 // FoldingRangeKind is the enum of known range kinds.

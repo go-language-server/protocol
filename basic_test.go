@@ -462,7 +462,7 @@ func testLocationLink(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc
 
 func testDiagnostic(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want                      = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}]}`
+		want                      = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","tags":[1,2],"relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}]}`
 		wantNilSeverity           = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}]}`
 		wantNilCode               = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}]}`
 		wantNilRelatedInformation = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar"}`
@@ -484,6 +484,10 @@ func testDiagnostic(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 		Code:     "foo/bar",
 		Source:   "test foo bar",
 		Message:  "foo bar",
+		Tags: []DiagnosticTag{
+			DiagnosticUnnecessary,
+			DiagnosticDeprecated,
+		},
 		RelatedInformation: []DiagnosticRelatedInformation{
 			{
 				Location: Location{
@@ -769,6 +773,40 @@ func TestDiagnosticSeverity_String(t *testing.T) {
 		{
 			name: "Unknown",
 			d:    DiagnosticSeverity(0),
+			want: "0",
+		},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			if got := tt.d.String(); got != tt.want {
+				t.Errorf("DiagnosticSeverity.String() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestDiagnosticTag_String(t *testing.T) {
+	tests := []struct {
+		name string
+		d    DiagnosticTag
+		want string
+	}{
+		{
+			name: "Unnecessary",
+			d:    DiagnosticUnnecessary,
+			want: "Unnecessary",
+		},
+		{
+			name: "Deprecated",
+			d:    DiagnosticDeprecated,
+			want: "Deprecated",
+		},
+		{
+			name: "Unknown",
+			d:    DiagnosticTag(0),
 			want: "0",
 		},
 	}
@@ -1148,7 +1186,7 @@ func testTextDocumentEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 			TextDocumentIdentifier: TextDocumentIdentifier{
 				URI: "file:///path/to/basic.go",
 			},
-			Version: Uint64Ptr(10),
+			Version: NewVersion(10),
 		},
 		Edits: []TextEdit{
 			{
@@ -1171,7 +1209,7 @@ func testTextDocumentEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 			TextDocumentIdentifier: TextDocumentIdentifier{
 				URI: "file:///path/to/basic.go",
 			},
-			Version: Uint64Ptr(10),
+			Version: NewVersion(10),
 		},
 		Edits: []TextEdit{
 			{
@@ -2134,7 +2172,7 @@ func testWorkspaceEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshalFun
 					TextDocumentIdentifier: TextDocumentIdentifier{
 						URI: uri.File("/path/to/basic.go"),
 					},
-					Version: Uint64Ptr(10),
+					Version: NewVersion(10),
 				},
 				Edits: []TextEdit{
 					{
@@ -2161,7 +2199,7 @@ func testWorkspaceEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshalFun
 					TextDocumentIdentifier: TextDocumentIdentifier{
 						URI: uri.File("/path/to/basic.go"),
 					},
-					Version: Uint64Ptr(10),
+					Version: NewVersion(10),
 				},
 				Edits: []TextEdit{
 					{
@@ -2563,7 +2601,7 @@ func testVersionedTextDocumentIdentifier(t *testing.T, marshal marshalFunc, unma
 		TextDocumentIdentifier: TextDocumentIdentifier{
 			URI: uri.File("/path/to/basic.go"),
 		},
-		Version: Uint64Ptr(10),
+		Version: NewVersion(10),
 	}
 	wantTypeNullVersion := VersionedTextDocumentIdentifier{
 		TextDocumentIdentifier: TextDocumentIdentifier{

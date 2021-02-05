@@ -107,7 +107,7 @@ func clientDispatch(ctx context.Context, client Client, reply jsonrpc2.Replier, 
 		if err := dec.DecodeObject(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-		resp, err := client.WorkspaceApplyEdit(ctx, &params)
+		resp, err := client.ApplyEdit(ctx, &params)
 		return true, reply(ctx, resp, err)
 
 	case MethodWorkspaceConfiguration: // request
@@ -117,7 +117,7 @@ func clientDispatch(ctx context.Context, client Client, reply jsonrpc2.Replier, 
 		if err := dec.DecodeObject(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
-		resp, err := client.WorkspaceConfiguration(ctx, &params)
+		resp, err := client.Configuration(ctx, &params)
 		return true, reply(ctx, resp, err)
 
 	case MethodWorkspaceWorkspaceFolders: // request

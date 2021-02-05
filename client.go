@@ -49,8 +49,8 @@ type Client interface {
 	Telemetry(ctx context.Context, params interface{}) (err error)
 	RegisterCapability(ctx context.Context, params *RegistrationParams) (err error)
 	UnregisterCapability(ctx context.Context, params *UnregistrationParams) (err error)
-	WorkspaceApplyEdit(ctx context.Context, params *ApplyWorkspaceEditParams) (result bool, err error)
-	WorkspaceConfiguration(ctx context.Context, params *ConfigurationParams) (result []interface{}, err error)
+	ApplyEdit(ctx context.Context, params *ApplyWorkspaceEditParams) (result bool, err error)
+	Configuration(ctx context.Context, params *ConfigurationParams) (result []interface{}, err error)
 	WorkspaceFolders(ctx context.Context) (result []WorkspaceFolder, err error)
 }
 
@@ -170,8 +170,8 @@ func (c *client) UnregisterCapability(ctx context.Context, params *Unregistratio
 	return Call(ctx, c.Conn, MethodClientUnregisterCapability, params, nil)
 }
 
-// WorkspaceApplyEdit sends the request from the server to the client to modify resource on the client side.
-func (c *client) WorkspaceApplyEdit(ctx context.Context, params *ApplyWorkspaceEditParams) (result bool, err error) {
+// ApplyEdit sends the request from the server to the client to modify resource on the client side.
+func (c *client) ApplyEdit(ctx context.Context, params *ApplyWorkspaceEditParams) (result bool, err error) {
 	c.logger.Debug("call " + MethodWorkspaceApplyEdit)
 	defer c.logger.Debug("end "+MethodWorkspaceApplyEdit, zap.Error(err))
 
@@ -181,12 +181,12 @@ func (c *client) WorkspaceApplyEdit(ctx context.Context, params *ApplyWorkspaceE
 	return result, nil
 }
 
-// WorkspaceConfiguration sends the request from the server to the client to fetch configuration settings from the client.
+// Configuration sends the request from the server to the client to fetch configuration settings from the client.
 //
 // The request can fetch several configuration settings in one roundtrip.
 // The order of the returned configuration settings correspond to the order of the
 // passed ConfigurationItems (e.g. the first item in the response is the result for the first configuration item in the params).
-func (c *client) WorkspaceConfiguration(ctx context.Context, params *ConfigurationParams) (_ []interface{}, err error) {
+func (c *client) Configuration(ctx context.Context, params *ConfigurationParams) (_ []interface{}, err error) {
 	c.logger.Debug("call " + MethodWorkspaceConfiguration)
 	defer c.logger.Debug("end "+MethodWorkspaceConfiguration, zap.Error(err))
 

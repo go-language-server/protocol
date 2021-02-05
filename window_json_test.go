@@ -24,3 +24,11 @@ func TestMessageActionItem(t *testing.T) {
 func TestLogMessageParams(t *testing.T) {
 	testLogMessageParams(t, json.Marshal, json.Unmarshal)
 }
+
+func TestWorkDoneProgressCreateParams(t *testing.T) {
+	testWorkDoneProgressCreateParams(t, json.Marshal, json.Unmarshal)
+}
+
+func TestWorkDoneProgressCancelParams(t *testing.T) {
+	testWorkDoneProgressCancelParams(t, json.Marshal, json.Unmarshal)
+}

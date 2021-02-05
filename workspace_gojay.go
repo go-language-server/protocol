@@ -373,6 +373,8 @@ var (
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *WorkspaceSymbolParams) MarshalJSONObject(enc *gojay.Encoder) {
+	encodeProgressToken(enc, keyWorkDoneToken, v.WorkDoneToken)
+	encodeProgressToken(enc, keyPartialResultToken, v.PartialResultToken)
 	enc.StringKey(keyQuery, v.Query)
 }
 
@@ -381,14 +383,19 @@ func (v *WorkspaceSymbolParams) IsNil() bool { return v == nil }
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *WorkspaceSymbolParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	if k == keyQuery {
+	switch k {
+	case keyWorkDoneToken:
+		return decodeProgressToken(dec, k, keyWorkDoneToken, v.WorkDoneToken)
+	case keyPartialResultToken:
+		return decodeProgressToken(dec, k, keyPartialResultToken, v.PartialResultToken)
+	case keyQuery:
 		return dec.String(&v.Query)
 	}
 	return nil
 }
 
 // NKeys returns the number of keys to unmarshal.
-func (v *WorkspaceSymbolParams) NKeys() int { return 1 }
+func (v *WorkspaceSymbolParams) NKeys() int { return 3 }
 
 // compile time check whether the WorkspaceSymbolParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
@@ -398,6 +405,7 @@ var (
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *ExecuteCommandParams) MarshalJSONObject(enc *gojay.Encoder) {
+	encodeProgressToken(enc, keyWorkDoneToken, v.WorkDoneToken)
 	enc.StringKey(keyCommand, v.Command)
 	enc.ArrayKeyOmitEmpty(keyArguments, (*Interfaces)(&v.Arguments))
 }
@@ -408,6 +416,8 @@ func (v *ExecuteCommandParams) IsNil() bool { return v == nil }
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ExecuteCommandParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
+	case keyWorkDoneToken:
+		return decodeProgressToken(dec, k, keyWorkDoneToken, v.WorkDoneToken)
 	case keyCommand:
 		return dec.String(&v.Command)
 	case keyArguments:
@@ -417,7 +427,7 @@ func (v *ExecuteCommandParams) UnmarshalJSONObject(dec *gojay.Decoder, k string)
 }
 
 // NKeys returns the number of keys to unmarshal.
-func (v *ExecuteCommandParams) NKeys() int { return 2 }
+func (v *ExecuteCommandParams) NKeys() int { return 3 }
 
 // compile time check whether the ExecuteCommandParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (

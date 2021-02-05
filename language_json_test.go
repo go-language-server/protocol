@@ -29,7 +29,15 @@ func TestCompletionRegistrationOptions(t *testing.T) {
 	testCompletionRegistrationOptions(t, json.Marshal, json.Unmarshal)
 }
 
+func TestHoverParams(t *testing.T) {
+	testHoverParams(t, json.Marshal, json.Unmarshal)
+}
+
 func TestHover(t *testing.T) { testHover(t, json.Marshal, json.Unmarshal) }
+
+func TestSignatureHelpParams(t *testing.T) {
+	testSignatureHelpParams(t, json.Marshal, json.Unmarshal)
+}
 
 func TestSignatureHelp(t *testing.T) { testSignatureHelp(t, json.Marshal, json.Unmarshal) }
 
@@ -131,6 +139,10 @@ func TestRenameParams(t *testing.T) {
 
 func TestRenameRegistrationOptions(t *testing.T) {
 	testRenameRegistrationOptions(t, json.Marshal, json.Unmarshal)
+}
+
+func TestPrepareRenameParams(t *testing.T) {
+	testPrepareRenameParams(t, json.Marshal, json.Unmarshal)
 }
 
 func TestFoldingRangeParams(t *testing.T) {

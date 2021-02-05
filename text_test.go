@@ -117,7 +117,7 @@ func testDidChangeTextDocumentParams(t *testing.T, marshal marshalFunc, unmarsha
 			TextDocumentIdentifier: TextDocumentIdentifier{
 				URI: uri.File("/path/to/test.go"),
 			},
-			Version: Uint64Ptr(10),
+			Version: NewVersion(10),
 		},
 		ContentChanges: []TextDocumentContentChangeEvent{
 			{

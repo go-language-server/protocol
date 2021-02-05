@@ -6,7 +6,34 @@
 
 package protocol
 
-import "github.com/francoispqt/gojay"
+import (
+	"github.com/francoispqt/gojay"
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *CancelParams) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.AddInterfaceKey(keyID, v.ID)
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *CancelParams) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *CancelParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	if k == keyID {
+		return dec.Interface(&v.ID)
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *CancelParams) NKeys() int { return 1 }
+
+// compile time check whether the CancelParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*CancelParams)(nil)
+	_ gojay.UnmarshalerJSONObject = (*CancelParams)(nil)
+)
 
 // MarshalJSONArray implements gojay.MarshalerJSONArray.
 func (v WorkspaceFolders) MarshalJSONArray(enc *gojay.Encoder) {
@@ -35,8 +62,39 @@ var (
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *ClientInfo) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.StringKey(keyName, v.Name)
+	enc.StringKeyOmitEmpty(keyVersion, v.Version)
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *ClientInfo) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *ClientInfo) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	switch k {
+	case keyName:
+		return dec.String(&v.Name)
+	case keyVersion:
+		return dec.String(&v.Version)
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *ClientInfo) NKeys() int { return 2 }
+
+// compile time check whether the ClientInfo implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*ClientInfo)(nil)
+	_ gojay.UnmarshalerJSONObject = (*ClientInfo)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *InitializeParams) MarshalJSONObject(enc *gojay.Encoder) {
+	encodeProgressToken(enc, keyWorkDoneToken, v.WorkDoneToken)
 	enc.Float64Key(keyProcessID, v.ProcessID)
+	enc.ObjectKeyOmitEmpty(keyClientInfo, v.ClientInfo)
 	enc.StringKeyOmitEmpty(keyRootPath, v.RootPath)
 	enc.StringKey(keyRootURI, string(v.RootURI))
 	enc.AddInterfaceKey(keyInitializationOptions, v.InitializationOptions)
@@ -51,8 +109,15 @@ func (v *InitializeParams) IsNil() bool { return v == nil }
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *InitializeParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
+	case keyWorkDoneToken:
+		return decodeProgressToken(dec, k, keyWorkDoneToken, v.WorkDoneToken)
 	case keyProcessID:
 		return dec.Float64(&v.ProcessID)
+	case keyClientInfo:
+		if v.ClientInfo == nil {
+			v.ClientInfo = &ClientInfo{}
+		}
+		return dec.Object(v.ClientInfo)
 	case keyRootPath:
 		return dec.String(&v.RootPath)
 	case keyRootURI:
@@ -64,18 +129,13 @@ func (v *InitializeParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) err
 	case keyTrace:
 		return dec.String((*string)(&v.Trace))
 	case keyWorkspaceFolders:
-		var values WorkspaceFolders
-		err := dec.Array(&values)
-		if err == nil && len(values) > 0 {
-			v.WorkspaceFolders = []WorkspaceFolder(values)
-		}
-		return err
+		return dec.Array((*WorkspaceFolders)(&v.WorkspaceFolders))
 	}
 	return nil
 }
 
 // NKeys returns the number of keys to unmarshal.
-func (v *InitializeParams) NKeys() int { return 7 }
+func (v *InitializeParams) NKeys() int { return 9 }
 
 // compile time check whether the InitializeParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
@@ -473,6 +533,31 @@ var (
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesCompletionItemKind)(nil)
 )
 
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *TextDocumentClientCapabilitiesCompletionItemTagSupport) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.ArrayKey(keyValueSet, (*CompletionItemTags)(&v.ValueSet))
+}
+
+// IsNil returns wether the structure is nil value or not.
+func (v *TextDocumentClientCapabilitiesCompletionItemTagSupport) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
+func (v *TextDocumentClientCapabilitiesCompletionItemTagSupport) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	if k == keyValueSet {
+		return dec.Array((*CompletionItemTags)(&v.ValueSet))
+	}
+	return nil
+}
+
+// NKeys returns the number of keys to unmarshal.
+func (v *TextDocumentClientCapabilitiesCompletionItemTagSupport) NKeys() int { return 1 }
+
+// compile time check whether the TextDocumentClientCapabilitiesCompletionItemTagSupport implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesCompletionItemTagSupport)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesCompletionItemTagSupport)(nil)
+)
+
 // MarkupKinds represents a slice of MarkupKind.
 type MarkupKinds []MarkupKind
 
@@ -509,6 +594,7 @@ func (v *TextDocumentClientCapabilitiesCompletionItem) MarshalJSONObject(enc *go
 	enc.ArrayKeyOmitEmpty(keyDocumentationFormat, (*MarkupKinds)(&v.DocumentationFormat))
 	enc.BoolKeyOmitEmpty(keyDeprecatedSupport, v.DeprecatedSupport)
 	enc.BoolKeyOmitEmpty(keyPreselectSupport, v.PreselectSupport)
+	enc.ObjectKeyOmitEmpty(keyTagSupport, v.TagSupport)
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -527,12 +613,17 @@ func (v *TextDocumentClientCapabilitiesCompletionItem) UnmarshalJSONObject(dec *
 		return dec.Bool(&v.DeprecatedSupport)
 	case keyPreselectSupport:
 		return dec.Bool(&v.PreselectSupport)
+	case keyTagSupport:
+		if v.TagSupport == nil {
+			v.TagSupport = &TextDocumentClientCapabilitiesCompletionItemTagSupport{}
+		}
+		return dec.Object(v.TagSupport)
 	}
 	return nil
 }
 
 // NKeys returns the number of keys to unmarshal.
-func (v *TextDocumentClientCapabilitiesCompletionItem) NKeys() int { return 5 }
+func (v *TextDocumentClientCapabilitiesCompletionItem) NKeys() int { return 6 }
 
 // compile time check whether the TextDocumentClientCapabilitiesCompletionItem implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
@@ -573,6 +664,7 @@ var (
 func (v *TextDocumentClientCapabilitiesSignatureHelp) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKeyOmitEmpty(keyDynamicRegistration, v.DynamicRegistration)
 	enc.ObjectKeyOmitEmpty(keySignatureInformation, v.SignatureInformation)
+	enc.BoolKeyOmitEmpty(keyContextSupport, v.ContextSupport)
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -588,12 +680,14 @@ func (v *TextDocumentClientCapabilitiesSignatureHelp) UnmarshalJSONObject(dec *g
 			v.SignatureInformation = &TextDocumentClientCapabilitiesSignatureInformation{}
 		}
 		return dec.Object(v.SignatureInformation)
+	case keyContextSupport:
+		return dec.Bool(&v.ContextSupport)
 	}
 	return nil
 }
 
 // NKeys returns the number of keys to unmarshal.
-func (v *TextDocumentClientCapabilitiesSignatureHelp) NKeys() int { return 2 }
+func (v *TextDocumentClientCapabilitiesSignatureHelp) NKeys() int { return 3 }
 
 // compile time check whether the TextDocumentClientCapabilitiesSignatureHelp implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
@@ -611,19 +705,85 @@ func (v *TextDocumentClientCapabilitiesSignatureInformation) IsNil() bool { retu
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesSignatureInformation) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	if k == keyDocumentationFormat {
+	switch k {
+	case keyDocumentationFormat:
 		return dec.Array((*MarkupKinds)(&v.DocumentationFormat))
+	case keyParameterInformation:
+		return dec.Object(v.ParameterInformation)
 	}
 	return nil
 }
 
 // NKeys returns the number of keys to unmarshal.
-func (v *TextDocumentClientCapabilitiesSignatureInformation) NKeys() int { return 1 }
+func (v *TextDocumentClientCapabilitiesSignatureInformation) NKeys() int { return 2 }
 
 // compile time check whether the TextDocumentClientCapabilitiesSignatureInformation implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesSignatureInformation)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesSignatureInformation)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *TextDocumentClientCapabilitiesParameterInformation) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.BoolKeyOmitEmpty(keyLabelOffsetSupport, v.LabelOffsetSupport)
+}
+
+// IsNil returns wether the structure is nil value or not.
+func (v *TextDocumentClientCapabilitiesParameterInformation) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
+func (v *TextDocumentClientCapabilitiesParameterInformation) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	if k == keyLabelOffsetSupport {
+		return dec.Bool(&v.LabelOffsetSupport)
+	}
+	return nil
+}
+
+// NKeys returns the number of keys to unmarshal.
+func (v *TextDocumentClientCapabilitiesParameterInformation) NKeys() int { return 1 }
+
+// compile time check whether the TextDocumentClientCapabilitiesSignatureInformation implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesParameterInformation)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesParameterInformation)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *ReferencesParams) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.ObjectKeyOmitEmpty(keyTextDocument, &v.TextDocument)
+	enc.ObjectKeyOmitEmpty(keyPosition, &v.Position)
+	encodeProgressToken(enc, keyWorkDoneToken, v.WorkDoneToken)
+	encodeProgressToken(enc, keyPartialResultToken, v.PartialResultToken)
+	enc.ObjectKeyOmitEmpty(keyContext, &v.Context)
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *ReferencesParams) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *ReferencesParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	switch k {
+	case keyTextDocument:
+		return dec.Object(&v.TextDocument)
+	case keyPosition:
+		return dec.Object(&v.Position)
+	case keyWorkDoneToken:
+		return decodeProgressToken(dec, k, keyWorkDoneToken, v.WorkDoneToken)
+	case keyPartialResultToken:
+		return decodeProgressToken(dec, k, keyPartialResultToken, v.PartialResultToken)
+	case keyContext:
+		return dec.Object(&v.Context)
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *ReferencesParams) NKeys() int { return 5 }
+
+// compile time check whether the ReferencesParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*ReferencesParams)(nil)
+	_ gojay.UnmarshalerJSONObject = (*ReferencesParams)(nil)
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
@@ -652,6 +812,66 @@ var (
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *DocumentHighlightOptions) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.BoolKeyOmitEmpty(keyWorkDoneProgress, v.WorkDoneProgress)
+}
+
+// IsNil returns wether the structure is nil value or not.
+func (v *DocumentHighlightOptions) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
+func (v *DocumentHighlightOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	if k == keyWorkDoneProgress {
+		return dec.Bool(&v.WorkDoneProgress)
+	}
+	return nil
+}
+
+// NKeys returns the number of keys to unmarshal.
+func (v *DocumentHighlightOptions) NKeys() int { return 1 }
+
+// compile time check whether the DocumentHighlightOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*DocumentHighlightOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*DocumentHighlightOptions)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *DocumentHighlightParams) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.ObjectKeyOmitEmpty(keyTextDocument, &v.TextDocument)
+	enc.ObjectKeyOmitEmpty(keyPosition, &v.Position)
+	encodeProgressToken(enc, keyWorkDoneToken, v.WorkDoneToken)
+	encodeProgressToken(enc, keyPartialResultToken, v.PartialResultToken)
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *DocumentHighlightParams) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *DocumentHighlightParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	switch k {
+	case keyTextDocument:
+		return dec.Object(&v.TextDocument)
+	case keyPosition:
+		return dec.Object(&v.Position)
+	case keyWorkDoneToken:
+		return decodeProgressToken(dec, k, keyWorkDoneToken, v.WorkDoneToken)
+	case keyPartialResultToken:
+		return decodeProgressToken(dec, k, keyPartialResultToken, v.PartialResultToken)
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *DocumentHighlightParams) NKeys() int { return 4 }
+
+// compile time check whether the DocumentHighlightParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*DocumentHighlightParams)(nil)
+	_ gojay.UnmarshalerJSONObject = (*DocumentHighlightParams)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesDocumentHighlight) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKeyOmitEmpty(keyDynamicRegistration, v.DynamicRegistration)
 }
@@ -674,6 +894,31 @@ func (v *TextDocumentClientCapabilitiesDocumentHighlight) NKeys() int { return 1
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesDocumentHighlight)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesDocumentHighlight)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *DocumentSymbolOptions) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.BoolKeyOmitEmpty(keyWorkDoneProgress, v.WorkDoneProgress)
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *DocumentSymbolOptions) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *DocumentSymbolOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	if k == keyWorkDoneProgress {
+		return dec.Bool(&v.WorkDoneProgress)
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *DocumentSymbolOptions) NKeys() int { return 1 }
+
+// compile time check whether the DocumentSymbolOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*DocumentSymbolOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*DocumentSymbolOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
@@ -712,6 +957,56 @@ var (
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *WorkspaceSymbolOptions) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.BoolKeyOmitEmpty(keyWorkDoneProgress, v.WorkDoneProgress)
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *WorkspaceSymbolOptions) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *WorkspaceSymbolOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	if k == keyWorkDoneProgress {
+		return dec.Bool(&v.WorkDoneProgress)
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *WorkspaceSymbolOptions) NKeys() int { return 1 }
+
+// compile time check whether the WorkspaceSymbolOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*WorkspaceSymbolOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*WorkspaceSymbolOptions)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *DocumentFormattingOptions) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.BoolKeyOmitEmpty(keyWorkDoneProgress, v.WorkDoneProgress)
+}
+
+// IsNil returns wether the structure is nil value or not.
+func (v *DocumentFormattingOptions) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
+func (v *DocumentFormattingOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	if k == keyWorkDoneProgress {
+		return dec.Bool(&v.WorkDoneProgress)
+	}
+	return nil
+}
+
+// NKeys returns the number of keys to unmarshal.
+func (v *DocumentFormattingOptions) NKeys() int { return 1 }
+
+// compile time check whether the DocumentFormattingOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*DocumentFormattingOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*DocumentFormattingOptions)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesFormatting) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKeyOmitEmpty(keyDynamicRegistration, v.DynamicRegistration)
 }
@@ -734,6 +1029,31 @@ func (v *TextDocumentClientCapabilitiesFormatting) NKeys() int { return 1 }
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesFormatting)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesFormatting)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *DocumentRangeFormattingOptions) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.BoolKeyOmitEmpty(keyWorkDoneProgress, v.WorkDoneProgress)
+}
+
+// IsNil returns wether the structure is nil value or not.
+func (v *DocumentRangeFormattingOptions) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
+func (v *DocumentRangeFormattingOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	if k == keyWorkDoneProgress {
+		return dec.Bool(&v.WorkDoneProgress)
+	}
+	return nil
+}
+
+// NKeys returns the number of keys to unmarshal.
+func (v *DocumentRangeFormattingOptions) NKeys() int { return 1 }
+
+// compile time check whether the DocumentRangeFormattingOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*DocumentRangeFormattingOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*DocumentRangeFormattingOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
@@ -787,6 +1107,101 @@ var (
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *DeclarationOptions) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.BoolKeyOmitEmpty(keyWorkDoneProgress, v.WorkDoneProgress)
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *DeclarationOptions) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *DeclarationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	if k == keyWorkDoneProgress {
+		return dec.Bool(&v.WorkDoneProgress)
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *DeclarationOptions) NKeys() int { return 1 }
+
+// compile time check whether the DeclarationOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*DeclarationOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*DeclarationOptions)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *DeclarationRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.BoolKeyOmitEmpty(keyWorkDoneProgress, v.WorkDoneProgress)
+	enc.AddArrayKey(keyDocumentSelector, &v.DocumentSelector)
+	enc.StringKeyOmitEmpty(keyID, v.ID)
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *DeclarationRegistrationOptions) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *DeclarationRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	switch k {
+	case keyWorkDoneProgress:
+		return dec.Bool(&v.WorkDoneProgress)
+	case keyDocumentSelector:
+		if v.DocumentSelector == nil {
+			v.DocumentSelector = DocumentSelector{}
+		}
+		return dec.Array(&v.DocumentSelector)
+	case keyID:
+		return dec.String(&v.ID)
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *DeclarationRegistrationOptions) NKeys() int { return 3 }
+
+// compile time check whether the DeclarationOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*DeclarationOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*DeclarationOptions)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *DeclarationParams) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.ObjectKeyOmitEmpty(keyTextDocument, &v.TextDocument)
+	enc.ObjectKeyOmitEmpty(keyPosition, &v.Position)
+	encodeProgressToken(enc, keyWorkDoneToken, v.WorkDoneToken)
+	encodeProgressToken(enc, keyPartialResultToken, v.PartialResultToken)
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *DeclarationParams) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *DeclarationParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	switch k {
+	case keyTextDocument:
+		return dec.Object(&v.TextDocument)
+	case keyPosition:
+		return dec.Object(&v.Position)
+	case keyWorkDoneToken:
+		return decodeProgressToken(dec, k, keyWorkDoneToken, v.WorkDoneToken)
+	case keyPartialResultToken:
+		return decodeProgressToken(dec, k, keyPartialResultToken, v.PartialResultToken)
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *DeclarationParams) NKeys() int { return 4 }
+
+// compile time check whether the DeclarationParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*DeclarationParams)(nil)
+	_ gojay.UnmarshalerJSONObject = (*DeclarationParams)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesDeclaration) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKeyOmitEmpty(keyDynamicRegistration, v.DynamicRegistration)
 	enc.BoolKeyOmitEmpty(keyLinkSupport, v.LinkSupport)
@@ -813,6 +1228,66 @@ func (v *TextDocumentClientCapabilitiesDeclaration) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesDeclaration)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesDeclaration)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *DefinitionOptions) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.BoolKeyOmitEmpty(keyWorkDoneProgress, v.WorkDoneProgress)
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *DefinitionOptions) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *DefinitionOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	if k == keyWorkDoneProgress {
+		return dec.Bool(&v.WorkDoneProgress)
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *DefinitionOptions) NKeys() int { return 1 }
+
+// compile time check whether the DefinitionOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*DefinitionOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*DefinitionOptions)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *DefinitionParams) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.ObjectKeyOmitEmpty(keyTextDocument, &v.TextDocument)
+	enc.ObjectKeyOmitEmpty(keyPosition, &v.Position)
+	encodeProgressToken(enc, keyWorkDoneToken, v.WorkDoneToken)
+	encodeProgressToken(enc, keyPartialResultToken, v.PartialResultToken)
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *DefinitionParams) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *DefinitionParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	switch k {
+	case keyTextDocument:
+		return dec.Object(&v.TextDocument)
+	case keyPosition:
+		return dec.Object(&v.Position)
+	case keyWorkDoneToken:
+		return decodeProgressToken(dec, k, keyWorkDoneToken, v.WorkDoneToken)
+	case keyPartialResultToken:
+		return decodeProgressToken(dec, k, keyPartialResultToken, v.PartialResultToken)
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *DefinitionParams) NKeys() int { return 4 }
+
+// compile time check whether the DefinitionParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*DefinitionParams)(nil)
+	_ gojay.UnmarshalerJSONObject = (*DefinitionParams)(nil)
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
@@ -845,6 +1320,101 @@ var (
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *TypeDefinitionOptions) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.BoolKeyOmitEmpty(keyWorkDoneProgress, v.WorkDoneProgress)
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *TypeDefinitionOptions) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *TypeDefinitionOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	if k == keyWorkDoneProgress {
+		return dec.Bool(&v.WorkDoneProgress)
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *TypeDefinitionOptions) NKeys() int { return 1 }
+
+// compile time check whether the TypeDefinitionOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*TypeDefinitionOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TypeDefinitionOptions)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *TypeDefinitionRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.AddArrayKey(keyDocumentSelector, &v.DocumentSelector)
+	enc.BoolKeyOmitEmpty(keyWorkDoneProgress, v.WorkDoneProgress)
+	enc.StringKeyOmitEmpty(keyID, v.ID)
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *TypeDefinitionRegistrationOptions) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *TypeDefinitionRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	switch k {
+	case keyWorkDoneProgress:
+		return dec.Bool(&v.WorkDoneProgress)
+	case keyDocumentSelector:
+		if v.DocumentSelector == nil {
+			v.DocumentSelector = DocumentSelector{}
+		}
+		return dec.Array(&v.DocumentSelector)
+	case keyID:
+		return dec.String(&v.ID)
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *TypeDefinitionRegistrationOptions) NKeys() int { return 3 }
+
+// compile time check whether the TypeDefinitionRegistrationOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*TypeDefinitionRegistrationOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TypeDefinitionRegistrationOptions)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *TypeDefinitionParams) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.ObjectKeyOmitEmpty(keyTextDocument, &v.TextDocument)
+	enc.ObjectKeyOmitEmpty(keyPosition, &v.Position)
+	encodeProgressToken(enc, keyWorkDoneToken, v.WorkDoneToken)
+	encodeProgressToken(enc, keyPartialResultToken, v.PartialResultToken)
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *TypeDefinitionParams) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *TypeDefinitionParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	switch k {
+	case keyTextDocument:
+		return dec.Object(&v.TextDocument)
+	case keyPosition:
+		return dec.Object(&v.Position)
+	case keyWorkDoneToken:
+		return decodeProgressToken(dec, k, keyWorkDoneToken, v.WorkDoneToken)
+	case keyPartialResultToken:
+		return decodeProgressToken(dec, k, keyPartialResultToken, v.PartialResultToken)
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *TypeDefinitionParams) NKeys() int { return 4 }
+
+// compile time check whether the TypeDefinitionParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*TypeDefinitionParams)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TypeDefinitionParams)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesTypeDefinition) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKeyOmitEmpty(keyDynamicRegistration, v.DynamicRegistration)
 	enc.BoolKeyOmitEmpty(keyLinkSupport, v.LinkSupport)
@@ -871,6 +1441,101 @@ func (v *TextDocumentClientCapabilitiesTypeDefinition) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesTypeDefinition)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesTypeDefinition)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *ImplementationOptions) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.BoolKeyOmitEmpty(keyWorkDoneProgress, v.WorkDoneProgress)
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *ImplementationOptions) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *ImplementationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	if k == keyWorkDoneProgress {
+		return dec.Bool(&v.WorkDoneProgress)
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *ImplementationOptions) NKeys() int { return 1 }
+
+// compile time check whether the ImplementationOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*ImplementationOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*ImplementationOptions)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *ImplementationRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.BoolKeyOmitEmpty(keyWorkDoneProgress, v.WorkDoneProgress)
+	enc.AddArrayKey(keyDocumentSelector, &v.DocumentSelector)
+	enc.StringKeyOmitEmpty(keyID, v.ID)
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *ImplementationRegistrationOptions) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *ImplementationRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	switch k {
+	case keyWorkDoneProgress:
+		return dec.Bool(&v.WorkDoneProgress)
+	case keyDocumentSelector:
+		if v.DocumentSelector == nil {
+			v.DocumentSelector = DocumentSelector{}
+		}
+		return dec.Array(&v.DocumentSelector)
+	case keyID:
+		return dec.String(&v.ID)
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *ImplementationRegistrationOptions) NKeys() int { return 3 }
+
+// compile time check whether the ImplementationRegistrationOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*ImplementationRegistrationOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*ImplementationRegistrationOptions)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *ImplementationParams) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.ObjectKeyOmitEmpty(keyTextDocument, &v.TextDocument)
+	enc.ObjectKeyOmitEmpty(keyPosition, &v.Position)
+	encodeProgressToken(enc, keyWorkDoneToken, v.WorkDoneToken)
+	encodeProgressToken(enc, keyPartialResultToken, v.PartialResultToken)
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *ImplementationParams) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *ImplementationParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	switch k {
+	case keyTextDocument:
+		return dec.Object(&v.TextDocument)
+	case keyPosition:
+		return dec.Object(&v.Position)
+	case keyWorkDoneToken:
+		return decodeProgressToken(dec, k, keyWorkDoneToken, v.WorkDoneToken)
+	case keyPartialResultToken:
+		return decodeProgressToken(dec, k, keyPartialResultToken, v.PartialResultToken)
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *ImplementationParams) NKeys() int { return 4 }
+
+// compile time check whether the ImplementationParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*ImplementationParams)(nil)
+	_ gojay.UnmarshalerJSONObject = (*ImplementationParams)(nil)
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
@@ -906,6 +1571,7 @@ var (
 func (v *TextDocumentClientCapabilitiesCodeAction) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKeyOmitEmpty(keyDynamicRegistration, v.DynamicRegistration)
 	enc.ObjectKeyOmitEmpty(keyCodeActionLiteralSupport, v.CodeActionLiteralSupport)
+	enc.BoolKeyOmitEmpty(keyIsPreferredSupport, v.IsPreferredSupport)
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -921,12 +1587,14 @@ func (v *TextDocumentClientCapabilitiesCodeAction) UnmarshalJSONObject(dec *goja
 			v.CodeActionLiteralSupport = &TextDocumentClientCapabilitiesCodeActionLiteralSupport{}
 		}
 		return dec.Object(v.CodeActionLiteralSupport)
+	case keyIsPreferredSupport:
+		return dec.Bool(&v.IsPreferredSupport)
 	}
 	return nil
 }
 
 // NKeys returns the number of keys to unmarshal.
-func (v *TextDocumentClientCapabilitiesCodeAction) NKeys() int { return 2 }
+func (v *TextDocumentClientCapabilitiesCodeAction) NKeys() int { return 3 }
 
 // compile time check whether the TextDocumentClientCapabilitiesCodeAction implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
@@ -1017,8 +1685,97 @@ var (
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *TextDocumentClientCapabilitiesPublishDiagnosticsTagSupport) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.ArrayKeyOmitEmpty(keyValueSet, (*DiagnosticTags)(&v.ValueSet))
+}
+
+// IsNil returns wether the structure is nil value or not.
+func (v *TextDocumentClientCapabilitiesPublishDiagnosticsTagSupport) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
+func (v *TextDocumentClientCapabilitiesPublishDiagnosticsTagSupport) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	if k == keyValueSet {
+		if v.ValueSet == nil {
+			v.ValueSet = []DiagnosticTag{}
+		}
+		return dec.Array((*DiagnosticTags)(&v.ValueSet))
+	}
+	return nil
+}
+
+// NKeys returns the number of keys to unmarshal.
+func (v *TextDocumentClientCapabilitiesPublishDiagnosticsTagSupport) NKeys() int { return 1 }
+
+// compile time check whether the TextDocumentClientCapabilitiesCodeActionKind implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesPublishDiagnosticsTagSupport)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesPublishDiagnosticsTagSupport)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *FoldingRangeOptions) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.BoolKeyOmitEmpty(keyWorkDoneProgress, v.WorkDoneProgress)
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *FoldingRangeOptions) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *FoldingRangeOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	if k == keyWorkDoneProgress {
+		return dec.Bool(&v.WorkDoneProgress)
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *FoldingRangeOptions) NKeys() int { return 1 }
+
+// compile time check whether the FoldingRangeOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*FoldingRangeOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*FoldingRangeOptions)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *FoldingRangeRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.AddArrayKey(keyDocumentSelector, &v.DocumentSelector)
+	enc.BoolKeyOmitEmpty(keyWorkDoneProgress, v.WorkDoneProgress)
+	enc.StringKeyOmitEmpty(keyID, v.ID)
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *FoldingRangeRegistrationOptions) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *FoldingRangeRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	switch k {
+	case keyDocumentSelector:
+		if v.DocumentSelector == nil {
+			v.DocumentSelector = DocumentSelector{}
+		}
+		return dec.Array(&v.DocumentSelector)
+	case keyWorkDoneProgress:
+		return dec.Bool(&v.WorkDoneProgress)
+	case keyID:
+		return dec.String(&v.ID)
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *FoldingRangeRegistrationOptions) NKeys() int { return 4 }
+
+// compile time check whether the FoldingRangeRegistrationOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*FoldingRangeRegistrationOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*FoldingRangeRegistrationOptions)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesCodeLens) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKeyOmitEmpty(keyDynamicRegistration, v.DynamicRegistration)
+	enc.BoolKeyOmitEmpty(keyTooltipSupport, v.TooltipSupport)
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -1026,14 +1783,17 @@ func (v *TextDocumentClientCapabilitiesCodeLens) IsNil() bool { return v == nil 
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesCodeLens) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	if k == keyDynamicRegistration {
+	switch k {
+	case keyDynamicRegistration:
 		return dec.Bool(&v.DynamicRegistration)
+	case keyTooltipSupport:
+		return dec.Bool(&v.TooltipSupport)
 	}
 	return nil
 }
 
 // NKeys returns the number of keys to unmarshal.
-func (v *TextDocumentClientCapabilitiesCodeLens) NKeys() int { return 1 }
+func (v *TextDocumentClientCapabilitiesCodeLens) NKeys() int { return 2 }
 
 // compile time check whether the TextDocumentClientCapabilitiesCodeLens implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
@@ -1044,6 +1804,7 @@ var (
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesDocumentLink) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKeyOmitEmpty(keyDynamicRegistration, v.DynamicRegistration)
+	enc.BoolKeyOmitEmpty(keyTooltipSupport, v.TooltipSupport)
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -1051,19 +1812,82 @@ func (v *TextDocumentClientCapabilitiesDocumentLink) IsNil() bool { return v == 
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesDocumentLink) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	if k == keyDynamicRegistration {
+	switch k {
+	case keyDynamicRegistration:
 		return dec.Bool(&v.DynamicRegistration)
+	case keyTooltipSupport:
+		return dec.Bool(&v.TooltipSupport)
 	}
 	return nil
 }
 
 // NKeys returns the number of keys to unmarshal.
-func (v *TextDocumentClientCapabilitiesDocumentLink) NKeys() int { return 1 }
+func (v *TextDocumentClientCapabilitiesDocumentLink) NKeys() int { return 2 }
 
 // compile time check whether the TextDocumentClientCapabilitiesDocumentLink implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentClientCapabilitiesDocumentLink)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentClientCapabilitiesDocumentLink)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *DocumentColorOptions) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.BoolKeyOmitEmpty(keyWorkDoneProgress, v.WorkDoneProgress)
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *DocumentColorOptions) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *DocumentColorOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	if k == keyWorkDoneProgress {
+		return dec.Bool(&v.WorkDoneProgress)
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *DocumentColorOptions) NKeys() int { return 1 }
+
+// compile time check whether the DocumentColorOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*DocumentColorOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*DocumentColorOptions)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *DocumentColorRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.AddArrayKey(keyDocumentSelector, &v.DocumentSelector)
+	enc.StringKeyOmitEmpty(keyID, v.ID)
+	enc.BoolKeyOmitEmpty(keyWorkDoneProgress, v.WorkDoneProgress)
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *DocumentColorRegistrationOptions) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *DocumentColorRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	switch k {
+	case keyDocumentSelector:
+		if v.DocumentSelector == nil {
+			v.DocumentSelector = DocumentSelector{}
+		}
+		return dec.Array(&v.DocumentSelector)
+	case keyID:
+		return dec.String(&v.ID)
+	case keyWorkDoneProgress:
+		return dec.Bool(&v.WorkDoneProgress)
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *DocumentColorRegistrationOptions) NKeys() int { return 4 }
+
+// compile time check whether the DocumentColorRegistrationOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*DocumentColorRegistrationOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*DocumentColorRegistrationOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
@@ -1123,7 +1947,8 @@ var (
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *TextDocumentClientCapabilitiesPublishDiagnostics) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKeyOmitEmpty(keyRelatedInformation, v.RelatedInformation)
-	enc.BoolKeyOmitEmpty(keyTagSupport, v.TagSupport)
+	enc.ObjectKeyOmitEmpty(keyTagSupport, v.TagSupport)
+	enc.BoolKeyOmitEmpty(keyVersionSupport, v.VersionSupport)
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -1135,13 +1960,18 @@ func (v *TextDocumentClientCapabilitiesPublishDiagnostics) UnmarshalJSONObject(d
 	case keyRelatedInformation:
 		return dec.Bool(&v.RelatedInformation)
 	case keyTagSupport:
-		return dec.Bool(&v.TagSupport)
+		if v.TagSupport == nil {
+			v.TagSupport = &TextDocumentClientCapabilitiesPublishDiagnosticsTagSupport{}
+		}
+		return dec.Object(v.TagSupport)
+	case keyVersionSupport:
+		return dec.Bool(&v.VersionSupport)
 	}
 	return nil
 }
 
 // NKeys returns the number of keys to unmarshal.
-func (v *TextDocumentClientCapabilitiesPublishDiagnostics) NKeys() int { return 2 }
+func (v *TextDocumentClientCapabilitiesPublishDiagnostics) NKeys() int { return 3 }
 
 // compile time check whether the TextDocumentClientCapabilitiesPublishDiagnostics implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
@@ -1363,9 +2193,35 @@ var (
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *WindowClientCapabilities) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.BoolKeyOmitEmpty(keyWorkDoneProgress, v.WorkDoneProgress)
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *WindowClientCapabilities) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *WindowClientCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	if k == keyWorkDoneProgress {
+		return dec.Bool(&v.WorkDoneProgress)
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *WindowClientCapabilities) NKeys() int { return 1 }
+
+// compile time check whether the WindowClientCapabilities implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*WindowClientCapabilities)(nil)
+	_ gojay.UnmarshalerJSONObject = (*WindowClientCapabilities)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *ClientCapabilities) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKeyOmitEmpty(keyWorkspace, v.Workspace)
 	enc.ObjectKeyOmitEmpty(keyTextDocument, v.TextDocument)
+	enc.ObjectKeyOmitEmpty(keyWindow, v.Window)
 	enc.AddInterfaceKeyOmitEmpty(keyExperimental, v.Experimental)
 }
 
@@ -1385,6 +2241,11 @@ func (v *ClientCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) e
 			v.TextDocument = &TextDocumentClientCapabilities{}
 		}
 		return dec.Object(v.TextDocument)
+	case keyWindow:
+		if v.Window == nil {
+			v.Window = &WindowClientCapabilities{}
+		}
+		return dec.Object(v.Window)
 	case keyExperimental:
 		return dec.Interface(&v.Experimental)
 	}
@@ -1392,7 +2253,7 @@ func (v *ClientCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) e
 }
 
 // NKeys returns the number of keys to unmarshal.
-func (v *ClientCapabilities) NKeys() int { return 3 }
+func (v *ClientCapabilities) NKeys() int { return 4 }
 
 // compile time check whether the ClientCapabilities implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
@@ -1403,6 +2264,7 @@ var (
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *InitializeResult) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey(keyCapabilities, &v.Capabilities)
+	enc.ObjectKeyOmitEmpty(keyServerInfo, v.ServerInfo)
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -1410,19 +2272,54 @@ func (v *InitializeResult) IsNil() bool { return v == nil }
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *InitializeResult) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	if k == keyCapabilities {
+	switch k {
+	case keyCapabilities:
 		return dec.Object(&v.Capabilities)
+	case keyServerInfo:
+		if v.ServerInfo == nil {
+			v.ServerInfo = &ServerInfo{}
+		}
+		return dec.Object(v.ServerInfo)
 	}
 	return nil
 }
 
 // NKeys returns the number of keys to unmarshal.
-func (v *InitializeResult) NKeys() int { return 1 }
+func (v *InitializeResult) NKeys() int { return 2 }
 
 // compile time check whether the InitializeResult implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
 	_ gojay.MarshalerJSONObject   = (*InitializeResult)(nil)
 	_ gojay.UnmarshalerJSONObject = (*InitializeResult)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *ServerInfo) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.StringKey(keyName, v.Name)
+	enc.StringKeyOmitEmpty(keyVersion, v.Version)
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *ServerInfo) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *ServerInfo) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	switch k {
+	case keyName:
+		return dec.String(&v.Name)
+	case keyVersion:
+		return dec.String(&v.Version)
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *ServerInfo) NKeys() int { return 2 }
+
+// compile time check whether the ServerInfo implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*ServerInfo)(nil)
+	_ gojay.UnmarshalerJSONObject = (*ServerInfo)(nil)
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
@@ -1485,6 +2382,7 @@ var (
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *SignatureHelpOptions) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ArrayKeyOmitEmpty(keyTriggerCharacters, (*Strings)(&v.TriggerCharacters))
+	enc.ArrayKeyOmitEmpty(keyRetriggerCharacters, (*Strings)(&v.RetriggerCharacters))
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -1492,24 +2390,52 @@ func (v *SignatureHelpOptions) IsNil() bool { return v == nil }
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *SignatureHelpOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	if k == keyTriggerCharacters {
+	switch k {
+	case keyTriggerCharacters:
 		var values Strings
 		err := dec.Array(&values)
 		if err == nil && len(values) > 0 {
 			v.TriggerCharacters = []string(values)
 		}
 		return err
+	case keyRetriggerCharacters:
+		return dec.Array((*Strings)(&v.RetriggerCharacters))
 	}
 	return nil
 }
 
 // NKeys returns the number of keys to unmarshal.
-func (v *SignatureHelpOptions) NKeys() int { return 1 }
+func (v *SignatureHelpOptions) NKeys() int { return 2 }
 
 // compile time check whether the SignatureHelpOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
 	_ gojay.MarshalerJSONObject   = (*SignatureHelpOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*SignatureHelpOptions)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *ReferencesOptions) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.BoolKeyOmitEmpty(keyWorkDoneProgress, v.WorkDoneProgress)
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *ReferencesOptions) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *ReferencesOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	if k == keyWorkDoneProgress {
+		return dec.Bool(&v.WorkDoneProgress)
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *ReferencesOptions) NKeys() int { return 1 }
+
+// compile time check whether the ReferencesOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*ReferencesOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*ReferencesOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
@@ -1739,7 +2665,7 @@ var (
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *TextDocumentSyncOptions) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKeyOmitEmpty(keyOpenClose, v.OpenClose)
-	enc.Float64KeyOmitEmpty(keyChange, v.Change)
+	enc.Float64KeyOmitEmpty(keyChange, float64(v.Change))
 	enc.BoolKeyOmitEmpty(keyWillSave, v.WillSave)
 	enc.BoolKeyOmitEmpty(keyWillSaveWaitUntil, v.WillSaveWaitUntil)
 	enc.ObjectKeyOmitEmpty(keySave, v.Save)
@@ -1754,7 +2680,7 @@ func (v *TextDocumentSyncOptions) UnmarshalJSONObject(dec *gojay.Decoder, k stri
 	case keyOpenClose:
 		return dec.Bool(&v.OpenClose)
 	case keyChange:
-		return dec.Float64(&v.Change)
+		return dec.Float64((*float64)(&v.Change))
 	case keyWillSave:
 		return dec.Bool(&v.WillSave)
 	case keyWillSaveWaitUntil:
@@ -1772,6 +2698,31 @@ func (v *TextDocumentSyncOptions) NKeys() int { return 5 }
 var (
 	_ gojay.MarshalerJSONObject   = (*TextDocumentSyncOptions)(nil)
 	_ gojay.UnmarshalerJSONObject = (*TextDocumentSyncOptions)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *HoverOptions) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.BoolKeyOmitEmpty(keyWorkDoneProgress, v.WorkDoneProgress)
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *HoverOptions) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *HoverOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	if k == keyWorkDoneProgress {
+		return dec.Bool(&v.WorkDoneProgress)
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *HoverOptions) NKeys() int { return 1 }
+
+// compile time check whether the HoverOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*HoverOptions)(nil)
+	_ gojay.UnmarshalerJSONObject = (*HoverOptions)(nil)
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
@@ -1857,28 +2808,148 @@ var (
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
+//nolint:funlen,gocritic // TODO(zchee): fix gocritic:typeSwitchVar
 func (v *ServerCapabilities) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.AddInterfaceKeyOmitEmpty(keyTextDocumentSync, v.TextDocumentSync)
-	enc.BoolKeyOmitEmpty(keyHoverProvider, v.HoverProvider)
+	switch v.TextDocumentSync.(type) {
+	case float64:
+		enc.Float64Key(keyTextDocumentSync, v.TextDocumentSync.(float64))
+	case *TextDocumentSyncOptions:
+		enc.ObjectKey(keyTextDocumentSync, v.TextDocumentSync.(*TextDocumentSyncOptions))
+	}
+
+	switch v.HoverProvider.(type) {
+	case bool:
+		enc.BoolKey(keyHoverProvider, v.HoverProvider.(bool))
+	case *HoverOptions:
+		enc.ObjectKey(keyHoverProvider, v.HoverProvider.(*HoverOptions))
+	}
+
 	enc.ObjectKeyOmitEmpty(keyCompletionProvider, v.CompletionProvider)
 	enc.ObjectKeyOmitEmpty(keySignatureHelpProvider, v.SignatureHelpProvider)
-	enc.BoolKeyOmitEmpty(keyDefinitionProvider, v.DefinitionProvider)
-	enc.AddInterfaceKeyOmitEmpty(keyTypeDefinitionProvider, v.TypeDefinitionProvider)
-	enc.AddInterfaceKeyOmitEmpty(keyImplementationProvider, v.ImplementationProvider)
-	enc.BoolKeyOmitEmpty(keyReferencesProvider, v.ReferencesProvider)
-	enc.BoolKeyOmitEmpty(keyDocumentHighlightProvider, v.DocumentHighlightProvider)
-	enc.BoolKeyOmitEmpty(keyDocumentSymbolProvider, v.DocumentSymbolProvider)
-	enc.BoolKeyOmitEmpty(keyWorkspaceSymbolProvider, v.WorkspaceSymbolProvider)
-	enc.BoolKeyOmitEmpty(keyCodeActionProvider, v.CodeActionProvider)
+
+	switch v.DeclarationProvider.(type) {
+	case bool:
+		enc.BoolKey(keyDeclarationProvider, v.DeclarationProvider.(bool))
+	case *DeclarationOptions:
+		enc.ObjectKey(keyDeclarationProvider, v.DeclarationProvider.(*DeclarationOptions))
+	case *DeclarationRegistrationOptions:
+		enc.ObjectKey(keyDeclarationProvider, v.DeclarationProvider.(*DeclarationRegistrationOptions))
+	}
+
+	switch v.DefinitionProvider.(type) {
+	case bool:
+		enc.BoolKey(keyDefinitionProvider, v.DefinitionProvider.(bool))
+	case *DefinitionOptions:
+		enc.ObjectKey(keyDefinitionProvider, v.DefinitionProvider.(*DefinitionOptions))
+	}
+
+	switch v.TypeDefinitionProvider.(type) {
+	case bool:
+		enc.BoolKey(keyTypeDefinitionProvider, v.TypeDefinitionProvider.(bool))
+	case *TypeDefinitionOptions:
+		enc.ObjectKey(keyTypeDefinitionProvider, v.TypeDefinitionProvider.(*TypeDefinitionOptions))
+	case *TypeDefinitionRegistrationOptions:
+		enc.ObjectKey(keyTypeDefinitionProvider, v.TypeDefinitionProvider.(*TypeDefinitionRegistrationOptions))
+	}
+
+	switch v.ImplementationProvider.(type) {
+	case bool:
+		enc.BoolKey(keyImplementationProvider, v.ImplementationProvider.(bool))
+	case *ImplementationOptions:
+		enc.ObjectKey(keyImplementationProvider, v.ImplementationProvider.(*ImplementationOptions))
+	case *ImplementationRegistrationOptions:
+		enc.ObjectKey(keyImplementationProvider, v.ImplementationProvider.(*ImplementationRegistrationOptions))
+	}
+
+	switch v.ReferencesProvider.(type) {
+	case bool:
+		enc.BoolKey(keyReferencesProvider, v.ReferencesProvider.(bool))
+	case *ReferencesOptions:
+		enc.ObjectKey(keyReferencesProvider, v.ReferencesProvider.(*ReferencesOptions))
+	}
+
+	switch v.DocumentHighlightProvider.(type) {
+	case bool:
+		enc.BoolKey(keyDocumentHighlightProvider, v.DocumentHighlightProvider.(bool))
+	case *DocumentHighlightOptions:
+		enc.ObjectKey(keyDocumentHighlightProvider, v.DocumentHighlightProvider.(*DocumentHighlightOptions))
+	}
+
+	switch v.DocumentSymbolProvider.(type) {
+	case bool:
+		enc.BoolKey(keyDocumentSymbolProvider, v.DocumentSymbolProvider.(bool))
+	case *DocumentSymbolOptions:
+		enc.ObjectKey(keyDocumentSymbolProvider, v.DocumentSymbolProvider.(*DocumentSymbolOptions))
+	}
+
+	switch v.WorkspaceSymbolProvider.(type) {
+	case bool:
+		enc.BoolKey(keyWorkspaceSymbolProvider, v.WorkspaceSymbolProvider.(bool))
+	case *WorkspaceSymbolOptions:
+		enc.ObjectKey(keyWorkspaceSymbolProvider, v.WorkspaceSymbolProvider.(*WorkspaceSymbolOptions))
+	}
+
+	switch v.CodeActionProvider.(type) {
+	case bool:
+		enc.BoolKey(keyCodeActionProvider, v.CodeActionProvider.(bool))
+	case *CodeActionOptions:
+		enc.ObjectKey(keyCodeActionProvider, v.CodeActionProvider.(*CodeActionOptions))
+	}
+
 	enc.ObjectKeyOmitEmpty(keyCodeLensProvider, v.CodeLensProvider)
-	enc.BoolKeyOmitEmpty(keyDocumentFormattingProvider, v.DocumentFormattingProvider)
-	enc.BoolKeyOmitEmpty(keyDocumentRangeFormattingProvider, v.DocumentRangeFormattingProvider)
+
+	switch v.DocumentFormattingProvider.(type) {
+	case bool:
+		enc.BoolKey(keyDocumentFormattingProvider, v.DocumentFormattingProvider.(bool))
+	case *DocumentFormattingOptions:
+		enc.ObjectKey(keyDocumentFormattingProvider, v.DocumentFormattingProvider.(*DocumentFormattingOptions))
+	}
+
+	switch v.DocumentRangeFormattingProvider.(type) {
+	case bool:
+		enc.BoolKey(keyDocumentRangeFormattingProvider, v.DocumentRangeFormattingProvider.(bool))
+	case *DocumentRangeFormattingOptions:
+		enc.ObjectKey(keyDocumentRangeFormattingProvider, v.DocumentRangeFormattingProvider.(*DocumentRangeFormattingOptions))
+	}
+
 	enc.ObjectKeyOmitEmpty(keyDocumentOnTypeFormattingProvider, v.DocumentOnTypeFormattingProvider)
-	enc.AddInterfaceKeyOmitEmpty(keyRenameProvider, v.RenameProvider)
+
+	switch v.RenameProvider.(type) {
+	case bool:
+		enc.BoolKey(keyRenameProvider, v.RenameProvider.(bool))
+	case *RenameOptions:
+		enc.ObjectKey(keyRenameProvider, v.RenameProvider.(*RenameOptions))
+	}
+
 	enc.ObjectKeyOmitEmpty(keyDocumentLinkProvider, v.DocumentLinkProvider)
-	enc.AddInterfaceKeyOmitEmpty(keyColorProvider, v.ColorProvider)
-	enc.AddInterfaceKeyOmitEmpty(keyFoldingRangeProvider, v.FoldingRangeProvider)
-	enc.AddInterfaceKeyOmitEmpty(keySelectionRangeProvider, v.SelectionRangeProvider)
+
+	switch v.ColorProvider.(type) {
+	case bool:
+		enc.BoolKey(keyColorProvider, v.ColorProvider.(bool))
+	case *DocumentColorOptions:
+		enc.ObjectKey(keyColorProvider, v.ColorProvider.(*DocumentColorOptions))
+	case *DocumentColorRegistrationOptions:
+		enc.ObjectKey(keyColorProvider, v.ColorProvider.(*DocumentColorRegistrationOptions))
+	}
+
+	switch v.FoldingRangeProvider.(type) {
+	case bool:
+		enc.BoolKey(keyFoldingRangeProvider, v.FoldingRangeProvider.(bool))
+	case *FoldingRangeOptions:
+		enc.ObjectKey(keyFoldingRangeProvider, v.FoldingRangeProvider.(*FoldingRangeOptions))
+	case *FoldingRangeRegistrationOptions:
+		enc.ObjectKey(keyFoldingRangeProvider, v.FoldingRangeProvider.(*FoldingRangeRegistrationOptions))
+	}
+
+	switch v.SelectionRangeProvider.(type) {
+	case *EnableSelectionRange:
+		enc.BoolKey(keySelectionRangeProvider, bool(*v.SelectionRangeProvider.(*EnableSelectionRange)))
+	case *SelectionRangeOptions:
+		enc.ObjectKey(keySelectionRangeProvider, v.SelectionRangeProvider.(*SelectionRangeOptions))
+	case *SelectionRangeRegistrationOptions:
+		enc.ObjectKey(keySelectionRangeProvider, v.SelectionRangeProvider.(*SelectionRangeRegistrationOptions))
+	}
+
 	enc.ObjectKeyOmitEmpty(keyExecuteCommandProvider, v.ExecuteCommandProvider)
 	enc.ObjectKeyOmitEmpty(keyWorkspace, v.Workspace)
 	enc.AddInterfaceKeyOmitEmpty(keyExperimental, v.Experimental)
@@ -1894,7 +2965,7 @@ func (v *ServerCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) e
 	case keyTextDocumentSync:
 		return dec.Interface(&v.TextDocumentSync)
 	case keyHoverProvider:
-		return dec.Bool(&v.HoverProvider)
+		return dec.Interface(&v.HoverProvider)
 	case keyCompletionProvider:
 		if v.CompletionProvider == nil {
 			v.CompletionProvider = &CompletionOptions{}
@@ -1905,31 +2976,33 @@ func (v *ServerCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) e
 			v.SignatureHelpProvider = &SignatureHelpOptions{}
 		}
 		return dec.Object(v.SignatureHelpProvider)
+	case keyDeclarationProvider:
+		return dec.Interface(&v.DeclarationProvider)
 	case keyDefinitionProvider:
-		return dec.Bool(&v.DefinitionProvider)
+		return dec.Interface(&v.DefinitionProvider)
 	case keyTypeDefinitionProvider:
 		return dec.Interface(&v.TypeDefinitionProvider)
 	case keyImplementationProvider:
 		return dec.Interface(&v.ImplementationProvider)
 	case keyReferencesProvider:
-		return dec.Bool(&v.ReferencesProvider)
+		return dec.Interface(&v.ReferencesProvider)
 	case keyDocumentHighlightProvider:
-		return dec.Bool(&v.DocumentHighlightProvider)
+		return dec.Interface(&v.DocumentHighlightProvider)
 	case keyDocumentSymbolProvider:
-		return dec.Bool(&v.DocumentSymbolProvider)
+		return dec.Interface(&v.DocumentSymbolProvider)
 	case keyWorkspaceSymbolProvider:
-		return dec.Bool(&v.WorkspaceSymbolProvider)
+		return dec.Interface(&v.WorkspaceSymbolProvider)
 	case keyCodeActionProvider:
-		return dec.Bool(&v.CodeActionProvider)
+		return dec.Interface(&v.CodeActionProvider)
 	case keyCodeLensProvider:
 		if v.CodeLensProvider == nil {
 			v.CodeLensProvider = &CodeLensOptions{}
 		}
 		return dec.Object(v.CodeLensProvider)
 	case keyDocumentFormattingProvider:
-		return dec.Bool(&v.DocumentFormattingProvider)
+		return dec.Interface(&v.DocumentFormattingProvider)
 	case keyDocumentRangeFormattingProvider:
-		return dec.Bool(&v.DocumentRangeFormattingProvider)
+		return dec.Interface(&v.DocumentRangeFormattingProvider)
 	case keyDocumentOnTypeFormattingProvider:
 		if v.DocumentOnTypeFormattingProvider == nil {
 			v.DocumentOnTypeFormattingProvider = &DocumentOnTypeFormattingOptions{}
@@ -1965,7 +3038,7 @@ func (v *ServerCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) e
 }
 
 // NKeys returns the number of keys to unmarshal.
-func (v *ServerCapabilities) NKeys() int { return 24 }
+func (v *ServerCapabilities) NKeys() int { return 25 }
 
 // compile time check whether the ServerCapabilities implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (

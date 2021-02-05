@@ -95,6 +95,11 @@ type Diagnostic struct {
 	// Message is the diagnostic's message.
 	Message string `json:"message"`
 
+	// Tags is the additional metadata about the diagnostic.
+	//
+	// @since 3.15.0.
+	Tags []DiagnosticTag `json:"tags,omitempty"`
+
 	// RelatedInformation an array of related diagnostic information, e.g. when symbol-names within
 	// a scope collide all definitions can be marked via this property.
 	RelatedInformation []DiagnosticRelatedInformation `json:"relatedInformation,omitempty"`
@@ -128,6 +133,37 @@ func (d DiagnosticSeverity) String() string {
 		return "Information"
 	case SeverityHint:
 		return "Hint"
+	default:
+		return strconv.FormatFloat(float64(d), 'f', -10, 64)
+	}
+}
+
+// DiagnosticTag is the diagnostic tags.
+//
+// @since 3.15.0.
+type DiagnosticTag float64
+
+// list of DiagnosticTag.
+const (
+	// DiagnosticUnnecessary unused or unnecessary code.
+	//
+	// Clients are allowed to render diagnostics with this tag faded out instead of having
+	// an error squiggle.
+	DiagnosticUnnecessary DiagnosticTag = 1
+
+	// DiagnosticDeprecated deprecated or obsolete code.
+	//
+	// Clients are allowed to rendered diagnostics with this tag strike through.
+	DiagnosticDeprecated DiagnosticTag = 2
+)
+
+// String implements fmt.Stringer.
+func (d DiagnosticTag) String() string {
+	switch d {
+	case DiagnosticUnnecessary:
+		return "Unnecessary"
+	case DiagnosticDeprecated:
+		return "Deprecated"
 	default:
 		return strconv.FormatFloat(float64(d), 'f', -10, 64)
 	}
@@ -312,6 +348,9 @@ type TextDocumentItem struct {
 type LanguageIdentifier string
 
 const (
+	// ABAPLanguage ABAP Language.
+	ABAPLanguage LanguageIdentifier = "abap"
+
 	// BatLanguage Windows Bat Language.
 	BatLanguage LanguageIdentifier = "bat"
 
@@ -321,8 +360,8 @@ const (
 	// ClojureLanguage Clojure Language.
 	ClojureLanguage LanguageIdentifier = "clojure"
 
-	// CoffeescriptLanguage Coffeescript Language.
-	CoffeescriptLanguage LanguageIdentifier = "coffeescript"
+	// CoffeescriptLanguage CoffeeScript Language.
+	CoffeeScriptLanguage LanguageIdentifier = "coffeescript"
 
 	// CLanguage C Language.
 	CLanguage LanguageIdentifier = "c"
@@ -344,6 +383,12 @@ const (
 
 	// DockerfileLanguage Dockerfile Language.
 	DockerfileLanguage LanguageIdentifier = "dockerfile"
+
+	// ElixirLanguage Elixir Language.
+	ElixirLanguage LanguageIdentifier = "elixir"
+
+	// ErlangLanguage Erlang Language.
+	ErlangLanguage LanguageIdentifier = "erlang"
 
 	// FsharpLanguage F# Language.
 	FsharpLanguage LanguageIdentifier = "fsharp"
@@ -374,6 +419,9 @@ const (
 
 	// JavaScriptLanguage JavaScript Language.
 	JavaScriptLanguage LanguageIdentifier = "javascript"
+
+	// JavaScriptReactLanguage JavaScript React Language.
+	JavaScriptReactLanguage LanguageIdentifier = "javascriptreact"
 
 	// JSONLanguage JSON Language.
 	JSONLanguage LanguageIdentifier = "json"
@@ -429,11 +477,11 @@ const (
 	// RustLanguage Rust Language.
 	RustLanguage LanguageIdentifier = "rust"
 
-	// ScssLanguage Sass Language.
-	ScssLanguage LanguageIdentifier = "scss"
+	// SCSSLanguage SCSS Languages syntax using curly brackets.
+	SCSSLanguage LanguageIdentifier = "scss"
 
-	// SassLanguage Sass Language.
-	SassLanguage LanguageIdentifier = "sass"
+	// SASSLanguage SCSS Languages indented syntax.
+	SASSLanguage LanguageIdentifier = "sass"
 
 	// ScalaLanguage Scala Language.
 	ScalaLanguage LanguageIdentifier = "scala"
@@ -453,8 +501,11 @@ const (
 	// TypeScriptLanguage TypeScript Language.
 	TypeScriptLanguage LanguageIdentifier = "typescript"
 
-	// TexLanguage TeX Language.
-	TexLanguage LanguageIdentifier = "tex"
+	// TypeScriptReactLanguage TypeScript React Language.
+	TypeScriptReactLanguage LanguageIdentifier = "typescriptreact"
+
+	// TeXLanguage TeX Language.
+	TeXLanguage LanguageIdentifier = "tex"
 
 	// VBLanguage Visual Basic Language.
 	VBLanguage LanguageIdentifier = "vb"
@@ -471,58 +522,63 @@ const (
 
 // languageIdentifierMap map of LanguageIdentifiers.
 var languageIdentifierMap = map[string]LanguageIdentifier{
-	"bat":           BatLanguage,
-	"bibtex":        BibtexLanguage,
-	"clojure":       ClojureLanguage,
-	"coffeescript":  CoffeescriptLanguage,
-	"c":             CLanguage,
-	"cpp":           CppLanguage,
-	"csharp":        CsharpLanguage,
-	"css":           CSSLanguage,
-	"diff":          DiffLanguage,
-	"dart":          DartLanguage,
-	"dockerfile":    DockerfileLanguage,
-	"fsharp":        FsharpLanguage,
-	"git-commit":    GitCommitLanguage,
-	"git-rebase":    GitRebaseLanguage,
-	"go":            GoLanguage,
-	"groovy":        GroovyLanguage,
-	"handlebars":    HandlebarsLanguage,
-	"html":          HTMLLanguage,
-	"ini":           IniLanguage,
-	"java":          JavaLanguage,
-	"javascript":    JavaScriptLanguage,
-	"json":          JSONLanguage,
-	"latex":         LatexLanguage,
-	"less":          LessLanguage,
-	"lua":           LuaLanguage,
-	"makefile":      MakefileLanguage,
-	"markdown":      MarkdownLanguage,
-	"objective-c":   ObjectiveCLanguage,
-	"objective-cpp": ObjectiveCppLanguage,
-	"perl":          PerlLanguage,
-	"perl6":         Perl6Language,
-	"php":           PHPLanguage,
-	"powershell":    PowershellLanguage,
-	"jade":          JadeLanguage,
-	"python":        PythonLanguage,
-	"r":             RLanguage,
-	"razor":         RazorLanguage,
-	"ruby":          RubyLanguage,
-	"rust":          RustLanguage,
-	"scss":          ScssLanguage,
-	"sass":          SassLanguage,
-	"scala":         ScalaLanguage,
-	"shaderlab":     ShaderlabLanguage,
-	"shellscript":   ShellscriptLanguage,
-	"sql":           SQLLanguage,
-	"swift":         SwiftLanguage,
-	"typescript":    TypeScriptLanguage,
-	"tex":           TexLanguage,
-	"vb":            VBLanguage,
-	"xml":           XMLLanguage,
-	"xsl":           XslLanguage,
-	"yaml":          YamlLanguage,
+	"abap":            ABAPLanguage,
+	"bat":             BatLanguage,
+	"bibtex":          BibtexLanguage,
+	"clojure":         ClojureLanguage,
+	"coffeescript":    CoffeeScriptLanguage,
+	"c":               CLanguage,
+	"cpp":             CppLanguage,
+	"csharp":          CsharpLanguage,
+	"css":             CSSLanguage,
+	"diff":            DiffLanguage,
+	"dart":            DartLanguage,
+	"dockerfile":      DockerfileLanguage,
+	"elixir":          ElixirLanguage,
+	"erlang":          ErlangLanguage,
+	"fsharp":          FsharpLanguage,
+	"git-commit":      GitCommitLanguage,
+	"git-rebase":      GitRebaseLanguage,
+	"go":              GoLanguage,
+	"groovy":          GroovyLanguage,
+	"handlebars":      HandlebarsLanguage,
+	"html":            HTMLLanguage,
+	"ini":             IniLanguage,
+	"java":            JavaLanguage,
+	"javascript":      JavaScriptLanguage,
+	"javascriptreact": JavaScriptReactLanguage,
+	"json":            JSONLanguage,
+	"latex":           LatexLanguage,
+	"less":            LessLanguage,
+	"lua":             LuaLanguage,
+	"makefile":        MakefileLanguage,
+	"markdown":        MarkdownLanguage,
+	"objective-c":     ObjectiveCLanguage,
+	"objective-cpp":   ObjectiveCppLanguage,
+	"perl":            PerlLanguage,
+	"perl6":           Perl6Language,
+	"php":             PHPLanguage,
+	"powershell":      PowershellLanguage,
+	"jade":            JadeLanguage,
+	"python":          PythonLanguage,
+	"r":               RLanguage,
+	"razor":           RazorLanguage,
+	"ruby":            RubyLanguage,
+	"rust":            RustLanguage,
+	"scss":            SCSSLanguage,
+	"sass":            SASSLanguage,
+	"scala":           ScalaLanguage,
+	"shaderlab":       ShaderlabLanguage,
+	"shellscript":     ShellscriptLanguage,
+	"sql":             SQLLanguage,
+	"swift":           SwiftLanguage,
+	"typescript":      TypeScriptLanguage,
+	"typescriptreact": TypeScriptReactLanguage,
+	"tex":             TeXLanguage,
+	"vb":              VBLanguage,
+	"xml":             XMLLanguage,
+	"xsl":             XslLanguage,
+	"yaml":            YamlLanguage,
 }
 
 // ToLanguageIdentifier converts ft to LanguageIdentifier.

@@ -30,12 +30,30 @@ const (
 	TraceVerbose TraceMode = "verbose"
 )
 
+// ClientInfo information about the client.
+//
+// @since 3.15.0.
+type ClientInfo struct {
+	// Name is the name of the client as defined by the client.
+	Name string `json:"name"`
+
+	// Version is the client's version as defined by the client.
+	Version string `json:"version,omitempty"`
+}
+
 // InitializeParams params of Initialize Request.
 type InitializeParams struct {
+	WorkDoneProgressParams
+
 	// ProcessID is the process Id of the parent process that started
 	// the server. Is null if the process has not been started by another process.
 	// If the parent process is not alive then the server should exit (see exit notification) its process.
 	ProcessID float64 `json:"processId"`
+
+	// ClientInfo is the information about the client.
+	//
+	// @since 3.15.0
+	ClientInfo *ClientInfo `json:"clientInfo,omitempty"`
 
 	// RootPath is the rootPath of the workspace. Is null
 	// if no folder is open.
@@ -200,6 +218,16 @@ type TextDocumentClientCapabilitiesCompletionItemKind struct {
 	ValueSet []CompletionItemKind `json:"valueSet,omitempty"`
 }
 
+// TextDocumentClientCapabilitiesCompletionItemTagSupport specific capabilities for the `TagSupport` in the `textDocument/completion` request.
+//
+// @since 3.15.0.
+type TextDocumentClientCapabilitiesCompletionItemTagSupport struct {
+	// ValueSet is the tags supported by the client.
+	//
+	// @since 3.15.0.
+	ValueSet []CompletionItemTag `json:"valueSet,omitempty"`
+}
+
 // TextDocumentClientCapabilitiesCompletionItem is the client supports the following `CompletionItem` specific
 // capabilities.
 type TextDocumentClientCapabilitiesCompletionItem struct {
@@ -223,6 +251,15 @@ type TextDocumentClientCapabilitiesCompletionItem struct {
 
 	// PreselectSupport client supports the preselect property on a completion item.
 	PreselectSupport bool `json:"preselectSupport,omitempty"`
+
+	// TagSupport is the client supports the tag property on a completion item.
+	//
+	// Clients supporting tags have to handle unknown tags gracefully.
+	// Clients especially need to preserve unknown tags when sending
+	// a completion item back to the server in a resolve call.
+	//
+	// @since 3.15.0.
+	TagSupport *TextDocumentClientCapabilitiesCompletionItemTagSupport `json:"tagSupport,omitempty"`
 }
 
 // TextDocumentClientCapabilitiesHover capabilities specific to the `textDocument/hover`.
@@ -243,6 +280,13 @@ type TextDocumentClientCapabilitiesSignatureHelp struct {
 	// SignatureInformation is the client supports the following `SignatureInformation`
 	// specific properties.
 	SignatureInformation *TextDocumentClientCapabilitiesSignatureInformation `json:"signatureInformation,omitempty"`
+
+	// ContextSupport is the client supports to send additional context information for a `textDocument/signatureHelp` request.
+	//
+	// A client that opts into contextSupport will also support the `retriggerCharacters` on `SignatureHelpOptions`.
+	//
+	// @since 3.15.0.
+	ContextSupport bool `json:"contextSupport,omitempty"`
 }
 
 // TextDocumentClientCapabilitiesSignatureInformation is the client supports the following `SignatureInformation`
@@ -265,16 +309,51 @@ type TextDocumentClientCapabilitiesParameterInformation struct {
 	LabelOffsetSupport bool `json:"labelOffsetSupport,omitempty"`
 }
 
+// ReferencesParams params of References Request.
+//
+// @since 3.15.0.
+type ReferencesParams struct {
+	TextDocumentPositionParams
+	WorkDoneProgressParams
+	PartialResultParams
+
+	// Context is the ReferenceParams context.
+	Context ReferenceContext `json:"context"`
+}
+
 // TextDocumentClientCapabilitiesReferences capabilities specific to the `textDocument/references`.
 type TextDocumentClientCapabilitiesReferences struct {
 	// DynamicRegistration whether references supports dynamic registration.
 	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
 }
 
+// DocumentHighlightOptions registration option of DocumentHighlight server capability.
+//
+// @since 3.15.0.
+type DocumentHighlightOptions struct {
+	WorkDoneProgressOptions
+}
+
+// DocumentHighlightParams params of DocumentHighlight Request.
+//
+// @since 3.15.0.
+type DocumentHighlightParams struct {
+	TextDocumentPositionParams
+	WorkDoneProgressParams
+	PartialResultParams
+}
+
 // TextDocumentClientCapabilitiesDocumentHighlight capabilities specific to the `textDocument/documentHighlight`.
 type TextDocumentClientCapabilitiesDocumentHighlight struct {
 	// DynamicRegistration Whether document highlight supports dynamic registration.
 	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+}
+
+// DocumentSymbolOptions registration option of DocumentSymbol server capability.
+//
+// @since 3.15.0.
+type DocumentSymbolOptions struct {
+	WorkDoneProgressOptions
 }
 
 // TextDocumentClientCapabilitiesDocumentSymbol capabilities specific to the `textDocument/documentSymbol`.
@@ -289,10 +368,31 @@ type TextDocumentClientCapabilitiesDocumentSymbol struct {
 	HierarchicalDocumentSymbolSupport bool `json:"hierarchicalDocumentSymbolSupport,omitempty"`
 }
 
+// WorkspaceSymbolOptions registration option of WorkspaceSymbol server capability.
+//
+// @since 3.15.0.
+type WorkspaceSymbolOptions struct {
+	WorkDoneProgressOptions
+}
+
+// DocumentFormattingOptions registration option of DocumentFormatting server capability.
+//
+// @since 3.15.0.
+type DocumentFormattingOptions struct {
+	WorkDoneProgressOptions
+}
+
 // TextDocumentClientCapabilitiesFormatting capabilities specific to the `textDocument/formatting`.
 type TextDocumentClientCapabilitiesFormatting struct {
 	// DynamicRegistration whether formatting supports dynamic registration.
 	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+}
+
+// DocumentRangeFormattingOptions registration option of DocumentRangeFormatting server capability.
+//
+// @since 3.15.0.
+type DocumentRangeFormattingOptions struct {
+	WorkDoneProgressOptions
 }
 
 // TextDocumentClientCapabilitiesRangeFormatting capabilities specific to the `textDocument/rangeFormatting`.
@@ -305,6 +405,31 @@ type TextDocumentClientCapabilitiesRangeFormatting struct {
 type TextDocumentClientCapabilitiesOnTypeFormatting struct {
 	// DynamicRegistration whether on type formatting supports dynamic registration.
 	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+}
+
+// DeclarationOptions registration option of Declaration server capability.
+//
+// @since 3.15.0.
+type DeclarationOptions struct {
+	WorkDoneProgressOptions
+}
+
+// DeclarationRegistrationOptions registration option of Declaration server capability.
+//
+// @since 3.15.0.
+type DeclarationRegistrationOptions struct {
+	DeclarationOptions
+	TextDocumentRegistrationOptions
+	StaticRegistrationOptions
+}
+
+// DeclarationParams params of Declaration Request.
+//
+// @since 3.15.0.
+type DeclarationParams struct {
+	TextDocumentPositionParams
+	WorkDoneProgressParams
+	PartialResultParams
 }
 
 // TextDocumentClientCapabilitiesDeclaration capabilities specific to the `textDocument/declaration`.
@@ -320,6 +445,22 @@ type TextDocumentClientCapabilitiesDeclaration struct {
 	LinkSupport bool `json:"linkSupport,omitempty"`
 }
 
+// DefinitionOptions registration option of Definition server capability.
+//
+// @since 3.15.0.
+type DefinitionOptions struct {
+	WorkDoneProgressOptions
+}
+
+// DefinitionParams params of Definition Request.
+//
+// @since 3.15.0.
+type DefinitionParams struct {
+	TextDocumentPositionParams
+	WorkDoneProgressParams
+	PartialResultParams
+}
+
 // TextDocumentClientCapabilitiesDefinition capabilities specific to the `textDocument/definition`.
 //
 // Since 3.14.0.
@@ -329,6 +470,31 @@ type TextDocumentClientCapabilitiesDefinition struct {
 
 	// LinkSupport is the client supports additional metadata in the form of definition links.
 	LinkSupport bool `json:"linkSupport,omitempty"`
+}
+
+// TypeDefinitionOptions registration option of TypeDefinition server capability.
+//
+// @since 3.15.0.
+type TypeDefinitionOptions struct {
+	WorkDoneProgressOptions
+}
+
+// TypeDefinitionRegistrationOptions registration option of TypeDefinition server capability.
+//
+// @since 3.15.0.
+type TypeDefinitionRegistrationOptions struct {
+	TextDocumentRegistrationOptions
+	TypeDefinitionOptions
+	StaticRegistrationOptions
+}
+
+// TypeDefinitionParams params of TypeDefinition Request.
+//
+// @since 3.15.0.
+type TypeDefinitionParams struct {
+	TextDocumentPositionParams
+	WorkDoneProgressParams
+	PartialResultParams
 }
 
 // TextDocumentClientCapabilitiesTypeDefinition capabilities specific to the `textDocument/typeDefinition`
@@ -344,6 +510,31 @@ type TextDocumentClientCapabilitiesTypeDefinition struct {
 	//
 	// Since 3.14.0
 	LinkSupport bool `json:"linkSupport,omitempty"`
+}
+
+// ImplementationOptions registration option of Implementation server capability.
+//
+// @since 3.15.0.
+type ImplementationOptions struct {
+	WorkDoneProgressOptions
+}
+
+// ImplementationRegistrationOptions registration option of Implementation server capability.
+//
+// @since 3.15.0.
+type ImplementationRegistrationOptions struct {
+	TextDocumentRegistrationOptions
+	ImplementationOptions
+	StaticRegistrationOptions
+}
+
+// ImplementationParams params of Implementation Request.
+//
+// @since 3.15.0.
+type ImplementationParams struct {
+	TextDocumentPositionParams
+	WorkDoneProgressParams
+	PartialResultParams
 }
 
 // TextDocumentClientCapabilitiesImplementation capabilities specific to the `textDocument/implementation`.
@@ -365,11 +556,17 @@ type TextDocumentClientCapabilitiesImplementation struct {
 type TextDocumentClientCapabilitiesCodeAction struct {
 	// DynamicRegistration whether code action supports dynamic registration.
 	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+
 	// CodeActionLiteralSupport is the client support code action literals as a valid
 	// response of the `textDocument/codeAction` request.
 	//
 	// Since 3.8.0
 	CodeActionLiteralSupport *TextDocumentClientCapabilitiesCodeActionLiteralSupport `json:"codeActionLiteralSupport,omitempty"`
+
+	// IsPreferredSupport whether code action supports the `isPreferred` property.
+	//
+	// @since 3.15.0.
+	IsPreferredSupport bool `json:"isPreferredSupport,omitempty"`
 }
 
 // TextDocumentClientCapabilitiesCodeActionLiteralSupport is the client support code action literals as a valid response of the `textDocument/codeAction` request.
@@ -392,12 +589,38 @@ type TextDocumentClientCapabilitiesCodeActionKind struct {
 type TextDocumentClientCapabilitiesCodeLens struct {
 	// DynamicRegistration Whether code lens supports dynamic registration.
 	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+
+	// TooltipSupport whether the client support the `tooltip` property on `DocumentLink`.
+	//
+	// @since 3.15.0.
+	TooltipSupport bool `json:"tooltipSupport,omitempty"`
 }
 
 // TextDocumentClientCapabilitiesDocumentLink capabilities specific to the `textDocument/documentLink`.
 type TextDocumentClientCapabilitiesDocumentLink struct {
 	// DynamicRegistration whether document link supports dynamic registration.
 	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+
+	// TooltipSupport whether the client supports the `tooltip` property on `DocumentLink`.
+	//
+	// @since 3.15.0.
+	TooltipSupport bool `json:"tooltipSupport,omitempty"`
+}
+
+// DocumentColorOptions registration option of DocumentColor server capability.
+//
+// @since 3.15.0.
+type DocumentColorOptions struct {
+	WorkDoneProgressOptions
+}
+
+// DocumentColorRegistrationOptions registration option of DocumentColor server capability.
+//
+// @since 3.15.0.
+type DocumentColorRegistrationOptions struct {
+	TextDocumentRegistrationOptions
+	StaticRegistrationOptions
+	DocumentColorOptions
 }
 
 // TextDocumentClientCapabilitiesColorProvider capabilities specific to the `textDocument/documentColor` and the
@@ -426,8 +649,40 @@ type TextDocumentClientCapabilitiesPublishDiagnostics struct {
 	// RelatedInformation whether the clients accepts diagnostics with related information.
 	RelatedInformation bool `json:"relatedInformation,omitempty"`
 
-	// TagSupport client supports the tag property to provide meta data about a diagnostic.
-	TagSupport bool `json:"tagSupport,omitempty"`
+	// TagSupport clients supporting tags have to handle unknown tags gracefully.
+	//
+	// @since 3.15.0.
+	TagSupport *TextDocumentClientCapabilitiesPublishDiagnosticsTagSupport `json:"tagSupport,omitempty"`
+
+	// VersionSupport whether the client interprets the version property of the
+	// `textDocument/publishDiagnostics` notification`s parameter.
+	//
+	// @since 3.15.0.
+	VersionSupport bool `json:"versionSupport,omitempty"`
+}
+
+// TextDocumentClientCapabilitiesPublishDiagnosticsTagSupport is the client capacity of TagSupport.
+//
+// @since 3.15.0.
+type TextDocumentClientCapabilitiesPublishDiagnosticsTagSupport struct {
+	// ValueSet is the tags supported by the client.
+	ValueSet []DiagnosticTag `json:"valueSet"`
+}
+
+// FoldingRangeOptions registration option of FoldingRange server capability.
+//
+// @since 3.15.0.
+type FoldingRangeOptions struct {
+	WorkDoneProgressOptions
+}
+
+// FoldingRangeRegistrationOptions registration option of FoldingRange server capability.
+//
+// @since 3.15.0.
+type FoldingRangeRegistrationOptions struct {
+	TextDocumentRegistrationOptions
+	FoldingRangeOptions
+	StaticRegistrationOptions
 }
 
 // TextDocumentClientCapabilitiesFoldingRange capabilities specific to `textDocument/foldingRange` requests.
@@ -533,7 +788,20 @@ type TextDocumentClientCapabilities struct {
 	FoldingRange *TextDocumentClientCapabilitiesFoldingRange `json:"foldingRange,omitempty"`
 
 	// SelectionRange capabilities specific to `textDocument/selectionRange` requests.
+	//
+	// @since 3.15.0.
 	SelectionRange *TextDocumentClientCapabilitiesSelectionRange `json:"selectionRange,omitempty"`
+}
+
+// WindowClientCapabilities represents a WindowClientCapabilities specific client capabilities.
+//
+// @since 3.15.0.
+type WindowClientCapabilities struct {
+	// WorkDoneProgress whether client supports handling progress notifications. If set servers are allowed to
+	// report in `workDoneProgress` property in the request specific server capabilities.
+	//
+	// @since 3.15.0.
+	WorkDoneProgress bool `json:"workDoneProgress,omitempty"`
 }
 
 // ClientCapabilities now define capabilities for dynamic registration, workspace and text document features the client supports.
@@ -547,6 +815,9 @@ type ClientCapabilities struct {
 	// TextDocument specific client capabilities.
 	TextDocument *TextDocumentClientCapabilities `json:"textDocument,omitempty"`
 
+	// Window specific client capabilities.
+	Window *WindowClientCapabilities `json:"window,omitempty"`
+
 	// Experimental client capabilities.
 	Experimental interface{} `json:"experimental,omitempty"`
 }
@@ -555,6 +826,22 @@ type ClientCapabilities struct {
 type InitializeResult struct {
 	// Capabilities is the capabilities the language server provides.
 	Capabilities ServerCapabilities `json:"capabilities"`
+
+	// ServerInfo Information about the server.
+	//
+	// @since 3.15.0.
+	ServerInfo *ServerInfo `json:"serverInfo,omitempty"`
+}
+
+// ServerInfo Information about the server.
+//
+// @since 3.15.0.
+type ServerInfo struct {
+	// Name is the name of the server as defined by the server.
+	Name string `json:"name"`
+
+	// Version is the server's version as defined by the server.
+	Version string `json:"version,omitempty"`
 }
 
 // InitializeError known error codes for an `InitializeError`.
@@ -612,6 +899,29 @@ type SignatureHelpOptions struct {
 	// The characters that trigger signature help
 	// automatically.
 	TriggerCharacters []string `json:"triggerCharacters,omitempty"`
+
+	// RetriggerCharacters is the slist of characters that re-trigger signature help.
+	//
+	// These trigger characters are only active when signature help is already
+	// showing.
+	// All trigger characters are also counted as re-trigger characters.
+	//
+	// @since 3.15.0.
+	RetriggerCharacters []string `json:"retriggerCharacters,omitempty"`
+}
+
+// ReferencesOptions ReferencesProvider options.
+//
+// @since 3.15.0.
+type ReferencesOptions struct {
+	WorkDoneProgressOptions
+}
+
+// WorkDoneProgressOptions WorkDoneProgress options.
+//
+// @since 3.15.0.
+type WorkDoneProgressOptions struct {
+	WorkDoneProgress bool `json:"workDoneProgress,omitempty"`
 }
 
 // CodeActionOptions CodeAction options.
@@ -675,7 +985,7 @@ type TextDocumentSyncOptions struct {
 
 	// Change notifications are sent to the server. See TextDocumentSyncKind.None, TextDocumentSyncKind.Full
 	// and TextDocumentSyncKind.Incremental. If omitted it defaults to TextDocumentSyncKind.None.
-	Change float64 `json:"change,omitempty"`
+	Change TextDocumentSyncKind `json:"change,omitempty"`
 
 	// WillSave notifications are sent to the server.
 	WillSave bool `json:"willSave,omitempty"`
@@ -685,6 +995,11 @@ type TextDocumentSyncOptions struct {
 
 	// Save notifications are sent to the server.
 	Save *SaveOptions `json:"save,omitempty"`
+}
+
+// HoverOptions option of hover provider server capabilities.
+type HoverOptions struct {
+	WorkDoneProgressOptions
 }
 
 // StaticRegistrationOptions staticRegistration options to be returned in the initialize request.
@@ -720,10 +1035,10 @@ type ServerCapabilitiesWorkspaceFolders struct {
 type ServerCapabilities struct {
 	// TextDocumentSync defines how text documents are synced. Is either a detailed structure defining each notification or
 	// for backwards compatibility the TextDocumentSyncKind number. If omitted it defaults to `TextDocumentSyncKind.None`.
-	TextDocumentSync interface{} `json:"textDocumentSync,omitempty"`
+	TextDocumentSync interface{} `json:"textDocumentSync,omitempty"` // number | *TextDocumentSyncOptions
 
 	// HoverProvider is the server provides hover support.
-	HoverProvider bool `json:"hoverProvider,omitempty"`
+	HoverProvider interface{} `json:"hoverProvider,omitempty"` // TODO(zchee): boolean | *HoverOptions
 
 	// CompletionProvider is the server provides completion support.
 	CompletionProvider *CompletionOptions `json:"completionProvider,omitempty"`
@@ -731,44 +1046,49 @@ type ServerCapabilities struct {
 	// SignatureHelpProvider is the server provides signature help support.
 	SignatureHelpProvider *SignatureHelpOptions `json:"signatureHelpProvider,omitempty"`
 
+	// DeclarationProvider is the server provides go to declaration support.
+	//
+	// @since 3.14.0.
+	DeclarationProvider interface{} `json:"declarationProvider,omitempty"` // TODO(zchee): boolean | *DeclarationOptions | *DeclarationRegistrationOptions
+
 	// DefinitionProvider is the server provides goto definition support.
-	DefinitionProvider bool `json:"definitionProvider,omitempty"`
+	DefinitionProvider interface{} `json:"definitionProvider,omitempty"` // TODO(zchee): boolean | *DefinitionOptions
 
 	// TypeDefinitionProvider is the server provides Goto Type Definition support.
 	//
 	// Since 3.6.0
-	TypeDefinitionProvider interface{} `json:"typeDefinitionProvider,omitempty"`
+	TypeDefinitionProvider interface{} `json:"typeDefinitionProvider,omitempty"` // TODO(zchee): boolean | *TypeDefinitionOptions | *TypeDefinitionRegistrationOptions
 
 	// ImplementationProvider is the server provides Goto Implementation support.
 	//
 	// Since 3.6.0
-	ImplementationProvider interface{} `json:"implementationProvider,omitempty"`
+	ImplementationProvider interface{} `json:"implementationProvider,omitempty"` // TODO(zchee): boolean | *ImplementationOptions | *ImplementationRegistrationOptions
 
 	// ReferencesProvider is the server provides find references support.
-	ReferencesProvider bool `json:"referencesProvider,omitempty"`
+	ReferencesProvider interface{} `json:"referencesProvider,omitempty"` // TODO(zchee): boolean | *ReferencesOptions
 
 	// DocumentHighlightProvider is the server provides document highlight support.
-	DocumentHighlightProvider bool `json:"documentHighlightProvider,omitempty"`
+	DocumentHighlightProvider interface{} `json:"documentHighlightProvider,omitempty"` // TODO(zchee): boolean | *DocumentHighlightOptions
 
 	// DocumentSymbolProvider is the server provides document symbol support.
-	DocumentSymbolProvider bool `json:"documentSymbolProvider,omitempty"`
+	DocumentSymbolProvider interface{} `json:"documentSymbolProvider,omitempty"` // TODO(zchee): boolean | *DocumentSymbolOptions
 
 	// WorkspaceSymbolProvider is the server provides workspace symbol support.
-	WorkspaceSymbolProvider bool `json:"workspaceSymbolProvider,omitempty"`
+	WorkspaceSymbolProvider interface{} `json:"workspaceSymbolProvider,omitempty"` // TODO(zchee): boolean | *WorkspaceSymbolOptions
 
 	// CodeActionProvider is the server provides code actions. The `CodeActionOptions` return type is only
 	// valid if the client signals code action literal support via the property
 	// `textDocument.codeAction.codeActionLiteralSupport`.
-	CodeActionProvider bool `json:"codeActionProvider,omitempty"`
+	CodeActionProvider interface{} `json:"codeActionProvider,omitempty"` // TODO(zchee): boolean | *CodeActionOptions
 
 	// CodeLensProvider is the server provides code lens.
 	CodeLensProvider *CodeLensOptions `json:"codeLensProvider,omitempty"`
 
 	// DocumentFormattingProvider is the server provides document formatting.
-	DocumentFormattingProvider bool `json:"documentFormattingProvider,omitempty"`
+	DocumentFormattingProvider interface{} `json:"documentFormattingProvider,omitempty"` // TODO(zchee): boolean | *DocumentFormattingOptions
 
 	// DocumentRangeFormattingProvider is the server provides document range formatting.
-	DocumentRangeFormattingProvider bool `json:"documentRangeFormattingProvider,omitempty"`
+	DocumentRangeFormattingProvider interface{} `json:"documentRangeFormattingProvider,omitempty"` // TODO(zchee): boolean | *DocumentRangeFormattingOptions
 
 	// DocumentOnTypeFormattingProvider is the server provides document formatting on typing.
 	DocumentOnTypeFormattingProvider *DocumentOnTypeFormattingOptions `json:"documentOnTypeFormattingProvider,omitempty"`
@@ -776,7 +1096,7 @@ type ServerCapabilities struct {
 	// RenameProvider is the server provides rename support. RenameOptions may only be
 	// specified if the client states that it supports
 	// `prepareSupport` in its initial `initialize` request.
-	RenameProvider interface{} `json:"renameProvider,omitempty"` // boolean | RenameOptions
+	RenameProvider interface{} `json:"renameProvider,omitempty"` // TODO(zchee): boolean | *RenameOptions
 
 	// The server provides document link support.
 	DocumentLinkProvider *DocumentLinkOptions `json:"documentLinkProvider,omitempty"`
@@ -784,15 +1104,17 @@ type ServerCapabilities struct {
 	// ColorProvider is the server provides color provider support.
 	//
 	// Since 3.6.0
-	ColorProvider interface{} `json:"colorProvider,omitempty"`
+	ColorProvider interface{} `json:"colorProvider,omitempty"` // TODO(zchee): boolean | *DocumentColorOptions | *DocumentColorRegistrationOptions
 
 	// FoldingRangeProvider is the server provides folding provider support.
 	//
 	// Since 3.10.0
-	FoldingRangeProvider interface{} `json:"foldingRangeProvider,omitempty"`
+	FoldingRangeProvider interface{} `json:"foldingRangeProvider,omitempty"` // TODO(zchee): boolean | *FoldingRangeOptions | *FoldingRangeRegistrationOptions
 
 	// SelectionRangeProvider is the server provides selection range support.
-	SelectionRangeProvider interface{} `json:"selectionRangeProvider,omitempty"` // boolean || (TextDocumentRegistrationOptions || StaticRegistrationOptions || SelectionRangeProviderOptions)
+	//
+	// @since 3.15.0.
+	SelectionRangeProvider interface{} `json:"selectionRangeProvider,omitempty"` // TODO(zchee): boolean | *EnableSelectionRange | *SelectionRangeOptions | *SelectionRangeRegistrationOptions
 
 	// ExecuteCommandProvider is the server provides execute command support.
 	ExecuteCommandProvider *ExecuteCommandOptions `json:"executeCommandProvider,omitempty"`

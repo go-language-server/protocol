@@ -160,7 +160,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 	case MethodTextDocumentDeclaration: // request
 		defer logger.Debug(MethodTextDocumentDeclaration, zap.Error(err))
 
-		var params TextDocumentPositionParams
+		var params DeclarationParams
 		if err := dec.DecodeObject(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
@@ -170,7 +170,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 	case MethodTextDocumentDefinition: // request
 		defer logger.Debug(MethodTextDocumentDefinition, zap.Error(err))
 
-		var params TextDocumentPositionParams
+		var params DefinitionParams
 		if err := dec.DecodeObject(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
@@ -260,7 +260,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 	case MethodTextDocumentDocumentHighlight: // request
 		defer logger.Debug(MethodTextDocumentDocumentHighlight, zap.Error(err))
 
-		var params TextDocumentPositionParams
+		var params DocumentHighlightParams
 		if err := dec.DecodeObject(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
@@ -330,7 +330,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 	case MethodTextDocumentHover: // request
 		defer logger.Debug(MethodTextDocumentHover, zap.Error(err))
 
-		var params TextDocumentPositionParams
+		var params HoverParams
 		if err := dec.DecodeObject(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
@@ -340,7 +340,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 	case MethodTextDocumentImplementation: // request
 		defer logger.Debug(MethodTextDocumentImplementation, zap.Error(err))
 
-		var params TextDocumentPositionParams
+		var params ImplementationParams
 		if err := dec.DecodeObject(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
@@ -360,7 +360,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 	case MethodTextDocumentPrepareRename: // request
 		defer logger.Debug(MethodTextDocumentPrepareRename, zap.Error(err))
 
-		var params TextDocumentPositionParams
+		var params PrepareRenameParams
 		if err := dec.DecodeObject(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
@@ -401,7 +401,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 	case MethodTextDocumentSignatureHelp: // request
 		defer logger.Debug(MethodTextDocumentSignatureHelp, zap.Error(err))
 
-		var params TextDocumentPositionParams
+		var params SignatureHelpParams
 		if err := dec.DecodeObject(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
@@ -421,7 +421,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 	case MethodTextDocumentTypeDefinition: // request
 		defer logger.Debug(MethodTextDocumentTypeDefinition, zap.Error(err))
 
-		var params TextDocumentPositionParams
+		var params TypeDefinitionParams
 		if err := dec.DecodeObject(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}

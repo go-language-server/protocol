@@ -5,4 +5,4 @@
 package protocol
 
 // Version is the version of the language-server-protocol specification being implemented.
-const Version = "3.15.0-next.6"
+const Version = "3.15.3"

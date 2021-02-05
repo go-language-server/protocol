@@ -6,7 +6,9 @@
 
 package protocol
 
-import "github.com/francoispqt/gojay"
+import (
+	"github.com/francoispqt/gojay"
+)
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *ShowMessageParams) MarshalJSONObject(enc *gojay.Encoder) {
@@ -150,4 +152,74 @@ func (v *LogMessageParams) NKeys() int { return 2 }
 var (
 	_ gojay.MarshalerJSONObject   = (*LogMessageParams)(nil)
 	_ gojay.UnmarshalerJSONObject = (*LogMessageParams)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *WorkDoneProgressCreateParams) MarshalJSONObject(enc *gojay.Encoder) {
+	switch {
+	case v.Token.name != "":
+		enc.StringKey(keyToken, v.Token.name)
+	default:
+		enc.Int64Key(keyToken, v.Token.number)
+	}
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *WorkDoneProgressCreateParams) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *WorkDoneProgressCreateParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	if k == keyToken {
+		switch {
+		case v.Token.name != "":
+			return dec.String(&v.Token.name)
+		default:
+			return dec.Int64(&v.Token.number)
+		}
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *WorkDoneProgressCreateParams) NKeys() int { return 1 }
+
+// compile time check whether the WorkDoneProgressCreateParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*WorkDoneProgressCreateParams)(nil)
+	_ gojay.UnmarshalerJSONObject = (*WorkDoneProgressCreateParams)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *WorkDoneProgressCancelParams) MarshalJSONObject(enc *gojay.Encoder) {
+	switch {
+	case v.Token.name != "":
+		enc.StringKey(keyToken, v.Token.name)
+	default:
+		enc.Int64Key(keyToken, v.Token.number)
+	}
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *WorkDoneProgressCancelParams) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *WorkDoneProgressCancelParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	if k == keyToken {
+		switch {
+		case v.Token.name != "":
+			return dec.String(&v.Token.name)
+		default:
+			return dec.Int64(&v.Token.number)
+		}
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *WorkDoneProgressCancelParams) NKeys() int { return 1 }
+
+// compile time check whether the WorkDoneProgressCancelParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*WorkDoneProgressCancelParams)(nil)
+	_ gojay.UnmarshalerJSONObject = (*WorkDoneProgressCancelParams)(nil)
 )

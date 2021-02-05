@@ -94,3 +94,19 @@ type LogMessageParams struct {
 	// Type is the message type. See {@link MessageType}
 	Type MessageType `json:"type"`
 }
+
+// WorkDoneProgressCreateParams params of WorkDoneProgressCreate request.
+//
+// @since 3.15.0.
+type WorkDoneProgressCreateParams struct {
+	// Token is the token to be used to report progress.
+	Token ProgressToken `json:"token"`
+}
+
+// WorkDoneProgressCreateParams params of WorkDoneProgressCancel request.
+//
+// @since 3.15.0.
+type WorkDoneProgressCancelParams struct {
+	// Token is the token to be used to report progress.
+	Token ProgressToken `json:"token"`
+}

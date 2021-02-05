@@ -5,6 +5,8 @@
 package protocol
 
 import (
+	"fmt"
+	"strconv"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -415,6 +417,196 @@ func testLogMessageParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 				}
 
 				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+}
+
+func testWorkDoneProgressCreateParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+	const (
+		wantToken    = int64(1569)
+		invalidToken = int64(1348)
+	)
+	var (
+		want        = `{"token":` + strconv.FormatInt(wantToken, 10) + `}`
+		wantInvalid = `{"token":` + strconv.FormatInt(invalidToken, 10) + `}`
+	)
+	token := NewNumberProgressToken(wantToken)
+	wantType := WorkDoneProgressCreateParams{
+		Token: *token,
+	}
+
+	t.Run("Marshal", func(t *testing.T) {
+		tests := []struct {
+			name           string
+			field          WorkDoneProgressCreateParams
+			want           string
+			wantMarshalErr bool
+			wantErr        bool
+		}{
+			{
+				name:           "Valid",
+				field:          wantType,
+				want:           want,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name:           "Invalid",
+				field:          wantType,
+				want:           wantInvalid,
+				wantMarshalErr: false,
+				wantErr:        true,
+			},
+		}
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got, err := marshal(&tt.field)
+				if (err != nil) != tt.wantMarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+
+	t.Run("Unmarshal", func(t *testing.T) {
+		tests := []struct {
+			name             string
+			field            string
+			want             WorkDoneProgressCreateParams
+			wantUnmarshalErr bool
+			wantErr          bool
+		}{
+			{
+				name:             "Valid",
+				field:            want,
+				want:             wantType,
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:             "Invalid",
+				field:            wantInvalid,
+				want:             wantType,
+				wantUnmarshalErr: false,
+				wantErr:          true,
+			},
+		}
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				var got WorkDoneProgressCreateParams
+				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(fmt.Sprint(got.Token), strconv.FormatInt(wantToken, 10)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+}
+
+func testWorkDoneProgressCancelParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+	const (
+		wantToken    = int64(1569)
+		invalidToken = int64(1348)
+	)
+	var (
+		want        = `{"token":` + strconv.FormatInt(wantToken, 10) + `}`
+		wantInvalid = `{"token":` + strconv.FormatInt(invalidToken, 10) + `}`
+	)
+	token := NewNumberProgressToken(wantToken)
+	wantType := WorkDoneProgressCancelParams{
+		Token: *token,
+	}
+
+	t.Run("Marshal", func(t *testing.T) {
+		tests := []struct {
+			name           string
+			field          WorkDoneProgressCancelParams
+			want           string
+			wantMarshalErr bool
+			wantErr        bool
+		}{
+			{
+				name:           "Valid",
+				field:          wantType,
+				want:           want,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name:           "Invalid",
+				field:          wantType,
+				want:           wantInvalid,
+				wantMarshalErr: false,
+				wantErr:        true,
+			},
+		}
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got, err := marshal(&tt.field)
+				if (err != nil) != tt.wantMarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+
+	t.Run("Unmarshal", func(t *testing.T) {
+		tests := []struct {
+			name             string
+			field            string
+			want             WorkDoneProgressCancelParams
+			wantUnmarshalErr bool
+			wantErr          bool
+		}{
+			{
+				name:             "Valid",
+				field:            want,
+				want:             wantType,
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:             "Invalid",
+				field:            wantInvalid,
+				want:             wantType,
+				wantUnmarshalErr: false,
+				wantErr:          true,
+			},
+		}
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				var got WorkDoneProgressCancelParams
+				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(fmt.Sprint(got.Token), strconv.FormatInt(wantToken, 10)); (diff != "") != tt.wantErr {
 					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})

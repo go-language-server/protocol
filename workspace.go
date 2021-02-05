@@ -155,12 +155,19 @@ func (k WatchKind) String() string {
 
 // WorkspaceSymbolParams is the parameters of a Workspace Symbol Request.
 type WorkspaceSymbolParams struct {
-	// Query a non-empty query string
+	WorkDoneProgressParams
+	PartialResultParams
+
+	// Query a query string to filter symbols by.
+	//
+	// Clients may send an empty string here to request all symbols.
 	Query string `json:"query"`
 }
 
 // ExecuteCommandParams params of Execute a command.
 type ExecuteCommandParams struct {
+	WorkDoneProgressParams
+
 	// Command is the identifier of the actual command handler.
 	Command string `json:"command"`
 

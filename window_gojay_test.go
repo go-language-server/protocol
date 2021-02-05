@@ -27,3 +27,11 @@ func TestMessageActionItem(t *testing.T) {
 func TestLogMessageParams(t *testing.T) {
 	testLogMessageParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
+
+func TestWorkDoneProgressCreateParams(t *testing.T) {
+	testWorkDoneProgressCreateParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
+
+func TestWorkDoneProgressCancelParams(t *testing.T) {
+	testWorkDoneProgressCancelParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}

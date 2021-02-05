@@ -33,7 +33,7 @@ func TestToURI(t *testing.T) {
 	}
 }
 
-func TestUint64Ptr(t *testing.T) {
+func TestNewVersion(t *testing.T) {
 	tests := []struct {
 		name string
 		i    uint64
@@ -45,9 +45,9 @@ func TestUint64Ptr(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			want := Uint64Ptr(tt.i)
-			if got := Uint64Ptr(tt.i); *got != *want {
-				t.Errorf("Uint64Ptr(%v) = %v, want %v", tt.i, *got, *want)
+			want := NewVersion(tt.i)
+			if got := NewVersion(tt.i); *got != *want {
+				t.Errorf("NewVersion(%v) = %v, want %v", tt.i, *got, *want)
 			}
 		})
 	}

@@ -9,14 +9,19 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 
 	"go.lsp.dev/uri"
 )
 
 func testCompletionParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"textDocument":{"uri":"file:///path/to/test.go"},"position":{"line":25,"character":1},"context":{"triggerCharacter":".","triggerKind":1}}`
-		wantInvalid = `{"textDocument":{"uri":"file:///path/to/test.go"},"position":{"line":2,"character":0},"context":{"triggerCharacter":".","triggerKind":1}}`
+		wantWorkDoneToken      = "156edea9-9d8d-422f-b7ee-81a84594afbb"
+		wantPartialResultToken = "dd134d84-c134-4d7a-a2a3-f8af3ef4a568"
+	)
+	const (
+		want        = `{"textDocument":{"uri":"file:///path/to/test.go"},"position":{"line":25,"character":1},"workDoneToken":"` + wantWorkDoneToken + `","partialResultToken":"` + wantPartialResultToken + `","context":{"triggerCharacter":".","triggerKind":1}}`
+		wantInvalid = `{"textDocument":{"uri":"file:///path/to/test.go"},"position":{"line":2,"character":0},"workDoneToken":"` + wantPartialResultToken + `","partialResultToken":"` + wantWorkDoneToken + `","context":{"triggerCharacter":".","triggerKind":1}}`
 	)
 	wantType := CompletionParams{
 		TextDocumentPositionParams: TextDocumentPositionParams{
@@ -27,6 +32,12 @@ func testCompletionParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 				Line:      25,
 				Character: 1,
 			},
+		},
+		WorkDoneProgressParams: WorkDoneProgressParams{
+			WorkDoneToken: NewProgressToken(wantWorkDoneToken),
+		},
+		PartialResultParams: PartialResultParams{
+			PartialResultToken: NewProgressToken(wantPartialResultToken),
 		},
 		Context: &CompletionContext{
 			TriggerCharacter: ".",
@@ -107,8 +118,20 @@ func testCompletionParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+				if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreTypes(WorkDoneProgressParams{}, PartialResultParams{})); (diff != "") != tt.wantErr {
 					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+
+				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
+					if diff := cmp.Diff(workDoneToken.String(), wantWorkDoneToken); (diff != "") != tt.wantErr {
+						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					}
+				}
+
+				if partialResultToken := got.PartialResultToken; partialResultToken != nil {
+					if diff := cmp.Diff(partialResultToken.String(), wantPartialResultToken); (diff != "") != tt.wantErr {
+						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					}
 				}
 			})
 		}
@@ -247,7 +270,7 @@ func testCompletionContext(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 
 func testCompletionList(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"isIncomplete":true,"items":[{"detail":"string","documentation":"Detail a human-readable string with additional information about this item, like type or symbol information.","filterText":"Detail","insertTextFormat":2,"kind":5,"label":"Detail","preselect":true,"sortText":"00000","textEdit":{"range":{"start":{"line":255,"character":4},"end":{"line":255,"character":10}},"newText":"Detail: ${1:},"}}]}`
+		want        = `{"isIncomplete":true,"items":[{"tags":[1],"detail":"string","documentation":"Detail a human-readable string with additional information about this item, like type or symbol information.","filterText":"Detail","insertTextFormat":2,"kind":5,"label":"Detail","preselect":true,"sortText":"00000","textEdit":{"range":{"start":{"line":255,"character":4},"end":{"line":255,"character":10}},"newText":"Detail: ${1:},"}}]}`
 		wantInvalid = `{"isIncomplete":false,"items":[]}`
 	)
 	wantType := CompletionList{
@@ -257,16 +280,19 @@ func testCompletionList(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 				AdditionalTextEdits: nil,
 				Command:             nil,
 				CommitCharacters:    nil,
-				Deprecated:          false,
-				Detail:              "string",
-				Documentation:       "Detail a human-readable string with additional information about this item, like type or symbol information.",
-				FilterText:          "Detail",
-				InsertText:          "",
-				InsertTextFormat:    TextFormatSnippet,
-				Kind:                FieldCompletion,
-				Label:               "Detail",
-				Preselect:           true,
-				SortText:            "00000",
+				Tags: []CompletionItemTag{
+					CompletionItemTagDeprecated,
+				},
+				Deprecated:       false,
+				Detail:           "string",
+				Documentation:    "Detail a human-readable string with additional information about this item, like type or symbol information.",
+				FilterText:       "Detail",
+				InsertText:       "",
+				InsertTextFormat: TextFormatSnippet,
+				Kind:             FieldCompletion,
+				Label:            "Detail",
+				Preselect:        true,
+				SortText:         "00000",
 				TextEdit: &TextEdit{
 					Range: Range{
 						Start: Position{
@@ -401,7 +427,7 @@ func TestInsertTextFormat_String(t *testing.T) {
 
 func testCompletionItem(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"additionalTextEdits":[{"range":{"start":{"line":255,"character":4},"end":{"line":255,"character":10}},"newText":"Detail: ${1:},"}],"command":{"title":"exec echo","command":"echo","arguments":["hello"]},"commitCharacters":["a"],"data":"testData","deprecated":true,"detail":"string","documentation":"Detail a human-readable string with additional information about this item, like type or symbol information.","filterText":"Detail","insertText":"testInsert","insertTextFormat":2,"kind":5,"label":"Detail","preselect":true,"sortText":"00000","textEdit":{"range":{"start":{"line":255,"character":4},"end":{"line":255,"character":10}},"newText":"Detail: ${1:},"}}`
+		want        = `{"additionalTextEdits":[{"range":{"start":{"line":255,"character":4},"end":{"line":255,"character":10}},"newText":"Detail: ${1:},"}],"command":{"title":"exec echo","command":"echo","arguments":["hello"]},"commitCharacters":["a"],"tags":[1],"data":"testData","deprecated":true,"detail":"string","documentation":"Detail a human-readable string with additional information about this item, like type or symbol information.","filterText":"Detail","insertText":"testInsert","insertTextFormat":2,"kind":5,"label":"Detail","preselect":true,"sortText":"00000","textEdit":{"range":{"start":{"line":255,"character":4},"end":{"line":255,"character":10}},"newText":"Detail: ${1:},"}}`
 		wantNilAll  = `{"label":"Detail"}`
 		wantInvalid = `{"items":[]}`
 	)
@@ -427,6 +453,9 @@ func testCompletionItem(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 			Arguments: []interface{}{"hello"},
 		},
 		CommitCharacters: []string{"a"},
+		Tags: []CompletionItemTag{
+			CompletionItemTagDeprecated,
+		},
 		Data:             "testData",
 		Deprecated:       true,
 		Detail:           "string",
@@ -700,6 +729,35 @@ func TestCompletionItemKind_String(t *testing.T) {
 	}
 }
 
+func TestCompletionItemTag_String(t *testing.T) {
+	tests := []struct {
+		name string
+		k    CompletionItemTag
+		want string
+	}{
+		{
+			name: "Deprecated",
+			k:    CompletionItemTagDeprecated,
+			want: "Deprecated",
+		},
+		{
+			name: "Unknown",
+			k:    CompletionItemTag(0),
+			want: "0",
+		},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			if got := tt.k.String(); got != tt.want {
+				t.Errorf("CompletionItemTag.String() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func testCompletionRegistrationOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
 		want        = `{"documentSelector":[{"language":"go","scheme":"file","pattern":"*.go"}],"triggerCharacters":["."],"resolveProvider":true}`
@@ -794,6 +852,149 @@ func testCompletionRegistrationOptions(t *testing.T, marshal marshalFunc, unmars
 
 				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
 					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+}
+
+func testHoverParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+	const (
+		wantWorkDoneToken    = "156edea9-9d8d-422f-b7ee-81a84594afbb"
+		invalidWorkDoneToken = "dd134d84-c134-4d7a-a2a3-f8af3ef4a568"
+	)
+	const (
+		want        = `{"textDocument":{"uri":"file:///path/to/basic.go"},"position":{"line":25,"character":1},"workDoneToken":"` + wantWorkDoneToken + `"}`
+		wantNilAll  = `{"textDocument":{"uri":"file:///path/to/basic.go"},"position":{"line":25,"character":1}}`
+		wantInvalid = `{"textDocument":{"uri":"file:///path/to/basic_gen.go"},"position":{"line":2,"character":1},"workDoneToken":"` + invalidWorkDoneToken + `"}`
+	)
+	wantType := HoverParams{
+		TextDocumentPositionParams: TextDocumentPositionParams{
+			TextDocument: TextDocumentIdentifier{
+				URI: uri.File("/path/to/basic.go"),
+			},
+			Position: Position{
+				Line:      25,
+				Character: 1,
+			},
+		},
+		WorkDoneProgressParams: WorkDoneProgressParams{
+			WorkDoneToken: NewProgressToken(wantWorkDoneToken),
+		},
+	}
+	wantTypeNilAll := HoverParams{
+		TextDocumentPositionParams: TextDocumentPositionParams{
+			TextDocument: TextDocumentIdentifier{
+				URI: uri.File("/path/to/basic.go"),
+			},
+			Position: Position{
+				Line:      25,
+				Character: 1,
+			},
+		},
+	}
+
+	t.Run("Marshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name           string
+			field          HoverParams
+			want           string
+			wantMarshalErr bool
+			wantErr        bool
+		}{
+			{
+				name:           "Valid",
+				field:          wantType,
+				want:           want,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name:           "ValidNilAll",
+				field:          wantTypeNilAll,
+				want:           wantNilAll,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name:           "Invalid",
+				field:          wantType,
+				want:           wantInvalid,
+				wantMarshalErr: false,
+				wantErr:        true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got, err := marshal(&tt.field)
+				if (err != nil) != tt.wantMarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+
+	t.Run("Unmarshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name             string
+			field            string
+			want             HoverParams
+			wantUnmarshalErr bool
+			wantErr          bool
+		}{
+			{
+				name:             "Valid",
+				field:            want,
+				want:             wantType,
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:             "ValidNilAll",
+				field:            wantNilAll,
+				want:             wantTypeNilAll,
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:             "Invalid",
+				field:            wantInvalid,
+				want:             wantType,
+				wantUnmarshalErr: false,
+				wantErr:          true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				var got HoverParams
+				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreTypes(WorkDoneProgressParams{})); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+
+				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
+					if diff := cmp.Diff(workDoneToken.String(), wantWorkDoneToken); (diff != "") != tt.wantErr {
+						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					}
 				}
 			})
 		}
@@ -901,6 +1102,208 @@ func testHover(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 			})
 		}
 	})
+}
+
+func testSignatureHelpParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+	const (
+		wantWorkDoneToken    = "156edea9-9d8d-422f-b7ee-81a84594afbb"
+		invalidWorkDoneToken = "dd134d84-c134-4d7a-a2a3-f8af3ef4a568"
+	)
+	const (
+		want        = `{"textDocument":{"uri":"file:///path/to/basic.go"},"position":{"line":25,"character":1},"workDoneToken":"` + wantWorkDoneToken + `","context":{"triggerKind":1,"triggerCharacter":".","isRetrigger":true,"activeSignatureHelp":{"signatures":[{"documentationFormat":["markdown"],"parameterInformation":{"label":"test label","documentation":"test documentation"}}],"activeParameter":10,"activeSignature":5}}}`
+		wantNilAll  = `{"textDocument":{"uri":"file:///path/to/basic.go"},"position":{"line":25,"character":1}}`
+		wantInvalid = `{"textDocument":{"uri":"file:///path/to/basic_gen.go"},"position":{"line":2,"character":1},"workDoneToken":"` + invalidWorkDoneToken + `","context":{"triggerKind":0,"triggerCharacter":"aaa","isRetrigger":false,"activeSignatureHelp":{"signatures":[{"documentationFormat":["markdown"],"parameterInformation":{"label":"test label","documentation":"test documentation"}}],"activeParameter":1,"activeSignature":0}}}`
+	)
+	wantType := SignatureHelpParams{
+		TextDocumentPositionParams: TextDocumentPositionParams{
+			TextDocument: TextDocumentIdentifier{
+				URI: uri.File("/path/to/basic.go"),
+			},
+			Position: Position{
+				Line:      25,
+				Character: 1,
+			},
+		},
+		WorkDoneProgressParams: WorkDoneProgressParams{
+			WorkDoneToken: NewProgressToken(wantWorkDoneToken),
+		},
+		Context: &SignatureHelpContext{
+			TriggerKind:      SignatureHelpTriggerKindInvoked,
+			TriggerCharacter: ".",
+			IsRetrigger:      true,
+			ActiveSignatureHelp: &SignatureHelp{
+				Signatures: []SignatureInformation{
+					{
+						DocumentationFormat: []MarkupKind{
+							Markdown,
+						},
+						ParameterInformation: &ParameterInformation{
+							Label:         "test label",
+							Documentation: "test documentation",
+						},
+					},
+				},
+				ActiveParameter: 10,
+				ActiveSignature: 5,
+			},
+		},
+	}
+	wantTypeNilAll := SignatureHelpParams{
+		TextDocumentPositionParams: TextDocumentPositionParams{
+			TextDocument: TextDocumentIdentifier{
+				URI: uri.File("/path/to/basic.go"),
+			},
+			Position: Position{
+				Line:      25,
+				Character: 1,
+			},
+		},
+	}
+
+	t.Run("Marshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name           string
+			field          SignatureHelpParams
+			want           string
+			wantMarshalErr bool
+			wantErr        bool
+		}{
+			{
+				name:           "Valid",
+				field:          wantType,
+				want:           want,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name:           "ValidNilAll",
+				field:          wantTypeNilAll,
+				want:           wantNilAll,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name:           "Invalid",
+				field:          wantType,
+				want:           wantInvalid,
+				wantMarshalErr: false,
+				wantErr:        true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got, err := marshal(&tt.field)
+				if (err != nil) != tt.wantMarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+
+	t.Run("Unmarshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name             string
+			field            string
+			want             SignatureHelpParams
+			wantUnmarshalErr bool
+			wantErr          bool
+		}{
+			{
+				name:             "Valid",
+				field:            want,
+				want:             wantType,
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:             "ValidNilAll",
+				field:            wantNilAll,
+				want:             wantTypeNilAll,
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:             "Invalid",
+				field:            wantInvalid,
+				want:             wantType,
+				wantUnmarshalErr: false,
+				wantErr:          true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				var got SignatureHelpParams
+				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreTypes(WorkDoneProgressParams{})); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+
+				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
+					if diff := cmp.Diff(workDoneToken.String(), wantWorkDoneToken); (diff != "") != tt.wantErr {
+						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					}
+				}
+			})
+		}
+	})
+}
+
+func TestSignatureHelpTriggerKind_String(t *testing.T) {
+	tests := []struct {
+		name string
+		k    SignatureHelpTriggerKind
+		want string
+	}{
+		{
+			name: "Invoked",
+			k:    SignatureHelpTriggerKindInvoked,
+			want: "Invoked",
+		},
+		{
+			name: "TriggerCharacter",
+			k:    SignatureHelpTriggerKindTriggerCharacter,
+			want: "TriggerCharacter",
+		},
+		{
+			name: "ContentChange",
+			k:    SignatureHelpTriggerKindContentChange,
+			want: "ContentChange",
+		},
+		{
+			name: "Unknown",
+			k:    SignatureHelpTriggerKind(0),
+			want: "0",
+		},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			if got := tt.k.String(); got != tt.want {
+				t.Errorf("SignatureHelpTriggerKind.String() = %v, want %v", got, tt.want)
+			}
+		})
+	}
 }
 
 func testSignatureHelp(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
@@ -1641,14 +2044,24 @@ func TestDocumentHighlightKind_String(t *testing.T) {
 
 func testDocumentSymbolParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"textDocument":{"uri":"file:///path/to/test.go"}}`
-		wantInvalid = `{"textDocument":{"uri":"file:///path/to/nottest.go"}}`
+		wantWorkDoneToken      = "156edea9-9d8d-422f-b7ee-81a84594afbb"
+		wantPartialResultToken = "dd134d84-c134-4d7a-a2a3-f8af3ef4a568"
 	)
 	wantType := DocumentSymbolParams{
+		WorkDoneProgressParams: WorkDoneProgressParams{
+			WorkDoneToken: NewProgressToken(wantWorkDoneToken),
+		},
+		PartialResultParams: PartialResultParams{
+			PartialResultToken: NewProgressToken(wantPartialResultToken),
+		},
 		TextDocument: TextDocumentIdentifier{
 			URI: uri.File("/path/to/test.go"),
 		},
 	}
+	const (
+		want        = `{"workDoneToken":"` + wantWorkDoneToken + `","partialResultToken":"` + wantPartialResultToken + `","textDocument":{"uri":"file:///path/to/test.go"}}`
+		wantInvalid = `{"workDoneToken":"` + wantPartialResultToken + `","partialResultToken":"` + wantWorkDoneToken + `","textDocument":{"uri":"file:///path/to/nottest.go"}}`
+	)
 
 	t.Run("Marshal", func(t *testing.T) {
 		tests := []struct {
@@ -1723,8 +2136,20 @@ func testDocumentSymbolParams(t *testing.T, marshal marshalFunc, unmarshal unmar
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+				if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreTypes(WorkDoneProgressParams{}, PartialResultParams{})); (diff != "") != tt.wantErr {
 					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+
+				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
+					if diff := cmp.Diff(workDoneToken.String(), wantWorkDoneToken); (diff != "") != tt.wantErr {
+						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					}
+				}
+
+				if partialResultToken := got.PartialResultToken; partialResultToken != nil {
+					if diff := cmp.Diff(partialResultToken.String(), wantPartialResultToken); (diff != "") != tt.wantErr {
+						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					}
 				}
 			})
 		}
@@ -2167,10 +2592,20 @@ func testSymbolInformation(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 
 func testCodeActionParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"textDocument":{"uri":"file:///path/to/test.go"},"context":{"diagnostics":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"test.go"}]}],"only":["quickfix"]},"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":6}}}`
-		wantInvalid = `{"textDocument":{"uri":"file:///path/to/test.go"},"context":{"diagnostics":[{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"test.go"}]}],"only":["quickfix"]},"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}}`
+		wantWorkDoneToken      = "156edea9-9d8d-422f-b7ee-81a84594afbb"
+		wantPartialResultToken = "dd134d84-c134-4d7a-a2a3-f8af3ef4a568"
+	)
+	const (
+		want        = `{"workDoneToken":"` + wantWorkDoneToken + `","partialResultToken":"` + wantPartialResultToken + `","textDocument":{"uri":"file:///path/to/test.go"},"context":{"diagnostics":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"test.go"}]}],"only":["quickfix"]},"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":6}}}`
+		wantInvalid = `{"workDoneToken":"` + wantPartialResultToken + `","partialResultToken":"` + wantWorkDoneToken + `","textDocument":{"uri":"file:///path/to/test.go"},"context":{"diagnostics":[{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"test.go"}]}],"only":["quickfix"]},"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}}`
 	)
 	wantType := CodeActionParams{
+		WorkDoneProgressParams: WorkDoneProgressParams{
+			WorkDoneToken: NewProgressToken(wantWorkDoneToken),
+		},
+		PartialResultParams: PartialResultParams{
+			PartialResultToken: NewProgressToken(wantPartialResultToken),
+		},
 		TextDocument: TextDocumentIdentifier{
 			URI: uri.File("/path/to/test.go"),
 		},
@@ -2300,8 +2735,20 @@ func testCodeActionParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+				if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreTypes(WorkDoneProgressParams{}, PartialResultParams{})); (diff != "") != tt.wantErr {
 					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+
+				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
+					if diff := cmp.Diff(workDoneToken.String(), wantWorkDoneToken); (diff != "") != tt.wantErr {
+						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					}
+				}
+
+				if partialResultToken := got.PartialResultToken; partialResultToken != nil {
+					if diff := cmp.Diff(partialResultToken.String(), wantPartialResultToken); (diff != "") != tt.wantErr {
+						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					}
 				}
 			})
 		}
@@ -2497,8 +2944,8 @@ func testCodeActionContext(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 
 func testCodeAction(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"title":"Refactoring","kind":"refactor.rewrite","diagnostics":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"test.go"}]}],"edit":{"changes":{"file:///path/to/test.go":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]},"documentChanges":[{"textDocument":{"uri":"file:///path/to/test.go","version":10},"edits":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}]},"command":{"title":"rewrite","command":"rewriter","arguments":["-w"]}}`
-		wantInvalid = `{"title":"Refactoring","kind":"refactor","diagnostics":[{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"test.go"}]}],"edit":{"changes":{"file:///path/to/test.go":[{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"newText":"foo bar"}]},"documentChanges":[{"textDocument":{"uri":"file:///path/to/test.go","version":10},"edits":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}]},"command":{"title":"rewrite","command":"rewriter","arguments":["-w"]}}`
+		want        = `{"title":"Refactoring","kind":"refactor.rewrite","diagnostics":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"test.go"}]}],"isPreferred":true,"edit":{"changes":{"file:///path/to/test.go":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]},"documentChanges":[{"textDocument":{"uri":"file:///path/to/test.go","version":10},"edits":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}]},"command":{"title":"rewrite","command":"rewriter","arguments":["-w"]}}`
+		wantInvalid = `{"title":"Refactoring","kind":"refactor","diagnostics":[{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"test.go"}]}],"isPreferred":false,"edit":{"changes":{"file:///path/to/test.go":[{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"newText":"foo bar"}]},"documentChanges":[{"textDocument":{"uri":"file:///path/to/test.go","version":10},"edits":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}]},"command":{"title":"rewrite","command":"rewriter","arguments":["-w"]}}`
 	)
 	wantType := CodeAction{
 		Title: "Refactoring",
@@ -2539,6 +2986,7 @@ func testCodeAction(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 				},
 			},
 		},
+		IsPreferred: true,
 		Edit: &WorkspaceEdit{
 			Changes: map[uri.URI][]TextEdit{
 				uri.File("/path/to/test.go"): {
@@ -2563,7 +3011,7 @@ func testCodeAction(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 						TextDocumentIdentifier: TextDocumentIdentifier{
 							URI: uri.File("/path/to/test.go"),
 						},
-						Version: Uint64Ptr(10),
+						Version: NewVersion(10),
 					},
 					Edits: []TextEdit{
 						{
@@ -2782,10 +3230,20 @@ func testCodeActionRegistrationOptions(t *testing.T, marshal marshalFunc, unmars
 
 func testCodeLensParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"textDocument":{"uri":"file:///path/to/test.go"}}`
-		wantInvalid = `{"textDocument":{"uri":"file:///path/to/invalid.go"}}`
+		wantWorkDoneToken      = "156edea9-9d8d-422f-b7ee-81a84594afbb"
+		wantPartialResultToken = "dd134d84-c134-4d7a-a2a3-f8af3ef4a568"
+	)
+	const (
+		want        = `{"workDoneToken":"` + wantWorkDoneToken + `","partialResultToken":"` + wantPartialResultToken + `","textDocument":{"uri":"file:///path/to/test.go"}}`
+		wantInvalid = `{"workDoneToken":"` + wantPartialResultToken + `","partialResultToken":"` + wantWorkDoneToken + `","textDocument":{"uri":"file:///path/to/invalid.go"}}`
 	)
 	wantType := CodeLensParams{
+		WorkDoneProgressParams: WorkDoneProgressParams{
+			WorkDoneToken: NewProgressToken(wantWorkDoneToken),
+		},
+		PartialResultParams: PartialResultParams{
+			PartialResultToken: NewProgressToken(wantPartialResultToken),
+		},
 		TextDocument: TextDocumentIdentifier{
 			URI: uri.File("/path/to/test.go"),
 		},
@@ -2864,8 +3322,20 @@ func testCodeLensParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+				if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreTypes(WorkDoneProgressParams{}, PartialResultParams{})); (diff != "") != tt.wantErr {
 					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+
+				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
+					if diff := cmp.Diff(workDoneToken.String(), wantWorkDoneToken); (diff != "") != tt.wantErr {
+						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					}
+				}
+
+				if partialResultToken := got.PartialResultToken; partialResultToken != nil {
+					if diff := cmp.Diff(partialResultToken.String(), wantPartialResultToken); (diff != "") != tt.wantErr {
+						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					}
 				}
 			})
 		}
@@ -3141,11 +3611,21 @@ func testCodeLensRegistrationOptions(t *testing.T, marshal marshalFunc, unmarsha
 
 func testDocumentLinkParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"textDocument":{"uri":"file:///path/to/test.go"}}`
+		wantWorkDoneToken      = "156edea9-9d8d-422f-b7ee-81a84594afbb"
+		wantPartialResultToken = "dd134d84-c134-4d7a-a2a3-f8af3ef4a568"
+	)
+	const (
+		want        = `{"workDoneToken":"` + wantWorkDoneToken + `","partialResultToken":"` + wantPartialResultToken + `","textDocument":{"uri":"file:///path/to/test.go"}}`
 		wantNilAll  = `{"textDocument":{"uri":"file:///path/to/test.go"}}`
-		wantInvalid = `{"textDocument":{"uri":"file:///path/to/invalid.go"}}`
+		wantInvalid = `{"workDoneToken":"` + wantPartialResultToken + `","partialResultToken":"` + wantWorkDoneToken + `","textDocument":{"uri":"file:///path/to/invalid.go"}}`
 	)
 	wantType := DocumentLinkParams{
+		WorkDoneProgressParams: WorkDoneProgressParams{
+			WorkDoneToken: NewProgressToken(wantWorkDoneToken),
+		},
+		PartialResultParams: PartialResultParams{
+			PartialResultToken: NewProgressToken(wantPartialResultToken),
+		},
 		TextDocument: TextDocumentIdentifier{
 			URI: uri.File("/path/to/test.go"),
 		},
@@ -3224,8 +3704,20 @@ func testDocumentLinkParams(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+				if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreTypes(WorkDoneProgressParams{}, PartialResultParams{})); (diff != "") != tt.wantErr {
 					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+
+				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
+					if diff := cmp.Diff(workDoneToken.String(), wantWorkDoneToken); (diff != "") != tt.wantErr {
+						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					}
+				}
+
+				if partialResultToken := got.PartialResultToken; partialResultToken != nil {
+					if diff := cmp.Diff(partialResultToken.String(), wantPartialResultToken); (diff != "") != tt.wantErr {
+						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					}
 				}
 			})
 		}
@@ -3234,9 +3726,9 @@ func testDocumentLinkParams(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 
 func testDocumentLink(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"target":"file:///path/to/test.go","data":"testData"}`
+		want        = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"target":"file:///path/to/test.go","tooltip":"testTooltip","data":"testData"}`
 		wantNilAll  = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`
-		wantInvalid = `{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"target":"file:///path/to/test.go","data":"testData"}`
+		wantInvalid = `{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"target":"file:///path/to/test.go","tooltip":"invalidTooltip","data":"testData"}`
 	)
 	wantType := DocumentLink{
 		Range: Range{
@@ -3249,8 +3741,9 @@ func testDocumentLink(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc
 				Character: 3,
 			},
 		},
-		Target: uri.File("/path/to/test.go"),
-		Data:   "testData",
+		Target:  uri.File("/path/to/test.go"),
+		Tooltip: "testTooltip",
+		Data:    "testData",
 	}
 	wantTypeNilAll := DocumentLink{
 		Range: Range{
@@ -3362,10 +3855,20 @@ func testDocumentLink(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc
 
 func testDocumentColorParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"textDocument":{"uri":"file:///path/to/test.go"}}`
-		wantInvalid = `{"textDocument":{"uri":"file:///path/to/invalid.go"}}`
+		wantWorkDoneToken      = "156edea9-9d8d-422f-b7ee-81a84594afbb"
+		wantPartialResultToken = "dd134d84-c134-4d7a-a2a3-f8af3ef4a568"
+	)
+	const (
+		want        = `{"workDoneToken":"` + wantWorkDoneToken + `","partialResultToken":"` + wantPartialResultToken + `","textDocument":{"uri":"file:///path/to/test.go"}}`
+		wantInvalid = `{"workDoneToken":"` + wantPartialResultToken + `","partialResultToken":"` + wantWorkDoneToken + `","textDocument":{"uri":"file:///path/to/invalid.go"}}`
 	)
 	wantType := DocumentColorParams{
+		WorkDoneProgressParams: WorkDoneProgressParams{
+			WorkDoneToken: NewProgressToken(wantWorkDoneToken),
+		},
+		PartialResultParams: PartialResultParams{
+			PartialResultToken: NewProgressToken(wantPartialResultToken),
+		},
 		TextDocument: TextDocumentIdentifier{
 			URI: uri.File("/path/to/test.go"),
 		},
@@ -3444,8 +3947,20 @@ func testDocumentColorParams(t *testing.T, marshal marshalFunc, unmarshal unmars
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+				if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreTypes(WorkDoneProgressParams{}, PartialResultParams{})); (diff != "") != tt.wantErr {
 					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+
+				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
+					if diff := cmp.Diff(workDoneToken.String(), wantWorkDoneToken); (diff != "") != tt.wantErr {
+						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					}
+				}
+
+				if partialResultToken := got.PartialResultToken; partialResultToken != nil {
+					if diff := cmp.Diff(partialResultToken.String(), wantPartialResultToken); (diff != "") != tt.wantErr {
+						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					}
 				}
 			})
 		}
@@ -3652,10 +4167,20 @@ func testColor(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 
 func testColorPresentationParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"textDocument":{"uri":"file:///path/to/test.go"},"color":{"alpha":1,"blue":0.2,"green":0.3,"red":0.4},"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`
-		wantInvalid = `{"textDocument":{"uri":"file:///path/to/test.go"},"color":{"alpha":0,"blue":0.4,"green":0.3,"red":0.2},"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}}`
+		wantWorkDoneToken      = "156edea9-9d8d-422f-b7ee-81a84594afbb"
+		wantPartialResultToken = "dd134d84-c134-4d7a-a2a3-f8af3ef4a568"
+	)
+	const (
+		want        = `{"workDoneToken":"` + wantWorkDoneToken + `","partialResultToken":"` + wantPartialResultToken + `","textDocument":{"uri":"file:///path/to/test.go"},"color":{"alpha":1,"blue":0.2,"green":0.3,"red":0.4},"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`
+		wantInvalid = `{"workDoneToken":"` + wantPartialResultToken + `","partialResultToken":"` + wantWorkDoneToken + `","textDocument":{"uri":"file:///path/to/test.go"},"color":{"alpha":0,"blue":0.4,"green":0.3,"red":0.2},"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}}`
 	)
 	wantType := ColorPresentationParams{
+		WorkDoneProgressParams: WorkDoneProgressParams{
+			WorkDoneToken: NewProgressToken(wantWorkDoneToken),
+		},
+		PartialResultParams: PartialResultParams{
+			PartialResultToken: NewProgressToken(wantPartialResultToken),
+		},
 		TextDocument: TextDocumentIdentifier{
 			URI: uri.File("/path/to/test.go"),
 		},
@@ -3750,8 +4275,20 @@ func testColorPresentationParams(t *testing.T, marshal marshalFunc, unmarshal un
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+				if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreTypes(WorkDoneProgressParams{}, PartialResultParams{})); (diff != "") != tt.wantErr {
 					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+
+				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
+					if diff := cmp.Diff(workDoneToken.String(), wantWorkDoneToken); (diff != "") != tt.wantErr {
+						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					}
+				}
+
+				if partialResultToken := got.PartialResultToken; partialResultToken != nil {
+					if diff := cmp.Diff(partialResultToken.String(), wantPartialResultToken); (diff != "") != tt.wantErr {
+						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					}
 				}
 			})
 		}
@@ -3896,10 +4433,17 @@ func testColorPresentation(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 
 func testDocumentFormattingParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"options":{"insertSpaces":true,"tabSize":4},"textDocument":{"uri":"file:///path/to/test.go"}}`
-		wantInvalid = `{"options":{"insertSpaces":false,"tabSize":2},"textDocument":{"uri":"file:///path/to/invalid.go"}}`
+		wantWorkDoneToken    = "156edea9-9d8d-422f-b7ee-81a84594afbb"
+		invalidWorkDoneToken = "dd134d84-c134-4d7a-a2a3-f8af3ef4a568"
+	)
+	const (
+		want        = `{"workDoneToken":"` + wantWorkDoneToken + `","options":{"insertSpaces":true,"tabSize":4},"textDocument":{"uri":"file:///path/to/test.go"}}`
+		wantInvalid = `{"workDoneToken":"` + invalidWorkDoneToken + `","options":{"insertSpaces":false,"tabSize":2},"textDocument":{"uri":"file:///path/to/invalid.go"}}`
 	)
 	wantType := DocumentFormattingParams{
+		WorkDoneProgressParams: WorkDoneProgressParams{
+			WorkDoneToken: NewProgressToken(wantWorkDoneToken),
+		},
 		Options: FormattingOptions{
 			InsertSpaces: true,
 			TabSize:      4,
@@ -3982,8 +4526,14 @@ func testDocumentFormattingParams(t *testing.T, marshal marshalFunc, unmarshal u
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+				if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreTypes(WorkDoneProgressParams{})); (diff != "") != tt.wantErr {
 					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+
+				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
+					if diff := cmp.Diff(workDoneToken.String(), wantWorkDoneToken); (diff != "") != tt.wantErr {
+						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					}
 				}
 			})
 		}
@@ -3992,12 +4542,15 @@ func testDocumentFormattingParams(t *testing.T, marshal marshalFunc, unmarshal u
 
 func testFormattingOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"insertSpaces":true,"tabSize":4}`
-		wantInvalid = `{"insertSpaces":false,"tabSize":2}`
+		want        = `{"insertSpaces":true,"tabSize":4,"trimTrailingWhitespace":true,"insertFinalNewline":true,"trimFinalNewlines":true}`
+		wantInvalid = `{"insertSpaces":false,"tabSize":2,"trimTrailingWhitespace":false,"insertFinalNewline":false,"trimFinalNewlines":false}`
 	)
 	wantType := FormattingOptions{
-		InsertSpaces: true,
-		TabSize:      4,
+		InsertSpaces:           true,
+		TabSize:                4,
+		TrimTrailingWhitespace: true,
+		InsertFinalNewline:     true,
+		TrimFinalNewlines:      true,
 	}
 
 	t.Run("Marshal", func(t *testing.T) {
@@ -4083,10 +4636,17 @@ func testFormattingOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 
 func testDocumentRangeFormattingParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"textDocument":{"uri":"file:///path/to/test.go"},"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"options":{"insertSpaces":true,"tabSize":4}}`
-		wantInvalid = `{"textDocument":{"uri":"file:///path/to/invalid.go"},"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"options":{"insertSpaces":false,"tabSize":2}}`
+		wantWorkDoneToken    = "156edea9-9d8d-422f-b7ee-81a84594afbb"
+		invalidWorkDoneToken = "dd134d84-c134-4d7a-a2a3-f8af3ef4a568"
+	)
+	const (
+		want        = `{"workDoneToken":"` + wantWorkDoneToken + `","textDocument":{"uri":"file:///path/to/test.go"},"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"options":{"insertSpaces":true,"tabSize":4}}`
+		wantInvalid = `{"workDoneToken":"` + invalidWorkDoneToken + `","textDocument":{"uri":"file:///path/to/invalid.go"},"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"options":{"insertSpaces":false,"tabSize":2}}`
 	)
 	wantType := DocumentRangeFormattingParams{
+		WorkDoneProgressParams: WorkDoneProgressParams{
+			WorkDoneToken: NewProgressToken(wantWorkDoneToken),
+		},
 		TextDocument: TextDocumentIdentifier{
 			URI: uri.File("/path/to/test.go"),
 		},
@@ -4179,8 +4739,14 @@ func testDocumentRangeFormattingParams(t *testing.T, marshal marshalFunc, unmars
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+				if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreTypes(WorkDoneProgressParams{})); (diff != "") != tt.wantErr {
 					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+
+				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
+					if diff := cmp.Diff(workDoneToken.String(), wantWorkDoneToken); (diff != "") != tt.wantErr {
+						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					}
 				}
 			})
 		}
@@ -4395,16 +4961,25 @@ func testDocumentOnTypeFormattingRegistrationOptions(t *testing.T, marshal marsh
 
 func testRenameParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"textDocument":{"uri":"file:///path/to/test.go"},"position":{"line":25,"character":1},"newName":"newNameSymbol"}`
-		wantInvalid = `{"textDocument":{"uri":"file:///path/to/invalid.go"},"position":{"line":2,"character":1},"newName":"invalidSymbol"}`
+		wantPartialResultToken    = "156edea9-9d8d-422f-b7ee-81a84594afbb"
+		invalidPartialResultToken = "dd134d84-c134-4d7a-a2a3-f8af3ef4a568"
+	)
+	const (
+		want        = `{"textDocument":{"uri":"file:///path/to/test.go"},"position":{"line":25,"character":1},"partialResultToken":"` + wantPartialResultToken + `","newName":"newNameSymbol"}`
+		wantInvalid = `{"textDocument":{"uri":"file:///path/to/invalid.go"},"position":{"line":2,"character":1},"partialResultToken":"` + invalidPartialResultToken + `","newName":"invalidSymbol"}`
 	)
 	wantType := RenameParams{
-		TextDocument: TextDocumentIdentifier{
-			URI: uri.File("/path/to/test.go"),
+		TextDocumentPositionParams: TextDocumentPositionParams{
+			TextDocument: TextDocumentIdentifier{
+				URI: uri.File("/path/to/test.go"),
+			},
+			Position: Position{
+				Line:      25,
+				Character: 1,
+			},
 		},
-		Position: Position{
-			Line:      25,
-			Character: 1,
+		PartialResultParams: PartialResultParams{
+			PartialResultToken: NewProgressToken(wantPartialResultToken),
 		},
 		NewName: "newNameSymbol",
 	}
@@ -4482,8 +5057,14 @@ func testRenameParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+				if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreTypes(PartialResultParams{})); (diff != "") != tt.wantErr {
 					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+
+				if partialResultToken := got.PartialResultToken; partialResultToken != nil {
+					if diff := cmp.Diff(partialResultToken.String(), wantPartialResultToken); (diff != "") != tt.wantErr {
+						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					}
 				}
 			})
 		}
@@ -4625,14 +5206,125 @@ func testRenameRegistrationOptions(t *testing.T, marshal marshalFunc, unmarshal 
 	})
 }
 
+func testPrepareRenameParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+	const (
+		want        = `{"textDocument":{"uri":"file:///path/to/test.go"},"position":{"line":25,"character":1}}`
+		wantInvalid = `{"textDocument":{"uri":"file:///path/to/invalid.go"},"position":{"line":2,"character":0}}`
+	)
+	wantType := PrepareRenameParams{
+		TextDocumentPositionParams: TextDocumentPositionParams{
+			TextDocument: TextDocumentIdentifier{
+				URI: uri.File("/path/to/test.go"),
+			},
+			Position: Position{
+				Line:      25,
+				Character: 1,
+			},
+		},
+	}
+
+	t.Run("Marshal", func(t *testing.T) {
+		tests := []struct {
+			name           string
+			field          PrepareRenameParams
+			want           string
+			wantMarshalErr bool
+			wantErr        bool
+		}{
+			{
+				name:           "Valid",
+				field:          wantType,
+				want:           want,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name:           "Invalid",
+				field:          wantType,
+				want:           wantInvalid,
+				wantMarshalErr: false,
+				wantErr:        true,
+			},
+		}
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got, err := marshal(&tt.field)
+				if (err != nil) != tt.wantMarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+
+	t.Run("Unmarshal", func(t *testing.T) {
+		tests := []struct {
+			name             string
+			field            string
+			want             PrepareRenameParams
+			wantUnmarshalErr bool
+			wantErr          bool
+		}{
+			{
+				name:             "Valid",
+				field:            want,
+				want:             wantType,
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:             "Invalid",
+				field:            wantInvalid,
+				want:             wantType,
+				wantUnmarshalErr: false,
+				wantErr:          true,
+			},
+		}
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				var got PrepareRenameParams
+				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreTypes(PartialResultParams{})); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+}
+
 func testFoldingRangeParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"textDocument":{"uri":"file:///path/to/test.go"}}`
-		wantInvalid = `{"textDocument":{"uri":"file:///path/to/invalid.go"}}`
+		wantPartialResultToken    = "156edea9-9d8d-422f-b7ee-81a84594afbb"
+		invalidPartialResultToken = "dd134d84-c134-4d7a-a2a3-f8af3ef4a568"
+	)
+	const (
+		want        = `{"textDocument":{"uri":"file:///path/to/test.go"},"position":{"line":25,"character":1},"partialResultToken":"` + wantPartialResultToken + `"}`
+		wantInvalid = `{"textDocument":{"uri":"file:///path/to/invalid.go"},"position":{"line":2,"character":0},"partialResultToken":"` + invalidPartialResultToken + `"}`
 	)
 	wantType := FoldingRangeParams{
-		TextDocument: TextDocumentIdentifier{
-			URI: uri.File("/path/to/test.go"),
+		TextDocumentPositionParams: TextDocumentPositionParams{
+			TextDocument: TextDocumentIdentifier{
+				URI: uri.File("/path/to/test.go"),
+			},
+			Position: Position{
+				Line:      25,
+				Character: 1,
+			},
+		},
+		PartialResultParams: PartialResultParams{
+			PartialResultToken: NewProgressToken(wantPartialResultToken),
 		},
 	}
 
@@ -4709,8 +5401,14 @@ func testFoldingRangeParams(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+				if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreTypes(PartialResultParams{})); (diff != "") != tt.wantErr {
 					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+
+				if partialResultToken := got.PartialResultToken; partialResultToken != nil {
+					if diff := cmp.Diff(partialResultToken.String(), wantPartialResultToken); (diff != "") != tt.wantErr {
+						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					}
 				}
 			})
 		}

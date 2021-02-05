@@ -30,7 +30,15 @@ func TestCompletionRegistrationOptions(t *testing.T) {
 	testCompletionRegistrationOptions(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
+func TestHoverParams(t *testing.T) {
+	testHoverParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
+
 func TestHover(t *testing.T) { testHover(t, gojay.Marshal, gojay.Unsafe.Unmarshal) }
+
+func TestSignatureHelpParams(t *testing.T) {
+	testSignatureHelpParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
 
 func TestSignatureHelp(t *testing.T) { testSignatureHelp(t, gojay.Marshal, gojay.Unsafe.Unmarshal) }
 
@@ -138,6 +146,10 @@ func TestRenameParams(t *testing.T) {
 
 func TestRenameRegistrationOptions(t *testing.T) {
 	testRenameRegistrationOptions(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
+
+func TestPrepareRenameParams(t *testing.T) {
+	testPrepareRenameParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
 func TestFoldingRangeParams(t *testing.T) {
