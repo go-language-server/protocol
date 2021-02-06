@@ -4,48 +4,49 @@ orbs:
   golang: cci-orb/golang@volatile
   codecov: codecov/codecov@1.1.3
 
+executors:
+  golang:
+    docker:
+      - image: golang:1.15-buster
+        auth:
+          username: $DOCKERHUB_USER
+          password: $DOCKERHUB_PASSWORD
+    working_directory: /go/src/go.lsp.dev/protocol
+
 command_vars:
-  - cache_key: &cache_key gomod-<< parameters.go-version >>-{{ checksum "go.mod" }}-{{ checksum "go.sum" }}
-  - cache_tools_key: &cache_tools_key tools-<< parameters.go-version >>-{{ checksum "tools/go.mod" }}-{{ checksum "tools/go.sum" }}
+  - cache_key: &cache_key go-mod-v1-{{ checksum "go.mod" }}-{{ checksum "go.sum" }}
+  - cache_tools_key: &cache_tools_key go-tools-v1-{{ checksum "tools/go.mod" }}-{{ checksum "tools/go.sum" }}
 
 commands:
   restore_dependencies:
-    parameters:
-      go-version:
-        type: string
     steps:
-      - restore_cache:
-          name: "Restore module dependencies cache"
-          keys:
-            - *cache_key
       - restore_cache:
           name: "Restore dependencies tools"
           keys:
             - *cache_tools_key
-      - run:
-          name: "Download project modules"
-          command: |
-            go mod download
 
   save_dependencies:
-    parameters:
-      go-version:
-        type: string
     steps:
-      - save_cache:
-          name: "Save module cache"
-          key: *cache_key
-          paths:
-            - /go/pkg/mod/cache
       - save_cache:
           name: "Save dependencies tools"
           key: *cache_tools_key
           paths:
-            - /go/bin/
+            - /go/src/go.lsp.dev/protocol/tools/bin/
+      - persist_to_workspace:
+          name: "Persist dependencies tools"
+          root: "/go"
+          paths:
+            - src/go.lsp.dev/protocol/tools/bin
+
+  install_tools:
+    steps:
       - run:
-          name: "go mod vendor"
+          name: "Download dependency tools"
           command: |
-            go mod vendor
+            find /go/bin/ -mindepth 1 -type f -executable | head -1
+            if [ -z $(find ./tools/bin/ -mindepth 1 -type f -executable | head -1) ]; then
+              make -j${CPUS} tools
+            fi
 
   setup:
     steps:
@@ -55,6 +56,18 @@ commands:
           command: |
             go version
             go env
+      - restore_cache:
+          name: "Restore module cache"
+          keys:
+            - *cache_key
+      - run:
+          name: "Download modules"
+          command: |
+            go mod download
+      - run:
+          name: "Run go mod vendor"
+          command: |
+            go mod vendor
       - run:
           name: "Parse CPUs"
           command: |
@@ -62,41 +75,31 @@ commands:
             CPUS="$(echo $(($(cat /sys/fs/cgroup/cpu/cpu.shares) / 1024)))"
             echo "export CPUS=${CPUS}" >> $BASH_ENV
 
-  install_tools:
-    steps:
-      - run:
-          name: "Download project tool dependencies"
-          command: |
-            if [ -z $(find /go/bin/ -mindepth 1 -type f -executable | head -1) ]; then
-              make -j${CPUS} tools GOBIN=/go/bin
-            fi
-
   set_goflags:
     steps:
       - run:
-          name: "Parse CPUs"
+          name: "Set GOFLAGS"
           command: |
             echo "export GOFLAGS='-p=${CPUS} -cpu=${CPUS}'" >> $BASH_ENV
 
 jobs:
+  tools:
+    executor: golang
+    resource_class: large
+    steps:
+      - checkout
+      - restore_dependencies
+      - install_tools
+      - save_dependencies
+
   test:
-    parameters:
-      go-version:
-        type: string
-    docker:
-      - image: golang:<< parameters.go-version >>
-        auth:
-          username: $DOCKERHUB_USER
-          password: $DOCKERHUB_PASSWORD
-    working_directory: /go/src/go.lsp.dev/protocol
+    executor: golang
     resource_class: xlarge
     parallelism: 2
     steps:
-      - restore_dependencies:
-          go-version: << parameters.go-version >>
-      - install_tools
-      - save_dependencies:
-          go-version: << parameters.go-version >>
+      - attach_workspace:
+          name: "Attach tools"
+          at: "/go"
       - set_goflags
       - run:
           name: Test and take a coverage
@@ -107,43 +110,45 @@ jobs:
           command: |
             mkdir -p /tmp/test-results
             make $(circleci tests split .circleci/coverage-targets)
+      - save_cache:
+          name: "Save module cache"
+          key: *cache_key
+          paths:
+            - /go/pkg/mod/cache
       - codecov/upload:
           file: "coverage.out"
           when: on_success
 
   lint:
-    parameters:
-      go-version:
-        type: string
-    docker:
-      - image: golang:<< parameters.go-version >>
-        auth:
-          username: $DOCKERHUB_USER
-          password: $DOCKERHUB_PASSWORD
-    working_directory: /go/src/go.lsp.dev/protocol
+    executor: golang
     resource_class: large
     parallelism: 2
     steps:
-      - restore_dependencies:
-          go-version: << parameters.go-version >>
-      - install_tools
-      - save_dependencies:
-          go-version: << parameters.go-version >>
+      - attach_workspace:
+          name: "Attach tools"
+          at: "/go"
       - run:
           name: Run fmt and lint for sources
           command: |
             make lint GO_LINT_FLAGS="$(circleci tests split .circleci/lint-buildtags)" JOBS=${CPUS}
             git add -N . && git diff --exit-code
+      - save_cache:
+          name: "Save module cache"
+          key: *cache_key
+          paths:
+            - /go/pkg/mod/cache
 
 workflows:
   version: 2
   workflows:
     jobs:
+      - tools:
+          context: org-global
+
       - test:
           context: org-global
-          matrix:
-            parameters:
-              go-version: ["1.15-buster", "1.16-rc-buster"]
+          requires:
+            - tools
           pre-steps:
             - setup
           post-steps:
@@ -154,8 +159,7 @@ workflows:
 
       - lint:
           context: org-global
-          matrix:
-            parameters:
-              go-version: ["1.15-buster"]
+          requires:
+            - tools
           pre-steps:
             - setup
