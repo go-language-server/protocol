@@ -81,9 +81,19 @@ coverage/gojay: coverage
 .PHONY: lint
 lint: fmt lint/golangci-lint  ## Run all linters.
 
+.PHONY: lint
+lint/gojay: fmt/gojay lint/golangci-lint/gojay
+
 .PHONY: fmt
 fmt: tools/goimports tools/gofumpt  ## Run goimports and gofumpt.
 	$(call target)
+	find . -iname "*.go" -not -path "./vendor/**" | xargs -P ${JOBS} ${TOOLS_BIN}/goimports -local=${PKG},$(subst /protocol,,$(PKG)) -w
+	find . -iname "*.go" -not -path "./vendor/**" | xargs -P ${JOBS} ${TOOLS_BIN}/gofumpt -s -extra -w
+
+.PHONY: fmt/gojay
+fmt/gojay: tools/goimports tools/gofumpt
+	$(call target)
+	@export GOFLAGS=-tags=gojay
 	find . -iname "*.go" -not -path "./vendor/**" | xargs -P ${JOBS} ${TOOLS_BIN}/goimports -local=${PKG},$(subst /protocol,,$(PKG)) -w
 	find . -iname "*.go" -not -path "./vendor/**" | xargs -P ${JOBS} ${TOOLS_BIN}/gofumpt -s -extra -w
 
@@ -91,6 +101,10 @@ fmt: tools/goimports tools/gofumpt  ## Run goimports and gofumpt.
 lint/golangci-lint: tools/golangci-lint .golangci.yml  ## Run golangci-lint.
 	$(call target)
 	${TOOLS_BIN}/golangci-lint -j ${JOBS} run $(strip ${GO_LINT_FLAGS}) ./...
+
+.PHONY: lint/golangci-lint/gojay
+lint/golangci-lint/gojay: GO_LINT_FLAGS+=--build-tags=gojay
+lint/golangci-lint/gojay: lint/golangci-lint
 
 
 ##@ tools
