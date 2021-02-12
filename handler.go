@@ -12,12 +12,6 @@ import (
 	"go.lsp.dev/pkg/xcontext"
 )
 
-// RequestCancelledCode cancel request code.
-const RequestCancelledCode jsonrpc2.Code = -32800
-
-// ErrRequestCancelled should be used when a request is canceled early.
-var ErrRequestCancelled = jsonrpc2.NewError(RequestCancelledCode, "cancelled JSON-RPC")
-
 // Handlers default jsonrpc2.Handler.
 func Handlers(handler jsonrpc2.Handler) jsonrpc2.Handler {
 	return CancelHandler(
