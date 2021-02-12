@@ -195,12 +195,6 @@ type server struct {
 
 var _ Server = (*server)(nil)
 
-// Run runs the Language Server Protocol server.
-// func (s *server) Run(ctx context.Context) (err error) {
-// 	err = s.Conn.Run(ctx)
-// 	return
-// }
-
 // Initialize sents the request as the first request from the client to the server.
 //
 // If the server receives a request or notification before the initialize request it should act as follows:
