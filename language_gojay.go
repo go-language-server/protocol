@@ -239,7 +239,7 @@ var (
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *Hover) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey(keyContents, &v.Contents)
-	enc.ObjectKey(keyRange, &v.Range)
+	enc.ObjectKeyOmitEmpty(keyRange, v.Range)
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -251,7 +251,10 @@ func (v *Hover) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	case keyContents:
 		return dec.Object(&v.Contents)
 	case keyRange:
-		return dec.Object(&v.Range)
+		if v.Range == nil {
+			v.Range = &Range{}
+		}
+		return dec.Object(v.Range)
 	}
 	return nil
 }

@@ -328,7 +328,7 @@ type Hover struct {
 
 	// Range an optional range is a range inside a text document
 	// that is used to visualize a hover, e.g. by changing the background color.
-	Range Range `json:"range,omitempty"`
+	Range *Range `json:"range,omitempty"`
 }
 
 // SignatureHelp signature help represents the signature of something

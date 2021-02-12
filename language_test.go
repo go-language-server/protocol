@@ -810,7 +810,7 @@ func testHover(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 			Kind:  Markdown,
 			Value: "example value",
 		},
-		Range: Range{
+		Range: &Range{
 			Start: Position{
 				Line:      255,
 				Character: 4,
