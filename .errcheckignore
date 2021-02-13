@@ -1,2 +1,0 @@
-(*go.lsp.dev/jsonrpc2.Request).Reply
-(*go.lsp.dev/jsonrpc2.Conn).Notify

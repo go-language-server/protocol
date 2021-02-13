@@ -20,7 +20,6 @@ linters-settings:
   errcheck:
     check-type-assertions: true
     check-blank: true
-    exclude: .errcheckignore
   funlen:
     lines: 100
     statements: 60
