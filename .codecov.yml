@@ -7,33 +7,56 @@ coverage:
   range: "70...100"
 
   status:
-    project: off
+    project:
+      default: false
+      json:
+        target: auto
+        threshold: 1%
+        if_not_found: success
+        if_ci_failed: error
+        flags:
+          - json
+      gojay:
+        target: auto
+        threshold: 1%
+        if_not_found: success
+        if_ci_failed: error
+        flags:
+          - gojay
     patch:
-      default: off
+      default: false
       json:
-        flags: json
         only_pulls: true
         target: 50%
         threshold: 10%
+        flags:
+          - json
       gojay:
-        flags: gojay
         only_pulls: true
         target: 50%
         threshold: 10%
+        flags:
+          - gojay
     changes:
-      default: off
+      default: false
       json:
-        flags: json
         target: auto
         threshold: 10%
         if_not_found: success
         if_ci_failed: error
+        flags:
+          - json
+        branches:
+          - main
       gojay:
-        flags: gojay
         target: auto
         threshold: 10%
         if_not_found: success
         if_ci_failed: error
+        flags:
+          - gojay
+        branches:
+          - main
 
 flags:
   json:
