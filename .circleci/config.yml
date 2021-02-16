@@ -117,6 +117,7 @@ jobs:
             - /go/pkg/mod/cache
       - codecov/upload:
           file: "coverage.out"
+          flags: $(if [ $CIRCLE_NODE_INDEX == 0 ]; then echo "json"; else echo "gojay"; fi)
           when: on_success
 
   lint:
