@@ -116,15 +116,13 @@ tools/%:  ## install an individual dependent tool
 	@${MAKE} tools/bin/$* 1>/dev/null
 
 tools/bin/%: ${TOOLS_DIR}/go.mod ${TOOLS_DIR}/go.sum
-	@if [ -z '${CI}' ]; then \
-		cd tools; \
-			for t in ${TOOLS}; do \
-				if [ -z '$*' ] || [ $$(basename $$t) = '$*' ]; then \
-					echo "Install $$t ..." >&2; \
-					GOBIN=${TOOLS_BIN} CGO_ENABLED=0 go install -v -mod=mod ${GO_FLAGS} "$${t}"; \
-				fi \
-			done \
-	fi
+	cd tools; \
+		for t in ${TOOLS}; do \
+			if [ -z '$*' ] || [ $$(basename $$t) = '$*' ]; then \
+				echo "Install $$t ..." >&2; \
+				GOBIN=${TOOLS_BIN} CGO_ENABLED=0 go install -v -mod=mod ${GO_FLAGS} "$${t}"; \
+			fi \
+		done
 
 
 ##@ clean

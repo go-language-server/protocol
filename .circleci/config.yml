@@ -7,15 +7,15 @@ orbs:
 executors:
   golang:
     docker:
-      - image: golang:1.15-buster
+      - image: golang:1.16-buster
         auth:
           username: $DOCKERHUB_USER
           password: $DOCKERHUB_PASSWORD
     working_directory: /go/src/go.lsp.dev/protocol
 
 command_vars:
-  - cache_key: &cache_key go-mod-v1-{{ checksum "go.mod" }}-{{ checksum "go.sum" }}
-  - cache_tools_key: &cache_tools_key go-tools-v1-{{ checksum "tools/go.mod" }}-{{ checksum "tools/go.sum" }}
+  - cache_key: &cache_key v1-go-mod-{{ checksum "go.mod" }}-{{ checksum "go.sum" }}
+  - cache_tools_key: &cache_tools_key v1-go-tools-{{ checksum "tools/go.mod" }}-{{ checksum "tools/go.sum" }}
 
 commands:
   restore_dependencies:
@@ -43,7 +43,6 @@ commands:
       - run:
           name: "Download dependency tools"
           command: |
-            find /go/bin/ -mindepth 1 -type f -executable | head -1
             if [ -z $(find ./tools/bin/ -mindepth 1 -type f -executable | head -1) ]; then
               make -j${CPUS} tools
             fi
@@ -132,7 +131,6 @@ jobs:
           name: Run fmt and lint for sources
           command: |
             make lint GO_LINT_FLAGS="$(circleci tests split .circleci/lint-buildtags)" JOBS=${CPUS}
-            git add -N . && git diff --exit-code
       - save_cache:
           name: "Save module cache"
           key: *cache_key
