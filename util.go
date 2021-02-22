@@ -4,14 +4,7 @@
 
 package protocol
 
-import "go.lsp.dev/uri"
-
-// ToURI returns the new DocumentURI from s.
-func ToURI(s string) uri.URI {
-	return uri.File(s)
-}
-
 // NewVersion returns the uint64 pointer converted i.
-func NewVersion(i uint64) *uint64 {
+func NewVersion(i int32) *int32 {
 	return &i
 }

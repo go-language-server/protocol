@@ -460,14 +460,108 @@ func testLocationLink(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc
 	})
 }
 
+func testCodeDescription(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+	const (
+		want        = `{"href":"file:///path/to/test.go"}`
+		wantInvalid = `{"href":"file:///path/to/invalid.go"}`
+	)
+	wantType := CodeDescription{
+		Href: uri.File("/path/to/test.go"),
+	}
+
+	t.Run("Marshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name           string
+			field          CodeDescription
+			want           string
+			wantMarshalErr bool
+			wantErr        bool
+		}{
+			{
+				name:           "Valid",
+				field:          wantType,
+				want:           want,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name:           "Invalid",
+				field:          wantType,
+				want:           wantInvalid,
+				wantMarshalErr: false,
+				wantErr:        true,
+			},
+		}
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got, err := marshal(&tt.field)
+				if (err != nil) != tt.wantMarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+
+	t.Run("Unmarshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name             string
+			field            string
+			want             CodeDescription
+			wantUnmarshalErr bool
+			wantErr          bool
+		}{
+			{
+				name:             "Valid",
+				field:            want,
+				want:             wantType,
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:             "Invalid",
+				field:            wantInvalid,
+				want:             wantType,
+				wantUnmarshalErr: false,
+				wantErr:          true,
+			},
+		}
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				var got CodeDescription
+				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+}
+
 func testDiagnostic(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want                      = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","tags":[1,2],"relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}]}`
-		wantNilSeverity           = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}]}`
-		wantNilCode               = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}]}`
-		wantNilRelatedInformation = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar"}`
+		want                      = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","codeDescription":{"href":"file:///path/to/test.go"},"source":"test foo bar","message":"foo bar","tags":[1,2],"relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}],"data":"testData"}`
+		wantNilSeverity           = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"code":"foo/bar","codeDescription":{"href":"file:///path/to/test.go"},"source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}],"data":"testData"}`
+		wantNilCode               = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"codeDescription":{"href":"file:///path/to/test.go"},"source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}],"data":"testData"}`
+		wantNilRelatedInformation = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","codeDescription":{"href":"file:///path/to/test.go"},"source":"test foo bar","message":"foo bar","data":"testData"}`
 		wantNilAll                = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"message":"foo bar"}`
-		wantInvalid               = `{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}},"message":"basic_gen.go"}]}`
+		wantInvalid               = `{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"severity":1,"code":"foo/bar","codeDescription":{"href":"file:///path/to/test.go"},"source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}},"message":"basic_gen.go"}],"data":"invalidData"}`
 	)
 	wantType := Diagnostic{
 		Range: Range{
@@ -482,8 +576,11 @@ func testDiagnostic(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 		},
 		Severity: SeverityError,
 		Code:     "foo/bar",
-		Source:   "test foo bar",
-		Message:  "foo bar",
+		CodeDescription: &CodeDescription{
+			Href: uri.File("/path/to/test.go"),
+		},
+		Source:  "test foo bar",
+		Message: "foo bar",
 		Tags: []DiagnosticTag{
 			DiagnosticUnnecessary,
 			DiagnosticDeprecated,
@@ -506,6 +603,7 @@ func testDiagnostic(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 				Message: "basic_gen.go",
 			},
 		},
+		Data: "testData",
 	}
 	wantTypeNilSeverity := Diagnostic{
 		Range: Range{
@@ -518,7 +616,10 @@ func testDiagnostic(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 				Character: 3,
 			},
 		},
-		Code:    "foo/bar",
+		Code: "foo/bar",
+		CodeDescription: &CodeDescription{
+			Href: uri.File("/path/to/test.go"),
+		},
 		Source:  "test foo bar",
 		Message: "foo bar",
 		RelatedInformation: []DiagnosticRelatedInformation{
@@ -539,6 +640,7 @@ func testDiagnostic(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 				Message: "basic_gen.go",
 			},
 		},
+		Data: "testData",
 	}
 	wantTypeNilCode := Diagnostic{
 		Range: Range{
@@ -552,8 +654,11 @@ func testDiagnostic(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 			},
 		},
 		Severity: SeverityError,
-		Source:   "test foo bar",
-		Message:  "foo bar",
+		CodeDescription: &CodeDescription{
+			Href: uri.File("/path/to/test.go"),
+		},
+		Source:  "test foo bar",
+		Message: "foo bar",
 		RelatedInformation: []DiagnosticRelatedInformation{
 			{
 				Location: Location{
@@ -572,6 +677,7 @@ func testDiagnostic(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 				Message: "basic_gen.go",
 			},
 		},
+		Data: "testData",
 	}
 	wantTypeNilRelatedInformation := Diagnostic{
 		Range: Range{
@@ -586,8 +692,12 @@ func testDiagnostic(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 		},
 		Severity: SeverityError,
 		Code:     "foo/bar",
-		Source:   "test foo bar",
-		Message:  "foo bar",
+		CodeDescription: &CodeDescription{
+			Href: uri.File("/path/to/test.go"),
+		},
+		Source:  "test foo bar",
+		Message: "foo bar",
+		Data:    "testData",
 	}
 	wantTypeNilAll := Diagnostic{
 		Range: Range{
@@ -1045,6 +1155,229 @@ func testCommand(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	})
 }
 
+func testChangeAnnotation(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+	const (
+		want        = `{"label":"testLabel","needsConfirmation":true,"description":"testDescription"}`
+		wantNilAll  = `{"label":"testLabel"}`
+		wantInvalid = `{"label":"invalidLabel","needsConfirmation":false,"description":"invalidDescription"}`
+	)
+	wantType := ChangeAnnotation{
+		Label:             "testLabel",
+		NeedsConfirmation: true,
+		Description:       "testDescription",
+	}
+	wantTypeNilAll := ChangeAnnotation{
+		Label: "testLabel",
+	}
+
+	t.Run("Marshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name           string
+			field          ChangeAnnotation
+			want           string
+			wantMarshalErr bool
+			wantErr        bool
+		}{
+			{
+				name:           "Valid",
+				field:          wantType,
+				want:           want,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name:           "ValidNilArguments",
+				field:          wantTypeNilAll,
+				want:           wantNilAll,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name:           "Invalid",
+				field:          wantType,
+				want:           wantInvalid,
+				wantMarshalErr: false,
+				wantErr:        true,
+			},
+		}
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got, err := marshal(&tt.field)
+				if (err != nil) != tt.wantMarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+
+	t.Run("Unmarshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name             string
+			field            string
+			want             ChangeAnnotation
+			wantUnmarshalErr bool
+			wantErr          bool
+		}{
+			{
+				name:             "Valid",
+				field:            want,
+				want:             wantType,
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:             "ValidNilArguments",
+				field:            wantNilAll,
+				want:             wantTypeNilAll,
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:             "Invalid",
+				field:            wantInvalid,
+				want:             wantType,
+				wantUnmarshalErr: false,
+				wantErr:          true,
+			},
+		}
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				var got ChangeAnnotation
+				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+}
+
+func testAnnotatedTextEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+	const (
+		want        = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar","annotationId":"testAnnotationIdentifier"}`
+		wantInvalid = `{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"newText":"foo bar","annotationId":"invalidAnnotationIdentifier"}`
+	)
+	wantType := AnnotatedTextEdit{
+		TextEdit: TextEdit{
+			Range: Range{
+				Start: Position{
+					Line:      25,
+					Character: 1,
+				},
+				End: Position{
+					Line:      27,
+					Character: 3,
+				},
+			},
+			NewText: "foo bar",
+		},
+		AnnotationID: ChangeAnnotationIdentifier("testAnnotationIdentifier"),
+	}
+
+	t.Run("Marshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name           string
+			field          AnnotatedTextEdit
+			want           string
+			wantMarshalErr bool
+			wantErr        bool
+		}{
+			{
+				name:           "Valid",
+				field:          wantType,
+				want:           want,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name:           "Invalid",
+				field:          wantType,
+				want:           wantInvalid,
+				wantMarshalErr: false,
+				wantErr:        true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got, err := marshal(&tt.field)
+				if (err != nil) != tt.wantMarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+
+	t.Run("Unmarshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name             string
+			field            string
+			want             AnnotatedTextEdit
+			wantUnmarshalErr bool
+			wantErr          bool
+		}{
+			{
+				name:             "Valid",
+				field:            want,
+				want:             wantType,
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:             "Invalid",
+				field:            wantInvalid,
+				want:             wantType,
+				wantUnmarshalErr: false,
+				wantErr:          true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				var got AnnotatedTextEdit
+				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+}
+
 func testTextEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
 		want        = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}`
@@ -1186,7 +1519,7 @@ func testTextDocumentEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 			TextDocumentIdentifier: TextDocumentIdentifier{
 				URI: "file:///path/to/basic.go",
 			},
-			Version: NewVersion(10),
+			Version: int32(10),
 		},
 		Edits: []TextEdit{
 			{
@@ -1209,7 +1542,7 @@ func testTextDocumentEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 			TextDocumentIdentifier: TextDocumentIdentifier{
 				URI: "file:///path/to/basic.go",
 			},
-			Version: NewVersion(10),
+			Version: int32(10),
 		},
 		Edits: []TextEdit{
 			{
@@ -1475,9 +1808,9 @@ func testCreateFileOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 
 func testCreateFile(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want           = `{"kind":"create","uri":"file:///path/to/basic.go","options":{"overwrite":true,"ignoreIfExists":true}}`
+		want           = `{"kind":"create","uri":"file:///path/to/basic.go","options":{"overwrite":true,"ignoreIfExists":true},"annotationId":"testAnnotationIdentifier"}`
 		wantNilOptions = `{"kind":"create","uri":"file:///path/to/basic.go"}`
-		wantInvalid    = `{"kind":"create","uri":"file:///path/to/basic_gen.go","options":{"overwrite":false,"ignoreIfExists":false}}`
+		wantInvalid    = `{"kind":"create","uri":"file:///path/to/basic_gen.go","options":{"overwrite":false,"ignoreIfExists":false},"annotationId":"invalidAnnotationIdentifier"}`
 	)
 	wantType := CreateFile{
 		Kind: "create",
@@ -1486,6 +1819,7 @@ func testCreateFile(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 			Overwrite:      true,
 			IgnoreIfExists: true,
 		},
+		AnnotationID: ChangeAnnotationIdentifier("testAnnotationIdentifier"),
 	}
 	wantTypeNilOptions := CreateFile{
 		Kind: "create",
@@ -1753,9 +2087,9 @@ func testRenameFileOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 
 func testRenameFile(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want           = `{"kind":"rename","oldUri":"file:///path/to/old.go","newUri":"file:///path/to/new.go","options":{"overwrite":true,"ignoreIfExists":true}}`
+		want           = `{"kind":"rename","oldUri":"file:///path/to/old.go","newUri":"file:///path/to/new.go","options":{"overwrite":true,"ignoreIfExists":true},"annotationId":"testAnnotationIdentifier"}`
 		wantNilOptions = `{"kind":"rename","oldUri":"file:///path/to/old.go","newUri":"file:///path/to/new.go"}`
-		wantInvalid    = `{"kind":"rename","oldUri":"file:///path/to/old2.go","newUri":"file:///path/to/new2.go","options":{"overwrite":false,"ignoreIfExists":false}}`
+		wantInvalid    = `{"kind":"rename","oldUri":"file:///path/to/old2.go","newUri":"file:///path/to/new2.go","options":{"overwrite":false,"ignoreIfExists":false},"annotationId":"invalidAnnotationIdentifier"}`
 	)
 	wantType := RenameFile{
 		Kind:   "rename",
@@ -1765,6 +2099,7 @@ func testRenameFile(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 			Overwrite:      true,
 			IgnoreIfExists: true,
 		},
+		AnnotationID: ChangeAnnotationIdentifier("testAnnotationIdentifier"),
 	}
 	wantTypeNilOptions := RenameFile{
 		Kind:   "rename",
@@ -2023,9 +2358,9 @@ func testDeleteFileOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 
 func testDeleteFile(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want           = `{"kind":"delete","uri":"file:///path/to/delete.go","options":{"recursive":true,"ignoreIfNotExists":true}}`
+		want           = `{"kind":"delete","uri":"file:///path/to/delete.go","options":{"recursive":true,"ignoreIfNotExists":true},"annotationId":"testAnnotationIdentifier"}`
 		wantNilOptions = `{"kind":"delete","uri":"file:///path/to/delete.go"}`
-		wantInvalid    = `{"kind":"delete","uri":"file:///path/to/delete2.go","options":{"recursive":false,"ignoreIfNotExists":false}}`
+		wantInvalid    = `{"kind":"delete","uri":"file:///path/to/delete2.go","options":{"recursive":false,"ignoreIfNotExists":false},"annotationId":"invalidAnnotationIdentifier"}`
 	)
 	wantType := DeleteFile{
 		Kind: "delete",
@@ -2034,6 +2369,7 @@ func testDeleteFile(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 			Recursive:         true,
 			IgnoreIfNotExists: true,
 		},
+		AnnotationID: ChangeAnnotationIdentifier("testAnnotationIdentifier"),
 	}
 	wantTypeNilOptions := DeleteFile{
 		Kind: "delete",
@@ -2143,7 +2479,7 @@ func testDeleteFile(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 
 func testWorkspaceEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want                   = `{"changes":{"file:///path/to/basic.go":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]},"documentChanges":[{"textDocument":{"uri":"file:///path/to/basic.go","version":10},"edits":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}]}`
+		want                   = `{"changes":{"file:///path/to/basic.go":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]},"documentChanges":[{"textDocument":{"uri":"file:///path/to/basic.go","version":10},"edits":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}],"changeAnnotations":{"testAnnotationIdentifier":{"label":"testLabel","needsConfirmation":true,"description":"testDescription"}}}`
 		wantNilChanges         = `{"documentChanges":[{"textDocument":{"uri":"file:///path/to/basic.go","version":10},"edits":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}]}`
 		wantNilDocumentChanges = `{"changes":{"file:///path/to/basic.go":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}}`
 		wantInvalid            = `{"changes":{"file:///path/to/basic_gen.go":[{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"newText":"foo bar"}]},"documentChanges":[{"textDocument":{"uri":"file:///path/to/basic_gen.go","version":10},"edits":[{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"newText":"foo bar"}]}]}`
@@ -2172,7 +2508,7 @@ func testWorkspaceEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshalFun
 					TextDocumentIdentifier: TextDocumentIdentifier{
 						URI: uri.File("/path/to/basic.go"),
 					},
-					Version: NewVersion(10),
+					Version: int32(10),
 				},
 				Edits: []TextEdit{
 					{
@@ -2191,6 +2527,13 @@ func testWorkspaceEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshalFun
 				},
 			},
 		},
+		ChangeAnnotations: map[ChangeAnnotationIdentifier]ChangeAnnotation{
+			ChangeAnnotationIdentifier("testAnnotationIdentifier"): {
+				Label:             "testLabel",
+				NeedsConfirmation: true,
+				Description:       "testDescription",
+			},
+		},
 	}
 	wantTypeNilChanges := WorkspaceEdit{
 		DocumentChanges: []TextDocumentEdit{
@@ -2199,7 +2542,7 @@ func testWorkspaceEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshalFun
 					TextDocumentIdentifier: TextDocumentIdentifier{
 						URI: uri.File("/path/to/basic.go"),
 					},
-					Version: NewVersion(10),
+					Version: int32(10),
 				},
 				Edits: []TextEdit{
 					{
@@ -2466,7 +2809,7 @@ func testTextDocumentItem(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 	wantType := TextDocumentItem{
 		URI:        uri.File("/path/to/basic.go"),
 		LanguageID: GoLanguage,
-		Version:    float64(10),
+		Version:    int32(10),
 		Text:       "Go Language",
 	}
 
@@ -2594,14 +2937,14 @@ func TestToLanguageIdentifier(t *testing.T) {
 func testVersionedTextDocumentIdentifier(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
 		want            = `{"uri":"file:///path/to/basic.go","version":10}`
-		wantNullVersion = `{"uri":"file:///path/to/basic.go","version":null}`
+		wantZeroVersion = `{"uri":"file:///path/to/basic.go","version":0}`
 		wantInvalid     = `{"uri":"file:///path/to/basic_gen.go","version":50}`
 	)
 	wantType := VersionedTextDocumentIdentifier{
 		TextDocumentIdentifier: TextDocumentIdentifier{
 			URI: uri.File("/path/to/basic.go"),
 		},
-		Version: NewVersion(10),
+		Version: int32(10),
 	}
 	wantTypeNullVersion := VersionedTextDocumentIdentifier{
 		TextDocumentIdentifier: TextDocumentIdentifier{
@@ -2615,6 +2958,125 @@ func testVersionedTextDocumentIdentifier(t *testing.T, marshal marshalFunc, unma
 		tests := []struct {
 			name           string
 			field          VersionedTextDocumentIdentifier
+			want           string
+			wantMarshalErr bool
+			wantErr        bool
+		}{
+			{
+				name:           "Valid",
+				field:          wantType,
+				want:           want,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name:           "ValidNullVersion",
+				field:          wantTypeNullVersion,
+				want:           wantZeroVersion,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name:           "Invalid",
+				field:          wantType,
+				want:           wantInvalid,
+				wantMarshalErr: false,
+				wantErr:        true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got, err := marshal(&tt.field)
+				if (err != nil) != tt.wantMarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+
+	t.Run("Unmarshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name             string
+			field            string
+			want             VersionedTextDocumentIdentifier
+			wantUnmarshalErr bool
+			wantErr          bool
+		}{
+			{
+				name:             "Valid",
+				field:            want,
+				want:             wantType,
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:             "ValidNullVersion",
+				field:            wantZeroVersion,
+				want:             wantTypeNullVersion,
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:             "Invalid",
+				field:            wantInvalid,
+				want:             wantType,
+				wantUnmarshalErr: false,
+				wantErr:          true,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				var got VersionedTextDocumentIdentifier
+				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+}
+
+func testOptionalVersionedTextDocumentIdentifier(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+	const (
+		want            = `{"uri":"file:///path/to/basic.go","version":10}`
+		wantNullVersion = `{"uri":"file:///path/to/basic.go","version":null}`
+		wantInvalid     = `{"uri":"file:///path/to/basic_gen.go","version":50}`
+	)
+	wantType := OptionalVersionedTextDocumentIdentifier{
+		TextDocumentIdentifier: TextDocumentIdentifier{
+			URI: uri.File("/path/to/basic.go"),
+		},
+		Version: NewVersion(10),
+	}
+	wantTypeNullVersion := OptionalVersionedTextDocumentIdentifier{
+		TextDocumentIdentifier: TextDocumentIdentifier{
+			URI: uri.File("/path/to/basic.go"),
+		},
+	}
+
+	t.Run("Marshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name           string
+			field          OptionalVersionedTextDocumentIdentifier
 			want           string
 			wantMarshalErr bool
 			wantErr        bool
@@ -2665,7 +3127,7 @@ func testVersionedTextDocumentIdentifier(t *testing.T, marshal marshalFunc, unma
 		tests := []struct {
 			name             string
 			field            string
-			want             VersionedTextDocumentIdentifier
+			want             OptionalVersionedTextDocumentIdentifier
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
@@ -2697,7 +3159,7 @@ func testVersionedTextDocumentIdentifier(t *testing.T, marshal marshalFunc, unma
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				var got VersionedTextDocumentIdentifier
+				var got OptionalVersionedTextDocumentIdentifier
 				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}

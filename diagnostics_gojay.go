@@ -43,7 +43,7 @@ func (v Diagnostics) IsNil() bool { return len(v) == 0 }
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *PublishDiagnosticsParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey(keyURI, string(v.URI))
-	enc.Float64KeyOmitEmpty(keyVersion, v.Version)
+	enc.Uint32KeyOmitEmpty(keyVersion, v.Version)
 	enc.ArrayKey(keyDiagnostics, Diagnostics(v.Diagnostics))
 }
 
@@ -56,7 +56,7 @@ func (v *PublishDiagnosticsParams) UnmarshalJSONObject(dec *gojay.Decoder, k str
 	case keyURI:
 		return dec.String((*string)(&v.URI))
 	case keyVersion:
-		return dec.Float64(&v.Version)
+		return dec.Uint32(&v.Version)
 	case keyDiagnostics:
 		value := Diagnostics{}
 		err := dec.Array(&value)

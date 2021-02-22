@@ -21,7 +21,7 @@ func testDidOpenTextDocumentParams(t *testing.T, marshal marshalFunc, unmarshal 
 		TextDocument: TextDocumentItem{
 			URI:        uri.File("/path/to/basic.go"),
 			LanguageID: GoLanguage,
-			Version:    float64(10),
+			Version:    int32(10),
 			Text:       "Go Language",
 		},
 	}
@@ -117,11 +117,11 @@ func testDidChangeTextDocumentParams(t *testing.T, marshal marshalFunc, unmarsha
 			TextDocumentIdentifier: TextDocumentIdentifier{
 				URI: uri.File("/path/to/test.go"),
 			},
-			Version: NewVersion(10),
+			Version: int32(10),
 		},
 		ContentChanges: []TextDocumentContentChangeEvent{
 			{
-				Range: &Range{
+				Range: Range{
 					Start: Position{
 						Line:      25,
 						Character: 1,
@@ -218,194 +218,6 @@ func testDidChangeTextDocumentParams(t *testing.T, marshal marshalFunc, unmarsha
 	})
 }
 
-func testTextDocument(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want        = `{"uri":"file:///path/to/test.go","languageId":"go","version":1,"lineCount":50}`
-		wantInvalid = `{"uri":"file:///path/to/invalid.go","languageId":"typescript","version":2,"lineCount":100}`
-	)
-	wantType := TextDocument{
-		URI:        uri.File("/path/to/test.go"),
-		LanguageID: "go",
-		Version:    1,
-		LineCount:  50,
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		tests := []struct {
-			name           string
-			field          TextDocument
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "Invalid",
-				field:          wantType,
-				want:           wantInvalid,
-				wantMarshalErr: false,
-				wantErr:        true,
-			},
-		}
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		tests := []struct {
-			name             string
-			field            string
-			want             TextDocument
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "Invalid",
-				field:            wantInvalid,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          true,
-			},
-		}
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got TextDocument
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-}
-
-func testTextDocumentChangeEvent(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want        = `{"document":{"uri":"file:///path/to/test.go","languageId":"go","version":1,"lineCount":50}}`
-		wantInvalid = `{"document":{"uri":"file:///path/to/invalid.go","languageId":"typescript","version":2,"lineCount":100}}`
-	)
-	wantType := TextDocumentChangeEvent{
-		Document: TextDocument{
-			URI:        uri.File("/path/to/test.go"),
-			LanguageID: "go",
-			Version:    1,
-			LineCount:  50,
-		},
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		tests := []struct {
-			name           string
-			field          TextDocumentChangeEvent
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "Invalid",
-				field:          wantType,
-				want:           wantInvalid,
-				wantMarshalErr: false,
-				wantErr:        true,
-			},
-		}
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		tests := []struct {
-			name             string
-			field            string
-			want             TextDocumentChangeEvent
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "Invalid",
-				field:            wantInvalid,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          true,
-			},
-		}
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got TextDocumentChangeEvent
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-}
-
 func TestTextDocumentSaveReason_String(t *testing.T) {
 	tests := []struct {
 		name string
@@ -451,7 +263,7 @@ func testTextDocumentContentChangeEvent(t *testing.T, marshal marshalFunc, unmar
 		wantInvalid = `{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":4}},"rangeLength":3,"text":"invalidText"}`
 	)
 	wantType := TextDocumentContentChangeEvent{
-		Range: &Range{
+		Range: Range{
 			Start: Position{
 				Line:      25,
 				Character: 1,

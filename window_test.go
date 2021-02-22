@@ -426,16 +426,22 @@ func testLogMessageParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 
 func testWorkDoneProgressCreateParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		wantToken    = int64(1569)
-		invalidToken = int64(1348)
+		wantToken    = int32(1569)
+		invalidToken = int32(1348)
 	)
 	var (
-		want        = `{"token":` + strconv.FormatInt(wantToken, 10) + `}`
-		wantInvalid = `{"token":` + strconv.FormatInt(invalidToken, 10) + `}`
+		wantString        = `{"token":"` + strconv.FormatInt(int64(wantToken), 10) + `"}`
+		wantInvalidString = `{"token":"` + strconv.FormatInt(int64(invalidToken), 10) + `"}`
+		wantNumber        = `{"token":` + strconv.FormatInt(int64(wantToken), 10) + `}`
+		wantInvalidNumber = `{"token":` + strconv.FormatInt(int64(invalidToken), 10) + `}`
 	)
-	token := NewNumberProgressToken(wantToken)
-	wantType := WorkDoneProgressCreateParams{
+	token := NewProgressToken(strconv.FormatInt(int64(wantToken), 10))
+	wantTypeString := WorkDoneProgressCreateParams{
 		Token: *token,
+	}
+	numberToken := NewNumberProgressToken(wantToken)
+	wantTypeNumber := WorkDoneProgressCreateParams{
+		Token: *numberToken,
 	}
 
 	t.Run("Marshal", func(t *testing.T) {
@@ -447,16 +453,30 @@ func testWorkDoneProgressCreateParams(t *testing.T, marshal marshalFunc, unmarsh
 			wantErr        bool
 		}{
 			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
+				name:           "Valid/String",
+				field:          wantTypeString,
+				want:           wantString,
 				wantMarshalErr: false,
 				wantErr:        false,
 			},
 			{
-				name:           "Invalid",
-				field:          wantType,
-				want:           wantInvalid,
+				name:           "Valid/Number",
+				field:          wantTypeNumber,
+				want:           wantNumber,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name:           "Invalid/String",
+				field:          wantTypeString,
+				want:           wantInvalidString,
+				wantMarshalErr: false,
+				wantErr:        true,
+			},
+			{
+				name:           "Invalid/Number",
+				field:          wantTypeNumber,
+				want:           wantInvalidNumber,
 				wantMarshalErr: false,
 				wantErr:        true,
 			},
@@ -487,16 +507,30 @@ func testWorkDoneProgressCreateParams(t *testing.T, marshal marshalFunc, unmarsh
 			wantErr          bool
 		}{
 			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
+				name:             "Valid/String",
+				field:            wantString,
+				want:             wantTypeString,
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
 			{
-				name:             "Invalid",
-				field:            wantInvalid,
-				want:             wantType,
+				name:             "Valid/Number",
+				field:            wantNumber,
+				want:             wantTypeNumber,
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:             "Invalid/String",
+				field:            wantInvalidString,
+				want:             wantTypeString,
+				wantUnmarshalErr: false,
+				wantErr:          true,
+			},
+			{
+				name:             "Invalid/Number",
+				field:            wantInvalidNumber,
+				want:             wantTypeNumber,
 				wantUnmarshalErr: false,
 				wantErr:          true,
 			},
@@ -511,7 +545,7 @@ func testWorkDoneProgressCreateParams(t *testing.T, marshal marshalFunc, unmarsh
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(fmt.Sprint(got.Token), strconv.FormatInt(wantToken, 10)); (diff != "") != tt.wantErr {
+				if diff := cmp.Diff(fmt.Sprint(got.Token), strconv.FormatInt(int64(wantToken), 10)); (diff != "") != tt.wantErr {
 					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
@@ -521,12 +555,12 @@ func testWorkDoneProgressCreateParams(t *testing.T, marshal marshalFunc, unmarsh
 
 func testWorkDoneProgressCancelParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		wantToken    = int64(1569)
-		invalidToken = int64(1348)
+		wantToken    = int32(1569)
+		invalidToken = int32(1348)
 	)
 	var (
-		want        = `{"token":` + strconv.FormatInt(wantToken, 10) + `}`
-		wantInvalid = `{"token":` + strconv.FormatInt(invalidToken, 10) + `}`
+		want        = `{"token":` + strconv.FormatInt(int64(wantToken), 10) + `}`
+		wantInvalid = `{"token":` + strconv.FormatInt(int64(invalidToken), 10) + `}`
 	)
 	token := NewNumberProgressToken(wantToken)
 	wantType := WorkDoneProgressCancelParams{
@@ -606,7 +640,7 @@ func testWorkDoneProgressCancelParams(t *testing.T, marshal marshalFunc, unmarsh
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(fmt.Sprint(got.Token), strconv.FormatInt(wantToken, 10)); (diff != "") != tt.wantErr {
+				if diff := cmp.Diff(fmt.Sprint(got.Token), strconv.FormatInt(int64(wantToken), 10)); (diff != "") != tt.wantErr {
 					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})

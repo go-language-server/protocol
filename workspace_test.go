@@ -1409,7 +1409,7 @@ func testApplyWorkspaceEditParams(t *testing.T, marshal marshalFunc, unmarshal u
 						TextDocumentIdentifier: TextDocumentIdentifier{
 							URI: uri.File("/path/to/basic.go"),
 						},
-						Version: NewVersion(10),
+						Version: int32(10),
 					},
 					Edits: []TextEdit{
 						{
@@ -1455,7 +1455,7 @@ func testApplyWorkspaceEditParams(t *testing.T, marshal marshalFunc, unmarshal u
 						TextDocumentIdentifier: TextDocumentIdentifier{
 							URI: uri.File("/path/to/basic.go"),
 						},
-						Version: NewVersion(10),
+						Version: int32(10),
 					},
 					Edits: []TextEdit{
 						{
@@ -1574,11 +1574,13 @@ func testApplyWorkspaceEditParams(t *testing.T, marshal marshalFunc, unmarshal u
 
 func testApplyWorkspaceEditResponse(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"applied":true}`
+		want        = `{"applied":true,"failureReason":"testFailureReason","failedChange":1}`
 		wantInvalid = `{"applied":false}`
 	)
 	wantType := ApplyWorkspaceEditResponse{
-		Applied: true,
+		Applied:       true,
+		FailureReason: "testFailureReason",
+		FailedChange:  1,
 	}
 
 	t.Run("Marshal", func(t *testing.T) {

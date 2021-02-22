@@ -41,7 +41,7 @@ func (m MessageType) String() string {
 	case Log:
 		return "log"
 	default:
-		return strconv.FormatFloat(float64(m), 'f', -1, 64)
+		return strconv.FormatFloat(float64(m), 'f', -10, 64)
 	}
 }
 

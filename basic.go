@@ -16,7 +16,12 @@ import (
 // For clarity, the type of such a field is declared as a DocumentURI.
 // Over the wire, it will still be transferred as a string, but this guarantees
 // that the contents of that string can be parsed as a valid URI.
-type DocumentURI string
+type DocumentURI = uri.URI
+
+// URI a tagging interface for normal non document URIs.
+//
+// @since 3.16.0.
+type URI = uri.URI
 
 // EOL denotes represents the character offset.
 var EOL = []string{"\n", "\r\n", "\r"}
@@ -26,14 +31,14 @@ var EOL = []string{"\n", "\r\n", "\r"}
 // A position is between two characters like an "insert" cursor in a editor.
 type Position struct {
 	// Line position in a document (zero-based).
-	Line float64 `json:"line"`
+	Line uint32 `json:"line"`
 
 	// Character offset on a line in a document (zero-based). Assuming that the line is
 	// represented as a string, the `character` value represents the gap between the
 	// `character` and `character + 1`.
 	// If the character value is greater than the line length it defaults back to the
 	// line length.
-	Character float64 `json:"character"`
+	Character uint32 `json:"character"`
 }
 
 // Range represents a text document expressed as (zero-based) start and end positions.
@@ -50,8 +55,8 @@ type Range struct {
 
 // Location represents a location inside a resource, such as a line inside a text file.
 type Location struct {
-	URI   uri.URI `json:"uri"`
-	Range Range   `json:"range"`
+	URI   DocumentURI `json:"uri"`
+	Range Range       `json:"range"`
 }
 
 // LocationLink represents a link between a source and a target location.
@@ -62,7 +67,7 @@ type LocationLink struct {
 	OriginSelectionRange *Range `json:"originSelectionRange,omitempty"`
 
 	// TargetURI is the target resource identifier of this link.
-	TargetURI uri.URI `json:"targetUri"`
+	TargetURI DocumentURI `json:"targetUri"`
 
 	// TargetRange is the full target range of this link. If the target for example is a symbol then target range is the
 	// range enclosing this symbol not including leading/trailing whitespace but everything else
@@ -72,6 +77,14 @@ type LocationLink struct {
 	// TargetSelectionRange is the range that should be selected and revealed when this link is being followed, e.g the name of a function.
 	// Must be contained by the the `targetRange`. See also `DocumentSymbol#range`
 	TargetSelectionRange Range `json:"targetSelectionRange"`
+}
+
+// CodeDescription is the structure to capture a description for an error code.
+//
+// @since 3.16.0.
+type CodeDescription struct {
+	// Href an URI to open with more information about the diagnostic error.
+	Href URI `json:"href"`
 }
 
 // Diagnostic represents a diagnostic, such as a compiler error or warning.
@@ -86,7 +99,12 @@ type Diagnostic struct {
 	Severity DiagnosticSeverity `json:"severity,omitempty"`
 
 	// Code is the diagnostic's code, which might appear in the user interface.
-	Code interface{} `json:"code,omitempty"`
+	Code interface{} `json:"code,omitempty"` // int32 | string;
+
+	// CodeDescription an optional property to describe the error code.
+	//
+	// @since 3.16.0.
+	CodeDescription *CodeDescription `json:"codeDescription,omitempty"`
 
 	// Source a human-readable string describing the source of this
 	// diagnostic, e.g. 'typescript' or 'super lint'.
@@ -103,6 +121,13 @@ type Diagnostic struct {
 	// RelatedInformation an array of related diagnostic information, e.g. when symbol-names within
 	// a scope collide all definitions can be marked via this property.
 	RelatedInformation []DiagnosticRelatedInformation `json:"relatedInformation,omitempty"`
+
+	// Data is a data entry field that is preserved between a
+	// "textDocument/publishDiagnostics" notification and
+	// "textDocument/codeAction" request.
+	//
+	// @since 3.16.0.
+	Data interface{} `json:"data,omitempty"`
 }
 
 // DiagnosticSeverity indicates the severity of a Diagnostic message.
@@ -197,6 +222,39 @@ type Command struct {
 	Arguments []interface{} `json:"arguments,omitempty"`
 }
 
+// ChangeAnnotation is the additional information that describes document changes.
+//
+// @since 3.16.0.
+type ChangeAnnotation struct {
+	// Label a human-readable string describing the actual change. The string
+	// is rendered prominent in the user interface.
+	Label string `json:"label"`
+
+	// NeedsConfirmation is a flag which indicates that user confirmation is needed
+	// before applying the change.
+	NeedsConfirmation bool `json:"needsConfirmation,omitempty"`
+
+	// Description is a human-readable string which is rendered less prominent in
+	// the user interface.
+	Description string `json:"description,omitempty"`
+}
+
+// ChangeAnnotationIdentifier an identifier referring to a change annotation managed by a workspace
+// edit.
+//
+// @since 3.16.0.
+type ChangeAnnotationIdentifier string
+
+// AnnotatedTextEdit is a special text edit with an additional change annotation.
+//
+// @since 3.16.0.
+type AnnotatedTextEdit struct {
+	TextEdit
+
+	// AnnotationID is the actual annotation identifier.
+	AnnotationID ChangeAnnotationIdentifier `json:"annotationId"`
+}
+
 // TextEdit is a textual edit applicable to a text document.
 type TextEdit struct {
 	// Range is the range of the text document to be manipulated.
@@ -218,7 +276,10 @@ type TextDocumentEdit struct {
 	TextDocument VersionedTextDocumentIdentifier `json:"textDocument"`
 
 	// Edits is the edits to be applied.
-	Edits []TextEdit `json:"edits"`
+	//
+	// @since 3.16.0 - support for AnnotatedTextEdit.
+	// This is guarded by the client capability "workspace.workspaceEdit.changeAnnotationSupport".
+	Edits []TextEdit `json:"edits"` // []TextEdit | []AnnotatedTextEdit
 }
 
 // ResourceOperationKind is the file event type.
@@ -250,10 +311,15 @@ type CreateFile struct {
 	Kind ResourceOperationKind `json:"kind"` // should be `create`
 
 	// URI is the resource to create.
-	URI uri.URI `json:"uri"`
+	URI DocumentURI `json:"uri"`
 
 	// Options additional options.
 	Options *CreateFileOptions `json:"options,omitempty"`
+
+	// AnnotationID an optional annotation identifier describing the operation.
+	//
+	// @since 3.16.0.
+	AnnotationID ChangeAnnotationIdentifier `json:"annotationId,omitempty"`
 }
 
 // RenameFileOptions represents a rename file options.
@@ -271,13 +337,18 @@ type RenameFile struct {
 	Kind ResourceOperationKind `json:"kind"` // should be `rename`
 
 	// OldURI is the old (existing) location.
-	OldURI uri.URI `json:"oldUri"`
+	OldURI DocumentURI `json:"oldUri"`
 
 	// NewURI is the new location.
-	NewURI uri.URI `json:"newUri"`
+	NewURI DocumentURI `json:"newUri"`
 
 	// Options rename options.
 	Options *RenameFileOptions `json:"options,omitempty"`
+
+	// AnnotationID an optional annotation identifier describing the operation.
+	//
+	// @since 3.16.0.
+	AnnotationID ChangeAnnotationIdentifier `json:"annotationId,omitempty"`
 }
 
 // DeleteFileOptions represents a delete file options.
@@ -295,10 +366,15 @@ type DeleteFile struct {
 	Kind ResourceOperationKind `json:"kind"` // should be `delete`
 
 	// URI is the file to delete.
-	URI uri.URI `json:"uri"`
+	URI DocumentURI `json:"uri"`
 
 	// Options delete options.
 	Options *DeleteFileOptions `json:"options,omitempty"`
+
+	// AnnotationID an optional annotation identifier describing the operation.
+	//
+	// @since 3.16.0.
+	AnnotationID ChangeAnnotationIdentifier `json:"annotationId,omitempty"`
 }
 
 // WorkspaceEdit represent a changes to many resources managed in the workspace.
@@ -307,7 +383,7 @@ type DeleteFile struct {
 // If the client can handle versioned document edits and if documentChanges are present, the latter are preferred over changes.
 type WorkspaceEdit struct {
 	// Changes holds changes to existing resources.
-	Changes map[uri.URI][]TextEdit `json:"changes,omitempty"`
+	Changes map[DocumentURI][]TextEdit `json:"changes,omitempty"`
 
 	// DocumentChanges depending on the client capability `workspace.workspaceEdit.resourceOperations` document changes
 	// are either an array of `TextDocumentEdit`s to express changes to n different text documents
@@ -320,25 +396,35 @@ type WorkspaceEdit struct {
 	// If a client neither supports `documentChanges` nor `workspace.workspaceEdit.resourceOperations` then
 	// only plain `TextEdit`s using the `changes` property are supported.
 	DocumentChanges []TextDocumentEdit `json:"documentChanges,omitempty"`
+
+	// ChangeAnnotations is a map of change annotations that can be referenced in
+	// "AnnotatedTextEdit"s or create, rename and delete file / folder
+	// operations.
+	//
+	// Whether clients honor this property depends on the client capability
+	// "workspace.changeAnnotationSupport".
+	//
+	// @since 3.16.0.
+	ChangeAnnotations map[ChangeAnnotationIdentifier]ChangeAnnotation `json:"changeAnnotations,omitempty"`
 }
 
 // TextDocumentIdentifier indicates the using a URI. On the protocol level, URIs are passed as strings.
 type TextDocumentIdentifier struct {
 	// URI is the text document's URI.
-	URI uri.URI `json:"uri"`
+	URI DocumentURI `json:"uri"`
 }
 
 // TextDocumentItem represent an item to transfer a text document from the client to the server.
 type TextDocumentItem struct {
 	// URI is the text document's URI.
-	URI uri.URI `json:"uri"`
+	URI DocumentURI `json:"uri"`
 
 	// LanguageID is the text document's language identifier.
 	LanguageID LanguageIdentifier `json:"languageId"`
 
 	// Version is the version number of this document (it will increase after each
 	// change, including undo/redo).
-	Version float64 `json:"version"`
+	Version int32 `json:"version"`
 
 	// Text is the content of the opened text document.
 	Text string `json:"text"`
@@ -584,11 +670,11 @@ var languageIdentifierMap = map[string]LanguageIdentifier{
 // ToLanguageIdentifier converts ft to LanguageIdentifier.
 func ToLanguageIdentifier(ft string) LanguageIdentifier {
 	langID, ok := languageIdentifierMap[ft]
-	if !ok {
-		return LanguageIdentifier(ft)
+	if ok {
+		return langID
 	}
 
-	return langID
+	return LanguageIdentifier(ft)
 }
 
 // VersionedTextDocumentIdentifier represents an identifier to denote a specific version of a text document.
@@ -597,14 +683,29 @@ type VersionedTextDocumentIdentifier struct {
 
 	// Version is the version number of this document.
 	//
-	// If a versioned text document identifier is sent from the server to the client and the file is not open in the editor
-	// (the server has not received an open notification before) the server can send
-	// `null` to indicate that the version is known and the content on disk is the
-	// truth (as speced with document content ownership).
-	//
 	// The version number of a document will increase after each change, including
 	// undo/redo. The number doesn't need to be consecutive.
-	Version *uint64 `json:"version"`
+	Version int32 `json:"version"`
+}
+
+// OptionalVersionedTextDocumentIdentifier represents an identifier which optionally denotes a specific version of a text document.
+//
+// This information usually flows from the server to the client.
+//
+// @since 3.16.0.
+type OptionalVersionedTextDocumentIdentifier struct {
+	TextDocumentIdentifier
+
+	// Version is the version number of this document. If an optional versioned text document
+	// identifier is sent from the server to the client and the file is not
+	// open in the editor (the server has not received an open notification
+	// before) the server can send `null` to indicate that the version is
+	// known and the content on disk is the master (as specified with document
+	// content ownership).
+	//
+	// The version number of a document will increase after each change,
+	// including undo/redo. The number doesn't need to be consecutive.
+	Version *int32 `json:"version"` // int32 | null
 }
 
 // TextDocumentPositionParams is a parameter literal used in requests to pass a text document and a position inside that document.

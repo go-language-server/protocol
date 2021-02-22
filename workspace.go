@@ -196,4 +196,19 @@ type ApplyWorkspaceEditParams struct {
 type ApplyWorkspaceEditResponse struct {
 	// Applied indicates whether the edit was applied or not.
 	Applied bool `json:"applied"`
+
+	// FailureReason an optional textual description for why the edit was not applied.
+	// This may be used by the server for diagnostic logging or to provide
+	// a suitable error for a request that triggered the edit.
+	//
+	// @since 3.16.0.
+	FailureReason string `json:"failureReason,omitempty"`
+
+	// FailedChange depending on the client's failure handling strategy "failedChange"
+	// might contain the index of the change that failed. This property is
+	// only available if the client signals a "failureHandlingStrategy"
+	// in its client capabilities.
+	//
+	// @since 3.16.0.
+	FailedChange uint32 `json:"failedChange,omitempty"`
 }

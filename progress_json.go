@@ -17,7 +17,7 @@ import (
 // @since 3.15.0.
 type ProgressToken struct {
 	name   string
-	number int64
+	number int32
 }
 
 // compile time check whether the ProgressToken implements a fmt.Formatter, fmt.Stringer, json.Marshaler and json.Unmarshaler interfaces.
@@ -34,7 +34,7 @@ func NewProgressToken(s string) *ProgressToken {
 }
 
 // NewNumberProgressToken returns a new number ProgressToken.
-func NewNumberProgressToken(n int64) *ProgressToken {
+func NewNumberProgressToken(n int32) *ProgressToken {
 	return &ProgressToken{number: n}
 }
 

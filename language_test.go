@@ -426,9 +426,138 @@ func TestInsertTextFormat_String(t *testing.T) {
 	}
 }
 
+func testInsertReplaceEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+	const (
+		want = `{"newText":"testNewText","insert":{"start":{"line":255,"character":4},"end":{"line":255,"character":10}},"replace":{"start":{"line":255,"character":4},"end":{"line":255,"character":10}}}`
+	)
+	wantType := InsertReplaceEdit{
+		NewText: "testNewText",
+		Insert: Range{
+			Start: Position{
+				Line:      255,
+				Character: 4,
+			},
+			End: Position{
+				Line:      255,
+				Character: 10,
+			},
+		},
+		Replace: Range{
+			Start: Position{
+				Line:      255,
+				Character: 4,
+			},
+			End: Position{
+				Line:      255,
+				Character: 10,
+			},
+		},
+	}
+
+	t.Run("Marshal", func(t *testing.T) {
+		tests := []struct {
+			name           string
+			field          InsertReplaceEdit
+			want           string
+			wantMarshalErr bool
+			wantErr        bool
+		}{
+			{
+				name:           "Valid",
+				field:          wantType,
+				want:           want,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+		}
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got, err := marshal(&tt.field)
+				if (err != nil) != tt.wantMarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+
+	t.Run("Unmarshal", func(t *testing.T) {
+		tests := []struct {
+			name             string
+			field            string
+			want             InsertReplaceEdit
+			wantUnmarshalErr bool
+			wantErr          bool
+		}{
+			{
+				name:             "Valid",
+				field:            want,
+				want:             wantType,
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+		}
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				var got InsertReplaceEdit
+				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+}
+
+func TestInsertTextMode_String(t *testing.T) {
+	tests := []struct {
+		name string
+		k    InsertTextMode
+		want string
+	}{
+		{
+			name: "AsIs",
+			k:    InsertTextModeAsIs,
+			want: "AsIs",
+		},
+		{
+			name: "AdjustIndentation",
+			k:    InsertTextModeAdjustIndentation,
+			want: "AdjustIndentation",
+		},
+		{
+			name: "Unknown",
+			k:    InsertTextMode(0),
+			want: "0",
+		},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			if got := tt.k.String(); got != tt.want {
+				t.Errorf("InsertTextMode.String() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func testCompletionItem(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"additionalTextEdits":[{"range":{"start":{"line":255,"character":4},"end":{"line":255,"character":10}},"newText":"Detail: ${1:},"}],"command":{"title":"exec echo","command":"echo","arguments":["hello"]},"commitCharacters":["a"],"tags":[1],"data":"testData","deprecated":true,"detail":"string","documentation":"Detail a human-readable string with additional information about this item, like type or symbol information.","filterText":"Detail","insertText":"testInsert","insertTextFormat":2,"kind":5,"label":"Detail","preselect":true,"sortText":"00000","textEdit":{"range":{"start":{"line":255,"character":4},"end":{"line":255,"character":10}},"newText":"Detail: ${1:},"}}`
+		want        = `{"additionalTextEdits":[{"range":{"start":{"line":255,"character":4},"end":{"line":255,"character":10}},"newText":"Detail: ${1:},"}],"command":{"title":"exec echo","command":"echo","arguments":["hello"]},"commitCharacters":["a"],"tags":[1],"data":"testData","deprecated":true,"detail":"string","documentation":"Detail a human-readable string with additional information about this item, like type or symbol information.","filterText":"Detail","insertText":"testInsert","insertTextFormat":2,"insertTextMode":1,"kind":5,"label":"Detail","preselect":true,"sortText":"00000","textEdit":{"range":{"start":{"line":255,"character":4},"end":{"line":255,"character":10}},"newText":"Detail: ${1:},"}}`
 		wantNilAll  = `{"label":"Detail"}`
 		wantInvalid = `{"items":[]}`
 	)
@@ -464,6 +593,7 @@ func testCompletionItem(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 		FilterText:       "Detail",
 		InsertText:       "testInsert",
 		InsertTextFormat: TextFormatSnippet,
+		InsertTextMode:   InsertTextModeAsIs,
 		Kind:             FieldCompletion,
 		Label:            "Detail",
 		Preselect:        true,
@@ -1111,7 +1241,7 @@ func testSignatureHelpParams(t *testing.T, marshal marshalFunc, unmarshal unmars
 		invalidWorkDoneToken = "dd134d84-c134-4d7a-a2a3-f8af3ef4a568"
 	)
 	const (
-		want        = `{"textDocument":{"uri":"file:///path/to/basic.go"},"position":{"line":25,"character":1},"workDoneToken":"` + wantWorkDoneToken + `","context":{"triggerKind":1,"triggerCharacter":".","isRetrigger":true,"activeSignatureHelp":{"signatures":[{"documentationFormat":["markdown"],"parameterInformation":{"label":"test label","documentation":"test documentation"}}],"activeParameter":10,"activeSignature":5}}}`
+		want        = `{"textDocument":{"uri":"file:///path/to/basic.go"},"position":{"line":25,"character":1},"workDoneToken":"` + wantWorkDoneToken + `","context":{"triggerKind":1,"triggerCharacter":".","isRetrigger":true,"activeSignatureHelp":{"signatures":[{"label":"testLabel","documentation":"testDocumentation","parameters":[{"label":"test label","documentation":"test documentation"}]}],"activeParameter":10,"activeSignature":5}}}`
 		wantNilAll  = `{"textDocument":{"uri":"file:///path/to/basic.go"},"position":{"line":25,"character":1}}`
 		wantInvalid = `{"textDocument":{"uri":"file:///path/to/basic_gen.go"},"position":{"line":2,"character":1},"workDoneToken":"` + invalidWorkDoneToken + `","context":{"triggerKind":0,"triggerCharacter":"aaa","isRetrigger":false,"activeSignatureHelp":{"signatures":[{"documentationFormat":["markdown"],"parameterInformation":{"label":"test label","documentation":"test documentation"}}],"activeParameter":1,"activeSignature":0}}}`
 	)
@@ -1135,12 +1265,13 @@ func testSignatureHelpParams(t *testing.T, marshal marshalFunc, unmarshal unmars
 			ActiveSignatureHelp: &SignatureHelp{
 				Signatures: []SignatureInformation{
 					{
-						DocumentationFormat: []MarkupKind{
-							Markdown,
-						},
-						ParameterInformation: &ParameterInformation{
-							Label:         "test label",
-							Documentation: "test documentation",
+						Label:         "testLabel",
+						Documentation: "testDocumentation",
+						Parameters: []ParameterInformation{
+							{
+								Label:         "test label",
+								Documentation: "test documentation",
+							},
 						},
 					},
 				},
@@ -1309,19 +1440,20 @@ func TestSignatureHelpTriggerKind_String(t *testing.T) {
 
 func testSignatureHelp(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"signatures":[{"documentationFormat":["markdown"],"parameterInformation":{"label":"test label","documentation":"test documentation"}}],"activeParameter":10,"activeSignature":5}`
+		want        = `{"signatures":[{"label":"testLabel","documentation":"testDocumentation","parameters":[{"label":"test label","documentation":"test documentation"}]}],"activeParameter":10,"activeSignature":5}`
 		wantNilAll  = `{"signatures":[]}`
-		wantInvalid = `{"signatures":[{"documentationFormat":["markdown"],"parameterInformation":{"label":"test label","documentation":"test documentation"}}],"activeParameter":1,"activeSignature":0}`
+		wantInvalid = `{"signatures":[{"label":"invalidLabel","documentation":"invalidDocumentation","parameters":[{"label":"test label","documentation":"test documentation"}]}],"activeParameter":1,"activeSignature":0}`
 	)
 	wantType := SignatureHelp{
 		Signatures: []SignatureInformation{
 			{
-				DocumentationFormat: []MarkupKind{
-					Markdown,
-				},
-				ParameterInformation: &ParameterInformation{
-					Label:         "test label",
-					Documentation: "test documentation",
+				Label:         "testLabel",
+				Documentation: "testDocumentation",
+				Parameters: []ParameterInformation{
+					{
+						Label:         "test label",
+						Documentation: "test documentation",
+					},
 				},
 			},
 		},
@@ -1429,17 +1561,19 @@ func testSignatureHelp(t *testing.T, marshal marshalFunc, unmarshal unmarshalFun
 
 func testSignatureInformation(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"documentationFormat":["markdown"],"parameterInformation":{"label":"test label","documentation":"test documentation"}}`
-		wantInvalid = `{"documentationFormat":["markdown","plaintext"],"parameterInformation":{"label":"test label","documentation":"test documentation"}}`
+		want        = `{"label":"testLabel","documentation":"testDocumentation","parameters":[{"label":"test label","documentation":"test documentation"}],"activeParameter":5}`
+		wantInvalid = `{"label":"testLabel","documentation":"invalidDocumentation","parameters":[{"label":"test label","documentation":"test documentation"}],"activeParameter":50}`
 	)
 	wantType := SignatureInformation{
-		DocumentationFormat: []MarkupKind{
-			Markdown,
+		Label:         "testLabel",
+		Documentation: "testDocumentation",
+		Parameters: []ParameterInformation{
+			{
+				Label:         "test label",
+				Documentation: "test documentation",
+			},
 		},
-		ParameterInformation: &ParameterInformation{
-			Label:         "test label",
-			Documentation: "test documentation",
-		},
+		ActiveParameter: uint32(5),
 	}
 
 	t.Run("Marshal", func(t *testing.T) {
@@ -2311,15 +2445,47 @@ func TestSymbolKind_String(t *testing.T) {
 	}
 }
 
+func TestSymbolTag_String(t *testing.T) {
+	tests := []struct {
+		name string
+		k    SymbolTag
+		want string
+	}{
+		{
+			name: "Deprecated",
+			k:    SymbolTagDeprecated,
+			want: "Deprecated",
+		},
+		{
+			name: "Unknown",
+			k:    SymbolTag(0),
+			want: "0",
+		},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			if got := tt.k.String(); got != tt.want {
+				t.Errorf("SymbolTag.String() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func testDocumentSymbol(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"name":"test symbol","detail":"test detail","kind":1,"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":6}},"selectionRange":{"start":{"line":25,"character":3},"end":{"line":26,"character":10}},"children":[{"name":"child symbol","detail":"child detail","kind":11,"deprecated":true,"range":{"start":{"line":255,"character":4},"end":{"line":255,"character":10}},"selectionRange":{"start":{"line":255,"character":5},"end":{"line":255,"character":8}}}]}`
-		wantInvalid = `{"name":"invalid symbol","detail":"invalid detail","kind":1,"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"selectionRange":{"start":{"line":2,"character":5},"end":{"line":3,"character":1}},"children":[{"name":"invalid child symbol","kind":1,"detail":"invalid child detail","range":{"start":{"line":255,"character":4},"end":{"line":255,"character":10}},"selectionRange":{"start":{"line":255,"character":5},"end":{"line":255,"character":8}}}]}`
+		want        = `{"name":"test symbol","detail":"test detail","kind":1,"tags":[1],"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":6}},"selectionRange":{"start":{"line":25,"character":3},"end":{"line":26,"character":10}},"children":[{"name":"child symbol","detail":"child detail","kind":11,"deprecated":true,"range":{"start":{"line":255,"character":4},"end":{"line":255,"character":10}},"selectionRange":{"start":{"line":255,"character":5},"end":{"line":255,"character":8}}}]}`
+		wantInvalid = `{"name":"invalid symbol","detail":"invalid detail","kind":1,"tags":[0],"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"selectionRange":{"start":{"line":2,"character":5},"end":{"line":3,"character":1}},"children":[{"name":"invalid child symbol","kind":1,"detail":"invalid child detail","range":{"start":{"line":255,"character":4},"end":{"line":255,"character":10}},"selectionRange":{"start":{"line":255,"character":5},"end":{"line":255,"character":8}}}]}`
 	)
 	wantType := DocumentSymbol{
-		Name:       "test symbol",
-		Detail:     "test detail",
-		Kind:       FileSymbol,
+		Name:   "test symbol",
+		Detail: "test detail",
+		Kind:   FileSymbol,
+		Tags: []SymbolTag{
+			SymbolTagDeprecated,
+		},
 		Deprecated: false,
 		Range: Range{
 			Start: Position{
@@ -2454,13 +2620,16 @@ func testDocumentSymbol(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 
 func testSymbolInformation(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"name":"test symbol","kind":1,"deprecated":true,"location":{"uri":"file:///path/to/test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"containerName":"testContainerName"}`
+		want        = `{"name":"test symbol","kind":1,"tags":[1],"deprecated":true,"location":{"uri":"file:///path/to/test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"containerName":"testContainerName"}`
 		wantNilAll  = `{"name":"test symbol","kind":1,"location":{"uri":"file:///path/to/test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}}`
-		wantInvalid = `{"name":"invalid symbol","kind":1,"deprecated":false,"location":{"uri":"file:///path/to/test_test.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}},"containerName":"invalidContainerName"}`
+		wantInvalid = `{"name":"invalid symbol","kind":1,"tags":[0],"deprecated":false,"location":{"uri":"file:///path/to/test_test.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}},"containerName":"invalidContainerName"}`
 	)
 	wantType := SymbolInformation{
-		Name:       "test symbol",
-		Kind:       1,
+		Name: "test symbol",
+		Kind: 1,
+		Tags: []SymbolTag{
+			SymbolTagDeprecated,
+		},
 		Deprecated: true,
 		Location: Location{
 			URI: uri.File("/path/to/test.go"),
@@ -2945,8 +3114,8 @@ func testCodeActionContext(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 
 func testCodeAction(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"title":"Refactoring","kind":"refactor.rewrite","diagnostics":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"test.go"}]}],"isPreferred":true,"edit":{"changes":{"file:///path/to/test.go":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]},"documentChanges":[{"textDocument":{"uri":"file:///path/to/test.go","version":10},"edits":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}]},"command":{"title":"rewrite","command":"rewriter","arguments":["-w"]}}`
-		wantInvalid = `{"title":"Refactoring","kind":"refactor","diagnostics":[{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"test.go"}]}],"isPreferred":false,"edit":{"changes":{"file:///path/to/test.go":[{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"newText":"foo bar"}]},"documentChanges":[{"textDocument":{"uri":"file:///path/to/test.go","version":10},"edits":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}]},"command":{"title":"rewrite","command":"rewriter","arguments":["-w"]}}`
+		want        = `{"title":"Refactoring","kind":"refactor.rewrite","diagnostics":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"test.go"}]}],"isPreferred":true,"disabled":{"reason":"testReason"},"edit":{"changes":{"file:///path/to/test.go":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]},"documentChanges":[{"textDocument":{"uri":"file:///path/to/test.go","version":10},"edits":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}]},"command":{"title":"rewrite","command":"rewriter","arguments":["-w"]},"data":"testData"}`
+		wantInvalid = `{"title":"Refactoring","kind":"refactor","diagnostics":[{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"test.go"}]}],"isPreferred":false,"disabled":{"reason":"invalidReason"},"edit":{"changes":{"file:///path/to/test.go":[{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"newText":"foo bar"}]},"documentChanges":[{"textDocument":{"uri":"file:///path/to/test.go","version":10},"edits":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}]},"command":{"title":"rewrite","command":"rewriter","arguments":["-w"]}}`
 	)
 	wantType := CodeAction{
 		Title: "Refactoring",
@@ -2988,6 +3157,9 @@ func testCodeAction(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 			},
 		},
 		IsPreferred: true,
+		Disabled: &CodeActionDisable{
+			Reason: "testReason",
+		},
 		Edit: &WorkspaceEdit{
 			Changes: map[uri.URI][]TextEdit{
 				uri.File("/path/to/test.go"): {
@@ -3012,7 +3184,7 @@ func testCodeAction(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 						TextDocumentIdentifier: TextDocumentIdentifier{
 							URI: uri.File("/path/to/test.go"),
 						},
-						Version: NewVersion(10),
+						Version: int32(10),
 					},
 					Edits: []TextEdit{
 						{
@@ -3037,6 +3209,7 @@ func testCodeAction(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 			Command:   "rewriter",
 			Arguments: []interface{}{"-w"},
 		},
+		Data: "testData",
 	}
 
 	t.Run("Marshal", func(t *testing.T) {
@@ -4543,7 +4716,7 @@ func testDocumentFormattingParams(t *testing.T, marshal marshalFunc, unmarshal u
 
 func testFormattingOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"insertSpaces":true,"tabSize":4,"trimTrailingWhitespace":true,"insertFinalNewline":true,"trimFinalNewlines":true}`
+		want        = `{"insertSpaces":true,"tabSize":4,"trimTrailingWhitespace":true,"insertFinalNewline":true,"trimFinalNewlines":true,"key":{"test":"key"}}`
 		wantInvalid = `{"insertSpaces":false,"tabSize":2,"trimTrailingWhitespace":false,"insertFinalNewline":false,"trimFinalNewlines":false}`
 	)
 	wantType := FormattingOptions{
@@ -4552,6 +4725,9 @@ func testFormattingOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 		TrimTrailingWhitespace: true,
 		InsertFinalNewline:     true,
 		TrimFinalNewlines:      true,
+		Key: map[string]interface{}{
+			"test": "key",
+		},
 	}
 
 	t.Run("Marshal", func(t *testing.T) {
