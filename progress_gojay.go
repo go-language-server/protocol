@@ -10,68 +10,47 @@ import (
 	"github.com/francoispqt/gojay"
 )
 
+// ProgressToken is the progress token provided by the client or server.
+//
+// @since 3.15.0.
+type ProgressToken interface{}
+
+// NewProgressToken returns a new ProgressToken.
+//nolint:gocritic
+func NewProgressToken(s string) *ProgressToken {
+	var iface interface{} = s
+	return (*ProgressToken)(&iface)
+}
+
+// NewNumberProgressToken returns a new number ProgressToken.
+//nolint:gocritic
+func NewNumberProgressToken(n int64) *ProgressToken {
+	var iface interface{} = n
+	return (*ProgressToken)(&iface)
+}
+
+//nolint:gocritic
 func encodeProgressToken(enc *gojay.Encoder, key string, v *ProgressToken) {
 	if v == nil {
 		return
 	}
-	switch {
-	case v.name != "":
-		enc.StringKeyOmitEmpty(key, v.name)
-	default:
-		enc.Int64KeyOmitEmpty(key, v.number)
-	}
+
+	enc.AddInterfaceKey(key, (interface{})(*v))
 }
 
+//nolint:gocritic
 func decodeProgressToken(dec *gojay.Decoder, k, key string, v *ProgressToken) error {
 	if v == nil || k != key {
 		return nil
 	}
-	switch {
-	case v.name != "":
-		return dec.String(&v.name)
-	default:
-		return dec.Int64(&v.number)
-	}
+
+	vv := (interface{})(*v)
+	return dec.Interface(&vv)
 }
-
-// MarshalJSONObject implements gojay.MarshalerJSONObject.
-func (v *ProgressToken) MarshalJSONObject(enc *gojay.Encoder) {
-	switch {
-	case v.name != "":
-		enc.String(v.name)
-	case v.number > 0:
-		enc.Int64(v.number)
-	}
-}
-
-// IsNil implements gojay.MarshalerJSONObject.
-func (v *ProgressToken) IsNil() bool { return v == nil }
-
-// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
-func (v *ProgressToken) UnmarshalJSONObject(dec *gojay.Decoder, _ string) error {
-	if err := dec.String(&v.name); err == nil {
-		return nil
-	}
-	return dec.Int64(&v.number)
-}
-
-// NKeys implements gojay.UnmarshalerJSONObject.
-func (v *ProgressToken) NKeys() int { return 0 }
-
-// compile time check whether the ProgressParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
-var (
-	_ gojay.MarshalerJSONObject   = (*ProgressParams)(nil)
-	_ gojay.UnmarshalerJSONObject = (*ProgressParams)(nil)
-)
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *ProgressParams) MarshalJSONObject(enc *gojay.Encoder) {
-	switch {
-	case v.Token.name != "":
-		enc.StringKeyOmitEmpty(keyToken, v.Token.name)
-	default:
-		enc.Int64KeyOmitEmpty(keyToken, v.Token.number)
-	}
+	encodeProgressToken(enc, keyToken, &v.Token)
 	enc.AddInterfaceKey(keyValue, v.Value)
 }
 
@@ -82,12 +61,7 @@ func (v *ProgressParams) IsNil() bool { return v == nil }
 func (v *ProgressParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keyToken:
-		switch {
-		case v.Token.name != "":
-			return dec.String(&v.Token.name)
-		default:
-			return dec.Int64(&v.Token.number)
-		}
+		return decodeProgressToken(dec, k, keyToken, &v.Token)
 	case keyValue:
 		return dec.Interface(&v.Value)
 	}
