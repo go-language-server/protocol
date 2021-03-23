@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	"go.lsp.dev/jsonrpc2"
+	"go.lsp.dev/pkg/event"
 	"go.lsp.dev/pkg/xcontext"
 )
 
@@ -21,18 +22,20 @@ func Handlers(handler jsonrpc2.Handler) jsonrpc2.Handler {
 }
 
 // Call calls method to params and result.
-func Call(ctx context.Context, conn jsonrpc2.Conn, method string, params, result interface{}) error {
+func Call(ctx context.Context, conn jsonrpc2.Connection, method string, params, result interface{}) error {
 	id, err := conn.Call(ctx, method, params, result)
 	if ctx.Err() != nil {
-		notifyCancel(ctx, conn, id)
+		cancelCall(ctx, clientConn{conn}, id)
 	}
 	return err
 }
 
-func notifyCancel(ctx context.Context, conn jsonrpc2.Conn, id jsonrpc2.ID) {
+func notifyCancel(ctx context.Context, sender connSender, id jsonrpc2.ID) {
 	ctx = xcontext.Detach(ctx)
+	ctx, done := event.Start(ctx, "protocol.canceller")
+	defer done()
 	// Note that only *jsonrpc2.ID implements json.Marshaler.
-	conn.Notify(ctx, MethodCancelRequest, &CancelParams{ID: &id})
+	sender.Notify(ctx, MethodCancelRequest, &CancelParams{ID: &id})
 }
 
 func replyParseError(ctx context.Context, reply jsonrpc2.Replier, err error) error {

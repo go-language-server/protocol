@@ -37,5 +37,5 @@ var (
 	ErrContentModified = jsonrpc2.NewError(CodeContentModified, "cancelled JSON-RPC")
 
 	// ErrRequestCancelled should be used when a request is canceled early.
-	ErrRequestCancelled = jsonrpc2.NewError(CodeRequestCancelled, "cancelled JSON-RPC")
+	ErrRequestCancelled = jsonrpc2.NewError(CodeRequestCancelled, "JSON RPC cancelled")
 )

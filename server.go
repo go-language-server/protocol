@@ -14,7 +14,7 @@ import (
 
 // ServerDispatcher returns a Server that dispatches LSP requests across the
 // given jsonrpc2 connection.
-func ServerDispatcher(conn jsonrpc2.Conn, logger *zap.Logger) Server {
+func ServerDispatcher(conn jsonrpc2.Connection, logger *zap.Logger) Server {
 	return &server{
 		Conn:   conn,
 		logger: logger,
@@ -269,7 +269,7 @@ const (
 
 // server implements a Language Server Protocol server.
 type server struct {
-	jsonrpc2.Conn
+	jsonrpc2.Connection
 
 	logger *zap.Logger
 }

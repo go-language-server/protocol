@@ -16,34 +16,29 @@ import (
 	"go.uber.org/zap"
 
 	"go.lsp.dev/jsonrpc2"
-	"go.lsp.dev/pkg/xcontext"
 )
 
 // ServerHandler jsonrpc2.Handler of Language Server Prococol Server.
-func ServerHandler(server Server, handler jsonrpc2.Handler) jsonrpc2.Handler {
-	h := func(ctx context.Context, reply jsonrpc2.Replier, req jsonrpc2.Request) error {
+func ServerHandler(server Server) jsonrpc2.Handler {
+	return jsonrpc2.HandlerFunc(func(ctx context.Context, req *jsonrpc2.Request) (interface{}, error) {
 		if ctx.Err() != nil {
-			xctx := xcontext.Detach(ctx)
-			return reply(xctx, nil, ErrRequestCancelled)
+			return nil, ErrRequestCancelled
 		}
-		handled, err := serverDispatch(ctx, server, reply, req)
-		if handled || err != nil {
-			return err
+		req1 := req2to1(req)
+		var (
+			result interface{}
+			resErr error
+		)
+		replier := func(ctx context.Context, res interface{}, err error) error {
+			result, resErr = res, err
+			return nil
 		}
-
-		// TODO: This code is wrong, it ignores handler and assumes non standard
-		// request handles everything
-		// non standard request should just be a layered handler.
-		var params interface{}
-		if err := json.Unmarshal(req.Params(), &params); err != nil {
-			return replyParseError(ctx, reply, err)
+		_, err := serverDispatch(ctx, server, replier, req1)
+		if err != nil {
+			return nil, err
 		}
-
-		resp, err := server.Request(ctx, req.Method(), params)
-		return reply(ctx, resp, err)
-	}
-
-	return h
+		return result, resErr
+	})
 }
 
 // serverDispatch implements jsonrpc2.Handler.
