@@ -270,6 +270,7 @@ const (
 // server implements a Language Server Protocol server.
 type server struct {
 	jsonrpc2.Conn
+
 	logger *zap.Logger
 }
 
