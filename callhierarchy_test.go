@@ -523,7 +523,7 @@ func testCallHierarchyItem(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 	)
 	wantType := CallHierarchyItem{
 		Name: "testName",
-		Kind: FileSymbol,
+		Kind: SymbolKindFile,
 		Tags: []SymbolTag{
 			SymbolTagDeprecated,
 		},
@@ -553,7 +553,7 @@ func testCallHierarchyItem(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 	}
 	wantTypeNil := CallHierarchyItem{
 		Name: "testName",
-		Kind: FileSymbol,
+		Kind: SymbolKindFile,
 		URI:  uri.File("/path/to/basic.go"),
 		Range: Range{
 			Start: Position{
@@ -697,7 +697,7 @@ func testCallHierarchyIncomingCallsParams(t *testing.T, marshal marshalFunc, unm
 		},
 		Item: CallHierarchyItem{
 			Name: "testName",
-			Kind: FileSymbol,
+			Kind: SymbolKindFile,
 			Tags: []SymbolTag{
 				SymbolTagDeprecated,
 			},
@@ -729,7 +729,7 @@ func testCallHierarchyIncomingCallsParams(t *testing.T, marshal marshalFunc, unm
 	wantTypeNil := CallHierarchyIncomingCallsParams{
 		Item: CallHierarchyItem{
 			Name: "testName",
-			Kind: FileSymbol,
+			Kind: SymbolKindFile,
 			URI:  uri.File("/path/to/basic.go"),
 			Range: Range{
 				Start: Position{
@@ -875,7 +875,7 @@ func testCallHierarchyIncomingCall(t *testing.T, marshal marshalFunc, unmarshal 
 	wantType := CallHierarchyIncomingCall{
 		From: CallHierarchyItem{
 			Name: "testName",
-			Kind: FileSymbol,
+			Kind: SymbolKindFile,
 			Tags: []SymbolTag{
 				SymbolTagDeprecated,
 			},
@@ -1023,7 +1023,7 @@ func testCallHierarchyOutgoingCallsParams(t *testing.T, marshal marshalFunc, unm
 		},
 		Item: CallHierarchyItem{
 			Name: "testName",
-			Kind: FileSymbol,
+			Kind: SymbolKindFile,
 			Tags: []SymbolTag{
 				SymbolTagDeprecated,
 			},
@@ -1055,7 +1055,7 @@ func testCallHierarchyOutgoingCallsParams(t *testing.T, marshal marshalFunc, unm
 	wantTypeNil := CallHierarchyOutgoingCallsParams{
 		Item: CallHierarchyItem{
 			Name: "testName",
-			Kind: FileSymbol,
+			Kind: SymbolKindFile,
 			URI:  uri.File("/path/to/basic.go"),
 			Range: Range{
 				Start: Position{
@@ -1201,7 +1201,7 @@ func testCallHierarchyOutgoingCall(t *testing.T, marshal marshalFunc, unmarshal 
 	wantType := CallHierarchyOutgoingCall{
 		To: CallHierarchyItem{
 			Name: "testName",
-			Kind: FileSymbol,
+			Kind: SymbolKindFile,
 			Tags: []SymbolTag{
 				SymbolTagDeprecated,
 			},

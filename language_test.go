@@ -2299,132 +2299,132 @@ func TestSymbolKind_String(t *testing.T) {
 	}{
 		{
 			name: "File",
-			k:    FileSymbol,
+			k:    SymbolKindFile,
 			want: "File",
 		},
 		{
 			name: "Module",
-			k:    ModuleSymbol,
+			k:    SymbolKindModule,
 			want: "Module",
 		},
 		{
 			name: "Namespace",
-			k:    NamespaceSymbol,
+			k:    SymbolKindNamespace,
 			want: "Namespace",
 		},
 		{
 			name: "Package",
-			k:    PackageSymbol,
+			k:    SymbolKindPackage,
 			want: "Package",
 		},
 		{
 			name: "Class",
-			k:    ClassSymbol,
+			k:    SymbolKindClass,
 			want: "Class",
 		},
 		{
 			name: "Method",
-			k:    MethodSymbol,
+			k:    SymbolKindMethod,
 			want: "Method",
 		},
 		{
 			name: "Property",
-			k:    PropertySymbol,
+			k:    SymbolKindProperty,
 			want: "Property",
 		},
 		{
 			name: "Field",
-			k:    FieldSymbol,
+			k:    SymbolKindField,
 			want: "Field",
 		},
 		{
 			name: "Constructor",
-			k:    ConstructorSymbol,
+			k:    SymbolKindConstructor,
 			want: "Constructor",
 		},
 		{
 			name: "Enum",
-			k:    EnumSymbol,
+			k:    SymbolKindEnum,
 			want: "Enum",
 		},
 		{
 			name: "Interface",
-			k:    InterfaceSymbol,
+			k:    SymbolKindInterface,
 			want: "Interface",
 		},
 		{
 			name: "Function",
-			k:    FunctionSymbol,
+			k:    SymbolKindFunction,
 			want: "Function",
 		},
 		{
 			name: "Variable",
-			k:    VariableSymbol,
+			k:    SymbolKindVariable,
 			want: "Variable",
 		},
 		{
 			name: "Constant",
-			k:    ConstantSymbol,
+			k:    SymbolKindConstant,
 			want: "Constant",
 		},
 		{
 			name: "String",
-			k:    StringSymbol,
+			k:    SymbolKindString,
 			want: "String",
 		},
 		{
 			name: "Number",
-			k:    NumberSymbol,
+			k:    SymbolKindNumber,
 			want: "Number",
 		},
 		{
 			name: "Boolean",
-			k:    BooleanSymbol,
+			k:    SymbolKindBoolean,
 			want: "Boolean",
 		},
 		{
 			name: "Array",
-			k:    ArraySymbol,
+			k:    SymbolKindArray,
 			want: "Array",
 		},
 		{
 			name: "Object",
-			k:    ObjectSymbol,
+			k:    SymbolKindObject,
 			want: "Object",
 		},
 		{
 			name: "Key",
-			k:    KeySymbol,
+			k:    SymbolKindKey,
 			want: "Key",
 		},
 		{
 			name: "Null",
-			k:    NullSymbol,
+			k:    SymbolKindNull,
 			want: "Null",
 		},
 		{
 			name: "EnumMember",
-			k:    EnumMemberSymbol,
+			k:    SymbolKindEnumMember,
 			want: "EnumMember",
 		},
 		{
 			name: "Struct",
-			k:    StructSymbol,
+			k:    SymbolKindStruct,
 			want: "Struct",
 		},
 		{
 			name: "Event",
-			k:    EventSymbol,
+			k:    SymbolKindEvent,
 			want: "Event",
 		},
 		{
 			name: "Operator",
-			k:    OperatorSymbol,
+			k:    SymbolKindOperator,
 			want: "Operator",
 		},
 		{
 			name: "TypeParameter",
-			k:    TypeParameterSymbol,
+			k:    SymbolKindTypeParameter,
 			want: "TypeParameter",
 		},
 		{
@@ -2482,7 +2482,7 @@ func testDocumentSymbol(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 	wantType := DocumentSymbol{
 		Name:   "test symbol",
 		Detail: "test detail",
-		Kind:   FileSymbol,
+		Kind:   SymbolKindFile,
 		Tags: []SymbolTag{
 			SymbolTagDeprecated,
 		},
@@ -2511,7 +2511,7 @@ func testDocumentSymbol(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 			{
 				Name:       "child symbol",
 				Detail:     "child detail",
-				Kind:       InterfaceSymbol,
+				Kind:       SymbolKindInterface,
 				Deprecated: true,
 				Range: Range{
 					Start: Position{

@@ -670,114 +670,114 @@ type DocumentSymbolParams struct {
 type SymbolKind float64
 
 const (
-	// FileSymbol symbol of file.
-	FileSymbol SymbolKind = 1
-	// ModuleSymbol symbol of module.
-	ModuleSymbol SymbolKind = 2
-	// NamespaceSymbol symbol of namespace.
-	NamespaceSymbol SymbolKind = 3
-	// PackageSymbol symbol of package.
-	PackageSymbol SymbolKind = 4
-	// ClassSymbol symbol of class.
-	ClassSymbol SymbolKind = 5
-	// MethodSymbol symbol of method.
-	MethodSymbol SymbolKind = 6
-	// PropertySymbol symbol of property.
-	PropertySymbol SymbolKind = 7
-	// FieldSymbol symbol of field.
-	FieldSymbol SymbolKind = 8
-	// ConstructorSymbol symbol of constructor.
-	ConstructorSymbol SymbolKind = 9
-	// EnumSymbol symbol of enum.
-	EnumSymbol SymbolKind = 10
-	// InterfaceSymbol symbol of interface.
-	InterfaceSymbol SymbolKind = 11
-	// FunctionSymbol symbol of function.
-	FunctionSymbol SymbolKind = 12
-	// VariableSymbol symbol of variable.
-	VariableSymbol SymbolKind = 13
-	// ConstantSymbol symbol of constant.
-	ConstantSymbol SymbolKind = 14
-	// StringSymbol symbol of string.
-	StringSymbol SymbolKind = 15
-	// NumberSymbol symbol of number.
-	NumberSymbol SymbolKind = 16
-	// BooleanSymbol symbol of boolean.
-	BooleanSymbol SymbolKind = 17
-	// ArraySymbol symbol of array.
-	ArraySymbol SymbolKind = 18
-	// ObjectSymbol symbol of object.
-	ObjectSymbol SymbolKind = 19
-	// KeySymbol symbol of key.
-	KeySymbol SymbolKind = 20
-	// NullSymbol symbol of null.
-	NullSymbol SymbolKind = 21
-	// EnumMemberSymbol symbol of enum member.
-	EnumMemberSymbol SymbolKind = 22
-	// StructSymbol symbol of struct.
-	StructSymbol SymbolKind = 23
-	// EventSymbol symbol of event.
-	EventSymbol SymbolKind = 24
-	// OperatorSymbol symbol of operator.
-	OperatorSymbol SymbolKind = 25
-	// TypeParameterSymbol symbol of type parameter.
-	TypeParameterSymbol SymbolKind = 26
+	// SymbolKindFile symbol of file.
+	SymbolKindFile SymbolKind = 1
+	// SymbolKindModule symbol of module.
+	SymbolKindModule SymbolKind = 2
+	// SymbolKindNamespace symbol of namespace.
+	SymbolKindNamespace SymbolKind = 3
+	// SymbolKindPackage symbol of package.
+	SymbolKindPackage SymbolKind = 4
+	// SymbolKindClass symbol of class.
+	SymbolKindClass SymbolKind = 5
+	// SymbolKindMethod symbol of method.
+	SymbolKindMethod SymbolKind = 6
+	// SymbolKindProperty symbol of property.
+	SymbolKindProperty SymbolKind = 7
+	// SymbolKindField symbol of field.
+	SymbolKindField SymbolKind = 8
+	// SymbolKindConstructor symbol of constructor.
+	SymbolKindConstructor SymbolKind = 9
+	// SymbolKindEnum symbol of enum.
+	SymbolKindEnum SymbolKind = 10
+	// SymbolKindInterface symbol of interface.
+	SymbolKindInterface SymbolKind = 11
+	// SymbolKindFunction symbol of function.
+	SymbolKindFunction SymbolKind = 12
+	// SymbolKindVariable symbol of variable.
+	SymbolKindVariable SymbolKind = 13
+	// SymbolKindConstant symbol of constant.
+	SymbolKindConstant SymbolKind = 14
+	// SymbolKindString symbol of string.
+	SymbolKindString SymbolKind = 15
+	// SymbolKindNumber symbol of number.
+	SymbolKindNumber SymbolKind = 16
+	// SymbolKindBoolean symbol of boolean.
+	SymbolKindBoolean SymbolKind = 17
+	// SymbolKindArray symbol of array.
+	SymbolKindArray SymbolKind = 18
+	// SymbolKindObject symbol of object.
+	SymbolKindObject SymbolKind = 19
+	// SymbolKindKey symbol of key.
+	SymbolKindKey SymbolKind = 20
+	// SymbolKindNull symbol of null.
+	SymbolKindNull SymbolKind = 21
+	// SymbolKindEnumMember symbol of enum member.
+	SymbolKindEnumMember SymbolKind = 22
+	// SymbolKindStruct symbol of struct.
+	SymbolKindStruct SymbolKind = 23
+	// SymbolKindEvent symbol of event.
+	SymbolKindEvent SymbolKind = 24
+	// SymbolKindOperator symbol of operator.
+	SymbolKindOperator SymbolKind = 25
+	// SymbolKindTypeParameter symbol of type parameter.
+	SymbolKindTypeParameter SymbolKind = 26
 )
 
 // String implements fmt.Stringer.
 func (k SymbolKind) String() string {
 	switch k {
-	case FileSymbol:
+	case SymbolKindFile:
 		return "File"
-	case ModuleSymbol:
+	case SymbolKindModule:
 		return "Module"
-	case NamespaceSymbol:
+	case SymbolKindNamespace:
 		return "Namespace"
-	case PackageSymbol:
+	case SymbolKindPackage:
 		return "Package"
-	case ClassSymbol:
+	case SymbolKindClass:
 		return "Class"
-	case MethodSymbol:
+	case SymbolKindMethod:
 		return "Method"
-	case PropertySymbol:
+	case SymbolKindProperty:
 		return "Property"
-	case FieldSymbol:
+	case SymbolKindField:
 		return "Field"
-	case ConstructorSymbol:
+	case SymbolKindConstructor:
 		return "Constructor"
-	case EnumSymbol:
+	case SymbolKindEnum:
 		return "Enum"
-	case InterfaceSymbol:
+	case SymbolKindInterface:
 		return "Interface"
-	case FunctionSymbol:
+	case SymbolKindFunction:
 		return "Function"
-	case VariableSymbol:
+	case SymbolKindVariable:
 		return "Variable"
-	case ConstantSymbol:
+	case SymbolKindConstant:
 		return "Constant"
-	case StringSymbol:
+	case SymbolKindString:
 		return "String"
-	case NumberSymbol:
+	case SymbolKindNumber:
 		return "Number"
-	case BooleanSymbol:
+	case SymbolKindBoolean:
 		return "Boolean"
-	case ArraySymbol:
+	case SymbolKindArray:
 		return "Array"
-	case ObjectSymbol:
+	case SymbolKindObject:
 		return "Object"
-	case KeySymbol:
+	case SymbolKindKey:
 		return "Key"
-	case NullSymbol:
+	case SymbolKindNull:
 		return "Null"
-	case EnumMemberSymbol:
+	case SymbolKindEnumMember:
 		return "EnumMember"
-	case StructSymbol:
+	case SymbolKindStruct:
 		return "Struct"
-	case EventSymbol:
+	case SymbolKindEvent:
 		return "Event"
-	case OperatorSymbol:
+	case SymbolKindOperator:
 		return "Operator"
-	case TypeParameterSymbol:
+	case SymbolKindTypeParameter:
 		return "TypeParameter"
 	default:
 		return strconv.FormatFloat(float64(k), 'f', -10, 64)
