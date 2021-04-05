@@ -1167,7 +1167,7 @@ func testTextDocumentClientCapabilitiesCompletion(t *testing.T, marshal marshalF
 			},
 		},
 		CompletionItemKind: &TextDocumentClientCapabilitiesCompletionItemKind{
-			ValueSet: []CompletionItemKind{TextCompletion},
+			ValueSet: []CompletionItemKind{CompletionItemKindText},
 		},
 		ContextSupport: true,
 	}
@@ -6046,7 +6046,7 @@ func testTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmar
 				PreselectSupport:  true,
 			},
 			CompletionItemKind: &TextDocumentClientCapabilitiesCompletionItemKind{
-				ValueSet: []CompletionItemKind{TextCompletion},
+				ValueSet: []CompletionItemKind{CompletionItemKindText},
 			},
 			ContextSupport: true,
 		},
@@ -6320,7 +6320,7 @@ func testClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 					PreselectSupport:  true,
 				},
 				CompletionItemKind: &TextDocumentClientCapabilitiesCompletionItemKind{
-					ValueSet: []CompletionItemKind{TextCompletion},
+					ValueSet: []CompletionItemKind{CompletionItemKindText},
 				},
 				ContextSupport: true,
 			},

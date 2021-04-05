@@ -272,110 +272,110 @@ type CompletionItem struct {
 type CompletionItemKind float64
 
 const (
-	// TextCompletion text completion kind.
-	TextCompletion CompletionItemKind = 1
-	// MethodCompletion method completion kind.
-	MethodCompletion CompletionItemKind = 2
-	// FunctionCompletion function completion kind.
-	FunctionCompletion CompletionItemKind = 3
-	// ConstructorCompletion constructor completion kind.
-	ConstructorCompletion CompletionItemKind = 4
-	// FieldCompletion field completion kind.
-	FieldCompletion CompletionItemKind = 5
-	// VariableCompletion variable completion kind.
-	VariableCompletion CompletionItemKind = 6
-	// ClassCompletion class completion kind.
-	ClassCompletion CompletionItemKind = 7
-	// InterfaceCompletion interface completion kind.
-	InterfaceCompletion CompletionItemKind = 8
-	// ModuleCompletion module completion kind.
-	ModuleCompletion CompletionItemKind = 9
-	// PropertyCompletion property completion kind.
-	PropertyCompletion CompletionItemKind = 10
-	// UnitCompletion unit completion kind.
-	UnitCompletion CompletionItemKind = 11
-	// ValueCompletion value completion kind.
-	ValueCompletion CompletionItemKind = 12
-	// EnumCompletion enum completion kind.
-	EnumCompletion CompletionItemKind = 13
-	// KeywordCompletion keyword completion kind.
-	KeywordCompletion CompletionItemKind = 14
-	// SnippetCompletion snippet completion kind.
-	SnippetCompletion CompletionItemKind = 15
-	// ColorCompletion color completion kind.
-	ColorCompletion CompletionItemKind = 16
-	// FileCompletion file completion kind.
-	FileCompletion CompletionItemKind = 17
-	// ReferenceCompletion reference completion kind.
-	ReferenceCompletion CompletionItemKind = 18
-	// FolderCompletion folder completion kind.
-	FolderCompletion CompletionItemKind = 19
-	// EnumMemberCompletion enum member completion kind.
-	EnumMemberCompletion CompletionItemKind = 20
-	// ConstantCompletion constant completion kind.
-	ConstantCompletion CompletionItemKind = 21
-	// StructCompletion struct completion kind.
-	StructCompletion CompletionItemKind = 22
-	// EventCompletion event completion kind.
-	EventCompletion CompletionItemKind = 23
-	// OperatorCompletion operator completion kind.
-	OperatorCompletion CompletionItemKind = 24
-	// TypeParameterCompletion type parameter completion kind.
-	TypeParameterCompletion CompletionItemKind = 25
+	// CompletionItemKindText text completion kind.
+	CompletionItemKindText CompletionItemKind = 1
+	// CompletionItemKindMethod method completion kind.
+	CompletionItemKindMethod CompletionItemKind = 2
+	// CompletionItemKindFunction function completion kind.
+	CompletionItemKindFunction CompletionItemKind = 3
+	// CompletionItemKindConstructor constructor completion kind.
+	CompletionItemKindConstructor CompletionItemKind = 4
+	// CompletionItemKindField field completion kind.
+	CompletionItemKindField CompletionItemKind = 5
+	// CompletionItemKindVariable variable completion kind.
+	CompletionItemKindVariable CompletionItemKind = 6
+	// CompletionItemKindClass class completion kind.
+	CompletionItemKindClass CompletionItemKind = 7
+	// CompletionItemKindInterface interface completion kind.
+	CompletionItemKindInterface CompletionItemKind = 8
+	// CompletionItemKindModule module completion kind.
+	CompletionItemKindModule CompletionItemKind = 9
+	// CompletionItemKindProperty property completion kind.
+	CompletionItemKindProperty CompletionItemKind = 10
+	// CompletionItemKindUnit unit completion kind.
+	CompletionItemKindUnit CompletionItemKind = 11
+	// CompletionItemKindValue value completion kind.
+	CompletionItemKindValue CompletionItemKind = 12
+	// CompletionItemKindEnum enum completion kind.
+	CompletionItemKindEnum CompletionItemKind = 13
+	// CompletionItemKindKeyword keyword completion kind.
+	CompletionItemKindKeyword CompletionItemKind = 14
+	// CompletionItemKindSnippet snippet completion kind.
+	CompletionItemKindSnippet CompletionItemKind = 15
+	// CompletionItemKindColor color completion kind.
+	CompletionItemKindColor CompletionItemKind = 16
+	// CompletionItemKindFile file completion kind.
+	CompletionItemKindFile CompletionItemKind = 17
+	// CompletionItemKindReference reference completion kind.
+	CompletionItemKindReference CompletionItemKind = 18
+	// CompletionItemKindFolder folder completion kind.
+	CompletionItemKindFolder CompletionItemKind = 19
+	// CompletionItemKindEnumMember enum member completion kind.
+	CompletionItemKindEnumMember CompletionItemKind = 20
+	// CompletionItemKindConstant constant completion kind.
+	CompletionItemKindConstant CompletionItemKind = 21
+	// CompletionItemKindStruct struct completion kind.
+	CompletionItemKindStruct CompletionItemKind = 22
+	// CompletionItemKindEvent event completion kind.
+	CompletionItemKindEvent CompletionItemKind = 23
+	// CompletionItemKindOperator operator completion kind.
+	CompletionItemKindOperator CompletionItemKind = 24
+	// CompletionItemKindTypeParameter type parameter completion kind.
+	CompletionItemKindTypeParameter CompletionItemKind = 25
 )
 
 // String implements fmt.Stringer.
 func (k CompletionItemKind) String() string {
 	switch k {
-	case TextCompletion:
+	case CompletionItemKindText:
 		return "Text"
-	case MethodCompletion:
+	case CompletionItemKindMethod:
 		return "Method"
-	case FunctionCompletion:
+	case CompletionItemKindFunction:
 		return "Function"
-	case ConstructorCompletion:
+	case CompletionItemKindConstructor:
 		return "Constructor"
-	case FieldCompletion:
+	case CompletionItemKindField:
 		return "Field"
-	case VariableCompletion:
+	case CompletionItemKindVariable:
 		return "Variable"
-	case ClassCompletion:
+	case CompletionItemKindClass:
 		return "Class"
-	case InterfaceCompletion:
+	case CompletionItemKindInterface:
 		return "Interface"
-	case ModuleCompletion:
+	case CompletionItemKindModule:
 		return "Module"
-	case PropertyCompletion:
+	case CompletionItemKindProperty:
 		return "Property"
-	case UnitCompletion:
+	case CompletionItemKindUnit:
 		return "Unit"
-	case ValueCompletion:
+	case CompletionItemKindValue:
 		return "Value"
-	case EnumCompletion:
+	case CompletionItemKindEnum:
 		return "Enum"
-	case KeywordCompletion:
+	case CompletionItemKindKeyword:
 		return "Keyword"
-	case SnippetCompletion:
+	case CompletionItemKindSnippet:
 		return "Snippet"
-	case ColorCompletion:
+	case CompletionItemKindColor:
 		return "Color"
-	case FileCompletion:
+	case CompletionItemKindFile:
 		return "File"
-	case ReferenceCompletion:
+	case CompletionItemKindReference:
 		return "Reference"
-	case FolderCompletion:
+	case CompletionItemKindFolder:
 		return "Folder"
-	case EnumMemberCompletion:
+	case CompletionItemKindEnumMember:
 		return "EnumMember"
-	case ConstantCompletion:
+	case CompletionItemKindConstant:
 		return "Constant"
-	case StructCompletion:
+	case CompletionItemKindStruct:
 		return "Struct"
-	case EventCompletion:
+	case CompletionItemKindEvent:
 		return "Event"
-	case OperatorCompletion:
+	case CompletionItemKindOperator:
 		return "Operator"
-	case TypeParameterCompletion:
+	case CompletionItemKindTypeParameter:
 		return "TypeParameter"
 	default:
 		return strconv.FormatFloat(float64(k), 'f', -10, 64)
