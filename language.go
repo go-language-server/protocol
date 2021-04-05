@@ -23,26 +23,26 @@ type CompletionParams struct {
 type CompletionTriggerKind float64
 
 const (
-	// Invoked completion was triggered by typing an identifier (24x7 code
+	// CompletionTriggerKindInvoked completion was triggered by typing an identifier (24x7 code
 	// complete), manual invocation (e.g Ctrl+Space) or via API.
-	Invoked CompletionTriggerKind = 1
+	CompletionTriggerKindInvoked CompletionTriggerKind = 1
 
-	// TriggerCharacter completion was triggered by a trigger character specified by
+	// CompletionTriggerKindTriggerCharacter completion was triggered by a trigger character specified by
 	// the `triggerCharacters` properties of the `CompletionRegistrationOptions`.
-	TriggerCharacter CompletionTriggerKind = 2
+	CompletionTriggerKindTriggerCharacter CompletionTriggerKind = 2
 
-	// TriggerForIncompleteCompletions completion was re-triggered as the current completion list is incomplete.
-	TriggerForIncompleteCompletions CompletionTriggerKind = 3
+	// CompletionTriggerKindTriggerForIncompleteCompletions completion was re-triggered as the current completion list is incomplete.
+	CompletionTriggerKindTriggerForIncompleteCompletions CompletionTriggerKind = 3
 )
 
 // String implements fmt.Stringer.
 func (k CompletionTriggerKind) String() string {
 	switch k {
-	case Invoked:
+	case CompletionTriggerKindInvoked:
 		return "Invoked"
-	case TriggerCharacter:
+	case CompletionTriggerKindTriggerCharacter:
 		return "TriggerCharacter"
-	case TriggerForIncompleteCompletions:
+	case CompletionTriggerKindTriggerForIncompleteCompletions:
 		return "TriggerForIncompleteCompletions"
 	default:
 		return strconv.FormatFloat(float64(k), 'f', -10, 64)

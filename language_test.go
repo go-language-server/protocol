@@ -42,7 +42,7 @@ func testCompletionParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 		},
 		Context: &CompletionContext{
 			TriggerCharacter: ".",
-			TriggerKind:      Invoked,
+			TriggerKind:      CompletionTriggerKindInvoked,
 		},
 	}
 
@@ -147,17 +147,17 @@ func TestCompletionTriggerKind_String(t *testing.T) {
 	}{
 		{
 			name: "Invoked",
-			k:    Invoked,
+			k:    CompletionTriggerKindInvoked,
 			want: "Invoked",
 		},
 		{
 			name: "TriggerCharacter",
-			k:    TriggerCharacter,
+			k:    CompletionTriggerKindTriggerCharacter,
 			want: "TriggerCharacter",
 		},
 		{
 			name: "TriggerForIncompleteCompletions",
-			k:    TriggerForIncompleteCompletions,
+			k:    CompletionTriggerKindTriggerForIncompleteCompletions,
 			want: "TriggerForIncompleteCompletions",
 		},
 		{
@@ -185,7 +185,7 @@ func testCompletionContext(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 	)
 	wantType := CompletionContext{
 		TriggerCharacter: ".",
-		TriggerKind:      Invoked,
+		TriggerKind:      CompletionTriggerKindInvoked,
 	}
 
 	t.Run("Marshal", func(t *testing.T) {
