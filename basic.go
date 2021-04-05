@@ -170,24 +170,24 @@ type DiagnosticTag float64
 
 // list of DiagnosticTag.
 const (
-	// DiagnosticUnnecessary unused or unnecessary code.
+	// DiagnosticTagUnnecessary unused or unnecessary code.
 	//
 	// Clients are allowed to render diagnostics with this tag faded out instead of having
 	// an error squiggle.
-	DiagnosticUnnecessary DiagnosticTag = 1
+	DiagnosticTagUnnecessary DiagnosticTag = 1
 
-	// DiagnosticDeprecated deprecated or obsolete code.
+	// DiagnosticTagDeprecated deprecated or obsolete code.
 	//
 	// Clients are allowed to rendered diagnostics with this tag strike through.
-	DiagnosticDeprecated DiagnosticTag = 2
+	DiagnosticTagDeprecated DiagnosticTag = 2
 )
 
 // String implements fmt.Stringer.
 func (d DiagnosticTag) String() string {
 	switch d {
-	case DiagnosticUnnecessary:
+	case DiagnosticTagUnnecessary:
 		return "Unnecessary"
-	case DiagnosticDeprecated:
+	case DiagnosticTagDeprecated:
 		return "Deprecated"
 	default:
 		return strconv.FormatFloat(float64(d), 'f', -10, 64)

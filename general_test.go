@@ -5576,8 +5576,8 @@ func testTextDocumentClientCapabilitiesPublishDiagnostics(t *testing.T, marshal 
 		RelatedInformation: true,
 		TagSupport: &TextDocumentClientCapabilitiesPublishDiagnosticsTagSupport{
 			ValueSet: []DiagnosticTag{
-				DiagnosticDeprecated,
-				DiagnosticUnnecessary,
+				DiagnosticTagDeprecated,
+				DiagnosticTagUnnecessary,
 			},
 		},
 		VersionSupport:         true,

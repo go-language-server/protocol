@@ -582,8 +582,8 @@ func testDiagnostic(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 		Source:  "test foo bar",
 		Message: "foo bar",
 		Tags: []DiagnosticTag{
-			DiagnosticUnnecessary,
-			DiagnosticDeprecated,
+			DiagnosticTagUnnecessary,
+			DiagnosticTagDeprecated,
 		},
 		RelatedInformation: []DiagnosticRelatedInformation{
 			{
@@ -906,12 +906,12 @@ func TestDiagnosticTag_String(t *testing.T) {
 	}{
 		{
 			name: "Unnecessary",
-			d:    DiagnosticUnnecessary,
+			d:    DiagnosticTagUnnecessary,
 			want: "Unnecessary",
 		},
 		{
 			name: "Deprecated",
-			d:    DiagnosticDeprecated,
+			d:    DiagnosticTagDeprecated,
 			want: "Deprecated",
 		},
 		{
