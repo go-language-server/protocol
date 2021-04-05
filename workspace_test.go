@@ -902,7 +902,7 @@ func testDidChangeWatchedFilesRegistrationOptions(t *testing.T, marshal marshalF
 		Watchers: []FileSystemWatcher{
 			{
 				GlobPattern: "*",
-				Kind:        ChangeWatch,
+				Kind:        WatchKindChange,
 			},
 		},
 	}
@@ -1017,17 +1017,17 @@ func TestWatchKind_String(t *testing.T) {
 	}{
 		{
 			name: "CreateWatch",
-			k:    CreateWatch,
+			k:    WatchKindCreate,
 			want: "Create",
 		},
 		{
 			name: "ChangeWatch",
-			k:    ChangeWatch,
+			k:    WatchKindChange,
 			want: "Change",
 		},
 		{
 			name: "DeleteWatch",
-			k:    DeleteWatch,
+			k:    WatchKindDelete,
 			want: "Delete",
 		},
 		{

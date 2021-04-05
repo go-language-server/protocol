@@ -129,24 +129,24 @@ type FileSystemWatcher struct {
 type WatchKind float64
 
 const (
-	// CreateWatch interested in create events.
-	CreateWatch WatchKind = 1
+	// WatchKindCreate interested in create events.
+	WatchKindCreate WatchKind = 1
 
-	// ChangeWatch interested in change events.
-	ChangeWatch WatchKind = 2
+	// WatchKindChange interested in change events.
+	WatchKindChange WatchKind = 2
 
-	// DeleteWatch interested in delete events.
-	DeleteWatch WatchKind = 4
+	// WatchKindDelete interested in delete events.
+	WatchKindDelete WatchKind = 4
 )
 
 // String implements fmt.Stringer.
 func (k WatchKind) String() string {
 	switch k {
-	case CreateWatch:
+	case WatchKindCreate:
 		return "Create"
-	case ChangeWatch:
+	case WatchKindChange:
 		return "Change"
-	case DeleteWatch:
+	case WatchKindDelete:
 		return "Delete"
 	default:
 		return strconv.FormatFloat(float64(k), 'f', -10, 64)
