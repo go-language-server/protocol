@@ -226,17 +226,17 @@ func TestTextDocumentSaveReason_String(t *testing.T) {
 	}{
 		{
 			name: "Manual",
-			k:    Manual,
+			k:    TextDocumentSaveReasonManual,
 			want: "Manual",
 		},
 		{
 			name: "AfterDelay",
-			k:    AfterDelay,
+			k:    TextDocumentSaveReasonAfterDelay,
 			want: "AfterDelay",
 		},
 		{
 			name: "FocusOut",
-			k:    FocusOut,
+			k:    TextDocumentSaveReasonFocusOut,
 			want: "FocusOut",
 		},
 		{
@@ -467,7 +467,7 @@ func testWillSaveTextDocumentParams(t *testing.T, marshal marshalFunc, unmarshal
 		TextDocument: TextDocumentIdentifier{
 			URI: uri.File("/path/to/test.go"),
 		},
-		Reason: FocusOut,
+		Reason: TextDocumentSaveReasonFocusOut,
 	}
 	wantTypeNilAll := WillSaveTextDocumentParams{
 		TextDocument: TextDocumentIdentifier{

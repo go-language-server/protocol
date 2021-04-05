@@ -31,25 +31,25 @@ type DidChangeTextDocumentParams struct {
 type TextDocumentSaveReason float64
 
 const (
-	// Manual is the manually triggered, e.g. by the user pressing save, by starting debugging,
+	// TextDocumentSaveReasonManual is the manually triggered, e.g. by the user pressing save, by starting debugging,
 	// or by an API call.
-	Manual TextDocumentSaveReason = 1
+	TextDocumentSaveReasonManual TextDocumentSaveReason = 1
 
-	// AfterDelay is the automatic after a delay.
-	AfterDelay TextDocumentSaveReason = 2
+	// TextDocumentSaveReasonAfterDelay is the automatic after a delay.
+	TextDocumentSaveReasonAfterDelay TextDocumentSaveReason = 2
 
-	// FocusOut when the editor lost focus.
-	FocusOut TextDocumentSaveReason = 3
+	// TextDocumentSaveReasonFocusOut when the editor lost focus.
+	TextDocumentSaveReasonFocusOut TextDocumentSaveReason = 3
 )
 
 // String implements fmt.Stringer.
 func (t TextDocumentSaveReason) String() string {
 	switch t {
-	case Manual:
+	case TextDocumentSaveReasonManual:
 		return "Manual"
-	case AfterDelay:
+	case TextDocumentSaveReasonAfterDelay:
 		return "AfterDelay"
-	case FocusOut:
+	case TextDocumentSaveReasonFocusOut:
 		return "FocusOut"
 	default:
 		return strconv.FormatFloat(float64(t), 'f', -10, 64)
