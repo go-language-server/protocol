@@ -134,29 +134,29 @@ type Diagnostic struct {
 type DiagnosticSeverity float64
 
 const (
-	// SeverityError reports an error.
-	SeverityError DiagnosticSeverity = 1
+	// DiagnosticSeverityError reports an error.
+	DiagnosticSeverityError DiagnosticSeverity = 1
 
-	// SeverityWarning reports a warning.
-	SeverityWarning DiagnosticSeverity = 2
+	// DiagnosticSeverityWarning reports a warning.
+	DiagnosticSeverityWarning DiagnosticSeverity = 2
 
-	// SeverityInformation reports an information.
-	SeverityInformation DiagnosticSeverity = 3
+	// DiagnosticSeverityInformation reports an information.
+	DiagnosticSeverityInformation DiagnosticSeverity = 3
 
-	// SeverityHint reports a hint.
-	SeverityHint DiagnosticSeverity = 4
+	// DiagnosticSeverityHint reports a hint.
+	DiagnosticSeverityHint DiagnosticSeverity = 4
 )
 
 // String implements fmt.Stringer.
 func (d DiagnosticSeverity) String() string {
 	switch d {
-	case SeverityError:
+	case DiagnosticSeverityError:
 		return "Error"
-	case SeverityWarning:
+	case DiagnosticSeverityWarning:
 		return "Warning"
-	case SeverityInformation:
+	case DiagnosticSeverityInformation:
 		return "Information"
-	case SeverityHint:
+	case DiagnosticSeverityHint:
 		return "Hint"
 	default:
 		return strconv.FormatFloat(float64(d), 'f', -10, 64)

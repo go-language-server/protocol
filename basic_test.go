@@ -574,7 +574,7 @@ func testDiagnostic(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 				Character: 3,
 			},
 		},
-		Severity: SeverityError,
+		Severity: DiagnosticSeverityError,
 		Code:     "foo/bar",
 		CodeDescription: &CodeDescription{
 			Href: uri.File("/path/to/test.go"),
@@ -653,7 +653,7 @@ func testDiagnostic(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 				Character: 3,
 			},
 		},
-		Severity: SeverityError,
+		Severity: DiagnosticSeverityError,
 		CodeDescription: &CodeDescription{
 			Href: uri.File("/path/to/test.go"),
 		},
@@ -690,7 +690,7 @@ func testDiagnostic(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 				Character: 3,
 			},
 		},
-		Severity: SeverityError,
+		Severity: DiagnosticSeverityError,
 		Code:     "foo/bar",
 		CodeDescription: &CodeDescription{
 			Href: uri.File("/path/to/test.go"),
@@ -862,22 +862,22 @@ func TestDiagnosticSeverity_String(t *testing.T) {
 	}{
 		{
 			name: "Error",
-			d:    SeverityError,
+			d:    DiagnosticSeverityError,
 			want: "Error",
 		},
 		{
 			name: "Warning",
-			d:    SeverityWarning,
+			d:    DiagnosticSeverityWarning,
 			want: "Warning",
 		},
 		{
 			name: "Information",
-			d:    SeverityInformation,
+			d:    DiagnosticSeverityInformation,
 			want: "Information",
 		},
 		{
 			name: "Hint",
-			d:    SeverityHint,
+			d:    DiagnosticSeverityHint,
 			want: "Hint",
 		},
 		{
