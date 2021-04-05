@@ -19,7 +19,7 @@ func testShowMessageParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 	)
 	wantType := ShowMessageParams{
 		Message: "error message",
-		Type:    Error,
+		Type:    MessageTypeError,
 	}
 	wantTypeUnkonwn := ShowMessageParams{
 		Message: "unknown message",
@@ -125,7 +125,7 @@ func testShowMessageRequestParams(t *testing.T, marshal marshalFunc, unmarshal u
 			},
 		},
 		Message: "error message",
-		Type:    Error,
+		Type:    MessageTypeError,
 	}
 	wantTypeUnkonwn := ShowMessageRequestParams{
 		Actions: []MessageActionItem{
@@ -330,7 +330,7 @@ func testLogMessageParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 	)
 	wantType := LogMessageParams{
 		Message: "error message",
-		Type:    Error,
+		Type:    MessageTypeError,
 	}
 	wantTypeUnknown := LogMessageParams{
 		Message: "unknown message",
@@ -656,22 +656,22 @@ func TestMessageType_String(t *testing.T) {
 	}{
 		{
 			name: "Error",
-			m:    Error,
+			m:    MessageTypeError,
 			want: "error",
 		},
 		{
 			name: "Warning",
-			m:    Warning,
+			m:    MessageTypeWarning,
 			want: "warning",
 		},
 		{
 			name: "Info",
-			m:    Info,
+			m:    MessageTypeInfo,
 			want: "info",
 		},
 		{
 			name: "Log",
-			m:    Log,
+			m:    MessageTypeLog,
 			want: "log",
 		},
 		{
@@ -701,19 +701,19 @@ func TestMessageType_Enabled(t *testing.T) {
 	}{
 		{
 			name:  "ErrorError",
-			m:     Error,
-			level: Error,
+			m:     MessageTypeError,
+			level: MessageTypeError,
 			want:  true,
 		},
 		{
 			name:  "ErrorInfo",
-			m:     Error,
-			level: Info,
+			m:     MessageTypeError,
+			level: MessageTypeInfo,
 			want:  false,
 		},
 		{
 			name:  "ErrorUnknown",
-			m:     Error,
+			m:     MessageTypeError,
 			level: MessageType(0),
 			want:  false,
 		},
@@ -739,22 +739,22 @@ func TestToMessageType(t *testing.T) {
 		{
 			name:  "Error",
 			level: "error",
-			want:  Error,
+			want:  MessageTypeError,
 		},
 		{
 			name:  "Warning",
 			level: "warning",
-			want:  Warning,
+			want:  MessageTypeWarning,
 		},
 		{
 			name:  "Info",
 			level: "info",
-			want:  Info,
+			want:  MessageTypeInfo,
 		},
 		{
 			name:  "Log",
 			level: "log",
-			want:  Log,
+			want:  MessageTypeLog,
 		},
 		{
 			name:  "Unknown",
