@@ -1486,27 +1486,27 @@ type InitializeError struct {
 type TextDocumentSyncKind float64
 
 const (
-	// None documents should not be synced at all.
-	None TextDocumentSyncKind = 0
+	// TextDocumentSyncKindNone documents should not be synced at all.
+	TextDocumentSyncKindNone TextDocumentSyncKind = 0
 
-	// Full documents are synced by always sending the full content
+	// TextDocumentSyncKindFull documents are synced by always sending the full content
 	// of the document.
-	Full TextDocumentSyncKind = 1
+	TextDocumentSyncKindFull TextDocumentSyncKind = 1
 
-	// Incremental documents are synced by sending the full content on open.
+	// TextDocumentSyncKindIncremental documents are synced by sending the full content on open.
 	// After that only incremental updates to the document are
 	// send.
-	Incremental TextDocumentSyncKind = 2
+	TextDocumentSyncKindIncremental TextDocumentSyncKind = 2
 )
 
 // String implements fmt.Stringer.
 func (k TextDocumentSyncKind) String() string {
 	switch k {
-	case None:
+	case TextDocumentSyncKindNone:
 		return "None"
-	case Full:
+	case TextDocumentSyncKindFull:
 		return "Full"
-	case Incremental:
+	case TextDocumentSyncKindIncremental:
 		return "Incremental"
 	default:
 		return strconv.FormatFloat(float64(k), 'f', -10, 64)

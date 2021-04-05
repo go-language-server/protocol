@@ -7063,17 +7063,17 @@ func TestTextDocumentSyncKind_String(t *testing.T) {
 	}{
 		{
 			name: "NoneKind",
-			k:    None,
+			k:    TextDocumentSyncKindNone,
 			want: "None",
 		},
 		{
 			name: "FullKind",
-			k:    Full,
+			k:    TextDocumentSyncKindFull,
 			want: "Full",
 		},
 		{
 			name: "IncrementalKind",
-			k:    Incremental,
+			k:    TextDocumentSyncKindIncremental,
 			want: "Incremental",
 		},
 		{
@@ -7477,7 +7477,7 @@ func testTextDocumentSyncOptions(t *testing.T, marshal marshalFunc, unmarshal un
 	)
 	wantType := TextDocumentSyncOptions{
 		OpenClose:         true,
-		Change:            Full,
+		Change:            TextDocumentSyncKindFull,
 		WillSave:          true,
 		WillSaveWaitUntil: true,
 		Save: &SaveOptions{
