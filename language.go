@@ -625,24 +625,24 @@ type DocumentHighlight struct {
 type DocumentHighlightKind float64
 
 const (
-	// Text a textual occurrence.
-	Text DocumentHighlightKind = 1
+	// DocumentHighlightKindText a textual occurrence.
+	DocumentHighlightKindText DocumentHighlightKind = 1
 
-	// Read read-access of a symbol, like reading a variable.
-	Read DocumentHighlightKind = 2
+	// DocumentHighlightKindRead read-access of a symbol, like reading a variable.
+	DocumentHighlightKindRead DocumentHighlightKind = 2
 
-	// Write write-access of a symbol, like writing to a variable.
-	Write DocumentHighlightKind = 3
+	// DocumentHighlightKindWrite write-access of a symbol, like writing to a variable.
+	DocumentHighlightKindWrite DocumentHighlightKind = 3
 )
 
 // String implements fmt.Stringer.
 func (k DocumentHighlightKind) String() string {
 	switch k {
-	case Text:
+	case DocumentHighlightKindText:
 		return "Text"
-	case Read:
+	case DocumentHighlightKindRead:
 		return "Read"
-	case Write:
+	case DocumentHighlightKindWrite:
 		return "Write"
 	default:
 		return strconv.FormatFloat(float64(k), 'f', -10, 64)

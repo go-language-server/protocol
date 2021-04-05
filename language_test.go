@@ -2054,7 +2054,7 @@ func testDocumentHighlight(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 				Character: 10,
 			},
 		},
-		Kind: Text,
+		Kind: DocumentHighlightKindText,
 	}
 
 	t.Run("Marshal", func(t *testing.T) {
@@ -2146,17 +2146,17 @@ func TestDocumentHighlightKind_String(t *testing.T) {
 	}{
 		{
 			name: "Text",
-			k:    Text,
+			k:    DocumentHighlightKindText,
 			want: "Text",
 		},
 		{
 			name: "Read",
-			k:    Read,
+			k:    DocumentHighlightKindRead,
 			want: "Read",
 		},
 		{
 			name: "Write",
-			k:    Write,
+			k:    DocumentHighlightKindWrite,
 			want: "Write",
 		},
 		{
