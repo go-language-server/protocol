@@ -660,7 +660,7 @@ func testDidChangeWatchedFilesParams(t *testing.T, marshal marshalFunc, unmarsha
 	wantType := DidChangeWatchedFilesParams{
 		Changes: []*FileEvent{
 			{
-				Type: Changed,
+				Type: FileChangeTypeChanged,
 				URI:  uri.File("/path/to/test.go"),
 			},
 		},
@@ -768,7 +768,7 @@ func testFileEvent(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 		wantInvalid = `{"type":3,"uri":"file:///path/to/invalid.go"}`
 	)
 	wantType := FileEvent{
-		Type: Changed,
+		Type: FileChangeTypeChanged,
 		URI:  uri.File("/path/to/test.go"),
 	}
 
@@ -861,17 +861,17 @@ func TestFileChangeType_String(t *testing.T) {
 	}{
 		{
 			name: "Created",
-			k:    Created,
+			k:    FileChangeTypeCreated,
 			want: "Created",
 		},
 		{
 			name: "Changed",
-			k:    Changed,
+			k:    FileChangeTypeChanged,
 			want: "Changed",
 		},
 		{
 			name: "Deleted",
-			k:    Deleted,
+			k:    FileChangeTypeDeleted,
 			want: "Deleted",
 		},
 		{

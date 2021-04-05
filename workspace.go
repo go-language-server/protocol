@@ -78,22 +78,22 @@ type FileEvent struct {
 type FileChangeType float64
 
 const (
-	// Created is the file got created.
-	Created FileChangeType = 1
-	// Changed is the file got changed.
-	Changed FileChangeType = 2
-	// Deleted is the file got deleted.
-	Deleted FileChangeType = 3
+	// FileChangeTypeCreated is the file got created.
+	FileChangeTypeCreated FileChangeType = 1
+	// FileChangeTypeChanged is the file got changed.
+	FileChangeTypeChanged FileChangeType = 2
+	// FileChangeTypeDeleted is the file got deleted.
+	FileChangeTypeDeleted FileChangeType = 3
 )
 
 // String implements fmt.Stringer.
 func (t FileChangeType) String() string {
 	switch t {
-	case Created:
+	case FileChangeTypeCreated:
 		return "Created"
-	case Changed:
+	case FileChangeTypeChanged:
 		return "Changed"
-	case Deleted:
+	case FileChangeTypeDeleted:
 		return "Deleted"
 	default:
 		return strconv.FormatFloat(float64(t), 'f', -10, 64)
