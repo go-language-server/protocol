@@ -289,7 +289,7 @@ func testCompletionList(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 				Documentation:    "Detail a human-readable string with additional information about this item, like type or symbol information.",
 				FilterText:       "Detail",
 				InsertText:       "",
-				InsertTextFormat: TextFormatSnippet,
+				InsertTextFormat: InsertTextFormatSnippet,
 				Kind:             FieldCompletion,
 				Label:            "Detail",
 				Preselect:        true,
@@ -400,12 +400,12 @@ func TestInsertTextFormat_String(t *testing.T) {
 	}{
 		{
 			name: "PlainText",
-			k:    TextFormatPlainText,
+			k:    InsertTextFormatPlainText,
 			want: "PlainText",
 		},
 		{
 			name: "Snippet",
-			k:    TextFormatSnippet,
+			k:    InsertTextFormatSnippet,
 			want: "Snippet",
 		},
 		{
@@ -592,7 +592,7 @@ func testCompletionItem(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 		Documentation:    "Detail a human-readable string with additional information about this item, like type or symbol information.",
 		FilterText:       "Detail",
 		InsertText:       "testInsert",
-		InsertTextFormat: TextFormatSnippet,
+		InsertTextFormat: InsertTextFormatSnippet,
 		InsertTextMode:   InsertTextModeAsIs,
 		Kind:             FieldCompletion,
 		Label:            "Detail",

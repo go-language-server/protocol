@@ -75,24 +75,24 @@ type CompletionList struct {
 type InsertTextFormat float64
 
 const (
-	// TextFormatPlainText is the primary text to be inserted is treated as a plain string.
-	TextFormatPlainText InsertTextFormat = 1
+	// InsertTextFormatPlainText is the primary text to be inserted is treated as a plain string.
+	InsertTextFormatPlainText InsertTextFormat = 1
 
-	// TextFormatSnippet is the primary text to be inserted is treated as a snippet.
+	// InsertTextFormatSnippet is the primary text to be inserted is treated as a snippet.
 	//
 	// A snippet can define tab stops and placeholders with `$1`, `$2`
 	// and `${3:foo}`. `$0` defines the final tab stop, it defaults to
 	// the end of the snippet. Placeholders with equal identifiers are linked,
 	// that is typing in one will update others too.
-	TextFormatSnippet InsertTextFormat = 2
+	InsertTextFormatSnippet InsertTextFormat = 2
 )
 
 // String implements fmt.Stringer.
 func (tf InsertTextFormat) String() string {
 	switch tf {
-	case TextFormatPlainText:
+	case InsertTextFormatPlainText:
 		return "PlainText"
-	case TextFormatSnippet:
+	case InsertTextFormatSnippet:
 		return "Snippet"
 	default:
 		return strconv.FormatFloat(float64(tf), 'f', -10, 64)
