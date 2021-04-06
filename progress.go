@@ -60,7 +60,7 @@ type WorkDoneProgressBegin struct {
 	//
 	// The value should be steadily rising. Clients are free to ignore values
 	// that are not following this rule.
-	Percentage float64 `json:"percentage,omitempty"`
+	Percentage uint32 `json:"percentage,omitempty"`
 }
 
 // WorkDoneProgressReport is the reporting progress is done.
@@ -91,7 +91,7 @@ type WorkDoneProgressReport struct {
 	//
 	// The value should be steadily rising. Clients are free to ignore values
 	// that are not following this rule.
-	Percentage float64 `json:"percentage,omitempty"`
+	Percentage uint32 `json:"percentage,omitempty"`
 }
 
 // WorkDoneProgressEnd is the signaling the end of a progress reporting is done.

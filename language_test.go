@@ -42,7 +42,7 @@ func testCompletionParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 		},
 		Context: &CompletionContext{
 			TriggerCharacter: ".",
-			TriggerKind:      Invoked,
+			TriggerKind:      CompletionTriggerKindInvoked,
 		},
 	}
 
@@ -147,17 +147,17 @@ func TestCompletionTriggerKind_String(t *testing.T) {
 	}{
 		{
 			name: "Invoked",
-			k:    Invoked,
+			k:    CompletionTriggerKindInvoked,
 			want: "Invoked",
 		},
 		{
 			name: "TriggerCharacter",
-			k:    TriggerCharacter,
+			k:    CompletionTriggerKindTriggerCharacter,
 			want: "TriggerCharacter",
 		},
 		{
 			name: "TriggerForIncompleteCompletions",
-			k:    TriggerForIncompleteCompletions,
+			k:    CompletionTriggerKindTriggerForIncompleteCompletions,
 			want: "TriggerForIncompleteCompletions",
 		},
 		{
@@ -185,7 +185,7 @@ func testCompletionContext(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 	)
 	wantType := CompletionContext{
 		TriggerCharacter: ".",
-		TriggerKind:      Invoked,
+		TriggerKind:      CompletionTriggerKindInvoked,
 	}
 
 	t.Run("Marshal", func(t *testing.T) {
@@ -289,8 +289,8 @@ func testCompletionList(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 				Documentation:    "Detail a human-readable string with additional information about this item, like type or symbol information.",
 				FilterText:       "Detail",
 				InsertText:       "",
-				InsertTextFormat: TextFormatSnippet,
-				Kind:             FieldCompletion,
+				InsertTextFormat: InsertTextFormatSnippet,
+				Kind:             CompletionItemKindField,
 				Label:            "Detail",
 				Preselect:        true,
 				SortText:         "00000",
@@ -400,12 +400,12 @@ func TestInsertTextFormat_String(t *testing.T) {
 	}{
 		{
 			name: "PlainText",
-			k:    TextFormatPlainText,
+			k:    InsertTextFormatPlainText,
 			want: "PlainText",
 		},
 		{
 			name: "Snippet",
-			k:    TextFormatSnippet,
+			k:    InsertTextFormatSnippet,
 			want: "Snippet",
 		},
 		{
@@ -426,9 +426,138 @@ func TestInsertTextFormat_String(t *testing.T) {
 	}
 }
 
+func testInsertReplaceEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+	const (
+		want = `{"newText":"testNewText","insert":{"start":{"line":255,"character":4},"end":{"line":255,"character":10}},"replace":{"start":{"line":255,"character":4},"end":{"line":255,"character":10}}}`
+	)
+	wantType := InsertReplaceEdit{
+		NewText: "testNewText",
+		Insert: Range{
+			Start: Position{
+				Line:      255,
+				Character: 4,
+			},
+			End: Position{
+				Line:      255,
+				Character: 10,
+			},
+		},
+		Replace: Range{
+			Start: Position{
+				Line:      255,
+				Character: 4,
+			},
+			End: Position{
+				Line:      255,
+				Character: 10,
+			},
+		},
+	}
+
+	t.Run("Marshal", func(t *testing.T) {
+		tests := []struct {
+			name           string
+			field          InsertReplaceEdit
+			want           string
+			wantMarshalErr bool
+			wantErr        bool
+		}{
+			{
+				name:           "Valid",
+				field:          wantType,
+				want:           want,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+		}
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got, err := marshal(&tt.field)
+				if (err != nil) != tt.wantMarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+
+	t.Run("Unmarshal", func(t *testing.T) {
+		tests := []struct {
+			name             string
+			field            string
+			want             InsertReplaceEdit
+			wantUnmarshalErr bool
+			wantErr          bool
+		}{
+			{
+				name:             "Valid",
+				field:            want,
+				want:             wantType,
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+		}
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				var got InsertReplaceEdit
+				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+}
+
+func TestInsertTextMode_String(t *testing.T) {
+	tests := []struct {
+		name string
+		k    InsertTextMode
+		want string
+	}{
+		{
+			name: "AsIs",
+			k:    InsertTextModeAsIs,
+			want: "AsIs",
+		},
+		{
+			name: "AdjustIndentation",
+			k:    InsertTextModeAdjustIndentation,
+			want: "AdjustIndentation",
+		},
+		{
+			name: "Unknown",
+			k:    InsertTextMode(0),
+			want: "0",
+		},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			if got := tt.k.String(); got != tt.want {
+				t.Errorf("InsertTextMode.String() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func testCompletionItem(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"additionalTextEdits":[{"range":{"start":{"line":255,"character":4},"end":{"line":255,"character":10}},"newText":"Detail: ${1:},"}],"command":{"title":"exec echo","command":"echo","arguments":["hello"]},"commitCharacters":["a"],"tags":[1],"data":"testData","deprecated":true,"detail":"string","documentation":"Detail a human-readable string with additional information about this item, like type or symbol information.","filterText":"Detail","insertText":"testInsert","insertTextFormat":2,"kind":5,"label":"Detail","preselect":true,"sortText":"00000","textEdit":{"range":{"start":{"line":255,"character":4},"end":{"line":255,"character":10}},"newText":"Detail: ${1:},"}}`
+		want        = `{"additionalTextEdits":[{"range":{"start":{"line":255,"character":4},"end":{"line":255,"character":10}},"newText":"Detail: ${1:},"}],"command":{"title":"exec echo","command":"echo","arguments":["hello"]},"commitCharacters":["a"],"tags":[1],"data":"testData","deprecated":true,"detail":"string","documentation":"Detail a human-readable string with additional information about this item, like type or symbol information.","filterText":"Detail","insertText":"testInsert","insertTextFormat":2,"insertTextMode":1,"kind":5,"label":"Detail","preselect":true,"sortText":"00000","textEdit":{"range":{"start":{"line":255,"character":4},"end":{"line":255,"character":10}},"newText":"Detail: ${1:},"}}`
 		wantNilAll  = `{"label":"Detail"}`
 		wantInvalid = `{"items":[]}`
 	)
@@ -463,8 +592,9 @@ func testCompletionItem(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 		Documentation:    "Detail a human-readable string with additional information about this item, like type or symbol information.",
 		FilterText:       "Detail",
 		InsertText:       "testInsert",
-		InsertTextFormat: TextFormatSnippet,
-		Kind:             FieldCompletion,
+		InsertTextFormat: InsertTextFormatSnippet,
+		InsertTextMode:   InsertTextModeAsIs,
+		Kind:             CompletionItemKindField,
 		Label:            "Detail",
 		Preselect:        true,
 		SortText:         "00000",
@@ -589,127 +719,127 @@ func TestCompletionItemKind_String(t *testing.T) {
 	}{
 		{
 			name: "Text",
-			k:    TextCompletion,
+			k:    CompletionItemKindText,
 			want: "Text",
 		},
 		{
 			name: "Method",
-			k:    MethodCompletion,
+			k:    CompletionItemKindMethod,
 			want: "Method",
 		},
 		{
 			name: "Function",
-			k:    FunctionCompletion,
+			k:    CompletionItemKindFunction,
 			want: "Function",
 		},
 		{
 			name: "Constructor",
-			k:    ConstructorCompletion,
+			k:    CompletionItemKindConstructor,
 			want: "Constructor",
 		},
 		{
 			name: "Field",
-			k:    FieldCompletion,
+			k:    CompletionItemKindField,
 			want: "Field",
 		},
 		{
 			name: "Variable",
-			k:    VariableCompletion,
+			k:    CompletionItemKindVariable,
 			want: "Variable",
 		},
 		{
 			name: "Class",
-			k:    ClassCompletion,
+			k:    CompletionItemKindClass,
 			want: "Class",
 		},
 		{
 			name: "Interface",
-			k:    InterfaceCompletion,
+			k:    CompletionItemKindInterface,
 			want: "Interface",
 		},
 		{
 			name: "Module",
-			k:    ModuleCompletion,
+			k:    CompletionItemKindModule,
 			want: "Module",
 		},
 		{
 			name: "Property",
-			k:    PropertyCompletion,
+			k:    CompletionItemKindProperty,
 			want: "Property",
 		},
 		{
 			name: "Unit",
-			k:    UnitCompletion,
+			k:    CompletionItemKindUnit,
 			want: "Unit",
 		},
 		{
 			name: "Value",
-			k:    ValueCompletion,
+			k:    CompletionItemKindValue,
 			want: "Value",
 		},
 		{
 			name: "Enum",
-			k:    EnumCompletion,
+			k:    CompletionItemKindEnum,
 			want: "Enum",
 		},
 		{
 			name: "Keyword",
-			k:    KeywordCompletion,
+			k:    CompletionItemKindKeyword,
 			want: "Keyword",
 		},
 		{
 			name: "Snippet",
-			k:    SnippetCompletion,
+			k:    CompletionItemKindSnippet,
 			want: "Snippet",
 		},
 		{
 			name: "Color",
-			k:    ColorCompletion,
+			k:    CompletionItemKindColor,
 			want: "Color",
 		},
 		{
 			name: "File",
-			k:    FileCompletion,
+			k:    CompletionItemKindFile,
 			want: "File",
 		},
 		{
 			name: "Reference",
-			k:    ReferenceCompletion,
+			k:    CompletionItemKindReference,
 			want: "Reference",
 		},
 		{
 			name: "Folder",
-			k:    FolderCompletion,
+			k:    CompletionItemKindFolder,
 			want: "Folder",
 		},
 		{
 			name: "EnumMember",
-			k:    EnumMemberCompletion,
+			k:    CompletionItemKindEnumMember,
 			want: "EnumMember",
 		},
 		{
 			name: "Constant",
-			k:    ConstantCompletion,
+			k:    CompletionItemKindConstant,
 			want: "Constant",
 		},
 		{
 			name: "Struct",
-			k:    StructCompletion,
+			k:    CompletionItemKindStruct,
 			want: "Struct",
 		},
 		{
 			name: "Event",
-			k:    EventCompletion,
+			k:    CompletionItemKindEvent,
 			want: "Event",
 		},
 		{
 			name: "Operator",
-			k:    OperatorCompletion,
+			k:    CompletionItemKindOperator,
 			want: "Operator",
 		},
 		{
 			name: "TypeParameter",
-			k:    TypeParameterCompletion,
+			k:    CompletionItemKindTypeParameter,
 			want: "TypeParameter",
 		},
 		{
@@ -1111,7 +1241,7 @@ func testSignatureHelpParams(t *testing.T, marshal marshalFunc, unmarshal unmars
 		invalidWorkDoneToken = "dd134d84-c134-4d7a-a2a3-f8af3ef4a568"
 	)
 	const (
-		want        = `{"textDocument":{"uri":"file:///path/to/basic.go"},"position":{"line":25,"character":1},"workDoneToken":"` + wantWorkDoneToken + `","context":{"triggerKind":1,"triggerCharacter":".","isRetrigger":true,"activeSignatureHelp":{"signatures":[{"documentationFormat":["markdown"],"parameterInformation":{"label":"test label","documentation":"test documentation"}}],"activeParameter":10,"activeSignature":5}}}`
+		want        = `{"textDocument":{"uri":"file:///path/to/basic.go"},"position":{"line":25,"character":1},"workDoneToken":"` + wantWorkDoneToken + `","context":{"triggerKind":1,"triggerCharacter":".","isRetrigger":true,"activeSignatureHelp":{"signatures":[{"label":"testLabel","documentation":"testDocumentation","parameters":[{"label":"test label","documentation":"test documentation"}]}],"activeParameter":10,"activeSignature":5}}}`
 		wantNilAll  = `{"textDocument":{"uri":"file:///path/to/basic.go"},"position":{"line":25,"character":1}}`
 		wantInvalid = `{"textDocument":{"uri":"file:///path/to/basic_gen.go"},"position":{"line":2,"character":1},"workDoneToken":"` + invalidWorkDoneToken + `","context":{"triggerKind":0,"triggerCharacter":"aaa","isRetrigger":false,"activeSignatureHelp":{"signatures":[{"documentationFormat":["markdown"],"parameterInformation":{"label":"test label","documentation":"test documentation"}}],"activeParameter":1,"activeSignature":0}}}`
 	)
@@ -1135,12 +1265,13 @@ func testSignatureHelpParams(t *testing.T, marshal marshalFunc, unmarshal unmars
 			ActiveSignatureHelp: &SignatureHelp{
 				Signatures: []SignatureInformation{
 					{
-						DocumentationFormat: []MarkupKind{
-							Markdown,
-						},
-						ParameterInformation: &ParameterInformation{
-							Label:         "test label",
-							Documentation: "test documentation",
+						Label:         "testLabel",
+						Documentation: "testDocumentation",
+						Parameters: []ParameterInformation{
+							{
+								Label:         "test label",
+								Documentation: "test documentation",
+							},
 						},
 					},
 				},
@@ -1309,19 +1440,20 @@ func TestSignatureHelpTriggerKind_String(t *testing.T) {
 
 func testSignatureHelp(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"signatures":[{"documentationFormat":["markdown"],"parameterInformation":{"label":"test label","documentation":"test documentation"}}],"activeParameter":10,"activeSignature":5}`
+		want        = `{"signatures":[{"label":"testLabel","documentation":"testDocumentation","parameters":[{"label":"test label","documentation":"test documentation"}]}],"activeParameter":10,"activeSignature":5}`
 		wantNilAll  = `{"signatures":[]}`
-		wantInvalid = `{"signatures":[{"documentationFormat":["markdown"],"parameterInformation":{"label":"test label","documentation":"test documentation"}}],"activeParameter":1,"activeSignature":0}`
+		wantInvalid = `{"signatures":[{"label":"invalidLabel","documentation":"invalidDocumentation","parameters":[{"label":"test label","documentation":"test documentation"}]}],"activeParameter":1,"activeSignature":0}`
 	)
 	wantType := SignatureHelp{
 		Signatures: []SignatureInformation{
 			{
-				DocumentationFormat: []MarkupKind{
-					Markdown,
-				},
-				ParameterInformation: &ParameterInformation{
-					Label:         "test label",
-					Documentation: "test documentation",
+				Label:         "testLabel",
+				Documentation: "testDocumentation",
+				Parameters: []ParameterInformation{
+					{
+						Label:         "test label",
+						Documentation: "test documentation",
+					},
 				},
 			},
 		},
@@ -1429,17 +1561,19 @@ func testSignatureHelp(t *testing.T, marshal marshalFunc, unmarshal unmarshalFun
 
 func testSignatureInformation(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"documentationFormat":["markdown"],"parameterInformation":{"label":"test label","documentation":"test documentation"}}`
-		wantInvalid = `{"documentationFormat":["markdown","plaintext"],"parameterInformation":{"label":"test label","documentation":"test documentation"}}`
+		want        = `{"label":"testLabel","documentation":"testDocumentation","parameters":[{"label":"test label","documentation":"test documentation"}],"activeParameter":5}`
+		wantInvalid = `{"label":"testLabel","documentation":"invalidDocumentation","parameters":[{"label":"test label","documentation":"test documentation"}],"activeParameter":50}`
 	)
 	wantType := SignatureInformation{
-		DocumentationFormat: []MarkupKind{
-			Markdown,
+		Label:         "testLabel",
+		Documentation: "testDocumentation",
+		Parameters: []ParameterInformation{
+			{
+				Label:         "test label",
+				Documentation: "test documentation",
+			},
 		},
-		ParameterInformation: &ParameterInformation{
-			Label:         "test label",
-			Documentation: "test documentation",
-		},
+		ActiveParameter: uint32(5),
 	}
 
 	t.Run("Marshal", func(t *testing.T) {
@@ -1920,7 +2054,7 @@ func testDocumentHighlight(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 				Character: 10,
 			},
 		},
-		Kind: Text,
+		Kind: DocumentHighlightKindText,
 	}
 
 	t.Run("Marshal", func(t *testing.T) {
@@ -2012,17 +2146,17 @@ func TestDocumentHighlightKind_String(t *testing.T) {
 	}{
 		{
 			name: "Text",
-			k:    Text,
+			k:    DocumentHighlightKindText,
 			want: "Text",
 		},
 		{
 			name: "Read",
-			k:    Read,
+			k:    DocumentHighlightKindRead,
 			want: "Read",
 		},
 		{
 			name: "Write",
-			k:    Write,
+			k:    DocumentHighlightKindWrite,
 			want: "Write",
 		},
 		{
@@ -2165,132 +2299,132 @@ func TestSymbolKind_String(t *testing.T) {
 	}{
 		{
 			name: "File",
-			k:    FileSymbol,
+			k:    SymbolKindFile,
 			want: "File",
 		},
 		{
 			name: "Module",
-			k:    ModuleSymbol,
+			k:    SymbolKindModule,
 			want: "Module",
 		},
 		{
 			name: "Namespace",
-			k:    NamespaceSymbol,
+			k:    SymbolKindNamespace,
 			want: "Namespace",
 		},
 		{
 			name: "Package",
-			k:    PackageSymbol,
+			k:    SymbolKindPackage,
 			want: "Package",
 		},
 		{
 			name: "Class",
-			k:    ClassSymbol,
+			k:    SymbolKindClass,
 			want: "Class",
 		},
 		{
 			name: "Method",
-			k:    MethodSymbol,
+			k:    SymbolKindMethod,
 			want: "Method",
 		},
 		{
 			name: "Property",
-			k:    PropertySymbol,
+			k:    SymbolKindProperty,
 			want: "Property",
 		},
 		{
 			name: "Field",
-			k:    FieldSymbol,
+			k:    SymbolKindField,
 			want: "Field",
 		},
 		{
 			name: "Constructor",
-			k:    ConstructorSymbol,
+			k:    SymbolKindConstructor,
 			want: "Constructor",
 		},
 		{
 			name: "Enum",
-			k:    EnumSymbol,
+			k:    SymbolKindEnum,
 			want: "Enum",
 		},
 		{
 			name: "Interface",
-			k:    InterfaceSymbol,
+			k:    SymbolKindInterface,
 			want: "Interface",
 		},
 		{
 			name: "Function",
-			k:    FunctionSymbol,
+			k:    SymbolKindFunction,
 			want: "Function",
 		},
 		{
 			name: "Variable",
-			k:    VariableSymbol,
+			k:    SymbolKindVariable,
 			want: "Variable",
 		},
 		{
 			name: "Constant",
-			k:    ConstantSymbol,
+			k:    SymbolKindConstant,
 			want: "Constant",
 		},
 		{
 			name: "String",
-			k:    StringSymbol,
+			k:    SymbolKindString,
 			want: "String",
 		},
 		{
 			name: "Number",
-			k:    NumberSymbol,
+			k:    SymbolKindNumber,
 			want: "Number",
 		},
 		{
 			name: "Boolean",
-			k:    BooleanSymbol,
+			k:    SymbolKindBoolean,
 			want: "Boolean",
 		},
 		{
 			name: "Array",
-			k:    ArraySymbol,
+			k:    SymbolKindArray,
 			want: "Array",
 		},
 		{
 			name: "Object",
-			k:    ObjectSymbol,
+			k:    SymbolKindObject,
 			want: "Object",
 		},
 		{
 			name: "Key",
-			k:    KeySymbol,
+			k:    SymbolKindKey,
 			want: "Key",
 		},
 		{
 			name: "Null",
-			k:    NullSymbol,
+			k:    SymbolKindNull,
 			want: "Null",
 		},
 		{
 			name: "EnumMember",
-			k:    EnumMemberSymbol,
+			k:    SymbolKindEnumMember,
 			want: "EnumMember",
 		},
 		{
 			name: "Struct",
-			k:    StructSymbol,
+			k:    SymbolKindStruct,
 			want: "Struct",
 		},
 		{
 			name: "Event",
-			k:    EventSymbol,
+			k:    SymbolKindEvent,
 			want: "Event",
 		},
 		{
 			name: "Operator",
-			k:    OperatorSymbol,
+			k:    SymbolKindOperator,
 			want: "Operator",
 		},
 		{
 			name: "TypeParameter",
-			k:    TypeParameterSymbol,
+			k:    SymbolKindTypeParameter,
 			want: "TypeParameter",
 		},
 		{
@@ -2311,15 +2445,47 @@ func TestSymbolKind_String(t *testing.T) {
 	}
 }
 
+func TestSymbolTag_String(t *testing.T) {
+	tests := []struct {
+		name string
+		k    SymbolTag
+		want string
+	}{
+		{
+			name: "Deprecated",
+			k:    SymbolTagDeprecated,
+			want: "Deprecated",
+		},
+		{
+			name: "Unknown",
+			k:    SymbolTag(0),
+			want: "0",
+		},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			if got := tt.k.String(); got != tt.want {
+				t.Errorf("SymbolTag.String() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func testDocumentSymbol(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"name":"test symbol","detail":"test detail","kind":1,"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":6}},"selectionRange":{"start":{"line":25,"character":3},"end":{"line":26,"character":10}},"children":[{"name":"child symbol","detail":"child detail","kind":11,"deprecated":true,"range":{"start":{"line":255,"character":4},"end":{"line":255,"character":10}},"selectionRange":{"start":{"line":255,"character":5},"end":{"line":255,"character":8}}}]}`
-		wantInvalid = `{"name":"invalid symbol","detail":"invalid detail","kind":1,"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"selectionRange":{"start":{"line":2,"character":5},"end":{"line":3,"character":1}},"children":[{"name":"invalid child symbol","kind":1,"detail":"invalid child detail","range":{"start":{"line":255,"character":4},"end":{"line":255,"character":10}},"selectionRange":{"start":{"line":255,"character":5},"end":{"line":255,"character":8}}}]}`
+		want        = `{"name":"test symbol","detail":"test detail","kind":1,"tags":[1],"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":6}},"selectionRange":{"start":{"line":25,"character":3},"end":{"line":26,"character":10}},"children":[{"name":"child symbol","detail":"child detail","kind":11,"deprecated":true,"range":{"start":{"line":255,"character":4},"end":{"line":255,"character":10}},"selectionRange":{"start":{"line":255,"character":5},"end":{"line":255,"character":8}}}]}`
+		wantInvalid = `{"name":"invalid symbol","detail":"invalid detail","kind":1,"tags":[0],"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"selectionRange":{"start":{"line":2,"character":5},"end":{"line":3,"character":1}},"children":[{"name":"invalid child symbol","kind":1,"detail":"invalid child detail","range":{"start":{"line":255,"character":4},"end":{"line":255,"character":10}},"selectionRange":{"start":{"line":255,"character":5},"end":{"line":255,"character":8}}}]}`
 	)
 	wantType := DocumentSymbol{
-		Name:       "test symbol",
-		Detail:     "test detail",
-		Kind:       FileSymbol,
+		Name:   "test symbol",
+		Detail: "test detail",
+		Kind:   SymbolKindFile,
+		Tags: []SymbolTag{
+			SymbolTagDeprecated,
+		},
 		Deprecated: false,
 		Range: Range{
 			Start: Position{
@@ -2345,7 +2511,7 @@ func testDocumentSymbol(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 			{
 				Name:       "child symbol",
 				Detail:     "child detail",
-				Kind:       InterfaceSymbol,
+				Kind:       SymbolKindInterface,
 				Deprecated: true,
 				Range: Range{
 					Start: Position{
@@ -2454,13 +2620,16 @@ func testDocumentSymbol(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 
 func testSymbolInformation(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"name":"test symbol","kind":1,"deprecated":true,"location":{"uri":"file:///path/to/test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"containerName":"testContainerName"}`
+		want        = `{"name":"test symbol","kind":1,"tags":[1],"deprecated":true,"location":{"uri":"file:///path/to/test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"containerName":"testContainerName"}`
 		wantNilAll  = `{"name":"test symbol","kind":1,"location":{"uri":"file:///path/to/test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}}`
-		wantInvalid = `{"name":"invalid symbol","kind":1,"deprecated":false,"location":{"uri":"file:///path/to/test_test.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}},"containerName":"invalidContainerName"}`
+		wantInvalid = `{"name":"invalid symbol","kind":1,"tags":[0],"deprecated":false,"location":{"uri":"file:///path/to/test_test.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}},"containerName":"invalidContainerName"}`
 	)
 	wantType := SymbolInformation{
-		Name:       "test symbol",
-		Kind:       1,
+		Name: "test symbol",
+		Kind: 1,
+		Tags: []SymbolTag{
+			SymbolTagDeprecated,
+		},
 		Deprecated: true,
 		Location: Location{
 			URI: uri.File("/path/to/test.go"),
@@ -2623,7 +2792,7 @@ func testCodeActionParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 							Character: 3,
 						},
 					},
-					Severity: SeverityError,
+					Severity: DiagnosticSeverityError,
 					Code:     "foo/bar",
 					Source:   "test foo bar",
 					Message:  "foo bar",
@@ -2833,7 +3002,7 @@ func testCodeActionContext(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 						Character: 3,
 					},
 				},
-				Severity: SeverityError,
+				Severity: DiagnosticSeverityError,
 				Code:     "foo/bar",
 				Source:   "test foo bar",
 				Message:  "foo bar",
@@ -2945,8 +3114,8 @@ func testCodeActionContext(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 
 func testCodeAction(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"title":"Refactoring","kind":"refactor.rewrite","diagnostics":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"test.go"}]}],"isPreferred":true,"edit":{"changes":{"file:///path/to/test.go":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]},"documentChanges":[{"textDocument":{"uri":"file:///path/to/test.go","version":10},"edits":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}]},"command":{"title":"rewrite","command":"rewriter","arguments":["-w"]}}`
-		wantInvalid = `{"title":"Refactoring","kind":"refactor","diagnostics":[{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"test.go"}]}],"isPreferred":false,"edit":{"changes":{"file:///path/to/test.go":[{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"newText":"foo bar"}]},"documentChanges":[{"textDocument":{"uri":"file:///path/to/test.go","version":10},"edits":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}]},"command":{"title":"rewrite","command":"rewriter","arguments":["-w"]}}`
+		want        = `{"title":"Refactoring","kind":"refactor.rewrite","diagnostics":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"test.go"}]}],"isPreferred":true,"disabled":{"reason":"testReason"},"edit":{"changes":{"file:///path/to/test.go":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]},"documentChanges":[{"textDocument":{"uri":"file:///path/to/test.go","version":10},"edits":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}]},"command":{"title":"rewrite","command":"rewriter","arguments":["-w"]},"data":"testData"}`
+		wantInvalid = `{"title":"Refactoring","kind":"refactor","diagnostics":[{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"test.go"}]}],"isPreferred":false,"disabled":{"reason":"invalidReason"},"edit":{"changes":{"file:///path/to/test.go":[{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"newText":"foo bar"}]},"documentChanges":[{"textDocument":{"uri":"file:///path/to/test.go","version":10},"edits":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"newText":"foo bar"}]}]},"command":{"title":"rewrite","command":"rewriter","arguments":["-w"]}}`
 	)
 	wantType := CodeAction{
 		Title: "Refactoring",
@@ -2963,7 +3132,7 @@ func testCodeAction(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 						Character: 3,
 					},
 				},
-				Severity: SeverityError,
+				Severity: DiagnosticSeverityError,
 				Code:     "foo/bar",
 				Source:   "test foo bar",
 				Message:  "foo bar",
@@ -2988,6 +3157,9 @@ func testCodeAction(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 			},
 		},
 		IsPreferred: true,
+		Disabled: &CodeActionDisable{
+			Reason: "testReason",
+		},
 		Edit: &WorkspaceEdit{
 			Changes: map[uri.URI][]TextEdit{
 				uri.File("/path/to/test.go"): {
@@ -3012,7 +3184,7 @@ func testCodeAction(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 						TextDocumentIdentifier: TextDocumentIdentifier{
 							URI: uri.File("/path/to/test.go"),
 						},
-						Version: NewVersion(10),
+						Version: int32(10),
 					},
 					Edits: []TextEdit{
 						{
@@ -3037,6 +3209,7 @@ func testCodeAction(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 			Command:   "rewriter",
 			Arguments: []interface{}{"-w"},
 		},
+		Data: "testData",
 	}
 
 	t.Run("Marshal", func(t *testing.T) {
@@ -4543,7 +4716,7 @@ func testDocumentFormattingParams(t *testing.T, marshal marshalFunc, unmarshal u
 
 func testFormattingOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"insertSpaces":true,"tabSize":4,"trimTrailingWhitespace":true,"insertFinalNewline":true,"trimFinalNewlines":true}`
+		want        = `{"insertSpaces":true,"tabSize":4,"trimTrailingWhitespace":true,"insertFinalNewline":true,"trimFinalNewlines":true,"key":{"test":"key"}}`
 		wantInvalid = `{"insertSpaces":false,"tabSize":2,"trimTrailingWhitespace":false,"insertFinalNewline":false,"trimFinalNewlines":false}`
 	)
 	wantType := FormattingOptions{
@@ -4552,6 +4725,9 @@ func testFormattingOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 		TrimTrailingWhitespace: true,
 		InsertFinalNewline:     true,
 		TrimFinalNewlines:      true,
+		Key: map[string]interface{}{
+			"test": "key",
+		},
 	}
 
 	t.Run("Marshal", func(t *testing.T) {

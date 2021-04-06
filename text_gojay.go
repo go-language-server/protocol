@@ -93,69 +93,9 @@ var (
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
-func (v *TextDocument) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.StringKey(keyURI, string(v.URI))
-	enc.StringKey(keyLanguageID, v.LanguageID)
-	enc.Float64Key(keyVersion, v.Version)
-	enc.Float64Key(keyLineCount, v.LineCount)
-}
-
-// IsNil returns wether the structure is nil value or not.
-func (v *TextDocument) IsNil() bool { return v == nil }
-
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
-func (v *TextDocument) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	switch k {
-	case keyURI:
-		return dec.String((*string)(&v.URI))
-	case keyLanguageID:
-		return dec.String(&v.LanguageID)
-	case keyVersion:
-		return dec.Float64(&v.Version)
-	case keyLineCount:
-		return dec.Float64(&v.LineCount)
-	}
-	return nil
-}
-
-// NKeys returns the number of keys to unmarshal.
-func (v *TextDocument) NKeys() int { return 4 }
-
-// compile time check whether the TextDocument implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
-var (
-	_ gojay.MarshalerJSONObject   = (*TextDocument)(nil)
-	_ gojay.UnmarshalerJSONObject = (*TextDocument)(nil)
-)
-
-// MarshalJSONObject implements gojay.MarshalerJSONObject.
-func (v *TextDocumentChangeEvent) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ObjectKey(keyDocument, &v.Document)
-}
-
-// IsNil returns wether the structure is nil value or not.
-func (v *TextDocumentChangeEvent) IsNil() bool { return v == nil }
-
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
-func (v *TextDocumentChangeEvent) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	if k == keyDocument {
-		return dec.Object(&v.Document)
-	}
-	return nil
-}
-
-// NKeys returns the number of keys to unmarshal.
-func (v *TextDocumentChangeEvent) NKeys() int { return 1 }
-
-// compile time check whether the TextDocumentChangeEvent implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
-var (
-	_ gojay.MarshalerJSONObject   = (*TextDocumentChangeEvent)(nil)
-	_ gojay.UnmarshalerJSONObject = (*TextDocumentChangeEvent)(nil)
-)
-
-// MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *TextDocumentContentChangeEvent) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ObjectKeyOmitEmpty(keyRange, v.Range)
-	enc.Float64KeyOmitEmpty(keyRangeLength, v.RangeLength)
+	enc.ObjectKeyOmitEmpty(keyRange, &v.Range)
+	enc.Uint32KeyOmitEmpty(keyRangeLength, v.RangeLength)
 	enc.StringKey(keyText, v.Text)
 }
 
@@ -166,12 +106,9 @@ func (v *TextDocumentContentChangeEvent) IsNil() bool { return v == nil }
 func (v *TextDocumentContentChangeEvent) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keyRange:
-		if v.Range == nil {
-			v.Range = &Range{}
-		}
-		return dec.Object(v.Range)
+		return dec.Object(&v.Range)
 	case keyRangeLength:
-		return dec.Float64(&v.RangeLength)
+		return dec.Uint32(&v.RangeLength)
 	case keyText:
 		return dec.String(&v.Text)
 	}
@@ -190,7 +127,7 @@ var (
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *TextDocumentChangeRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ArrayKey(keyDocumentSelector, &v.DocumentSelector)
-	enc.Float64Key(keySyncKind, v.SyncKind)
+	enc.Float64Key(keySyncKind, float64(v.SyncKind))
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -202,7 +139,7 @@ func (v *TextDocumentChangeRegistrationOptions) UnmarshalJSONObject(dec *gojay.D
 	case keyDocumentSelector:
 		return dec.Array(&v.DocumentSelector)
 	case keySyncKind:
-		return dec.Float64(&v.SyncKind)
+		return dec.Float64((*float64)(&v.SyncKind))
 	}
 	return nil
 }

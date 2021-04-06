@@ -25,7 +25,7 @@ func NewProgressToken(s string) *ProgressToken {
 
 // NewNumberProgressToken returns a new number ProgressToken.
 //nolint:gocritic
-func NewNumberProgressToken(n int64) *ProgressToken {
+func NewNumberProgressToken(n int32) *ProgressToken {
 	var iface interface{} = n
 	return (*ProgressToken)(&iface)
 }
@@ -35,7 +35,6 @@ func encodeProgressToken(enc *gojay.Encoder, key string, v *ProgressToken) {
 	if v == nil {
 		return
 	}
-
 	enc.AddInterfaceKey(key, (interface{})(*v))
 }
 
@@ -44,9 +43,7 @@ func decodeProgressToken(dec *gojay.Decoder, k, key string, v *ProgressToken) er
 	if v == nil || k != key {
 		return nil
 	}
-
-	vv := (interface{})(*v)
-	return dec.Interface(&vv)
+	return dec.Interface((*interface{})(v))
 }
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
@@ -84,7 +81,7 @@ func (v *WorkDoneProgressBegin) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey(keyTitle, v.Title)
 	enc.BoolKeyOmitEmpty(keyCancellable, v.Cancellable)
 	enc.StringKeyOmitEmpty(keyMessage, v.Message)
-	enc.Float64KeyOmitEmpty(keyPercentage, v.Percentage)
+	enc.Uint32KeyOmitEmpty(keyPercentage, v.Percentage)
 }
 
 // IsNil implements gojay.MarshalerJSONObject.
@@ -102,7 +99,7 @@ func (v *WorkDoneProgressBegin) UnmarshalJSONObject(dec *gojay.Decoder, k string
 	case keyMessage:
 		return dec.String(&v.Message)
 	case keyPercentage:
-		return dec.Float(&v.Percentage)
+		return dec.Uint32(&v.Percentage)
 	}
 	return nil
 }
@@ -121,7 +118,7 @@ func (v *WorkDoneProgressReport) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey(keyKind, string(v.Kind))
 	enc.BoolKeyOmitEmpty(keyCancellable, v.Cancellable)
 	enc.StringKeyOmitEmpty(keyMessage, v.Message)
-	enc.Float64KeyOmitEmpty(keyPercentage, v.Percentage)
+	enc.Uint32KeyOmitEmpty(keyPercentage, v.Percentage)
 }
 
 // IsNil implements gojay.MarshalerJSONObject.
@@ -137,7 +134,7 @@ func (v *WorkDoneProgressReport) UnmarshalJSONObject(dec *gojay.Decoder, k strin
 	case keyMessage:
 		return dec.String(&v.Message)
 	case keyPercentage:
-		return dec.Float(&v.Percentage)
+		return dec.Uint32(&v.Percentage)
 	}
 	return nil
 }

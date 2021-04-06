@@ -32,7 +32,7 @@ func testPublishDiagnosticsParams(t *testing.T, marshal marshalFunc, unmarshal u
 						Character: 3,
 					},
 				},
-				Severity: SeverityError,
+				Severity: DiagnosticSeverityError,
 				Code:     "foo/bar",
 				Source:   "test foo bar",
 				Message:  "foo bar",

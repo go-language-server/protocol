@@ -14,8 +14,6 @@ import (
 // SelectionRangeProviderOptions selection range provider options interface.
 type SelectionRangeProviderOptions interface {
 	Value() interface{}
-	gojay.MarshalerJSONObject
-	gojay.UnmarshalerJSONObject
 }
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.

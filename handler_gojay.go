@@ -49,8 +49,8 @@ func CancelHandler(handler jsonrpc2.Handler) jsonrpc2.Handler {
 		}
 
 		switch id := params.ID.(type) {
-		case float64:
-			canceller(jsonrpc2.NewNumberID(int64(id)))
+		case int32:
+			canceller(jsonrpc2.NewNumberID(id))
 		case string:
 			canceller(jsonrpc2.NewStringID(id))
 		default:

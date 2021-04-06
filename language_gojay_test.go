@@ -25,6 +25,10 @@ func TestCompletionList(t *testing.T) {
 	testCompletionList(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
+func TestInsertReplaceEdit(t *testing.T) {
+	testInsertReplaceEdit(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
+
 func TestCompletionItem(t *testing.T) { testCompletionItem(t, gojay.Marshal, gojay.Unsafe.Unmarshal) }
 
 func TestCompletionRegistrationOptions(t *testing.T) {

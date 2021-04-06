@@ -20,14 +20,6 @@ func TestDidChangeTextDocumentParams(t *testing.T) {
 	testDidChangeTextDocumentParams(t, json.Marshal, json.Unmarshal)
 }
 
-func TestTextDocument(t *testing.T) {
-	testTextDocument(t, json.Marshal, json.Unmarshal)
-}
-
-func TestTextDocumentChangeEvent(t *testing.T) {
-	testTextDocumentChangeEvent(t, json.Marshal, json.Unmarshal)
-}
-
 func TestTextDocumentContentChangeEvent(t *testing.T) {
 	testTextDocumentContentChangeEvent(t, json.Marshal, json.Unmarshal)
 }

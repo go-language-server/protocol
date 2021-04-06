@@ -12,7 +12,7 @@ type PublishDiagnosticsParams struct {
 	// Version optional the version number of the document the diagnostics are published for.
 	//
 	// @since 3.15
-	Version float64 `json:"version,omitempty"`
+	Version uint32 `json:"version,omitempty"`
 
 	// Diagnostics an array of diagnostic information items.
 	Diagnostics []Diagnostic `json:"diagnostics"`

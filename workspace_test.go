@@ -660,7 +660,7 @@ func testDidChangeWatchedFilesParams(t *testing.T, marshal marshalFunc, unmarsha
 	wantType := DidChangeWatchedFilesParams{
 		Changes: []*FileEvent{
 			{
-				Type: Changed,
+				Type: FileChangeTypeChanged,
 				URI:  uri.File("/path/to/test.go"),
 			},
 		},
@@ -768,7 +768,7 @@ func testFileEvent(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 		wantInvalid = `{"type":3,"uri":"file:///path/to/invalid.go"}`
 	)
 	wantType := FileEvent{
-		Type: Changed,
+		Type: FileChangeTypeChanged,
 		URI:  uri.File("/path/to/test.go"),
 	}
 
@@ -861,17 +861,17 @@ func TestFileChangeType_String(t *testing.T) {
 	}{
 		{
 			name: "Created",
-			k:    Created,
+			k:    FileChangeTypeCreated,
 			want: "Created",
 		},
 		{
 			name: "Changed",
-			k:    Changed,
+			k:    FileChangeTypeChanged,
 			want: "Changed",
 		},
 		{
 			name: "Deleted",
-			k:    Deleted,
+			k:    FileChangeTypeDeleted,
 			want: "Deleted",
 		},
 		{
@@ -902,7 +902,7 @@ func testDidChangeWatchedFilesRegistrationOptions(t *testing.T, marshal marshalF
 		Watchers: []FileSystemWatcher{
 			{
 				GlobPattern: "*",
-				Kind:        ChangeWatch,
+				Kind:        WatchKindChange,
 			},
 		},
 	}
@@ -1017,17 +1017,17 @@ func TestWatchKind_String(t *testing.T) {
 	}{
 		{
 			name: "CreateWatch",
-			k:    CreateWatch,
+			k:    WatchKindCreate,
 			want: "Create",
 		},
 		{
 			name: "ChangeWatch",
-			k:    ChangeWatch,
+			k:    WatchKindChange,
 			want: "Change",
 		},
 		{
 			name: "DeleteWatch",
-			k:    DeleteWatch,
+			k:    WatchKindDelete,
 			want: "Delete",
 		},
 		{
@@ -1409,7 +1409,7 @@ func testApplyWorkspaceEditParams(t *testing.T, marshal marshalFunc, unmarshal u
 						TextDocumentIdentifier: TextDocumentIdentifier{
 							URI: uri.File("/path/to/basic.go"),
 						},
-						Version: NewVersion(10),
+						Version: int32(10),
 					},
 					Edits: []TextEdit{
 						{
@@ -1455,7 +1455,7 @@ func testApplyWorkspaceEditParams(t *testing.T, marshal marshalFunc, unmarshal u
 						TextDocumentIdentifier: TextDocumentIdentifier{
 							URI: uri.File("/path/to/basic.go"),
 						},
-						Version: NewVersion(10),
+						Version: int32(10),
 					},
 					Edits: []TextEdit{
 						{
@@ -1574,11 +1574,13 @@ func testApplyWorkspaceEditParams(t *testing.T, marshal marshalFunc, unmarshal u
 
 func testApplyWorkspaceEditResponse(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want        = `{"applied":true}`
+		want        = `{"applied":true,"failureReason":"testFailureReason","failedChange":1}`
 		wantInvalid = `{"applied":false}`
 	)
 	wantType := ApplyWorkspaceEditResponse{
-		Applied: true,
+		Applied:       true,
+		FailureReason: "testFailureReason",
+		FailedChange:  1,
 	}
 
 	t.Run("Marshal", func(t *testing.T) {

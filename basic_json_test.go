@@ -20,6 +20,8 @@ func TestLocation(t *testing.T) { testLocation(t, json.Marshal, json.Unmarshal) 
 
 func TestLocationLink(t *testing.T) { testLocationLink(t, json.Marshal, json.Unmarshal) }
 
+func TestCodeDescription(t *testing.T) { testCodeDescription(t, json.Marshal, json.Unmarshal) }
+
 func TestDiagnostic(t *testing.T) { testDiagnostic(t, json.Marshal, json.Unmarshal) }
 
 func TestDiagnosticRelatedInformation(t *testing.T) {
@@ -27,6 +29,10 @@ func TestDiagnosticRelatedInformation(t *testing.T) {
 }
 
 func TestCommand(t *testing.T) { testCommand(t, json.Marshal, json.Unmarshal) }
+
+func TestChangeAnnotation(t *testing.T) { testChangeAnnotation(t, json.Marshal, json.Unmarshal) }
+
+func TestAnnotatedTextEdit(t *testing.T) { testAnnotatedTextEdit(t, json.Marshal, json.Unmarshal) }
 
 func TestTextEdit(t *testing.T) { testTextEdit(t, json.Marshal, json.Unmarshal) }
 
@@ -54,6 +60,10 @@ func TestTextDocumentItem(t *testing.T) { testTextDocumentItem(t, json.Marshal, 
 
 func TestVersionedTextDocumentIdentifier(t *testing.T) {
 	testVersionedTextDocumentIdentifier(t, json.Marshal, json.Unmarshal)
+}
+
+func TestOptionalVersionedTextDocumentIdentifier(t *testing.T) {
+	testOptionalVersionedTextDocumentIdentifier(t, json.Marshal, json.Unmarshal)
 }
 
 func TestTextDocumentPositionParams(t *testing.T) {

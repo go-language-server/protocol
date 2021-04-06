@@ -7,6 +7,13 @@ package protocol
 import "go.lsp.dev/jsonrpc2"
 
 const (
+	// LSPReservedErrorRangeStart is the start range of LSP reserved error codes.
+	//
+	// It doesn't denote a real error code.
+	//
+	// @since 3.16.0.
+	LSPReservedErrorRangeStart jsonrpc2.Code = -32899
+
 	// ContentModified is the state change that invalidates the result of a request in execution.
 	//
 	// Defined by the protocol.
@@ -16,6 +23,13 @@ const (
 	//
 	// Defined by the protocol.
 	CodeRequestCancelled jsonrpc2.Code = -32800
+
+	// LSPReservedErrorRangeEnd is the end range of LSP reserved error codes.
+	//
+	// It doesn't denote a real error code.
+	//
+	// @since 3.16.0.
+	LSPReservedErrorRangeEnd jsonrpc2.Code = -32800
 )
 
 var (

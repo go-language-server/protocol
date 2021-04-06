@@ -24,6 +24,10 @@ func TestCompletionList(t *testing.T) {
 	testCompletionList(t, json.Marshal, json.Unmarshal)
 }
 
+func TestInsertReplaceEdit(t *testing.T) {
+	testInsertReplaceEdit(t, json.Marshal, json.Unmarshal)
+}
+
 func TestCompletionItem(t *testing.T) { testCompletionItem(t, json.Marshal, json.Unmarshal) }
 
 func TestCompletionRegistrationOptions(t *testing.T) {

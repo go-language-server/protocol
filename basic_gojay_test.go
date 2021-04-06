@@ -21,6 +21,8 @@ func TestLocation(t *testing.T) { testLocation(t, gojay.Marshal, gojay.Unsafe.Un
 
 func TestLocationLink(t *testing.T) { testLocationLink(t, gojay.Marshal, gojay.Unsafe.Unmarshal) }
 
+func TestCodeDescription(t *testing.T) { testCodeDescription(t, gojay.Marshal, gojay.Unsafe.Unmarshal) }
+
 func TestDiagnostic(t *testing.T) { testDiagnostic(t, gojay.Marshal, gojay.Unsafe.Unmarshal) }
 
 func TestDiagnosticRelatedInformation(t *testing.T) {
@@ -28,6 +30,14 @@ func TestDiagnosticRelatedInformation(t *testing.T) {
 }
 
 func TestCommand(t *testing.T) { testCommand(t, gojay.Marshal, gojay.Unsafe.Unmarshal) }
+
+func TestChangeAnnotation(t *testing.T) {
+	testChangeAnnotation(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
+
+func TestAnnotatedTextEdit(t *testing.T) {
+	testAnnotatedTextEdit(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
 
 func TestTextEdit(t *testing.T) { testTextEdit(t, gojay.Marshal, gojay.Unsafe.Unmarshal) }
 
@@ -65,6 +75,10 @@ func TestTextDocumentItem(t *testing.T) {
 
 func TestVersionedTextDocumentIdentifier(t *testing.T) {
 	testVersionedTextDocumentIdentifier(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
+
+func TestOptionalVersionedTextDocumentIdentifier(t *testing.T) {
+	testOptionalVersionedTextDocumentIdentifier(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
 func TestTextDocumentPositionParams(t *testing.T) {

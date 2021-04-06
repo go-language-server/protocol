@@ -31,6 +31,26 @@ func clientDispatch(ctx context.Context, client Client, reply jsonrpc2.Replier, 
 	logger := LoggerFromContext(ctx)
 
 	switch req.Method() {
+	case MethodProgress: // notification
+		defer logger.Debug(MethodProgress, zap.Error(err))
+
+		var params ProgressParams
+		if err := dec.DecodeObject(&params); err != nil {
+			return true, replyParseError(ctx, reply, err)
+		}
+		err := client.Progress(ctx, &params)
+		return true, reply(ctx, nil, err)
+
+	case MethodWorkDoneProgressCreate: // request
+		defer logger.Debug(MethodWorkDoneProgressCreate, zap.Error(err))
+
+		var params WorkDoneProgressCreateParams
+		if err := dec.DecodeObject(&params); err != nil {
+			return true, replyParseError(ctx, reply, err)
+		}
+		err := client.WorkDoneProgressCreate(ctx, &params)
+		return true, reply(ctx, nil, err)
+
 	case MethodWindowLogMessage: // notification
 		defer logger.Debug(MethodWindowLogMessage, zap.Error(err))
 

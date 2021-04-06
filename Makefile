@@ -116,7 +116,7 @@ tools/%:  ## install an individual dependent tool
 	@${MAKE} tools/bin/$* 1>/dev/null
 
 tools/bin/%: ${TOOLS_DIR}/go.mod ${TOOLS_DIR}/go.sum
-	cd tools; \
+	@cd tools; \
 		for t in ${TOOLS}; do \
 			if [ -z '$*' ] || [ $$(basename $$t) = '$*' ]; then \
 				echo "Install $$t ..." >&2; \

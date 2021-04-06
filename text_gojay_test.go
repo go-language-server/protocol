@@ -21,14 +21,6 @@ func TestDidChangeTextDocumentParams(t *testing.T) {
 	testDidChangeTextDocumentParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
-func TestTextDocument(t *testing.T) {
-	testTextDocument(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
-}
-
-func TestTextDocumentChangeEvent(t *testing.T) {
-	testTextDocumentChangeEvent(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
-}
-
 func TestTextDocumentContentChangeEvent(t *testing.T) {
 	testTextDocumentContentChangeEvent(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }

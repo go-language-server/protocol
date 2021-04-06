@@ -13,6 +13,10 @@ import (
 	"github.com/francoispqt/gojay"
 )
 
+func TestCancelParams(t *testing.T) {
+	testCancelParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
+
 func TestWorkspaceFolders(t *testing.T) {
 	testWorkspaceFolders(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
@@ -23,6 +27,26 @@ func TestClientInfo(t *testing.T) {
 
 func TestInitializeParams(t *testing.T) {
 	testInitializeParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
+
+func TestLogTraceParams(t *testing.T) {
+	testLogTraceParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
+
+func TestSetTraceParams(t *testing.T) {
+	testSetTraceParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
+
+func TestCreateFilesParams(t *testing.T) {
+	testCreateFilesParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
+
+func TestRenameFilesParams(t *testing.T) {
+	testRenameFilesParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
+
+func TestDeleteFilesParams(t *testing.T) {
+	testDeleteFilesParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
 func TestWorkspaceClientCapabilities(t *testing.T) {
@@ -141,6 +165,14 @@ func TestTextDocumentClientCapabilitiesTypeDefinition(t *testing.T) {
 	testTextDocumentClientCapabilitiesTypeDefinition(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
+func TestImplementationOptions(t *testing.T) {
+	testImplementationOptions(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
+
+func TestImplementationRegistrationOptions(t *testing.T) {
+	testImplementationRegistrationOptions(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
+
 func TestImplementationParams(t *testing.T) {
 	testImplementationParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
@@ -203,6 +235,46 @@ func TestClientCapabilities(t *testing.T) {
 
 func TestInitializeResult(t *testing.T) {
 	testInitializeResult(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
+
+func TestInitializeError(t *testing.T) {
+	testInitializeError(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
+
+func TestShowDocumentParams(t *testing.T) {
+	testShowDocumentParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
+
+func TestShowDocumentResult(t *testing.T) {
+	testShowDocumentResult(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
+
+func TestReferencesOptions(t *testing.T) {
+	testReferencesOptions(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
+
+func TestCodeActionOptions(t *testing.T) {
+	testCodeActionOptions(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
+
+func TestRenameOptions(t *testing.T) {
+	testRenameOptions(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
+
+func TestSaveOptions(t *testing.T) {
+	testSaveOptions(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
+
+func TestTextDocumentSyncOptions(t *testing.T) {
+	testTextDocumentSyncOptions(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
+
+func TestHoverOptions(t *testing.T) {
+	testHoverOptions(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
+
+func TestStaticRegistrationOptions(t *testing.T) {
+	testStaticRegistrationOptions(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
 func TestDocumentLinkRegistrationOptions(t *testing.T) {

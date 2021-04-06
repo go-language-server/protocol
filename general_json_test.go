@@ -12,11 +12,35 @@ import (
 	"testing"
 )
 
+func TestCancelParams(t *testing.T) {
+	testCancelParams(t, json.Marshal, json.Unmarshal)
+}
+
 func TestWorkspaceFolders(t *testing.T) { testWorkspaceFolders(t, json.Marshal, json.Unmarshal) }
 
 func TestClientInfo(t *testing.T) { testClientInfo(t, json.Marshal, json.Unmarshal) }
 
 func TestInitializeParams(t *testing.T) { testInitializeParams(t, json.Marshal, json.Unmarshal) }
+
+func TestLogTraceParams(t *testing.T) {
+	testLogTraceParams(t, json.Marshal, json.Unmarshal)
+}
+
+func TestSetTraceParams(t *testing.T) {
+	testSetTraceParams(t, json.Marshal, json.Unmarshal)
+}
+
+func TestCreateFilesParams(t *testing.T) {
+	testCreateFilesParams(t, json.Marshal, json.Unmarshal)
+}
+
+func TestRenameFilesParams(t *testing.T) {
+	testRenameFilesParams(t, json.Marshal, json.Unmarshal)
+}
+
+func TestDeleteFilesParams(t *testing.T) {
+	testDeleteFilesParams(t, json.Marshal, json.Unmarshal)
+}
 
 func TestWorkspaceClientCapabilities(t *testing.T) {
 	testWorkspaceClientCapabilities(t, json.Marshal, json.Unmarshal)
@@ -134,6 +158,14 @@ func TestTextDocumentClientCapabilitiesTypeDefinition(t *testing.T) {
 	testTextDocumentClientCapabilitiesTypeDefinition(t, json.Marshal, json.Unmarshal)
 }
 
+func TestImplementationOptions(t *testing.T) {
+	testImplementationOptions(t, json.Marshal, json.Unmarshal)
+}
+
+func TestImplementationRegistrationOptions(t *testing.T) {
+	testImplementationRegistrationOptions(t, json.Marshal, json.Unmarshal)
+}
+
 func TestImplementationParams(t *testing.T) {
 	testImplementationParams(t, json.Marshal, json.Unmarshal)
 }
@@ -193,6 +225,46 @@ func TestTextDocumentClientCapabilities(t *testing.T) {
 func TestClientCapabilities(t *testing.T) { testClientCapabilities(t, json.Marshal, json.Unmarshal) }
 
 func TestInitializeResult(t *testing.T) { testInitializeResult(t, json.Marshal, json.Unmarshal) }
+
+func TestInitializeError(t *testing.T) {
+	testInitializeError(t, json.Marshal, json.Unmarshal)
+}
+
+func TestShowDocumentParams(t *testing.T) {
+	testShowDocumentParams(t, json.Marshal, json.Unmarshal)
+}
+
+func TestShowDocumentResult(t *testing.T) {
+	testShowDocumentResult(t, json.Marshal, json.Unmarshal)
+}
+
+func TestReferencesOptions(t *testing.T) {
+	testReferencesOptions(t, json.Marshal, json.Unmarshal)
+}
+
+func TestCodeActionOptions(t *testing.T) {
+	testCodeActionOptions(t, json.Marshal, json.Unmarshal)
+}
+
+func TestRenameOptions(t *testing.T) {
+	testRenameOptions(t, json.Marshal, json.Unmarshal)
+}
+
+func TestSaveOptions(t *testing.T) {
+	testSaveOptions(t, json.Marshal, json.Unmarshal)
+}
+
+func TestTextDocumentSyncOptions(t *testing.T) {
+	testTextDocumentSyncOptions(t, json.Marshal, json.Unmarshal)
+}
+
+func TestHoverOptions(t *testing.T) {
+	testHoverOptions(t, json.Marshal, json.Unmarshal)
+}
+
+func TestStaticRegistrationOptions(t *testing.T) {
+	testStaticRegistrationOptions(t, json.Marshal, json.Unmarshal)
+}
 
 func TestDocumentLinkRegistrationOptions(t *testing.T) {
 	testDocumentLinkRegistrationOptions(t, json.Marshal, json.Unmarshal)

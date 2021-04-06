@@ -493,6 +493,8 @@ var (
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *ApplyWorkspaceEditResponse) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKey(keyApplied, v.Applied)
+	enc.StringKeyOmitEmpty(keyFailureReason, v.FailureReason)
+	enc.Uint32KeyOmitEmpty(keyFailedChange, v.FailedChange)
 }
 
 // IsNil returns wether the structure is nil value or not.
@@ -500,14 +502,19 @@ func (v *ApplyWorkspaceEditResponse) IsNil() bool { return v == nil }
 
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v *ApplyWorkspaceEditResponse) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	if k == keyApplied {
+	switch k {
+	case keyApplied:
 		return dec.Bool(&v.Applied)
+	case keyFailureReason:
+		return dec.String(&v.FailureReason)
+	case keyFailedChange:
+		return dec.Uint32(&v.FailedChange)
 	}
 	return nil
 }
 
 // NKeys returns the number of keys to unmarshal.
-func (v *ApplyWorkspaceEditResponse) NKeys() int { return 1 }
+func (v *ApplyWorkspaceEditResponse) NKeys() int { return 3 }
 
 // compile time check whether the ApplyWorkspaceEditResponse implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (

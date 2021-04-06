@@ -42,6 +42,8 @@ func ClientHandler(client Client, handler jsonrpc2.Handler) jsonrpc2.Handler {
 
 // Client represents a Language Server Protocol client.
 type Client interface {
+	Progress(ctx context.Context, params *ProgressParams) (err error)
+	WorkDoneProgressCreate(ctx context.Context, params *WorkDoneProgressCreateParams) (err error)
 	LogMessage(ctx context.Context, params *LogMessageParams) (err error)
 	PublishDiagnostics(ctx context.Context, params *PublishDiagnosticsParams) (err error)
 	ShowMessage(ctx context.Context, params *ShowMessageParams) (err error)
@@ -55,6 +57,12 @@ type Client interface {
 }
 
 const (
+	// MethodProgress method name of "$/progress".
+	MethodProgress = "$/progress"
+
+	// MethodWorkDoneProgressCreate method name of "window/workDoneProgress/create".
+	MethodWorkDoneProgressCreate = "window/workDoneProgress/create"
+
 	// MethodWindowShowMessage method name of "window/showMessage".
 	MethodWindowShowMessage = "window/showMessage"
 
@@ -95,6 +103,29 @@ type client struct {
 
 // compiler time check whether the Client implements ClientInterface interface.
 var _ Client = (*client)(nil)
+
+// Progress is the base protocol offers also support to report progress in a generic fashion.
+//
+// This mechanism can be used to report any kind of progress including work done progress (usually used to report progress in the user interface using a progress bar) and
+// partial result progress to support streaming of results.
+//
+// @since 3.16.0.
+func (c *client) Progress(ctx context.Context, params *ProgressParams) (err error) {
+	c.logger.Debug("call " + MethodProgress)
+	defer c.logger.Debug("end "+MethodProgress, zap.Error(err))
+
+	return c.Conn.Notify(ctx, MethodProgress, params)
+}
+
+// WorkDoneProgressCreate sends the request is sent from the server to the client to ask the client to create a work done progress.
+//
+// @since 3.16.0.
+func (c *client) WorkDoneProgressCreate(ctx context.Context, params *WorkDoneProgressCreateParams) (err error) {
+	c.logger.Debug("call " + MethodWorkDoneProgressCreate)
+	defer c.logger.Debug("end "+MethodWorkDoneProgressCreate, zap.Error(err))
+
+	return Call(ctx, c.Conn, MethodWorkDoneProgressCreate, params, nil)
+}
 
 // LogMessage sends the notification from the server to the client to ask the client to log a particular message.
 func (c *client) LogMessage(ctx context.Context, params *LogMessageParams) (err error) {

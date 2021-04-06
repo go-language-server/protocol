@@ -27,8 +27,9 @@ type Server interface {
 	Initialized(ctx context.Context, params *InitializedParams) (err error)
 	Shutdown(ctx context.Context) (err error)
 	Exit(ctx context.Context) (err error)
-	WorkDoneProgressCreate(ctx context.Context, params *WorkDoneProgressCreateParams) error
-	WorkDoneProgressCancel(ctx context.Context, params *WorkDoneProgressCancelParams) error
+	WorkDoneProgressCancel(ctx context.Context, params *WorkDoneProgressCancelParams) (err error)
+	LogTrace(ctx context.Context, params *LogTraceParams) (err error)
+	SetTrace(ctx context.Context, params *SetTraceParams) (err error)
 	CodeAction(ctx context.Context, params *CodeActionParams) (result []CodeAction, err error)
 	CodeLens(ctx context.Context, params *CodeLensParams) (result []CodeLens, err error)
 	CodeLensResolve(ctx context.Context, params *CodeLens) (result *CodeLens, err error)
@@ -48,7 +49,7 @@ type Server interface {
 	DocumentHighlight(ctx context.Context, params *DocumentHighlightParams) (result []DocumentHighlight, err error)
 	DocumentLink(ctx context.Context, params *DocumentLinkParams) (result []DocumentLink, err error)
 	DocumentLinkResolve(ctx context.Context, params *DocumentLink) (result *DocumentLink, err error)
-	DocumentSymbol(ctx context.Context, params *DocumentSymbolParams) (result []interface{} /* SymbolInformation[] | DocumentSymbol[] | null */, err error)
+	DocumentSymbol(ctx context.Context, params *DocumentSymbolParams) (result []interface{} /* []SymbolInformation | []DocumentSymbol */, err error)
 	ExecuteCommand(ctx context.Context, params *ExecuteCommandParams) (result interface{}, err error)
 	FoldingRanges(ctx context.Context, params *FoldingRangeParams) (result []FoldingRange, err error)
 	Formatting(ctx context.Context, params *DocumentFormattingParams) (result []TextEdit, err error)
@@ -64,13 +65,27 @@ type Server interface {
 	TypeDefinition(ctx context.Context, params *TypeDefinitionParams) (result []Location, err error)
 	WillSave(ctx context.Context, params *WillSaveTextDocumentParams) (err error)
 	WillSaveWaitUntil(ctx context.Context, params *WillSaveTextDocumentParams) (result []TextEdit, err error)
-	Request(ctx context.Context, method string, params interface{}) (interface{}, error)
+	ShowDocument(ctx context.Context, params *ShowDocumentParams) (result *ShowDocumentResult, err error)
+	WillCreateFiles(ctx context.Context, params *CreateFilesParams) (result *WorkspaceEdit, err error)
+	DidCreateFiles(ctx context.Context, params *CreateFilesParams) (err error)
+	WillRenameFiles(ctx context.Context, params *RenameFilesParams) (result *WorkspaceEdit, err error)
+	DidRenameFiles(ctx context.Context, params *RenameFilesParams) (err error)
+	WillDeleteFiles(ctx context.Context, params *DeleteFilesParams) (result *WorkspaceEdit, err error)
+	DidDeleteFiles(ctx context.Context, params *DeleteFilesParams) (err error)
+	CodeLensRefresh(ctx context.Context) (err error)
+	PrepareCallHierarchy(ctx context.Context, params *CallHierarchyPrepareParams) (result []CallHierarchyItem, err error)
+	IncomingCalls(ctx context.Context, params *CallHierarchyIncomingCallsParams) (result []CallHierarchyIncomingCall, err error)
+	OutgoingCalls(ctx context.Context, params *CallHierarchyOutgoingCallsParams) (result []CallHierarchyOutgoingCall, err error)
+	SemanticTokensFull(ctx context.Context, params *SemanticTokensParams) (result *SemanticTokens, err error)
+	SemanticTokensFullDelta(ctx context.Context, params *SemanticTokensDeltaParams) (result interface{} /* SemanticTokens | SemanticTokensDelta */, err error)
+	SemanticTokensRange(ctx context.Context, params *SemanticTokensRangeParams) (result *SemanticTokens, err error)
+	SemanticTokensRefresh(ctx context.Context) (err error)
+	LinkedEditingRange(ctx context.Context, params *LinkedEditingRangeParams) (result *LinkedEditingRanges, err error)
+	Moniker(ctx context.Context, params *MonikerParams) (result []Moniker, err error)
+	Request(ctx context.Context, method string, params interface{}) (result interface{}, err error)
 }
 
 const (
-	// MethodProgress method name of "$/progress".
-	MethodProgress = "$/progress"
-
 	// MethodInitialize method name of "initialize".
 	MethodInitialize = "initialize"
 
@@ -83,11 +98,14 @@ const (
 	// MethodExit method name of "exit".
 	MethodExit = "exit"
 
-	// MethodWorkDoneProgressCreate method name of "window/workDoneProgress/create".
-	MethodWorkDoneProgressCreate = "window/workDoneProgress/create"
-
 	// MethodWorkDoneProgressCancel method name of "window/workDoneProgress/cancel".
 	MethodWorkDoneProgressCancel = "window/workDoneProgress/cancel"
+
+	// MethodLogTrace method name of "$/logTrace".
+	MethodLogTrace = "$/logTrace"
+
+	// MethodSetTrace method name of "$/setTrace".
+	MethodSetTrace = "$/setTrace"
 
 	// MethodCancelRequest method name of "$/cancelRequest".
 	MethodCancelRequest = "$/cancelRequest"
@@ -196,11 +214,63 @@ const (
 
 	// MethodTextDocumentWillSaveWaitUntil method name of "textDocument/willSaveWaitUntil".
 	MethodTextDocumentWillSaveWaitUntil = "textDocument/willSaveWaitUntil"
+
+	// MethodShowDocument method name of "window/showDocument".
+	MethodShowDocument = "window/showDocument"
+
+	// MethodWillCreateFiles method name of "workspace/willCreateFiles".
+	MethodWillCreateFiles = "workspace/willCreateFiles"
+
+	// MethodDidCreateFiles method name of "workspace/didCreateFiles".
+	MethodDidCreateFiles = "workspace/didCreateFiles"
+
+	// MethodWillRenameFiles method name of "workspace/willRenameFiles".
+	MethodWillRenameFiles = "workspace/willRenameFiles"
+
+	// MethodDidRenameFiles method name of "workspace/didRenameFiles".
+	MethodDidRenameFiles = "workspace/didRenameFiles"
+
+	// MethodWillDeleteFiles method name of "workspace/willDeleteFiles".
+	MethodWillDeleteFiles = "workspace/willDeleteFiles"
+
+	// MethodDidDeleteFiles method name of "workspace/didDeleteFiles".
+	MethodDidDeleteFiles = "workspace/didDeleteFiles"
+
+	// MethodCodeLensRefresh method name of "workspace/codeLens/refresh".
+	MethodCodeLensRefresh = "workspace/codeLens/refresh"
+
+	// MethodTextDocumentPrepareCallHierarchy method name of "textDocument/prepareCallHierarchy".
+	MethodTextDocumentPrepareCallHierarchy = "textDocument/prepareCallHierarchy"
+
+	// MethodCallHierarchyIncomingCalls method name of "callHierarchy/incomingCalls".
+	MethodCallHierarchyIncomingCalls = "callHierarchy/incomingCalls"
+
+	// MethodCallHierarchyOutgoingCalls method name of "callHierarchy/outgoingCalls".
+	MethodCallHierarchyOutgoingCalls = "callHierarchy/outgoingCalls"
+
+	// MethodSemanticTokensFull method name of "textDocument/semanticTokens/full".
+	MethodSemanticTokensFull = "textDocument/semanticTokens/full"
+
+	// MethodSemanticTokensFullDelta method name of "textDocument/semanticTokens/full/delta".
+	MethodSemanticTokensFullDelta = "textDocument/semanticTokens/full/delta"
+
+	// MethodSemanticTokensRange method name of "textDocument/semanticTokens/range".
+	MethodSemanticTokensRange = "textDocument/semanticTokens/range"
+
+	// MethodSemanticTokensRefresh method name of "workspace/semanticTokens/refresh".
+	MethodSemanticTokensRefresh = "workspace/semanticTokens/refresh"
+
+	// MethodLinkedEditingRange method name of "textDocument/linkedEditingRange".
+	MethodLinkedEditingRange = "textDocument/linkedEditingRange"
+
+	// MethodMoniker method name of "textDocument/moniker".
+	MethodMoniker = "textDocument/moniker"
 )
 
 // server implements a Language Server Protocol server.
 type server struct {
 	jsonrpc2.Conn
+
 	logger *zap.Logger
 }
 
@@ -266,12 +336,29 @@ func (s *server) Exit(ctx context.Context) (err error) {
 	return s.Conn.Notify(ctx, MethodExit, nil)
 }
 
-// WorkDoneProgressCreate sends the request is sent from the server to the client to ask the client to create a work done progress.
-func (s *server) WorkDoneProgressCreate(ctx context.Context, params *WorkDoneProgressCreateParams) (err error) {
-	s.logger.Debug("call " + MethodWorkDoneProgressCreate)
-	defer s.logger.Debug("end "+MethodWorkDoneProgressCreate, zap.Error(err))
+// LogTrace a notification to log the trace of the server’s execution.
+//
+// The amount and content of these notifications depends on the current trace configuration.
+//
+// If trace is "off", the server should not send any logTrace notification. If trace is "message",
+// the server should not add the "verbose" field in the LogTraceParams.
+//
+// @since 3.16.0.
+func (s *server) LogTrace(ctx context.Context, params *LogTraceParams) (err error) {
+	s.logger.Debug("notify " + MethodLogTrace)
+	defer s.logger.Debug("end "+MethodLogTrace, zap.Error(err))
 
-	return s.Conn.Notify(ctx, MethodWorkDoneProgressCreate, params)
+	return s.Conn.Notify(ctx, MethodLogTrace, params)
+}
+
+// SetTrace a notification that should be used by the client to modify the trace setting of the server.
+//
+// @since 3.16.0.
+func (s *server) SetTrace(ctx context.Context, params *SetTraceParams) (err error) {
+	s.logger.Debug("notify " + MethodSetTrace)
+	defer s.logger.Debug("end "+MethodSetTrace, zap.Error(err))
+
+	return s.Conn.Notify(ctx, MethodSetTrace, params)
 }
 
 // WorkDoneProgressCancel is the sends notification from the client to the server to cancel a progress initiated on the
@@ -739,6 +826,265 @@ func (s *server) WillSaveWaitUntil(ctx context.Context, params *WillSaveTextDocu
 	return result, nil
 }
 
+// ShowDocument sends the request from a server to a client to ask the client to display a particular document in the user interface.
+//
+// @since 3.16.0.
+func (s *server) ShowDocument(ctx context.Context, params *ShowDocumentParams) (result *ShowDocumentResult, err error) {
+	s.logger.Debug("call " + MethodShowDocument)
+	defer s.logger.Debug("end "+MethodShowDocument, zap.Error(err))
+
+	if err := Call(ctx, s.Conn, MethodShowDocument, params, &result); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+// WillCreateFiles sends the will create files request is sent from the client to the server before files are actually created as long as the creation is triggered from within the client.
+//
+// The request can return a WorkspaceEdit which will be applied to workspace before the files are created.
+//
+// Please note that clients might drop results if computing the edit took too long or if a server constantly fails on this request. This is done to keep creates fast and reliable.
+//
+// @since 3.16.0.
+func (s *server) WillCreateFiles(ctx context.Context, params *CreateFilesParams) (result *WorkspaceEdit, err error) {
+	s.logger.Debug("call " + MethodWillCreateFiles)
+	defer s.logger.Debug("end "+MethodWillCreateFiles, zap.Error(err))
+
+	if err := Call(ctx, s.Conn, MethodWillCreateFiles, params, &result); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+// DidCreateFiles sends the did create files notification is sent from the client to the server when files were created from within the client.
+//
+// @since 3.16.0.
+func (s *server) DidCreateFiles(ctx context.Context, params *CreateFilesParams) (err error) {
+	s.logger.Debug("call " + MethodDidCreateFiles)
+	defer s.logger.Debug("end "+MethodDidCreateFiles, zap.Error(err))
+
+	return s.Conn.Notify(ctx, MethodDidCreateFiles, params)
+}
+
+// WillRenameFiles sends the will rename files request is sent from the client to the server before files are actually renamed as long as the rename is triggered from within the client.
+//
+// The request can return a WorkspaceEdit which will be applied to workspace before the files are renamed.
+//
+// Please note that clients might drop results if computing the edit took too long or if a server constantly fails on this request. This is done to keep renames fast and reliable.
+//
+// @since 3.16.0.
+func (s *server) WillRenameFiles(ctx context.Context, params *RenameFilesParams) (result *WorkspaceEdit, err error) {
+	s.logger.Debug("call " + MethodWillRenameFiles)
+	defer s.logger.Debug("end "+MethodWillRenameFiles, zap.Error(err))
+
+	if err := Call(ctx, s.Conn, MethodWillRenameFiles, params, &result); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+// DidRenameFiles sends the did rename files notification is sent from the client to the server when files were renamed from within the client.
+//
+// @since 3.16.0.
+func (s *server) DidRenameFiles(ctx context.Context, params *RenameFilesParams) (err error) {
+	s.logger.Debug("call " + MethodDidRenameFiles)
+	defer s.logger.Debug("end "+MethodDidRenameFiles, zap.Error(err))
+
+	return s.Conn.Notify(ctx, MethodDidRenameFiles, params)
+}
+
+// WillDeleteFiles sends the will delete files request is sent from the client to the server before files are actually deleted as long as the deletion is triggered from within the client.
+//
+// The request can return a WorkspaceEdit which will be applied to workspace before the files are deleted.
+//
+// Please note that clients might drop results if computing the edit took too long or if a server constantly fails on this request. This is done to keep deletes fast and reliable.
+//
+// @since 3.16.0.
+func (s *server) WillDeleteFiles(ctx context.Context, params *DeleteFilesParams) (result *WorkspaceEdit, err error) {
+	s.logger.Debug("call " + MethodWillDeleteFiles)
+	defer s.logger.Debug("end "+MethodWillDeleteFiles, zap.Error(err))
+
+	if err := Call(ctx, s.Conn, MethodWillDeleteFiles, params, &result); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+// DidDeleteFiles sends the did delete files notification is sent from the client to the server when files were deleted from within the client.
+//
+// @since 3.16.0.
+func (s *server) DidDeleteFiles(ctx context.Context, params *DeleteFilesParams) (err error) {
+	s.logger.Debug("call " + MethodDidDeleteFiles)
+	defer s.logger.Debug("end "+MethodDidDeleteFiles, zap.Error(err))
+
+	return s.Conn.Notify(ctx, MethodDidDeleteFiles, params)
+}
+
+// CodeLensRefresh sent from the server to the client.
+//
+// Servers can use it to ask clients to refresh the code lenses currently shown in editors.
+// As a result the client should ask the server to recompute the code lenses for these editors.
+// This is useful if a server detects a configuration change which requires a re-calculation of all code lenses.
+//
+// Note that the client still has the freedom to delay the re-calculation of the code lenses if for example an editor is currently not visible.
+//
+// @since 3.16.0.
+func (s *server) CodeLensRefresh(ctx context.Context) (err error) {
+	s.logger.Debug("call " + MethodCodeLensRefresh)
+	defer s.logger.Debug("end "+MethodCodeLensRefresh, zap.Error(err))
+
+	return Call(ctx, s.Conn, MethodCodeLensRefresh, nil, nil)
+}
+
+// PrepareCallHierarchy sent from the client to the server to return a call hierarchy for the language element of given text document positions.
+//
+// The call hierarchy requests are executed in two steps:
+//  1. first a call hierarchy item is resolved for the given text document position
+//  2. for a call hierarchy item the incoming or outgoing call hierarchy items are resolved.
+//
+// @since 3.16.0.
+func (s *server) PrepareCallHierarchy(ctx context.Context, params *CallHierarchyPrepareParams) (result []CallHierarchyItem, err error) {
+	s.logger.Debug("call " + MethodTextDocumentPrepareCallHierarchy)
+	defer s.logger.Debug("end "+MethodTextDocumentPrepareCallHierarchy, zap.Error(err))
+
+	if err := Call(ctx, s.Conn, MethodTextDocumentPrepareCallHierarchy, params, &result); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+// IncomingCalls is the request is sent from the client to the server to resolve incoming calls for a given call hierarchy item.
+//
+// The request doesn’t define its own client and server capabilities. It is only issued if a server registers for the "textDocument/prepareCallHierarchy" request.
+//
+// @since 3.16.0.
+func (s *server) IncomingCalls(ctx context.Context, params *CallHierarchyIncomingCallsParams) (result []CallHierarchyIncomingCall, err error) {
+	s.logger.Debug("call " + MethodCallHierarchyIncomingCalls)
+	defer s.logger.Debug("end "+MethodCallHierarchyIncomingCalls, zap.Error(err))
+
+	if err := Call(ctx, s.Conn, MethodCallHierarchyIncomingCalls, params, &result); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+// OutgoingCalls is the request is sent from the client to the server to resolve outgoing calls for a given call hierarchy item.
+//
+// The request doesn’t define its own client and server capabilities. It is only issued if a server registers for the "textDocument/prepareCallHierarchy" request.
+//
+// @since 3.16.0.
+func (s *server) OutgoingCalls(ctx context.Context, params *CallHierarchyOutgoingCallsParams) (result []CallHierarchyOutgoingCall, err error) {
+	s.logger.Debug("call " + MethodCallHierarchyOutgoingCalls)
+	defer s.logger.Debug("end "+MethodCallHierarchyOutgoingCalls, zap.Error(err))
+
+	if err := Call(ctx, s.Conn, MethodCallHierarchyOutgoingCalls, params, &result); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+// SemanticTokensFull is the request is sent from the client to the server to resolve semantic tokens for a given file.
+//
+// Semantic tokens are used to add additional color information to a file that depends on language specific symbol information.
+//
+// A semantic token request usually produces a large result. The protocol therefore supports encoding tokens with numbers.
+//
+// @since 3.16.0.
+func (s *server) SemanticTokensFull(ctx context.Context, params *SemanticTokensParams) (result *SemanticTokens, err error) {
+	s.logger.Debug("call " + MethodSemanticTokensFull)
+	defer s.logger.Debug("end "+MethodSemanticTokensFull, zap.Error(err))
+
+	if err := Call(ctx, s.Conn, MethodSemanticTokensFull, params, &result); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+// SemanticTokensFullDelta is the request is sent from the client to the server to resolve semantic token delta for a given file.
+//
+// Semantic tokens are used to add additional color information to a file that depends on language specific symbol information.
+//
+// A semantic token request usually produces a large result. The protocol therefore supports encoding tokens with numbers.
+//
+// @since 3.16.0.
+func (s *server) SemanticTokensFullDelta(ctx context.Context, params *SemanticTokensDeltaParams) (result interface{}, err error) {
+	s.logger.Debug("call " + MethodSemanticTokensFullDelta)
+	defer s.logger.Debug("end "+MethodSemanticTokensFullDelta, zap.Error(err))
+
+	if err := Call(ctx, s.Conn, MethodSemanticTokensFullDelta, params, &result); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+// SemanticTokensRange is the request is sent from the client to the server to resolve semantic token delta for a given file.
+//
+// When a user opens a file it can be beneficial to only compute the semantic tokens for the visible range (faster rendering of the tokens in the user interface).
+// If a server can compute these tokens faster than for the whole file it can provide a handler for the "textDocument/semanticTokens/range" request to handle this case special.
+//
+// Please note that if a client also announces that it will send the "textDocument/semanticTokens/range" server should implement this request as well to allow for flicker free scrolling and semantic coloring of a minimap.
+//
+// @since 3.16.0.
+func (s *server) SemanticTokensRange(ctx context.Context, params *SemanticTokensRangeParams) (result *SemanticTokens, err error) {
+	s.logger.Debug("call " + MethodSemanticTokensRange)
+	defer s.logger.Debug("end "+MethodSemanticTokensRange, zap.Error(err))
+
+	if err := Call(ctx, s.Conn, MethodSemanticTokensRange, params, &result); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+// SemanticTokensRefresh is sent from the server to the client. Servers can use it to ask clients to refresh the editors for which this server provides semantic tokens.
+//
+// As a result the client should ask the server to recompute the semantic tokens for these editors.
+// This is useful if a server detects a project wide configuration change which requires a re-calculation of all semantic tokens.
+//
+// Note that the client still has the freedom to delay the re-calculation of the semantic tokens if for example an editor is currently not visible.
+//
+// @since 3.16.0.
+func (s *server) SemanticTokensRefresh(ctx context.Context) (err error) {
+	s.logger.Debug("call " + MethodSemanticTokensRefresh)
+	defer s.logger.Debug("end "+MethodSemanticTokensRefresh, zap.Error(err))
+
+	return Call(ctx, s.Conn, MethodSemanticTokensRefresh, nil, nil)
+}
+
+// LinkedEditingRange is the linked editing request is sent from the client to the server to return for a given position in a document the range of the symbol at the position and all ranges that have the same content.
+//
+// Optionally a word pattern can be returned to describe valid contents.
+//
+// A rename to one of the ranges can be applied to all other ranges if the new content is valid. If no result-specific word pattern is provided, the word pattern from the client’s language configuration is used.
+//
+// @since 3.16.0.
+func (s *server) LinkedEditingRange(ctx context.Context, params *LinkedEditingRangeParams) (result *LinkedEditingRanges, err error) {
+	s.logger.Debug("call " + MethodLinkedEditingRange)
+	defer s.logger.Debug("end "+MethodLinkedEditingRange, zap.Error(err))
+
+	if err := Call(ctx, s.Conn, MethodLinkedEditingRange, params, &result); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+// Moniker is the request is sent from the client to the server to get the symbol monikers for a given text document position.
+//
+// An array of Moniker types is returned as response to indicate possible monikers at the given location.
+//
+// If no monikers can be calculated, an empty array or null should be returned.
+//
+// @since 3.16.0.
+func (s *server) Moniker(ctx context.Context, params *MonikerParams) (result []Moniker, err error) {
+	s.logger.Debug("call " + MethodMoniker)
+	defer s.logger.Debug("end "+MethodMoniker, zap.Error(err))
+
+	if err := Call(ctx, s.Conn, MethodMoniker, params, &result); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+// Request sends a request from the client to the server that non-compliant with the Language Server Protocol specifications.
 func (s *server) Request(ctx context.Context, method string, params interface{}) (interface{}, error) {
 	s.logger.Debug("call " + method)
 	defer s.logger.Debug("end " + method)

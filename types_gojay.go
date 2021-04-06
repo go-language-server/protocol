@@ -38,6 +38,35 @@ func (v *Interfaces) UnmarshalJSONArray(dec *gojay.Decoder) error {
 	return nil
 }
 
+// Uint32s represents a slice of uint32.
+type Uint32s []uint32
+
+// compile time check whether the Uint32s implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
+var (
+	_ gojay.MarshalerJSONArray   = (*Uint32s)(nil)
+	_ gojay.UnmarshalerJSONArray = (*Uint32s)(nil)
+)
+
+// MarshalJSONArray implements gojay.MarshalerJSONArray.
+func (v Uint32s) MarshalJSONArray(enc *gojay.Encoder) {
+	for i := range v {
+		enc.Uint32(v[i])
+	}
+}
+
+// IsNil implements gojay.MarshalerJSONArray.
+func (v Uint32s) IsNil() bool { return len(v) == 0 }
+
+// UnmarshalJSONArray implements gojay.UnmarshalerJSONArray.
+func (v *Uint32s) UnmarshalJSONArray(dec *gojay.Decoder) error {
+	u := uint32(0)
+	if err := dec.Uint32(&u); err != nil {
+		return err
+	}
+	*v = append(*v, u)
+	return nil
+}
+
 // Strings represents a slice of string.
 type Strings []string
 

@@ -95,6 +95,36 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 		err := server.Exit(ctx)
 		return true, reply(ctx, nil, err)
 
+	case MethodWorkDoneProgressCancel: // notification
+		defer logger.Debug(MethodWorkDoneProgressCancel, zap.Error(err))
+
+		var params WorkDoneProgressCancelParams
+		if err := dec.Decode(&params); err != nil {
+			return true, replyParseError(ctx, reply, err)
+		}
+		err := server.WorkDoneProgressCancel(ctx, &params)
+		return true, reply(ctx, nil, err)
+
+	case MethodLogTrace: // notification
+		defer logger.Debug(MethodLogTrace, zap.Error(err))
+
+		var params LogTraceParams
+		if err := dec.Decode(&params); err != nil {
+			return true, replyParseError(ctx, reply, err)
+		}
+		err := server.LogTrace(ctx, &params)
+		return true, reply(ctx, nil, err)
+
+	case MethodSetTrace: // notification
+		defer logger.Debug(MethodSetTrace, zap.Error(err))
+
+		var params SetTraceParams
+		if err := dec.Decode(&params); err != nil {
+			return true, replyParseError(ctx, reply, err)
+		}
+		err := server.SetTrace(ctx, &params)
+		return true, reply(ctx, nil, err)
+
 	case MethodTextDocumentCodeAction: // request
 		defer logger.Debug(MethodTextDocumentCodeAction, zap.Error(err))
 
@@ -443,6 +473,174 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 		resp, err := server.WillSaveWaitUntil(ctx, &params)
+		return true, reply(ctx, resp, err)
+
+	case MethodShowDocument: // request
+		defer logger.Debug(MethodShowDocument, zap.Error(err))
+
+		var params ShowDocumentParams
+		if err := dec.Decode(&params); err != nil {
+			return true, replyParseError(ctx, reply, err)
+		}
+		resp, err := server.ShowDocument(ctx, &params)
+		return true, reply(ctx, resp, err)
+
+	case MethodWillCreateFiles: // request
+		defer logger.Debug(MethodWillCreateFiles, zap.Error(err))
+
+		var params CreateFilesParams
+		if err := dec.Decode(&params); err != nil {
+			return true, replyParseError(ctx, reply, err)
+		}
+		resp, err := server.WillCreateFiles(ctx, &params)
+		return true, reply(ctx, resp, err)
+
+	case MethodDidCreateFiles: // notification
+		defer logger.Debug(MethodDidCreateFiles, zap.Error(err))
+
+		var params CreateFilesParams
+		if err := dec.Decode(&params); err != nil {
+			return true, replyParseError(ctx, reply, err)
+		}
+		err := server.DidCreateFiles(ctx, &params)
+		return true, reply(ctx, nil, err)
+
+	case MethodWillRenameFiles: // request
+		defer logger.Debug(MethodWillRenameFiles, zap.Error(err))
+
+		var params RenameFilesParams
+		if err := dec.Decode(&params); err != nil {
+			return true, replyParseError(ctx, reply, err)
+		}
+		resp, err := server.WillRenameFiles(ctx, &params)
+		return true, reply(ctx, resp, err)
+
+	case MethodDidRenameFiles: // notification
+		defer logger.Debug(MethodDidRenameFiles, zap.Error(err))
+
+		var params RenameFilesParams
+		if err := dec.Decode(&params); err != nil {
+			return true, replyParseError(ctx, reply, err)
+		}
+		err := server.DidRenameFiles(ctx, &params)
+		return true, reply(ctx, nil, err)
+
+	case MethodWillDeleteFiles: // request
+		defer logger.Debug(MethodWillDeleteFiles, zap.Error(err))
+
+		var params DeleteFilesParams
+		if err := dec.Decode(&params); err != nil {
+			return true, replyParseError(ctx, reply, err)
+		}
+		resp, err := server.WillDeleteFiles(ctx, &params)
+		return true, reply(ctx, resp, err)
+
+	case MethodDidDeleteFiles: // notification
+		defer logger.Debug(MethodDidDeleteFiles, zap.Error(err))
+
+		var params DeleteFilesParams
+		if err := dec.Decode(&params); err != nil {
+			return true, replyParseError(ctx, reply, err)
+		}
+		err := server.DidDeleteFiles(ctx, &params)
+		return true, reply(ctx, nil, err)
+
+	case MethodCodeLensRefresh: // request
+		defer logger.Debug(MethodCodeLensRefresh, zap.Error(err))
+
+		if len(req.Params()) > 0 {
+			return true, reply(ctx, nil, fmt.Errorf("expected no params: %w", jsonrpc2.ErrInvalidParams))
+		}
+		err := server.CodeLensRefresh(ctx)
+		return true, reply(ctx, nil, err)
+
+	case MethodTextDocumentPrepareCallHierarchy: // request
+		defer logger.Debug(MethodTextDocumentPrepareCallHierarchy, zap.Error(err))
+
+		var params CallHierarchyPrepareParams
+		if err := dec.Decode(&params); err != nil {
+			return true, replyParseError(ctx, reply, err)
+		}
+		resp, err := server.PrepareCallHierarchy(ctx, &params)
+		return true, reply(ctx, resp, err)
+
+	case MethodCallHierarchyIncomingCalls: // request
+		defer logger.Debug(MethodCallHierarchyIncomingCalls, zap.Error(err))
+
+		var params CallHierarchyIncomingCallsParams
+		if err := dec.Decode(&params); err != nil {
+			return true, replyParseError(ctx, reply, err)
+		}
+		resp, err := server.IncomingCalls(ctx, &params)
+		return true, reply(ctx, resp, err)
+
+	case MethodCallHierarchyOutgoingCalls: // request
+		defer logger.Debug(MethodCallHierarchyOutgoingCalls, zap.Error(err))
+
+		var params CallHierarchyOutgoingCallsParams
+		if err := dec.Decode(&params); err != nil {
+			return true, replyParseError(ctx, reply, err)
+		}
+		resp, err := server.OutgoingCalls(ctx, &params)
+		return true, reply(ctx, resp, err)
+
+	case MethodSemanticTokensFull: // request
+		defer logger.Debug(MethodSemanticTokensFull, zap.Error(err))
+
+		var params SemanticTokensParams
+		if err := dec.Decode(&params); err != nil {
+			return true, replyParseError(ctx, reply, err)
+		}
+		resp, err := server.SemanticTokensFull(ctx, &params)
+		return true, reply(ctx, resp, err)
+
+	case MethodSemanticTokensFullDelta: // request
+		defer logger.Debug(MethodSemanticTokensFullDelta, zap.Error(err))
+
+		var params SemanticTokensDeltaParams
+		if err := dec.Decode(&params); err != nil {
+			return true, replyParseError(ctx, reply, err)
+		}
+		resp, err := server.SemanticTokensFullDelta(ctx, &params)
+		return true, reply(ctx, resp, err)
+
+	case MethodSemanticTokensRange: // request
+		defer logger.Debug(MethodSemanticTokensRange, zap.Error(err))
+
+		var params SemanticTokensRangeParams
+		if err := dec.Decode(&params); err != nil {
+			return true, replyParseError(ctx, reply, err)
+		}
+		resp, err := server.SemanticTokensRange(ctx, &params)
+		return true, reply(ctx, resp, err)
+
+	case MethodSemanticTokensRefresh: // request
+		defer logger.Debug(MethodSemanticTokensRefresh, zap.Error(err))
+
+		if len(req.Params()) > 0 {
+			return true, reply(ctx, nil, fmt.Errorf("expected no params: %w", jsonrpc2.ErrInvalidParams))
+		}
+		err := server.SemanticTokensRefresh(ctx)
+		return true, reply(ctx, nil, err)
+
+	case MethodLinkedEditingRange: // request
+		defer logger.Debug(MethodLinkedEditingRange, zap.Error(err))
+
+		var params LinkedEditingRangeParams
+		if err := dec.Decode(&params); err != nil {
+			return true, replyParseError(ctx, reply, err)
+		}
+		resp, err := server.LinkedEditingRange(ctx, &params)
+		return true, reply(ctx, resp, err)
+
+	case MethodMoniker: // request
+		defer logger.Debug(MethodMoniker, zap.Error(err))
+
+		var params MonikerParams
+		if err := dec.Decode(&params); err != nil {
+			return true, replyParseError(ctx, reply, err)
+		}
+		resp, err := server.Moniker(ctx, &params)
 		return true, reply(ctx, resp, err)
 
 	default:
