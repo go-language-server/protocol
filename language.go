@@ -1289,7 +1289,7 @@ const (
 
 // FoldingRange capabilities specific to `textDocument/foldingRange` requests.
 //
-// Since 3.10.0.
+// @since 3.10.0.
 type FoldingRange struct {
 	// StartLine is the zero-based line number from where the folded range starts.
 	StartLine uint32 `json:"startLine"`

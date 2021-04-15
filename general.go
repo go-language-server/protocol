@@ -91,7 +91,7 @@ type InitializeParams struct {
 	// It can be `null` if the client supports workspace folders but none are
 	// configured.
 	//
-	// Since 3.6.0
+	// @since 3.6.0.
 	WorkspaceFolders []WorkspaceFolder `json:"workspaceFolders,omitempty"`
 }
 
@@ -400,12 +400,12 @@ type WorkspaceClientCapabilities struct {
 
 	// WorkspaceFolders is the client has support for workspace folders.
 	//
-	// Since 3.6.0
+	// @since 3.6.0.
 	WorkspaceFolders bool `json:"workspaceFolders,omitempty"`
 
 	// Configuration is the client supports "workspace/configuration" requests.
 	//
-	// Since 3.6.0
+	// @since 3.6.0.
 	Configuration bool `json:"configuration,omitempty"`
 
 	// SemanticTokens is the capabilities specific to the semantic token requests scoped to the
@@ -604,7 +604,7 @@ type TextDocumentClientCapabilitiesParameterInformation struct {
 	// LabelOffsetSupport is the client supports processing label offsets instead of a
 	// simple label string.
 	//
-	// Since 3.14.0
+	// @since 3.14.0.
 	LabelOffsetSupport bool `json:"labelOffsetSupport,omitempty"`
 }
 
@@ -767,7 +767,7 @@ type TextDocumentClientCapabilitiesDeclaration struct {
 
 	// LinkSupport is the client supports additional metadata in the form of declaration links.
 	//
-	// Since 3.14.0
+	// @since 3.14.0.
 	LinkSupport bool `json:"linkSupport,omitempty"`
 }
 
@@ -789,7 +789,7 @@ type DefinitionParams struct {
 
 // TextDocumentClientCapabilitiesDefinition capabilities specific to the "textDocument/definition".
 //
-// Since 3.14.0.
+// @since 3.14.0.
 type TextDocumentClientCapabilitiesDefinition struct {
 	// DynamicRegistration whether definition supports dynamic registration.
 	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
@@ -825,7 +825,7 @@ type TypeDefinitionParams struct {
 
 // TextDocumentClientCapabilitiesTypeDefinition capabilities specific to the "textDocument/typeDefinition".
 //
-// Since 3.6.0.
+// @since 3.6.0.
 type TextDocumentClientCapabilitiesTypeDefinition struct {
 	// DynamicRegistration whether typeDefinition supports dynamic registration. If this is set to `true`
 	// the client supports the new "(TextDocumentRegistrationOptions & StaticRegistrationOptions)"
@@ -834,7 +834,7 @@ type TextDocumentClientCapabilitiesTypeDefinition struct {
 
 	// LinkSupport is the client supports additional metadata in the form of definition links.
 	//
-	// Since 3.14.0
+	// @since 3.14.0
 	LinkSupport bool `json:"linkSupport,omitempty"`
 }
 
@@ -865,7 +865,7 @@ type ImplementationParams struct {
 
 // TextDocumentClientCapabilitiesImplementation capabilities specific to the "textDocument/implementation".
 //
-// Since 3.6.0.
+// @since 3.6.0.
 type TextDocumentClientCapabilitiesImplementation struct {
 	// DynamicRegistration whether implementation supports dynamic registration. If this is set to `true`
 	// the client supports the new "(TextDocumentRegistrationOptions & StaticRegistrationOptions)"
@@ -874,7 +874,7 @@ type TextDocumentClientCapabilitiesImplementation struct {
 
 	// LinkSupport is the client supports additional metadata in the form of definition links.
 	//
-	// Since 3.14.0
+	// @since 3.14.0
 	LinkSupport bool `json:"linkSupport,omitempty"`
 }
 
@@ -886,7 +886,7 @@ type TextDocumentClientCapabilitiesCodeAction struct {
 	// CodeActionLiteralSupport is the client support code action literals as a valid
 	// response of the "textDocument/codeAction" request.
 	//
-	// Since 3.8.0
+	// @since 3.8.0
 	CodeActionLiteralSupport *TextDocumentClientCapabilitiesCodeActionLiteralSupport `json:"codeActionLiteralSupport,omitempty"`
 
 	// IsPreferredSupport whether code action supports the "isPreferred" property.
@@ -987,7 +987,7 @@ type DocumentColorRegistrationOptions struct {
 // TextDocumentClientCapabilitiesColorProvider capabilities specific to the "textDocument/documentColor" and the
 // "textDocument/colorPresentation" request.
 //
-// Since 3.6.0.
+// @since 3.6.0.
 type TextDocumentClientCapabilitiesColorProvider struct {
 	// DynamicRegistration whether colorProvider supports dynamic registration. If this is set to `true`
 	// the client supports the new "(ColorProviderOptions & TextDocumentRegistrationOptions & StaticRegistrationOptions)"
@@ -1100,7 +1100,7 @@ type FoldingRangeRegistrationOptions struct {
 
 // TextDocumentClientCapabilitiesFoldingRange capabilities specific to "textDocument/foldingRange" requests.
 //
-// Since 3.10.0.
+// @since 3.10.0.
 type TextDocumentClientCapabilitiesFoldingRange struct {
 	// DynamicRegistration whether implementation supports dynamic registration for folding range providers. If this is set to `true`
 	// the client supports the new "(FoldingRangeProviderOptions & TextDocumentRegistrationOptions & StaticRegistrationOptions)"
@@ -1245,17 +1245,17 @@ type TextDocumentClientCapabilities struct {
 
 	// Definition capabilities specific to the "textDocument/definition".
 	//
-	// Since 3.14.0
+	// @since 3.14.0.
 	Definition *TextDocumentClientCapabilitiesDefinition `json:"definition,omitempty"`
 
 	// TypeDefinition capabilities specific to the "textDocument/typeDefinition".
 	//
-	// Since 3.6.0
+	// @since 3.6.0.
 	TypeDefinition *TextDocumentClientCapabilitiesTypeDefinition `json:"typeDefinition,omitempty"`
 
 	// Implementation capabilities specific to the "textDocument/implementation".
 	//
-	// Since 3.6.0
+	// @since 3.6.0.
 	Implementation *TextDocumentClientCapabilitiesImplementation `json:"implementation,omitempty"`
 
 	// CodeAction capabilities specific to the "textDocument/codeAction".
@@ -1270,7 +1270,7 @@ type TextDocumentClientCapabilities struct {
 	// ColorProvider capabilities specific to the "textDocument/documentColor" and the
 	// "textDocument/colorPresentation" request.
 	//
-	// Since 3.6.0
+	// @since 3.6.0.
 	ColorProvider *TextDocumentClientCapabilitiesColorProvider `json:"colorProvider,omitempty"`
 
 	// Rename capabilities specific to the "textDocument/rename".
@@ -1281,7 +1281,7 @@ type TextDocumentClientCapabilities struct {
 
 	// FoldingRange capabilities specific to "textDocument/foldingRange" requests.
 	//
-	// Since 3.10.0
+	// @since 3.10.0.
 	FoldingRange *TextDocumentClientCapabilitiesFoldingRange `json:"foldingRange,omitempty"`
 
 	// SelectionRange capabilities specific to "textDocument/selectionRange" requests.
@@ -1795,7 +1795,7 @@ type ServerCapabilitiesWorkspace struct {
 
 // ServerCapabilitiesWorkspaceFolders is the server supports workspace folder.
 //
-// Since 3.6.0.
+// @since 3.6.0.
 type ServerCapabilitiesWorkspaceFolders struct {
 	// Supported is the server has support for workspace folders
 	Supported bool `json:"supported,omitempty"`
@@ -1862,12 +1862,12 @@ type ServerCapabilities struct {
 
 	// TypeDefinitionProvider is the server provides Goto Type Definition support.
 	//
-	// Since 3.6.0
+	// @since 3.6.0.
 	TypeDefinitionProvider interface{} `json:"typeDefinitionProvider,omitempty"` // TODO(zchee): bool | *TypeDefinitionOptions | *TypeDefinitionRegistrationOptions
 
 	// ImplementationProvider is the server provides Goto Implementation support.
 	//
-	// Since 3.6.0
+	// @since 3.6.0.
 	ImplementationProvider interface{} `json:"implementationProvider,omitempty"` // TODO(zchee): bool | *ImplementationOptions | *ImplementationRegistrationOptions
 
 	// ReferencesProvider is the server provides find references support.
@@ -1909,12 +1909,12 @@ type ServerCapabilities struct {
 
 	// ColorProvider is the server provides color provider support.
 	//
-	// Since 3.6.0
+	// @since 3.6.0.
 	ColorProvider interface{} `json:"colorProvider,omitempty"` // TODO(zchee): bool | *DocumentColorOptions | *DocumentColorRegistrationOptions
 
 	// FoldingRangeProvider is the server provides folding provider support.
 	//
-	// Since 3.10.0
+	// @since 3.10.0.
 	FoldingRangeProvider interface{} `json:"foldingRangeProvider,omitempty"` // TODO(zchee): bool | *FoldingRangeOptions | *FoldingRangeRegistrationOptions
 
 	// SelectionRangeProvider is the server provides selection range support.

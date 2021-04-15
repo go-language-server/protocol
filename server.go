@@ -467,7 +467,7 @@ func (s *server) CompletionResolve(ctx context.Context, params *CompletionItem) 
 //
 // The result type LocationLink[] got introduce with version 3.14.0 and depends in the corresponding client capability `clientCapabilities.textDocument.declaration.linkSupport`.
 //
-// Since version 3.14.0.
+// @since 3.14.0.
 func (s *server) Declaration(ctx context.Context, params *DeclarationParams) (result []Location, err error) {
 	s.logger.Debug("call " + MethodTextDocumentDeclaration)
 	defer s.logger.Debug("end "+MethodTextDocumentDeclaration, zap.Error(err))
@@ -482,7 +482,7 @@ func (s *server) Declaration(ctx context.Context, params *DeclarationParams) (re
 //
 // The result type `[]LocationLink` got introduce with version 3.14.0 and depends in the corresponding client capability `clientCapabilities.textDocument.definition.linkSupport`.
 //
-// Since version 3.14.0.
+// @since 3.14.0.
 func (s *server) Definition(ctx context.Context, params *DefinitionParams) (result []Location, err error) {
 	s.logger.Debug("call " + MethodTextDocumentDefinition)
 	defer s.logger.Debug("end "+MethodTextDocumentDefinition, zap.Error(err))
@@ -661,7 +661,7 @@ func (s *server) ExecuteCommand(ctx context.Context, params *ExecuteCommandParam
 
 // FoldingRanges sends the request from the client to the server to return all folding ranges found in a given text document.
 //
-// Since version 3.10.0.
+// @since version 3.10.0.
 func (s *server) FoldingRanges(ctx context.Context, params *FoldingRangeParams) (result []FoldingRange, err error) {
 	s.logger.Debug("call " + MethodTextDocumentFoldingRange)
 	defer s.logger.Debug("end "+MethodTextDocumentFoldingRange, zap.Error(err))
@@ -721,7 +721,7 @@ func (s *server) OnTypeFormatting(ctx context.Context, params *DocumentOnTypeFor
 
 // PrepareRename sends the request from the client to the server to setup and test the validity of a rename operation at a given location.
 //
-// Since version 3.12.0.
+// @since version 3.12.0.
 func (s *server) PrepareRename(ctx context.Context, params *PrepareRenameParams) (result *Range, err error) {
 	s.logger.Debug("call " + MethodTextDocumentPrepareRename)
 	defer s.logger.Debug("end "+MethodTextDocumentPrepareRename, zap.Error(err))
@@ -792,7 +792,7 @@ func (s *server) Symbols(ctx context.Context, params *WorkspaceSymbolParams) (re
 //
 // The result type `[]LocationLink` got introduce with version 3.14.0 and depends in the corresponding client capability `clientCapabilities.textDocument.typeDefinition.linkSupport`.
 //
-// Since version 3.6.0.
+// @since version 3.6.0.
 func (s *server) TypeDefinition(ctx context.Context, params *TypeDefinitionParams) (result []Location, err error) {
 	s.logger.Debug("call " + MethodTextDocumentTypeDefinition)
 	defer s.logger.Debug("end "+MethodTextDocumentTypeDefinition, zap.Error(err))

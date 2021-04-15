@@ -232,7 +232,7 @@ func (c *client) Configuration(ctx context.Context, params *ConfigurationParams)
 //
 // Returns null in the response if only a single file is open in the tool. Returns an empty array if a workspace is open but no folders are configured.
 //
-// Since version 3.6.0.
+// @since 3.6.0.
 func (c *client) WorkspaceFolders(ctx context.Context) (result []WorkspaceFolder, err error) {
 	c.logger.Debug("call " + MethodWorkspaceWorkspaceFolders)
 	defer c.logger.Debug("end "+MethodWorkspaceWorkspaceFolders, zap.Error(err))
