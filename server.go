@@ -85,6 +85,7 @@ type Server interface {
 	Request(ctx context.Context, method string, params interface{}) (result interface{}, err error)
 }
 
+// list of server methods.
 const (
 	// MethodCancelRequest method name of "$/cancelRequest".
 	MethodCancelRequest = "$/cancelRequest"

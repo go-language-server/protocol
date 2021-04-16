@@ -56,6 +56,7 @@ type Client interface {
 	WorkspaceFolders(ctx context.Context) (result []WorkspaceFolder, err error)
 }
 
+// list of client methods.
 const (
 	// MethodProgress method name of "$/progress".
 	MethodProgress = "$/progress"
