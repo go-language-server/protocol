@@ -86,6 +86,9 @@ type Server interface {
 }
 
 const (
+	// MethodCancelRequest method name of "$/cancelRequest".
+	MethodCancelRequest = "$/cancelRequest"
+
 	// MethodInitialize method name of "initialize".
 	MethodInitialize = "initialize"
 
@@ -106,9 +109,6 @@ const (
 
 	// MethodSetTrace method name of "$/setTrace".
 	MethodSetTrace = "$/setTrace"
-
-	// MethodCancelRequest method name of "$/cancelRequest".
-	MethodCancelRequest = "$/cancelRequest"
 
 	// MethodTextDocumentCodeAction method name of "textDocument/codeAction".
 	MethodTextDocumentCodeAction = "textDocument/codeAction"
