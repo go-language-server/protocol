@@ -3361,35 +3361,6 @@ var (
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
-func (v *RegularExpressionsClientCapabilities) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.StringKey(keyEngine, v.Engine)
-	enc.StringKeyOmitEmpty(keyVersion, v.Version)
-}
-
-// IsNil implements gojay.MarshalerJSONObject.
-func (v *RegularExpressionsClientCapabilities) IsNil() bool { return v == nil }
-
-// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
-func (v *RegularExpressionsClientCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	switch k {
-	case keyEngine:
-		return dec.String(&v.Engine)
-	case keyVersion:
-		return dec.String(&v.Version)
-	}
-	return nil
-}
-
-// NKeys implements gojay.UnmarshalerJSONObject.
-func (v *RegularExpressionsClientCapabilities) NKeys() int { return 2 }
-
-// compile time check whether the RegularExpressionsClientCapabilities implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
-var (
-	_ gojay.MarshalerJSONObject   = (*RegularExpressionsClientCapabilities)(nil)
-	_ gojay.UnmarshalerJSONObject = (*RegularExpressionsClientCapabilities)(nil)
-)
-
-// MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *MarkdownClientCapabilities) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.StringKey(keyParser, v.Parser)
 	enc.StringKeyOmitEmpty(keyVersion, v.Version)

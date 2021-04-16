@@ -1385,17 +1385,6 @@ type WindowClientCapabilities struct {
 	ShowDocument *ClientCapabilitiesShowDocument `json:"showDocument,omitempty"`
 }
 
-// RegularExpressionsClientCapabilities represents a client capabilities specific to regular expressions.
-//
-// @since 3.16.0.
-type RegularExpressionsClientCapabilities struct {
-	// Engine is the engine's name.
-	Engine string `json:"engine"`
-
-	// Version is the engine's version.
-	Version string `json:"version,omitempty"`
-}
-
 // MarkdownClientCapabilities represents a client capabilities specific to the used markdown parser.
 //
 // @since 3.16.0.
