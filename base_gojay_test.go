@@ -15,3 +15,7 @@ import (
 func TestCancelParams(t *testing.T) {
 	testCancelParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
+
+func TestProgressParams(t *testing.T) {
+	testProgressParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}

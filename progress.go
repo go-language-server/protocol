@@ -4,17 +4,6 @@
 
 package protocol
 
-// ProgressParams params of Progress netification.
-//
-// @since 3.15.0.
-type ProgressParams struct {
-	// Token is the progress token provided by the client or server.
-	Token ProgressToken `json:"token"`
-
-	// Value is the progress data.
-	Value interface{} `json:"value"`
-}
-
 // WorkDoneProgressKind kind of WorkDoneProgress.
 //
 // @since 3.15.0.

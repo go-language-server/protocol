@@ -14,3 +14,7 @@ import (
 func TestCancelParams(t *testing.T) {
 	testCancelParams(t, json.Marshal, json.Unmarshal)
 }
+
+func TestProgressParams(t *testing.T) {
+	testProgressParams(t, json.Marshal, json.Unmarshal)
+}

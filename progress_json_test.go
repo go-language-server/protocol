@@ -12,10 +12,6 @@ import (
 	"testing"
 )
 
-func TestProgressParams(t *testing.T) {
-	testProgressParams(t, json.Marshal, json.Unmarshal)
-}
-
 func TestWorkDoneProgressBegin(t *testing.T) {
 	testWorkDoneProgressBegin(t, json.Marshal, json.Unmarshal)
 }

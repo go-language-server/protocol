@@ -13,10 +13,6 @@ import (
 	"github.com/francoispqt/gojay"
 )
 
-func TestProgressParams(t *testing.T) {
-	testProgressParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
-}
-
 func TestWorkDoneProgressBegin(t *testing.T) {
 	testWorkDoneProgressBegin(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
