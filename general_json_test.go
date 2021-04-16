@@ -12,10 +12,6 @@ import (
 	"testing"
 )
 
-func TestCancelParams(t *testing.T) {
-	testCancelParams(t, json.Marshal, json.Unmarshal)
-}
-
 func TestWorkspaceFolders(t *testing.T) { testWorkspaceFolders(t, json.Marshal, json.Unmarshal) }
 
 func TestClientInfo(t *testing.T) { testClientInfo(t, json.Marshal, json.Unmarshal) }

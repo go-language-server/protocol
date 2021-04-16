@@ -1,0 +1,89 @@
+// SPDX-FileCopyrightText: Copyright 2021 The Go Language Server Authors
+// SPDX-License-Identifier: BSD-3-Clause
+
+package protocol
+
+import (
+	"testing"
+
+	"github.com/google/go-cmp/cmp"
+)
+
+func testCancelParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+	const want = `{"id":"testID"}`
+	wantType := CancelParams{
+		ID: "testID",
+	}
+
+	t.Run("Marshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name           string
+			field          CancelParams
+			want           string
+			wantMarshalErr bool
+			wantErr        bool
+		}{
+			{
+				name:           "Valid",
+				field:          wantType,
+				want:           want,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got, err := marshal(&tt.field)
+				if (err != nil) != tt.wantMarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+
+	t.Run("Unmarshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name             string
+			field            string
+			want             CancelParams
+			wantUnmarshalErr bool
+			wantErr          bool
+		}{
+			{
+				name:             "Valid",
+				field:            want,
+				want:             wantType,
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				var got CancelParams
+				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+}

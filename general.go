@@ -8,12 +8,6 @@ import (
 	"strconv"
 )
 
-// CancelParams params of cancelRequest.
-type CancelParams struct {
-	// ID is the request id to cancel.
-	ID interface{} `json:"id"` // int32 | string
-}
-
 // TraceValue represents a InitializeParams Trace mode.
 type TraceValue string
 

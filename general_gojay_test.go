@@ -13,10 +13,6 @@ import (
 	"github.com/francoispqt/gojay"
 )
 
-func TestCancelParams(t *testing.T) {
-	testCancelParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
-}
-
 func TestWorkspaceFolders(t *testing.T) {
 	testWorkspaceFolders(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
