@@ -85,16 +85,16 @@ lint: fmt lint/golangci-lint  ## Run all linters.
 lint/gojay: fmt/gojay lint/golangci-lint/gojay
 
 .PHONY: fmt
-fmt: tools/goimports tools/gofumpt  ## Run goimports and gofumpt.
+fmt: tools/goimportz tools/gofumpt  ## Run goimportz and gofumpt.
 	$(call target)
-	find . -iname "*.go" -not -path "./vendor/**" | xargs -P ${JOBS} ${TOOLS_BIN}/goimports -local=${PKG},$(subst /protocol,,$(PKG)) -w
+	find . -iname "*.go" -not -path "./vendor/**" | xargs -P ${JOBS} ${TOOLS_BIN}/goimportz -local=${PKG},$(subst /protocol,,$(PKG)) -w
 	find . -iname "*.go" -not -path "./vendor/**" | xargs -P ${JOBS} ${TOOLS_BIN}/gofumpt -s -extra -w
 
 .PHONY: fmt/gojay
-fmt/gojay: tools/goimports tools/gofumpt
+fmt/gojay: tools/goimportz tools/gofumpt
 	$(call target)
 	@export GOFLAGS=-tags=gojay
-	find . -iname "*.go" -not -path "./vendor/**" | xargs -P ${JOBS} ${TOOLS_BIN}/goimports -local=${PKG},$(subst /protocol,,$(PKG)) -w
+	find . -iname "*.go" -not -path "./vendor/**" | xargs -P ${JOBS} ${TOOLS_BIN}/goimportz -local=${PKG},$(subst /protocol,,$(PKG)) -w
 	find . -iname "*.go" -not -path "./vendor/**" | xargs -P ${JOBS} ${TOOLS_BIN}/gofumpt -s -extra -w
 
 .PHONY: lint/golangci-lint

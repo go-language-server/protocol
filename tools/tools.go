@@ -5,7 +5,7 @@ package tools
 
 import (
 	_ "github.com/golangci/golangci-lint/cmd/golangci-lint"
-	_ "golang.org/x/tools/cmd/goimports"
+	_ "github.com/zchee/goimportz/cmd/goimportz"
 	_ "gotest.tools/gotestsum"
 	_ "mvdan.cc/gofumpt"
 )
