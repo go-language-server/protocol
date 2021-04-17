@@ -1405,11 +1405,11 @@ func testApplyWorkspaceEditParams(t *testing.T, marshal marshalFunc, unmarshal u
 			},
 			DocumentChanges: []TextDocumentEdit{
 				{
-					TextDocument: VersionedTextDocumentIdentifier{
+					TextDocument: OptionalVersionedTextDocumentIdentifier{
 						TextDocumentIdentifier: TextDocumentIdentifier{
 							URI: uri.File("/path/to/basic.go"),
 						},
-						Version: int32(10),
+						Version: NewVersion(int32(10)),
 					},
 					Edits: []TextEdit{
 						{
@@ -1451,11 +1451,11 @@ func testApplyWorkspaceEditParams(t *testing.T, marshal marshalFunc, unmarshal u
 			},
 			DocumentChanges: []TextDocumentEdit{
 				{
-					TextDocument: VersionedTextDocumentIdentifier{
+					TextDocument: OptionalVersionedTextDocumentIdentifier{
 						TextDocumentIdentifier: TextDocumentIdentifier{
 							URI: uri.File("/path/to/basic.go"),
 						},
-						Version: int32(10),
+						Version: NewVersion(int32(10)),
 					},
 					Edits: []TextEdit{
 						{

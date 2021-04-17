@@ -1515,11 +1515,11 @@ func testTextDocumentEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 		wantInvalid = `{"textDocument":{"uri":"file:///path/to/basic_gen.go","version":10},"edits":[{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"newText":"foo bar"}]}`
 	)
 	wantType := TextDocumentEdit{
-		TextDocument: VersionedTextDocumentIdentifier{
+		TextDocument: OptionalVersionedTextDocumentIdentifier{
 			TextDocumentIdentifier: TextDocumentIdentifier{
 				URI: "file:///path/to/basic.go",
 			},
-			Version: int32(10),
+			Version: NewVersion(int32(10)),
 		},
 		Edits: []TextEdit{
 			{
@@ -1538,11 +1538,11 @@ func testTextDocumentEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 		},
 	}
 	wantInvalidType := TextDocumentEdit{
-		TextDocument: VersionedTextDocumentIdentifier{
+		TextDocument: OptionalVersionedTextDocumentIdentifier{
 			TextDocumentIdentifier: TextDocumentIdentifier{
 				URI: "file:///path/to/basic.go",
 			},
-			Version: int32(10),
+			Version: NewVersion(int32(10)),
 		},
 		Edits: []TextEdit{
 			{
@@ -2504,11 +2504,11 @@ func testWorkspaceEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshalFun
 		},
 		DocumentChanges: []TextDocumentEdit{
 			{
-				TextDocument: VersionedTextDocumentIdentifier{
+				TextDocument: OptionalVersionedTextDocumentIdentifier{
 					TextDocumentIdentifier: TextDocumentIdentifier{
 						URI: uri.File("/path/to/basic.go"),
 					},
-					Version: int32(10),
+					Version: NewVersion(int32(10)),
 				},
 				Edits: []TextEdit{
 					{
@@ -2538,11 +2538,11 @@ func testWorkspaceEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshalFun
 	wantTypeNilChanges := WorkspaceEdit{
 		DocumentChanges: []TextDocumentEdit{
 			{
-				TextDocument: VersionedTextDocumentIdentifier{
+				TextDocument: OptionalVersionedTextDocumentIdentifier{
 					TextDocumentIdentifier: TextDocumentIdentifier{
 						URI: uri.File("/path/to/basic.go"),
 					},
-					Version: int32(10),
+					Version: NewVersion(int32(10)),
 				},
 				Edits: []TextEdit{
 					{

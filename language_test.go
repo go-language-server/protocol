@@ -3180,11 +3180,11 @@ func testCodeAction(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 			},
 			DocumentChanges: []TextDocumentEdit{
 				{
-					TextDocument: VersionedTextDocumentIdentifier{
+					TextDocument: OptionalVersionedTextDocumentIdentifier{
 						TextDocumentIdentifier: TextDocumentIdentifier{
 							URI: uri.File("/path/to/test.go"),
 						},
-						Version: int32(10),
+						Version: NewVersion(int32(10)),
 					},
 					Edits: []TextEdit{
 						{
