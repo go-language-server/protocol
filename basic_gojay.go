@@ -195,31 +195,6 @@ var (
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
-func (v *CodeDescription) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.StringKey(keyHref, string(v.Href))
-}
-
-// IsNil implements gojay.MarshalerJSONObject.
-func (v *CodeDescription) IsNil() bool { return v == nil }
-
-// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
-func (v *CodeDescription) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	if k == keyHref {
-		return dec.String((*string)(&v.Href))
-	}
-	return nil
-}
-
-// NKeys implements gojay.UnmarshalerJSONObject.
-func (v *CodeDescription) NKeys() int { return 1 }
-
-// compile time check whether the CodeDescription implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
-var (
-	_ gojay.MarshalerJSONObject   = (*CodeDescription)(nil)
-	_ gojay.UnmarshalerJSONObject = (*CodeDescription)(nil)
-)
-
-// MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *Diagnostic) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKey(keyRange, &v.Range)
 	enc.Float64KeyOmitEmpty(keySeverity, float64(v.Severity))
@@ -335,6 +310,31 @@ var (
 	_ gojay.UnmarshalerJSONObject = (*DiagnosticRelatedInformation)(nil)
 )
 
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *CodeDescription) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.StringKey(keyHref, string(v.Href))
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *CodeDescription) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *CodeDescription) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	if k == keyHref {
+		return dec.String((*string)(&v.Href))
+	}
+	return nil
+}
+
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *CodeDescription) NKeys() int { return 1 }
+
+// compile time check whether the CodeDescription implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*CodeDescription)(nil)
+	_ gojay.UnmarshalerJSONObject = (*CodeDescription)(nil)
+)
+
 // DiagnosticRelatedInformations represents a slice of DiagnosticRelatedInformation.
 type DiagnosticRelatedInformations []DiagnosticRelatedInformation
 
@@ -394,6 +394,35 @@ func (v *Command) NKeys() int { return 3 }
 var (
 	_ gojay.MarshalerJSONObject   = (*Command)(nil)
 	_ gojay.UnmarshalerJSONObject = (*Command)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *TextEdit) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.ObjectKey(keyRange, &v.Range)
+	enc.StringKey(keyNewText, v.NewText)
+}
+
+// IsNil returns wether the structure is nil value or not.
+func (v *TextEdit) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
+func (v *TextEdit) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	switch k {
+	case keyRange:
+		return dec.Object(&v.Range)
+	case keyNewText:
+		return dec.String(&v.NewText)
+	}
+	return nil
+}
+
+// NKeys returns the number of keys to unmarshal.
+func (v *TextEdit) NKeys() int { return 2 }
+
+// compile time check whether the TextEdit implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*TextEdit)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TextEdit)(nil)
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
@@ -458,35 +487,6 @@ func (v *AnnotatedTextEdit) NKeys() int { return 3 }
 var (
 	_ gojay.MarshalerJSONObject   = (*AnnotatedTextEdit)(nil)
 	_ gojay.UnmarshalerJSONObject = (*AnnotatedTextEdit)(nil)
-)
-
-// MarshalJSONObject implements gojay.MarshalerJSONObject.
-func (v *TextEdit) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ObjectKey(keyRange, &v.Range)
-	enc.StringKey(keyNewText, v.NewText)
-}
-
-// IsNil returns wether the structure is nil value or not.
-func (v *TextEdit) IsNil() bool { return v == nil }
-
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
-func (v *TextEdit) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	switch k {
-	case keyRange:
-		return dec.Object(&v.Range)
-	case keyNewText:
-		return dec.String(&v.NewText)
-	}
-	return nil
-}
-
-// NKeys returns the number of keys to unmarshal.
-func (v *TextEdit) NKeys() int { return 2 }
-
-// compile time check whether the TextEdit implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
-var (
-	_ gojay.MarshalerJSONObject   = (*TextEdit)(nil)
-	_ gojay.UnmarshalerJSONObject = (*TextEdit)(nil)
 )
 
 // TextEdits represents a slice of TextEdit.
