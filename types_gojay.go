@@ -120,8 +120,7 @@ func (m StringInterfaceMap) IsNil() bool {
 // UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
 func (m StringInterfaceMap) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	var iface interface{}
-	err := dec.Interface(&iface)
-	if err != nil {
+	if err := dec.Interface(&iface); err != nil {
 		return err
 	}
 	m[k] = iface
@@ -157,8 +156,7 @@ func (m StringStringMap) IsNil() bool {
 // UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
 func (m StringStringMap) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	s := ""
-	err := dec.String(&s)
-	if err != nil {
+	if err := dec.String(&s); err != nil {
 		return err
 	}
 	m[k] = s

@@ -837,8 +837,7 @@ func (v ChangeAnnotationsMap) IsNil() bool { return v == nil }
 // UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
 func (v ChangeAnnotationsMap) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	edits := ChangeAnnotation{}
-	err := dec.Object(&edits)
-	if err != nil {
+	if err := dec.Object(&edits); err != nil {
 		return err
 	}
 	v[ChangeAnnotationIdentifier(k)] = edits
