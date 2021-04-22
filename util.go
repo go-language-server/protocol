@@ -3,7 +3,7 @@
 
 package protocol
 
-// NewVersion returns the uint64 pointer converted i.
+// NewVersion returns the int32 pointer converted i.
 func NewVersion(i int32) *int32 {
 	return &i
 }
