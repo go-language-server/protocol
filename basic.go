@@ -36,7 +36,7 @@ var EOL = []string{"\n", "\r\n", "\r"}
 // Positions are line end character agnostic. So you can not specify a position that
 // denotes "\r|\n" or "\n|" where "|" represents the character offset.
 //
-// A position is between two characters like an "insert" cursor in a editor.
+// Position is between two characters like an "insert" cursor in a editor.
 // Special values like for example "-1" to denote the end of a line are not supported.
 type Position struct {
 	// Line position in a document (zero-based).
@@ -78,8 +78,8 @@ type Location struct {
 // LocationLink represents a link between a source and a target location.
 type LocationLink struct {
 	// OriginSelectionRange span of the origin of this link.
-	// Used as the underlined span for mouse interaction. Defaults to the word range at
-	// the mouse position.
+	//
+	// Used as the underlined span for mouse interaction. Defaults to the word range at the mouse position.
 	OriginSelectionRange *Range `json:"originSelectionRange,omitempty"`
 
 	// TargetURI is the target resource identifier of this link.
