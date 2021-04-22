@@ -6,6 +6,7 @@
 
 package tools
 
+// tools we use during development.
 import (
 	_ "github.com/golangci/golangci-lint/cmd/golangci-lint"
 	_ "github.com/zchee/goimportz/cmd/goimportz"
