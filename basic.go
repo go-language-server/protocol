@@ -586,6 +586,8 @@ func ToLanguageIdentifier(ft string) LanguageIdentifier {
 }
 
 // VersionedTextDocumentIdentifier represents an identifier to denote a specific version of a text document.
+//
+// This information usually flows from the client to the server.
 type VersionedTextDocumentIdentifier struct {
 	TextDocumentIdentifier
 
@@ -619,6 +621,12 @@ type OptionalVersionedTextDocumentIdentifier struct {
 
 // TextDocumentPositionParams is a parameter literal used in requests to pass a text document and a position
 // inside that document.
+//
+// It is up to the client to decide how a selection is converted into a position when issuing a request for a text
+// document.
+//
+// The client can for example honor or ignore the selection direction to make LSP request consistent with features
+// implemented internally.
 type TextDocumentPositionParams struct {
 	// TextDocument is the text document.
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
