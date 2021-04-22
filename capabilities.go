@@ -1036,6 +1036,14 @@ type ServerCapabilitiesWorkspaceFolders struct {
 	ChangeNotifications interface{} `json:"changeNotifications,omitempty"` // string | boolean
 }
 
+// FileOperationRegistrationOptions is the options to register for file operations.
+//
+// @since 3.16.0.
+type FileOperationRegistrationOptions struct {
+	// filters is the actual filters.
+	Filters []FileOperationFilter `json:"filters"`
+}
+
 // ServerCapabilitiesWorkspaceFileOperations is the server is interested in file notifications/requests.
 //
 // @since 3.16.0.

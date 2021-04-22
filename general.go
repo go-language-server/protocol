@@ -108,14 +108,6 @@ type SetTraceParams struct {
 	Value TraceValue `json:"value"`
 }
 
-// FileOperationRegistrationOptions is the options to register for file operations.
-//
-// @since 3.16.0.
-type FileOperationRegistrationOptions struct {
-	// filters is the actual filters.
-	Filters []FileOperationFilter `json:"filters"`
-}
-
 // FileOperationPatternKind is a pattern kind describing if a glob pattern matches a file a folder or
 // both.
 //
