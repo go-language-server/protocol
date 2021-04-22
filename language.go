@@ -596,10 +596,15 @@ type SignatureHelpRegistrationOptions struct {
 	TriggerCharacters []string `json:"triggerCharacters,omitempty"`
 }
 
-// ReferenceParams params of Find References Request.
+// ReferenceParams params of References Request.
+//
+// @since 3.15.0.
 type ReferenceParams struct {
 	TextDocumentPositionParams
+	WorkDoneProgressParams
+	PartialResultParams
 
+	// Context is the ReferenceParams context.
 	Context ReferenceContext `json:"context"`
 }
 

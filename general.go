@@ -233,18 +233,6 @@ type FileDelete struct {
 	URI string `json:"uri"`
 }
 
-// ReferencesParams params of References Request.
-//
-// @since 3.15.0.
-type ReferencesParams struct {
-	TextDocumentPositionParams
-	WorkDoneProgressParams
-	PartialResultParams
-
-	// Context is the ReferenceParams context.
-	Context ReferenceContext `json:"context"`
-}
-
 // DocumentHighlightOptions registration option of DocumentHighlight server capability.
 //
 // @since 3.15.0.
