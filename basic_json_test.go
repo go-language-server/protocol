@@ -21,12 +21,6 @@ func TestLocationLink(t *testing.T) { testLocationLink(t, json.Marshal, json.Unm
 
 func TestCodeDescription(t *testing.T) { testCodeDescription(t, json.Marshal, json.Unmarshal) }
 
-func TestDiagnostic(t *testing.T) { testDiagnostic(t, json.Marshal, json.Unmarshal) }
-
-func TestDiagnosticRelatedInformation(t *testing.T) {
-	testDiagnosticRelatedInformation(t, json.Marshal, json.Unmarshal)
-}
-
 func TestCommand(t *testing.T) { testCommand(t, json.Marshal, json.Unmarshal) }
 
 func TestChangeAnnotation(t *testing.T) { testChangeAnnotation(t, json.Marshal, json.Unmarshal) }

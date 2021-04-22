@@ -11,6 +11,14 @@ import (
 	"testing"
 )
 
+func TestDiagnostic(t *testing.T) {
+	testDiagnostic(t, json.Marshal, json.Unmarshal)
+}
+
+func TestDiagnosticRelatedInformation(t *testing.T) {
+	testDiagnosticRelatedInformation(t, json.Marshal, json.Unmarshal)
+}
+
 func TestPublishDiagnosticsParams(t *testing.T) {
 	testPublishDiagnosticsParams(t, json.Marshal, json.Unmarshal)
 }

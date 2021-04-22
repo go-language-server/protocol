@@ -22,12 +22,6 @@ func TestLocationLink(t *testing.T) { testLocationLink(t, gojay.Marshal, gojay.U
 
 func TestCodeDescription(t *testing.T) { testCodeDescription(t, gojay.Marshal, gojay.Unsafe.Unmarshal) }
 
-func TestDiagnostic(t *testing.T) { testDiagnostic(t, gojay.Marshal, gojay.Unsafe.Unmarshal) }
-
-func TestDiagnosticRelatedInformation(t *testing.T) {
-	testDiagnosticRelatedInformation(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
-}
-
 func TestCommand(t *testing.T) { testCommand(t, gojay.Marshal, gojay.Unsafe.Unmarshal) }
 
 func TestChangeAnnotation(t *testing.T) {
