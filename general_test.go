@@ -838,7 +838,7 @@ func testReferencesParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 		wantNilAll  = `{"textDocument":{"uri":"file:///path/to/basic.go"},"position":{"line":25,"character":1},"context":{"includeDeclaration":true}}`
 		wantInvalid = `{"textDocument":{"uri":"file:///path/to/basic_gen.go"},"position":{"line":2,"character":1},"workDoneToken":"` + wantPartialResultToken + `","partialResultToken":"` + wantWorkDoneToken + `","context":{"includeDeclaration":false}}`
 	)
-	wantType := ReferencesParams{
+	wantType := ReferenceParams{
 		TextDocumentPositionParams: TextDocumentPositionParams{
 			TextDocument: TextDocumentIdentifier{
 				URI: uri.File("/path/to/basic.go"),
@@ -858,7 +858,7 @@ func testReferencesParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 			IncludeDeclaration: true,
 		},
 	}
-	wantTypeNilAll := ReferencesParams{
+	wantTypeNilAll := ReferenceParams{
 		TextDocumentPositionParams: TextDocumentPositionParams{
 			TextDocument: TextDocumentIdentifier{
 				URI: uri.File("/path/to/basic.go"),
@@ -878,7 +878,7 @@ func testReferencesParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 
 		tests := []struct {
 			name           string
-			field          ReferencesParams
+			field          ReferenceParams
 			want           string
 			wantMarshalErr bool
 			wantErr        bool
@@ -929,7 +929,7 @@ func testReferencesParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 		tests := []struct {
 			name             string
 			field            string
-			want             ReferencesParams
+			want             ReferenceParams
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
@@ -961,7 +961,7 @@ func testReferencesParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				var got ReferencesParams
+				var got ReferenceParams
 				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
@@ -3697,7 +3697,7 @@ func testFoldingRangeRegistrationOptions(t *testing.T, marshal marshalFunc, unma
 
 func testInitializeResult(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want    = `{"capabilities":{"textDocumentSync":1,"hoverProvider":true,"completionProvider":{"resolveProvider":true,"triggerCharacters":["Tab"]},"signatureHelpProvider":{"triggerCharacters":["C-K"],"retriggerCharacters":["."]},"declarationProvider":true,"definitionProvider":true,"typeDefinitionProvider":true,"implementationProvider":true,"referencesProvider":true,"documentHighlightProvider":true,"documentSymbolProvider":true,"workspaceSymbolProvider":true,"codeActionProvider":true,"codeLensProvider":{"resolveProvider":true},"documentFormattingProvider":true,"documentRangeFormattingProvider":true,"documentOnTypeFormattingProvider":{"firstTriggerCharacter":".","moreTriggerCharacter":["f"]},"renameProvider":true,"documentLinkProvider":{"resolveProvider":true},"colorProvider":true,"foldingRangeProvider":true,"selectionRangeProvider":true,"executeCommandProvider":{"commands":["test","command"]},"workspace":{"workspaceFolders":{"supported":true,"changeNotifications":"testNotifications"},"fileOperations":{"didCreate":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"file","options":{"ignoreCase":true}}}]},"willCreate":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"folder","options":{"ignoreCase":true}}}]},"didRename":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"file","options":{"ignoreCase":true}}}]},"willRename":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"folder","options":{"ignoreCase":true}}}]},"didDelete":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"file","options":{"ignoreCase":true}}}]},"willDelete":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"folder","options":{"ignoreCase":true}}}]}}},"linkedEditingRangeProvider":true,"callHierarchyProvider":true,"monikerProvider":true,"experimental":"Awesome Experimentals"},"serverInfo":{"name":"testServer","version":"v0.0.0"}}`
+		want    = `{"capabilities":{"textDocumentSync":1,"completionProvider":{"resolveProvider":true,"triggerCharacters":["Tab"]},"hoverProvider":true,"signatureHelpProvider":{"triggerCharacters":["C-K"],"retriggerCharacters":["."]},"declarationProvider":true,"definitionProvider":true,"typeDefinitionProvider":true,"implementationProvider":true,"referencesProvider":true,"documentHighlightProvider":true,"documentSymbolProvider":true,"codeActionProvider":true,"codeLensProvider":{"resolveProvider":true},"documentLinkProvider":{"resolveProvider":true},"colorProvider":true,"workspaceSymbolProvider":true,"documentFormattingProvider":true,"documentRangeFormattingProvider":true,"documentOnTypeFormattingProvider":{"firstTriggerCharacter":".","moreTriggerCharacter":["f"]},"renameProvider":true,"foldingRangeProvider":true,"selectionRangeProvider":true,"executeCommandProvider":{"commands":["test","command"]},"callHierarchyProvider":true,"linkedEditingRangeProvider":true,"workspace":{"workspaceFolders":{"supported":true,"changeNotifications":"testNotifications"},"fileOperations":{"didCreate":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"file","options":{"ignoreCase":true}}}]},"willCreate":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"folder","options":{"ignoreCase":true}}}]},"didRename":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"file","options":{"ignoreCase":true}}}]},"willRename":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"folder","options":{"ignoreCase":true}}}]},"didDelete":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"file","options":{"ignoreCase":true}}}]},"willDelete":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"folder","options":{"ignoreCase":true}}}]}}},"monikerProvider":true,"experimental":"Awesome Experimentals"},"serverInfo":{"name":"testServer","version":"v0.0.0"}}`
 		wantNil = `{"capabilities":{}}`
 	)
 	wantType := InitializeResult{
