@@ -646,44 +646,6 @@ func (v *MarkupKinds) UnmarshalJSONArray(dec *gojay.Decoder) error {
 }
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
-func (v *ReferencesParams) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ObjectKeyOmitEmpty(keyTextDocument, &v.TextDocument)
-	enc.ObjectKeyOmitEmpty(keyPosition, &v.Position)
-	encodeProgressToken(enc, keyWorkDoneToken, v.WorkDoneToken)
-	encodeProgressToken(enc, keyPartialResultToken, v.PartialResultToken)
-	enc.ObjectKeyOmitEmpty(keyContext, &v.Context)
-}
-
-// IsNil implements gojay.MarshalerJSONObject.
-func (v *ReferencesParams) IsNil() bool { return v == nil }
-
-// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
-func (v *ReferencesParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	switch k {
-	case keyTextDocument:
-		return dec.Object(&v.TextDocument)
-	case keyPosition:
-		return dec.Object(&v.Position)
-	case keyWorkDoneToken:
-		return decodeProgressToken(dec, k, keyWorkDoneToken, v.WorkDoneToken)
-	case keyPartialResultToken:
-		return decodeProgressToken(dec, k, keyPartialResultToken, v.PartialResultToken)
-	case keyContext:
-		return dec.Object(&v.Context)
-	}
-	return nil
-}
-
-// NKeys implements gojay.UnmarshalerJSONObject.
-func (v *ReferencesParams) NKeys() int { return 5 }
-
-// compile time check whether the ReferencesParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
-var (
-	_ gojay.MarshalerJSONObject   = (*ReferencesParams)(nil)
-	_ gojay.UnmarshalerJSONObject = (*ReferencesParams)(nil)
-)
-
-// MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *DocumentHighlightOptions) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKeyOmitEmpty(keyWorkDoneProgress, v.WorkDoneProgress)
 }
