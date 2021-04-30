@@ -15,32 +15,32 @@ func TestWorkspaceClientCapabilities(t *testing.T) {
 	testWorkspaceClientCapabilities(t, json.Marshal, json.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesSynchronization(t *testing.T) {
-	testTextDocumentClientCapabilitiesSynchronization(t, json.Marshal, json.Unmarshal)
+func TestTextDocumentSyncClientCapabilities(t *testing.T) {
+	testTextDocumentSyncClientCapabilities(t, json.Marshal, json.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesCompletion(t *testing.T) {
-	testTextDocumentClientCapabilitiesCompletion(t, json.Marshal, json.Unmarshal)
+func TestCompletionTextDocumentClientCapabilities(t *testing.T) {
+	testCompletionTextDocumentClientCapabilities(t, json.Marshal, json.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesHover(t *testing.T) {
-	testTextDocumentClientCapabilitiesHover(t, json.Marshal, json.Unmarshal)
+func TestHoverTextDocumentClientCapabilities(t *testing.T) {
+	testHoverTextDocumentClientCapabilities(t, json.Marshal, json.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesSignatureHelp(t *testing.T) {
-	testTextDocumentClientCapabilitiesSignatureHelp(t, json.Marshal, json.Unmarshal)
+func TestSignatureHelpTextDocumentClientCapabilities(t *testing.T) {
+	testSignatureHelpTextDocumentClientCapabilities(t, json.Marshal, json.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesReferences(t *testing.T) {
-	testTextDocumentClientCapabilitiesReferences(t, json.Marshal, json.Unmarshal)
+func TestReferencesTextDocumentClientCapabilities(t *testing.T) {
+	testReferencesTextDocumentClientCapabilities(t, json.Marshal, json.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesDocumentHighlight(t *testing.T) {
-	testTextDocumentClientCapabilitiesDocumentHighlight(t, json.Marshal, json.Unmarshal)
+func TestDocumentHighlightClientCapabilities(t *testing.T) {
+	testDocumentHighlightClientCapabilities(t, json.Marshal, json.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesDocumentSymbol(t *testing.T) {
-	testTextDocumentClientCapabilitiesDocumentSymbol(t, json.Marshal, json.Unmarshal)
+func TestDocumentSymbolClientCapabilities(t *testing.T) {
+	testDocumentSymbolClientCapabilities(t, json.Marshal, json.Unmarshal)
 }
 
 func TestTextDocumentClientCapabilitiesFormatting(t *testing.T) {
@@ -55,48 +55,48 @@ func TestTextDocumentClientCapabilitiesOnTypeFormatting(t *testing.T) {
 	testTextDocumentClientCapabilitiesOnTypeFormatting(t, json.Marshal, json.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesDeclaration(t *testing.T) {
-	testTextDocumentClientCapabilitiesDeclaration(t, json.Marshal, json.Unmarshal)
+func TestDeclarationTextDocumentClientCapabilities(t *testing.T) {
+	testDeclarationTextDocumentClientCapabilities(t, json.Marshal, json.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesDefinition(t *testing.T) {
-	testTextDocumentClientCapabilitiesDefinition(t, json.Marshal, json.Unmarshal)
+func TestDefinitionTextDocumentClientCapabilities(t *testing.T) {
+	testDefinitionTextDocumentClientCapabilities(t, json.Marshal, json.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesTypeDefinition(t *testing.T) {
-	testTextDocumentClientCapabilitiesTypeDefinition(t, json.Marshal, json.Unmarshal)
+func TestTypeDefinitionTextDocumentClientCapabilities(t *testing.T) {
+	testTypeDefinitionTextDocumentClientCapabilities(t, json.Marshal, json.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesImplementation(t *testing.T) {
-	testTextDocumentClientCapabilitiesImplementation(t, json.Marshal, json.Unmarshal)
+func TestImplementationTextDocumentClientCapabilities(t *testing.T) {
+	testImplementationTextDocumentClientCapabilities(t, json.Marshal, json.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesCodeAction(t *testing.T) {
-	testTextDocumentClientCapabilitiesCodeAction(t, json.Marshal, json.Unmarshal)
+func TestCodeActionClientCapabilities(t *testing.T) {
+	testCodeActionClientCapabilities(t, json.Marshal, json.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesCodeLens(t *testing.T) {
-	testTextDocumentClientCapabilitiesCodeLens(t, json.Marshal, json.Unmarshal)
+func TestCodeLensClientCapabilities(t *testing.T) {
+	testCodeLensClientCapabilities(t, json.Marshal, json.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesDocumentLink(t *testing.T) {
-	testTextDocumentClientCapabilitiesDocumentLink(t, json.Marshal, json.Unmarshal)
+func TestDocumentLinkClientCapabilities(t *testing.T) {
+	testDocumentLinkClientCapabilities(t, json.Marshal, json.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesColorProvider(t *testing.T) {
-	testTextDocumentClientCapabilitiesColorProvider(t, json.Marshal, json.Unmarshal)
+func TestDocumentColorClientCapabilities(t *testing.T) {
+	testDocumentColorClientCapabilities(t, json.Marshal, json.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesRename(t *testing.T) {
-	testTextDocumentClientCapabilitiesRename(t, json.Marshal, json.Unmarshal)
+func TestRenameClientCapabilities(t *testing.T) {
+	testRenameClientCapabilities(t, json.Marshal, json.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesPublishDiagnostics(t *testing.T) {
-	testTextDocumentClientCapabilitiesPublishDiagnostics(t, json.Marshal, json.Unmarshal)
+func TestPublishDiagnosticsClientCapabilities(t *testing.T) {
+	testPublishDiagnosticsClientCapabilities(t, json.Marshal, json.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesFoldingRange(t *testing.T) {
-	testTextDocumentClientCapabilitiesFoldingRange(t, json.Marshal, json.Unmarshal)
+func TestFoldingRangeClientCapabilities(t *testing.T) {
+	testFoldingRangeClientCapabilities(t, json.Marshal, json.Unmarshal)
 }
 
 func TestTextDocumentClientCapabilities(t *testing.T) {

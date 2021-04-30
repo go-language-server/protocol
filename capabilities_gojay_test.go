@@ -16,32 +16,32 @@ func TestWorkspaceClientCapabilities(t *testing.T) {
 	testWorkspaceClientCapabilities(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesSynchronization(t *testing.T) {
-	testTextDocumentClientCapabilitiesSynchronization(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+func TestTextDocumentSyncClientCapabilities(t *testing.T) {
+	testTextDocumentSyncClientCapabilities(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesCompletion(t *testing.T) {
-	testTextDocumentClientCapabilitiesCompletion(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+func TestCompletionTextDocumentClientCapabilities(t *testing.T) {
+	testCompletionTextDocumentClientCapabilities(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesHover(t *testing.T) {
-	testTextDocumentClientCapabilitiesHover(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+func TestHoverTextDocumentClientCapabilities(t *testing.T) {
+	testHoverTextDocumentClientCapabilities(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesSignatureHelp(t *testing.T) {
-	testTextDocumentClientCapabilitiesSignatureHelp(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+func TestSignatureHelpTextDocumentClientCapabilities(t *testing.T) {
+	testSignatureHelpTextDocumentClientCapabilities(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesReferences(t *testing.T) {
-	testTextDocumentClientCapabilitiesReferences(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+func TestReferencesTextDocumentClientCapabilities(t *testing.T) {
+	testReferencesTextDocumentClientCapabilities(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesDocumentHighlight(t *testing.T) {
-	testTextDocumentClientCapabilitiesDocumentHighlight(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+func TestDocumentHighlightClientCapabilities(t *testing.T) {
+	testDocumentHighlightClientCapabilities(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesDocumentSymbol(t *testing.T) {
-	testTextDocumentClientCapabilitiesDocumentSymbol(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+func TestDocumentSymbolClientCapabilities(t *testing.T) {
+	testDocumentSymbolClientCapabilities(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
 func TestTextDocumentClientCapabilitiesFormatting(t *testing.T) {
@@ -56,48 +56,48 @@ func TestTextDocumentClientCapabilitiesOnTypeFormatting(t *testing.T) {
 	testTextDocumentClientCapabilitiesOnTypeFormatting(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesDeclaration(t *testing.T) {
-	testTextDocumentClientCapabilitiesDeclaration(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+func TestDeclarationTextDocumentClientCapabilities(t *testing.T) {
+	testDeclarationTextDocumentClientCapabilities(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesDefinition(t *testing.T) {
-	testTextDocumentClientCapabilitiesDefinition(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+func TestDefinitionTextDocumentClientCapabilities(t *testing.T) {
+	testDefinitionTextDocumentClientCapabilities(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesTypeDefinition(t *testing.T) {
-	testTextDocumentClientCapabilitiesTypeDefinition(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+func TestTypeDefinitionTextDocumentClientCapabilities(t *testing.T) {
+	testTypeDefinitionTextDocumentClientCapabilities(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesImplementation(t *testing.T) {
-	testTextDocumentClientCapabilitiesImplementation(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+func TestImplementationTextDocumentClientCapabilities(t *testing.T) {
+	testImplementationTextDocumentClientCapabilities(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesCodeAction(t *testing.T) {
-	testTextDocumentClientCapabilitiesCodeAction(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+func TestCodeActionClientCapabilities(t *testing.T) {
+	testCodeActionClientCapabilities(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesCodeLens(t *testing.T) {
-	testTextDocumentClientCapabilitiesCodeLens(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+func TestCodeLensClientCapabilities(t *testing.T) {
+	testCodeLensClientCapabilities(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesDocumentLink(t *testing.T) {
-	testTextDocumentClientCapabilitiesDocumentLink(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+func TestDocumentLinkClientCapabilities(t *testing.T) {
+	testDocumentLinkClientCapabilities(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesColorProvider(t *testing.T) {
-	testTextDocumentClientCapabilitiesColorProvider(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+func TestDocumentColorClientCapabilities(t *testing.T) {
+	testDocumentColorClientCapabilities(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesRename(t *testing.T) {
-	testTextDocumentClientCapabilitiesRename(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+func TestRenameClientCapabilities(t *testing.T) {
+	testRenameClientCapabilities(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesPublishDiagnostics(t *testing.T) {
-	testTextDocumentClientCapabilitiesPublishDiagnostics(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+func TestPublishDiagnosticsClientCapabilities(t *testing.T) {
+	testPublishDiagnosticsClientCapabilities(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
-func TestTextDocumentClientCapabilitiesFoldingRange(t *testing.T) {
-	testTextDocumentClientCapabilitiesFoldingRange(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+func TestFoldingRangeClientCapabilities(t *testing.T) {
+	testFoldingRangeClientCapabilities(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
 func TestTextDocumentClientCapabilities(t *testing.T) {

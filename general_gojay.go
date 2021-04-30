@@ -705,35 +705,6 @@ var (
 	_ gojay.UnmarshalerJSONObject = (*DocumentHighlightParams)(nil)
 )
 
-// SymbolTags represents a slice of SymbolTag.
-type SymbolTags []SymbolTag
-
-// compile time check whether the SymbolTags implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
-var (
-	_ gojay.MarshalerJSONArray   = (*SymbolTags)(nil)
-	_ gojay.UnmarshalerJSONArray = (*SymbolTags)(nil)
-)
-
-// MarshalJSONArray implements gojay.MarshalerJSONArray.
-func (v SymbolTags) MarshalJSONArray(enc *gojay.Encoder) {
-	for i := range v {
-		enc.Float64(float64(v[i]))
-	}
-}
-
-// IsNil implements gojay.MarshalerJSONArray.
-func (v SymbolTags) IsNil() bool { return len(v) == 0 }
-
-// UnmarshalJSONArray decodes JSON array elements into slice.
-func (v *SymbolTags) UnmarshalJSONArray(dec *gojay.Decoder) error {
-	var value SymbolTag
-	if err := dec.Float64((*float64)(&value)); err != nil {
-		return err
-	}
-	*v = append(*v, value)
-	return nil
-}
-
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *WorkspaceSymbolOptions) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKeyOmitEmpty(keyWorkDoneProgress, v.WorkDoneProgress)

@@ -22,15 +22,15 @@ func testWorkspaceClientCapabilities(t *testing.T, marshal marshalFunc, unmarsha
 				GroupsOnLabel: true,
 			},
 		},
-		DidChangeConfiguration: &WorkspaceClientCapabilitiesDidChangeConfiguration{
+		DidChangeConfiguration: &DidChangeConfigurationWorkspaceClientCapabilities{
 			DynamicRegistration: true,
 		},
-		DidChangeWatchedFiles: &WorkspaceClientCapabilitiesDidChangeWatchedFiles{
+		DidChangeWatchedFiles: &DidChangeWatchedFilesWorkspaceClientCapabilities{
 			DynamicRegistration: true,
 		},
-		Symbol: &WorkspaceClientCapabilitiesSymbol{
+		Symbol: &WorkspaceSymbolClientCapabilities{
 			DynamicRegistration: true,
-			SymbolKind: &WorkspaceClientCapabilitiesSymbolKind{
+			SymbolKind: &WorkspaceSymbolSymbolKind{
 				ValueSet: []SymbolKind{
 					SymbolKindFile,
 					SymbolKindModule,
@@ -41,15 +41,15 @@ func testWorkspaceClientCapabilities(t *testing.T, marshal marshalFunc, unmarsha
 				},
 			},
 		},
-		ExecuteCommand: &WorkspaceClientCapabilitiesExecuteCommand{
+		ExecuteCommand: &ExecuteCommandClientCapabilities{
 			DynamicRegistration: true,
 		},
 		WorkspaceFolders: true,
 		Configuration:    true,
-		SemanticTokens: &WorkspaceClientCapabilitiesSemanticTokens{
+		SemanticTokens: &SemanticTokensWorkspaceClientCapabilities{
 			RefreshSupport: true,
 		},
-		CodeLens: &WorkspaceClientCapabilitiesCodeLens{
+		CodeLens: &CodeLensWorkspaceClientCapabilities{
 			RefreshSupport: true,
 		},
 		FileOperations: &WorkspaceClientCapabilitiesFileOperations{
@@ -136,16 +136,16 @@ func testWorkspaceClientCapabilities(t *testing.T, marshal marshalFunc, unmarsha
 	})
 }
 
-func testTextDocumentClientCapabilitiesSynchronization(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func testTextDocumentSyncClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want    = `{"didSave":true,"dynamicRegistration":true,"willSave":true,"willSaveWaitUntil":true}`
+		want    = `{"dynamicRegistration":true,"willSave":true,"willSaveWaitUntil":true,"didSave":true}`
 		wantNil = `{}`
 	)
-	wantType := TextDocumentClientCapabilitiesSynchronization{
-		DidSave:             true,
+	wantType := TextDocumentSyncClientCapabilities{
 		DynamicRegistration: true,
 		WillSave:            true,
 		WillSaveWaitUntil:   true,
+		DidSave:             true,
 	}
 
 	t.Run("Marshal", func(t *testing.T) {
@@ -153,7 +153,7 @@ func testTextDocumentClientCapabilitiesSynchronization(t *testing.T, marshal mar
 
 		tests := []struct {
 			name           string
-			field          TextDocumentClientCapabilitiesSynchronization
+			field          TextDocumentSyncClientCapabilities
 			want           string
 			wantMarshalErr bool
 			wantErr        bool
@@ -167,7 +167,7 @@ func testTextDocumentClientCapabilitiesSynchronization(t *testing.T, marshal mar
 			},
 			{
 				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesSynchronization{},
+				field:          TextDocumentSyncClientCapabilities{},
 				want:           wantNil,
 				wantMarshalErr: false,
 				wantErr:        false,
@@ -197,7 +197,7 @@ func testTextDocumentClientCapabilitiesSynchronization(t *testing.T, marshal mar
 		tests := []struct {
 			name             string
 			field            string
-			want             TextDocumentClientCapabilitiesSynchronization
+			want             TextDocumentSyncClientCapabilities
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
@@ -211,7 +211,7 @@ func testTextDocumentClientCapabilitiesSynchronization(t *testing.T, marshal mar
 			{
 				name:             "ValidNilAll",
 				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesSynchronization{},
+				want:             TextDocumentSyncClientCapabilities{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
@@ -222,7 +222,7 @@ func testTextDocumentClientCapabilitiesSynchronization(t *testing.T, marshal mar
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				var got TextDocumentClientCapabilitiesSynchronization
+				var got TextDocumentSyncClientCapabilities
 				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
@@ -235,14 +235,14 @@ func testTextDocumentClientCapabilitiesSynchronization(t *testing.T, marshal mar
 	})
 }
 
-func testTextDocumentClientCapabilitiesCompletion(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func testCompletionTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
 		want    = `{"dynamicRegistration":true,"completionItem":{"snippetSupport":true,"commitCharactersSupport":true,"documentationFormat":["plaintext","markdown"],"deprecatedSupport":true,"preselectSupport":true,"tagSupport":{"valueSet":[1]},"insertReplaceSupport":true,"resolveSupport":{"properties":["test","properties"]},"insertTextModeSupport":{"valueSet":[1,2]}},"completionItemKind":{"valueSet":[1]},"contextSupport":true}`
 		wantNil = `{}`
 	)
-	wantType := TextDocumentClientCapabilitiesCompletion{
+	wantType := CompletionTextDocumentClientCapabilities{
 		DynamicRegistration: true,
-		CompletionItem: &TextDocumentClientCapabilitiesCompletionItem{
+		CompletionItem: &CompletionTextDocumentClientCapabilitiesItem{
 			SnippetSupport:          true,
 			CommitCharactersSupport: true,
 			DocumentationFormat: []MarkupKind{
@@ -251,23 +251,23 @@ func testTextDocumentClientCapabilitiesCompletion(t *testing.T, marshal marshalF
 			},
 			DeprecatedSupport: true,
 			PreselectSupport:  true,
-			TagSupport: &TextDocumentClientCapabilitiesCompletionItemTagSupport{
+			TagSupport: &CompletionTextDocumentClientCapabilitiesItemTagSupport{
 				ValueSet: []CompletionItemTag{
 					CompletionItemTagDeprecated,
 				},
 			},
 			InsertReplaceSupport: true,
-			ResolveSupport: &TextDocumentClientCapabilitiesCompletionItemResolveSupport{
+			ResolveSupport: &CompletionTextDocumentClientCapabilitiesItemResolveSupport{
 				Properties: []string{"test", "properties"},
 			},
-			InsertTextModeSupport: &TextDocumentClientCapabilitiesCompletionItemInsertTextModeSupport{
+			InsertTextModeSupport: &CompletionTextDocumentClientCapabilitiesItemInsertTextModeSupport{
 				ValueSet: []InsertTextMode{
 					InsertTextModeAsIs,
 					InsertTextModeAdjustIndentation,
 				},
 			},
 		},
-		CompletionItemKind: &TextDocumentClientCapabilitiesCompletionItemKind{
+		CompletionItemKind: &CompletionTextDocumentClientCapabilitiesItemKind{
 			ValueSet: []CompletionItemKind{CompletionItemKindText},
 		},
 		ContextSupport: true,
@@ -278,7 +278,7 @@ func testTextDocumentClientCapabilitiesCompletion(t *testing.T, marshal marshalF
 
 		tests := []struct {
 			name           string
-			field          TextDocumentClientCapabilitiesCompletion
+			field          CompletionTextDocumentClientCapabilities
 			want           string
 			wantMarshalErr bool
 			wantErr        bool
@@ -292,7 +292,7 @@ func testTextDocumentClientCapabilitiesCompletion(t *testing.T, marshal marshalF
 			},
 			{
 				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesCompletion{},
+				field:          CompletionTextDocumentClientCapabilities{},
 				want:           wantNil,
 				wantMarshalErr: false,
 				wantErr:        false,
@@ -322,7 +322,7 @@ func testTextDocumentClientCapabilitiesCompletion(t *testing.T, marshal marshalF
 		tests := []struct {
 			name             string
 			field            string
-			want             TextDocumentClientCapabilitiesCompletion
+			want             CompletionTextDocumentClientCapabilities
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
@@ -336,7 +336,7 @@ func testTextDocumentClientCapabilitiesCompletion(t *testing.T, marshal marshalF
 			{
 				name:             "ValidNilAll",
 				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesCompletion{},
+				want:             CompletionTextDocumentClientCapabilities{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
@@ -347,7 +347,7 @@ func testTextDocumentClientCapabilitiesCompletion(t *testing.T, marshal marshalF
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				var got TextDocumentClientCapabilitiesCompletion
+				var got CompletionTextDocumentClientCapabilities
 				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
@@ -360,12 +360,12 @@ func testTextDocumentClientCapabilitiesCompletion(t *testing.T, marshal marshalF
 	})
 }
 
-func testTextDocumentClientCapabilitiesHover(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func testHoverTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
 		want    = `{"dynamicRegistration":true,"contentFormat":["plaintext","markdown"]}`
 		wantNil = `{}`
 	)
-	wantType := TextDocumentClientCapabilitiesHover{
+	wantType := HoverTextDocumentClientCapabilities{
 		DynamicRegistration: true,
 		ContentFormat: []MarkupKind{
 			PlainText,
@@ -378,7 +378,7 @@ func testTextDocumentClientCapabilitiesHover(t *testing.T, marshal marshalFunc, 
 
 		tests := []struct {
 			name           string
-			field          TextDocumentClientCapabilitiesHover
+			field          HoverTextDocumentClientCapabilities
 			want           string
 			wantMarshalErr bool
 			wantErr        bool
@@ -392,7 +392,7 @@ func testTextDocumentClientCapabilitiesHover(t *testing.T, marshal marshalFunc, 
 			},
 			{
 				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesHover{},
+				field:          HoverTextDocumentClientCapabilities{},
 				want:           wantNil,
 				wantMarshalErr: false,
 				wantErr:        false,
@@ -422,7 +422,7 @@ func testTextDocumentClientCapabilitiesHover(t *testing.T, marshal marshalFunc, 
 		tests := []struct {
 			name             string
 			field            string
-			want             TextDocumentClientCapabilitiesHover
+			want             HoverTextDocumentClientCapabilities
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
@@ -436,7 +436,7 @@ func testTextDocumentClientCapabilitiesHover(t *testing.T, marshal marshalFunc, 
 			{
 				name:             "ValidNilAll",
 				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesHover{},
+				want:             HoverTextDocumentClientCapabilities{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
@@ -447,7 +447,7 @@ func testTextDocumentClientCapabilitiesHover(t *testing.T, marshal marshalFunc, 
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				var got TextDocumentClientCapabilitiesHover
+				var got HoverTextDocumentClientCapabilities
 				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
@@ -460,12 +460,12 @@ func testTextDocumentClientCapabilitiesHover(t *testing.T, marshal marshalFunc, 
 	})
 }
 
-func testTextDocumentClientCapabilitiesSignatureHelp(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func testSignatureHelpTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
 		want    = `{"dynamicRegistration":true,"signatureInformation":{"documentationFormat":["plaintext","markdown"],"parameterInformation":{"labelOffsetSupport":true},"activeParameterSupport":true},"contextSupport":true}`
 		wantNil = `{}`
 	)
-	wantType := TextDocumentClientCapabilitiesSignatureHelp{
+	wantType := SignatureHelpTextDocumentClientCapabilities{
 		DynamicRegistration: true,
 		SignatureInformation: &TextDocumentClientCapabilitiesSignatureInformation{
 			DocumentationFormat: []MarkupKind{
@@ -485,7 +485,7 @@ func testTextDocumentClientCapabilitiesSignatureHelp(t *testing.T, marshal marsh
 
 		tests := []struct {
 			name           string
-			field          TextDocumentClientCapabilitiesSignatureHelp
+			field          SignatureHelpTextDocumentClientCapabilities
 			want           string
 			wantMarshalErr bool
 			wantErr        bool
@@ -499,7 +499,7 @@ func testTextDocumentClientCapabilitiesSignatureHelp(t *testing.T, marshal marsh
 			},
 			{
 				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesSignatureHelp{},
+				field:          SignatureHelpTextDocumentClientCapabilities{},
 				want:           wantNil,
 				wantMarshalErr: false,
 				wantErr:        false,
@@ -529,7 +529,7 @@ func testTextDocumentClientCapabilitiesSignatureHelp(t *testing.T, marshal marsh
 		tests := []struct {
 			name             string
 			field            string
-			want             TextDocumentClientCapabilitiesSignatureHelp
+			want             SignatureHelpTextDocumentClientCapabilities
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
@@ -543,7 +543,7 @@ func testTextDocumentClientCapabilitiesSignatureHelp(t *testing.T, marshal marsh
 			{
 				name:             "ValidNilAll",
 				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesSignatureHelp{},
+				want:             SignatureHelpTextDocumentClientCapabilities{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
@@ -554,7 +554,7 @@ func testTextDocumentClientCapabilitiesSignatureHelp(t *testing.T, marshal marsh
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				var got TextDocumentClientCapabilitiesSignatureHelp
+				var got SignatureHelpTextDocumentClientCapabilities
 				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
@@ -567,12 +567,12 @@ func testTextDocumentClientCapabilitiesSignatureHelp(t *testing.T, marshal marsh
 	})
 }
 
-func testTextDocumentClientCapabilitiesReferences(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func testReferencesTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
 		want    = `{"dynamicRegistration":true}`
 		wantNil = `{}`
 	)
-	wantType := TextDocumentClientCapabilitiesReferences{
+	wantType := ReferencesTextDocumentClientCapabilities{
 		DynamicRegistration: true,
 	}
 
@@ -581,7 +581,7 @@ func testTextDocumentClientCapabilitiesReferences(t *testing.T, marshal marshalF
 
 		tests := []struct {
 			name           string
-			field          TextDocumentClientCapabilitiesReferences
+			field          ReferencesTextDocumentClientCapabilities
 			want           string
 			wantMarshalErr bool
 			wantErr        bool
@@ -595,7 +595,7 @@ func testTextDocumentClientCapabilitiesReferences(t *testing.T, marshal marshalF
 			},
 			{
 				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesReferences{},
+				field:          ReferencesTextDocumentClientCapabilities{},
 				want:           wantNil,
 				wantMarshalErr: false,
 				wantErr:        false,
@@ -625,7 +625,7 @@ func testTextDocumentClientCapabilitiesReferences(t *testing.T, marshal marshalF
 		tests := []struct {
 			name             string
 			field            string
-			want             TextDocumentClientCapabilitiesReferences
+			want             ReferencesTextDocumentClientCapabilities
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
@@ -639,7 +639,7 @@ func testTextDocumentClientCapabilitiesReferences(t *testing.T, marshal marshalF
 			{
 				name:             "ValidNilAll",
 				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesReferences{},
+				want:             ReferencesTextDocumentClientCapabilities{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
@@ -650,7 +650,7 @@ func testTextDocumentClientCapabilitiesReferences(t *testing.T, marshal marshalF
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				var got TextDocumentClientCapabilitiesReferences
+				var got ReferencesTextDocumentClientCapabilities
 				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
@@ -663,12 +663,12 @@ func testTextDocumentClientCapabilitiesReferences(t *testing.T, marshal marshalF
 	})
 }
 
-func testTextDocumentClientCapabilitiesDocumentHighlight(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func testDocumentHighlightClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
 		want    = `{"dynamicRegistration":true}`
 		wantNil = `{}`
 	)
-	wantType := TextDocumentClientCapabilitiesDocumentHighlight{
+	wantType := DocumentHighlightClientCapabilities{
 		DynamicRegistration: true,
 	}
 
@@ -677,7 +677,7 @@ func testTextDocumentClientCapabilitiesDocumentHighlight(t *testing.T, marshal m
 
 		tests := []struct {
 			name           string
-			field          TextDocumentClientCapabilitiesDocumentHighlight
+			field          DocumentHighlightClientCapabilities
 			want           string
 			wantMarshalErr bool
 			wantErr        bool
@@ -691,7 +691,7 @@ func testTextDocumentClientCapabilitiesDocumentHighlight(t *testing.T, marshal m
 			},
 			{
 				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesDocumentHighlight{},
+				field:          DocumentHighlightClientCapabilities{},
 				want:           wantNil,
 				wantMarshalErr: false,
 				wantErr:        false,
@@ -721,7 +721,7 @@ func testTextDocumentClientCapabilitiesDocumentHighlight(t *testing.T, marshal m
 		tests := []struct {
 			name             string
 			field            string
-			want             TextDocumentClientCapabilitiesDocumentHighlight
+			want             DocumentHighlightClientCapabilities
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
@@ -735,7 +735,7 @@ func testTextDocumentClientCapabilitiesDocumentHighlight(t *testing.T, marshal m
 			{
 				name:             "ValidNilAll",
 				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesDocumentHighlight{},
+				want:             DocumentHighlightClientCapabilities{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
@@ -746,7 +746,7 @@ func testTextDocumentClientCapabilitiesDocumentHighlight(t *testing.T, marshal m
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				var got TextDocumentClientCapabilitiesDocumentHighlight
+				var got DocumentHighlightClientCapabilities
 				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
@@ -759,14 +759,14 @@ func testTextDocumentClientCapabilitiesDocumentHighlight(t *testing.T, marshal m
 	})
 }
 
-func testTextDocumentClientCapabilitiesDocumentSymbol(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func testDocumentSymbolClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
 		want    = `{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]},"hierarchicalDocumentSymbolSupport":true,"tagSupport":{"valueSet":[1]},"labelSupport":true}`
 		wantNil = `{}`
 	)
-	wantType := TextDocumentClientCapabilitiesDocumentSymbol{
+	wantType := DocumentSymbolClientCapabilities{
 		DynamicRegistration: true,
-		SymbolKind: &WorkspaceClientCapabilitiesSymbolKind{
+		SymbolKind: &WorkspaceSymbolClientCapabilitiesKind{
 			ValueSet: []SymbolKind{
 				SymbolKindFile,
 				SymbolKindModule,
@@ -777,7 +777,7 @@ func testTextDocumentClientCapabilitiesDocumentSymbol(t *testing.T, marshal mars
 			},
 		},
 		HierarchicalDocumentSymbolSupport: true,
-		TagSupport: &TextDocumentClientCapabilitiesDocumentSymbolTagSupport{
+		TagSupport: &DocumentSymbolClientCapabilitiesTagSupport{
 			ValueSet: []SymbolTag{
 				SymbolTagDeprecated,
 			},
@@ -790,7 +790,7 @@ func testTextDocumentClientCapabilitiesDocumentSymbol(t *testing.T, marshal mars
 
 		tests := []struct {
 			name           string
-			field          TextDocumentClientCapabilitiesDocumentSymbol
+			field          DocumentSymbolClientCapabilities
 			want           string
 			wantMarshalErr bool
 			wantErr        bool
@@ -804,7 +804,7 @@ func testTextDocumentClientCapabilitiesDocumentSymbol(t *testing.T, marshal mars
 			},
 			{
 				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesDocumentSymbol{},
+				field:          DocumentSymbolClientCapabilities{},
 				want:           wantNil,
 				wantMarshalErr: false,
 				wantErr:        false,
@@ -834,7 +834,7 @@ func testTextDocumentClientCapabilitiesDocumentSymbol(t *testing.T, marshal mars
 		tests := []struct {
 			name             string
 			field            string
-			want             TextDocumentClientCapabilitiesDocumentSymbol
+			want             DocumentSymbolClientCapabilities
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
@@ -848,7 +848,7 @@ func testTextDocumentClientCapabilitiesDocumentSymbol(t *testing.T, marshal mars
 			{
 				name:             "ValidNilAll",
 				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesDocumentSymbol{},
+				want:             DocumentSymbolClientCapabilities{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
@@ -859,7 +859,7 @@ func testTextDocumentClientCapabilitiesDocumentSymbol(t *testing.T, marshal mars
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				var got TextDocumentClientCapabilitiesDocumentSymbol
+				var got DocumentSymbolClientCapabilities
 				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
@@ -1160,12 +1160,12 @@ func testTextDocumentClientCapabilitiesOnTypeFormatting(t *testing.T, marshal ma
 	})
 }
 
-func testTextDocumentClientCapabilitiesDeclaration(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func testDeclarationTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
 		want    = `{"dynamicRegistration":true,"linkSupport":true}`
 		wantNil = `{}`
 	)
-	wantType := TextDocumentClientCapabilitiesDeclaration{
+	wantType := DeclarationTextDocumentClientCapabilities{
 		DynamicRegistration: true,
 		LinkSupport:         true,
 	}
@@ -1175,7 +1175,7 @@ func testTextDocumentClientCapabilitiesDeclaration(t *testing.T, marshal marshal
 
 		tests := []struct {
 			name           string
-			field          TextDocumentClientCapabilitiesDeclaration
+			field          DeclarationTextDocumentClientCapabilities
 			want           string
 			wantMarshalErr bool
 			wantErr        bool
@@ -1189,7 +1189,7 @@ func testTextDocumentClientCapabilitiesDeclaration(t *testing.T, marshal marshal
 			},
 			{
 				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesDeclaration{},
+				field:          DeclarationTextDocumentClientCapabilities{},
 				want:           wantNil,
 				wantMarshalErr: false,
 				wantErr:        false,
@@ -1219,7 +1219,7 @@ func testTextDocumentClientCapabilitiesDeclaration(t *testing.T, marshal marshal
 		tests := []struct {
 			name             string
 			field            string
-			want             TextDocumentClientCapabilitiesDeclaration
+			want             DeclarationTextDocumentClientCapabilities
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
@@ -1233,7 +1233,7 @@ func testTextDocumentClientCapabilitiesDeclaration(t *testing.T, marshal marshal
 			{
 				name:             "ValidNilAll",
 				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesDeclaration{},
+				want:             DeclarationTextDocumentClientCapabilities{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
@@ -1244,7 +1244,7 @@ func testTextDocumentClientCapabilitiesDeclaration(t *testing.T, marshal marshal
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				var got TextDocumentClientCapabilitiesDeclaration
+				var got DeclarationTextDocumentClientCapabilities
 				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
@@ -1257,12 +1257,12 @@ func testTextDocumentClientCapabilitiesDeclaration(t *testing.T, marshal marshal
 	})
 }
 
-func testTextDocumentClientCapabilitiesDefinition(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func testDefinitionTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
 		want    = `{"dynamicRegistration":true,"linkSupport":true}`
 		wantNil = `{}`
 	)
-	wantType := TextDocumentClientCapabilitiesDefinition{
+	wantType := DefinitionTextDocumentClientCapabilities{
 		DynamicRegistration: true,
 		LinkSupport:         true,
 	}
@@ -1272,7 +1272,7 @@ func testTextDocumentClientCapabilitiesDefinition(t *testing.T, marshal marshalF
 
 		tests := []struct {
 			name           string
-			field          TextDocumentClientCapabilitiesDefinition
+			field          DefinitionTextDocumentClientCapabilities
 			want           string
 			wantMarshalErr bool
 			wantErr        bool
@@ -1286,7 +1286,7 @@ func testTextDocumentClientCapabilitiesDefinition(t *testing.T, marshal marshalF
 			},
 			{
 				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesDefinition{},
+				field:          DefinitionTextDocumentClientCapabilities{},
 				want:           wantNil,
 				wantMarshalErr: false,
 				wantErr:        false,
@@ -1316,7 +1316,7 @@ func testTextDocumentClientCapabilitiesDefinition(t *testing.T, marshal marshalF
 		tests := []struct {
 			name             string
 			field            string
-			want             TextDocumentClientCapabilitiesDefinition
+			want             DefinitionTextDocumentClientCapabilities
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
@@ -1330,7 +1330,7 @@ func testTextDocumentClientCapabilitiesDefinition(t *testing.T, marshal marshalF
 			{
 				name:             "ValidNilAll",
 				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesDefinition{},
+				want:             DefinitionTextDocumentClientCapabilities{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
@@ -1341,7 +1341,7 @@ func testTextDocumentClientCapabilitiesDefinition(t *testing.T, marshal marshalF
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				var got TextDocumentClientCapabilitiesDefinition
+				var got DefinitionTextDocumentClientCapabilities
 				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
@@ -1353,12 +1353,13 @@ func testTextDocumentClientCapabilitiesDefinition(t *testing.T, marshal marshalF
 		}
 	})
 }
-func testTextDocumentClientCapabilitiesTypeDefinition(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+
+func testTypeDefinitionTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
 		want    = `{"dynamicRegistration":true,"linkSupport":true}`
 		wantNil = `{}`
 	)
-	wantType := TextDocumentClientCapabilitiesTypeDefinition{
+	wantType := TypeDefinitionTextDocumentClientCapabilities{
 		DynamicRegistration: true,
 		LinkSupport:         true,
 	}
@@ -1368,7 +1369,7 @@ func testTextDocumentClientCapabilitiesTypeDefinition(t *testing.T, marshal mars
 
 		tests := []struct {
 			name           string
-			field          TextDocumentClientCapabilitiesTypeDefinition
+			field          TypeDefinitionTextDocumentClientCapabilities
 			want           string
 			wantMarshalErr bool
 			wantErr        bool
@@ -1382,7 +1383,7 @@ func testTextDocumentClientCapabilitiesTypeDefinition(t *testing.T, marshal mars
 			},
 			{
 				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesTypeDefinition{},
+				field:          TypeDefinitionTextDocumentClientCapabilities{},
 				want:           wantNil,
 				wantMarshalErr: false,
 				wantErr:        false,
@@ -1412,7 +1413,7 @@ func testTextDocumentClientCapabilitiesTypeDefinition(t *testing.T, marshal mars
 		tests := []struct {
 			name             string
 			field            string
-			want             TextDocumentClientCapabilitiesTypeDefinition
+			want             TypeDefinitionTextDocumentClientCapabilities
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
@@ -1426,7 +1427,7 @@ func testTextDocumentClientCapabilitiesTypeDefinition(t *testing.T, marshal mars
 			{
 				name:             "ValidNilAll",
 				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesTypeDefinition{},
+				want:             TypeDefinitionTextDocumentClientCapabilities{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
@@ -1437,7 +1438,7 @@ func testTextDocumentClientCapabilitiesTypeDefinition(t *testing.T, marshal mars
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				var got TextDocumentClientCapabilitiesTypeDefinition
+				var got TypeDefinitionTextDocumentClientCapabilities
 				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
@@ -1450,12 +1451,12 @@ func testTextDocumentClientCapabilitiesTypeDefinition(t *testing.T, marshal mars
 	})
 }
 
-func testTextDocumentClientCapabilitiesImplementation(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func testImplementationTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
 		want    = `{"dynamicRegistration":true,"linkSupport":true}`
 		wantNil = `{}`
 	)
-	wantType := TextDocumentClientCapabilitiesImplementation{
+	wantType := ImplementationTextDocumentClientCapabilities{
 		DynamicRegistration: true,
 		LinkSupport:         true,
 	}
@@ -1465,7 +1466,7 @@ func testTextDocumentClientCapabilitiesImplementation(t *testing.T, marshal mars
 
 		tests := []struct {
 			name           string
-			field          TextDocumentClientCapabilitiesImplementation
+			field          ImplementationTextDocumentClientCapabilities
 			want           string
 			wantMarshalErr bool
 			wantErr        bool
@@ -1479,7 +1480,7 @@ func testTextDocumentClientCapabilitiesImplementation(t *testing.T, marshal mars
 			},
 			{
 				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesImplementation{},
+				field:          ImplementationTextDocumentClientCapabilities{},
 				want:           wantNil,
 				wantMarshalErr: false,
 				wantErr:        false,
@@ -1509,7 +1510,7 @@ func testTextDocumentClientCapabilitiesImplementation(t *testing.T, marshal mars
 		tests := []struct {
 			name             string
 			field            string
-			want             TextDocumentClientCapabilitiesImplementation
+			want             ImplementationTextDocumentClientCapabilities
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
@@ -1523,7 +1524,7 @@ func testTextDocumentClientCapabilitiesImplementation(t *testing.T, marshal mars
 			{
 				name:             "ValidNilAll",
 				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesImplementation{},
+				want:             ImplementationTextDocumentClientCapabilities{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
@@ -1534,7 +1535,7 @@ func testTextDocumentClientCapabilitiesImplementation(t *testing.T, marshal mars
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				var got TextDocumentClientCapabilitiesImplementation
+				var got ImplementationTextDocumentClientCapabilities
 				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
@@ -1547,15 +1548,15 @@ func testTextDocumentClientCapabilitiesImplementation(t *testing.T, marshal mars
 	})
 }
 
-func testTextDocumentClientCapabilitiesCodeAction(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func testCodeActionClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
 		want    = `{"dynamicRegistration":true,"codeActionLiteralSupport":{"codeActionKind":{"valueSet":["quickfix","refactor","refactor.extract","refactor.rewrite","source","source.organizeImports"]}},"isPreferredSupport":true,"disabledSupport":true,"dataSupport":true,"resolveSupport":{"properties":["testProperties"]},"honorsChangeAnnotations":true}`
 		wantNil = `{}`
 	)
-	wantType := TextDocumentClientCapabilitiesCodeAction{
+	wantType := CodeActionClientCapabilities{
 		DynamicRegistration: true,
-		CodeActionLiteralSupport: &TextDocumentClientCapabilitiesCodeActionLiteralSupport{
-			CodeActionKind: &TextDocumentClientCapabilitiesCodeActionKind{
+		CodeActionLiteralSupport: &CodeActionClientCapabilitiesLiteralSupport{
+			CodeActionKind: &CodeActionClientCapabilitiesKind{
 				ValueSet: []CodeActionKind{
 					QuickFix,
 					Refactor,
@@ -1569,7 +1570,7 @@ func testTextDocumentClientCapabilitiesCodeAction(t *testing.T, marshal marshalF
 		IsPreferredSupport: true,
 		DisabledSupport:    true,
 		DataSupport:        true,
-		ResolveSupport: &TextDocumentClientCapabilitiesCodeActionResolveSupport{
+		ResolveSupport: &CodeActionClientCapabilitiesResolveSupport{
 			Properties: []string{"testProperties"},
 		},
 		HonorsChangeAnnotations: true,
@@ -1580,7 +1581,7 @@ func testTextDocumentClientCapabilitiesCodeAction(t *testing.T, marshal marshalF
 
 		tests := []struct {
 			name           string
-			field          TextDocumentClientCapabilitiesCodeAction
+			field          CodeActionClientCapabilities
 			want           string
 			wantMarshalErr bool
 			wantErr        bool
@@ -1594,7 +1595,7 @@ func testTextDocumentClientCapabilitiesCodeAction(t *testing.T, marshal marshalF
 			},
 			{
 				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesCodeAction{},
+				field:          CodeActionClientCapabilities{},
 				want:           wantNil,
 				wantMarshalErr: false,
 				wantErr:        false,
@@ -1624,7 +1625,7 @@ func testTextDocumentClientCapabilitiesCodeAction(t *testing.T, marshal marshalF
 		tests := []struct {
 			name             string
 			field            string
-			want             TextDocumentClientCapabilitiesCodeAction
+			want             CodeActionClientCapabilities
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
@@ -1638,7 +1639,7 @@ func testTextDocumentClientCapabilitiesCodeAction(t *testing.T, marshal marshalF
 			{
 				name:             "ValidNilAll",
 				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesCodeAction{},
+				want:             CodeActionClientCapabilities{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
@@ -1649,7 +1650,7 @@ func testTextDocumentClientCapabilitiesCodeAction(t *testing.T, marshal marshalF
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				var got TextDocumentClientCapabilitiesCodeAction
+				var got CodeActionClientCapabilities
 				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
@@ -1662,206 +1663,12 @@ func testTextDocumentClientCapabilitiesCodeAction(t *testing.T, marshal marshalF
 	})
 }
 
-func testTextDocumentClientCapabilitiesCodeLens(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want    = `{"dynamicRegistration":true,"tooltipSupport":true}`
-		wantNil = `{}`
-	)
-	wantType := TextDocumentClientCapabilitiesCodeLens{
-		DynamicRegistration: true,
-		TooltipSupport:      true,
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          TextDocumentClientCapabilitiesCodeLens
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesCodeLens{},
-				want:           wantNil,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             TextDocumentClientCapabilitiesCodeLens
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilAll",
-				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesCodeLens{},
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got TextDocumentClientCapabilitiesCodeLens
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-}
-
-func testTextDocumentClientCapabilitiesDocumentLink(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want    = `{"dynamicRegistration":true,"tooltipSupport":true}`
-		wantNil = `{}`
-	)
-	wantType := TextDocumentClientCapabilitiesDocumentLink{
-		DynamicRegistration: true,
-		TooltipSupport:      true,
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          TextDocumentClientCapabilitiesDocumentLink
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesDocumentLink{},
-				want:           wantNil,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             TextDocumentClientCapabilitiesDocumentLink
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilAll",
-				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesDocumentLink{},
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got TextDocumentClientCapabilitiesDocumentLink
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-}
-
-func testTextDocumentClientCapabilitiesColorProvider(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func testCodeLensClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
 		want    = `{"dynamicRegistration":true}`
 		wantNil = `{}`
 	)
-	wantType := TextDocumentClientCapabilitiesColorProvider{
+	wantType := CodeLensClientCapabilities{
 		DynamicRegistration: true,
 	}
 
@@ -1870,7 +1677,7 @@ func testTextDocumentClientCapabilitiesColorProvider(t *testing.T, marshal marsh
 
 		tests := []struct {
 			name           string
-			field          TextDocumentClientCapabilitiesColorProvider
+			field          CodeLensClientCapabilities
 			want           string
 			wantMarshalErr bool
 			wantErr        bool
@@ -1884,7 +1691,7 @@ func testTextDocumentClientCapabilitiesColorProvider(t *testing.T, marshal marsh
 			},
 			{
 				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesColorProvider{},
+				field:          CodeLensClientCapabilities{},
 				want:           wantNil,
 				wantMarshalErr: false,
 				wantErr:        false,
@@ -1914,7 +1721,7 @@ func testTextDocumentClientCapabilitiesColorProvider(t *testing.T, marshal marsh
 		tests := []struct {
 			name             string
 			field            string
-			want             TextDocumentClientCapabilitiesColorProvider
+			want             CodeLensClientCapabilities
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
@@ -1928,7 +1735,7 @@ func testTextDocumentClientCapabilitiesColorProvider(t *testing.T, marshal marsh
 			{
 				name:             "ValidNilAll",
 				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesColorProvider{},
+				want:             CodeLensClientCapabilities{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
@@ -1939,7 +1746,7 @@ func testTextDocumentClientCapabilitiesColorProvider(t *testing.T, marshal marsh
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				var got TextDocumentClientCapabilitiesColorProvider
+				var got CodeLensClientCapabilities
 				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
@@ -1952,12 +1759,205 @@ func testTextDocumentClientCapabilitiesColorProvider(t *testing.T, marshal marsh
 	})
 }
 
-func testTextDocumentClientCapabilitiesRename(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func testDocumentLinkClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+	const (
+		want    = `{"dynamicRegistration":true,"tooltipSupport":true}`
+		wantNil = `{}`
+	)
+	wantType := DocumentLinkClientCapabilities{
+		DynamicRegistration: true,
+		TooltipSupport:      true,
+	}
+
+	t.Run("Marshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name           string
+			field          DocumentLinkClientCapabilities
+			want           string
+			wantMarshalErr bool
+			wantErr        bool
+		}{
+			{
+				name:           "Valid",
+				field:          wantType,
+				want:           want,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name:           "ValidNilAll",
+				field:          DocumentLinkClientCapabilities{},
+				want:           wantNil,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got, err := marshal(&tt.field)
+				if (err != nil) != tt.wantMarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+
+	t.Run("Unmarshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name             string
+			field            string
+			want             DocumentLinkClientCapabilities
+			wantUnmarshalErr bool
+			wantErr          bool
+		}{
+			{
+				name:             "Valid",
+				field:            want,
+				want:             wantType,
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:             "ValidNilAll",
+				field:            wantNil,
+				want:             DocumentLinkClientCapabilities{},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				var got DocumentLinkClientCapabilities
+				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+}
+
+func testDocumentColorClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+	const (
+		want    = `{"dynamicRegistration":true}`
+		wantNil = `{}`
+	)
+	wantType := DocumentColorClientCapabilities{
+		DynamicRegistration: true,
+	}
+
+	t.Run("Marshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name           string
+			field          DocumentColorClientCapabilities
+			want           string
+			wantMarshalErr bool
+			wantErr        bool
+		}{
+			{
+				name:           "Valid",
+				field:          wantType,
+				want:           want,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+			{
+				name:           "ValidNilAll",
+				field:          DocumentColorClientCapabilities{},
+				want:           wantNil,
+				wantMarshalErr: false,
+				wantErr:        false,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				got, err := marshal(&tt.field)
+				if (err != nil) != tt.wantMarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+
+	t.Run("Unmarshal", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			name             string
+			field            string
+			want             DocumentColorClientCapabilities
+			wantUnmarshalErr bool
+			wantErr          bool
+		}{
+			{
+				name:             "Valid",
+				field:            want,
+				want:             wantType,
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+			{
+				name:             "ValidNilAll",
+				field:            wantNil,
+				want:             DocumentColorClientCapabilities{},
+				wantUnmarshalErr: false,
+				wantErr:          false,
+			},
+		}
+
+		for _, tt := range tests {
+			tt := tt
+			t.Run(tt.name, func(t *testing.T) {
+				t.Parallel()
+
+				var got DocumentColorClientCapabilities
+				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+					t.Fatal(err)
+				}
+
+				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				}
+			})
+		}
+	})
+}
+
+func testRenameClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
 		want    = `{"dynamicRegistration":true,"prepareSupport":true,"prepareSupportDefaultBehavior":1,"honorsChangeAnnotations":true}`
 		wantNil = `{}`
 	)
-	wantType := TextDocumentClientCapabilitiesRename{
+	wantType := RenameClientCapabilities{
 		DynamicRegistration:           true,
 		PrepareSupport:                true,
 		PrepareSupportDefaultBehavior: PrepareSupportDefaultBehaviorIdentifier,
@@ -1969,7 +1969,7 @@ func testTextDocumentClientCapabilitiesRename(t *testing.T, marshal marshalFunc,
 
 		tests := []struct {
 			name           string
-			field          TextDocumentClientCapabilitiesRename
+			field          RenameClientCapabilities
 			want           string
 			wantMarshalErr bool
 			wantErr        bool
@@ -1983,7 +1983,7 @@ func testTextDocumentClientCapabilitiesRename(t *testing.T, marshal marshalFunc,
 			},
 			{
 				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesRename{},
+				field:          RenameClientCapabilities{},
 				want:           wantNil,
 				wantMarshalErr: false,
 				wantErr:        false,
@@ -2013,7 +2013,7 @@ func testTextDocumentClientCapabilitiesRename(t *testing.T, marshal marshalFunc,
 		tests := []struct {
 			name             string
 			field            string
-			want             TextDocumentClientCapabilitiesRename
+			want             RenameClientCapabilities
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
@@ -2027,7 +2027,7 @@ func testTextDocumentClientCapabilitiesRename(t *testing.T, marshal marshalFunc,
 			{
 				name:             "ValidNilAll",
 				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesRename{},
+				want:             RenameClientCapabilities{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
@@ -2038,7 +2038,7 @@ func testTextDocumentClientCapabilitiesRename(t *testing.T, marshal marshalFunc,
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				var got TextDocumentClientCapabilitiesRename
+				var got RenameClientCapabilities
 				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
@@ -2051,14 +2051,14 @@ func testTextDocumentClientCapabilitiesRename(t *testing.T, marshal marshalFunc,
 	})
 }
 
-func testTextDocumentClientCapabilitiesPublishDiagnostics(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func testPublishDiagnosticsClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
 		want    = `{"relatedInformation":true,"tagSupport":{"valueSet":[2,1]},"versionSupport":true,"codeDescriptionSupport":true,"dataSupport":true}`
 		wantNil = `{}`
 	)
-	wantType := TextDocumentClientCapabilitiesPublishDiagnostics{
+	wantType := PublishDiagnosticsClientCapabilities{
 		RelatedInformation: true,
-		TagSupport: &TextDocumentClientCapabilitiesPublishDiagnosticsTagSupport{
+		TagSupport: &PublishDiagnosticsClientCapabilitiesTagSupport{
 			ValueSet: []DiagnosticTag{
 				DiagnosticTagDeprecated,
 				DiagnosticTagUnnecessary,
@@ -2074,7 +2074,7 @@ func testTextDocumentClientCapabilitiesPublishDiagnostics(t *testing.T, marshal 
 
 		tests := []struct {
 			name           string
-			field          TextDocumentClientCapabilitiesPublishDiagnostics
+			field          PublishDiagnosticsClientCapabilities
 			want           string
 			wantMarshalErr bool
 			wantErr        bool
@@ -2088,7 +2088,7 @@ func testTextDocumentClientCapabilitiesPublishDiagnostics(t *testing.T, marshal 
 			},
 			{
 				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesPublishDiagnostics{},
+				field:          PublishDiagnosticsClientCapabilities{},
 				want:           wantNil,
 				wantMarshalErr: false,
 				wantErr:        false,
@@ -2118,7 +2118,7 @@ func testTextDocumentClientCapabilitiesPublishDiagnostics(t *testing.T, marshal 
 		tests := []struct {
 			name             string
 			field            string
-			want             TextDocumentClientCapabilitiesPublishDiagnostics
+			want             PublishDiagnosticsClientCapabilities
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
@@ -2132,7 +2132,7 @@ func testTextDocumentClientCapabilitiesPublishDiagnostics(t *testing.T, marshal 
 			{
 				name:             "ValidNilAll",
 				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesPublishDiagnostics{},
+				want:             PublishDiagnosticsClientCapabilities{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
@@ -2143,7 +2143,7 @@ func testTextDocumentClientCapabilitiesPublishDiagnostics(t *testing.T, marshal 
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				var got TextDocumentClientCapabilitiesPublishDiagnostics
+				var got PublishDiagnosticsClientCapabilities
 				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
@@ -2156,12 +2156,12 @@ func testTextDocumentClientCapabilitiesPublishDiagnostics(t *testing.T, marshal 
 	})
 }
 
-func testTextDocumentClientCapabilitiesFoldingRange(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func testFoldingRangeClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
 		want    = `{"dynamicRegistration":true,"rangeLimit":5,"lineFoldingOnly":true}`
 		wantNil = `{}`
 	)
-	wantType := TextDocumentClientCapabilitiesFoldingRange{
+	wantType := FoldingRangeClientCapabilities{
 		DynamicRegistration: true,
 		RangeLimit:          uint32(5),
 		LineFoldingOnly:     true,
@@ -2172,7 +2172,7 @@ func testTextDocumentClientCapabilitiesFoldingRange(t *testing.T, marshal marsha
 
 		tests := []struct {
 			name           string
-			field          TextDocumentClientCapabilitiesFoldingRange
+			field          FoldingRangeClientCapabilities
 			want           string
 			wantMarshalErr bool
 			wantErr        bool
@@ -2186,7 +2186,7 @@ func testTextDocumentClientCapabilitiesFoldingRange(t *testing.T, marshal marsha
 			},
 			{
 				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesFoldingRange{},
+				field:          FoldingRangeClientCapabilities{},
 				want:           wantNil,
 				wantMarshalErr: false,
 				wantErr:        false,
@@ -2216,7 +2216,7 @@ func testTextDocumentClientCapabilitiesFoldingRange(t *testing.T, marshal marsha
 		tests := []struct {
 			name             string
 			field            string
-			want             TextDocumentClientCapabilitiesFoldingRange
+			want             FoldingRangeClientCapabilities
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
@@ -2230,7 +2230,7 @@ func testTextDocumentClientCapabilitiesFoldingRange(t *testing.T, marshal marsha
 			{
 				name:             "ValidNilAll",
 				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesFoldingRange{},
+				want:             FoldingRangeClientCapabilities{},
 				wantUnmarshalErr: false,
 				wantErr:          false,
 			},
@@ -2241,7 +2241,7 @@ func testTextDocumentClientCapabilitiesFoldingRange(t *testing.T, marshal marsha
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				var got TextDocumentClientCapabilitiesFoldingRange
+				var got FoldingRangeClientCapabilities
 				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
@@ -2256,19 +2256,19 @@ func testTextDocumentClientCapabilitiesFoldingRange(t *testing.T, marshal marsha
 
 func testTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want    = `{"synchronization":{"didSave":true,"dynamicRegistration":true,"willSave":true,"willSaveWaitUntil":true},"completion":{"dynamicRegistration":true,"completionItem":{"snippetSupport":true,"commitCharactersSupport":true,"documentationFormat":["plaintext","markdown"],"deprecatedSupport":true,"preselectSupport":true},"completionItemKind":{"valueSet":[1]},"contextSupport":true},"hover":{"dynamicRegistration":true,"contentFormat":["plaintext","markdown"]},"signatureHelp":{"dynamicRegistration":true,"signatureInformation":{"documentationFormat":["plaintext","markdown"]}},"references":{"dynamicRegistration":true},"documentHighlight":{"dynamicRegistration":true},"documentSymbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]},"hierarchicalDocumentSymbolSupport":true},"formatting":{"dynamicRegistration":true},"rangeFormatting":{"dynamicRegistration":true},"onTypeFormatting":{"dynamicRegistration":true},"declaration":{"dynamicRegistration":true,"linkSupport":true},"definition":{"dynamicRegistration":true,"linkSupport":true},"typeDefinition":{"dynamicRegistration":true,"linkSupport":true},"implementation":{"dynamicRegistration":true,"linkSupport":true},"codeAction":{"dynamicRegistration":true,"codeActionLiteralSupport":{"codeActionKind":{"valueSet":["quickfix","refactor","refactor.extract","refactor.rewrite","source","source.organizeImports"]}}},"codeLens":{"dynamicRegistration":true},"documentLink":{"dynamicRegistration":true},"colorProvider":{"dynamicRegistration":true},"rename":{"dynamicRegistration":true,"prepareSupport":true},"publishDiagnostics":{"relatedInformation":true},"foldingRange":{"dynamicRegistration":true,"rangeLimit":5,"lineFoldingOnly":true},"selectionRange":{"dynamicRegistration":true},"linkedEditingRange":{"dynamicRegistration":true},"callHierarchy":{"dynamicRegistration":true},"semanticTokens":{"dynamicRegistration":true,"requests":{"range":true,"full":true},"tokenTypes":["test","tokenTypes"],"tokenModifiers":["test","tokenModifiers"],"formats":["relative"],"overlappingTokenSupport":true,"multilineTokenSupport":true},"moniker":{"dynamicRegistration":true}}`
+		want    = `{"synchronization":{"dynamicRegistration":true,"willSave":true,"willSaveWaitUntil":true,"didSave":true},"completion":{"dynamicRegistration":true,"completionItem":{"snippetSupport":true,"commitCharactersSupport":true,"documentationFormat":["plaintext","markdown"],"deprecatedSupport":true,"preselectSupport":true},"completionItemKind":{"valueSet":[1]},"contextSupport":true},"hover":{"dynamicRegistration":true,"contentFormat":["plaintext","markdown"]},"signatureHelp":{"dynamicRegistration":true,"signatureInformation":{"documentationFormat":["plaintext","markdown"]}},"declaration":{"dynamicRegistration":true,"linkSupport":true},"definition":{"dynamicRegistration":true,"linkSupport":true},"typeDefinition":{"dynamicRegistration":true,"linkSupport":true},"implementation":{"dynamicRegistration":true,"linkSupport":true},"references":{"dynamicRegistration":true},"documentHighlight":{"dynamicRegistration":true},"documentSymbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]},"hierarchicalDocumentSymbolSupport":true},"codeAction":{"dynamicRegistration":true,"codeActionLiteralSupport":{"codeActionKind":{"valueSet":["quickfix","refactor","refactor.extract","refactor.rewrite","source","source.organizeImports"]}}},"codeLens":{"dynamicRegistration":true},"documentLink":{"dynamicRegistration":true},"colorProvider":{"dynamicRegistration":true},"formatting":{"dynamicRegistration":true},"rangeFormatting":{"dynamicRegistration":true},"onTypeFormatting":{"dynamicRegistration":true},"publishDiagnostics":{"relatedInformation":true},"rename":{"dynamicRegistration":true,"prepareSupport":true},"foldingRange":{"dynamicRegistration":true,"rangeLimit":5,"lineFoldingOnly":true},"selectionRange":{"dynamicRegistration":true},"callHierarchy":{"dynamicRegistration":true},"semanticTokens":{"dynamicRegistration":true,"requests":{"range":true,"full":true},"tokenTypes":["test","tokenTypes"],"tokenModifiers":["test","tokenModifiers"],"formats":["relative"],"overlappingTokenSupport":true,"multilineTokenSupport":true},"linkedEditingRange":{"dynamicRegistration":true},"moniker":{"dynamicRegistration":true}}`
 		wantNil = `{}`
 	)
 	wantType := TextDocumentClientCapabilities{
-		Synchronization: &TextDocumentClientCapabilitiesSynchronization{
-			DidSave:             true,
+		Synchronization: &TextDocumentSyncClientCapabilities{
 			DynamicRegistration: true,
 			WillSave:            true,
 			WillSaveWaitUntil:   true,
+			DidSave:             true,
 		},
-		Completion: &TextDocumentClientCapabilitiesCompletion{
+		Completion: &CompletionTextDocumentClientCapabilities{
 			DynamicRegistration: true,
-			CompletionItem: &TextDocumentClientCapabilitiesCompletionItem{
+			CompletionItem: &CompletionTextDocumentClientCapabilitiesItem{
 				SnippetSupport:          true,
 				CommitCharactersSupport: true,
 				DocumentationFormat: []MarkupKind{
@@ -2278,19 +2278,19 @@ func testTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmar
 				DeprecatedSupport: true,
 				PreselectSupport:  true,
 			},
-			CompletionItemKind: &TextDocumentClientCapabilitiesCompletionItemKind{
+			CompletionItemKind: &CompletionTextDocumentClientCapabilitiesItemKind{
 				ValueSet: []CompletionItemKind{CompletionItemKindText},
 			},
 			ContextSupport: true,
 		},
-		Hover: &TextDocumentClientCapabilitiesHover{
+		Hover: &HoverTextDocumentClientCapabilities{
 			DynamicRegistration: true,
 			ContentFormat: []MarkupKind{
 				PlainText,
 				Markdown,
 			},
 		},
-		SignatureHelp: &TextDocumentClientCapabilitiesSignatureHelp{
+		SignatureHelp: &SignatureHelpTextDocumentClientCapabilities{
 			DynamicRegistration: true,
 			SignatureInformation: &TextDocumentClientCapabilitiesSignatureInformation{
 				DocumentationFormat: []MarkupKind{
@@ -2299,15 +2299,31 @@ func testTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmar
 				},
 			},
 		},
-		References: &TextDocumentClientCapabilitiesReferences{
+		Declaration: &DeclarationTextDocumentClientCapabilities{
+			DynamicRegistration: true,
+			LinkSupport:         true,
+		},
+		Definition: &DefinitionTextDocumentClientCapabilities{
+			DynamicRegistration: true,
+			LinkSupport:         true,
+		},
+		TypeDefinition: &TypeDefinitionTextDocumentClientCapabilities{
+			DynamicRegistration: true,
+			LinkSupport:         true,
+		},
+		Implementation: &ImplementationTextDocumentClientCapabilities{
+			DynamicRegistration: true,
+			LinkSupport:         true,
+		},
+		References: &ReferencesTextDocumentClientCapabilities{
 			DynamicRegistration: true,
 		},
-		DocumentHighlight: &TextDocumentClientCapabilitiesDocumentHighlight{
+		DocumentHighlight: &DocumentHighlightClientCapabilities{
 			DynamicRegistration: true,
 		},
-		DocumentSymbol: &TextDocumentClientCapabilitiesDocumentSymbol{
+		DocumentSymbol: &DocumentSymbolClientCapabilities{
 			DynamicRegistration: true,
-			SymbolKind: &WorkspaceClientCapabilitiesSymbolKind{
+			SymbolKind: &WorkspaceSymbolClientCapabilitiesKind{
 				ValueSet: []SymbolKind{
 					SymbolKindFile,
 					SymbolKindModule,
@@ -2319,35 +2335,10 @@ func testTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmar
 			},
 			HierarchicalDocumentSymbolSupport: true,
 		},
-		Formatting: &TextDocumentClientCapabilitiesFormatting{
+		CodeAction: &CodeActionClientCapabilities{
 			DynamicRegistration: true,
-		},
-		RangeFormatting: &TextDocumentClientCapabilitiesRangeFormatting{
-			DynamicRegistration: true,
-		},
-		OnTypeFormatting: &TextDocumentClientCapabilitiesOnTypeFormatting{
-			DynamicRegistration: true,
-		},
-		Declaration: &TextDocumentClientCapabilitiesDeclaration{
-			DynamicRegistration: true,
-			LinkSupport:         true,
-		},
-		Definition: &TextDocumentClientCapabilitiesDefinition{
-			DynamicRegistration: true,
-			LinkSupport:         true,
-		},
-		TypeDefinition: &TextDocumentClientCapabilitiesTypeDefinition{
-			DynamicRegistration: true,
-			LinkSupport:         true,
-		},
-		Implementation: &TextDocumentClientCapabilitiesImplementation{
-			DynamicRegistration: true,
-			LinkSupport:         true,
-		},
-		CodeAction: &TextDocumentClientCapabilitiesCodeAction{
-			DynamicRegistration: true,
-			CodeActionLiteralSupport: &TextDocumentClientCapabilitiesCodeActionLiteralSupport{
-				CodeActionKind: &TextDocumentClientCapabilitiesCodeActionKind{
+			CodeActionLiteralSupport: &CodeActionClientCapabilitiesLiteralSupport{
+				CodeActionKind: &CodeActionClientCapabilitiesKind{
 					ValueSet: []CodeActionKind{
 						QuickFix,
 						Refactor,
@@ -2359,39 +2350,45 @@ func testTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmar
 				},
 			},
 		},
-		CodeLens: &TextDocumentClientCapabilitiesCodeLens{
+		CodeLens: &CodeLensClientCapabilities{
 			DynamicRegistration: true,
 		},
-		DocumentLink: &TextDocumentClientCapabilitiesDocumentLink{
+		DocumentLink: &DocumentLinkClientCapabilities{
 			DynamicRegistration: true,
 		},
-		ColorProvider: &TextDocumentClientCapabilitiesColorProvider{
+		ColorProvider: &DocumentColorClientCapabilities{
 			DynamicRegistration: true,
 		},
-		Rename: &TextDocumentClientCapabilitiesRename{
+		Formatting: &DocumentFormattingClientCapabilities{
+			DynamicRegistration: true,
+		},
+		RangeFormatting: &DocumentRangeFormattingClientCapabilities{
+			DynamicRegistration: true,
+		},
+		OnTypeFormatting: &DocumentOnTypeFormattingClientCapabilities{
+			DynamicRegistration: true,
+		},
+		PublishDiagnostics: &PublishDiagnosticsClientCapabilities{
+			RelatedInformation: true,
+		},
+		Rename: &RenameClientCapabilities{
 			DynamicRegistration: true,
 			PrepareSupport:      true,
 		},
-		PublishDiagnostics: &TextDocumentClientCapabilitiesPublishDiagnostics{
-			RelatedInformation: true,
-		},
-		FoldingRange: &TextDocumentClientCapabilitiesFoldingRange{
+		FoldingRange: &FoldingRangeClientCapabilities{
 			DynamicRegistration: true,
 			RangeLimit:          uint32(5),
 			LineFoldingOnly:     true,
 		},
-		SelectionRange: &TextDocumentClientCapabilitiesSelectionRange{
+		SelectionRange: &SelectionRangeClientCapabilities{
 			DynamicRegistration: true,
 		},
-		LinkedEditingRange: &TextDocumentClientCapabilitiesLinkedEditingRange{
+		CallHierarchy: &CallHierarchyClientCapabilities{
 			DynamicRegistration: true,
 		},
-		CallHierarchy: &TextDocumentClientCapabilitiesCallHierarchy{
+		SemanticTokens: &SemanticTokensClientCapabilities{
 			DynamicRegistration: true,
-		},
-		SemanticTokens: &TextDocumentClientCapabilitiesSemanticTokens{
-			DynamicRegistration: true,
-			Requests: WorkspaceClientCapabilitiesSemanticTokensRequests{
+			Requests: SemanticTokensWorkspaceClientCapabilitiesRequests{
 				Range: true,
 				Full:  true,
 			},
@@ -2403,7 +2400,10 @@ func testTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmar
 			OverlappingTokenSupport: true,
 			MultilineTokenSupport:   true,
 		},
-		Moniker: &TextDocumentClientCapabilitiesMoniker{
+		LinkedEditingRange: &LinkedEditingRangeClientCapabilities{
+			DynamicRegistration: true,
+		},
+		Moniker: &MonikerClientCapabilities{
 			DynamicRegistration: true,
 		},
 	}
@@ -2497,7 +2497,7 @@ func testTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmar
 
 func testClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want    = `{"workspace":{"applyEdit":true,"workspaceEdit":{"documentChanges":true,"failureHandling":"FailureHandling","resourceOperations":["ResourceOperations"]},"didChangeConfiguration":{"dynamicRegistration":true},"didChangeWatchedFiles":{"dynamicRegistration":true},"symbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]}},"executeCommand":{"dynamicRegistration":true},"workspaceFolders":true,"configuration":true},"textDocument":{"synchronization":{"didSave":true,"dynamicRegistration":true,"willSave":true,"willSaveWaitUntil":true},"completion":{"dynamicRegistration":true,"completionItem":{"snippetSupport":true,"commitCharactersSupport":true,"documentationFormat":["plaintext","markdown"],"deprecatedSupport":true,"preselectSupport":true},"completionItemKind":{"valueSet":[1]},"contextSupport":true},"hover":{"dynamicRegistration":true,"contentFormat":["plaintext","markdown"]},"signatureHelp":{"dynamicRegistration":true,"signatureInformation":{"documentationFormat":["plaintext","markdown"]}},"references":{"dynamicRegistration":true},"documentHighlight":{"dynamicRegistration":true},"documentSymbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]},"hierarchicalDocumentSymbolSupport":true},"formatting":{"dynamicRegistration":true},"rangeFormatting":{"dynamicRegistration":true},"onTypeFormatting":{"dynamicRegistration":true},"declaration":{"dynamicRegistration":true,"linkSupport":true},"definition":{"dynamicRegistration":true,"linkSupport":true},"typeDefinition":{"dynamicRegistration":true,"linkSupport":true},"implementation":{"dynamicRegistration":true,"linkSupport":true},"codeAction":{"dynamicRegistration":true,"codeActionLiteralSupport":{"codeActionKind":{"valueSet":["quickfix","refactor","refactor.extract","refactor.rewrite","source","source.organizeImports"]}}},"codeLens":{"dynamicRegistration":true},"documentLink":{"dynamicRegistration":true},"colorProvider":{"dynamicRegistration":true},"rename":{"dynamicRegistration":true,"prepareSupport":true},"publishDiagnostics":{"relatedInformation":true},"foldingRange":{"dynamicRegistration":true,"rangeLimit":5,"lineFoldingOnly":true},"selectionRange":{"dynamicRegistration":true}},"window":{"workDoneProgress":true,"showMessage":{"messageActionItem":{"additionalPropertiesSupport":true}},"showDocument":{"support":true}},"general":{"regularExpressions":{"engine":"ECMAScript","version":"ES2020"},"markdown":{"parser":"marked","version":"1.1.0"}},"experimental":"testExperimental"}`
+		want    = `{"workspace":{"applyEdit":true,"workspaceEdit":{"documentChanges":true,"failureHandling":"FailureHandling","resourceOperations":["ResourceOperations"]},"didChangeConfiguration":{"dynamicRegistration":true},"didChangeWatchedFiles":{"dynamicRegistration":true},"symbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]}},"executeCommand":{"dynamicRegistration":true},"workspaceFolders":true,"configuration":true},"textDocument":{"synchronization":{"dynamicRegistration":true,"willSave":true,"willSaveWaitUntil":true,"didSave":true},"completion":{"dynamicRegistration":true,"completionItem":{"snippetSupport":true,"commitCharactersSupport":true,"documentationFormat":["plaintext","markdown"],"deprecatedSupport":true,"preselectSupport":true},"completionItemKind":{"valueSet":[1]},"contextSupport":true},"hover":{"dynamicRegistration":true,"contentFormat":["plaintext","markdown"]},"signatureHelp":{"dynamicRegistration":true,"signatureInformation":{"documentationFormat":["plaintext","markdown"]}},"declaration":{"dynamicRegistration":true,"linkSupport":true},"definition":{"dynamicRegistration":true,"linkSupport":true},"typeDefinition":{"dynamicRegistration":true,"linkSupport":true},"implementation":{"dynamicRegistration":true,"linkSupport":true},"references":{"dynamicRegistration":true},"documentHighlight":{"dynamicRegistration":true},"documentSymbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]},"hierarchicalDocumentSymbolSupport":true},"codeAction":{"dynamicRegistration":true,"codeActionLiteralSupport":{"codeActionKind":{"valueSet":["quickfix","refactor","refactor.extract","refactor.rewrite","source","source.organizeImports"]}}},"codeLens":{"dynamicRegistration":true},"documentLink":{"dynamicRegistration":true},"colorProvider":{"dynamicRegistration":true},"formatting":{"dynamicRegistration":true},"rangeFormatting":{"dynamicRegistration":true},"onTypeFormatting":{"dynamicRegistration":true},"publishDiagnostics":{"relatedInformation":true},"rename":{"dynamicRegistration":true,"prepareSupport":true},"foldingRange":{"dynamicRegistration":true,"rangeLimit":5,"lineFoldingOnly":true},"selectionRange":{"dynamicRegistration":true},"callHierarchy":{"dynamicRegistration":true},"semanticTokens":{"dynamicRegistration":true,"requests":{"range":true,"full":true},"tokenTypes":["test","tokenTypes"],"tokenModifiers":["test","tokenModifiers"],"formats":["relative"],"overlappingTokenSupport":true,"multilineTokenSupport":true},"linkedEditingRange":{"dynamicRegistration":true},"moniker":{"dynamicRegistration":true}},"window":{"workDoneProgress":true,"showMessage":{"messageActionItem":{"additionalPropertiesSupport":true}},"showDocument":{"support":true}},"general":{"regularExpressions":{"engine":"ECMAScript","version":"ES2020"},"markdown":{"parser":"marked","version":"1.1.0"}},"experimental":"testExperimental"}`
 		wantNil = `{}`
 	)
 	wantType := ClientCapabilities{
@@ -2508,15 +2508,15 @@ func testClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 				FailureHandling:    "FailureHandling",
 				ResourceOperations: []string{"ResourceOperations"},
 			},
-			DidChangeConfiguration: &WorkspaceClientCapabilitiesDidChangeConfiguration{
+			DidChangeConfiguration: &DidChangeConfigurationWorkspaceClientCapabilities{
 				DynamicRegistration: true,
 			},
-			DidChangeWatchedFiles: &WorkspaceClientCapabilitiesDidChangeWatchedFiles{
+			DidChangeWatchedFiles: &DidChangeWatchedFilesWorkspaceClientCapabilities{
 				DynamicRegistration: true,
 			},
-			Symbol: &WorkspaceClientCapabilitiesSymbol{
+			Symbol: &WorkspaceSymbolClientCapabilities{
 				DynamicRegistration: true,
-				SymbolKind: &WorkspaceClientCapabilitiesSymbolKind{
+				SymbolKind: &WorkspaceSymbolSymbolKind{
 					ValueSet: []SymbolKind{
 						SymbolKindFile,
 						SymbolKindModule,
@@ -2527,22 +2527,22 @@ func testClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 					},
 				},
 			},
-			ExecuteCommand: &WorkspaceClientCapabilitiesExecuteCommand{
+			ExecuteCommand: &ExecuteCommandClientCapabilities{
 				DynamicRegistration: true,
 			},
 			WorkspaceFolders: true,
 			Configuration:    true,
 		},
 		TextDocument: &TextDocumentClientCapabilities{
-			Synchronization: &TextDocumentClientCapabilitiesSynchronization{
-				DidSave:             true,
+			Synchronization: &TextDocumentSyncClientCapabilities{
 				DynamicRegistration: true,
 				WillSave:            true,
 				WillSaveWaitUntil:   true,
+				DidSave:             true,
 			},
-			Completion: &TextDocumentClientCapabilitiesCompletion{
+			Completion: &CompletionTextDocumentClientCapabilities{
 				DynamicRegistration: true,
-				CompletionItem: &TextDocumentClientCapabilitiesCompletionItem{
+				CompletionItem: &CompletionTextDocumentClientCapabilitiesItem{
 					SnippetSupport:          true,
 					CommitCharactersSupport: true,
 					DocumentationFormat: []MarkupKind{
@@ -2552,19 +2552,19 @@ func testClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 					DeprecatedSupport: true,
 					PreselectSupport:  true,
 				},
-				CompletionItemKind: &TextDocumentClientCapabilitiesCompletionItemKind{
+				CompletionItemKind: &CompletionTextDocumentClientCapabilitiesItemKind{
 					ValueSet: []CompletionItemKind{CompletionItemKindText},
 				},
 				ContextSupport: true,
 			},
-			Hover: &TextDocumentClientCapabilitiesHover{
+			Hover: &HoverTextDocumentClientCapabilities{
 				DynamicRegistration: true,
 				ContentFormat: []MarkupKind{
 					PlainText,
 					Markdown,
 				},
 			},
-			SignatureHelp: &TextDocumentClientCapabilitiesSignatureHelp{
+			SignatureHelp: &SignatureHelpTextDocumentClientCapabilities{
 				DynamicRegistration: true,
 				SignatureInformation: &TextDocumentClientCapabilitiesSignatureInformation{
 					DocumentationFormat: []MarkupKind{
@@ -2573,15 +2573,31 @@ func testClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 					},
 				},
 			},
-			References: &TextDocumentClientCapabilitiesReferences{
+			Declaration: &DeclarationTextDocumentClientCapabilities{
+				DynamicRegistration: true,
+				LinkSupport:         true,
+			},
+			Definition: &DefinitionTextDocumentClientCapabilities{
+				DynamicRegistration: true,
+				LinkSupport:         true,
+			},
+			TypeDefinition: &TypeDefinitionTextDocumentClientCapabilities{
+				DynamicRegistration: true,
+				LinkSupport:         true,
+			},
+			Implementation: &ImplementationTextDocumentClientCapabilities{
+				DynamicRegistration: true,
+				LinkSupport:         true,
+			},
+			References: &ReferencesTextDocumentClientCapabilities{
 				DynamicRegistration: true,
 			},
-			DocumentHighlight: &TextDocumentClientCapabilitiesDocumentHighlight{
+			DocumentHighlight: &DocumentHighlightClientCapabilities{
 				DynamicRegistration: true,
 			},
-			DocumentSymbol: &TextDocumentClientCapabilitiesDocumentSymbol{
+			DocumentSymbol: &DocumentSymbolClientCapabilities{
 				DynamicRegistration: true,
-				SymbolKind: &WorkspaceClientCapabilitiesSymbolKind{
+				SymbolKind: &WorkspaceSymbolClientCapabilitiesKind{
 					ValueSet: []SymbolKind{
 						SymbolKindFile,
 						SymbolKindModule,
@@ -2593,35 +2609,10 @@ func testClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 				},
 				HierarchicalDocumentSymbolSupport: true,
 			},
-			Formatting: &TextDocumentClientCapabilitiesFormatting{
+			CodeAction: &CodeActionClientCapabilities{
 				DynamicRegistration: true,
-			},
-			RangeFormatting: &TextDocumentClientCapabilitiesRangeFormatting{
-				DynamicRegistration: true,
-			},
-			OnTypeFormatting: &TextDocumentClientCapabilitiesOnTypeFormatting{
-				DynamicRegistration: true,
-			},
-			Declaration: &TextDocumentClientCapabilitiesDeclaration{
-				DynamicRegistration: true,
-				LinkSupport:         true,
-			},
-			Definition: &TextDocumentClientCapabilitiesDefinition{
-				DynamicRegistration: true,
-				LinkSupport:         true,
-			},
-			TypeDefinition: &TextDocumentClientCapabilitiesTypeDefinition{
-				DynamicRegistration: true,
-				LinkSupport:         true,
-			},
-			Implementation: &TextDocumentClientCapabilitiesImplementation{
-				DynamicRegistration: true,
-				LinkSupport:         true,
-			},
-			CodeAction: &TextDocumentClientCapabilitiesCodeAction{
-				DynamicRegistration: true,
-				CodeActionLiteralSupport: &TextDocumentClientCapabilitiesCodeActionLiteralSupport{
-					CodeActionKind: &TextDocumentClientCapabilitiesCodeActionKind{
+				CodeActionLiteralSupport: &CodeActionClientCapabilitiesLiteralSupport{
+					CodeActionKind: &CodeActionClientCapabilitiesKind{
 						ValueSet: []CodeActionKind{
 							QuickFix,
 							Refactor,
@@ -2633,39 +2624,71 @@ func testClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 					},
 				},
 			},
-			CodeLens: &TextDocumentClientCapabilitiesCodeLens{
+			CodeLens: &CodeLensClientCapabilities{
 				DynamicRegistration: true,
 			},
-			DocumentLink: &TextDocumentClientCapabilitiesDocumentLink{
+			DocumentLink: &DocumentLinkClientCapabilities{
 				DynamicRegistration: true,
 			},
-			ColorProvider: &TextDocumentClientCapabilitiesColorProvider{
+			ColorProvider: &DocumentColorClientCapabilities{
 				DynamicRegistration: true,
 			},
-			Rename: &TextDocumentClientCapabilitiesRename{
+			Formatting: &DocumentFormattingClientCapabilities{
+				DynamicRegistration: true,
+			},
+			RangeFormatting: &DocumentRangeFormattingClientCapabilities{
+				DynamicRegistration: true,
+			},
+			OnTypeFormatting: &DocumentOnTypeFormattingClientCapabilities{
+				DynamicRegistration: true,
+			},
+			PublishDiagnostics: &PublishDiagnosticsClientCapabilities{
+				RelatedInformation: true,
+			},
+			Rename: &RenameClientCapabilities{
 				DynamicRegistration: true,
 				PrepareSupport:      true,
 			},
-			PublishDiagnostics: &TextDocumentClientCapabilitiesPublishDiagnostics{
-				RelatedInformation: true,
-			},
-			FoldingRange: &TextDocumentClientCapabilitiesFoldingRange{
+			FoldingRange: &FoldingRangeClientCapabilities{
 				DynamicRegistration: true,
 				RangeLimit:          uint32(5),
 				LineFoldingOnly:     true,
 			},
-			SelectionRange: &TextDocumentClientCapabilitiesSelectionRange{
+			SelectionRange: &SelectionRangeClientCapabilities{
+				DynamicRegistration: true,
+			},
+			CallHierarchy: &CallHierarchyClientCapabilities{
+				DynamicRegistration: true,
+			},
+			SemanticTokens: &SemanticTokensClientCapabilities{
+				DynamicRegistration: true,
+				Requests: SemanticTokensWorkspaceClientCapabilitiesRequests{
+					Range: true,
+					Full:  true,
+				},
+				TokenTypes:     []string{"test", "tokenTypes"},
+				TokenModifiers: []string{"test", "tokenModifiers"},
+				Formats: []TokenFormat{
+					TokenFormatRelative,
+				},
+				OverlappingTokenSupport: true,
+				MultilineTokenSupport:   true,
+			},
+			LinkedEditingRange: &LinkedEditingRangeClientCapabilities{
+				DynamicRegistration: true,
+			},
+			Moniker: &MonikerClientCapabilities{
 				DynamicRegistration: true,
 			},
 		},
 		Window: &WindowClientCapabilities{
 			WorkDoneProgress: true,
-			ShowMessage: &ClientCapabilitiesShowMessageRequest{
-				MessageActionItem: &ClientCapabilitiesShowMessageRequestMessageActionItem{
+			ShowMessage: &ShowMessageRequestClientCapabilities{
+				MessageActionItem: &ShowMessageRequestClientCapabilitiesMessageActionItem{
 					AdditionalPropertiesSupport: true,
 				},
 			},
-			ShowDocument: &ClientCapabilitiesShowDocument{
+			ShowDocument: &ShowDocumentClientCapabilities{
 				Support: true,
 			},
 		},
