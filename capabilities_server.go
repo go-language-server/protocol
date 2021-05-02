@@ -20,68 +20,6 @@ type ServerCapabilitiesWorkspaceFolders struct {
 	ChangeNotifications interface{} `json:"changeNotifications,omitempty"` // string | boolean
 }
 
-// CompletionTextDocumentClientCapabilitiesItemTagSupport specific capabilities for the "TagSupport" in the "textDocument/completion" request.
-//
-// @since 3.15.0.
-type CompletionTextDocumentClientCapabilitiesItemTagSupport struct {
-	// ValueSet is the tags supported by the client.
-	//
-	// @since 3.15.0.
-	ValueSet []CompletionItemTag `json:"valueSet,omitempty"`
-}
-
-// CompletionTextDocumentClientCapabilitiesItemResolveSupport specific capabilities for the ResolveSupport in the CompletionTextDocumentClientCapabilitiesItem.
-//
-// @since 3.16.0.
-type CompletionTextDocumentClientCapabilitiesItemResolveSupport struct {
-	// Properties is the properties that a client can resolve lazily.
-	Properties []string `json:"properties"`
-}
-
-// CompletionTextDocumentClientCapabilitiesItemInsertTextModeSupport specific capabilities for the InsertTextModeSupport in the CompletionTextDocumentClientCapabilitiesItem.
-//
-// @since 3.16.0.
-type CompletionTextDocumentClientCapabilitiesItemInsertTextModeSupport struct {
-	// ValueSet is the tags supported by the client.
-	//
-	// @since 3.16.0.
-	ValueSet []InsertTextMode `json:"valueSet,omitempty"`
-}
-
-// TextDocumentClientCapabilitiesSignatureInformation is the client supports the following "SignatureInformation"
-// specific properties.
-type TextDocumentClientCapabilitiesSignatureInformation struct {
-	// DocumentationFormat is the client supports the follow content formats for the documentation
-	// property. The order describes the preferred format of the client.
-	DocumentationFormat []MarkupKind `json:"documentationFormat,omitempty"`
-
-	// ParameterInformation is the Client capabilities specific to parameter information.
-	ParameterInformation *TextDocumentClientCapabilitiesParameterInformation `json:"parameterInformation,omitempty"`
-
-	// ActiveParameterSupport is the client supports the `activeParameter` property on
-	// `SignatureInformation` literal.
-	//
-	// @since 3.16.0.
-	ActiveParameterSupport bool `json:"activeParameterSupport,omitempty"`
-}
-
-// TextDocumentClientCapabilitiesParameterInformation is the client capabilities specific to parameter information.
-type TextDocumentClientCapabilitiesParameterInformation struct {
-	// LabelOffsetSupport is the client supports processing label offsets instead of a
-	// simple label string.
-	//
-	// @since 3.14.0.
-	LabelOffsetSupport bool `json:"labelOffsetSupport,omitempty"`
-}
-
-// DocumentSymbolClientCapabilitiesTagSupport TagSupport in the DocumentSymbolClientCapabilities.
-//
-// @since 3.16.0.
-type DocumentSymbolClientCapabilitiesTagSupport struct {
-	// ValueSet is the tags supported by the client.
-	ValueSet []SymbolTag `json:"valueSet"`
-}
-
 // TextDocumentClientCapabilitiesFormatting capabilities specific to the textDocument/formatting.
 type TextDocumentClientCapabilitiesFormatting struct {
 	// DynamicRegistration whether formatting supports dynamic registration.
@@ -98,61 +36,6 @@ type TextDocumentClientCapabilitiesRangeFormatting struct {
 type TextDocumentClientCapabilitiesOnTypeFormatting struct {
 	// DynamicRegistration whether on type formatting supports dynamic registration.
 	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-}
-
-// CodeActionClientCapabilitiesResolveSupport ResolveSupport in the CodeActionClientCapabilities.
-//
-// @since 3.16.0.
-type CodeActionClientCapabilitiesResolveSupport struct {
-	// Properties is the properties that a client can resolve lazily.
-	Properties []string `json:"properties"`
-}
-
-// CodeActionClientCapabilitiesLiteralSupport is the client support code action literals as a valid response of the "textDocument/codeAction" request.
-type CodeActionClientCapabilitiesLiteralSupport struct {
-	// CodeActionKind is the code action kind is support with the following value
-	// set.
-	CodeActionKind *CodeActionClientCapabilitiesKind `json:"codeActionKind"`
-}
-
-// CodeActionClientCapabilitiesKind is the code action kind is support with the following value set.
-type CodeActionClientCapabilitiesKind struct {
-	// ValueSet is the code action kind values the client supports. When this
-	// property exists the client also guarantees that it will
-	// handle values outside its set gracefully and falls back
-	// to a default value when unknown.
-	ValueSet []CodeActionKind `json:"valueSet"`
-}
-
-// PublishDiagnosticsClientCapabilitiesTagSupport is the client capacity of TagSupport.
-//
-// @since 3.15.0.
-type PublishDiagnosticsClientCapabilitiesTagSupport struct {
-	// ValueSet is the tags supported by the client.
-	ValueSet []DiagnosticTag `json:"valueSet"`
-}
-
-// SemanticTokensWorkspaceClientCapabilitiesRequests capabilities specific to the "textDocument/semanticTokens/xxx" request.
-//
-// @since 3.16.0.
-type SemanticTokensWorkspaceClientCapabilitiesRequests struct {
-	// Range is the client will send the "textDocument/semanticTokens/range" request
-	// if the server provides a corresponding handler.
-	Range bool `json:"range,omitempty"`
-
-	// Full is the client will send the "textDocument/semanticTokens/full" request
-	// if the server provides a corresponding handler.
-	Full bool `json:"full,omitempty"` // delta?: boolean
-}
-
-// ShowMessageRequestClientCapabilitiesMessageActionItem capabilities specific to the "MessageActionItem" type.
-//
-// @since 3.16.0.
-type ShowMessageRequestClientCapabilitiesMessageActionItem struct {
-	// AdditionalPropertiesSupport whether the client supports additional attributes which
-	// are preserved and sent back to the server in the
-	// request's response.
-	AdditionalPropertiesSupport bool `json:"additionalPropertiesSupport,omitempty"`
 }
 
 // InitializeResult result of ClientCapabilities.

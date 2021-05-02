@@ -382,28 +382,6 @@ type DocumentColorRegistrationOptions struct {
 	DocumentColorOptions
 }
 
-// PrepareSupportDefaultBehavior default behavior of PrepareSupport.
-//
-// @since 3.16.0.
-type PrepareSupportDefaultBehavior float64
-
-// list of PrepareSupportDefaultBehavior.
-const (
-	// PrepareSupportDefaultBehaviorIdentifier is the client's default behavior is to select the identifier
-	// according the to language's syntax rule.
-	PrepareSupportDefaultBehaviorIdentifier PrepareSupportDefaultBehavior = 1
-)
-
-// String returns a string representation of the PrepareSupportDefaultBehavior.
-func (k PrepareSupportDefaultBehavior) String() string {
-	switch k {
-	case PrepareSupportDefaultBehaviorIdentifier:
-		return "Identifier"
-	default:
-		return strconv.FormatFloat(float64(k), 'f', -10, 64)
-	}
-}
-
 // FoldingRangeOptions registration option of FoldingRange server capability.
 //
 // @since 3.15.0.
