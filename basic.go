@@ -655,7 +655,7 @@ type DocumentFilter struct {
 	//  "**"
 	// to match any number of path segments, including none
 	//  "{}"
-	// to group conditions (e.g. `**​/*.{ts,js}` matches all TypeScript and JavaScript files)
+	// to group conditions (e.g. `**/*.{ts,js}` matches all TypeScript and JavaScript files)
 	//  "[]"
 	// to declare a range of characters to match in a path segment (e.g., `example.[0-9]` to match on `example.0`, `example.1`, …)
 	//  "[!...]"
