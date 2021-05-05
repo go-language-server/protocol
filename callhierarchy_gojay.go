@@ -36,66 +36,6 @@ var (
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
-func (v *CallHierarchyOptions) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.BoolKeyOmitEmpty(keyWorkDoneProgress, v.WorkDoneProgress)
-}
-
-// IsNil returns wether the structure is nil value or not.
-func (v *CallHierarchyOptions) IsNil() bool { return v == nil }
-
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
-func (v *CallHierarchyOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	if k == keyWorkDoneProgress {
-		return dec.Bool(&v.WorkDoneProgress)
-	}
-	return nil
-}
-
-// NKeys returns the number of keys to unmarshal.
-func (v *CallHierarchyOptions) NKeys() int { return 1 }
-
-// compile time check whether the CallHierarchyOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
-var (
-	_ gojay.MarshalerJSONObject   = (*CallHierarchyOptions)(nil)
-	_ gojay.UnmarshalerJSONObject = (*CallHierarchyOptions)(nil)
-)
-
-// MarshalJSONObject implements gojay.MarshalerJSONObject.
-func (v *CallHierarchyRegistrationOptions) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.AddArrayKey(keyDocumentSelector, &v.DocumentSelector)
-	enc.BoolKeyOmitEmpty(keyWorkDoneProgress, v.WorkDoneProgress)
-	enc.StringKeyOmitEmpty(keyID, v.ID)
-}
-
-// IsNil implements gojay.MarshalerJSONObject.
-func (v *CallHierarchyRegistrationOptions) IsNil() bool { return v == nil }
-
-// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
-func (v *CallHierarchyRegistrationOptions) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	switch k {
-	case keyDocumentSelector:
-		if v.DocumentSelector == nil {
-			v.DocumentSelector = DocumentSelector{}
-		}
-		return dec.Array(&v.DocumentSelector)
-	case keyWorkDoneProgress:
-		return dec.Bool(&v.WorkDoneProgress)
-	case keyID:
-		return dec.String(&v.ID)
-	}
-	return nil
-}
-
-// NKeys implements gojay.UnmarshalerJSONObject.
-func (v *CallHierarchyRegistrationOptions) NKeys() int { return 3 }
-
-// compile time check whether the CallHierarchyRegistrationOptions implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
-var (
-	_ gojay.MarshalerJSONObject   = (*CallHierarchyRegistrationOptions)(nil)
-	_ gojay.UnmarshalerJSONObject = (*CallHierarchyRegistrationOptions)(nil)
-)
-
-// MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *CallHierarchyPrepareParams) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ObjectKeyOmitEmpty(keyTextDocument, &v.TextDocument)
 	enc.ObjectKeyOmitEmpty(keyPosition, &v.Position)

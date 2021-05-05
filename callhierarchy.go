@@ -13,22 +13,6 @@ type CallHierarchy struct {
 	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
 }
 
-// CallHierarchyOptions option of CallHierarchy.
-//
-// @since 3.16.0.
-type CallHierarchyOptions struct {
-	WorkDoneProgressOptions
-}
-
-// CallHierarchyRegistrationOptions registration options of CallHierarchy.
-//
-// @since 3.16.0.
-type CallHierarchyRegistrationOptions struct {
-	TextDocumentRegistrationOptions
-	CallHierarchyOptions
-	StaticRegistrationOptions
-}
-
 // CallHierarchyPrepareParams params of CallHierarchyPrepare.
 //
 // @since 3.16.0.

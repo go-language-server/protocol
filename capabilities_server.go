@@ -3,99 +3,9 @@
 
 package protocol
 
-// ServerCapabilitiesWorkspaceFolders is the server supports workspace folder.
-//
-// @since 3.6.0.
-type ServerCapabilitiesWorkspaceFolders struct {
-	// Supported is the server has support for workspace folders
-	Supported bool `json:"supported,omitempty"`
-
-	// ChangeNotifications whether the server wants to receive workspace folder
-	// change notifications.
-	//
-	// If a strings is provided the string is treated as a ID
-	// under which the notification is registered on the client
-	// side. The ID can be used to unregister for these events
-	// using the `client/unregisterCapability` request.
-	ChangeNotifications interface{} `json:"changeNotifications,omitempty"` // string | boolean
-}
-
-// TextDocumentClientCapabilitiesFormatting capabilities specific to the textDocument/formatting.
-type TextDocumentClientCapabilitiesFormatting struct {
-	// DynamicRegistration whether formatting supports dynamic registration.
-	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-}
-
-// TextDocumentClientCapabilitiesRangeFormatting capabilities specific to the "textDocument/rangeFormatting".
-type TextDocumentClientCapabilitiesRangeFormatting struct {
-	// DynamicRegistration whether range formatting supports dynamic registration.
-	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-}
-
-// TextDocumentClientCapabilitiesOnTypeFormatting Capabilities specific to the "textDocument/onTypeFormatting".
-type TextDocumentClientCapabilitiesOnTypeFormatting struct {
-	// DynamicRegistration whether on type formatting supports dynamic registration.
-	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-}
-
-// InitializeResult result of ClientCapabilities.
-type InitializeResult struct {
-	// Capabilities is the capabilities the language server provides.
-	Capabilities ServerCapabilities `json:"capabilities"`
-
-	// ServerInfo Information about the server.
-	//
-	// @since 3.15.0.
-	ServerInfo *ServerInfo `json:"serverInfo,omitempty"`
-}
-
-// ServerCapabilitiesWorkspace specific server capabilities.
-type ServerCapabilitiesWorkspace struct {
-	// WorkspaceFolders is the server supports workspace folder.
-	//
-	// @since 3.6.0.
-	WorkspaceFolders *ServerCapabilitiesWorkspaceFolders `json:"workspaceFolders,omitempty"`
-
-	// FileOperations is the server is interested in file notifications/requests.
-	//
-	// @since 3.16.0.
-	FileOperations *ServerCapabilitiesWorkspaceFileOperations `json:"fileOperations,omitempty"`
-}
-
-// FileOperationRegistrationOptions is the options to register for file operations.
-//
-// @since 3.16.0.
-type FileOperationRegistrationOptions struct {
-	// filters is the actual filters.
-	Filters []FileOperationFilter `json:"filters"`
-}
-
-// ServerCapabilitiesWorkspaceFileOperations is the server is interested in file notifications/requests.
-//
-// @since 3.16.0.
-type ServerCapabilitiesWorkspaceFileOperations struct {
-	// DidCreate is the server is interested in receiving didCreateFiles
-	// notifications.
-	DidCreate *FileOperationRegistrationOptions `json:"didCreate,omitempty"`
-
-	// WillCreate is the server is interested in receiving willCreateFiles requests.
-	WillCreate *FileOperationRegistrationOptions `json:"willCreate,omitempty"`
-
-	// DidRename is the server is interested in receiving didRenameFiles
-	// notifications.
-	DidRename *FileOperationRegistrationOptions `json:"didRename,omitempty"`
-
-	// WillRename is the server is interested in receiving willRenameFiles requests.
-	WillRename *FileOperationRegistrationOptions `json:"willRename,omitempty"`
-
-	// DidDelete is the server is interested in receiving didDeleteFiles file
-	// notifications.
-	DidDelete *FileOperationRegistrationOptions `json:"didDelete,omitempty"`
-
-	// WillDelete is the server is interested in receiving willDeleteFiles file
-	// requests.
-	WillDelete *FileOperationRegistrationOptions `json:"willDelete,omitempty"`
-}
+import (
+	"strconv"
+)
 
 // ServerCapabilities efines the capabilities provided by a language server.
 type ServerCapabilities struct {
@@ -214,4 +124,400 @@ type ServerCapabilities struct {
 
 	// Experimental server capabilities.
 	Experimental interface{} `json:"experimental,omitempty"`
+}
+
+// TextDocumentSyncOptions TextDocumentSync options.
+type TextDocumentSyncOptions struct {
+	// OpenClose open and close notifications are sent to the server.
+	OpenClose bool `json:"openClose,omitempty"`
+
+	// Change notifications are sent to the server. See TextDocumentSyncKind.None, TextDocumentSyncKind.Full
+	// and TextDocumentSyncKind.Incremental. If omitted it defaults to TextDocumentSyncKind.None.
+	Change TextDocumentSyncKind `json:"change,omitempty"`
+
+	// WillSave notifications are sent to the server.
+	WillSave bool `json:"willSave,omitempty"`
+
+	// WillSaveWaitUntil will save wait until requests are sent to the server.
+	WillSaveWaitUntil bool `json:"willSaveWaitUntil,omitempty"`
+
+	// Save notifications are sent to the server.
+	Save *SaveOptions `json:"save,omitempty"`
+}
+
+// TextDocumentSyncKind defines how the host (editor) should sync document changes to the language server.
+type TextDocumentSyncKind float64
+
+const (
+	// TextDocumentSyncKindNone documents should not be synced at all.
+	TextDocumentSyncKindNone TextDocumentSyncKind = 0
+
+	// TextDocumentSyncKindFull documents are synced by always sending the full content
+	// of the document.
+	TextDocumentSyncKindFull TextDocumentSyncKind = 1
+
+	// TextDocumentSyncKindIncremental documents are synced by sending the full content on open.
+	// After that only incremental updates to the document are
+	// send.
+	TextDocumentSyncKindIncremental TextDocumentSyncKind = 2
+)
+
+// String implements fmt.Stringer.
+func (k TextDocumentSyncKind) String() string {
+	switch k {
+	case TextDocumentSyncKindNone:
+		return "None"
+	case TextDocumentSyncKindFull:
+		return "Full"
+	case TextDocumentSyncKindIncremental:
+		return "Incremental"
+	default:
+		return strconv.FormatFloat(float64(k), 'f', -10, 64)
+	}
+}
+
+// SaveOptions save options.
+type SaveOptions struct {
+	// IncludeText is the client is supposed to include the content on save.
+	IncludeText bool `json:"includeText,omitempty"`
+}
+
+// CompletionOptions Completion options.
+type CompletionOptions struct {
+	// The server provides support to resolve additional
+	// information for a completion item.
+	ResolveProvider bool `json:"resolveProvider,omitempty"`
+
+	// The characters that trigger completion automatically.
+	TriggerCharacters []string `json:"triggerCharacters,omitempty"`
+}
+
+// HoverOptions option of hover provider server capabilities.
+type HoverOptions struct {
+	WorkDoneProgressOptions
+}
+
+// SignatureHelpOptions SignatureHelp options.
+type SignatureHelpOptions struct {
+	// The characters that trigger signature help
+	// automatically.
+	TriggerCharacters []string `json:"triggerCharacters,omitempty"`
+
+	// RetriggerCharacters is the slist of characters that re-trigger signature help.
+	//
+	// These trigger characters are only active when signature help is already
+	// showing.
+	// All trigger characters are also counted as re-trigger characters.
+	//
+	// @since 3.15.0.
+	RetriggerCharacters []string `json:"retriggerCharacters,omitempty"`
+}
+
+// DeclarationOptions registration option of Declaration server capability.
+//
+// @since 3.15.0.
+type DeclarationOptions struct {
+	WorkDoneProgressOptions
+}
+
+// DeclarationRegistrationOptions registration option of Declaration server capability.
+//
+// @since 3.15.0.
+type DeclarationRegistrationOptions struct {
+	DeclarationOptions
+	TextDocumentRegistrationOptions
+	StaticRegistrationOptions
+}
+
+// DefinitionOptions registration option of Definition server capability.
+//
+// @since 3.15.0.
+type DefinitionOptions struct {
+	WorkDoneProgressOptions
+}
+
+// TypeDefinitionOptions registration option of TypeDefinition server capability.
+//
+// @since 3.15.0.
+type TypeDefinitionOptions struct {
+	WorkDoneProgressOptions
+}
+
+// TypeDefinitionRegistrationOptions registration option of TypeDefinition server capability.
+//
+// @since 3.15.0.
+type TypeDefinitionRegistrationOptions struct {
+	TextDocumentRegistrationOptions
+	TypeDefinitionOptions
+	StaticRegistrationOptions
+}
+
+// ImplementationOptions registration option of Implementation server capability.
+//
+// @since 3.15.0.
+type ImplementationOptions struct {
+	WorkDoneProgressOptions
+}
+
+// ImplementationRegistrationOptions registration option of Implementation server capability.
+//
+// @since 3.15.0.
+type ImplementationRegistrationOptions struct {
+	TextDocumentRegistrationOptions
+	ImplementationOptions
+	StaticRegistrationOptions
+}
+
+// ReferenceOptions registration option of Reference server capability.
+type ReferenceOptions struct {
+	WorkDoneProgressOptions
+}
+
+// DocumentHighlightOptions registration option of DocumentHighlight server capability.
+//
+// @since 3.15.0.
+type DocumentHighlightOptions struct {
+	WorkDoneProgressOptions
+}
+
+// DocumentSymbolOptions registration option of DocumentSymbol server capability.
+//
+// @since 3.15.0.
+type DocumentSymbolOptions struct {
+	WorkDoneProgressOptions
+
+	// Label a human-readable string that is shown when multiple outlines trees
+	// are shown for the same document.
+	//
+	// @since 3.16.0.
+	Label string `json:"label,omitempty"`
+}
+
+// CodeActionOptions CodeAction options.
+type CodeActionOptions struct {
+	// CodeActionKinds that this server may return.
+	//
+	// The list of kinds may be generic, such as "CodeActionKind.Refactor", or the server
+	// may list out every specific kind they provide.
+	CodeActionKinds []CodeActionKind `json:"codeActionKinds,omitempty"`
+
+	// ResolveProvider is the server provides support to resolve additional
+	// information for a code action.
+	//
+	// @since 3.16.0.
+	ResolveProvider bool `json:"resolveProvider,omitempty"`
+}
+
+// CodeLensOptions CodeLens options.
+type CodeLensOptions struct {
+	// Code lens has a resolve provider as well.
+	ResolveProvider bool `json:"resolveProvider,omitempty"`
+}
+
+// DocumentLinkOptions document link options.
+type DocumentLinkOptions struct {
+	// ResolveProvider document links have a resolve provider as well.
+	ResolveProvider bool `json:"resolveProvider,omitempty"`
+}
+
+// DocumentColorOptions registration option of DocumentColor server capability.
+//
+// @since 3.15.0.
+type DocumentColorOptions struct {
+	WorkDoneProgressOptions
+}
+
+// DocumentColorRegistrationOptions registration option of DocumentColor server capability.
+//
+// @since 3.15.0.
+type DocumentColorRegistrationOptions struct {
+	TextDocumentRegistrationOptions
+	StaticRegistrationOptions
+	DocumentColorOptions
+}
+
+// WorkspaceSymbolOptions registration option of WorkspaceSymbol server capability.
+//
+// @since 3.15.0.
+type WorkspaceSymbolOptions struct {
+	WorkDoneProgressOptions
+}
+
+// DocumentFormattingOptions registration option of DocumentFormatting server capability.
+//
+// @since 3.15.0.
+type DocumentFormattingOptions struct {
+	WorkDoneProgressOptions
+}
+
+// DocumentRangeFormattingOptions registration option of DocumentRangeFormatting server capability.
+//
+// @since 3.15.0.
+type DocumentRangeFormattingOptions struct {
+	WorkDoneProgressOptions
+}
+
+// DocumentOnTypeFormattingOptions format document on type options.
+type DocumentOnTypeFormattingOptions struct {
+	// FirstTriggerCharacter a character on which formatting should be triggered, like "}".
+	FirstTriggerCharacter string `json:"firstTriggerCharacter"`
+
+	// MoreTriggerCharacter more trigger characters.
+	MoreTriggerCharacter []string `json:"moreTriggerCharacter,omitempty"`
+}
+
+// RenameOptions rename options.
+type RenameOptions struct {
+	// PrepareProvider renames should be checked and tested before being executed.
+	PrepareProvider bool `json:"prepareProvider,omitempty"`
+}
+
+// FoldingRangeOptions registration option of FoldingRange server capability.
+//
+// @since 3.15.0.
+type FoldingRangeOptions struct {
+	WorkDoneProgressOptions
+}
+
+// FoldingRangeRegistrationOptions registration option of FoldingRange server capability.
+//
+// @since 3.15.0.
+type FoldingRangeRegistrationOptions struct {
+	TextDocumentRegistrationOptions
+	FoldingRangeOptions
+	StaticRegistrationOptions
+}
+
+// ExecuteCommandOptions execute command options.
+type ExecuteCommandOptions struct {
+	// Commands is the commands to be executed on the server
+	Commands []string `json:"commands"`
+}
+
+// CallHierarchyOptions option of CallHierarchy.
+//
+// @since 3.16.0.
+type CallHierarchyOptions struct {
+	WorkDoneProgressOptions
+}
+
+// CallHierarchyRegistrationOptions registration options of CallHierarchy.
+//
+// @since 3.16.0.
+type CallHierarchyRegistrationOptions struct {
+	TextDocumentRegistrationOptions
+	CallHierarchyOptions
+	StaticRegistrationOptions
+}
+
+// LinkedEditingRangeOptions option of linked editing range provider server capabilities.
+//
+// @since 3.16.0.
+type LinkedEditingRangeOptions struct {
+	WorkDoneProgressOptions
+}
+
+// LinkedEditingRangeRegistrationOptions registration option of linked editing range provider server capabilities.
+//
+// @since 3.16.0.
+type LinkedEditingRangeRegistrationOptions struct {
+	TextDocumentRegistrationOptions
+	LinkedEditingRangeOptions
+	StaticRegistrationOptions
+}
+
+// SemanticTokensOptions option of semantic tokens provider server capabilities.
+//
+// @since 3.16.0.
+type SemanticTokensOptions struct {
+	WorkDoneProgressOptions
+}
+
+// SemanticTokensRegistrationOptions registration option of semantic tokens provider server capabilities.
+//
+// @since 3.16.0.
+type SemanticTokensRegistrationOptions struct {
+	TextDocumentRegistrationOptions
+	SemanticTokensOptions
+	StaticRegistrationOptions
+}
+
+// ServerCapabilitiesWorkspace specific server capabilities.
+type ServerCapabilitiesWorkspace struct {
+	// WorkspaceFolders is the server supports workspace folder.
+	//
+	// @since 3.6.0.
+	WorkspaceFolders *ServerCapabilitiesWorkspaceFolders `json:"workspaceFolders,omitempty"`
+
+	// FileOperations is the server is interested in file notifications/requests.
+	//
+	// @since 3.16.0.
+	FileOperations *ServerCapabilitiesWorkspaceFileOperations `json:"fileOperations,omitempty"`
+}
+
+// ServerCapabilitiesWorkspaceFolders is the server supports workspace folder.
+//
+// @since 3.6.0.
+type ServerCapabilitiesWorkspaceFolders struct {
+	// Supported is the server has support for workspace folders
+	Supported bool `json:"supported,omitempty"`
+
+	// ChangeNotifications whether the server wants to receive workspace folder
+	// change notifications.
+	//
+	// If a strings is provided the string is treated as a ID
+	// under which the notification is registered on the client
+	// side. The ID can be used to unregister for these events
+	// using the `client/unregisterCapability` request.
+	ChangeNotifications interface{} `json:"changeNotifications,omitempty"` // string | boolean
+}
+
+// ServerCapabilitiesWorkspaceFileOperations is the server is interested in file notifications/requests.
+//
+// @since 3.16.0.
+type ServerCapabilitiesWorkspaceFileOperations struct {
+	// DidCreate is the server is interested in receiving didCreateFiles
+	// notifications.
+	DidCreate *FileOperationRegistrationOptions `json:"didCreate,omitempty"`
+
+	// WillCreate is the server is interested in receiving willCreateFiles requests.
+	WillCreate *FileOperationRegistrationOptions `json:"willCreate,omitempty"`
+
+	// DidRename is the server is interested in receiving didRenameFiles
+	// notifications.
+	DidRename *FileOperationRegistrationOptions `json:"didRename,omitempty"`
+
+	// WillRename is the server is interested in receiving willRenameFiles requests.
+	WillRename *FileOperationRegistrationOptions `json:"willRename,omitempty"`
+
+	// DidDelete is the server is interested in receiving didDeleteFiles file
+	// notifications.
+	DidDelete *FileOperationRegistrationOptions `json:"didDelete,omitempty"`
+
+	// WillDelete is the server is interested in receiving willDeleteFiles file
+	// requests.
+	WillDelete *FileOperationRegistrationOptions `json:"willDelete,omitempty"`
+}
+
+// FileOperationRegistrationOptions is the options to register for file operations.
+//
+// @since 3.16.0.
+type FileOperationRegistrationOptions struct {
+	// filters is the actual filters.
+	Filters []FileOperationFilter `json:"filters"`
+}
+
+// MonikerOptions option of moniker provider server capabilities.
+//
+// @since 3.16.0.
+type MonikerOptions struct {
+	WorkDoneProgressOptions
+}
+
+// MonikerRegistrationOptions registration option of moniker provider server capabilities.
+//
+// @since 3.16.0.
+type MonikerRegistrationOptions struct {
+	TextDocumentRegistrationOptions
+	MonikerOptions
 }

@@ -3,10 +3,6 @@
 
 package protocol
 
-import (
-	"strconv"
-)
-
 // TraceValue represents a InitializeParams Trace mode.
 type TraceValue string
 
@@ -86,6 +82,17 @@ type InitializeParams struct {
 	//
 	// @since 3.6.0.
 	WorkspaceFolders []WorkspaceFolder `json:"workspaceFolders,omitempty"`
+}
+
+// InitializeResult result of ClientCapabilities.
+type InitializeResult struct {
+	// Capabilities is the capabilities the language server provides.
+	Capabilities ServerCapabilities `json:"capabilities"`
+
+	// ServerInfo Information about the server.
+	//
+	// @since 3.15.0.
+	ServerInfo *ServerInfo `json:"serverInfo,omitempty"`
 }
 
 // LogTraceParams params of LogTrace notification.
@@ -225,13 +232,6 @@ type FileDelete struct {
 	URI string `json:"uri"`
 }
 
-// DocumentHighlightOptions registration option of DocumentHighlight server capability.
-//
-// @since 3.15.0.
-type DocumentHighlightOptions struct {
-	WorkDoneProgressOptions
-}
-
 // DocumentHighlightParams params of DocumentHighlight Request.
 //
 // @since 3.15.0.
@@ -239,56 +239,6 @@ type DocumentHighlightParams struct {
 	TextDocumentPositionParams
 	WorkDoneProgressParams
 	PartialResultParams
-}
-
-// DocumentSymbolOptions registration option of DocumentSymbol server capability.
-//
-// @since 3.15.0.
-type DocumentSymbolOptions struct {
-	WorkDoneProgressOptions
-
-	// Label a human-readable string that is shown when multiple outlines trees
-	// are shown for the same document.
-	//
-	// @since 3.16.0.
-	Label string `json:"label,omitempty"`
-}
-
-// WorkspaceSymbolOptions registration option of WorkspaceSymbol server capability.
-//
-// @since 3.15.0.
-type WorkspaceSymbolOptions struct {
-	WorkDoneProgressOptions
-}
-
-// DocumentFormattingOptions registration option of DocumentFormatting server capability.
-//
-// @since 3.15.0.
-type DocumentFormattingOptions struct {
-	WorkDoneProgressOptions
-}
-
-// DocumentRangeFormattingOptions registration option of DocumentRangeFormatting server capability.
-//
-// @since 3.15.0.
-type DocumentRangeFormattingOptions struct {
-	WorkDoneProgressOptions
-}
-
-// DeclarationOptions registration option of Declaration server capability.
-//
-// @since 3.15.0.
-type DeclarationOptions struct {
-	WorkDoneProgressOptions
-}
-
-// DeclarationRegistrationOptions registration option of Declaration server capability.
-//
-// @since 3.15.0.
-type DeclarationRegistrationOptions struct {
-	DeclarationOptions
-	TextDocumentRegistrationOptions
-	StaticRegistrationOptions
 }
 
 // DeclarationParams params of Declaration Request.
@@ -300,13 +250,6 @@ type DeclarationParams struct {
 	PartialResultParams
 }
 
-// DefinitionOptions registration option of Definition server capability.
-//
-// @since 3.15.0.
-type DefinitionOptions struct {
-	WorkDoneProgressOptions
-}
-
 // DefinitionParams params of Definition Request.
 //
 // @since 3.15.0.
@@ -314,22 +257,6 @@ type DefinitionParams struct {
 	TextDocumentPositionParams
 	WorkDoneProgressParams
 	PartialResultParams
-}
-
-// TypeDefinitionOptions registration option of TypeDefinition server capability.
-//
-// @since 3.15.0.
-type TypeDefinitionOptions struct {
-	WorkDoneProgressOptions
-}
-
-// TypeDefinitionRegistrationOptions registration option of TypeDefinition server capability.
-//
-// @since 3.15.0.
-type TypeDefinitionRegistrationOptions struct {
-	TextDocumentRegistrationOptions
-	TypeDefinitionOptions
-	StaticRegistrationOptions
 }
 
 // TypeDefinitionParams params of TypeDefinition Request.
@@ -341,22 +268,6 @@ type TypeDefinitionParams struct {
 	PartialResultParams
 }
 
-// ImplementationOptions registration option of Implementation server capability.
-//
-// @since 3.15.0.
-type ImplementationOptions struct {
-	WorkDoneProgressOptions
-}
-
-// ImplementationRegistrationOptions registration option of Implementation server capability.
-//
-// @since 3.15.0.
-type ImplementationRegistrationOptions struct {
-	TextDocumentRegistrationOptions
-	ImplementationOptions
-	StaticRegistrationOptions
-}
-
 // ImplementationParams params of Implementation Request.
 //
 // @since 3.15.0.
@@ -364,38 +275,6 @@ type ImplementationParams struct {
 	TextDocumentPositionParams
 	WorkDoneProgressParams
 	PartialResultParams
-}
-
-// DocumentColorOptions registration option of DocumentColor server capability.
-//
-// @since 3.15.0.
-type DocumentColorOptions struct {
-	WorkDoneProgressOptions
-}
-
-// DocumentColorRegistrationOptions registration option of DocumentColor server capability.
-//
-// @since 3.15.0.
-type DocumentColorRegistrationOptions struct {
-	TextDocumentRegistrationOptions
-	StaticRegistrationOptions
-	DocumentColorOptions
-}
-
-// FoldingRangeOptions registration option of FoldingRange server capability.
-//
-// @since 3.15.0.
-type FoldingRangeOptions struct {
-	WorkDoneProgressOptions
-}
-
-// FoldingRangeRegistrationOptions registration option of FoldingRange server capability.
-//
-// @since 3.15.0.
-type FoldingRangeRegistrationOptions struct {
-	TextDocumentRegistrationOptions
-	FoldingRangeOptions
-	StaticRegistrationOptions
 }
 
 // ShowDocumentParams params to show a document.
@@ -451,63 +330,6 @@ type InitializeError struct {
 	Retry bool `json:"retry,omitempty"`
 }
 
-// TextDocumentSyncKind defines how the host (editor) should sync document changes to the language server.
-type TextDocumentSyncKind float64
-
-const (
-	// TextDocumentSyncKindNone documents should not be synced at all.
-	TextDocumentSyncKindNone TextDocumentSyncKind = 0
-
-	// TextDocumentSyncKindFull documents are synced by always sending the full content
-	// of the document.
-	TextDocumentSyncKindFull TextDocumentSyncKind = 1
-
-	// TextDocumentSyncKindIncremental documents are synced by sending the full content on open.
-	// After that only incremental updates to the document are
-	// send.
-	TextDocumentSyncKindIncremental TextDocumentSyncKind = 2
-)
-
-// String implements fmt.Stringer.
-func (k TextDocumentSyncKind) String() string {
-	switch k {
-	case TextDocumentSyncKindNone:
-		return "None"
-	case TextDocumentSyncKindFull:
-		return "Full"
-	case TextDocumentSyncKindIncremental:
-		return "Incremental"
-	default:
-		return strconv.FormatFloat(float64(k), 'f', -10, 64)
-	}
-}
-
-// CompletionOptions Completion options.
-type CompletionOptions struct {
-	// The server provides support to resolve additional
-	// information for a completion item.
-	ResolveProvider bool `json:"resolveProvider,omitempty"`
-
-	// The characters that trigger completion automatically.
-	TriggerCharacters []string `json:"triggerCharacters,omitempty"`
-}
-
-// SignatureHelpOptions SignatureHelp options.
-type SignatureHelpOptions struct {
-	// The characters that trigger signature help
-	// automatically.
-	TriggerCharacters []string `json:"triggerCharacters,omitempty"`
-
-	// RetriggerCharacters is the slist of characters that re-trigger signature help.
-	//
-	// These trigger characters are only active when signature help is already
-	// showing.
-	// All trigger characters are also counted as re-trigger characters.
-	//
-	// @since 3.15.0.
-	RetriggerCharacters []string `json:"retriggerCharacters,omitempty"`
-}
-
 // ReferencesOptions ReferencesProvider options.
 //
 // @since 3.15.0.
@@ -520,116 +342,6 @@ type ReferencesOptions struct {
 // @since 3.15.0.
 type WorkDoneProgressOptions struct {
 	WorkDoneProgress bool `json:"workDoneProgress,omitempty"`
-}
-
-// CodeActionOptions CodeAction options.
-type CodeActionOptions struct {
-	// CodeActionKinds that this server may return.
-	//
-	// The list of kinds may be generic, such as "CodeActionKind.Refactor", or the server
-	// may list out every specific kind they provide.
-	CodeActionKinds []CodeActionKind `json:"codeActionKinds,omitempty"`
-
-	// ResolveProvider is the server provides support to resolve additional
-	// information for a code action.
-	//
-	// @since 3.16.0.
-	ResolveProvider bool `json:"resolveProvider,omitempty"`
-}
-
-// CodeLensOptions CodeLens options.
-type CodeLensOptions struct {
-	// Code lens has a resolve provider as well.
-	ResolveProvider bool `json:"resolveProvider,omitempty"`
-}
-
-// DocumentOnTypeFormattingOptions format document on type options.
-type DocumentOnTypeFormattingOptions struct {
-	// FirstTriggerCharacter a character on which formatting should be triggered, like "}".
-	FirstTriggerCharacter string `json:"firstTriggerCharacter"`
-
-	// MoreTriggerCharacter more trigger characters.
-	MoreTriggerCharacter []string `json:"moreTriggerCharacter,omitempty"`
-}
-
-// RenameOptions rename options.
-type RenameOptions struct {
-	// PrepareProvider renames should be checked and tested before being executed.
-	PrepareProvider bool `json:"prepareProvider,omitempty"`
-}
-
-// DocumentLinkOptions document link options.
-type DocumentLinkOptions struct {
-	// ResolveProvider document links have a resolve provider as well.
-	ResolveProvider bool `json:"resolveProvider,omitempty"`
-}
-
-// ExecuteCommandOptions execute command options.
-type ExecuteCommandOptions struct {
-	// Commands is the commands to be executed on the server
-	Commands []string `json:"commands"`
-}
-
-// SaveOptions save options.
-type SaveOptions struct {
-	// IncludeText is the client is supposed to include the content on save.
-	IncludeText bool `json:"includeText,omitempty"`
-}
-
-// TextDocumentSyncOptions TextDocumentSync options.
-type TextDocumentSyncOptions struct {
-	// OpenClose open and close notifications are sent to the server.
-	OpenClose bool `json:"openClose,omitempty"`
-
-	// Change notifications are sent to the server. See TextDocumentSyncKind.None, TextDocumentSyncKind.Full
-	// and TextDocumentSyncKind.Incremental. If omitted it defaults to TextDocumentSyncKind.None.
-	Change TextDocumentSyncKind `json:"change,omitempty"`
-
-	// WillSave notifications are sent to the server.
-	WillSave bool `json:"willSave,omitempty"`
-
-	// WillSaveWaitUntil will save wait until requests are sent to the server.
-	WillSaveWaitUntil bool `json:"willSaveWaitUntil,omitempty"`
-
-	// Save notifications are sent to the server.
-	Save *SaveOptions `json:"save,omitempty"`
-}
-
-// HoverOptions option of hover provider server capabilities.
-type HoverOptions struct {
-	WorkDoneProgressOptions
-}
-
-// SemanticTokensOptions option of semantic tokens provider server capabilities.
-//
-// @since 3.16.0.
-type SemanticTokensOptions struct {
-	WorkDoneProgressOptions
-}
-
-// SemanticTokensRegistrationOptions registration option of semantic tokens provider server capabilities.
-//
-// @since 3.16.0.
-type SemanticTokensRegistrationOptions struct {
-	TextDocumentRegistrationOptions
-	SemanticTokensOptions
-	StaticRegistrationOptions
-}
-
-// LinkedEditingRangeOptions option of linked editing range provider server capabilities.
-//
-// @since 3.16.0.
-type LinkedEditingRangeOptions struct {
-	WorkDoneProgressOptions
-}
-
-// LinkedEditingRangeRegistrationOptions registration option of linked editing range provider server capabilities.
-//
-// @since 3.16.0.
-type LinkedEditingRangeRegistrationOptions struct {
-	TextDocumentRegistrationOptions
-	LinkedEditingRangeOptions
-	StaticRegistrationOptions
 }
 
 // LinkedEditingRangeParams params for the LinkedEditingRange request.
@@ -656,21 +368,6 @@ type LinkedEditingRanges struct {
 	//
 	// If no pattern is provided, the client configuration's word pattern will be used.
 	WordPattern string `json:"wordPattern,omitempty"`
-}
-
-// MonikerOptions option of moniker provider server capabilities.
-//
-// @since 3.16.0.
-type MonikerOptions struct {
-	WorkDoneProgressOptions
-}
-
-// MonikerRegistrationOptions registration option of moniker provider server capabilities.
-//
-// @since 3.16.0.
-type MonikerRegistrationOptions struct {
-	TextDocumentRegistrationOptions
-	MonikerOptions
 }
 
 // MonikerParams params for the Moniker request.
