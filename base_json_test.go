@@ -12,9 +12,13 @@ import (
 )
 
 func TestCancelParams(t *testing.T) {
+	t.Parallel()
+
 	testCancelParams(t, json.Marshal, json.Unmarshal)
 }
 
 func TestProgressParams(t *testing.T) {
+	t.Parallel()
+
 	testProgressParams(t, json.Marshal, json.Unmarshal)
 }

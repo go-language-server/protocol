@@ -13,9 +13,13 @@ import (
 )
 
 func TestCancelParams(t *testing.T) {
+	t.Parallel()
+
 	testCancelParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
 func TestProgressParams(t *testing.T) {
+	t.Parallel()
+
 	testProgressParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }

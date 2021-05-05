@@ -11,18 +11,32 @@ import (
 	"testing"
 )
 
-func TestRegistration(t *testing.T) { testRegistration(t, json.Marshal, json.Unmarshal) }
+func TestRegistration(t *testing.T) {
+	t.Parallel()
+
+	testRegistration(t, json.Marshal, json.Unmarshal)
+}
 
 func TestRegistrationParams(t *testing.T) {
+	t.Parallel()
+
 	testRegistrationParams(t, json.Marshal, json.Unmarshal)
 }
 
 func TestTextDocumentRegistrationOptions(t *testing.T) {
+	t.Parallel()
+
 	testTextDocumentRegistrationOptions(t, json.Marshal, json.Unmarshal)
 }
 
-func TestUnregistration(t *testing.T) { testUnregistration(t, json.Marshal, json.Unmarshal) }
+func TestUnregistration(t *testing.T) {
+	t.Parallel()
+
+	testUnregistration(t, json.Marshal, json.Unmarshal)
+}
 
 func TestUnregistrationParams(t *testing.T) {
+	t.Parallel()
+
 	testUnregistrationParams(t, json.Marshal, json.Unmarshal)
 }
