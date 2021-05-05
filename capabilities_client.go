@@ -91,6 +91,8 @@ type WorkspaceClientCapabilitiesWorkspaceEdit struct {
 
 	// FailureHandling is the failure handling strategy of a client if applying the workspace edit
 	// fails.
+	//
+	// Mostly FailureHandlingKind.
 	FailureHandling string `json:"failureHandling,omitempty"`
 
 	// ResourceOperations is the resource operations the client supports. Clients should at least
@@ -111,6 +113,28 @@ type WorkspaceClientCapabilitiesWorkspaceEdit struct {
 	// @since 3.16.0.
 	ChangeAnnotationSupport *WorkspaceClientCapabilitiesWorkspaceEditChangeAnnotationSupport `json:"changeAnnotationSupport,omitempty"`
 }
+
+// FailureHandlingKind is the kind of failure handling .
+type FailureHandlingKind string
+
+const (
+	// FailureHandlingKindAbort applying the workspace change is simply aborted if one of the changes provided
+	// fails. All operations executed before the failing operation stay executed.
+	FailureHandlingKindAbort FailureHandlingKind = "abort"
+
+	// FailureHandlingKindTransactional all operations are executed transactional. That means they either all
+	// succeed or no changes at all are applied to the workspace.
+	FailureHandlingKindTransactional FailureHandlingKind = "transactional"
+
+	// FailureHandlingKindTextOnlyTransactional if the workspace edit contains only textual file changes they are executed transactional.
+	// If resource changes (create, rename or delete file) are part of the change the failure
+	// handling strategy is abort.
+	FailureHandlingKindTextOnlyTransactional FailureHandlingKind = "textOnlyTransactional"
+
+	// FailureHandlingKindUndo the client tries to undo the operations already executed. But there is no
+	// guarantee that this is succeeding.
+	FailureHandlingKindUndo FailureHandlingKind = "undo"
+)
 
 // WorkspaceClientCapabilitiesWorkspaceEditChangeAnnotationSupport is the ChangeAnnotationSupport of WorkspaceClientCapabilitiesWorkspaceEdit.
 //
