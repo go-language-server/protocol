@@ -47,8 +47,8 @@ func testCancelParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -83,8 +83,8 @@ func testCancelParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -130,8 +130,8 @@ func testProgressParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -166,13 +166,13 @@ func testProgressParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreFields(ProgressParams{}, "Token")); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got, cmpopts.IgnoreFields(ProgressParams{}, "Token")); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 
 				if token := got.Token; !reflect.ValueOf(token).IsZero() {
 					if diff := cmp.Diff(fmt.Sprint(token), wantWorkDoneToken); (diff != "") != tt.wantErr {
-						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}
 			})

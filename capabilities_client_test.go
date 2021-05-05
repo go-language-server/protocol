@@ -255,8 +255,8 @@ func testClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -298,8 +298,8 @@ func testClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -389,8 +389,8 @@ func testWorkspaceClientCapabilities(t *testing.T, marshal marshalFunc, unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -425,8 +425,8 @@ func testWorkspaceClientCapabilities(t *testing.T, marshal marshalFunc, unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -486,8 +486,8 @@ func testWorkspaceClientCapabilitiesWorkspaceEdit(t *testing.T, marshal marshalF
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -529,8 +529,8 @@ func testWorkspaceClientCapabilitiesWorkspaceEdit(t *testing.T, marshal marshalF
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -727,8 +727,8 @@ func testTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmar
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -770,8 +770,8 @@ func testTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmar
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -826,8 +826,8 @@ func testTextDocumentSyncClientCapabilities(t *testing.T, marshal marshalFunc, u
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -869,8 +869,8 @@ func testTextDocumentSyncClientCapabilities(t *testing.T, marshal marshalFunc, u
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -951,8 +951,8 @@ func testCompletionTextDocumentClientCapabilities(t *testing.T, marshal marshalF
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -994,8 +994,8 @@ func testCompletionTextDocumentClientCapabilities(t *testing.T, marshal marshalF
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1051,8 +1051,8 @@ func testHoverTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, 
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1094,8 +1094,8 @@ func testHoverTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, 
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1158,8 +1158,8 @@ func testSignatureHelpTextDocumentClientCapabilities(t *testing.T, marshal marsh
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1201,8 +1201,8 @@ func testSignatureHelpTextDocumentClientCapabilities(t *testing.T, marshal marsh
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1255,8 +1255,8 @@ func testDeclarationTextDocumentClientCapabilities(t *testing.T, marshal marshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1298,8 +1298,8 @@ func testDeclarationTextDocumentClientCapabilities(t *testing.T, marshal marshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1352,8 +1352,8 @@ func testDefinitionTextDocumentClientCapabilities(t *testing.T, marshal marshalF
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1395,8 +1395,8 @@ func testDefinitionTextDocumentClientCapabilities(t *testing.T, marshal marshalF
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1449,8 +1449,8 @@ func testTypeDefinitionTextDocumentClientCapabilities(t *testing.T, marshal mars
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1492,8 +1492,8 @@ func testTypeDefinitionTextDocumentClientCapabilities(t *testing.T, marshal mars
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1546,8 +1546,8 @@ func testImplementationTextDocumentClientCapabilities(t *testing.T, marshal mars
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1589,8 +1589,8 @@ func testImplementationTextDocumentClientCapabilities(t *testing.T, marshal mars
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1642,8 +1642,8 @@ func testReferencesTextDocumentClientCapabilities(t *testing.T, marshal marshalF
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1685,8 +1685,8 @@ func testReferencesTextDocumentClientCapabilities(t *testing.T, marshal marshalF
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1738,8 +1738,8 @@ func testDocumentHighlightClientCapabilities(t *testing.T, marshal marshalFunc, 
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1781,8 +1781,8 @@ func testDocumentHighlightClientCapabilities(t *testing.T, marshal marshalFunc, 
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1851,8 +1851,8 @@ func testDocumentSymbolClientCapabilities(t *testing.T, marshal marshalFunc, unm
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1894,8 +1894,8 @@ func testDocumentSymbolClientCapabilities(t *testing.T, marshal marshalFunc, unm
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1966,8 +1966,8 @@ func testCodeActionClientCapabilities(t *testing.T, marshal marshalFunc, unmarsh
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2009,8 +2009,8 @@ func testCodeActionClientCapabilities(t *testing.T, marshal marshalFunc, unmarsh
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2062,8 +2062,8 @@ func testCodeLensClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2105,8 +2105,8 @@ func testCodeLensClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2159,8 +2159,8 @@ func testDocumentLinkClientCapabilities(t *testing.T, marshal marshalFunc, unmar
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2202,8 +2202,8 @@ func testDocumentLinkClientCapabilities(t *testing.T, marshal marshalFunc, unmar
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2255,8 +2255,8 @@ func testDocumentColorClientCapabilities(t *testing.T, marshal marshalFunc, unma
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2298,8 +2298,8 @@ func testDocumentColorClientCapabilities(t *testing.T, marshal marshalFunc, unma
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2360,8 +2360,8 @@ func testPublishDiagnosticsClientCapabilities(t *testing.T, marshal marshalFunc,
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2403,8 +2403,8 @@ func testPublishDiagnosticsClientCapabilities(t *testing.T, marshal marshalFunc,
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2459,8 +2459,8 @@ func testRenameClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal u
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2502,8 +2502,8 @@ func testRenameClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal u
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2557,8 +2557,8 @@ func testFoldingRangeClientCapabilities(t *testing.T, marshal marshalFunc, unmar
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2600,8 +2600,8 @@ func testFoldingRangeClientCapabilities(t *testing.T, marshal marshalFunc, unmar
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2688,8 +2688,8 @@ func testSemanticTokensClientCapabilities(t *testing.T, marshal marshalFunc, unm
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2731,8 +2731,8 @@ func testSemanticTokensClientCapabilities(t *testing.T, marshal marshalFunc, unm
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}

@@ -58,8 +58,8 @@ func testDidOpenTextDocumentParams(t *testing.T, marshal marshalFunc, unmarshal 
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -98,8 +98,8 @@ func testDidOpenTextDocumentParams(t *testing.T, marshal marshalFunc, unmarshal 
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -169,8 +169,8 @@ func testDidChangeTextDocumentParams(t *testing.T, marshal marshalFunc, unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -209,8 +209,8 @@ func testDidChangeTextDocumentParams(t *testing.T, marshal marshalFunc, unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -250,7 +250,7 @@ func TestTextDocumentSaveReason_String(t *testing.T) {
 			t.Parallel()
 
 			if got := tt.k.String(); got != tt.want {
-				t.Errorf("TextDocumentSaveReason.String() = %v, want %v", got, tt.want)
+				t.Errorf("TextDocumentSaveReason.String() = %v, want %v", tt.want, got)
 			}
 		})
 	}
@@ -309,8 +309,8 @@ func testTextDocumentContentChangeEvent(t *testing.T, marshal marshalFunc, unmar
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -349,8 +349,8 @@ func testTextDocumentContentChangeEvent(t *testing.T, marshal marshalFunc, unmar
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -408,8 +408,8 @@ func testTextDocumentChangeRegistrationOptions(t *testing.T, marshal marshalFunc
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -448,8 +448,8 @@ func testTextDocumentChangeRegistrationOptions(t *testing.T, marshal marshalFunc
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -514,8 +514,8 @@ func testWillSaveTextDocumentParams(t *testing.T, marshal marshalFunc, unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -561,8 +561,8 @@ func testWillSaveTextDocumentParams(t *testing.T, marshal marshalFunc, unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -627,8 +627,8 @@ func testDidSaveTextDocumentParams(t *testing.T, marshal marshalFunc, unmarshal 
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -674,8 +674,8 @@ func testDidSaveTextDocumentParams(t *testing.T, marshal marshalFunc, unmarshal 
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -752,8 +752,8 @@ func testTextDocumentSaveRegistrationOptions(t *testing.T, marshal marshalFunc, 
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -799,8 +799,8 @@ func testTextDocumentSaveRegistrationOptions(t *testing.T, marshal marshalFunc, 
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -851,8 +851,8 @@ func testDidCloseTextDocumentParams(t *testing.T, marshal marshalFunc, unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -891,8 +891,8 @@ func testDidCloseTextDocumentParams(t *testing.T, marshal marshalFunc, unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}

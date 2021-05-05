@@ -61,8 +61,8 @@ func testShowMessageParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -104,8 +104,8 @@ func testShowMessageParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -172,8 +172,8 @@ func testShowMessageRequestParams(t *testing.T, marshal marshalFunc, unmarshal u
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -215,8 +215,8 @@ func testShowMessageRequestParams(t *testing.T, marshal marshalFunc, unmarshal u
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -271,8 +271,8 @@ func testMessageActionItem(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -314,8 +314,8 @@ func testMessageActionItem(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -372,8 +372,8 @@ func testLogMessageParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -415,8 +415,8 @@ func testLogMessageParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -490,8 +490,8 @@ func testWorkDoneProgressCreateParams(t *testing.T, marshal marshalFunc, unmarsh
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -545,7 +545,7 @@ func testWorkDoneProgressCreateParams(t *testing.T, marshal marshalFunc, unmarsh
 				}
 
 				if diff := cmp.Diff(fmt.Sprint(got.Token), strconv.FormatInt(int64(wantToken), 10)); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -599,8 +599,8 @@ func testWorkDoneProgressCancelParams(t *testing.T, marshal marshalFunc, unmarsh
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -640,7 +640,7 @@ func testWorkDoneProgressCancelParams(t *testing.T, marshal marshalFunc, unmarsh
 				}
 
 				if diff := cmp.Diff(fmt.Sprint(got.Token), strconv.FormatInt(int64(wantToken), 10)); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -685,7 +685,7 @@ func TestMessageType_String(t *testing.T) {
 			t.Parallel()
 
 			if got := tt.m.String(); got != tt.want {
-				t.Errorf("MessageType.String() = %v, want %v", got, tt.want)
+				t.Errorf("MessageType.String() = %v, want %v", tt.want, got)
 			}
 		})
 	}
@@ -723,7 +723,7 @@ func TestMessageType_Enabled(t *testing.T) {
 			t.Parallel()
 
 			if got := tt.m.Enabled(tt.level); got != tt.want {
-				t.Errorf("MessageType.Enabled(%v) = %v, want %v", tt.level, got, tt.want)
+				t.Errorf("MessageType.Enabled(%v) = %v, want %v", tt.level, tt.want, got)
 			}
 		})
 	}
@@ -767,7 +767,7 @@ func TestToMessageType(t *testing.T) {
 			t.Parallel()
 
 			if got := ToMessageType(tt.level); got != tt.want {
-				t.Errorf("ToMessageType(%v) = %v, want %v", tt.level, got, tt.want)
+				t.Errorf("ToMessageType(%v) = %v, want %v", tt.level, tt.want, got)
 			}
 		})
 	}

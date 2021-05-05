@@ -233,8 +233,8 @@ func testDiagnostic(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -303,8 +303,8 @@ func testDiagnostic(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -349,7 +349,7 @@ func TestDiagnosticSeverity_String(t *testing.T) {
 			t.Parallel()
 
 			if got := tt.d.String(); got != tt.want {
-				t.Errorf("DiagnosticSeverity.String() = %v, want %v", got, tt.want)
+				t.Errorf("DiagnosticSeverity.String() = %v, want %v", tt.want, got)
 			}
 		})
 	}
@@ -383,7 +383,7 @@ func TestDiagnosticTag_String(t *testing.T) {
 			t.Parallel()
 
 			if got := tt.d.String(); got != tt.want {
-				t.Errorf("DiagnosticSeverity.String() = %v, want %v", got, tt.want)
+				t.Errorf("DiagnosticSeverity.String() = %v, want %v", tt.want, got)
 			}
 		})
 	}
@@ -447,8 +447,8 @@ func testDiagnosticRelatedInformation(t *testing.T, marshal marshalFunc, unmarsh
 					return
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -489,8 +489,8 @@ func testDiagnosticRelatedInformation(t *testing.T, marshal marshalFunc, unmarsh
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -579,8 +579,8 @@ func testPublishDiagnosticsParams(t *testing.T, marshal marshalFunc, unmarshal u
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -621,8 +621,8 @@ func testPublishDiagnosticsParams(t *testing.T, marshal marshalFunc, unmarshal u
 				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
