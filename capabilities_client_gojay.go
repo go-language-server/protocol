@@ -1435,6 +1435,31 @@ var (
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
+func (v *CodeActionClientCapabilitiesResolveSupport) MarshalJSONObject(enc *gojay.Encoder) {
+	enc.ArrayKey(keyProperties, (*Strings)(&v.Properties))
+}
+
+// IsNil implements gojay.MarshalerJSONObject.
+func (v *CodeActionClientCapabilitiesResolveSupport) IsNil() bool { return v == nil }
+
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
+func (v *CodeActionClientCapabilitiesResolveSupport) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+	if k == keyProperties {
+		return dec.Array((*Strings)(&v.Properties))
+	}
+	return nil
+}
+
+// NKeys returns the number of keys to unmarshal.
+func (v *CodeActionClientCapabilitiesResolveSupport) NKeys() int { return 1 }
+
+// compile time check whether the CodeActionClientCapabilitiesResolveSupport implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+var (
+	_ gojay.MarshalerJSONObject   = (*CodeActionClientCapabilitiesResolveSupport)(nil)
+	_ gojay.UnmarshalerJSONObject = (*CodeActionClientCapabilitiesResolveSupport)(nil)
+)
+
+// MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *CodeLensClientCapabilities) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKeyOmitEmpty(keyDynamicRegistration, v.DynamicRegistration)
 }
