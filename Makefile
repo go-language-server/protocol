@@ -52,7 +52,7 @@ export GOTESTSUM_FORMAT=standard-verbose
 test: CGO_ENABLED=1
 test: tools/bin/gotestsum  ## Runs package test including race condition.
 	$(call target)
-	@CGO_ENABLED=${CGO_ENABLED} ${GO_TEST} ${GO_TEST_FLAGS} -run=${GO_TEST_FUNC} $(strip ${GO_FLAGS}) ${GO_TEST_PKGS}
+	@CGO_ENABLED=${CGO_ENABLED} ${GO_TEST} ${GO_TEST_FLAGS} -run=${GO_TEST_FUNC} -tags='$(subst $(space),$(comma),${GO_BUILDTAGS})' ${GO_TEST_PKGS}
 
 .PHONY: test/gojay
 test/gojay: GO_BUILDTAGS+=gojay
