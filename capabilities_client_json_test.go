@@ -11,8 +11,16 @@ import (
 	"testing"
 )
 
+func TestClientCapabilities(t *testing.T) {
+	testClientCapabilities(t, json.Marshal, json.Unmarshal)
+}
+
 func TestWorkspaceClientCapabilities(t *testing.T) {
 	testWorkspaceClientCapabilities(t, json.Marshal, json.Unmarshal)
+}
+
+func TestWorkspaceClientCapabilitiesWorkspaceEdit(t *testing.T) {
+	testWorkspaceClientCapabilitiesWorkspaceEdit(t, json.Marshal, json.Unmarshal)
 }
 
 func TestTextDocumentSyncClientCapabilities(t *testing.T) {
@@ -41,18 +49,6 @@ func TestDocumentHighlightClientCapabilities(t *testing.T) {
 
 func TestDocumentSymbolClientCapabilities(t *testing.T) {
 	testDocumentSymbolClientCapabilities(t, json.Marshal, json.Unmarshal)
-}
-
-func TestTextDocumentClientCapabilitiesFormatting(t *testing.T) {
-	testTextDocumentClientCapabilitiesFormatting(t, json.Marshal, json.Unmarshal)
-}
-
-func TestTextDocumentClientCapabilitiesRangeFormatting(t *testing.T) {
-	testTextDocumentClientCapabilitiesRangeFormatting(t, json.Marshal, json.Unmarshal)
-}
-
-func TestTextDocumentClientCapabilitiesOnTypeFormatting(t *testing.T) {
-	testTextDocumentClientCapabilitiesOnTypeFormatting(t, json.Marshal, json.Unmarshal)
 }
 
 func TestDeclarationTextDocumentClientCapabilities(t *testing.T) {
@@ -103,6 +99,6 @@ func TestTextDocumentClientCapabilities(t *testing.T) {
 	testTextDocumentClientCapabilities(t, json.Marshal, json.Unmarshal)
 }
 
-func TestClientCapabilities(t *testing.T) {
-	testClientCapabilities(t, json.Marshal, json.Unmarshal)
+func TestSemanticTokensClientCapabilities(t *testing.T) {
+	testSemanticTokensClientCapabilities(t, json.Marshal, json.Unmarshal)
 }

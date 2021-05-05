@@ -12,8 +12,16 @@ import (
 	"github.com/francoispqt/gojay"
 )
 
+func TestClientCapabilities(t *testing.T) {
+	testClientCapabilities(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
+
 func TestWorkspaceClientCapabilities(t *testing.T) {
 	testWorkspaceClientCapabilities(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+}
+
+func TestWorkspaceClientCapabilitiesWorkspaceEdit(t *testing.T) {
+	testWorkspaceClientCapabilitiesWorkspaceEdit(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
 func TestTextDocumentSyncClientCapabilities(t *testing.T) {
@@ -42,18 +50,6 @@ func TestDocumentHighlightClientCapabilities(t *testing.T) {
 
 func TestDocumentSymbolClientCapabilities(t *testing.T) {
 	testDocumentSymbolClientCapabilities(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
-}
-
-func TestTextDocumentClientCapabilitiesFormatting(t *testing.T) {
-	testTextDocumentClientCapabilitiesFormatting(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
-}
-
-func TestTextDocumentClientCapabilitiesRangeFormatting(t *testing.T) {
-	testTextDocumentClientCapabilitiesRangeFormatting(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
-}
-
-func TestTextDocumentClientCapabilitiesOnTypeFormatting(t *testing.T) {
-	testTextDocumentClientCapabilitiesOnTypeFormatting(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
 func TestDeclarationTextDocumentClientCapabilities(t *testing.T) {
@@ -104,6 +100,6 @@ func TestTextDocumentClientCapabilities(t *testing.T) {
 	testTextDocumentClientCapabilities(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
-func TestClientCapabilities(t *testing.T) {
-	testClientCapabilities(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
+func TestSemanticTokensClientCapabilities(t *testing.T) {
+	testSemanticTokensClientCapabilities(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
