@@ -280,12 +280,12 @@ func (v *WorkspaceSymbolClientCapabilities) UnmarshalJSONObject(dec *gojay.Decod
 		return dec.Bool(&v.DynamicRegistration)
 	case keySymbolKind:
 		if v.SymbolKind == nil {
-			v.SymbolKind = &WorkspaceSymbolSymbolKind{}
+			v.SymbolKind = &SymbolKindCapabilities{}
 		}
 		return dec.Object(v.SymbolKind)
 	case keyTagSupport:
 		if v.TagSupport == nil {
-			v.TagSupport = &WorkspaceSymbolTagSupport{}
+			v.TagSupport = &TagSupportCapabilities{}
 		}
 		return dec.Object(v.TagSupport)
 	}
@@ -301,7 +301,7 @@ var (
 	_ gojay.UnmarshalerJSONObject = (*WorkspaceSymbolClientCapabilities)(nil)
 )
 
-// SymbolKinds represents a slice of SymbolKinds.
+// SymbolKinds represents a slice of SymbolKind.
 type SymbolKinds []SymbolKind
 
 // compile time check whether the SymbolKinds implements a gojay.MarshalerJSONArray and gojay.UnmarshalerJSONArray interfaces.
@@ -331,15 +331,15 @@ func (v *SymbolKinds) UnmarshalJSONArray(dec *gojay.Decoder) error {
 }
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
-func (v *WorkspaceSymbolSymbolKind) MarshalJSONObject(enc *gojay.Encoder) {
+func (v *SymbolKindCapabilities) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ArrayKeyOmitEmpty(keyValueSet, (*SymbolKinds)(&v.ValueSet))
 }
 
 // IsNil implements gojay.MarshalerJSONObject.
-func (v *WorkspaceSymbolSymbolKind) IsNil() bool { return v == nil }
+func (v *SymbolKindCapabilities) IsNil() bool { return v == nil }
 
 // UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
-func (v *WorkspaceSymbolSymbolKind) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+func (v *SymbolKindCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyValueSet {
 		return dec.Array((*SymbolKinds)(&v.ValueSet))
 	}
@@ -347,12 +347,12 @@ func (v *WorkspaceSymbolSymbolKind) UnmarshalJSONObject(dec *gojay.Decoder, k st
 }
 
 // NKeys implements gojay.UnmarshalerJSONObject.
-func (v *WorkspaceSymbolSymbolKind) NKeys() int { return 1 }
+func (v *SymbolKindCapabilities) NKeys() int { return 1 }
 
-// compile time check whether the WorkspaceSymbolSymbolKind implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
+// compile time check whether the SymbolKindCapabilities implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
-	_ gojay.MarshalerJSONObject   = (*WorkspaceSymbolSymbolKind)(nil)
-	_ gojay.UnmarshalerJSONObject = (*WorkspaceSymbolSymbolKind)(nil)
+	_ gojay.MarshalerJSONObject   = (*SymbolKindCapabilities)(nil)
+	_ gojay.UnmarshalerJSONObject = (*SymbolKindCapabilities)(nil)
 )
 
 // SymbolTags represents a slice of SymbolTag.
@@ -385,15 +385,15 @@ func (v *SymbolTags) UnmarshalJSONArray(dec *gojay.Decoder) error {
 }
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
-func (v *WorkspaceSymbolTagSupport) MarshalJSONObject(enc *gojay.Encoder) {
+func (v *TagSupportCapabilities) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.ArrayKeyOmitEmpty(keyValueSet, (*SymbolTags)(&v.ValueSet))
 }
 
 // IsNil implements gojay.MarshalerJSONObject.
-func (v *WorkspaceSymbolTagSupport) IsNil() bool { return v == nil }
+func (v *TagSupportCapabilities) IsNil() bool { return v == nil }
 
 // UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
-func (v *WorkspaceSymbolTagSupport) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
+func (v *TagSupportCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	if k == keyValueSet {
 		return dec.Array((*SymbolTags)(&v.ValueSet))
 	}
@@ -401,12 +401,12 @@ func (v *WorkspaceSymbolTagSupport) UnmarshalJSONObject(dec *gojay.Decoder, k st
 }
 
 // NKeys implements gojay.UnmarshalerJSONObject.
-func (v *WorkspaceSymbolTagSupport) NKeys() int { return 1 }
+func (v *TagSupportCapabilities) NKeys() int { return 1 }
 
 // compile time check whether the WorkspaceSymbolTagSupport implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (
-	_ gojay.MarshalerJSONObject   = (*WorkspaceSymbolTagSupport)(nil)
-	_ gojay.UnmarshalerJSONObject = (*WorkspaceSymbolTagSupport)(nil)
+	_ gojay.MarshalerJSONObject   = (*TagSupportCapabilities)(nil)
+	_ gojay.UnmarshalerJSONObject = (*TagSupportCapabilities)(nil)
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
@@ -1254,7 +1254,7 @@ func (v *DocumentSymbolClientCapabilities) UnmarshalJSONObject(dec *gojay.Decode
 		return dec.Bool(&v.DynamicRegistration)
 	case keySymbolKind:
 		if v.SymbolKind == nil {
-			v.SymbolKind = &WorkspaceSymbolClientCapabilitiesKind{}
+			v.SymbolKind = &SymbolKindCapabilities{}
 		}
 		return dec.Object(v.SymbolKind)
 	case keyHierarchicalDocumentSymbolSupport:
@@ -1277,31 +1277,6 @@ func (v *DocumentSymbolClientCapabilities) NKeys() int { return 5 }
 var (
 	_ gojay.MarshalerJSONObject   = (*DocumentSymbolClientCapabilities)(nil)
 	_ gojay.UnmarshalerJSONObject = (*DocumentSymbolClientCapabilities)(nil)
-)
-
-// MarshalJSONObject implements gojay.MarshalerJSONObject.
-func (v *WorkspaceSymbolClientCapabilitiesKind) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ArrayKeyOmitEmpty(keyValueSet, (*SymbolKinds)(&v.ValueSet))
-}
-
-// IsNil implements gojay.MarshalerJSONObject.
-func (v *WorkspaceSymbolClientCapabilitiesKind) IsNil() bool { return v == nil }
-
-// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
-func (v *WorkspaceSymbolClientCapabilitiesKind) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
-	if k == keyValueSet {
-		return dec.Array((*SymbolKinds)(&v.ValueSet))
-	}
-	return nil
-}
-
-// NKeys returns the number of keys to unmarshal.
-func (v *WorkspaceSymbolClientCapabilitiesKind) NKeys() int { return 1 }
-
-// compile time check whether the WorkspaceSymbolClientCapabilitiesKind implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
-var (
-	_ gojay.MarshalerJSONObject   = (*WorkspaceSymbolClientCapabilitiesKind)(nil)
-	_ gojay.UnmarshalerJSONObject = (*WorkspaceSymbolClientCapabilitiesKind)(nil)
 )
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.

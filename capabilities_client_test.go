@@ -30,7 +30,7 @@ func testClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 			},
 			Symbol: &WorkspaceSymbolClientCapabilities{
 				DynamicRegistration: true,
-				SymbolKind: &WorkspaceSymbolSymbolKind{
+				SymbolKind: &SymbolKindCapabilities{
 					ValueSet: []SymbolKind{
 						SymbolKindFile,
 						SymbolKindModule,
@@ -111,7 +111,7 @@ func testClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 			},
 			DocumentSymbol: &DocumentSymbolClientCapabilities{
 				DynamicRegistration: true,
-				SymbolKind: &WorkspaceSymbolClientCapabilitiesKind{
+				SymbolKind: &SymbolKindCapabilities{
 					ValueSet: []SymbolKind{
 						SymbolKindFile,
 						SymbolKindModule,
@@ -327,7 +327,7 @@ func testWorkspaceClientCapabilities(t *testing.T, marshal marshalFunc, unmarsha
 		},
 		Symbol: &WorkspaceSymbolClientCapabilities{
 			DynamicRegistration: true,
-			SymbolKind: &WorkspaceSymbolSymbolKind{
+			SymbolKind: &SymbolKindCapabilities{
 				ValueSet: []SymbolKind{
 					SymbolKindFile,
 					SymbolKindModule,
@@ -606,7 +606,7 @@ func testTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmar
 		},
 		DocumentSymbol: &DocumentSymbolClientCapabilities{
 			DynamicRegistration: true,
-			SymbolKind: &WorkspaceSymbolClientCapabilitiesKind{
+			SymbolKind: &SymbolKindCapabilities{
 				ValueSet: []SymbolKind{
 					SymbolKindFile,
 					SymbolKindModule,
@@ -1796,7 +1796,7 @@ func testDocumentSymbolClientCapabilities(t *testing.T, marshal marshalFunc, unm
 	)
 	wantType := DocumentSymbolClientCapabilities{
 		DynamicRegistration: true,
-		SymbolKind: &WorkspaceSymbolClientCapabilitiesKind{
+		SymbolKind: &SymbolKindCapabilities{
 			ValueSet: []SymbolKind{
 				SymbolKindFile,
 				SymbolKindModule,

@@ -170,17 +170,17 @@ type WorkspaceSymbolClientCapabilities struct {
 	// DynamicRegistration is the Symbol request supports dynamic registration.
 	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
 
-	// SymbolKind is the specific capabilities for the SymbolKind in the "workspace/symbol" request.
-	SymbolKind *WorkspaceSymbolSymbolKind `json:"symbolKind,omitempty"`
+	// SymbolKindCapabilities is the specific capabilities for the SymbolKindCapabilities in the "workspace/symbol" request.
+	SymbolKind *SymbolKindCapabilities `json:"symbolKind,omitempty"`
 
 	// TagSupport is the client supports tags on `SymbolInformation`.
 	// Clients supporting tags have to handle unknown tags gracefully.
 	//
 	// @since 3.16.0
-	TagSupport *WorkspaceSymbolTagSupport `json:"tagSupport,omitempty"`
+	TagSupport *TagSupportCapabilities `json:"tagSupport,omitempty"`
 }
 
-type WorkspaceSymbolSymbolKind struct {
+type SymbolKindCapabilities struct {
 	// ValueSet is the symbol kind values the client supports. When this
 	// property exists the client also guarantees that it will
 	// handle values outside its set gracefully and falls back
@@ -192,7 +192,7 @@ type WorkspaceSymbolSymbolKind struct {
 	ValueSet []SymbolKind `json:"valueSet,omitempty"`
 }
 
-type WorkspaceSymbolTagSupport struct {
+type TagSupportCapabilities struct {
 	// ValueSet is the tags supported by the client.
 	ValueSet []SymbolTag `json:"valueSet,omitempty"`
 }
@@ -613,8 +613,8 @@ type DocumentSymbolClientCapabilities struct {
 	// DynamicRegistration whether document symbol supports dynamic registration.
 	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
 
-	// SymbolKind specific capabilities for the "SymbolKind".
-	SymbolKind *WorkspaceSymbolClientCapabilitiesKind `json:"symbolKind,omitempty"`
+	// SymbolKind specific capabilities for the "SymbolKindCapabilities".
+	SymbolKind *SymbolKindCapabilities `json:"symbolKind,omitempty"`
 
 	// HierarchicalDocumentSymbolSupport is the client support hierarchical document symbols.
 	HierarchicalDocumentSymbolSupport bool `json:"hierarchicalDocumentSymbolSupport,omitempty"`
@@ -631,18 +631,6 @@ type DocumentSymbolClientCapabilities struct {
 	//
 	// @since 3.16.0.
 	LabelSupport bool `json:"labelSupport,omitempty"`
-}
-
-// WorkspaceSymbolClientCapabilitiesKind is the DocumentSymbolClientCapabilities.SymbolKind capabilities.
-type WorkspaceSymbolClientCapabilitiesKind struct {
-	// ValueSet is the symbol kind values the client supports.
-	//
-	// When this property exists the client also guarantees that it will handle values outside its set gracefully
-	// and falls back to a default value when unknown.
-	//
-	// If this property is not present the client only supports the symbol kinds from "File" to "Array" as defined in
-	// the initial version of the protocol.
-	ValueSet []SymbolKind `json:"valueSet,omitempty"`
 }
 
 // DocumentSymbolClientCapabilitiesTagSupport TagSupport in the DocumentSymbolClientCapabilities.
