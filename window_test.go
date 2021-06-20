@@ -648,6 +648,8 @@ func testWorkDoneProgressCancelParams(t *testing.T, marshal marshalFunc, unmarsh
 }
 
 func TestMessageType_String(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
 		m    MessageType
@@ -692,6 +694,8 @@ func TestMessageType_String(t *testing.T) {
 }
 
 func TestMessageType_Enabled(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name  string
 		m     MessageType
@@ -730,6 +734,8 @@ func TestMessageType_Enabled(t *testing.T) {
 }
 
 func TestToMessageType(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name  string
 		level string

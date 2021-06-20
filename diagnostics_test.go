@@ -312,6 +312,8 @@ func testDiagnostic(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 }
 
 func TestDiagnosticSeverity_String(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
 		d    DiagnosticSeverity
@@ -356,6 +358,8 @@ func TestDiagnosticSeverity_String(t *testing.T) {
 }
 
 func TestDiagnosticTag_String(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
 		d    DiagnosticTag
@@ -443,8 +447,7 @@ func testDiagnosticRelatedInformation(t *testing.T, marshal marshalFunc, unmarsh
 
 				got, err := marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
-					t.Error(err)
-					return
+					t.Fatal(err)
 				}
 
 				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {

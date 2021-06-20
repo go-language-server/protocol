@@ -26,6 +26,7 @@ func ClientHandler(client Client, handler jsonrpc2.Handler) jsonrpc2.Handler {
 	h := func(ctx context.Context, reply jsonrpc2.Replier, req jsonrpc2.Request) error {
 		if ctx.Err() != nil {
 			xctx := xcontext.Detach(ctx)
+
 			return reply(xctx, nil, ErrRequestCancelled)
 		}
 
@@ -33,6 +34,7 @@ func ClientHandler(client Client, handler jsonrpc2.Handler) jsonrpc2.Handler {
 		if handled || err != nil {
 			return err
 		}
+
 		return handler(ctx, reply, req)
 	}
 
@@ -169,6 +171,7 @@ func (c *client) ShowMessageRequest(ctx context.Context, params *ShowMessageRequ
 	if err := Call(ctx, c.Conn, MethodWindowShowMessageRequest, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -209,6 +212,7 @@ func (c *client) ApplyEdit(ctx context.Context, params *ApplyWorkspaceEditParams
 	if err := Call(ctx, c.Conn, MethodWorkspaceApplyEdit, params, &result); err != nil {
 		return false, err
 	}
+
 	return result, nil
 }
 
@@ -225,6 +229,7 @@ func (c *client) Configuration(ctx context.Context, params *ConfigurationParams)
 	if err := Call(ctx, c.Conn, MethodWorkspaceConfiguration, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -240,5 +245,6 @@ func (c *client) WorkspaceFolders(ctx context.Context) (result []WorkspaceFolder
 	if err := Call(ctx, c.Conn, MethodWorkspaceWorkspaceFolders, nil, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }

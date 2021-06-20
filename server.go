@@ -297,6 +297,7 @@ func (s *server) Initialize(ctx context.Context, params *InitializeParams) (_ *I
 	if err := Call(ctx, s.Conn, MethodInitialize, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -385,6 +386,7 @@ func (s *server) CodeAction(ctx context.Context, params *CodeActionParams) (resu
 	if err := Call(ctx, s.Conn, MethodTextDocumentCodeAction, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -396,6 +398,7 @@ func (s *server) CodeLens(ctx context.Context, params *CodeLensParams) (result [
 	if err := Call(ctx, s.Conn, MethodTextDocumentCodeLens, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -408,6 +411,7 @@ func (s *server) CodeLensResolve(ctx context.Context, params *CodeLens) (_ *Code
 	if err := Call(ctx, s.Conn, MethodCodeLensResolve, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -424,6 +428,7 @@ func (s *server) ColorPresentation(ctx context.Context, params *ColorPresentatio
 	if err := Call(ctx, s.Conn, MethodTextDocumentColorPresentation, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -448,6 +453,7 @@ func (s *server) Completion(ctx context.Context, params *CompletionParams) (_ *C
 	if err := Call(ctx, s.Conn, MethodTextDocumentCompletion, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -460,6 +466,7 @@ func (s *server) CompletionResolve(ctx context.Context, params *CompletionItem) 
 	if err := Call(ctx, s.Conn, MethodCompletionItemResolve, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -475,6 +482,7 @@ func (s *server) Declaration(ctx context.Context, params *DeclarationParams) (re
 	if err := Call(ctx, s.Conn, MethodTextDocumentDeclaration, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -490,6 +498,7 @@ func (s *server) Definition(ctx context.Context, params *DefinitionParams) (resu
 	if err := Call(ctx, s.Conn, MethodTextDocumentDefinition, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -590,6 +599,7 @@ func (s *server) DocumentColor(ctx context.Context, params *DocumentColorParams)
 	if err := Call(ctx, s.Conn, MethodTextDocumentDocumentColor, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -606,6 +616,7 @@ func (s *server) DocumentHighlight(ctx context.Context, params *DocumentHighligh
 	if err := Call(ctx, s.Conn, MethodTextDocumentDocumentHighlight, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -617,6 +628,7 @@ func (s *server) DocumentLink(ctx context.Context, params *DocumentLinkParams) (
 	if err := Call(ctx, s.Conn, MethodTextDocumentDocumentLink, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -629,6 +641,7 @@ func (s *server) DocumentLinkResolve(ctx context.Context, params *DocumentLink) 
 	if err := Call(ctx, s.Conn, MethodDocumentLinkResolve, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -642,6 +655,7 @@ func (s *server) DocumentSymbol(ctx context.Context, params *DocumentSymbolParam
 	if err := Call(ctx, s.Conn, MethodTextDocumentDocumentSymbol, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -656,6 +670,7 @@ func (s *server) ExecuteCommand(ctx context.Context, params *ExecuteCommandParam
 	if err := Call(ctx, s.Conn, MethodWorkspaceExecuteCommand, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -669,6 +684,7 @@ func (s *server) FoldingRanges(ctx context.Context, params *FoldingRangeParams) 
 	if err := Call(ctx, s.Conn, MethodTextDocumentFoldingRange, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -680,6 +696,7 @@ func (s *server) Formatting(ctx context.Context, params *DocumentFormattingParam
 	if err := Call(ctx, s.Conn, MethodTextDocumentFormatting, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -692,6 +709,7 @@ func (s *server) Hover(ctx context.Context, params *HoverParams) (_ *Hover, err 
 	if err := Call(ctx, s.Conn, MethodTextDocumentHover, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -705,6 +723,7 @@ func (s *server) Implementation(ctx context.Context, params *ImplementationParam
 	if err := Call(ctx, s.Conn, MethodTextDocumentImplementation, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -716,6 +735,7 @@ func (s *server) OnTypeFormatting(ctx context.Context, params *DocumentOnTypeFor
 	if err := Call(ctx, s.Conn, MethodTextDocumentOnTypeFormatting, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -729,6 +749,7 @@ func (s *server) PrepareRename(ctx context.Context, params *PrepareRenameParams)
 	if err := Call(ctx, s.Conn, MethodTextDocumentPrepareRename, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -740,6 +761,7 @@ func (s *server) RangeFormatting(ctx context.Context, params *DocumentRangeForma
 	if err := Call(ctx, s.Conn, MethodTextDocumentRangeFormatting, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -751,6 +773,7 @@ func (s *server) References(ctx context.Context, params *ReferenceParams) (resul
 	if err := Call(ctx, s.Conn, MethodTextDocumentReferences, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -762,6 +785,7 @@ func (s *server) Rename(ctx context.Context, params *RenameParams) (result *Work
 	if err := Call(ctx, s.Conn, MethodTextDocumentRename, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -774,6 +798,7 @@ func (s *server) SignatureHelp(ctx context.Context, params *SignatureHelpParams)
 	if err := Call(ctx, s.Conn, MethodTextDocumentSignatureHelp, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -785,6 +810,7 @@ func (s *server) Symbols(ctx context.Context, params *WorkspaceSymbolParams) (re
 	if err := Call(ctx, s.Conn, MethodWorkspaceSymbol, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -800,6 +826,7 @@ func (s *server) TypeDefinition(ctx context.Context, params *TypeDefinitionParam
 	if err := Call(ctx, s.Conn, MethodTextDocumentTypeDefinition, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -823,6 +850,7 @@ func (s *server) WillSaveWaitUntil(ctx context.Context, params *WillSaveTextDocu
 	if err := Call(ctx, s.Conn, MethodTextDocumentWillSaveWaitUntil, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -836,6 +864,7 @@ func (s *server) ShowDocument(ctx context.Context, params *ShowDocumentParams) (
 	if err := Call(ctx, s.Conn, MethodShowDocument, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -853,6 +882,7 @@ func (s *server) WillCreateFiles(ctx context.Context, params *CreateFilesParams)
 	if err := Call(ctx, s.Conn, MethodWillCreateFiles, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -880,6 +910,7 @@ func (s *server) WillRenameFiles(ctx context.Context, params *RenameFilesParams)
 	if err := Call(ctx, s.Conn, MethodWillRenameFiles, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -907,6 +938,7 @@ func (s *server) WillDeleteFiles(ctx context.Context, params *DeleteFilesParams)
 	if err := Call(ctx, s.Conn, MethodWillDeleteFiles, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -950,6 +982,7 @@ func (s *server) PrepareCallHierarchy(ctx context.Context, params *CallHierarchy
 	if err := Call(ctx, s.Conn, MethodTextDocumentPrepareCallHierarchy, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -965,6 +998,7 @@ func (s *server) IncomingCalls(ctx context.Context, params *CallHierarchyIncomin
 	if err := Call(ctx, s.Conn, MethodCallHierarchyIncomingCalls, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -980,6 +1014,7 @@ func (s *server) OutgoingCalls(ctx context.Context, params *CallHierarchyOutgoin
 	if err := Call(ctx, s.Conn, MethodCallHierarchyOutgoingCalls, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -997,6 +1032,7 @@ func (s *server) SemanticTokensFull(ctx context.Context, params *SemanticTokensP
 	if err := Call(ctx, s.Conn, MethodSemanticTokensFull, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -1014,6 +1050,7 @@ func (s *server) SemanticTokensFullDelta(ctx context.Context, params *SemanticTo
 	if err := Call(ctx, s.Conn, MethodSemanticTokensFullDelta, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -1032,6 +1069,7 @@ func (s *server) SemanticTokensRange(ctx context.Context, params *SemanticTokens
 	if err := Call(ctx, s.Conn, MethodSemanticTokensRange, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -1064,6 +1102,7 @@ func (s *server) LinkedEditingRange(ctx context.Context, params *LinkedEditingRa
 	if err := Call(ctx, s.Conn, MethodLinkedEditingRange, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -1081,6 +1120,7 @@ func (s *server) Moniker(ctx context.Context, params *MonikerParams) (result []M
 	if err := Call(ctx, s.Conn, MethodMoniker, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -1093,5 +1133,6 @@ func (s *server) Request(ctx context.Context, method string, params interface{})
 	if err := Call(ctx, s.Conn, method, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }

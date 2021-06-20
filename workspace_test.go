@@ -853,6 +853,8 @@ func testFileEvent(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 }
 
 func TestFileChangeType_String(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
 		k    FileChangeType
@@ -1009,6 +1011,8 @@ func testDidChangeWatchedFilesRegistrationOptions(t *testing.T, marshal marshalF
 }
 
 func TestWatchKind_String(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
 		k    WatchKind

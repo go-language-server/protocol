@@ -646,6 +646,7 @@ var (
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v TextEditsMap) MarshalJSONObject(enc *gojay.Encoder) {
 	for key, value := range v {
+		value := value
 		enc.ArrayKeyOmitEmpty(string(key), (*TextEdits)(&value))
 	}
 }
@@ -710,6 +711,7 @@ var (
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v ChangeAnnotationsMap) MarshalJSONObject(enc *gojay.Encoder) {
 	for key, value := range v {
+		value := value
 		enc.ObjectKeyOmitEmpty(string(key), &value)
 	}
 }

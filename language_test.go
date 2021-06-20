@@ -139,6 +139,8 @@ func testCompletionParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 }
 
 func TestCompletionTriggerKind_String(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
 		k    CompletionTriggerKind
@@ -392,6 +394,8 @@ func testCompletionList(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 }
 
 func TestInsertTextFormat_String(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
 		k    InsertTextFormat
@@ -521,6 +525,8 @@ func testInsertReplaceEdit(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 }
 
 func TestInsertTextMode_String(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
 		k    InsertTextMode
@@ -711,6 +717,8 @@ func testCompletionItem(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 }
 
 func TestCompletionItemKind_String(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
 		k    CompletionItemKind
@@ -860,6 +868,8 @@ func TestCompletionItemKind_String(t *testing.T) {
 }
 
 func TestCompletionItemTag_String(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
 		k    CompletionItemTag
@@ -1399,6 +1409,8 @@ func testSignatureHelpParams(t *testing.T, marshal marshalFunc, unmarshal unmars
 }
 
 func TestSignatureHelpTriggerKind_String(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
 		k    SignatureHelpTriggerKind
@@ -2138,6 +2150,8 @@ func testDocumentHighlight(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 }
 
 func TestDocumentHighlightKind_String(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
 		k    DocumentHighlightKind
@@ -2291,6 +2305,8 @@ func testDocumentSymbolParams(t *testing.T, marshal marshalFunc, unmarshal unmar
 }
 
 func TestSymbolKind_String(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
 		k    SymbolKind
@@ -2445,6 +2461,8 @@ func TestSymbolKind_String(t *testing.T) {
 }
 
 func TestSymbolTag_String(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
 		k    SymbolTag
@@ -2925,6 +2943,8 @@ func testCodeActionParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 }
 
 func TestCodeActionKind_String(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
 		k    CodeActionKind
@@ -5592,6 +5612,8 @@ func testFoldingRangeParams(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 }
 
 func TestFoldingRangeKind_String(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
 		s    FoldingRangeKind

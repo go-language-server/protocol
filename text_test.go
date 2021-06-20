@@ -218,6 +218,8 @@ func testDidChangeTextDocumentParams(t *testing.T, marshal marshalFunc, unmarsha
 }
 
 func TestTextDocumentSaveReason_String(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
 		k    TextDocumentSaveReason

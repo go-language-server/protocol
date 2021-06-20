@@ -18,7 +18,7 @@ import (
 )
 
 // clientDispatch implements jsonrpc2.Handler.
-//nolint:gocognit,funlen
+//nolint:funlen,cyclop
 func clientDispatch(ctx context.Context, client Client, reply jsonrpc2.Replier, req jsonrpc2.Request) (handled bool, err error) {
 	if ctx.Err() != nil {
 		return true, reply(ctx, nil, ErrRequestCancelled)

@@ -324,6 +324,7 @@ const (
 )
 
 // String implements fmt.Stringer.
+//nolint:cyclop
 func (k CompletionItemKind) String() string {
 	switch k {
 	case CompletionItemKindText:
@@ -729,6 +730,7 @@ const (
 )
 
 // String implements fmt.Stringer.
+//nolint:cyclop
 func (k SymbolKind) String() string {
 	switch k {
 	case SymbolKindFile:

@@ -35,6 +35,7 @@ func (s *loggingStream) Read(ctx context.Context) (jsonrpc2.Message, int64, erro
 	if err == nil {
 		s.logCommon(msg, true)
 	}
+
 	return msg, count, err
 }
 
@@ -42,6 +43,7 @@ func (s *loggingStream) Read(ctx context.Context) (jsonrpc2.Message, int64, erro
 func (s *loggingStream) Write(ctx context.Context, msg jsonrpc2.Message) (int64, error) {
 	s.logCommon(msg, false)
 	count, err := s.stream.Write(ctx, msg)
+
 	return count, err
 }
 
@@ -75,6 +77,7 @@ func (m *mapped) client(id string) req {
 	v := m.clientCalls[id]
 	delete(m.clientCalls, id)
 	m.mu.Unlock()
+
 	return v
 }
 
@@ -83,6 +86,7 @@ func (m *mapped) server(id string) req {
 	v := m.serverCalls[id]
 	delete(m.serverCalls, id)
 	m.mu.Unlock()
+
 	return v
 }
 
@@ -135,8 +139,10 @@ func (s *loggingStream) logCommon(msg jsonrpc2.Message, isRead bool) {
 		id := fmt.Sprint(msg.ID())
 		if err := msg.Err(); err != nil {
 			fmt.Fprintf(s.log, "[Error - %s] %s #%s %s%s", pastTense, tmfmt, id, err, eor)
+
 			return
 		}
+
 		cc := get(id)
 		elapsed := tm.Sub(cc.start)
 		fmt.Fprintf(&buf, "%s response '%s - (%s)' in %dms.\n",

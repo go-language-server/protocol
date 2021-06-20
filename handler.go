@@ -26,6 +26,7 @@ func Call(ctx context.Context, conn jsonrpc2.Conn, method string, params, result
 	if ctx.Err() != nil {
 		notifyCancel(ctx, conn, id)
 	}
+
 	return err
 }
 

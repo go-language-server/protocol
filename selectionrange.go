@@ -30,6 +30,7 @@ func (v EnableSelectionRange) Value() interface{} {
 // NewEnableSelectionRange returns the new EnableSelectionRange underlying types SelectionRangeProviderOptions.
 func NewEnableSelectionRange(enable bool) SelectionRangeProviderOptions {
 	v := EnableSelectionRange(enable)
+
 	return &v
 }
 
@@ -53,6 +54,7 @@ func NewSelectionRangeOptions(enableWorkDoneProgress bool) SelectionRangeProvide
 			WorkDoneProgress: enableWorkDoneProgress,
 		},
 	}
+
 	return &v
 }
 
@@ -86,6 +88,7 @@ func NewSelectionRangeRegistrationOptions(enableWorkDoneProgress bool, selector 
 			ID: id,
 		},
 	}
+
 	return &v
 }
 

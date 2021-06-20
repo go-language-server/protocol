@@ -2414,6 +2414,8 @@ func testTextDocumentItem(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 }
 
 func TestToLanguageIdentifier(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
 		ft   string

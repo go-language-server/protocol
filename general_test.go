@@ -3416,6 +3416,8 @@ func testDocumentColorRegistrationOptions(t *testing.T, marshal marshalFunc, unm
 }
 
 func TestPrepareSupportDefaultBehavior_String(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
 		k    PrepareSupportDefaultBehavior
@@ -4215,6 +4217,8 @@ func testShowDocumentResult(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 }
 
 func TestTextDocumentSyncKind_String(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
 		k    TextDocumentSyncKind

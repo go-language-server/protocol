@@ -66,6 +66,7 @@ func (v *ProgressToken) MarshalJSON() ([]byte, error) {
 	if v.name != "" {
 		return json.Marshal(v.name)
 	}
+
 	return json.Marshal(v.number)
 }
 
@@ -75,5 +76,6 @@ func (v *ProgressToken) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &v.number); err == nil {
 		return nil
 	}
+
 	return json.Unmarshal(data, &v.name)
 }
