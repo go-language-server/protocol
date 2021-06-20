@@ -1,6 +1,5 @@
-// Copyright 2021 The Go Language Server Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
+// SPDX-FileCopyrightText: Copyright 2021 The Go Language Server Authors
+// SPDX-License-Identifier: BSD-3-Clause
 
 //go:build !gojay
 // +build !gojay
@@ -67,6 +66,7 @@ func (v *ProgressToken) MarshalJSON() ([]byte, error) {
 	if v.name != "" {
 		return json.Marshal(v.name)
 	}
+
 	return json.Marshal(v.number)
 }
 
@@ -76,5 +76,6 @@ func (v *ProgressToken) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &v.number); err == nil {
 		return nil
 	}
+
 	return json.Unmarshal(data, &v.name)
 }

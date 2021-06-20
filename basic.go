@@ -1,12 +1,9 @@
-// Copyright 2019 The Go Language Server Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
+// SPDX-FileCopyrightText: Copyright 2019 The Go Language Server Authors
+// SPDX-License-Identifier: BSD-3-Clause
 
 package protocol
 
 import (
-	"strconv"
-
 	"go.lsp.dev/uri"
 )
 
@@ -28,23 +25,39 @@ var EOL = []string{"\n", "\r\n", "\r"}
 
 // Position represents a text document expressed as zero-based line and zero-based character offset.
 //
-// A position is between two characters like an "insert" cursor in a editor.
+// The offsets are based on a UTF-16 string representation.
+// So a string of the form "a𐐀b" the character offset of the character "a" is 0,
+// the character offset of "𐐀" is 1 and the character offset of "b" is 3 since 𐐀 is represented using two code
+// units in UTF-16.
+//
+// Positions are line end character agnostic. So you can not specify a position that
+// denotes "\r|\n" or "\n|" where "|" represents the character offset.
+//
+// Position is between two characters like an "insert" cursor in a editor.
+// Special values like for example "-1" to denote the end of a line are not supported.
 type Position struct {
 	// Line position in a document (zero-based).
+	//
+	// If a line number is greater than the number of lines in a document, it defaults back to the number of lines in
+	// the document.
+	// If a line number is negative, it defaults to 0.
 	Line uint32 `json:"line"`
 
-	// Character offset on a line in a document (zero-based). Assuming that the line is
-	// represented as a string, the `character` value represents the gap between the
-	// `character` and `character + 1`.
-	// If the character value is greater than the line length it defaults back to the
-	// line length.
+	// Character offset on a line in a document (zero-based).
+	//
+	// Assuming that the line is represented as a string, the Character value represents the gap between the
+	// "character" and "character + 1".
+	//
+	// If the character value is greater than the line length it defaults back to the line length.
+	// If a line number is negative, it defaults to 0.
 	Character uint32 `json:"character"`
 }
 
 // Range represents a text document expressed as (zero-based) start and end positions.
 //
 // A range is comparable to a selection in an editor. Therefore the end position is exclusive.
-// If you want to specify a range that contains a line including the line ending character(s) then use an end position denoting the start of the next line.
+// If you want to specify a range that contains a line including the line ending character(s) then use an end position
+// denoting the start of the next line.
 type Range struct {
 	// Start is the range's start position.
 	Start Position `json:"start"`
@@ -62,155 +75,36 @@ type Location struct {
 // LocationLink represents a link between a source and a target location.
 type LocationLink struct {
 	// OriginSelectionRange span of the origin of this link.
-	// Used as the underlined span for mouse interaction. Defaults to the word range at
-	// the mouse position.
+	//
+	// Used as the underlined span for mouse interaction. Defaults to the word range at the mouse position.
 	OriginSelectionRange *Range `json:"originSelectionRange,omitempty"`
 
 	// TargetURI is the target resource identifier of this link.
 	TargetURI DocumentURI `json:"targetUri"`
 
-	// TargetRange is the full target range of this link. If the target for example is a symbol then target range is the
-	// range enclosing this symbol not including leading/trailing whitespace but everything else
-	// like comments. This information is typically used to highlight the range in the editor.
+	// TargetRange is the full target range of this link.
+	//
+	// If the target for example is a symbol then target range is the range enclosing this symbol not including
+	// leading/trailing whitespace but everything else like comments.
+	//
+	// This information is typically used to highlight the range in the editor.
 	TargetRange Range `json:"targetRange"`
 
-	// TargetSelectionRange is the range that should be selected and revealed when this link is being followed, e.g the name of a function.
-	// Must be contained by the the `targetRange`. See also `DocumentSymbol#range`
+	// TargetSelectionRange is the range that should be selected and revealed when this link is being followed,
+	// e.g the name of a function.
+	//
+	// Must be contained by the the TargetRange. See also DocumentSymbol#range
 	TargetSelectionRange Range `json:"targetSelectionRange"`
-}
-
-// CodeDescription is the structure to capture a description for an error code.
-//
-// @since 3.16.0.
-type CodeDescription struct {
-	// Href an URI to open with more information about the diagnostic error.
-	Href URI `json:"href"`
-}
-
-// Diagnostic represents a diagnostic, such as a compiler error or warning.
-//
-// Diagnostic objects are only valid in the scope of a resource.
-type Diagnostic struct {
-	// Range is the range at which the message applies.
-	Range Range `json:"range"`
-
-	// Severity is the diagnostic's severity. Can be omitted. If omitted it is up to the
-	// client to interpret diagnostics as error, warning, info or hint.
-	Severity DiagnosticSeverity `json:"severity,omitempty"`
-
-	// Code is the diagnostic's code, which might appear in the user interface.
-	Code interface{} `json:"code,omitempty"` // int32 | string;
-
-	// CodeDescription an optional property to describe the error code.
-	//
-	// @since 3.16.0.
-	CodeDescription *CodeDescription `json:"codeDescription,omitempty"`
-
-	// Source a human-readable string describing the source of this
-	// diagnostic, e.g. 'typescript' or 'super lint'.
-	Source string `json:"source,omitempty"`
-
-	// Message is the diagnostic's message.
-	Message string `json:"message"`
-
-	// Tags is the additional metadata about the diagnostic.
-	//
-	// @since 3.15.0.
-	Tags []DiagnosticTag `json:"tags,omitempty"`
-
-	// RelatedInformation an array of related diagnostic information, e.g. when symbol-names within
-	// a scope collide all definitions can be marked via this property.
-	RelatedInformation []DiagnosticRelatedInformation `json:"relatedInformation,omitempty"`
-
-	// Data is a data entry field that is preserved between a
-	// "textDocument/publishDiagnostics" notification and
-	// "textDocument/codeAction" request.
-	//
-	// @since 3.16.0.
-	Data interface{} `json:"data,omitempty"`
-}
-
-// DiagnosticSeverity indicates the severity of a Diagnostic message.
-type DiagnosticSeverity float64
-
-const (
-	// DiagnosticSeverityError reports an error.
-	DiagnosticSeverityError DiagnosticSeverity = 1
-
-	// DiagnosticSeverityWarning reports a warning.
-	DiagnosticSeverityWarning DiagnosticSeverity = 2
-
-	// DiagnosticSeverityInformation reports an information.
-	DiagnosticSeverityInformation DiagnosticSeverity = 3
-
-	// DiagnosticSeverityHint reports a hint.
-	DiagnosticSeverityHint DiagnosticSeverity = 4
-)
-
-// String implements fmt.Stringer.
-func (d DiagnosticSeverity) String() string {
-	switch d {
-	case DiagnosticSeverityError:
-		return "Error"
-	case DiagnosticSeverityWarning:
-		return "Warning"
-	case DiagnosticSeverityInformation:
-		return "Information"
-	case DiagnosticSeverityHint:
-		return "Hint"
-	default:
-		return strconv.FormatFloat(float64(d), 'f', -10, 64)
-	}
-}
-
-// DiagnosticTag is the diagnostic tags.
-//
-// @since 3.15.0.
-type DiagnosticTag float64
-
-// list of DiagnosticTag.
-const (
-	// DiagnosticTagUnnecessary unused or unnecessary code.
-	//
-	// Clients are allowed to render diagnostics with this tag faded out instead of having
-	// an error squiggle.
-	DiagnosticTagUnnecessary DiagnosticTag = 1
-
-	// DiagnosticTagDeprecated deprecated or obsolete code.
-	//
-	// Clients are allowed to rendered diagnostics with this tag strike through.
-	DiagnosticTagDeprecated DiagnosticTag = 2
-)
-
-// String implements fmt.Stringer.
-func (d DiagnosticTag) String() string {
-	switch d {
-	case DiagnosticTagUnnecessary:
-		return "Unnecessary"
-	case DiagnosticTagDeprecated:
-		return "Deprecated"
-	default:
-		return strconv.FormatFloat(float64(d), 'f', -10, 64)
-	}
-}
-
-// DiagnosticRelatedInformation represents a related message and source code location for a diagnostic.
-//
-// This should be used to point to code locations that cause or related to a diagnostics, e.g when duplicating
-// a symbol in a scope.
-type DiagnosticRelatedInformation struct {
-	// Location is the location of this related diagnostic information.
-	Location Location `json:"location"`
-
-	// Message is the message of this related diagnostic information.
-	Message string `json:"message"`
 }
 
 // Command represents a reference to a command. Provides a title which will be used to represent a command in the UI.
 //
 // Commands are identified by a string identifier.
-// The recommended way to handle commands is to implement their execution on the server side if the client and server provides the corresponding capabilities.
-// Alternatively the tool extension code could handle the command. The protocol currently doesn't specify a set of well-known commands.
+// The recommended way to handle commands is to implement their execution on the server side if the client and
+// server provides the corresponding capabilities.
+//
+// Alternatively the tool extension code could handle the command. The protocol currently doesn't specify
+// a set of well-known commands.
 type Command struct {
 	// Title of the command, like `save`.
 	Title string `json:"title"`
@@ -222,12 +116,24 @@ type Command struct {
 	Arguments []interface{} `json:"arguments,omitempty"`
 }
 
+// TextEdit is a textual edit applicable to a text document.
+type TextEdit struct {
+	// Range is the range of the text document to be manipulated.
+	//
+	// To insert text into a document create a range where start == end.
+	Range Range `json:"range"`
+
+	// NewText is the string to be inserted. For delete operations use an
+	// empty string.
+	NewText string `json:"newText"`
+}
+
 // ChangeAnnotation is the additional information that describes document changes.
 //
 // @since 3.16.0.
 type ChangeAnnotation struct {
-	// Label a human-readable string describing the actual change. The string
-	// is rendered prominent in the user interface.
+	// Label a human-readable string describing the actual change.
+	// The string is rendered prominent in the user interface.
 	Label string `json:"label"`
 
 	// NeedsConfirmation is a flag which indicates that user confirmation is needed
@@ -255,30 +161,23 @@ type AnnotatedTextEdit struct {
 	AnnotationID ChangeAnnotationIdentifier `json:"annotationId"`
 }
 
-// TextEdit is a textual edit applicable to a text document.
-type TextEdit struct {
-	// Range is the range of the text document to be manipulated.
-	// To insert text into a document create a range where start === end.
-	Range Range `json:"range"`
-
-	// NewText is the string to be inserted. For delete operations use an
-	// empty string.
-	NewText string `json:"newText"`
-}
-
 // TextDocumentEdit describes textual changes on a single text document.
 //
-// The text document is referred to as a VersionedTextDocumentIdentifier to allow clients to check the text document version before an edit is applied.
-// A TextDocumentEdit describes all changes on a version Si and after they are applied move the document to version Si+1.
-// So the creator of a TextDocumentEdit doesn't need to sort the array or do any kind of ordering. However the edits must be non overlapping.
+// The TextDocument is referred to as a OptionalVersionedTextDocumentIdentifier to allow clients to check the
+// text document version before an edit is applied.
+//
+// TextDocumentEdit describes all changes on a version "Si" and after they are applied move the document to
+// version "Si+1".
+// So the creator of a TextDocumentEdit doesn't need to sort the array or do any kind of ordering. However the
+// edits must be non overlapping.
 type TextDocumentEdit struct {
 	// TextDocument is the text document to change.
-	TextDocument VersionedTextDocumentIdentifier `json:"textDocument"`
+	TextDocument OptionalVersionedTextDocumentIdentifier `json:"textDocument"`
 
 	// Edits is the edits to be applied.
 	//
 	// @since 3.16.0 - support for AnnotatedTextEdit.
-	// This is guarded by the client capability "workspace.workspaceEdit.changeAnnotationSupport".
+	// This is guarded by the client capability Workspace.WorkspaceEdit.ChangeAnnotationSupport.
 	Edits []TextEdit `json:"edits"` // []TextEdit | []AnnotatedTextEdit
 }
 
@@ -380,7 +279,8 @@ type DeleteFile struct {
 // WorkspaceEdit represent a changes to many resources managed in the workspace.
 //
 // The edit should either provide changes or documentChanges.
-// If the client can handle versioned document edits and if documentChanges are present, the latter are preferred over changes.
+// If the client can handle versioned document edits and if documentChanges are present, the latter are preferred over
+// changes.
 type WorkspaceEdit struct {
 	// Changes holds changes to existing resources.
 	Changes map[DocumentURI][]TextEdit `json:"changes,omitempty"`
@@ -678,6 +578,8 @@ func ToLanguageIdentifier(ft string) LanguageIdentifier {
 }
 
 // VersionedTextDocumentIdentifier represents an identifier to denote a specific version of a text document.
+//
+// This information usually flows from the client to the server.
 type VersionedTextDocumentIdentifier struct {
 	TextDocumentIdentifier
 
@@ -688,7 +590,8 @@ type VersionedTextDocumentIdentifier struct {
 	Version int32 `json:"version"`
 }
 
-// OptionalVersionedTextDocumentIdentifier represents an identifier which optionally denotes a specific version of a text document.
+// OptionalVersionedTextDocumentIdentifier represents an identifier which optionally denotes a specific version of
+// a text document.
 //
 // This information usually flows from the server to the client.
 //
@@ -708,7 +611,14 @@ type OptionalVersionedTextDocumentIdentifier struct {
 	Version *int32 `json:"version"` // int32 | null
 }
 
-// TextDocumentPositionParams is a parameter literal used in requests to pass a text document and a position inside that document.
+// TextDocumentPositionParams is a parameter literal used in requests to pass a text document and a position
+// inside that document.
+//
+// It is up to the client to decide how a selection is converted into a position when issuing a request for a text
+// document.
+//
+// The client can for example honor or ignore the selection direction to make LSP request consistent with features
+// implemented internally.
 type TextDocumentPositionParams struct {
 	// TextDocument is the text document.
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
@@ -730,12 +640,18 @@ type DocumentFilter struct {
 	// Pattern a glob pattern, like `*.{ts,js}`.
 	//
 	// Glob patterns can have the following syntax:
-	// - `*` to match one or more characters in a path segment
-	// - `?` to match on one character in a path segment
-	// - `**` to match any number of path segments, including none
-	// - `{}` to group conditions (e.g. `**​/*.{ts,js}` matches all TypeScript and JavaScript files)
-	// - `[]` to declare a range of characters to match in a path segment (e.g., `example.[0-9]` to match on `example.0`, `example.1`, …)
-	// - `[!...]` to negate a range of characters to match in a path segment (e.g., `example.[!0-9]` to match on `example.a`, `example.b`, but not `example.0`)
+	//  "*"
+	// "*" to match one or more characters in a path segment
+	//  "?"
+	// "?" to match on one character in a path segment
+	//  "**"
+	// "**" to match any number of path segments, including none
+	//  "{}"
+	// "{}" to group conditions (e.g. `**/*.{ts,js}` matches all TypeScript and JavaScript files)
+	//  "[]"
+	// "[]" to declare a range of characters to match in a path segment (e.g., `example.[0-9]` to match on `example.0`, `example.1`, …)
+	//  "[!...]"
+	// "[!...]" to negate a range of characters to match in a path segment (e.g., `example.[!0-9]` to match on `example.a`, `example.b`, but not `example.0`)
 	Pattern string `json:"pattern,omitempty"`
 }
 
@@ -766,18 +682,17 @@ const (
 // See https://help.github.com/articles/creating-and-highlighting-code-blocks/#syntax-highlighting
 //
 // Here is an example how such a string can be constructed using JavaScript / TypeScript:
-// ```typescript
-//  * let markdown: MarkdownContent = {
-//  *  kind: MarkupKind.Markdown,
-//  *	value: [
-//  *		'# Header',
-//  *		'Some text',
-//  *		'```typescript',
-// 		'someCode();',
-// 		'```'
-//  *	].join('\n')
-//  * };
-//  * ```
+//
+//  let markdown: MarkdownContent = {
+//   kind: MarkupKind.Markdown,
+//    value: [
+//    	'# Header',
+//    	'Some text',
+//    	'```typescript',
+//    'someCode();',
+//    '```'
+//    ].join('\n')
+//  };
 //
 // NOTE: clients might sanitize the return markdown. A client could decide to
 // remove HTML from the markdown to avoid script execution.

@@ -1,6 +1,5 @@
-// Copyright 2019 The Go Language Server Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
+// SPDX-FileCopyrightText: Copyright 2019 The Go Language Server Authors
+// SPDX-License-Identifier: BSD-3-Clause
 
 //go:build gojay
 // +build gojay
@@ -20,7 +19,7 @@ import (
 )
 
 // clientDispatch implements jsonrpc2.Conn.
-//nolint:funlen,gocognit
+//nolint:funlen
 func clientDispatch(ctx context.Context, client Client, reply jsonrpc2.Replier, req jsonrpc2.Request) (handled bool, err error) {
 	if ctx.Err() != nil {
 		return true, reply(ctx, nil, ErrRequestCancelled)

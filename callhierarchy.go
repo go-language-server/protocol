@@ -1,6 +1,5 @@
-// Copyright 2021 The Go Language Server Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
+// SPDX-FileCopyrightText: Copyright 2021 The Go Language Server Authors
+// SPDX-License-Identifier: BSD-3-Clause
 
 package protocol
 
@@ -8,26 +7,12 @@ package protocol
 //
 // @since 3.16.0.
 type CallHierarchy struct {
-	// DynamicRegistration whether implementation supports dynamic registration. If this is set to "true"
-	// the client supports the new TextDocumentRegistrationOptions && StaticRegistrationOptions
-	// return value for the corresponding server capability as well.
+	// DynamicRegistration whether implementation supports dynamic registration.
+	//
+	// If this is set to "true" the client supports the new
+	// TextDocumentRegistrationOptions && StaticRegistrationOptions return
+	// value for the corresponding server capability as well.
 	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
-}
-
-// CallHierarchyOptions option of CallHierarchy.
-//
-// @since 3.16.0.
-type CallHierarchyOptions struct {
-	WorkDoneProgressOptions
-}
-
-// CallHierarchyRegistrationOptions registration options of CallHierarchy.
-//
-// @since 3.16.0.
-type CallHierarchyRegistrationOptions struct {
-	TextDocumentRegistrationOptions
-	CallHierarchyOptions
-	StaticRegistrationOptions
 }
 
 // CallHierarchyPrepareParams params of CallHierarchyPrepare.

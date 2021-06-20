@@ -1,6 +1,5 @@
-// Copyright 2021 The Go Language Server Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
+// SPDX-FileCopyrightText: Copyright 2021 The Go Language Server Authors
+// SPDX-License-Identifier: BSD-3-Clause
 
 package protocol
 
@@ -9,6 +8,7 @@ package protocol
 // @since 3.16.0.
 type SemanticTokenTypes string
 
+// list of SemanticTokenTypes.
 const (
 	SemanticTokenNamespace SemanticTokenTypes = "namespace"
 
@@ -42,6 +42,7 @@ const (
 // @since 3.16.0.
 type SemanticTokenModifiers string
 
+// list of SemanticTokenModifiers.
 const (
 	SemanticTokenModifierDeclaration    SemanticTokenModifiers = "declaration"
 	SemanticTokenModifierDefinition     SemanticTokenModifiers = "definition"

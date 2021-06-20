@@ -1,6 +1,5 @@
-// Copyright 2021 The Go Language Server Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
+// SPDX-FileCopyrightText: Copyright 2021 The Go Language Server Authors
+// SPDX-License-Identifier: BSD-3-Clause
 
 package protocol
 
@@ -31,6 +30,7 @@ func (v EnableSelectionRange) Value() interface{} {
 // NewEnableSelectionRange returns the new EnableSelectionRange underlying types SelectionRangeProviderOptions.
 func NewEnableSelectionRange(enable bool) SelectionRangeProviderOptions {
 	v := EnableSelectionRange(enable)
+
 	return &v
 }
 
@@ -54,6 +54,7 @@ func NewSelectionRangeOptions(enableWorkDoneProgress bool) SelectionRangeProvide
 			WorkDoneProgress: enableWorkDoneProgress,
 		},
 	}
+
 	return &v
 }
 
@@ -87,6 +88,7 @@ func NewSelectionRangeRegistrationOptions(enableWorkDoneProgress bool, selector 
 			ID: id,
 		},
 	}
+
 	return &v
 }
 

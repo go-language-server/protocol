@@ -1,6 +1,5 @@
-// Copyright 2019 The Go Language Server Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
+// SPDX-FileCopyrightText: Copyright 2019 The Go Language Server Authors
+// SPDX-License-Identifier: BSD-3-Clause
 
 package protocol
 
@@ -27,6 +26,7 @@ func ClientHandler(client Client, handler jsonrpc2.Handler) jsonrpc2.Handler {
 	h := func(ctx context.Context, reply jsonrpc2.Replier, req jsonrpc2.Request) error {
 		if ctx.Err() != nil {
 			xctx := xcontext.Detach(ctx)
+
 			return reply(xctx, nil, ErrRequestCancelled)
 		}
 
@@ -34,6 +34,7 @@ func ClientHandler(client Client, handler jsonrpc2.Handler) jsonrpc2.Handler {
 		if handled || err != nil {
 			return err
 		}
+
 		return handler(ctx, reply, req)
 	}
 
@@ -56,6 +57,7 @@ type Client interface {
 	WorkspaceFolders(ctx context.Context) (result []WorkspaceFolder, err error)
 }
 
+// list of client methods.
 const (
 	// MethodProgress method name of "$/progress".
 	MethodProgress = "$/progress"
@@ -169,6 +171,7 @@ func (c *client) ShowMessageRequest(ctx context.Context, params *ShowMessageRequ
 	if err := Call(ctx, c.Conn, MethodWindowShowMessageRequest, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -209,6 +212,7 @@ func (c *client) ApplyEdit(ctx context.Context, params *ApplyWorkspaceEditParams
 	if err := Call(ctx, c.Conn, MethodWorkspaceApplyEdit, params, &result); err != nil {
 		return false, err
 	}
+
 	return result, nil
 }
 
@@ -225,6 +229,7 @@ func (c *client) Configuration(ctx context.Context, params *ConfigurationParams)
 	if err := Call(ctx, c.Conn, MethodWorkspaceConfiguration, params, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
 
@@ -232,7 +237,7 @@ func (c *client) Configuration(ctx context.Context, params *ConfigurationParams)
 //
 // Returns null in the response if only a single file is open in the tool. Returns an empty array if a workspace is open but no folders are configured.
 //
-// Since version 3.6.0.
+// @since 3.6.0.
 func (c *client) WorkspaceFolders(ctx context.Context) (result []WorkspaceFolder, err error) {
 	c.logger.Debug("call " + MethodWorkspaceWorkspaceFolders)
 	defer c.logger.Debug("end "+MethodWorkspaceWorkspaceFolders, zap.Error(err))
@@ -240,5 +245,6 @@ func (c *client) WorkspaceFolders(ctx context.Context) (result []WorkspaceFolder
 	if err := Call(ctx, c.Conn, MethodWorkspaceWorkspaceFolders, nil, &result); err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }

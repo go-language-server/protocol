@@ -1,6 +1,5 @@
-// Copyright 2021 The Go Language Server Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
+// SPDX-FileCopyrightText: Copyright 2021 The Go Language Server Authors
+// SPDX-License-Identifier: BSD-3-Clause
 
 //go:build gojay
 // +build gojay
@@ -13,26 +12,32 @@ import (
 	"github.com/francoispqt/gojay"
 )
 
-func TestProgressParams(t *testing.T) {
-	testProgressParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
-}
-
 func TestWorkDoneProgressBegin(t *testing.T) {
+	t.Parallel()
+
 	testWorkDoneProgressBegin(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
 func TestWorkDoneProgressReport(t *testing.T) {
+	t.Parallel()
+
 	testWorkDoneProgressReport(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
 func TestWorkDoneProgressEnd(t *testing.T) {
+	t.Parallel()
+
 	testWorkDoneProgressEnd(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
 func TestWorkDoneProgressParams(t *testing.T) {
+	t.Parallel()
+
 	testWorkDoneProgressParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }
 
 func TestPartialResultParams(t *testing.T) {
+	t.Parallel()
+
 	testPartialResultParams(t, gojay.Marshal, gojay.Unsafe.Unmarshal)
 }

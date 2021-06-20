@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: BSD-3-Clause
 // SPDX-FileCopyrightText: Copyright 2021 The Go Language Server Authors
+// SPDX-License-Identifier: BSD-3-Clause
 
 package protocol
 
@@ -26,6 +26,7 @@ func Call(ctx context.Context, conn jsonrpc2.Conn, method string, params, result
 	if ctx.Err() != nil {
 		notifyCancel(ctx, conn, id)
 	}
+
 	return err
 }
 

@@ -1,6 +1,5 @@
-// Copyright 2019 The Go Language Server Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
+// SPDX-FileCopyrightText: Copyright 2019 The Go Language Server Authors
+// SPDX-License-Identifier: BSD-3-Clause
 
 package protocol
 
@@ -55,8 +54,8 @@ func testPosition(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -95,8 +94,8 @@ func testPosition(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -152,8 +151,8 @@ func testRange(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -192,8 +191,8 @@ func testRange(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -252,8 +251,8 @@ func testLocation(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -292,8 +291,8 @@ func testLocation(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -403,8 +402,8 @@ func testLocationLink(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -452,8 +451,8 @@ func testLocationLink(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -504,8 +503,8 @@ func testCodeDescription(t *testing.T, marshal marshalFunc, unmarshal unmarshalF
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -546,494 +545,8 @@ func testCodeDescription(t *testing.T, marshal marshalFunc, unmarshal unmarshalF
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-}
-
-func testDiagnostic(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want                      = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","codeDescription":{"href":"file:///path/to/test.go"},"source":"test foo bar","message":"foo bar","tags":[1,2],"relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}],"data":"testData"}`
-		wantNilSeverity           = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"code":"foo/bar","codeDescription":{"href":"file:///path/to/test.go"},"source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}],"data":"testData"}`
-		wantNilCode               = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"codeDescription":{"href":"file:///path/to/test.go"},"source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}],"data":"testData"}`
-		wantNilRelatedInformation = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","codeDescription":{"href":"file:///path/to/test.go"},"source":"test foo bar","message":"foo bar","data":"testData"}`
-		wantNilAll                = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"message":"foo bar"}`
-		wantInvalid               = `{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"severity":1,"code":"foo/bar","codeDescription":{"href":"file:///path/to/test.go"},"source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}},"message":"basic_gen.go"}],"data":"invalidData"}`
-	)
-	wantType := Diagnostic{
-		Range: Range{
-			Start: Position{
-				Line:      25,
-				Character: 1,
-			},
-			End: Position{
-				Line:      27,
-				Character: 3,
-			},
-		},
-		Severity: DiagnosticSeverityError,
-		Code:     "foo/bar",
-		CodeDescription: &CodeDescription{
-			Href: uri.File("/path/to/test.go"),
-		},
-		Source:  "test foo bar",
-		Message: "foo bar",
-		Tags: []DiagnosticTag{
-			DiagnosticTagUnnecessary,
-			DiagnosticTagDeprecated,
-		},
-		RelatedInformation: []DiagnosticRelatedInformation{
-			{
-				Location: Location{
-					URI: uri.File("/path/to/basic.go"),
-					Range: Range{
-						Start: Position{
-							Line:      25,
-							Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-				},
-				Message: "basic_gen.go",
-			},
-		},
-		Data: "testData",
-	}
-	wantTypeNilSeverity := Diagnostic{
-		Range: Range{
-			Start: Position{
-				Line:      25,
-				Character: 1,
-			},
-			End: Position{
-				Line:      27,
-				Character: 3,
-			},
-		},
-		Code: "foo/bar",
-		CodeDescription: &CodeDescription{
-			Href: uri.File("/path/to/test.go"),
-		},
-		Source:  "test foo bar",
-		Message: "foo bar",
-		RelatedInformation: []DiagnosticRelatedInformation{
-			{
-				Location: Location{
-					URI: uri.File("/path/to/basic.go"),
-					Range: Range{
-						Start: Position{
-							Line:      25,
-							Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-				},
-				Message: "basic_gen.go",
-			},
-		},
-		Data: "testData",
-	}
-	wantTypeNilCode := Diagnostic{
-		Range: Range{
-			Start: Position{
-				Line:      25,
-				Character: 1,
-			},
-			End: Position{
-				Line:      27,
-				Character: 3,
-			},
-		},
-		Severity: DiagnosticSeverityError,
-		CodeDescription: &CodeDescription{
-			Href: uri.File("/path/to/test.go"),
-		},
-		Source:  "test foo bar",
-		Message: "foo bar",
-		RelatedInformation: []DiagnosticRelatedInformation{
-			{
-				Location: Location{
-					URI: uri.File("/path/to/basic.go"),
-					Range: Range{
-						Start: Position{
-							Line:      25,
-							Character: 1,
-						},
-						End: Position{
-							Line:      27,
-							Character: 3,
-						},
-					},
-				},
-				Message: "basic_gen.go",
-			},
-		},
-		Data: "testData",
-	}
-	wantTypeNilRelatedInformation := Diagnostic{
-		Range: Range{
-			Start: Position{
-				Line:      25,
-				Character: 1,
-			},
-			End: Position{
-				Line:      27,
-				Character: 3,
-			},
-		},
-		Severity: DiagnosticSeverityError,
-		Code:     "foo/bar",
-		CodeDescription: &CodeDescription{
-			Href: uri.File("/path/to/test.go"),
-		},
-		Source:  "test foo bar",
-		Message: "foo bar",
-		Data:    "testData",
-	}
-	wantTypeNilAll := Diagnostic{
-		Range: Range{
-			Start: Position{
-				Line:      25,
-				Character: 1,
-			},
-			End: Position{
-				Line:      27,
-				Character: 3,
-			},
-		},
-		Message: "foo bar",
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          Diagnostic
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilSeverity",
-				field:          wantTypeNilSeverity,
-				want:           wantNilSeverity,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilCode",
-				field:          wantTypeNilCode,
-				want:           wantNilCode,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilRelatedInformation",
-				field:          wantTypeNilRelatedInformation,
-				want:           wantNilRelatedInformation,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilAll",
-				field:          wantTypeNilAll,
-				want:           wantNilAll,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "Invalid",
-				field:          wantType,
-				want:           wantInvalid,
-				wantMarshalErr: false,
-				wantErr:        true,
-			},
-		}
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             Diagnostic
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilSeverity",
-				field:            wantNilSeverity,
-				want:             wantTypeNilSeverity,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilCode",
-				field:            wantNilCode,
-				want:             wantTypeNilCode,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilRelatedInformation",
-				field:            wantNilRelatedInformation,
-				want:             wantTypeNilRelatedInformation,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilAll",
-				field:            wantNilAll,
-				want:             wantTypeNilAll,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "Invalid",
-				field:            wantInvalid,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          true,
-			},
-		}
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got Diagnostic
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-}
-
-func TestDiagnosticSeverity_String(t *testing.T) {
-	tests := []struct {
-		name string
-		d    DiagnosticSeverity
-		want string
-	}{
-		{
-			name: "Error",
-			d:    DiagnosticSeverityError,
-			want: "Error",
-		},
-		{
-			name: "Warning",
-			d:    DiagnosticSeverityWarning,
-			want: "Warning",
-		},
-		{
-			name: "Information",
-			d:    DiagnosticSeverityInformation,
-			want: "Information",
-		},
-		{
-			name: "Hint",
-			d:    DiagnosticSeverityHint,
-			want: "Hint",
-		},
-		{
-			name: "Unknown",
-			d:    DiagnosticSeverity(0),
-			want: "0",
-		},
-	}
-	for _, tt := range tests {
-		tt := tt
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-
-			if got := tt.d.String(); got != tt.want {
-				t.Errorf("DiagnosticSeverity.String() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestDiagnosticTag_String(t *testing.T) {
-	tests := []struct {
-		name string
-		d    DiagnosticTag
-		want string
-	}{
-		{
-			name: "Unnecessary",
-			d:    DiagnosticTagUnnecessary,
-			want: "Unnecessary",
-		},
-		{
-			name: "Deprecated",
-			d:    DiagnosticTagDeprecated,
-			want: "Deprecated",
-		},
-		{
-			name: "Unknown",
-			d:    DiagnosticTag(0),
-			want: "0",
-		},
-	}
-	for _, tt := range tests {
-		tt := tt
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-
-			if got := tt.d.String(); got != tt.want {
-				t.Errorf("DiagnosticSeverity.String() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func testDiagnosticRelatedInformation(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want        = `{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}`
-		wantInvalid = `{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}},"message":"basic_gen.go"}`
-	)
-	wantType := DiagnosticRelatedInformation{
-		Location: Location{
-			URI: uri.File("/path/to/basic.go"),
-			Range: Range{
-				Start: Position{
-					Line:      25,
-					Character: 1,
-				},
-				End: Position{
-					Line:      27,
-					Character: 3,
-				},
-			},
-		},
-		Message: "basic_gen.go",
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          DiagnosticRelatedInformation
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "Invalid",
-				field:          wantType,
-				want:           wantInvalid,
-				wantMarshalErr: false,
-				wantErr:        true,
-			},
-		}
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Error(err)
-					return
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             DiagnosticRelatedInformation
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "Invalid",
-				field:            wantInvalid,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          true,
-			},
-		}
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got DiagnosticRelatedInformation
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1098,8 +611,8 @@ func testCommand(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1147,8 +660,8 @@ func testCommand(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1212,8 +725,8 @@ func testChangeAnnotation(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1261,8 +774,8 @@ func testChangeAnnotation(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1327,8 +840,8 @@ func testAnnotatedTextEdit(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1370,8 +883,8 @@ func testAnnotatedTextEdit(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1458,8 +971,8 @@ func testTextEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1501,8 +1014,8 @@ func testTextEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1515,11 +1028,11 @@ func testTextDocumentEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 		wantInvalid = `{"textDocument":{"uri":"file:///path/to/basic_gen.go","version":10},"edits":[{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"newText":"foo bar"}]}`
 	)
 	wantType := TextDocumentEdit{
-		TextDocument: VersionedTextDocumentIdentifier{
+		TextDocument: OptionalVersionedTextDocumentIdentifier{
 			TextDocumentIdentifier: TextDocumentIdentifier{
 				URI: "file:///path/to/basic.go",
 			},
-			Version: int32(10),
+			Version: NewVersion(int32(10)),
 		},
 		Edits: []TextEdit{
 			{
@@ -1538,11 +1051,11 @@ func testTextDocumentEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 		},
 	}
 	wantInvalidType := TextDocumentEdit{
-		TextDocument: VersionedTextDocumentIdentifier{
+		TextDocument: OptionalVersionedTextDocumentIdentifier{
 			TextDocumentIdentifier: TextDocumentIdentifier{
 				URI: "file:///path/to/basic.go",
 			},
-			Version: int32(10),
+			Version: NewVersion(int32(10)),
 		},
 		Edits: []TextEdit{
 			{
@@ -1597,8 +1110,8 @@ func testTextDocumentEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1640,8 +1153,8 @@ func testTextDocumentEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1724,8 +1237,8 @@ func testCreateFileOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1798,8 +1311,8 @@ func testCreateFileOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1869,8 +1382,8 @@ func testCreateFile(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1919,8 +1432,8 @@ func testCreateFile(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2003,8 +1516,8 @@ func testRenameFileOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2077,8 +1590,8 @@ func testRenameFileOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2150,8 +1663,8 @@ func testRenameFile(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2200,8 +1713,8 @@ func testRenameFile(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2284,8 +1797,8 @@ func testDeleteFileOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2348,8 +1861,8 @@ func testDeleteFileOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2419,8 +1932,8 @@ func testDeleteFile(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2469,8 +1982,8 @@ func testDeleteFile(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2504,11 +2017,11 @@ func testWorkspaceEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshalFun
 		},
 		DocumentChanges: []TextDocumentEdit{
 			{
-				TextDocument: VersionedTextDocumentIdentifier{
+				TextDocument: OptionalVersionedTextDocumentIdentifier{
 					TextDocumentIdentifier: TextDocumentIdentifier{
 						URI: uri.File("/path/to/basic.go"),
 					},
-					Version: int32(10),
+					Version: NewVersion(int32(10)),
 				},
 				Edits: []TextEdit{
 					{
@@ -2538,11 +2051,11 @@ func testWorkspaceEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshalFun
 	wantTypeNilChanges := WorkspaceEdit{
 		DocumentChanges: []TextDocumentEdit{
 			{
-				TextDocument: VersionedTextDocumentIdentifier{
+				TextDocument: OptionalVersionedTextDocumentIdentifier{
 					TextDocumentIdentifier: TextDocumentIdentifier{
 						URI: uri.File("/path/to/basic.go"),
 					},
-					Version: int32(10),
+					Version: NewVersion(int32(10)),
 				},
 				Edits: []TextEdit{
 					{
@@ -2632,8 +2145,8 @@ func testWorkspaceEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshalFun
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2689,8 +2202,8 @@ func testWorkspaceEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshalFun
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2750,8 +2263,8 @@ func testTextDocumentIdentifier(t *testing.T, marshal marshalFunc, unmarshal unm
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2793,8 +2306,8 @@ func testTextDocumentIdentifier(t *testing.T, marshal marshalFunc, unmarshal unm
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2849,8 +2362,8 @@ func testTextDocumentItem(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2892,8 +2405,8 @@ func testTextDocumentItem(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2901,6 +2414,8 @@ func testTextDocumentItem(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 }
 
 func TestToLanguageIdentifier(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
 		ft   string
@@ -2928,7 +2443,7 @@ func TestToLanguageIdentifier(t *testing.T) {
 			t.Parallel()
 
 			if got := ToLanguageIdentifier(tt.ft); got != tt.want {
-				t.Errorf("ToLanguageIdentifier(%v) = %v, want %v", tt.ft, got, tt.want)
+				t.Errorf("ToLanguageIdentifier(%v) = %v, want %v", tt.ft, tt.want, got)
 			}
 		})
 	}
@@ -2995,8 +2510,8 @@ func testVersionedTextDocumentIdentifier(t *testing.T, marshal marshalFunc, unma
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -3045,8 +2560,8 @@ func testVersionedTextDocumentIdentifier(t *testing.T, marshal marshalFunc, unma
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -3114,8 +2629,8 @@ func testOptionalVersionedTextDocumentIdentifier(t *testing.T, marshal marshalFu
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -3164,8 +2679,8 @@ func testOptionalVersionedTextDocumentIdentifier(t *testing.T, marshal marshalFu
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -3223,8 +2738,8 @@ func testTextDocumentPositionParams(t *testing.T, marshal marshalFunc, unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -3266,8 +2781,8 @@ func testTextDocumentPositionParams(t *testing.T, marshal marshalFunc, unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -3365,8 +2880,8 @@ func testDocumentFilter(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -3436,8 +2951,8 @@ func testDocumentFilter(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -3498,8 +3013,8 @@ func testDocumentSelector(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -3541,8 +3056,8 @@ func testDocumentSelector(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -3595,8 +3110,8 @@ func testMarkupContent(t *testing.T, marshal marshalFunc, unmarshal unmarshalFun
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -3638,8 +3153,8 @@ func testMarkupContent(t *testing.T, marshal marshalFunc, unmarshal unmarshalFun
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}

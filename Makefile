@@ -120,7 +120,7 @@ tools/bin/%: ${TOOLS_DIR}/go.mod ${TOOLS_DIR}/go.sum
 		for t in ${TOOLS}; do \
 			if [ -z '$*' ] || [ $$(basename $$t) = '$*' ]; then \
 				echo "Install $$t ..." >&2; \
-				GOBIN=${TOOLS_BIN} CGO_ENABLED=0 go install -v -mod=mod ${GO_FLAGS} "$${t}"; \
+				GOBIN=${TOOLS_BIN} CGO_ENABLED=0 go install -mod=mod ${GO_FLAGS} "$${t}"; \
 			fi \
 		done
 

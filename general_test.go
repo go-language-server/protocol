@@ -1,6 +1,5 @@
-// Copyright 2019 The Go Language Server Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
+// SPDX-FileCopyrightText: Copyright 2019 The Go Language Server Authors
+// SPDX-License-Identifier: BSD-3-Clause
 
 package protocol
 
@@ -14,85 +13,6 @@ import (
 
 	"go.lsp.dev/uri"
 )
-
-func testCancelParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const want = `{"id":"testID"}`
-	wantType := CancelParams{
-		ID: "testID",
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          CancelParams
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             CancelParams
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got CancelParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-}
 
 func testWorkspaceFolders(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const want = `[{"uri":"file:///Users/zchee/go/src/go.lsp.dev/protocol","name":"protocol"},{"uri":"file:///Users/zchee/go/src/go.lsp.dev/jsonrpc2","name":"jsonrpc2"}]`
@@ -136,8 +56,8 @@ func testWorkspaceFolders(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -172,8 +92,8 @@ func testWorkspaceFolders(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -229,8 +149,8 @@ func testClientInfo(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -272,8 +192,8 @@ func testClientInfo(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -354,8 +274,8 @@ func testInitializeParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -397,13 +317,13 @@ func testInitializeParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreTypes(WorkDoneProgressParams{})); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got, cmpopts.IgnoreTypes(WorkDoneProgressParams{})); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 
 				if token := got.WorkDoneToken; token != nil {
 					if diff := cmp.Diff(fmt.Sprint(token), wantWorkDoneToken); (diff != "") != tt.wantErr {
-						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}
 			})
@@ -460,8 +380,8 @@ func testLogTraceParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -503,8 +423,8 @@ func testLogTraceParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -556,8 +476,8 @@ func testSetTraceParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -599,8 +519,8 @@ func testSetTraceParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -656,8 +576,8 @@ func testCreateFilesParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -699,8 +619,8 @@ func testCreateFilesParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -757,8 +677,8 @@ func testRenameFilesParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -800,8 +720,8 @@ func testRenameFilesParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -857,8 +777,8 @@ func testDeleteFilesParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -900,566 +820,8 @@ func testDeleteFilesParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-}
-
-func testWorkspaceClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const want = `{"applyEdit":true,"workspaceEdit":{"documentChanges":true,"failureHandling":"FailureHandling","resourceOperations":["ResourceOperations"],"normalizesLineEndings":true,"changeAnnotationSupport":{"groupsOnLabel":true}},"didChangeConfiguration":{"dynamicRegistration":true},"didChangeWatchedFiles":{"dynamicRegistration":true},"symbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]}},"executeCommand":{"dynamicRegistration":true},"workspaceFolders":true,"configuration":true,"semanticTokens":{"refreshSupport":true},"codeLens":{"refreshSupport":true},"fileOperations":{"dynamicRegistration":true,"didCreate":true,"willCreate":true,"didRename":true,"willRename":true,"didDelete":true,"willDelete":true}}`
-	wantType := WorkspaceClientCapabilities{
-		ApplyEdit: true,
-		WorkspaceEdit: &WorkspaceClientCapabilitiesWorkspaceEdit{
-			DocumentChanges:       true,
-			FailureHandling:       "FailureHandling",
-			ResourceOperations:    []string{"ResourceOperations"},
-			NormalizesLineEndings: true,
-			ChangeAnnotationSupport: &WorkspaceClientCapabilitiesWorkspaceEditChangeAnnotationSupport{
-				GroupsOnLabel: true,
-			},
-		},
-		DidChangeConfiguration: &WorkspaceClientCapabilitiesDidChangeConfiguration{
-			DynamicRegistration: true,
-		},
-		DidChangeWatchedFiles: &WorkspaceClientCapabilitiesDidChangeWatchedFiles{
-			DynamicRegistration: true,
-		},
-		Symbol: &WorkspaceClientCapabilitiesSymbol{
-			DynamicRegistration: true,
-			SymbolKind: &WorkspaceClientCapabilitiesSymbolKind{
-				ValueSet: []SymbolKind{
-					SymbolKindFile,
-					SymbolKindModule,
-					SymbolKindNamespace,
-					SymbolKindPackage,
-					SymbolKindClass,
-					SymbolKindMethod,
-				},
-			},
-		},
-		ExecuteCommand: &WorkspaceClientCapabilitiesExecuteCommand{
-			DynamicRegistration: true,
-		},
-		WorkspaceFolders: true,
-		Configuration:    true,
-		SemanticTokens: &WorkspaceClientCapabilitiesSemanticTokens{
-			RefreshSupport: true,
-		},
-		CodeLens: &WorkspaceClientCapabilitiesCodeLens{
-			RefreshSupport: true,
-		},
-		FileOperations: &WorkspaceClientCapabilitiesFileOperations{
-			DynamicRegistration: true,
-			DidCreate:           true,
-			WillCreate:          true,
-			DidRename:           true,
-			WillRename:          true,
-			DidDelete:           true,
-			WillDelete:          true,
-		},
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          WorkspaceClientCapabilities
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             WorkspaceClientCapabilities
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got WorkspaceClientCapabilities
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-}
-
-func testTextDocumentClientCapabilitiesSynchronization(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want    = `{"didSave":true,"dynamicRegistration":true,"willSave":true,"willSaveWaitUntil":true}`
-		wantNil = `{}`
-	)
-	wantType := TextDocumentClientCapabilitiesSynchronization{
-		DidSave:             true,
-		DynamicRegistration: true,
-		WillSave:            true,
-		WillSaveWaitUntil:   true,
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          TextDocumentClientCapabilitiesSynchronization
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesSynchronization{},
-				want:           wantNil,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             TextDocumentClientCapabilitiesSynchronization
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilAll",
-				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesSynchronization{},
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got TextDocumentClientCapabilitiesSynchronization
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-}
-
-func testTextDocumentClientCapabilitiesCompletion(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want    = `{"dynamicRegistration":true,"completionItem":{"snippetSupport":true,"commitCharactersSupport":true,"documentationFormat":["plaintext","markdown"],"deprecatedSupport":true,"preselectSupport":true,"tagSupport":{"valueSet":[1]},"insertReplaceSupport":true,"resolveSupport":{"properties":["test","properties"]},"insertTextModeSupport":{"valueSet":[1,2]}},"completionItemKind":{"valueSet":[1]},"contextSupport":true}`
-		wantNil = `{}`
-	)
-	wantType := TextDocumentClientCapabilitiesCompletion{
-		DynamicRegistration: true,
-		CompletionItem: &TextDocumentClientCapabilitiesCompletionItem{
-			SnippetSupport:          true,
-			CommitCharactersSupport: true,
-			DocumentationFormat: []MarkupKind{
-				PlainText,
-				Markdown,
-			},
-			DeprecatedSupport: true,
-			PreselectSupport:  true,
-			TagSupport: &TextDocumentClientCapabilitiesCompletionItemTagSupport{
-				ValueSet: []CompletionItemTag{
-					CompletionItemTagDeprecated,
-				},
-			},
-			InsertReplaceSupport: true,
-			ResolveSupport: &TextDocumentClientCapabilitiesCompletionItemResolveSupport{
-				Properties: []string{"test", "properties"},
-			},
-			InsertTextModeSupport: &TextDocumentClientCapabilitiesCompletionItemInsertTextModeSupport{
-				ValueSet: []InsertTextMode{
-					InsertTextModeAsIs,
-					InsertTextModeAdjustIndentation,
-				},
-			},
-		},
-		CompletionItemKind: &TextDocumentClientCapabilitiesCompletionItemKind{
-			ValueSet: []CompletionItemKind{CompletionItemKindText},
-		},
-		ContextSupport: true,
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          TextDocumentClientCapabilitiesCompletion
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesCompletion{},
-				want:           wantNil,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             TextDocumentClientCapabilitiesCompletion
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilAll",
-				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesCompletion{},
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got TextDocumentClientCapabilitiesCompletion
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-}
-
-func testTextDocumentClientCapabilitiesHover(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want    = `{"dynamicRegistration":true,"contentFormat":["plaintext","markdown"]}`
-		wantNil = `{}`
-	)
-	wantType := TextDocumentClientCapabilitiesHover{
-		DynamicRegistration: true,
-		ContentFormat: []MarkupKind{
-			PlainText,
-			Markdown,
-		},
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          TextDocumentClientCapabilitiesHover
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesHover{},
-				want:           wantNil,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             TextDocumentClientCapabilitiesHover
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilAll",
-				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesHover{},
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got TextDocumentClientCapabilitiesHover
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-}
-
-func testTextDocumentClientCapabilitiesSignatureHelp(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want    = `{"dynamicRegistration":true,"signatureInformation":{"documentationFormat":["plaintext","markdown"],"parameterInformation":{"labelOffsetSupport":true},"activeParameterSupport":true},"contextSupport":true}`
-		wantNil = `{}`
-	)
-	wantType := TextDocumentClientCapabilitiesSignatureHelp{
-		DynamicRegistration: true,
-		SignatureInformation: &TextDocumentClientCapabilitiesSignatureInformation{
-			DocumentationFormat: []MarkupKind{
-				PlainText,
-				Markdown,
-			},
-			ParameterInformation: &TextDocumentClientCapabilitiesParameterInformation{
-				LabelOffsetSupport: true,
-			},
-			ActiveParameterSupport: true,
-		},
-		ContextSupport: true,
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          TextDocumentClientCapabilitiesSignatureHelp
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesSignatureHelp{},
-				want:           wantNil,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             TextDocumentClientCapabilitiesSignatureHelp
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilAll",
-				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesSignatureHelp{},
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got TextDocumentClientCapabilitiesSignatureHelp
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1476,7 +838,7 @@ func testReferencesParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 		wantNilAll  = `{"textDocument":{"uri":"file:///path/to/basic.go"},"position":{"line":25,"character":1},"context":{"includeDeclaration":true}}`
 		wantInvalid = `{"textDocument":{"uri":"file:///path/to/basic_gen.go"},"position":{"line":2,"character":1},"workDoneToken":"` + wantPartialResultToken + `","partialResultToken":"` + wantWorkDoneToken + `","context":{"includeDeclaration":false}}`
 	)
-	wantType := ReferencesParams{
+	wantType := ReferenceParams{
 		TextDocumentPositionParams: TextDocumentPositionParams{
 			TextDocument: TextDocumentIdentifier{
 				URI: uri.File("/path/to/basic.go"),
@@ -1496,7 +858,7 @@ func testReferencesParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 			IncludeDeclaration: true,
 		},
 	}
-	wantTypeNilAll := ReferencesParams{
+	wantTypeNilAll := ReferenceParams{
 		TextDocumentPositionParams: TextDocumentPositionParams{
 			TextDocument: TextDocumentIdentifier{
 				URI: uri.File("/path/to/basic.go"),
@@ -1516,7 +878,7 @@ func testReferencesParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 
 		tests := []struct {
 			name           string
-			field          ReferencesParams
+			field          ReferenceParams
 			want           string
 			wantMarshalErr bool
 			wantErr        bool
@@ -1554,8 +916,8 @@ func testReferencesParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1567,7 +929,7 @@ func testReferencesParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 		tests := []struct {
 			name             string
 			field            string
-			want             ReferencesParams
+			want             ReferenceParams
 			wantUnmarshalErr bool
 			wantErr          bool
 		}{
@@ -1599,121 +961,25 @@ func testReferencesParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				var got ReferencesParams
+				var got ReferenceParams
 				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreTypes(WorkDoneProgressParams{}, PartialResultParams{})); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got, cmpopts.IgnoreTypes(WorkDoneProgressParams{}, PartialResultParams{})); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 
 				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
 					if diff := cmp.Diff(fmt.Sprint(workDoneToken), wantWorkDoneToken); (diff != "") != tt.wantErr {
-						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}
 
 				if partialResultToken := got.PartialResultToken; partialResultToken != nil {
 					if diff := cmp.Diff(fmt.Sprint(partialResultToken), wantPartialResultToken); (diff != "") != tt.wantErr {
-						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
-				}
-			})
-		}
-	})
-}
-
-func testTextDocumentClientCapabilitiesReferences(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want    = `{"dynamicRegistration":true}`
-		wantNil = `{}`
-	)
-	wantType := TextDocumentClientCapabilitiesReferences{
-		DynamicRegistration: true,
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          TextDocumentClientCapabilitiesReferences
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesReferences{},
-				want:           wantNil,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             TextDocumentClientCapabilitiesReferences
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilAll",
-				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesReferences{},
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got TextDocumentClientCapabilitiesReferences
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1775,8 +1041,8 @@ func testDocumentHighlightOptions(t *testing.T, marshal marshalFunc, unmarshal u
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1825,8 +1091,8 @@ func testDocumentHighlightOptions(t *testing.T, marshal marshalFunc, unmarshal u
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1915,8 +1181,8 @@ func testDocumentHighlightParams(t *testing.T, marshal marshalFunc, unmarshal un
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -1965,116 +1231,20 @@ func testDocumentHighlightParams(t *testing.T, marshal marshalFunc, unmarshal un
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreTypes(WorkDoneProgressParams{}, PartialResultParams{})); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got, cmpopts.IgnoreTypes(WorkDoneProgressParams{}, PartialResultParams{})); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 
 				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
 					if diff := cmp.Diff(fmt.Sprint(workDoneToken), wantWorkDoneToken); (diff != "") != tt.wantErr {
-						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}
 
 				if partialResultToken := got.PartialResultToken; partialResultToken != nil {
 					if diff := cmp.Diff(fmt.Sprint(partialResultToken), wantPartialResultToken); (diff != "") != tt.wantErr {
-						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
-				}
-			})
-		}
-	})
-}
-
-func testTextDocumentClientCapabilitiesDocumentHighlight(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want    = `{"dynamicRegistration":true}`
-		wantNil = `{}`
-	)
-	wantType := TextDocumentClientCapabilitiesDocumentHighlight{
-		DynamicRegistration: true,
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          TextDocumentClientCapabilitiesDocumentHighlight
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesDocumentHighlight{},
-				want:           wantNil,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             TextDocumentClientCapabilitiesDocumentHighlight
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilAll",
-				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesDocumentHighlight{},
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got TextDocumentClientCapabilitiesDocumentHighlight
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2137,8 +1307,8 @@ func testDocumentSymbolOptions(t *testing.T, marshal marshalFunc, unmarshal unma
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2187,121 +1357,8 @@ func testDocumentSymbolOptions(t *testing.T, marshal marshalFunc, unmarshal unma
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-}
-
-func testTextDocumentClientCapabilitiesDocumentSymbol(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want    = `{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]},"hierarchicalDocumentSymbolSupport":true,"tagSupport":{"valueSet":[1]},"labelSupport":true}`
-		wantNil = `{}`
-	)
-	wantType := TextDocumentClientCapabilitiesDocumentSymbol{
-		DynamicRegistration: true,
-		SymbolKind: &WorkspaceClientCapabilitiesSymbolKind{
-			ValueSet: []SymbolKind{
-				SymbolKindFile,
-				SymbolKindModule,
-				SymbolKindNamespace,
-				SymbolKindPackage,
-				SymbolKindClass,
-				SymbolKindMethod,
-			},
-		},
-		HierarchicalDocumentSymbolSupport: true,
-		TagSupport: &TextDocumentClientCapabilitiesDocumentSymbolTagSupport{
-			ValueSet: []SymbolTag{
-				SymbolTagDeprecated,
-			},
-		},
-		LabelSupport: true,
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          TextDocumentClientCapabilitiesDocumentSymbol
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesDocumentSymbol{},
-				want:           wantNil,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             TextDocumentClientCapabilitiesDocumentSymbol
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilAll",
-				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesDocumentSymbol{},
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got TextDocumentClientCapabilitiesDocumentSymbol
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2363,8 +1420,8 @@ func testWorkspaceSymbolOptions(t *testing.T, marshal marshalFunc, unmarshal unm
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2413,8 +1470,8 @@ func testWorkspaceSymbolOptions(t *testing.T, marshal marshalFunc, unmarshal unm
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2476,8 +1533,8 @@ func testDocumentFormattingOptions(t *testing.T, marshal marshalFunc, unmarshal 
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2526,104 +1583,8 @@ func testDocumentFormattingOptions(t *testing.T, marshal marshalFunc, unmarshal 
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-}
-
-func testTextDocumentClientCapabilitiesFormatting(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want    = `{"dynamicRegistration":true}`
-		wantNil = `{}`
-	)
-	wantType := TextDocumentClientCapabilitiesFormatting{
-		DynamicRegistration: true,
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          TextDocumentClientCapabilitiesFormatting
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesFormatting{},
-				want:           wantNil,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             TextDocumentClientCapabilitiesFormatting
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilAll",
-				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesFormatting{},
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got TextDocumentClientCapabilitiesFormatting
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2685,8 +1646,8 @@ func testDocumentRangeFormattingOptions(t *testing.T, marshal marshalFunc, unmar
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2735,200 +1696,8 @@ func testDocumentRangeFormattingOptions(t *testing.T, marshal marshalFunc, unmar
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-}
-
-func testTextDocumentClientCapabilitiesRangeFormatting(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want    = `{"dynamicRegistration":true}`
-		wantNil = `{}`
-	)
-	wantType := TextDocumentClientCapabilitiesRangeFormatting{
-		DynamicRegistration: true,
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          TextDocumentClientCapabilitiesRangeFormatting
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesRangeFormatting{},
-				want:           wantNil,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             TextDocumentClientCapabilitiesRangeFormatting
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilAll",
-				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesRangeFormatting{},
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got TextDocumentClientCapabilitiesRangeFormatting
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-}
-
-func testTextDocumentClientCapabilitiesOnTypeFormatting(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want    = `{"dynamicRegistration":true}`
-		wantNil = `{}`
-	)
-	wantType := TextDocumentClientCapabilitiesOnTypeFormatting{
-		DynamicRegistration: true,
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          TextDocumentClientCapabilitiesOnTypeFormatting
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesOnTypeFormatting{},
-				want:           wantNil,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             TextDocumentClientCapabilitiesOnTypeFormatting
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilAll",
-				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesOnTypeFormatting{},
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got TextDocumentClientCapabilitiesOnTypeFormatting
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -2990,8 +1759,8 @@ func testDeclarationOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -3040,8 +1809,8 @@ func testDeclarationOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -3128,8 +1897,8 @@ func testDeclarationRegistrationOptions(t *testing.T, marshal marshalFunc, unmar
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -3178,8 +1947,8 @@ func testDeclarationRegistrationOptions(t *testing.T, marshal marshalFunc, unmar
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -3268,8 +2037,8 @@ func testDeclarationParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -3318,117 +2087,20 @@ func testDeclarationParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreTypes(WorkDoneProgressParams{}, PartialResultParams{})); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got, cmpopts.IgnoreTypes(WorkDoneProgressParams{}, PartialResultParams{})); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 
 				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
 					if diff := cmp.Diff(fmt.Sprint(workDoneToken), wantWorkDoneToken); (diff != "") != tt.wantErr {
-						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}
 
 				if partialResultToken := got.PartialResultToken; partialResultToken != nil {
 					if diff := cmp.Diff(fmt.Sprint(partialResultToken), wantPartialResultToken); (diff != "") != tt.wantErr {
-						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
-				}
-			})
-		}
-	})
-}
-
-func testTextDocumentClientCapabilitiesDeclaration(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want    = `{"dynamicRegistration":true,"linkSupport":true}`
-		wantNil = `{}`
-	)
-	wantType := TextDocumentClientCapabilitiesDeclaration{
-		DynamicRegistration: true,
-		LinkSupport:         true,
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          TextDocumentClientCapabilitiesDeclaration
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesDeclaration{},
-				want:           wantNil,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             TextDocumentClientCapabilitiesDeclaration
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilAll",
-				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesDeclaration{},
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got TextDocumentClientCapabilitiesDeclaration
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -3490,8 +2162,8 @@ func testDefinitionOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -3540,8 +2212,8 @@ func testDefinitionOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -3630,8 +2302,8 @@ func testDefinitionParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -3680,117 +2352,20 @@ func testDefinitionParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreTypes(WorkDoneProgressParams{}, PartialResultParams{})); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got, cmpopts.IgnoreTypes(WorkDoneProgressParams{}, PartialResultParams{})); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 
 				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
 					if diff := cmp.Diff(fmt.Sprint(workDoneToken), wantWorkDoneToken); (diff != "") != tt.wantErr {
-						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}
 
 				if partialResultToken := got.PartialResultToken; partialResultToken != nil {
 					if diff := cmp.Diff(fmt.Sprint(partialResultToken), wantPartialResultToken); (diff != "") != tt.wantErr {
-						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
-				}
-			})
-		}
-	})
-}
-
-func testTextDocumentClientCapabilitiesDefinition(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want    = `{"dynamicRegistration":true,"linkSupport":true}`
-		wantNil = `{}`
-	)
-	wantType := TextDocumentClientCapabilitiesDefinition{
-		DynamicRegistration: true,
-		LinkSupport:         true,
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          TextDocumentClientCapabilitiesDefinition
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesDefinition{},
-				want:           wantNil,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             TextDocumentClientCapabilitiesDefinition
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilAll",
-				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesDefinition{},
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got TextDocumentClientCapabilitiesDefinition
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -3852,8 +2427,8 @@ func testTypeDefinitionOptions(t *testing.T, marshal marshalFunc, unmarshal unma
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -3902,8 +2477,8 @@ func testTypeDefinitionOptions(t *testing.T, marshal marshalFunc, unmarshal unma
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -3990,8 +2565,8 @@ func testTypeDefinitionRegistrationOptions(t *testing.T, marshal marshalFunc, un
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -4040,8 +2615,8 @@ func testTypeDefinitionRegistrationOptions(t *testing.T, marshal marshalFunc, un
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -4130,8 +2705,8 @@ func testTypeDefinitionParams(t *testing.T, marshal marshalFunc, unmarshal unmar
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -4180,117 +2755,20 @@ func testTypeDefinitionParams(t *testing.T, marshal marshalFunc, unmarshal unmar
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreTypes(WorkDoneProgressParams{}, PartialResultParams{})); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got, cmpopts.IgnoreTypes(WorkDoneProgressParams{}, PartialResultParams{})); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 
 				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
 					if diff := cmp.Diff(fmt.Sprint(workDoneToken), wantWorkDoneToken); (diff != "") != tt.wantErr {
-						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}
 
 				if partialResultToken := got.PartialResultToken; partialResultToken != nil {
 					if diff := cmp.Diff(fmt.Sprint(partialResultToken), wantPartialResultToken); (diff != "") != tt.wantErr {
-						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
-				}
-			})
-		}
-	})
-}
-
-func testTextDocumentClientCapabilitiesTypeDefinition(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want    = `{"dynamicRegistration":true,"linkSupport":true}`
-		wantNil = `{}`
-	)
-	wantType := TextDocumentClientCapabilitiesTypeDefinition{
-		DynamicRegistration: true,
-		LinkSupport:         true,
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          TextDocumentClientCapabilitiesTypeDefinition
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesTypeDefinition{},
-				want:           wantNil,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             TextDocumentClientCapabilitiesTypeDefinition
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilAll",
-				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesTypeDefinition{},
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got TextDocumentClientCapabilitiesTypeDefinition
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -4345,8 +2823,8 @@ func testImplementationOptions(t *testing.T, marshal marshalFunc, unmarshal unma
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -4388,8 +2866,8 @@ func testImplementationOptions(t *testing.T, marshal marshalFunc, unmarshal unma
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -4476,8 +2954,8 @@ func testImplementationRegistrationOptions(t *testing.T, marshal marshalFunc, un
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -4526,8 +3004,8 @@ func testImplementationRegistrationOptions(t *testing.T, marshal marshalFunc, un
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -4616,8 +3094,8 @@ func testImplementationParams(t *testing.T, marshal marshalFunc, unmarshal unmar
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -4666,426 +3144,20 @@ func testImplementationParams(t *testing.T, marshal marshalFunc, unmarshal unmar
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want, cmpopts.IgnoreTypes(WorkDoneProgressParams{}, PartialResultParams{})); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got, cmpopts.IgnoreTypes(WorkDoneProgressParams{}, PartialResultParams{})); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 
 				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
 					if diff := cmp.Diff(fmt.Sprint(workDoneToken), wantWorkDoneToken); (diff != "") != tt.wantErr {
-						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}
 
 				if partialResultToken := got.PartialResultToken; partialResultToken != nil {
 					if diff := cmp.Diff(fmt.Sprint(partialResultToken), wantPartialResultToken); (diff != "") != tt.wantErr {
-						t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
-				}
-			})
-		}
-	})
-}
-
-func testTextDocumentClientCapabilitiesImplementation(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want    = `{"dynamicRegistration":true,"linkSupport":true}`
-		wantNil = `{}`
-	)
-	wantType := TextDocumentClientCapabilitiesImplementation{
-		DynamicRegistration: true,
-		LinkSupport:         true,
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          TextDocumentClientCapabilitiesImplementation
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesImplementation{},
-				want:           wantNil,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             TextDocumentClientCapabilitiesImplementation
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilAll",
-				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesImplementation{},
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got TextDocumentClientCapabilitiesImplementation
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-}
-
-func testTextDocumentClientCapabilitiesCodeAction(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want    = `{"dynamicRegistration":true,"codeActionLiteralSupport":{"codeActionKind":{"valueSet":["quickfix","refactor","refactor.extract","refactor.rewrite","source","source.organizeImports"]}},"isPreferredSupport":true,"disabledSupport":true,"dataSupport":true,"resolveSupport":{"properties":["testProperties"]},"honorsChangeAnnotations":true}`
-		wantNil = `{}`
-	)
-	wantType := TextDocumentClientCapabilitiesCodeAction{
-		DynamicRegistration: true,
-		CodeActionLiteralSupport: &TextDocumentClientCapabilitiesCodeActionLiteralSupport{
-			CodeActionKind: &TextDocumentClientCapabilitiesCodeActionKind{
-				ValueSet: []CodeActionKind{
-					QuickFix,
-					Refactor,
-					RefactorExtract,
-					RefactorRewrite,
-					Source,
-					SourceOrganizeImports,
-				},
-			},
-		},
-		IsPreferredSupport: true,
-		DisabledSupport:    true,
-		DataSupport:        true,
-		ResolveSupport: &TextDocumentClientCapabilitiesCodeActionResolveSupport{
-			Properties: []string{"testProperties"},
-		},
-		HonorsChangeAnnotations: true,
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          TextDocumentClientCapabilitiesCodeAction
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesCodeAction{},
-				want:           wantNil,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             TextDocumentClientCapabilitiesCodeAction
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilAll",
-				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesCodeAction{},
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got TextDocumentClientCapabilitiesCodeAction
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-}
-
-func testTextDocumentClientCapabilitiesCodeLens(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want    = `{"dynamicRegistration":true,"tooltipSupport":true}`
-		wantNil = `{}`
-	)
-	wantType := TextDocumentClientCapabilitiesCodeLens{
-		DynamicRegistration: true,
-		TooltipSupport:      true,
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          TextDocumentClientCapabilitiesCodeLens
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesCodeLens{},
-				want:           wantNil,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             TextDocumentClientCapabilitiesCodeLens
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilAll",
-				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesCodeLens{},
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got TextDocumentClientCapabilitiesCodeLens
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-}
-
-func testTextDocumentClientCapabilitiesDocumentLink(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want    = `{"dynamicRegistration":true,"tooltipSupport":true}`
-		wantNil = `{}`
-	)
-	wantType := TextDocumentClientCapabilitiesDocumentLink{
-		DynamicRegistration: true,
-		TooltipSupport:      true,
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          TextDocumentClientCapabilitiesDocumentLink
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesDocumentLink{},
-				want:           wantNil,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             TextDocumentClientCapabilitiesDocumentLink
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilAll",
-				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesDocumentLink{},
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got TextDocumentClientCapabilitiesDocumentLink
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -5147,8 +3219,8 @@ func testDocumentColorOptions(t *testing.T, marshal marshalFunc, unmarshal unmar
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -5197,8 +3269,8 @@ func testDocumentColorOptions(t *testing.T, marshal marshalFunc, unmarshal unmar
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -5285,8 +3357,8 @@ func testDocumentColorRegistrationOptions(t *testing.T, marshal marshalFunc, unm
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -5335,8 +3407,8 @@ func testDocumentColorRegistrationOptions(t *testing.T, marshal marshalFunc, unm
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -5344,6 +3416,8 @@ func testDocumentColorRegistrationOptions(t *testing.T, marshal marshalFunc, unm
 }
 
 func TestPrepareSupportDefaultBehavior_String(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
 		k    PrepareSupportDefaultBehavior
@@ -5366,310 +3440,10 @@ func TestPrepareSupportDefaultBehavior_String(t *testing.T) {
 			t.Parallel()
 
 			if got := tt.k.String(); got != tt.want {
-				t.Errorf("PrepareSupportDefaultBehavior.String() = %v, want %v", got, tt.want)
+				t.Errorf("PrepareSupportDefaultBehavior.String() = %v, want %v", tt.want, got)
 			}
 		})
 	}
-}
-
-func testTextDocumentClientCapabilitiesColorProvider(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want    = `{"dynamicRegistration":true}`
-		wantNil = `{}`
-	)
-	wantType := TextDocumentClientCapabilitiesColorProvider{
-		DynamicRegistration: true,
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          TextDocumentClientCapabilitiesColorProvider
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesColorProvider{},
-				want:           wantNil,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             TextDocumentClientCapabilitiesColorProvider
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilAll",
-				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesColorProvider{},
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got TextDocumentClientCapabilitiesColorProvider
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-}
-
-func testTextDocumentClientCapabilitiesRename(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want    = `{"dynamicRegistration":true,"prepareSupport":true,"prepareSupportDefaultBehavior":1,"honorsChangeAnnotations":true}`
-		wantNil = `{}`
-	)
-	wantType := TextDocumentClientCapabilitiesRename{
-		DynamicRegistration:           true,
-		PrepareSupport:                true,
-		PrepareSupportDefaultBehavior: PrepareSupportDefaultBehaviorIdentifier,
-		HonorsChangeAnnotations:       true,
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          TextDocumentClientCapabilitiesRename
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesRename{},
-				want:           wantNil,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             TextDocumentClientCapabilitiesRename
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilAll",
-				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesRename{},
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got TextDocumentClientCapabilitiesRename
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-}
-
-func testTextDocumentClientCapabilitiesPublishDiagnostics(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want    = `{"relatedInformation":true,"tagSupport":{"valueSet":[2,1]},"versionSupport":true,"codeDescriptionSupport":true,"dataSupport":true}`
-		wantNil = `{}`
-	)
-	wantType := TextDocumentClientCapabilitiesPublishDiagnostics{
-		RelatedInformation: true,
-		TagSupport: &TextDocumentClientCapabilitiesPublishDiagnosticsTagSupport{
-			ValueSet: []DiagnosticTag{
-				DiagnosticTagDeprecated,
-				DiagnosticTagUnnecessary,
-			},
-		},
-		VersionSupport:         true,
-		CodeDescriptionSupport: true,
-		DataSupport:            true,
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          TextDocumentClientCapabilitiesPublishDiagnostics
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesPublishDiagnostics{},
-				want:           wantNil,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             TextDocumentClientCapabilitiesPublishDiagnostics
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilAll",
-				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesPublishDiagnostics{},
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got TextDocumentClientCapabilitiesPublishDiagnostics
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
 }
 
 func testFoldingRangeOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
@@ -5727,8 +3501,8 @@ func testFoldingRangeOptions(t *testing.T, marshal marshalFunc, unmarshal unmars
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -5777,8 +3551,8 @@ func testFoldingRangeOptions(t *testing.T, marshal marshalFunc, unmarshal unmars
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -5865,8 +3639,8 @@ func testFoldingRangeRegistrationOptions(t *testing.T, marshal marshalFunc, unma
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -5915,621 +3689,8 @@ func testFoldingRangeRegistrationOptions(t *testing.T, marshal marshalFunc, unma
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-}
-
-func testTextDocumentClientCapabilitiesFoldingRange(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want    = `{"dynamicRegistration":true,"rangeLimit":5,"lineFoldingOnly":true}`
-		wantNil = `{}`
-	)
-	wantType := TextDocumentClientCapabilitiesFoldingRange{
-		DynamicRegistration: true,
-		RangeLimit:          uint32(5),
-		LineFoldingOnly:     true,
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          TextDocumentClientCapabilitiesFoldingRange
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilitiesFoldingRange{},
-				want:           wantNil,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             TextDocumentClientCapabilitiesFoldingRange
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilAll",
-				field:            wantNil,
-				want:             TextDocumentClientCapabilitiesFoldingRange{},
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got TextDocumentClientCapabilitiesFoldingRange
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-}
-
-func testTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want    = `{"synchronization":{"didSave":true,"dynamicRegistration":true,"willSave":true,"willSaveWaitUntil":true},"completion":{"dynamicRegistration":true,"completionItem":{"snippetSupport":true,"commitCharactersSupport":true,"documentationFormat":["plaintext","markdown"],"deprecatedSupport":true,"preselectSupport":true},"completionItemKind":{"valueSet":[1]},"contextSupport":true},"hover":{"dynamicRegistration":true,"contentFormat":["plaintext","markdown"]},"signatureHelp":{"dynamicRegistration":true,"signatureInformation":{"documentationFormat":["plaintext","markdown"]}},"references":{"dynamicRegistration":true},"documentHighlight":{"dynamicRegistration":true},"documentSymbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]},"hierarchicalDocumentSymbolSupport":true},"formatting":{"dynamicRegistration":true},"rangeFormatting":{"dynamicRegistration":true},"onTypeFormatting":{"dynamicRegistration":true},"declaration":{"dynamicRegistration":true,"linkSupport":true},"definition":{"dynamicRegistration":true,"linkSupport":true},"typeDefinition":{"dynamicRegistration":true,"linkSupport":true},"implementation":{"dynamicRegistration":true,"linkSupport":true},"codeAction":{"dynamicRegistration":true,"codeActionLiteralSupport":{"codeActionKind":{"valueSet":["quickfix","refactor","refactor.extract","refactor.rewrite","source","source.organizeImports"]}}},"codeLens":{"dynamicRegistration":true},"documentLink":{"dynamicRegistration":true},"colorProvider":{"dynamicRegistration":true},"rename":{"dynamicRegistration":true,"prepareSupport":true},"publishDiagnostics":{"relatedInformation":true},"foldingRange":{"dynamicRegistration":true,"rangeLimit":5,"lineFoldingOnly":true},"selectionRange":{"dynamicRegistration":true},"linkedEditingRange":{"dynamicRegistration":true},"callHierarchy":{"dynamicRegistration":true},"semanticTokens":{"dynamicRegistration":true,"requests":{"range":true,"full":true},"tokenTypes":["test","tokenTypes"],"tokenModifiers":["test","tokenModifiers"],"formats":["relative"],"overlappingTokenSupport":true,"multilineTokenSupport":true},"moniker":{"dynamicRegistration":true}}`
-		wantNil = `{}`
-	)
-	wantType := TextDocumentClientCapabilities{
-		Synchronization: &TextDocumentClientCapabilitiesSynchronization{
-			DidSave:             true,
-			DynamicRegistration: true,
-			WillSave:            true,
-			WillSaveWaitUntil:   true,
-		},
-		Completion: &TextDocumentClientCapabilitiesCompletion{
-			DynamicRegistration: true,
-			CompletionItem: &TextDocumentClientCapabilitiesCompletionItem{
-				SnippetSupport:          true,
-				CommitCharactersSupport: true,
-				DocumentationFormat: []MarkupKind{
-					PlainText,
-					Markdown,
-				},
-				DeprecatedSupport: true,
-				PreselectSupport:  true,
-			},
-			CompletionItemKind: &TextDocumentClientCapabilitiesCompletionItemKind{
-				ValueSet: []CompletionItemKind{CompletionItemKindText},
-			},
-			ContextSupport: true,
-		},
-		Hover: &TextDocumentClientCapabilitiesHover{
-			DynamicRegistration: true,
-			ContentFormat: []MarkupKind{
-				PlainText,
-				Markdown,
-			},
-		},
-		SignatureHelp: &TextDocumentClientCapabilitiesSignatureHelp{
-			DynamicRegistration: true,
-			SignatureInformation: &TextDocumentClientCapabilitiesSignatureInformation{
-				DocumentationFormat: []MarkupKind{
-					PlainText,
-					Markdown,
-				},
-			},
-		},
-		References: &TextDocumentClientCapabilitiesReferences{
-			DynamicRegistration: true,
-		},
-		DocumentHighlight: &TextDocumentClientCapabilitiesDocumentHighlight{
-			DynamicRegistration: true,
-		},
-		DocumentSymbol: &TextDocumentClientCapabilitiesDocumentSymbol{
-			DynamicRegistration: true,
-			SymbolKind: &WorkspaceClientCapabilitiesSymbolKind{
-				ValueSet: []SymbolKind{
-					SymbolKindFile,
-					SymbolKindModule,
-					SymbolKindNamespace,
-					SymbolKindPackage,
-					SymbolKindClass,
-					SymbolKindMethod,
-				},
-			},
-			HierarchicalDocumentSymbolSupport: true,
-		},
-		Formatting: &TextDocumentClientCapabilitiesFormatting{
-			DynamicRegistration: true,
-		},
-		RangeFormatting: &TextDocumentClientCapabilitiesRangeFormatting{
-			DynamicRegistration: true,
-		},
-		OnTypeFormatting: &TextDocumentClientCapabilitiesOnTypeFormatting{
-			DynamicRegistration: true,
-		},
-		Declaration: &TextDocumentClientCapabilitiesDeclaration{
-			DynamicRegistration: true,
-			LinkSupport:         true,
-		},
-		Definition: &TextDocumentClientCapabilitiesDefinition{
-			DynamicRegistration: true,
-			LinkSupport:         true,
-		},
-		TypeDefinition: &TextDocumentClientCapabilitiesTypeDefinition{
-			DynamicRegistration: true,
-			LinkSupport:         true,
-		},
-		Implementation: &TextDocumentClientCapabilitiesImplementation{
-			DynamicRegistration: true,
-			LinkSupport:         true,
-		},
-		CodeAction: &TextDocumentClientCapabilitiesCodeAction{
-			DynamicRegistration: true,
-			CodeActionLiteralSupport: &TextDocumentClientCapabilitiesCodeActionLiteralSupport{
-				CodeActionKind: &TextDocumentClientCapabilitiesCodeActionKind{
-					ValueSet: []CodeActionKind{
-						QuickFix,
-						Refactor,
-						RefactorExtract,
-						RefactorRewrite,
-						Source,
-						SourceOrganizeImports,
-					},
-				},
-			},
-		},
-		CodeLens: &TextDocumentClientCapabilitiesCodeLens{
-			DynamicRegistration: true,
-		},
-		DocumentLink: &TextDocumentClientCapabilitiesDocumentLink{
-			DynamicRegistration: true,
-		},
-		ColorProvider: &TextDocumentClientCapabilitiesColorProvider{
-			DynamicRegistration: true,
-		},
-		Rename: &TextDocumentClientCapabilitiesRename{
-			DynamicRegistration: true,
-			PrepareSupport:      true,
-		},
-		PublishDiagnostics: &TextDocumentClientCapabilitiesPublishDiagnostics{
-			RelatedInformation: true,
-		},
-		FoldingRange: &TextDocumentClientCapabilitiesFoldingRange{
-			DynamicRegistration: true,
-			RangeLimit:          uint32(5),
-			LineFoldingOnly:     true,
-		},
-		SelectionRange: &TextDocumentClientCapabilitiesSelectionRange{
-			DynamicRegistration: true,
-		},
-		LinkedEditingRange: &TextDocumentClientCapabilitiesLinkedEditingRange{
-			DynamicRegistration: true,
-		},
-		CallHierarchy: &TextDocumentClientCapabilitiesCallHierarchy{
-			DynamicRegistration: true,
-		},
-		SemanticTokens: &TextDocumentClientCapabilitiesSemanticTokens{
-			DynamicRegistration: true,
-			Requests: WorkspaceClientCapabilitiesSemanticTokensRequests{
-				Range: true,
-				Full:  true,
-			},
-			TokenTypes:     []string{"test", "tokenTypes"},
-			TokenModifiers: []string{"test", "tokenModifiers"},
-			Formats: []TokenFormat{
-				TokenFormatRelative,
-			},
-			OverlappingTokenSupport: true,
-			MultilineTokenSupport:   true,
-		},
-		Moniker: &TextDocumentClientCapabilitiesMoniker{
-			DynamicRegistration: true,
-		},
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          TextDocumentClientCapabilities
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilAll",
-				field:          TextDocumentClientCapabilities{},
-				want:           wantNil,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             TextDocumentClientCapabilities
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilAll",
-				field:            wantNil,
-				want:             TextDocumentClientCapabilities{},
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got TextDocumentClientCapabilities
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-}
-
-func testClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
-	const (
-		want    = `{"workspace":{"applyEdit":true,"workspaceEdit":{"documentChanges":true,"failureHandling":"FailureHandling","resourceOperations":["ResourceOperations"]},"didChangeConfiguration":{"dynamicRegistration":true},"didChangeWatchedFiles":{"dynamicRegistration":true},"symbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]}},"executeCommand":{"dynamicRegistration":true},"workspaceFolders":true,"configuration":true},"textDocument":{"synchronization":{"didSave":true,"dynamicRegistration":true,"willSave":true,"willSaveWaitUntil":true},"completion":{"dynamicRegistration":true,"completionItem":{"snippetSupport":true,"commitCharactersSupport":true,"documentationFormat":["plaintext","markdown"],"deprecatedSupport":true,"preselectSupport":true},"completionItemKind":{"valueSet":[1]},"contextSupport":true},"hover":{"dynamicRegistration":true,"contentFormat":["plaintext","markdown"]},"signatureHelp":{"dynamicRegistration":true,"signatureInformation":{"documentationFormat":["plaintext","markdown"]}},"references":{"dynamicRegistration":true},"documentHighlight":{"dynamicRegistration":true},"documentSymbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]},"hierarchicalDocumentSymbolSupport":true},"formatting":{"dynamicRegistration":true},"rangeFormatting":{"dynamicRegistration":true},"onTypeFormatting":{"dynamicRegistration":true},"declaration":{"dynamicRegistration":true,"linkSupport":true},"definition":{"dynamicRegistration":true,"linkSupport":true},"typeDefinition":{"dynamicRegistration":true,"linkSupport":true},"implementation":{"dynamicRegistration":true,"linkSupport":true},"codeAction":{"dynamicRegistration":true,"codeActionLiteralSupport":{"codeActionKind":{"valueSet":["quickfix","refactor","refactor.extract","refactor.rewrite","source","source.organizeImports"]}}},"codeLens":{"dynamicRegistration":true},"documentLink":{"dynamicRegistration":true},"colorProvider":{"dynamicRegistration":true},"rename":{"dynamicRegistration":true,"prepareSupport":true},"publishDiagnostics":{"relatedInformation":true},"foldingRange":{"dynamicRegistration":true,"rangeLimit":5,"lineFoldingOnly":true},"selectionRange":{"dynamicRegistration":true}},"window":{"workDoneProgress":true,"showMessage":{"messageActionItem":{"additionalPropertiesSupport":true}},"showDocument":{"support":true}},"general":{"regularExpressions":{"engine":"ECMAScript","version":"ES2020"},"markdown":{"parser":"marked","version":"1.1.0"}},"experimental":"testExperimental"}`
-		wantNil = `{}`
-	)
-	wantType := ClientCapabilities{
-		Workspace: &WorkspaceClientCapabilities{
-			ApplyEdit: true,
-			WorkspaceEdit: &WorkspaceClientCapabilitiesWorkspaceEdit{
-				DocumentChanges:    true,
-				FailureHandling:    "FailureHandling",
-				ResourceOperations: []string{"ResourceOperations"},
-			},
-			DidChangeConfiguration: &WorkspaceClientCapabilitiesDidChangeConfiguration{
-				DynamicRegistration: true,
-			},
-			DidChangeWatchedFiles: &WorkspaceClientCapabilitiesDidChangeWatchedFiles{
-				DynamicRegistration: true,
-			},
-			Symbol: &WorkspaceClientCapabilitiesSymbol{
-				DynamicRegistration: true,
-				SymbolKind: &WorkspaceClientCapabilitiesSymbolKind{
-					ValueSet: []SymbolKind{
-						SymbolKindFile,
-						SymbolKindModule,
-						SymbolKindNamespace,
-						SymbolKindPackage,
-						SymbolKindClass,
-						SymbolKindMethod,
-					},
-				},
-			},
-			ExecuteCommand: &WorkspaceClientCapabilitiesExecuteCommand{
-				DynamicRegistration: true,
-			},
-			WorkspaceFolders: true,
-			Configuration:    true,
-		},
-		TextDocument: &TextDocumentClientCapabilities{
-			Synchronization: &TextDocumentClientCapabilitiesSynchronization{
-				DidSave:             true,
-				DynamicRegistration: true,
-				WillSave:            true,
-				WillSaveWaitUntil:   true,
-			},
-			Completion: &TextDocumentClientCapabilitiesCompletion{
-				DynamicRegistration: true,
-				CompletionItem: &TextDocumentClientCapabilitiesCompletionItem{
-					SnippetSupport:          true,
-					CommitCharactersSupport: true,
-					DocumentationFormat: []MarkupKind{
-						PlainText,
-						Markdown,
-					},
-					DeprecatedSupport: true,
-					PreselectSupport:  true,
-				},
-				CompletionItemKind: &TextDocumentClientCapabilitiesCompletionItemKind{
-					ValueSet: []CompletionItemKind{CompletionItemKindText},
-				},
-				ContextSupport: true,
-			},
-			Hover: &TextDocumentClientCapabilitiesHover{
-				DynamicRegistration: true,
-				ContentFormat: []MarkupKind{
-					PlainText,
-					Markdown,
-				},
-			},
-			SignatureHelp: &TextDocumentClientCapabilitiesSignatureHelp{
-				DynamicRegistration: true,
-				SignatureInformation: &TextDocumentClientCapabilitiesSignatureInformation{
-					DocumentationFormat: []MarkupKind{
-						PlainText,
-						Markdown,
-					},
-				},
-			},
-			References: &TextDocumentClientCapabilitiesReferences{
-				DynamicRegistration: true,
-			},
-			DocumentHighlight: &TextDocumentClientCapabilitiesDocumentHighlight{
-				DynamicRegistration: true,
-			},
-			DocumentSymbol: &TextDocumentClientCapabilitiesDocumentSymbol{
-				DynamicRegistration: true,
-				SymbolKind: &WorkspaceClientCapabilitiesSymbolKind{
-					ValueSet: []SymbolKind{
-						SymbolKindFile,
-						SymbolKindModule,
-						SymbolKindNamespace,
-						SymbolKindPackage,
-						SymbolKindClass,
-						SymbolKindMethod,
-					},
-				},
-				HierarchicalDocumentSymbolSupport: true,
-			},
-			Formatting: &TextDocumentClientCapabilitiesFormatting{
-				DynamicRegistration: true,
-			},
-			RangeFormatting: &TextDocumentClientCapabilitiesRangeFormatting{
-				DynamicRegistration: true,
-			},
-			OnTypeFormatting: &TextDocumentClientCapabilitiesOnTypeFormatting{
-				DynamicRegistration: true,
-			},
-			Declaration: &TextDocumentClientCapabilitiesDeclaration{
-				DynamicRegistration: true,
-				LinkSupport:         true,
-			},
-			Definition: &TextDocumentClientCapabilitiesDefinition{
-				DynamicRegistration: true,
-				LinkSupport:         true,
-			},
-			TypeDefinition: &TextDocumentClientCapabilitiesTypeDefinition{
-				DynamicRegistration: true,
-				LinkSupport:         true,
-			},
-			Implementation: &TextDocumentClientCapabilitiesImplementation{
-				DynamicRegistration: true,
-				LinkSupport:         true,
-			},
-			CodeAction: &TextDocumentClientCapabilitiesCodeAction{
-				DynamicRegistration: true,
-				CodeActionLiteralSupport: &TextDocumentClientCapabilitiesCodeActionLiteralSupport{
-					CodeActionKind: &TextDocumentClientCapabilitiesCodeActionKind{
-						ValueSet: []CodeActionKind{
-							QuickFix,
-							Refactor,
-							RefactorExtract,
-							RefactorRewrite,
-							Source,
-							SourceOrganizeImports,
-						},
-					},
-				},
-			},
-			CodeLens: &TextDocumentClientCapabilitiesCodeLens{
-				DynamicRegistration: true,
-			},
-			DocumentLink: &TextDocumentClientCapabilitiesDocumentLink{
-				DynamicRegistration: true,
-			},
-			ColorProvider: &TextDocumentClientCapabilitiesColorProvider{
-				DynamicRegistration: true,
-			},
-			Rename: &TextDocumentClientCapabilitiesRename{
-				DynamicRegistration: true,
-				PrepareSupport:      true,
-			},
-			PublishDiagnostics: &TextDocumentClientCapabilitiesPublishDiagnostics{
-				RelatedInformation: true,
-			},
-			FoldingRange: &TextDocumentClientCapabilitiesFoldingRange{
-				DynamicRegistration: true,
-				RangeLimit:          uint32(5),
-				LineFoldingOnly:     true,
-			},
-			SelectionRange: &TextDocumentClientCapabilitiesSelectionRange{
-				DynamicRegistration: true,
-			},
-		},
-		Window: &WindowClientCapabilities{
-			WorkDoneProgress: true,
-			ShowMessage: &ClientCapabilitiesShowMessageRequest{
-				MessageActionItem: &ClientCapabilitiesShowMessageRequestMessageActionItem{
-					AdditionalPropertiesSupport: true,
-				},
-			},
-			ShowDocument: &ClientCapabilitiesShowDocument{
-				Support: true,
-			},
-		},
-		General: &GeneralClientCapabilities{
-			RegularExpressions: &RegularExpressionsClientCapabilities{
-				Engine:  "ECMAScript",
-				Version: "ES2020",
-			},
-			Markdown: &MarkdownClientCapabilities{
-				Parser:  "marked",
-				Version: "1.1.0",
-			},
-		},
-		Experimental: "testExperimental",
-	}
-
-	t.Run("Marshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name           string
-			field          ClientCapabilities
-			want           string
-			wantMarshalErr bool
-			wantErr        bool
-		}{
-			{
-				name:           "Valid",
-				field:          wantType,
-				want:           want,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-			{
-				name:           "ValidNilAll",
-				field:          ClientCapabilities{},
-				want:           wantNil,
-				wantMarshalErr: false,
-				wantErr:        false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				got, err := marshal(&tt.field)
-				if (err != nil) != tt.wantMarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
-				}
-			})
-		}
-	})
-
-	t.Run("Unmarshal", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name             string
-			field            string
-			want             ClientCapabilities
-			wantUnmarshalErr bool
-			wantErr          bool
-		}{
-			{
-				name:             "Valid",
-				field:            want,
-				want:             wantType,
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-			{
-				name:             "ValidNilAll",
-				field:            wantNil,
-				want:             ClientCapabilities{},
-				wantUnmarshalErr: false,
-				wantErr:          false,
-			},
-		}
-
-		for _, tt := range tests {
-			tt := tt
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				var got ClientCapabilities
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
-					t.Fatal(err)
-				}
-
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -6538,17 +3699,17 @@ func testClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 
 func testInitializeResult(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
 	const (
-		want    = `{"capabilities":{"textDocumentSync":1,"hoverProvider":true,"completionProvider":{"resolveProvider":true,"triggerCharacters":["Tab"]},"signatureHelpProvider":{"triggerCharacters":["C-K"],"retriggerCharacters":["."]},"declarationProvider":true,"definitionProvider":true,"typeDefinitionProvider":true,"implementationProvider":true,"referencesProvider":true,"documentHighlightProvider":true,"documentSymbolProvider":true,"workspaceSymbolProvider":true,"codeActionProvider":true,"codeLensProvider":{"resolveProvider":true},"documentFormattingProvider":true,"documentRangeFormattingProvider":true,"documentOnTypeFormattingProvider":{"firstTriggerCharacter":".","moreTriggerCharacter":["f"]},"renameProvider":true,"documentLinkProvider":{"resolveProvider":true},"colorProvider":true,"foldingRangeProvider":true,"selectionRangeProvider":true,"executeCommandProvider":{"commands":["test","command"]},"workspace":{"workspaceFolders":{"supported":true,"changeNotifications":"testNotifications"},"fileOperations":{"didCreate":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"file","options":{"ignoreCase":true}}}]},"willCreate":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"folder","options":{"ignoreCase":true}}}]},"didRename":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"file","options":{"ignoreCase":true}}}]},"willRename":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"folder","options":{"ignoreCase":true}}}]},"didDelete":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"file","options":{"ignoreCase":true}}}]},"willDelete":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"folder","options":{"ignoreCase":true}}}]}}},"linkedEditingRangeProvider":true,"callHierarchyProvider":true,"monikerProvider":true,"experimental":"Awesome Experimentals"},"serverInfo":{"name":"testServer","version":"v0.0.0"}}`
+		want    = `{"capabilities":{"textDocumentSync":1,"completionProvider":{"resolveProvider":true,"triggerCharacters":["Tab"]},"hoverProvider":true,"signatureHelpProvider":{"triggerCharacters":["C-K"],"retriggerCharacters":["."]},"declarationProvider":true,"definitionProvider":true,"typeDefinitionProvider":true,"implementationProvider":true,"referencesProvider":true,"documentHighlightProvider":true,"documentSymbolProvider":true,"codeActionProvider":true,"codeLensProvider":{"resolveProvider":true},"documentLinkProvider":{"resolveProvider":true},"colorProvider":true,"workspaceSymbolProvider":true,"documentFormattingProvider":true,"documentRangeFormattingProvider":true,"documentOnTypeFormattingProvider":{"firstTriggerCharacter":".","moreTriggerCharacter":["f"]},"renameProvider":true,"foldingRangeProvider":true,"selectionRangeProvider":true,"executeCommandProvider":{"commands":["test","command"]},"callHierarchyProvider":true,"linkedEditingRangeProvider":true,"workspace":{"workspaceFolders":{"supported":true,"changeNotifications":"testNotifications"},"fileOperations":{"didCreate":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"file","options":{"ignoreCase":true}}}]},"willCreate":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"folder","options":{"ignoreCase":true}}}]},"didRename":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"file","options":{"ignoreCase":true}}}]},"willRename":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"folder","options":{"ignoreCase":true}}}]},"didDelete":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"file","options":{"ignoreCase":true}}}]},"willDelete":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"folder","options":{"ignoreCase":true}}}]}}},"monikerProvider":true,"experimental":"Awesome Experimentals"},"serverInfo":{"name":"testServer","version":"v0.0.0"}}`
 		wantNil = `{"capabilities":{}}`
 	)
 	wantType := InitializeResult{
 		Capabilities: ServerCapabilities{
 			TextDocumentSync: float64(1),
-			HoverProvider:    true,
 			CompletionProvider: &CompletionOptions{
 				ResolveProvider:   true,
 				TriggerCharacters: []string{"Tab"},
 			},
+			HoverProvider: true,
 			SignatureHelpProvider: &SignatureHelpOptions{
 				TriggerCharacters:   []string{"C-K"},
 				RetriggerCharacters: []string{"."},
@@ -6722,9 +3883,9 @@ func testInitializeResult(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
 					t.Logf("got: %s", string(got))
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -6767,15 +3928,15 @@ func testInitializeResult(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 				}
 
 				// cmpOpts := cmpopts.IgnoreFields(ServerCapabilities{}, "SelectionRangeProvider") // ignore SelectionRangeProvider field but assert below
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 
 				// if srp := got.Capabilities.SelectionRangeProvider; srp != nil {
 				// 	switch srp := srp.(type) {
 				// 	case bool: // EnableSelectionRange
 				// 		if diff := cmp.Diff(EnableSelectionRange(srp), enableSelectionRange); (diff != "") != tt.wantErr {
-				// 			t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				// 			t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				// 		}
 				// 	default:
 				// 		t.Fatalf("srp type is %[1]T, not bool: %#[1]v\n", srp)
@@ -6821,8 +3982,8 @@ func testInitializeError(t *testing.T, marshal marshalFunc, unmarshal unmarshalF
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -6857,8 +4018,8 @@ func testInitializeError(t *testing.T, marshal marshalFunc, unmarshal unmarshalF
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -6925,8 +4086,8 @@ func testShowDocumentParams(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -6968,8 +4129,8 @@ func testShowDocumentParams(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -7011,8 +4172,8 @@ func testShowDocumentResult(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -7047,8 +4208,8 @@ func testShowDocumentResult(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -7056,6 +4217,8 @@ func testShowDocumentResult(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 }
 
 func TestTextDocumentSyncKind_String(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
 		k    TextDocumentSyncKind
@@ -7088,7 +4251,7 @@ func TestTextDocumentSyncKind_String(t *testing.T) {
 			t.Parallel()
 
 			if got := tt.k.String(); got != tt.want {
-				t.Errorf("TextDocumentSyncKind.String() = %v, want %v", got, tt.want)
+				t.Errorf("TextDocumentSyncKind.String() = %v, want %v", tt.want, got)
 			}
 		})
 	}
@@ -7131,8 +4294,8 @@ func testReferencesOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -7167,8 +4330,8 @@ func testReferencesOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -7225,8 +4388,8 @@ func testCodeActionOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -7268,8 +4431,8 @@ func testCodeActionOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -7322,8 +4485,8 @@ func testRenameOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFun
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -7365,8 +4528,8 @@ func testRenameOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFun
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -7419,8 +4582,8 @@ func testSaveOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc)
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -7462,8 +4625,8 @@ func testSaveOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc)
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -7522,8 +4685,8 @@ func testTextDocumentSyncOptions(t *testing.T, marshal marshalFunc, unmarshal un
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -7565,8 +4728,8 @@ func testTextDocumentSyncOptions(t *testing.T, marshal marshalFunc, unmarshal un
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -7621,8 +4784,8 @@ func testHoverOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -7664,8 +4827,8 @@ func testHoverOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -7718,8 +4881,8 @@ func testStaticRegistrationOptions(t *testing.T, marshal marshalFunc, unmarshal 
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -7761,8 +4924,8 @@ func testStaticRegistrationOptions(t *testing.T, marshal marshalFunc, unmarshal 
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -7828,8 +4991,8 @@ func testDocumentLinkRegistrationOptions(t *testing.T, marshal marshalFunc, unma
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -7871,8 +5034,8 @@ func testDocumentLinkRegistrationOptions(t *testing.T, marshal marshalFunc, unma
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -7911,8 +5074,8 @@ func testInitializedParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(string(got), tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, string(got)); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}
@@ -7947,8 +5110,8 @@ func testInitializedParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(got, tt.want); (diff != "") != tt.wantErr {
-					t.Errorf("%s: wantErr: %t\n(-got, +want)\n%s", tt.name, tt.wantErr, diff)
+				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
 		}

@@ -1,6 +1,5 @@
-// Copyright 2019 The Go Language Server Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
+// SPDX-FileCopyrightText: Copyright 2019 The Go Language Server Authors
+// SPDX-License-Identifier: BSD-3-Clause
 
 //go:build gojay
 // +build gojay
@@ -665,29 +664,35 @@ var (
 
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *ReferenceParams) MarshalJSONObject(enc *gojay.Encoder) {
-	enc.ObjectKey(keyTextDocument, &v.TextDocument)
-	enc.ObjectKey(keyPosition, &v.Position)
-	enc.ObjectKey(keyContext, &v.Context)
+	enc.ObjectKeyOmitEmpty(keyTextDocument, &v.TextDocument)
+	enc.ObjectKeyOmitEmpty(keyPosition, &v.Position)
+	encodeProgressToken(enc, keyWorkDoneToken, v.WorkDoneToken)
+	encodeProgressToken(enc, keyPartialResultToken, v.PartialResultToken)
+	enc.ObjectKeyOmitEmpty(keyContext, &v.Context)
 }
 
-// IsNil returns wether the structure is nil value or not.
+// IsNil implements gojay.MarshalerJSONObject.
 func (v *ReferenceParams) IsNil() bool { return v == nil }
 
-// UnmarshalJSONObject implements gojay's UnmarshalerJSONObject.
+// UnmarshalJSONObject implements gojay.UnmarshalerJSONObject.
 func (v *ReferenceParams) UnmarshalJSONObject(dec *gojay.Decoder, k string) error {
 	switch k {
 	case keyTextDocument:
 		return dec.Object(&v.TextDocument)
 	case keyPosition:
 		return dec.Object(&v.Position)
+	case keyWorkDoneToken:
+		return decodeProgressToken(dec, k, keyWorkDoneToken, v.WorkDoneToken)
+	case keyPartialResultToken:
+		return decodeProgressToken(dec, k, keyPartialResultToken, v.PartialResultToken)
 	case keyContext:
 		return dec.Object(&v.Context)
 	}
 	return nil
 }
 
-// NKeys returns the number of keys to unmarshal.
-func (v *ReferenceParams) NKeys() int { return 3 }
+// NKeys implements gojay.UnmarshalerJSONObject.
+func (v *ReferenceParams) NKeys() int { return 5 }
 
 // compile time check whether the ReferenceParams implements a gojay.MarshalerJSONObject and gojay.UnmarshalerJSONObject interfaces.
 var (

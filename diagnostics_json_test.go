@@ -1,6 +1,5 @@
-// Copyright 2019 The Go Language Server Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
+// SPDX-FileCopyrightText: Copyright 2019 The Go Language Server Authors
+// SPDX-License-Identifier: BSD-3-Clause
 
 //go:build !gojay
 // +build !gojay
@@ -12,6 +11,20 @@ import (
 	"testing"
 )
 
+func TestDiagnostic(t *testing.T) {
+	t.Parallel()
+
+	testDiagnostic(t, json.Marshal, json.Unmarshal)
+}
+
+func TestDiagnosticRelatedInformation(t *testing.T) {
+	t.Parallel()
+
+	testDiagnosticRelatedInformation(t, json.Marshal, json.Unmarshal)
+}
+
 func TestPublishDiagnosticsParams(t *testing.T) {
+	t.Parallel()
+
 	testPublishDiagnosticsParams(t, json.Marshal, json.Unmarshal)
 }

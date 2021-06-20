@@ -1,12 +1,11 @@
-// Copyright 2019 The Go Language Server Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
+// SPDX-FileCopyrightText: Copyright 2019 The Go Language Server Authors
+// SPDX-License-Identifier: BSD-3-Clause
 
 package protocol
 
 import "strconv"
 
-// ShowMessageParams params of ShowMessage Notification.
+// ShowMessageParams params of ShowMessage notification.
 type ShowMessageParams struct {
 	// Message is the actual message.
 	Message string `json:"message"`
@@ -68,7 +67,7 @@ func ToMessageType(level string) MessageType {
 	return mt
 }
 
-// ShowMessageRequestParams params of ShowMessage Request.
+// ShowMessageRequestParams params of ShowMessage request.
 type ShowMessageRequestParams struct {
 	// Actions is the message action items to present.
 	Actions []MessageActionItem `json:"actions"`
@@ -86,7 +85,7 @@ type MessageActionItem struct {
 	Title string `json:"title"`
 }
 
-// LogMessageParams params of LogMessage Notification.
+// LogMessageParams params of LogMessage notification.
 type LogMessageParams struct {
 	// Message is the actual message
 	Message string `json:"message"`

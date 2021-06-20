@@ -33,8 +33,10 @@ func CancelHandler(handler jsonrpc2.Handler) jsonrpc2.Handler {
 					err = ErrRequestCancelled
 				}
 				ctx = xcontext.Detach(ctx)
+
 				return reply(ctx, resp, err)
 			}
+
 			return handler(ctx, reply, req)
 		}
 

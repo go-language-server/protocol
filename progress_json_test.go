@@ -1,6 +1,5 @@
-// Copyright 2021 The Go Language Server Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
+// SPDX-FileCopyrightText: Copyright 2021 The Go Language Server Authors
+// SPDX-License-Identifier: BSD-3-Clause
 
 //go:build !gojay
 // +build !gojay
@@ -12,26 +11,32 @@ import (
 	"testing"
 )
 
-func TestProgressParams(t *testing.T) {
-	testProgressParams(t, json.Marshal, json.Unmarshal)
-}
-
 func TestWorkDoneProgressBegin(t *testing.T) {
+	t.Parallel()
+
 	testWorkDoneProgressBegin(t, json.Marshal, json.Unmarshal)
 }
 
 func TestWorkDoneProgressReport(t *testing.T) {
+	t.Parallel()
+
 	testWorkDoneProgressReport(t, json.Marshal, json.Unmarshal)
 }
 
 func TestWorkDoneProgressEnd(t *testing.T) {
+	t.Parallel()
+
 	testWorkDoneProgressEnd(t, json.Marshal, json.Unmarshal)
 }
 
 func TestWorkDoneProgressParams(t *testing.T) {
+	t.Parallel()
+
 	testWorkDoneProgressParams(t, json.Marshal, json.Unmarshal)
 }
 
 func TestPartialResultParams(t *testing.T) {
+	t.Parallel()
+
 	testPartialResultParams(t, json.Marshal, json.Unmarshal)
 }

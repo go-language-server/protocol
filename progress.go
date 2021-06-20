@@ -1,19 +1,7 @@
-// Copyright 2021 The Go Language Server Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
+// SPDX-FileCopyrightText: Copyright 2021 The Go Language Server Authors
+// SPDX-License-Identifier: BSD-3-Clause
 
 package protocol
-
-// ProgressParams params of Progress netification.
-//
-// @since 3.15.0.
-type ProgressParams struct {
-	// Token is the progress token provided by the client or server.
-	Token ProgressToken `json:"token"`
-
-	// Value is the progress data.
-	Value interface{} `json:"value"`
-}
 
 // WorkDoneProgressKind kind of WorkDoneProgress.
 //
@@ -22,9 +10,14 @@ type WorkDoneProgressKind string
 
 // list of WorkDoneProgressKind.
 const (
-	WorkDoneProgressKindBegin  WorkDoneProgressKind = "begin"
+	// WorkDoneProgressKindBegin kind of WorkDoneProgressBegin.
+	WorkDoneProgressKindBegin WorkDoneProgressKind = "begin"
+
+	// WorkDoneProgressKindReport kind of WorkDoneProgressReport.
 	WorkDoneProgressKindReport WorkDoneProgressKind = "report"
-	WorkDoneProgressKindEnd    WorkDoneProgressKind = "end"
+
+	// WorkDoneProgressKindEnd kind of WorkDoneProgressEnd.
+	WorkDoneProgressKindEnd WorkDoneProgressKind = "end"
 )
 
 // WorkDoneProgressBegin is the to start progress reporting a "$/progress" notification.
