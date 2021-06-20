@@ -15,9 +15,7 @@ import (
 func (v *ServerCapabilities) MarshalJSONObject(enc *gojay.Encoder) {
 	switch v.TextDocumentSync.(type) {
 	case float64: // TextDocumentSyncKind
-		enc.Uint32Key(keyTextDocumentSync, uint32(v.TextDocumentSync.(float64)))
-	case TextDocumentSyncKind: // TextDocumentSyncKind
-		enc.Uint32Key(keyTextDocumentSync, uint32(v.TextDocumentSync.(TextDocumentSyncKind)))
+		enc.Float64Key(keyTextDocumentSync, v.TextDocumentSync.(float64))
 	case *TextDocumentSyncOptions:
 		enc.ObjectKey(keyTextDocumentSync, v.TextDocumentSync.(*TextDocumentSyncOptions))
 	}
@@ -207,81 +205,109 @@ func (v *ServerCapabilities) UnmarshalJSONObject(dec *gojay.Decoder, k string) e
 	switch k {
 	case keyTextDocumentSync:
 		return dec.Interface(&v.TextDocumentSync)
+
 	case keyCompletionProvider:
 		if v.CompletionProvider == nil {
 			v.CompletionProvider = &CompletionOptions{}
 		}
 		return dec.Object(v.CompletionProvider)
+
 	case keyHoverProvider:
 		return dec.Interface(&v.HoverProvider)
+
 	case keySignatureHelpProvider:
 		if v.SignatureHelpProvider == nil {
 			v.SignatureHelpProvider = &SignatureHelpOptions{}
 		}
 		return dec.Object(v.SignatureHelpProvider)
+
 	case keyDeclarationProvider:
 		return dec.Interface(&v.DeclarationProvider)
+
 	case keyDefinitionProvider:
 		return dec.Interface(&v.DefinitionProvider)
+
 	case keyTypeDefinitionProvider:
 		return dec.Interface(&v.TypeDefinitionProvider)
+
 	case keyImplementationProvider:
 		return dec.Interface(&v.ImplementationProvider)
+
 	case keyReferencesProvider:
 		return dec.Interface(&v.ReferencesProvider)
+
 	case keyDocumentHighlightProvider:
 		return dec.Interface(&v.DocumentHighlightProvider)
+
 	case keyDocumentSymbolProvider:
 		return dec.Interface(&v.DocumentSymbolProvider)
+
 	case keyCodeActionProvider:
 		return dec.Interface(&v.CodeActionProvider)
+
 	case keyCodeLensProvider:
 		if v.CodeLensProvider == nil {
 			v.CodeLensProvider = &CodeLensOptions{}
 		}
 		return dec.Object(v.CodeLensProvider)
+
 	case keyDocumentLinkProvider:
 		if v.DocumentLinkProvider == nil {
 			v.DocumentLinkProvider = &DocumentLinkOptions{}
 		}
 		return dec.Object(v.DocumentLinkProvider)
+
 	case keyColorProvider:
 		return dec.Interface(&v.ColorProvider)
+
 	case keyWorkspaceSymbolProvider:
 		return dec.Interface(&v.WorkspaceSymbolProvider)
+
 	case keyDocumentFormattingProvider:
 		return dec.Interface(&v.DocumentFormattingProvider)
+
 	case keyDocumentRangeFormattingProvider:
 		return dec.Interface(&v.DocumentRangeFormattingProvider)
+
 	case keyDocumentOnTypeFormattingProvider:
 		if v.DocumentOnTypeFormattingProvider == nil {
 			v.DocumentOnTypeFormattingProvider = &DocumentOnTypeFormattingOptions{}
 		}
 		return dec.Object(v.DocumentOnTypeFormattingProvider)
+
 	case keyRenameProvider:
 		return dec.Interface(&v.RenameProvider)
+
 	case keyFoldingRangeProvider:
 		return dec.Interface(&v.FoldingRangeProvider)
+
 	case keySelectionRangeProvider:
 		return dec.Interface(&v.SelectionRangeProvider)
+
 	case keyExecuteCommandProvider:
 		if v.ExecuteCommandProvider == nil {
 			v.ExecuteCommandProvider = &ExecuteCommandOptions{}
 		}
 		return dec.Object(v.ExecuteCommandProvider)
+
+	case keyCallHierarchyProvider:
+		return dec.Interface(&v.CallHierarchyProvider)
+
+	case keyLinkedEditingRangeProvider:
+		return dec.Interface(&v.LinkedEditingRangeProvider)
+
+	case keySemanticTokensProvider:
+		return dec.Interface(&v.SemanticTokensProvider)
+
 	case keyWorkspace:
 		if v.Workspace == nil {
 			v.Workspace = &ServerCapabilitiesWorkspace{}
 		}
 		return dec.Object(v.Workspace)
-	case keyLinkedEditingRangeProvider:
-		return dec.Interface(&v.LinkedEditingRangeProvider)
-	case keyCallHierarchyProvider:
-		return dec.Interface(&v.CallHierarchyProvider)
-	case keySemanticTokensProvider:
-		return dec.Interface(&v.SemanticTokensProvider)
+
 	case keyMonikerProvider:
 		return dec.Interface(&v.MonikerProvider)
+
 	case keyExperimental:
 		return dec.Interface(&v.Experimental)
 	}
