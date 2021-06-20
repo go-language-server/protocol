@@ -5,7 +5,7 @@ package protocol
 
 import "strconv"
 
-// ShowMessageParams params of ShowMessage Notification.
+// ShowMessageParams params of ShowMessage notification.
 type ShowMessageParams struct {
 	// Message is the actual message.
 	Message string `json:"message"`
@@ -67,7 +67,7 @@ func ToMessageType(level string) MessageType {
 	return mt
 }
 
-// ShowMessageRequestParams params of ShowMessage Request.
+// ShowMessageRequestParams params of ShowMessage request.
 type ShowMessageRequestParams struct {
 	// Actions is the message action items to present.
 	Actions []MessageActionItem `json:"actions"`
@@ -85,7 +85,7 @@ type MessageActionItem struct {
 	Title string `json:"title"`
 }
 
-// LogMessageParams params of LogMessage Notification.
+// LogMessageParams params of LogMessage notification.
 type LogMessageParams struct {
 	// Message is the actual message
 	Message string `json:"message"`

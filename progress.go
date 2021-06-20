@@ -10,9 +10,14 @@ type WorkDoneProgressKind string
 
 // list of WorkDoneProgressKind.
 const (
-	WorkDoneProgressKindBegin  WorkDoneProgressKind = "begin"
+	// WorkDoneProgressKindBegin kind of WorkDoneProgressBegin.
+	WorkDoneProgressKindBegin WorkDoneProgressKind = "begin"
+
+	// WorkDoneProgressKindReport kind of WorkDoneProgressReport.
 	WorkDoneProgressKindReport WorkDoneProgressKind = "report"
-	WorkDoneProgressKindEnd    WorkDoneProgressKind = "end"
+
+	// WorkDoneProgressKindEnd kind of WorkDoneProgressEnd.
+	WorkDoneProgressKindEnd WorkDoneProgressKind = "end"
 )
 
 // WorkDoneProgressBegin is the to start progress reporting a "$/progress" notification.

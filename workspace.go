@@ -19,7 +19,7 @@ type WorkspaceFolder struct {
 	Name string `json:"name"`
 }
 
-// DidChangeWorkspaceFoldersParams params of DidChangeWorkspaceFolders Notification.
+// DidChangeWorkspaceFoldersParams params of DidChangeWorkspaceFolders notification.
 type DidChangeWorkspaceFoldersParams struct {
 	// Event is the actual workspace folder change event.
 	Event WorkspaceFoldersChangeEvent `json:"event"`
@@ -34,13 +34,13 @@ type WorkspaceFoldersChangeEvent struct {
 	Removed []WorkspaceFolder `json:"removed"`
 }
 
-// DidChangeConfigurationParams params of DidChangeConfiguration Notification.
+// DidChangeConfigurationParams params of DidChangeConfiguration notification.
 type DidChangeConfigurationParams struct {
 	// Settings is the actual changed settings
 	Settings interface{} `json:"settings,omitempty"`
 }
 
-// ConfigurationParams params of Configuration Request.
+// ConfigurationParams params of Configuration request.
 type ConfigurationParams struct {
 	Items []ConfigurationItem `json:"items"`
 }
@@ -58,7 +58,7 @@ type ConfigurationItem struct {
 	Section string `json:"section,omitempty"`
 }
 
-// DidChangeWatchedFilesParams params of DidChangeWatchedFiles Notification.
+// DidChangeWatchedFilesParams params of DidChangeWatchedFiles notification.
 type DidChangeWatchedFilesParams struct {
 	// Changes is the actual file events.
 	Changes []*FileEvent `json:"changes,omitempty"`
@@ -152,7 +152,7 @@ func (k WatchKind) String() string {
 	}
 }
 
-// WorkspaceSymbolParams is the parameters of a Workspace Symbol Request.
+// WorkspaceSymbolParams is the parameters of a Workspace Symbol request.
 type WorkspaceSymbolParams struct {
 	WorkDoneProgressParams
 	PartialResultParams

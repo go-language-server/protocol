@@ -7,13 +7,13 @@ import (
 	"strconv"
 )
 
-// DidOpenTextDocumentParams params of DidOpenTextDocument Notification.
+// DidOpenTextDocumentParams params of DidOpenTextDocument notification.
 type DidOpenTextDocumentParams struct {
 	// TextDocument is the document that was opened.
 	TextDocument TextDocumentItem `json:"textDocument"`
 }
 
-// DidChangeTextDocumentParams params of DidChangeTextDocument Notification.
+// DidChangeTextDocumentParams params of DidChangeTextDocument notification.
 type DidChangeTextDocumentParams struct {
 	// TextDocument is the document that did change. The version number points
 	// to the version after all provided content changes have
@@ -73,7 +73,7 @@ type WillSaveTextDocumentParams struct {
 	Reason TextDocumentSaveReason `json:"reason,omitempty"`
 }
 
-// DidSaveTextDocumentParams params of DidSaveTextDocument Notification.
+// DidSaveTextDocumentParams params of DidSaveTextDocument notification.
 type DidSaveTextDocumentParams struct {
 	// Text optional the content when saved. Depends on the includeText value
 	// when the save notification was requested.
@@ -104,7 +104,7 @@ type TextDocumentSaveRegistrationOptions struct {
 	IncludeText bool `json:"includeText,omitempty"`
 }
 
-// DidCloseTextDocumentParams params of DidCloseTextDocument Notification.
+// DidCloseTextDocumentParams params of DidCloseTextDocument notification.
 type DidCloseTextDocumentParams struct {
 	// TextDocument the document that was closed.
 	TextDocument TextDocumentIdentifier `json:"textDocument"`

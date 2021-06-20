@@ -29,7 +29,7 @@ type ClientInfo struct {
 	Version string `json:"version,omitempty"`
 }
 
-// InitializeParams params of Initialize Request.
+// InitializeParams params of Initialize request.
 type InitializeParams struct {
 	WorkDoneProgressParams
 
@@ -232,7 +232,7 @@ type FileDelete struct {
 	URI string `json:"uri"`
 }
 
-// DocumentHighlightParams params of DocumentHighlight Request.
+// DocumentHighlightParams params of DocumentHighlight request.
 //
 // @since 3.15.0.
 type DocumentHighlightParams struct {
@@ -241,7 +241,7 @@ type DocumentHighlightParams struct {
 	PartialResultParams
 }
 
-// DeclarationParams params of Declaration Request.
+// DeclarationParams params of Declaration request.
 //
 // @since 3.15.0.
 type DeclarationParams struct {
@@ -250,7 +250,7 @@ type DeclarationParams struct {
 	PartialResultParams
 }
 
-// DefinitionParams params of Definition Request.
+// DefinitionParams params of Definition request.
 //
 // @since 3.15.0.
 type DefinitionParams struct {
@@ -259,7 +259,7 @@ type DefinitionParams struct {
 	PartialResultParams
 }
 
-// TypeDefinitionParams params of TypeDefinition Request.
+// TypeDefinitionParams params of TypeDefinition request.
 //
 // @since 3.15.0.
 type TypeDefinitionParams struct {
@@ -268,7 +268,7 @@ type TypeDefinitionParams struct {
 	PartialResultParams
 }
 
-// ImplementationParams params of Implementation Request.
+// ImplementationParams params of Implementation request.
 //
 // @since 3.15.0.
 type ImplementationParams struct {
@@ -454,7 +454,7 @@ type DocumentLinkRegistrationOptions struct {
 	ResolveProvider bool `json:"resolveProvider,omitempty"`
 }
 
-// InitializedParams params of Initialized Notification.
+// InitializedParams params of Initialized notification.
 type InitializedParams struct{}
 
 // WorkspaceFolders represents a slice of WorkspaceFolder.

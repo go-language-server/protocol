@@ -7,9 +7,11 @@ package protocol
 //
 // @since 3.16.0.
 type CallHierarchy struct {
-	// DynamicRegistration whether implementation supports dynamic registration. If this is set to "true"
-	// the client supports the new TextDocumentRegistrationOptions && StaticRegistrationOptions
-	// return value for the corresponding server capability as well.
+	// DynamicRegistration whether implementation supports dynamic registration.
+	//
+	// If this is set to "true" the client supports the new
+	// TextDocumentRegistrationOptions && StaticRegistrationOptions return
+	// value for the corresponding server capability as well.
 	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
 }
 

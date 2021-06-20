@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-// CompletionParams params of Completion Request.
+// CompletionParams params of Completion request.
 type CompletionParams struct {
 	TextDocumentPositionParams
 	WorkDoneProgressParams
@@ -422,7 +422,7 @@ type CompletionRegistrationOptions struct {
 	ResolveProvider bool `json:"resolveProvider,omitempty"`
 }
 
-// HoverParams params of Hover Request.
+// HoverParams params of Hover request.
 //
 // @since 3.15.0.
 type HoverParams struct {
@@ -440,7 +440,7 @@ type Hover struct {
 	Range *Range `json:"range,omitempty"`
 }
 
-// SignatureHelpParams params of SignatureHelp Request.
+// SignatureHelpParams params of SignatureHelp request.
 //
 // @since 3.15.0.
 type SignatureHelpParams struct {
@@ -596,7 +596,7 @@ type SignatureHelpRegistrationOptions struct {
 	TriggerCharacters []string `json:"triggerCharacters,omitempty"`
 }
 
-// ReferenceParams params of References Request.
+// ReferenceParams params of References request.
 //
 // @since 3.15.0.
 type ReferenceParams struct {
@@ -653,7 +653,7 @@ func (k DocumentHighlightKind) String() string {
 	}
 }
 
-// DocumentSymbolParams params of Document Symbols Request.
+// DocumentSymbolParams params of Document Symbols request.
 type DocumentSymbolParams struct {
 	WorkDoneProgressParams
 	PartialResultParams
@@ -1037,7 +1037,7 @@ type CodeActionRegistrationOptions struct {
 	CodeActionOptions
 }
 
-// CodeLensParams params of Code Lens Request.
+// CodeLensParams params of Code Lens request.
 type CodeLensParams struct {
 	WorkDoneProgressParams
 	PartialResultParams
@@ -1071,7 +1071,7 @@ type CodeLensRegistrationOptions struct {
 	ResolveProvider bool `json:"resolveProvider,omitempty"`
 }
 
-// DocumentLinkParams params of Document Link Request.
+// DocumentLinkParams params of Document Link request.
 type DocumentLinkParams struct {
 	WorkDoneProgressParams
 	PartialResultParams
@@ -1103,7 +1103,7 @@ type DocumentLink struct {
 	Data interface{} `json:"data,omitempty"`
 }
 
-// DocumentColorParams params of Document Color Request.
+// DocumentColorParams params of Document Color request.
 type DocumentColorParams struct {
 	WorkDoneProgressParams
 	PartialResultParams
@@ -1112,7 +1112,7 @@ type DocumentColorParams struct {
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
 }
 
-// ColorInformation response of Document Color Request.
+// ColorInformation response of Document Color request.
 type ColorInformation struct {
 	// Range is the range in the document where this color appears.
 	Range Range `json:"range"`
@@ -1136,7 +1136,7 @@ type Color struct {
 	Red float64 `json:"red"`
 }
 
-// ColorPresentationParams params of Color Presentation Request.
+// ColorPresentationParams params of Color Presentation request.
 type ColorPresentationParams struct {
 	WorkDoneProgressParams
 	PartialResultParams
@@ -1151,7 +1151,7 @@ type ColorPresentationParams struct {
 	Range Range `json:"range"`
 }
 
-// ColorPresentation response of Color Presentation Request.
+// ColorPresentation response of Color Presentation request.
 type ColorPresentation struct {
 	// Label is the label of this color presentation. It will be shown on the color
 	// picker header. By default this is also the text that is inserted when selecting
@@ -1167,7 +1167,7 @@ type ColorPresentation struct {
 	AdditionalTextEdits []TextEdit `json:"additionalTextEdits,omitempty"`
 }
 
-// DocumentFormattingParams params of Document Formatting Request.
+// DocumentFormattingParams params of Document Formatting request.
 type DocumentFormattingParams struct {
 	WorkDoneProgressParams
 
@@ -1205,7 +1205,7 @@ type FormattingOptions struct {
 	Key map[string]interface{} `json:"key,omitempty"` // bool | int32 | string
 }
 
-// DocumentRangeFormattingParams params of Document Range Formatting Request.
+// DocumentRangeFormattingParams params of Document Range Formatting request.
 type DocumentRangeFormattingParams struct {
 	WorkDoneProgressParams
 
@@ -1219,7 +1219,7 @@ type DocumentRangeFormattingParams struct {
 	Options FormattingOptions `json:"options"`
 }
 
-// DocumentOnTypeFormattingParams params of Document on Type Formatting Request.
+// DocumentOnTypeFormattingParams params of Document on Type Formatting request.
 type DocumentOnTypeFormattingParams struct {
 	// TextDocument is the document to format.
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
@@ -1245,7 +1245,7 @@ type DocumentOnTypeFormattingRegistrationOptions struct {
 	MoreTriggerCharacter []string `json:"moreTriggerCharacter"`
 }
 
-// RenameParams params of Rename Request.
+// RenameParams params of Rename request.
 type RenameParams struct {
 	TextDocumentPositionParams
 	PartialResultParams
@@ -1271,7 +1271,7 @@ type PrepareRenameParams struct {
 	TextDocumentPositionParams
 }
 
-// FoldingRangeParams params of Folding Range Request.
+// FoldingRangeParams params of Folding Range request.
 type FoldingRangeParams struct {
 	TextDocumentPositionParams
 	PartialResultParams

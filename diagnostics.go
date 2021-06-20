@@ -83,6 +83,14 @@ func (d DiagnosticSeverity) String() string {
 	}
 }
 
+// CodeDescription is the structure to capture a description for an error code.
+//
+// @since 3.16.0.
+type CodeDescription struct {
+	// Href an URI to open with more information about the diagnostic error.
+	Href URI `json:"href"`
+}
+
 // DiagnosticTag is the diagnostic tags.
 //
 // @since 3.15.0.
@@ -126,7 +134,7 @@ type DiagnosticRelatedInformation struct {
 	Message string `json:"message"`
 }
 
-// PublishDiagnosticsParams represents a params of PublishDiagnostics Notification.
+// PublishDiagnosticsParams represents a params of PublishDiagnostics notification.
 type PublishDiagnosticsParams struct {
 	// URI is the URI for which diagnostic information is reported.
 	URI DocumentURI `json:"uri"`

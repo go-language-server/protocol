@@ -97,14 +97,6 @@ type LocationLink struct {
 	TargetSelectionRange Range `json:"targetSelectionRange"`
 }
 
-// CodeDescription is the structure to capture a description for an error code.
-//
-// @since 3.16.0.
-type CodeDescription struct {
-	// Href an URI to open with more information about the diagnostic error.
-	Href URI `json:"href"`
-}
-
 // Command represents a reference to a command. Provides a title which will be used to represent a command in the UI.
 //
 // Commands are identified by a string identifier.
@@ -649,17 +641,17 @@ type DocumentFilter struct {
 	//
 	// Glob patterns can have the following syntax:
 	//  "*"
-	// to match one or more characters in a path segment
+	// "*" to match one or more characters in a path segment
 	//  "?"
-	// to match on one character in a path segment
+	// "?" to match on one character in a path segment
 	//  "**"
-	// to match any number of path segments, including none
+	// "**" to match any number of path segments, including none
 	//  "{}"
-	// to group conditions (e.g. `**/*.{ts,js}` matches all TypeScript and JavaScript files)
+	// "{}" to group conditions (e.g. `**/*.{ts,js}` matches all TypeScript and JavaScript files)
 	//  "[]"
-	// to declare a range of characters to match in a path segment (e.g., `example.[0-9]` to match on `example.0`, `example.1`, …)
+	// "[]" to declare a range of characters to match in a path segment (e.g., `example.[0-9]` to match on `example.0`, `example.1`, …)
 	//  "[!...]"
-	// to negate a range of characters to match in a path segment (e.g., `example.[!0-9]` to match on `example.a`, `example.b`, but not `example.0`)
+	// "[!...]" to negate a range of characters to match in a path segment (e.g., `example.[!0-9]` to match on `example.a`, `example.b`, but not `example.0`)
 	Pattern string `json:"pattern,omitempty"`
 }
 

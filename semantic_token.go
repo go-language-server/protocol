@@ -8,6 +8,7 @@ package protocol
 // @since 3.16.0.
 type SemanticTokenTypes string
 
+// list of SemanticTokenTypes.
 const (
 	SemanticTokenNamespace SemanticTokenTypes = "namespace"
 
@@ -41,6 +42,7 @@ const (
 // @since 3.16.0.
 type SemanticTokenModifiers string
 
+// list of SemanticTokenModifiers.
 const (
 	SemanticTokenModifierDeclaration    SemanticTokenModifiers = "declaration"
 	SemanticTokenModifierDefinition     SemanticTokenModifiers = "definition"
