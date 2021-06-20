@@ -1,11 +1,10 @@
 module go.lsp.dev/protocol/tools
 
-go 1.15
+go 1.16
 
 require (
-	github.com/golangci/golangci-lint v1.39.0
+	github.com/golangci/golangci-lint v1.41.1
 	github.com/zchee/goimportz v0.0.1
-	golang.org/x/tools v0.1.1-0.20210415232134-cb5dc85ca1a7 // indirect
-	gotest.tools/gotestsum v1.6.3
+	gotest.tools/gotestsum v1.6.4
 	mvdan.cc/gofumpt v0.1.1
 )
