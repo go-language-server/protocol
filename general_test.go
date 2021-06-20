@@ -3703,11 +3703,11 @@ func testInitializeResult(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 	wantType := InitializeResult{
 		Capabilities: ServerCapabilities{
 			TextDocumentSync: float64(1),
-			HoverProvider:    true,
 			CompletionProvider: &CompletionOptions{
 				ResolveProvider:   true,
 				TriggerCharacters: []string{"Tab"},
 			},
+			HoverProvider: true,
 			SignatureHelpProvider: &SignatureHelpOptions{
 				TriggerCharacters:   []string{"C-K"},
 				RetriggerCharacters: []string{"."},

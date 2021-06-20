@@ -145,6 +145,12 @@ type TextDocumentSyncOptions struct {
 	Save *SaveOptions `json:"save,omitempty"`
 }
 
+// SaveOptions save options.
+type SaveOptions struct {
+	// IncludeText is the client is supposed to include the content on save.
+	IncludeText bool `json:"includeText,omitempty"`
+}
+
 // TextDocumentSyncKind defines how the host (editor) should sync document changes to the language server.
 type TextDocumentSyncKind float64
 
@@ -174,12 +180,6 @@ func (k TextDocumentSyncKind) String() string {
 	default:
 		return strconv.FormatFloat(float64(k), 'f', -10, 64)
 	}
-}
-
-// SaveOptions save options.
-type SaveOptions struct {
-	// IncludeText is the client is supposed to include the content on save.
-	IncludeText bool `json:"includeText,omitempty"`
 }
 
 // CompletionOptions Completion options.
