@@ -5,19 +5,152 @@ package protocol
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 
 	"go.uber.org/zap"
 
 	"go.lsp.dev/jsonrpc2"
 )
 
-// ServerDispatcher returns a Server that dispatches LSP requests across the
-// given jsonrpc2 connection.
-func ServerDispatcher(conn jsonrpc2.Conn, logger *zap.Logger) Server {
-	return &server{
-		Conn:   conn,
-		logger: logger,
+// ServerOption represents a configures a server.
+type ServerOption interface {
+	apply(*server)
+}
+
+// serverOptionFunc wraps a func so it satisfies the ServerOption interface.
+type serverOptionFunc func(*server)
+
+func (f serverOptionFunc) apply(s *server) {
+	f(s)
+}
+
+// WithServerLogger sets logger to server.
+func WithServerLogger(logger *zap.Logger) ServerOption {
+	return serverOptionFunc(func(s *server) {
+		s.logger = logger
+	})
+}
+
+// ServerFunc is used to construct an LSP server for a given client.
+type ServerFunc func(context.Context, Client) Server
+
+// server implements a Language Server Protocol server.
+//
+// server binds incoming connections to a new server.
+type server struct {
+	newServer ServerFunc
+
+	conn *jsonrpc2.Connection
+
+	logger *zap.Logger
+}
+
+// make sure server implements the Server and jsonrpc2.Binder interfaces.
+var (
+	_ Server          = (*server)(nil)
+	_ jsonrpc2.Binder = (*server)(nil)
+)
+
+// NewServer returns the new Server.
+func NewServer(newServer ServerFunc, opts ...ServerOption) Server {
+	s := &server{
+		newServer: newServer,
+		logger:    zap.NewNop(),
 	}
+
+	for _, opt := range opts {
+		opt.apply(s)
+	}
+
+	return s
+}
+
+// Bind implements jsonrpc2.Binder.Bind.
+func (s *server) Bind(ctx context.Context, conn *jsonrpc2.Connection) (jsonrpc2.Conn, error) {
+	client := ClientDispatcher(conn, WithClientLogger(s.logger.Named("client")))
+	server := s.newServer(ctx, client)
+
+	// Wrap the server handler to inject the client into each request context, so
+	// that log events are reflected back to the client.
+	h := ServerHandler(server)
+	handler := jsonrpc2.HandlerFunc(func(ctx context.Context, req *jsonrpc2.Request) (interface{}, error) {
+		ctx = WithClient(ctx, client)
+
+		return h.Handle(ctx, req)
+	})
+
+	preempter := jsonrpc2.Preempter(&canceler{
+		conn: conn,
+	})
+
+	return jsonrpc2.Conn{
+		Handler:   handler,
+		Preempter: preempter,
+	}, nil
+}
+
+// ServerHandler returns the server jsonrpc2.Handler.
+func ServerHandler(server Server) jsonrpc2.Handler {
+	return jsonrpc2.HandlerFunc(func(ctx context.Context, req *jsonrpc2.Request) (interface{}, error) {
+		if ctx.Err() != nil {
+			return nil, ErrRequestCancelled
+		}
+
+		resp, err := serverDispatch(ctx, server, req)
+		if err != nil {
+			return nil, err
+		}
+
+		return resp, nil
+	})
+}
+
+// ServerDispatcher returns a Server that dispatches Language Server Protocol requests across the
+// given JSON-RPC connection.
+func ServerDispatcher(conn *jsonrpc2.Connection, opts ...ServerOption) Server {
+	s := &server{
+		conn:   conn,
+		logger: zap.NewNop(),
+	}
+
+	for _, opt := range opts {
+		opt.apply(s)
+	}
+
+	return s
+}
+
+type canceler struct {
+	conn *jsonrpc2.Connection
+}
+
+// make sure canceler implements the Server and jsonrpc2.Preempter interface.
+var _ jsonrpc2.Preempter = (*canceler)(nil)
+
+// Preempt implements jsonrpc2.Preempter.Preempt.
+func (c *canceler) Preempt(ctx context.Context, req *jsonrpc2.Request) (interface{}, error) {
+	if req.Method != "$/cancelRequest" {
+		return nil, jsonrpc2.ErrNotHandled
+	}
+
+	var params CancelParams
+	if err := json.Unmarshal(req.Params, &params); err != nil {
+		return nil, fmt.Errorf("%w: %v", jsonrpc2.ErrParse, err)
+	}
+
+	var id jsonrpc2.ID
+	switch raw := params.ID.(type) {
+	case float64:
+		id = jsonrpc2.Int64ID(int64(raw))
+	case string:
+		id = jsonrpc2.StringID(raw)
+	default:
+		return nil, fmt.Errorf("%w: invalid ID type %T", jsonrpc2.ErrParse, params.ID)
+	}
+	c.conn.Cancel(id)
+
+	return nil, nil
 }
 
 // Server represents a Language Server Protocol server.
@@ -26,9 +159,9 @@ type Server interface {
 	Initialized(ctx context.Context, params *InitializedParams) (err error)
 	Shutdown(ctx context.Context) (err error)
 	Exit(ctx context.Context) (err error)
-	WorkDoneProgressCancel(ctx context.Context, params *WorkDoneProgressCancelParams) (err error)
 	LogTrace(ctx context.Context, params *LogTraceParams) (err error)
 	SetTrace(ctx context.Context, params *SetTraceParams) (err error)
+	WorkDoneProgressCancel(ctx context.Context, params *WorkDoneProgressCancelParams) (err error)
 	CodeAction(ctx context.Context, params *CodeActionParams) (result []CodeAction, err error)
 	CodeLens(ctx context.Context, params *CodeLensParams) (result []CodeLens, err error)
 	CodeLensResolve(ctx context.Context, params *CodeLens) (result *CodeLens, err error)
@@ -267,15 +400,6 @@ const (
 	MethodMoniker = "textDocument/moniker"
 )
 
-// server implements a Language Server Protocol server.
-type server struct {
-	jsonrpc2.Conn
-
-	logger *zap.Logger
-}
-
-var _ Server = (*server)(nil)
-
 // Initialize sents the request as the first request from the client to the server.
 //
 // If the server receives a request or notification before the initialize request it should act as follows:
@@ -294,7 +418,7 @@ func (s *server) Initialize(ctx context.Context, params *InitializeParams) (_ *I
 	defer s.logger.Debug("end "+MethodInitialize, zap.Error(err))
 
 	var result *InitializeResult
-	if err := Call(ctx, s.Conn, MethodInitialize, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodInitialize, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -310,7 +434,7 @@ func (s *server) Initialized(ctx context.Context, params *InitializedParams) (er
 	s.logger.Debug("notify " + MethodInitialized)
 	defer s.logger.Debug("end "+MethodInitialized, zap.Error(err))
 
-	return s.Conn.Notify(ctx, MethodInitialized, params)
+	return s.conn.Notify(ctx, MethodInitialized, params)
 }
 
 // Shutdown sents the request from the client to the server.
@@ -324,7 +448,7 @@ func (s *server) Shutdown(ctx context.Context) (err error) {
 	s.logger.Debug("call " + MethodShutdown)
 	defer s.logger.Debug("end "+MethodShutdown, zap.Error(err))
 
-	return Call(ctx, s.Conn, MethodShutdown, nil, nil)
+	return s.conn.Request(ctx, MethodShutdown, nil).Await(ctx, nil)
 }
 
 // Exit a notification to ask the server to exit its process.
@@ -334,7 +458,7 @@ func (s *server) Exit(ctx context.Context) (err error) {
 	s.logger.Debug("notify " + MethodExit)
 	defer s.logger.Debug("end "+MethodExit, zap.Error(err))
 
-	return s.Conn.Notify(ctx, MethodExit, nil)
+	return s.conn.Notify(ctx, MethodExit, nil)
 }
 
 // LogTrace a notification to log the trace of the server’s execution.
@@ -349,7 +473,7 @@ func (s *server) LogTrace(ctx context.Context, params *LogTraceParams) (err erro
 	s.logger.Debug("notify " + MethodLogTrace)
 	defer s.logger.Debug("end "+MethodLogTrace, zap.Error(err))
 
-	return s.Conn.Notify(ctx, MethodLogTrace, params)
+	return s.conn.Notify(ctx, MethodLogTrace, params)
 }
 
 // SetTrace a notification that should be used by the client to modify the trace setting of the server.
@@ -359,7 +483,7 @@ func (s *server) SetTrace(ctx context.Context, params *SetTraceParams) (err erro
 	s.logger.Debug("notify " + MethodSetTrace)
 	defer s.logger.Debug("end "+MethodSetTrace, zap.Error(err))
 
-	return s.Conn.Notify(ctx, MethodSetTrace, params)
+	return s.conn.Notify(ctx, MethodSetTrace, params)
 }
 
 // WorkDoneProgressCancel is the sends notification from the client to the server to cancel a progress initiated on the
@@ -368,7 +492,7 @@ func (s *server) WorkDoneProgressCancel(ctx context.Context, params *WorkDonePro
 	s.logger.Debug("call " + MethodWorkDoneProgressCancel)
 	defer s.logger.Debug("end "+MethodWorkDoneProgressCancel, zap.Error(err))
 
-	return s.Conn.Notify(ctx, MethodWorkDoneProgressCancel, params)
+	return s.conn.Notify(ctx, MethodWorkDoneProgressCancel, params)
 }
 
 // CodeAction sends the request is from the client to the server to compute commands for a given text document and range.
@@ -383,7 +507,7 @@ func (s *server) CodeAction(ctx context.Context, params *CodeActionParams) (resu
 	s.logger.Debug("call " + MethodTextDocumentCodeAction)
 	defer s.logger.Debug("end "+MethodTextDocumentCodeAction, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodTextDocumentCodeAction, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodTextDocumentCodeAction, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -395,7 +519,7 @@ func (s *server) CodeLens(ctx context.Context, params *CodeLensParams) (result [
 	s.logger.Debug("call " + MethodTextDocumentCodeLens)
 	defer s.logger.Debug("end "+MethodTextDocumentCodeLens, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodTextDocumentCodeLens, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodTextDocumentCodeLens, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -408,7 +532,7 @@ func (s *server) CodeLensResolve(ctx context.Context, params *CodeLens) (_ *Code
 	defer s.logger.Debug("end "+MethodCodeLensResolve, zap.Error(err))
 
 	var result *CodeLens
-	if err := Call(ctx, s.Conn, MethodCodeLensResolve, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodCodeLensResolve, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -425,7 +549,7 @@ func (s *server) ColorPresentation(ctx context.Context, params *ColorPresentatio
 	s.logger.Debug("call " + MethodTextDocumentColorPresentation)
 	defer s.logger.Debug("end "+MethodTextDocumentColorPresentation, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodTextDocumentColorPresentation, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodTextDocumentColorPresentation, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -450,7 +574,7 @@ func (s *server) Completion(ctx context.Context, params *CompletionParams) (_ *C
 	defer s.logger.Debug("end "+MethodTextDocumentCompletion, zap.Error(err))
 
 	var result *CompletionList
-	if err := Call(ctx, s.Conn, MethodTextDocumentCompletion, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodTextDocumentCompletion, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -463,7 +587,7 @@ func (s *server) CompletionResolve(ctx context.Context, params *CompletionItem) 
 	defer s.logger.Debug("end "+MethodCompletionItemResolve, zap.Error(err))
 
 	var result *CompletionItem
-	if err := Call(ctx, s.Conn, MethodCompletionItemResolve, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodCompletionItemResolve, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -479,7 +603,7 @@ func (s *server) Declaration(ctx context.Context, params *DeclarationParams) (re
 	s.logger.Debug("call " + MethodTextDocumentDeclaration)
 	defer s.logger.Debug("end "+MethodTextDocumentDeclaration, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodTextDocumentDeclaration, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodTextDocumentDeclaration, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -495,7 +619,7 @@ func (s *server) Definition(ctx context.Context, params *DefinitionParams) (resu
 	s.logger.Debug("call " + MethodTextDocumentDefinition)
 	defer s.logger.Debug("end "+MethodTextDocumentDefinition, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodTextDocumentDefinition, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodTextDocumentDefinition, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -509,7 +633,7 @@ func (s *server) DidChange(ctx context.Context, params *DidChangeTextDocumentPar
 	s.logger.Debug("notify " + MethodTextDocumentDidChange)
 	defer s.logger.Debug("end "+MethodTextDocumentDidChange, zap.Error(err))
 
-	return s.Conn.Notify(ctx, MethodTextDocumentDidChange, params)
+	return s.conn.Notify(ctx, MethodTextDocumentDidChange, params)
 }
 
 // DidChangeConfiguration sends the notification from the client to the server to signal the change of configuration settings.
@@ -517,7 +641,7 @@ func (s *server) DidChangeConfiguration(ctx context.Context, params *DidChangeCo
 	s.logger.Debug("call " + MethodWorkspaceDidChangeConfiguration)
 	defer s.logger.Debug("end "+MethodWorkspaceDidChangeConfiguration, zap.Error(err))
 
-	return s.Conn.Notify(ctx, MethodWorkspaceDidChangeConfiguration, params)
+	return s.conn.Notify(ctx, MethodWorkspaceDidChangeConfiguration, params)
 }
 
 // DidChangeWatchedFiles sends the notification from the client to the server when the client detects changes to files watched by the language client.
@@ -528,7 +652,7 @@ func (s *server) DidChangeWatchedFiles(ctx context.Context, params *DidChangeWat
 	s.logger.Debug("call " + MethodWorkspaceDidChangeWatchedFiles)
 	defer s.logger.Debug("end "+MethodWorkspaceDidChangeWatchedFiles, zap.Error(err))
 
-	return s.Conn.Notify(ctx, MethodWorkspaceDidChangeWatchedFiles, params)
+	return s.conn.Notify(ctx, MethodWorkspaceDidChangeWatchedFiles, params)
 }
 
 // DidChangeWorkspaceFolders sents the notification from the client to the server to inform the server about workspace folder configuration changes.
@@ -542,7 +666,7 @@ func (s *server) DidChangeWorkspaceFolders(ctx context.Context, params *DidChang
 	s.logger.Debug("call " + MethodWorkspaceDidChangeWorkspaceFolders)
 	defer s.logger.Debug("end "+MethodWorkspaceDidChangeWorkspaceFolders, zap.Error(err))
 
-	return s.Conn.Notify(ctx, MethodWorkspaceDidChangeWorkspaceFolders, params)
+	return s.conn.Notify(ctx, MethodWorkspaceDidChangeWorkspaceFolders, params)
 }
 
 // DidClose sends the notification from the client to the server when the document got closed in the client.
@@ -557,7 +681,7 @@ func (s *server) DidClose(ctx context.Context, params *DidCloseTextDocumentParam
 	s.logger.Debug("call " + MethodTextDocumentDidClose)
 	defer s.logger.Debug("end "+MethodTextDocumentDidClose, zap.Error(err))
 
-	return s.Conn.Notify(ctx, MethodTextDocumentDidClose, params)
+	return s.conn.Notify(ctx, MethodTextDocumentDidClose, params)
 }
 
 // DidOpen sends the open notification from the client to the server to signal newly opened text documents.
@@ -572,7 +696,7 @@ func (s *server) DidOpen(ctx context.Context, params *DidOpenTextDocumentParams)
 	s.logger.Debug("call " + MethodTextDocumentDidOpen)
 	defer s.logger.Debug("end "+MethodTextDocumentDidOpen, zap.Error(err))
 
-	return s.Conn.Notify(ctx, MethodTextDocumentDidOpen, params)
+	return s.conn.Notify(ctx, MethodTextDocumentDidOpen, params)
 }
 
 // DidSave sends the notification from the client to the server when the document was saved in the client.
@@ -580,7 +704,7 @@ func (s *server) DidSave(ctx context.Context, params *DidSaveTextDocumentParams)
 	s.logger.Debug("call " + MethodTextDocumentDidSave)
 	defer s.logger.Debug("end "+MethodTextDocumentDidSave, zap.Error(err))
 
-	return s.Conn.Notify(ctx, MethodTextDocumentDidSave, params)
+	return s.conn.Notify(ctx, MethodTextDocumentDidSave, params)
 }
 
 // DocumentColor sends the request from the client to the server to list all color references found in a given text document.
@@ -596,7 +720,7 @@ func (s *server) DocumentColor(ctx context.Context, params *DocumentColorParams)
 	s.logger.Debug("call " + MethodTextDocumentDocumentColor)
 	defer s.logger.Debug("end "+MethodTextDocumentDocumentColor, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodTextDocumentDocumentColor, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodTextDocumentDocumentColor, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -613,7 +737,7 @@ func (s *server) DocumentHighlight(ctx context.Context, params *DocumentHighligh
 	s.logger.Debug("call " + MethodTextDocumentDocumentHighlight)
 	defer s.logger.Debug("end "+MethodTextDocumentDocumentHighlight, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodTextDocumentDocumentHighlight, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodTextDocumentDocumentHighlight, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -625,7 +749,7 @@ func (s *server) DocumentLink(ctx context.Context, params *DocumentLinkParams) (
 	s.logger.Debug("call " + MethodTextDocumentDocumentLink)
 	defer s.logger.Debug("end "+MethodTextDocumentDocumentLink, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodTextDocumentDocumentLink, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodTextDocumentDocumentLink, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -638,7 +762,7 @@ func (s *server) DocumentLinkResolve(ctx context.Context, params *DocumentLink) 
 	defer s.logger.Debug("end "+MethodDocumentLinkResolve, zap.Error(err))
 
 	var result *DocumentLink
-	if err := Call(ctx, s.Conn, MethodDocumentLinkResolve, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodDocumentLinkResolve, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -652,7 +776,7 @@ func (s *server) DocumentSymbol(ctx context.Context, params *DocumentSymbolParam
 	s.logger.Debug("call " + MethodTextDocumentDocumentSymbol)
 	defer s.logger.Debug("end "+MethodTextDocumentDocumentSymbol, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodTextDocumentDocumentSymbol, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodTextDocumentDocumentSymbol, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -667,7 +791,7 @@ func (s *server) ExecuteCommand(ctx context.Context, params *ExecuteCommandParam
 	s.logger.Debug("call " + MethodWorkspaceExecuteCommand)
 	defer s.logger.Debug("end "+MethodWorkspaceExecuteCommand, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodWorkspaceExecuteCommand, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodWorkspaceExecuteCommand, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -681,7 +805,7 @@ func (s *server) FoldingRanges(ctx context.Context, params *FoldingRangeParams) 
 	s.logger.Debug("call " + MethodTextDocumentFoldingRange)
 	defer s.logger.Debug("end "+MethodTextDocumentFoldingRange, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodTextDocumentFoldingRange, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodTextDocumentFoldingRange, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -693,7 +817,7 @@ func (s *server) Formatting(ctx context.Context, params *DocumentFormattingParam
 	s.logger.Debug("call " + MethodTextDocumentFormatting)
 	defer s.logger.Debug("end "+MethodTextDocumentFormatting, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodTextDocumentFormatting, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodTextDocumentFormatting, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -706,7 +830,7 @@ func (s *server) Hover(ctx context.Context, params *HoverParams) (_ *Hover, err 
 	defer s.logger.Debug("end "+MethodTextDocumentHover, zap.Error(err))
 
 	var result *Hover
-	if err := Call(ctx, s.Conn, MethodTextDocumentHover, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodTextDocumentHover, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -720,7 +844,7 @@ func (s *server) Implementation(ctx context.Context, params *ImplementationParam
 	s.logger.Debug("call " + MethodTextDocumentImplementation)
 	defer s.logger.Debug("end "+MethodTextDocumentImplementation, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodTextDocumentImplementation, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodTextDocumentImplementation, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -732,7 +856,7 @@ func (s *server) OnTypeFormatting(ctx context.Context, params *DocumentOnTypeFor
 	s.logger.Debug("call " + MethodTextDocumentOnTypeFormatting)
 	defer s.logger.Debug("end "+MethodTextDocumentOnTypeFormatting, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodTextDocumentOnTypeFormatting, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodTextDocumentOnTypeFormatting, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -746,7 +870,7 @@ func (s *server) PrepareRename(ctx context.Context, params *PrepareRenameParams)
 	s.logger.Debug("call " + MethodTextDocumentPrepareRename)
 	defer s.logger.Debug("end "+MethodTextDocumentPrepareRename, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodTextDocumentPrepareRename, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodTextDocumentPrepareRename, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -758,7 +882,7 @@ func (s *server) RangeFormatting(ctx context.Context, params *DocumentRangeForma
 	s.logger.Debug("call " + MethodTextDocumentRangeFormatting)
 	defer s.logger.Debug("end "+MethodTextDocumentRangeFormatting, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodTextDocumentRangeFormatting, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodTextDocumentRangeFormatting, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -770,7 +894,7 @@ func (s *server) References(ctx context.Context, params *ReferenceParams) (resul
 	s.logger.Debug("call " + MethodTextDocumentReferences)
 	defer s.logger.Debug("end "+MethodTextDocumentReferences, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodTextDocumentReferences, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodTextDocumentReferences, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -782,7 +906,7 @@ func (s *server) Rename(ctx context.Context, params *RenameParams) (result *Work
 	s.logger.Debug("call " + MethodTextDocumentRename)
 	defer s.logger.Debug("end "+MethodTextDocumentRename, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodTextDocumentRename, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodTextDocumentRename, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -795,7 +919,7 @@ func (s *server) SignatureHelp(ctx context.Context, params *SignatureHelpParams)
 	defer s.logger.Debug("end "+MethodTextDocumentSignatureHelp, zap.Error(err))
 
 	var result *SignatureHelp
-	if err := Call(ctx, s.Conn, MethodTextDocumentSignatureHelp, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodTextDocumentSignatureHelp, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -807,7 +931,7 @@ func (s *server) Symbols(ctx context.Context, params *WorkspaceSymbolParams) (re
 	s.logger.Debug("call " + MethodWorkspaceSymbol)
 	defer s.logger.Debug("end "+MethodWorkspaceSymbol, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodWorkspaceSymbol, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodWorkspaceSymbol, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -823,7 +947,7 @@ func (s *server) TypeDefinition(ctx context.Context, params *TypeDefinitionParam
 	s.logger.Debug("call " + MethodTextDocumentTypeDefinition)
 	defer s.logger.Debug("end "+MethodTextDocumentTypeDefinition, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodTextDocumentTypeDefinition, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodTextDocumentTypeDefinition, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -835,7 +959,7 @@ func (s *server) WillSave(ctx context.Context, params *WillSaveTextDocumentParam
 	s.logger.Debug("call " + MethodTextDocumentWillSave)
 	defer s.logger.Debug("end "+MethodTextDocumentWillSave, zap.Error(err))
 
-	return s.Conn.Notify(ctx, MethodTextDocumentWillSave, params)
+	return s.conn.Notify(ctx, MethodTextDocumentWillSave, params)
 }
 
 // WillSaveWaitUntil sends the request from the client to the server before the document is actually saved.
@@ -847,7 +971,7 @@ func (s *server) WillSaveWaitUntil(ctx context.Context, params *WillSaveTextDocu
 	s.logger.Debug("call " + MethodTextDocumentWillSaveWaitUntil)
 	defer s.logger.Debug("end "+MethodTextDocumentWillSaveWaitUntil, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodTextDocumentWillSaveWaitUntil, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodTextDocumentWillSaveWaitUntil, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -861,7 +985,7 @@ func (s *server) ShowDocument(ctx context.Context, params *ShowDocumentParams) (
 	s.logger.Debug("call " + MethodShowDocument)
 	defer s.logger.Debug("end "+MethodShowDocument, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodShowDocument, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodShowDocument, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -879,7 +1003,7 @@ func (s *server) WillCreateFiles(ctx context.Context, params *CreateFilesParams)
 	s.logger.Debug("call " + MethodWillCreateFiles)
 	defer s.logger.Debug("end "+MethodWillCreateFiles, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodWillCreateFiles, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodWillCreateFiles, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -893,7 +1017,7 @@ func (s *server) DidCreateFiles(ctx context.Context, params *CreateFilesParams) 
 	s.logger.Debug("call " + MethodDidCreateFiles)
 	defer s.logger.Debug("end "+MethodDidCreateFiles, zap.Error(err))
 
-	return s.Conn.Notify(ctx, MethodDidCreateFiles, params)
+	return s.conn.Notify(ctx, MethodDidCreateFiles, params)
 }
 
 // WillRenameFiles sends the will rename files request is sent from the client to the server before files are actually renamed as long as the rename is triggered from within the client.
@@ -907,7 +1031,7 @@ func (s *server) WillRenameFiles(ctx context.Context, params *RenameFilesParams)
 	s.logger.Debug("call " + MethodWillRenameFiles)
 	defer s.logger.Debug("end "+MethodWillRenameFiles, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodWillRenameFiles, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodWillRenameFiles, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -921,7 +1045,7 @@ func (s *server) DidRenameFiles(ctx context.Context, params *RenameFilesParams) 
 	s.logger.Debug("call " + MethodDidRenameFiles)
 	defer s.logger.Debug("end "+MethodDidRenameFiles, zap.Error(err))
 
-	return s.Conn.Notify(ctx, MethodDidRenameFiles, params)
+	return s.conn.Notify(ctx, MethodDidRenameFiles, params)
 }
 
 // WillDeleteFiles sends the will delete files request is sent from the client to the server before files are actually deleted as long as the deletion is triggered from within the client.
@@ -935,7 +1059,7 @@ func (s *server) WillDeleteFiles(ctx context.Context, params *DeleteFilesParams)
 	s.logger.Debug("call " + MethodWillDeleteFiles)
 	defer s.logger.Debug("end "+MethodWillDeleteFiles, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodWillDeleteFiles, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodWillDeleteFiles, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -949,7 +1073,7 @@ func (s *server) DidDeleteFiles(ctx context.Context, params *DeleteFilesParams) 
 	s.logger.Debug("call " + MethodDidDeleteFiles)
 	defer s.logger.Debug("end "+MethodDidDeleteFiles, zap.Error(err))
 
-	return s.Conn.Notify(ctx, MethodDidDeleteFiles, params)
+	return s.conn.Notify(ctx, MethodDidDeleteFiles, params)
 }
 
 // CodeLensRefresh sent from the server to the client.
@@ -965,7 +1089,7 @@ func (s *server) CodeLensRefresh(ctx context.Context) (err error) {
 	s.logger.Debug("call " + MethodCodeLensRefresh)
 	defer s.logger.Debug("end "+MethodCodeLensRefresh, zap.Error(err))
 
-	return Call(ctx, s.Conn, MethodCodeLensRefresh, nil, nil)
+	return s.conn.Request(ctx, MethodCodeLensRefresh, nil).Await(ctx, nil)
 }
 
 // PrepareCallHierarchy sent from the client to the server to return a call hierarchy for the language element of given text document positions.
@@ -979,7 +1103,7 @@ func (s *server) PrepareCallHierarchy(ctx context.Context, params *CallHierarchy
 	s.logger.Debug("call " + MethodTextDocumentPrepareCallHierarchy)
 	defer s.logger.Debug("end "+MethodTextDocumentPrepareCallHierarchy, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodTextDocumentPrepareCallHierarchy, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodTextDocumentPrepareCallHierarchy, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -995,7 +1119,7 @@ func (s *server) IncomingCalls(ctx context.Context, params *CallHierarchyIncomin
 	s.logger.Debug("call " + MethodCallHierarchyIncomingCalls)
 	defer s.logger.Debug("end "+MethodCallHierarchyIncomingCalls, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodCallHierarchyIncomingCalls, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodCallHierarchyIncomingCalls, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -1011,7 +1135,7 @@ func (s *server) OutgoingCalls(ctx context.Context, params *CallHierarchyOutgoin
 	s.logger.Debug("call " + MethodCallHierarchyOutgoingCalls)
 	defer s.logger.Debug("end "+MethodCallHierarchyOutgoingCalls, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodCallHierarchyOutgoingCalls, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodCallHierarchyOutgoingCalls, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -1029,7 +1153,7 @@ func (s *server) SemanticTokensFull(ctx context.Context, params *SemanticTokensP
 	s.logger.Debug("call " + MethodSemanticTokensFull)
 	defer s.logger.Debug("end "+MethodSemanticTokensFull, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodSemanticTokensFull, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodSemanticTokensFull, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -1047,7 +1171,7 @@ func (s *server) SemanticTokensFullDelta(ctx context.Context, params *SemanticTo
 	s.logger.Debug("call " + MethodSemanticTokensFullDelta)
 	defer s.logger.Debug("end "+MethodSemanticTokensFullDelta, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodSemanticTokensFullDelta, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodSemanticTokensFullDelta, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -1066,7 +1190,7 @@ func (s *server) SemanticTokensRange(ctx context.Context, params *SemanticTokens
 	s.logger.Debug("call " + MethodSemanticTokensRange)
 	defer s.logger.Debug("end "+MethodSemanticTokensRange, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodSemanticTokensRange, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodSemanticTokensRange, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -1085,7 +1209,7 @@ func (s *server) SemanticTokensRefresh(ctx context.Context) (err error) {
 	s.logger.Debug("call " + MethodSemanticTokensRefresh)
 	defer s.logger.Debug("end "+MethodSemanticTokensRefresh, zap.Error(err))
 
-	return Call(ctx, s.Conn, MethodSemanticTokensRefresh, nil, nil)
+	return s.conn.Request(ctx, MethodSemanticTokensRefresh, nil).Await(ctx, nil)
 }
 
 // LinkedEditingRange is the linked editing request is sent from the client to the server to return for a given position in a document the range of the symbol at the position and all ranges that have the same content.
@@ -1099,7 +1223,7 @@ func (s *server) LinkedEditingRange(ctx context.Context, params *LinkedEditingRa
 	s.logger.Debug("call " + MethodLinkedEditingRange)
 	defer s.logger.Debug("end "+MethodLinkedEditingRange, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodLinkedEditingRange, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodLinkedEditingRange, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -1117,7 +1241,7 @@ func (s *server) Moniker(ctx context.Context, params *MonikerParams) (result []M
 	s.logger.Debug("call " + MethodMoniker)
 	defer s.logger.Debug("end "+MethodMoniker, zap.Error(err))
 
-	if err := Call(ctx, s.Conn, MethodMoniker, params, &result); err != nil {
+	if err := s.conn.Request(ctx, MethodMoniker, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -1130,7 +1254,7 @@ func (s *server) Request(ctx context.Context, method string, params interface{})
 	defer s.logger.Debug("end " + method)
 
 	var result interface{}
-	if err := Call(ctx, s.Conn, method, params, &result); err != nil {
+	if err := s.conn.Request(ctx, method, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 

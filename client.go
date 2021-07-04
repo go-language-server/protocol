@@ -9,36 +9,100 @@ import (
 	"go.uber.org/zap"
 
 	"go.lsp.dev/jsonrpc2"
-	"go.lsp.dev/pkg/xcontext"
 )
 
-// ClientDispatcher returns a Client that dispatches LSP requests across the
-// given jsonrpc2 connection.
-func ClientDispatcher(conn jsonrpc2.Conn, logger *zap.Logger) Client {
-	return &client{
-		Conn:   conn,
-		logger: logger,
-	}
+// ClientOption represents a configures a client.
+type ClientOption interface {
+	apply(*client)
 }
 
-// ClientHandler handler of LSP client.
-func ClientHandler(client Client, handler jsonrpc2.Handler) jsonrpc2.Handler {
-	h := func(ctx context.Context, reply jsonrpc2.Replier, req jsonrpc2.Request) error {
-		if ctx.Err() != nil {
-			xctx := xcontext.Detach(ctx)
+// clientOptionFunc wraps a func so it satisfies the ClientOption interface.
+type clientOptionFunc func(*client)
 
-			return reply(xctx, nil, ErrRequestCancelled)
-		}
+func (f clientOptionFunc) apply(c *client) {
+	f(c)
+}
 
-		handled, err := clientDispatch(ctx, client, reply, req)
-		if handled || err != nil {
-			return err
-		}
+// WithClientLogger sets logger to Client.
+func WithClientLogger(logger *zap.Logger) ClientOption {
+	return clientOptionFunc(func(c *client) {
+		c.logger = logger
+	})
+}
 
-		return handler(ctx, reply, req)
+// ClientFunc is used to construct a Language Server Protocol client for a given server.
+type ClientFunc func(ctx context.Context, server Server) Client
+
+// Client binds a Language Server Protocol client to an incoming connection.
+type client struct {
+	newClient ClientFunc
+
+	conn *jsonrpc2.Connection
+
+	logger *zap.Logger
+}
+
+// make sure server implements the Server and jsonrpc2.Binder interfaces.
+var (
+	_ Client          = (*client)(nil)
+	_ jsonrpc2.Binder = (*client)(nil)
+)
+
+// NewClient returns the new Client.
+func NewClient(clientFunc ClientFunc, opts ...ClientOption) Client {
+	c := &client{
+		newClient: clientFunc,
+		logger:    zap.NewNop(),
 	}
 
-	return h
+	for _, opt := range opts {
+		opt.apply(c)
+	}
+
+	return c
+}
+
+// Bind implements jsonrpc2.Binder.Bind.
+func (c *client) Bind(ctx context.Context, conn *jsonrpc2.Connection) (jsonrpc2.Conn, error) {
+	server := ServerDispatcher(conn, WithServerLogger(c.logger.Named("server")))
+	client := c.newClient(ctx, server)
+
+	handler := ClientHandler(client)
+
+	return jsonrpc2.Conn{
+		Handler: handler,
+	}, nil
+}
+
+// ClientHandler returns the client jsonrpc2.Handler.
+func ClientHandler(client Client) jsonrpc2.Handler {
+	return jsonrpc2.HandlerFunc(func(ctx context.Context, req *jsonrpc2.Request) (interface{}, error) {
+		if ctx.Err() != nil {
+			return nil, ErrRequestCancelled
+		}
+
+		resp, err := clientDispatch(ctx, client, req)
+		if err != nil {
+			return nil, err
+		}
+
+		return resp, nil
+	})
+}
+
+// ClientDispatcher returns a Client that dispatches Language Server Protocol requests across the
+// given JSON-RPC connection.
+func ClientDispatcher(conn *jsonrpc2.Connection, opts ...ClientOption) Client {
+	c := &client{
+		conn:   conn,
+		logger: zap.NewNop(),
+	}
+
+	for _, opt := range opts {
+		opt.apply(c)
+	}
+
+	return c
 }
 
 // Client represents a Language Server Protocol client.
@@ -96,16 +160,6 @@ const (
 	MethodWorkspaceWorkspaceFolders = "workspace/workspaceFolders"
 )
 
-// client implements a Language Server Protocol client.
-type client struct {
-	jsonrpc2.Conn
-
-	logger *zap.Logger
-}
-
-// compiler time check whether the Client implements ClientInterface interface.
-var _ Client = (*client)(nil)
-
 // Progress is the base protocol offers also support to report progress in a generic fashion.
 //
 // This mechanism can be used to report any kind of progress including work done progress (usually used to report progress in the user interface using a progress bar) and
@@ -116,7 +170,7 @@ func (c *client) Progress(ctx context.Context, params *ProgressParams) (err erro
 	c.logger.Debug("call " + MethodProgress)
 	defer c.logger.Debug("end "+MethodProgress, zap.Error(err))
 
-	return c.Conn.Notify(ctx, MethodProgress, params)
+	return c.conn.Notify(ctx, MethodProgress, params)
 }
 
 // WorkDoneProgressCreate sends the request is sent from the server to the client to ask the client to create a work done progress.
@@ -126,7 +180,7 @@ func (c *client) WorkDoneProgressCreate(ctx context.Context, params *WorkDonePro
 	c.logger.Debug("call " + MethodWorkDoneProgressCreate)
 	defer c.logger.Debug("end "+MethodWorkDoneProgressCreate, zap.Error(err))
 
-	return Call(ctx, c.Conn, MethodWorkDoneProgressCreate, params, nil)
+	return c.conn.Request(ctx, MethodWorkDoneProgressCreate, params).Await(ctx, nil)
 }
 
 // LogMessage sends the notification from the server to the client to ask the client to log a particular message.
@@ -134,7 +188,7 @@ func (c *client) LogMessage(ctx context.Context, params *LogMessageParams) (err 
 	c.logger.Debug("call " + MethodWindowLogMessage)
 	defer c.logger.Debug("end "+MethodWindowLogMessage, zap.Error(err))
 
-	return c.Conn.Notify(ctx, MethodWindowLogMessage, params)
+	return c.conn.Notify(ctx, MethodWindowLogMessage, params)
 }
 
 // PublishDiagnostics sends the notification from the server to the client to signal results of validation runs.
@@ -151,13 +205,13 @@ func (c *client) PublishDiagnostics(ctx context.Context, params *PublishDiagnost
 	c.logger.Debug("call " + MethodTextDocumentPublishDiagnostics)
 	defer c.logger.Debug("end "+MethodTextDocumentPublishDiagnostics, zap.Error(err))
 
-	return c.Conn.Notify(ctx, MethodTextDocumentPublishDiagnostics, params)
+	return c.conn.Notify(ctx, MethodTextDocumentPublishDiagnostics, params)
 }
 
 // ShowMessage sends the notification from a server to a client to ask the
 // client to display a particular message in the user interface.
 func (c *client) ShowMessage(ctx context.Context, params *ShowMessageParams) (err error) {
-	return c.Conn.Notify(ctx, MethodWindowShowMessage, params)
+	return c.conn.Notify(ctx, MethodWindowShowMessage, params)
 }
 
 // ShowMessageRequest sends the request from a server to a client to ask the client to display a particular message in the user interface.
@@ -168,7 +222,7 @@ func (c *client) ShowMessageRequest(ctx context.Context, params *ShowMessageRequ
 	defer c.logger.Debug("end "+MethodWindowShowMessageRequest, zap.Error(err))
 
 	var result *MessageActionItem
-	if err := Call(ctx, c.Conn, MethodWindowShowMessageRequest, params, &result); err != nil {
+	if err := c.conn.Request(ctx, MethodWindowShowMessageRequest, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -180,7 +234,7 @@ func (c *client) Telemetry(ctx context.Context, params interface{}) (err error) 
 	c.logger.Debug("call " + MethodTelemetryEvent)
 	defer c.logger.Debug("end "+MethodTelemetryEvent, zap.Error(err))
 
-	return c.Conn.Notify(ctx, MethodTelemetryEvent, params)
+	return c.conn.Notify(ctx, MethodTelemetryEvent, params)
 }
 
 // RegisterCapability sends the request from the server to the client to register for a new capability on the client side.
@@ -193,7 +247,7 @@ func (c *client) RegisterCapability(ctx context.Context, params *RegistrationPar
 	c.logger.Debug("call " + MethodClientRegisterCapability)
 	defer c.logger.Debug("end "+MethodClientRegisterCapability, zap.Error(err))
 
-	return Call(ctx, c.Conn, MethodClientRegisterCapability, params, nil)
+	return c.conn.Request(ctx, MethodClientRegisterCapability, params).Await(ctx, nil)
 }
 
 // UnregisterCapability sends the request from the server to the client to unregister a previously registered capability.
@@ -201,7 +255,7 @@ func (c *client) UnregisterCapability(ctx context.Context, params *Unregistratio
 	c.logger.Debug("call " + MethodClientUnregisterCapability)
 	defer c.logger.Debug("end "+MethodClientUnregisterCapability, zap.Error(err))
 
-	return Call(ctx, c.Conn, MethodClientUnregisterCapability, params, nil)
+	return c.conn.Request(ctx, MethodClientUnregisterCapability, params).Await(ctx, nil)
 }
 
 // ApplyEdit sends the request from the server to the client to modify resource on the client side.
@@ -209,7 +263,7 @@ func (c *client) ApplyEdit(ctx context.Context, params *ApplyWorkspaceEditParams
 	c.logger.Debug("call " + MethodWorkspaceApplyEdit)
 	defer c.logger.Debug("end "+MethodWorkspaceApplyEdit, zap.Error(err))
 
-	if err := Call(ctx, c.Conn, MethodWorkspaceApplyEdit, params, &result); err != nil {
+	if err := c.conn.Request(ctx, MethodWorkspaceApplyEdit, params).Await(ctx, &result); err != nil {
 		return false, err
 	}
 
@@ -226,7 +280,7 @@ func (c *client) Configuration(ctx context.Context, params *ConfigurationParams)
 	defer c.logger.Debug("end "+MethodWorkspaceConfiguration, zap.Error(err))
 
 	var result []interface{}
-	if err := Call(ctx, c.Conn, MethodWorkspaceConfiguration, params, &result); err != nil {
+	if err := c.conn.Request(ctx, MethodWorkspaceConfiguration, params).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 
@@ -242,7 +296,7 @@ func (c *client) WorkspaceFolders(ctx context.Context) (result []WorkspaceFolder
 	c.logger.Debug("call " + MethodWorkspaceWorkspaceFolders)
 	defer c.logger.Debug("end "+MethodWorkspaceWorkspaceFolders, zap.Error(err))
 
-	if err := Call(ctx, c.Conn, MethodWorkspaceWorkspaceFolders, nil, &result); err != nil {
+	if err := c.conn.Request(ctx, MethodWorkspaceWorkspaceFolders, nil).Await(ctx, &result); err != nil {
 		return nil, err
 	}
 

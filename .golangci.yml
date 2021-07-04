@@ -214,36 +214,46 @@ issues:
         - gosec
         - thelper
         - wrapcheck
+
     - path: "(.*)?_example_test.go"
       linters:
         - gocritic
+
     # Exclude shadow checking on the variable named err
-    - text: "shadow: declaration of \"(err|ok)\""
+    - text: "shadow: declaration of \"err|ok\""
       linters:
         - govet
+
     # false positive
     - path: language.go
       text: "deprecatedComment: the proper format is `Deprecated: <text>`"
+
     # async
     - path: handler.go
       text: "Error return value of `conn.Notify` is not checked"
       linters:
         - errcheck
+
     - path: log.go
-      text: "Error return value of `s.log.Write` is not checked"
+      text: "Error return value of `wl.w.Write` is not checked"
       linters:
         - errcheck
     - path: deprecated.go
       linters:
         - lll
-    - path: "(client|server)_json.go"
-      linters:
-        - nlreturn
+
     - path: _gojay\.go
       linters:
         - cyclop
         - gocyclo
         - nlreturn
+
     - path: keys_gojay.go
       linters:
         - gosec
+
+    # ignore server.go, {client,server}{_json,_gojay}.go
+    - path: "(server|(client|server))(_json|_gojay)?.go"
+      text: "non-wrapping format verb for fmt.Errorf."
+      linters:
+        - errorlint
