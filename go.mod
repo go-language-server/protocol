@@ -9,4 +9,5 @@ require (
 	go.lsp.dev/pkg v0.0.0-20210323044036-f7deec69b52e
 	go.lsp.dev/uri v0.3.0
 	go.uber.org/zap v1.17.0
+	golang.org/x/exp v0.0.0-20210625193404-fa9d1d177d71
 )

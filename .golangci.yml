@@ -72,7 +72,7 @@ linters-settings:
       regexp:
         YEAR: '20\d\d'
     template: |-
-      SPDX-FileCopyrightText: Copyright {{ YEAR }} The {{ AUTHOR }} Authors
+      SPDX-FileCopyrightText: {{ YEAR }} The {{ AUTHOR }} Authors
       SPDX-License-Identifier: BSD-3-Clause
   goimports:
     local-prefixes: go.lsp.dev/protocol
