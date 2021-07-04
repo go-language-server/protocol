@@ -5,19 +5,133 @@ package protocol
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 
 	"go.uber.org/zap"
 
 	"go.lsp.dev/jsonrpc2"
 )
 
+// ServerFunc is used to construct an LSP server for a given client.
+type ServerFunc func(context.Context, Client) Server
+
+// server implements a Language Server Protocol server.
+//
+// server binds incoming connections to a new server.
+type server struct {
+	newServer ServerFunc
+	conn      *jsonrpc2.Connection
+
+	logger *zap.Logger
+}
+
+// Bind implements jsonrpc2.Binder.Bind.
+func (s *server) Bind(ctx context.Context, conn *jsonrpc2.Connection) (jsonrpc2.Conn, error) {
+	client := ClientDispatcher(conn)
+	server := s.newServer(ctx, client)
+	serverHandler := ServerHandler(server)
+
+	// Wrap the server handler to inject the client into each request context, so
+	// that log events are reflected back to the client.
+	handler := jsonrpc2.HandlerFunc(func(ctx context.Context, req *jsonrpc2.Request) (interface{}, error) {
+		ctx = WithClient(ctx, client)
+		return serverHandler.Handle(ctx, req)
+	})
+
+	preempter := &canceler{
+		conn: conn,
+	}
+
+	return jsonrpc2.ConnectionOptions{
+		Handler:   handler,
+		Preempter: preempter,
+	}, nil
+}
+
+// make sure server implements the ServerInterface interface.
+var _ Server = (*server)(nil)
+
+// ServerOption represents a configures a server.
+type ServerOption interface {
+	apply(*server)
+}
+
+// serverOptionFunc wraps a func so it satisfies the ServerOption interface.
+type serverOptionFunc func(*server)
+
+func (f serverOptionFunc) apply(s *server) {
+	f(s)
+}
+
+// WithServerLogger sets logger to server.
+func WithServerLogger(logger *zap.Logger) ServerOption {
+	return serverOptionFunc(func(s *server) {
+		s.logger = logger
+	})
+}
+
 // ServerDispatcher returns a Server that dispatches LSP requests across the
 // given jsonrpc2 connection.
-func ServerDispatcher(conn jsonrpc2.Conn, logger *zap.Logger) Server {
-	return &server{
-		Conn:   conn,
-		logger: logger,
+func ServerDispatcher(conn *jsonrpc2.Connection, opts ...ServerOption) Server {
+	s := &server{
+		conn:   conn,
+		logger: zap.NewNop(),
 	}
+
+	for _, o := range opts {
+		o(s)
+	}
+
+	return s
+}
+
+func NewServerV2(newServer ServerFunc) Server {
+	return &server{
+		newServer: newServer,
+	}
+}
+
+func NewServer(ctx context.Context, server Server, stream jsonrpc2.Stream, logger *zap.Logger) (context.Context, jsonrpc2.Conn, Client) {
+	conn := jsonrpc2.NewConn(stream)
+	cliint := ClientDispatcher(conn, logger.Named("client"))
+	ctx = WithClient(ctx, cliint)
+
+	conn.Go(ctx,
+		Handlers(
+			ServerHandler(server, jsonrpc2.MethodNotFoundHandler),
+		),
+	)
+
+	return ctx, conn, cliint
+}
+
+type canceler struct {
+	conn *jsonrpc2.Connection
+}
+
+// Preempt implements jsonrpc2.Preempter.Preempt.
+func (c *canceler) Preempt(ctx context.Context, req *jsonrpc2.Request) (interface{}, error) {
+	if req.Method != "$/cancelRequest" {
+		return nil, jsonrpc2_v2.ErrNotHandled
+	}
+
+	var params CancelParams
+	if err := json.Unmarshal(req.Params, &params); err != nil {
+		return nil, errors.Errorf("%w: %v", jsonrpc2.ErrParse, err)
+	}
+
+	var id jsonrpc2.ID
+	switch raw := params.ID.(type) {
+	case float64:
+		id = jsonrpc2.Int64ID(int64(raw))
+	case string:
+		id = jsonrpc2.StringID(raw)
+	default:
+		return nil, fmt.Errorf("%w: invalid ID type %T", jsonrpc2_v2.ErrParse, params.ID)
+	}
+	c.conn.Cancel(id)
+	return nil, nil
 }
 
 // Server represents a Language Server Protocol server.
@@ -266,15 +380,6 @@ const (
 	// MethodMoniker method name of "textDocument/moniker".
 	MethodMoniker = "textDocument/moniker"
 )
-
-// server implements a Language Server Protocol server.
-type server struct {
-	jsonrpc2.Conn
-
-	logger *zap.Logger
-}
-
-var _ Server = (*server)(nil)
 
 // Initialize sents the request as the first request from the client to the server.
 //

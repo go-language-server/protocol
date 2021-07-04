@@ -20,16 +20,16 @@ import (
 
 // clientDispatch implements jsonrpc2.Conn.
 //nolint:funlen
-func clientDispatch(ctx context.Context, client Client, reply jsonrpc2.Replier, req jsonrpc2.Request) (handled bool, err error) {
+func clientDispatch(ctx context.Context, client Client, req *jsonrpc2.Request) (interface{}, error) {
 	if ctx.Err() != nil {
 		return true, reply(ctx, nil, ErrRequestCancelled)
 	}
 
-	dec := gojaypool.BorrowSizedDecoder(bytes.NewReader(req.Params()), len(req.Params()))
+	dec := gojaypool.BorrowSizedDecoder(bytes.NewReader(req.Params), len(req.Params))
 	defer dec.Release()
 	logger := LoggerFromContext(ctx)
 
-	switch req.Method() {
+	switch req.Method {
 	case MethodProgress: // notification
 		defer logger.Debug(MethodProgress, zap.Error(err))
 
@@ -37,7 +37,9 @@ func clientDispatch(ctx context.Context, client Client, reply jsonrpc2.Replier, 
 		if err := dec.DecodeObject(&params); err != nil {
 			return true, replyParseError(ctx, reply, err)
 		}
+
 		err := client.Progress(ctx, &params)
+
 		return true, reply(ctx, nil, err)
 
 	case MethodWorkDoneProgressCreate: // request

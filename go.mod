@@ -10,3 +10,5 @@ require (
 	go.lsp.dev/uri v0.3.0
 	go.uber.org/zap v1.17.0
 )
+
+replace go.lsp.dev/jsonrpc2 => ../jsonrpc2

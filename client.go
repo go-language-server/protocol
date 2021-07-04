@@ -12,33 +12,140 @@ import (
 	"go.lsp.dev/pkg/xcontext"
 )
 
+// NewClient returns the context in which Client is embedded, jsonrpc2.Conn, and the Server.
+func NewClientV1(ctx context.Context, clientFunc ClientFunc, listen jsonrpc2.Listener, logger *zap.Logger) (context.Context, jsonrpc2.Conn, Server) {
+	client := &client{
+		newClient: clientFunc,
+	}
+
+	ctx = WithClient(ctx, client)
+
+	listen, err := jsonrpc2.NetPipe(ctx)
+	conn.Go(ctx,
+		Handlers(
+			ClientHandler(client, jsonrpc2.MethodNotFoundHandler),
+		),
+	)
+	server := ServerDispatcher(conn, logger.Named("server"))
+
+	return ctx, conn, server
+}
+
+// clientConn implements a Language Server Protocol client.
+type clientConn struct {
+	conn *jsonrpc2.Connection
+}
+
+func (c *clientConn) Close() error {
+	return c.conn.Close()
+}
+
+func (c *clientConn) Notify(ctx context.Context, method string, params interface{}) error {
+	return c.conn.Notify(ctx, method, params)
+}
+
+func (c *clientConn) Call(ctx context.Context, method string, params interface{}, result interface{}) (err error) {
+	call := c.conn.Call(ctx, method, params)
+	err = call.Await(ctx, result)
+
+	if ctx.Err() != nil {
+		detachCtx := xcontext.Detach(ctx)
+		c.conn.Notify(detachCtx, MethodCancelRequest, &CancelParams{ID: call.ID().Raw()})
+	}
+
+	return err
+}
+
 // ClientDispatcher returns a Client that dispatches LSP requests across the
 // given jsonrpc2 connection.
-func ClientDispatcher(conn jsonrpc2.Conn, logger *zap.Logger) Client {
-	return &client{
-		Conn:   conn,
-		logger: logger,
+func ClientDispatcher(conn *jsonrpc2.Connection) Client {
+	return &clientConn{
+		conn: conn,
 	}
 }
 
-// ClientHandler handler of LSP client.
-func ClientHandler(client Client, handler jsonrpc2.Handler) jsonrpc2.Handler {
-	h := func(ctx context.Context, reply jsonrpc2.Replier, req jsonrpc2.Request) error {
-		if ctx.Err() != nil {
-			xctx := xcontext.Detach(ctx)
+// ClientOption represents a configures a client.
+type ClientOption interface {
+	apply(*client)
+}
 
-			return reply(xctx, nil, ErrRequestCancelled)
-		}
+// clientOptionFunc wraps a func so it satisfies the ClientOption interface.
+type clientOptionFunc func(*client)
 
-		handled, err := clientDispatch(ctx, client, reply, req)
-		if handled || err != nil {
-			return err
-		}
+func (f clientOptionFunc) apply(c *client) {
+	f(c)
+}
 
-		return handler(ctx, reply, req)
+// WithInterceptor sets interceptor to Client.
+func WithInterceptor(interceptor jsonrpc2.Interceptor) ClientOption {
+	return clientOptionFunc(func(c *client) {
+		c.interceptors = append(c.interceptors, interceptor)
+	})
+}
+
+// WithClientLogger sets logger to Client.
+func WithClientLogger(logger *zap.Logger) ClientOption {
+	return clientOptionFunc(func(c *client) {
+		c.logger = logger
+	})
+}
+
+// ClientFunc is used to construct a Language Server Protocol client for a given server.
+type ClientFunc func(ctx context.Context, server Server) Client
+
+// Client binds a Language Server Protocol client to an incoming connection.
+type client struct {
+	newClient    ClientFunc
+	interceptors []jsonrpc2.Interceptor
+
+	logger *zap.Logger
+}
+
+// NewClient returns the new Client.
+func NewClient(clientFunc ClientFunc, opts ...ClientOption) jsonrpc2.Binder {
+	c := &client{
+		newClient: clientFunc,
+		logger:    zap.NewNop(),
 	}
 
-	return h
+	for _, opt := range opts {
+		opt.apply(c)
+	}
+
+	for _, interceptor := range c.interceptors {
+		c = interceptor(c)
+	}
+
+	return c
+}
+
+// Bind implements jsonrpc2.Binder.Bind.
+func (c *client) Bind(ctx context.Context, conn *jsonrpc2.Connection) (jsonrpc2.Conn, error) {
+	server := ServerDispatcher(conn, WithServerLogger(c.logger))
+	client := c.newClient(ctx, server)
+	ctx = WithClient(ctx, client)
+
+	conn := jsonrpc2.Conn{
+		Framer:  jsonrpc2.HeaderFramer(),
+		Handler: ClientHandler(client),
+	}
+
+	return conn, nil
+}
+
+func ClientHandler(client Client) jsonrpc2.Handler {
+	return jsonrpc2.HandlerFunc(func(ctx context.Context, req *jsonrpc2.Request) (interface{}, error) {
+		if ctx.Err() != nil {
+			return nil, RequestCancelledError
+		}
+
+		result, err := clientDispatch(ctx, client, req)
+		if err != nil {
+			return nil, err
+		}
+
+		return result, resErr
+	})
 }
 
 // Client represents a Language Server Protocol client.
@@ -95,16 +202,6 @@ const (
 	// MethodWorkspaceWorkspaceFolders method name of "workspace/workspaceFolders".
 	MethodWorkspaceWorkspaceFolders = "workspace/workspaceFolders"
 )
-
-// client implements a Language Server Protocol client.
-type client struct {
-	jsonrpc2.Conn
-
-	logger *zap.Logger
-}
-
-// compiler time check whether the Client implements ClientInterface interface.
-var _ Client = (*client)(nil)
 
 // Progress is the base protocol offers also support to report progress in a generic fashion.
 //
