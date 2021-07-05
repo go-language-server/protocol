@@ -926,7 +926,9 @@ type SemanticTokensWorkspaceClientCapabilitiesRequests struct {
 	Range bool `json:"range,omitempty"`
 
 	// Full is the client will send the "textDocument/semanticTokens/full" request
-	// if the server provides a corresponding handler.
+	// if the server provides a corresponding handler. The client will send the
+	// `textDocument/semanticTokens/full/delta` request if the server provides a
+	// corresponding handler.
 	Full interface{} `json:"full,omitempty"`
 }
 
