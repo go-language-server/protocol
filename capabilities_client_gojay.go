@@ -1821,7 +1821,7 @@ var (
 // MarshalJSONObject implements gojay.MarshalerJSONObject.
 func (v *SemanticTokensWorkspaceClientCapabilitiesRequests) MarshalJSONObject(enc *gojay.Encoder) {
 	enc.BoolKeyOmitEmpty(keyRange, v.Range)
-	enc.BoolKeyOmitEmpty(keyFull, v.Full)
+	enc.AddInterfaceKey(keyFull, v.Full)
 }
 
 // IsNil implements gojay.MarshalerJSONObject.
@@ -1833,7 +1833,7 @@ func (v *SemanticTokensWorkspaceClientCapabilitiesRequests) UnmarshalJSONObject(
 	case keyRange:
 		return dec.Bool(&v.Range)
 	case keyFull:
-		return dec.Bool(&v.Full)
+		return dec.Interface(&v.Full)
 	}
 	return nil
 }
