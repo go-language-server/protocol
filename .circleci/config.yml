@@ -1,50 +1,66 @@
 version: 2.1
 
-orbs:
-  golang: cci-orb/golang@volatile
-  codecov: codecov/codecov@1.1.4
-
 executors:
   golang:
+    parameters:
+      go-version:
+        type: string
     docker:
-      - image: golang:1.16-buster
-        auth:
-          username: $DOCKERHUB_USER
-          password: $DOCKERHUB_PASSWORD
+      - image: "golang:<< parameters.go-version >>-buster"
+        environment:
+          CODOCOV_VERSION: v0.1.0_5313
     working_directory: /go/src/go.lsp.dev/protocol
 
 command_vars:
-  - cache_key: &cache_key v1-go-mod-{{ checksum "go.mod" }}-{{ checksum "go.sum" }}
-  - cache_tools_key: &cache_tools_key v1-go-tools-{{ checksum "tools/go.mod" }}-{{ checksum "tools/go.sum" }}
+  - cache_key: &cache_key gomod-<< parameters.go-version >>-{{ checksum "go.mod" }}-{{ checksum "go.sum" }}-2ptat08qmr4k
+  - cache_tools_key: &cache_tools_key tools-<< parameters.go-version >>-{{ checksum "tools/go.mod" }}-{{ checksum "tools/go.sum" }}-2ptat08qmr4k
 
 commands:
   restore_dependencies:
+    parameters:
+      go-version:
+        type: string
     steps:
+      - restore_cache:
+          name: "Restore module dependencies cache"
+          keys:
+            - *cache_key
       - restore_cache:
           name: "Restore dependencies tools"
           keys:
             - *cache_tools_key
+      - run:
+          name: "Download project modules"
+          command: |
+            go mod download
 
   save_dependencies:
+    parameters:
+      go-version:
+        type: string
     steps:
+      - save_cache:
+          name: "Save module cache"
+          key: *cache_key
+          paths:
+            - /go/pkg/mod/cache
       - save_cache:
           name: "Save dependencies tools"
           key: *cache_tools_key
           paths:
-            - /go/src/go.lsp.dev/protocol/tools/bin/
-      - persist_to_workspace:
-          name: "Persist dependencies tools"
-          root: "/go"
-          paths:
-            - src/go.lsp.dev/protocol/tools/bin
+            - /go/bin/
+      - run:
+          name: "go mod vendor"
+          command: |
+            go mod vendor
 
   install_tools:
     steps:
       - run:
-          name: "Download dependency tools"
+          name: "Build project tools"
           command: |
-            if [ -z $(find ./tools/bin/ -mindepth 1 -type f -executable | head -1) ]; then
-              make -j${CPUS} tools
+            if [ -z $(find /go/bin/ -mindepth 1 -type f | head -1) ]; then
+              make -j${CPUS} tools GOBIN=/go/bin
             fi
 
   setup:
@@ -55,16 +71,11 @@ commands:
           command: |
             go version
             go env
-      - restore_cache:
-          name: "Restore module cache"
-          keys:
-            - *cache_key
+      - attach_workspace:
+          name: "Attach vendor directory and dependencies tools"
+          at: "/go"
       - run:
-          name: "Download modules"
-          command: |
-            go mod download
-      - run:
-          name: "Run go mod vendor"
+          name: "go mod vendor"
           command: |
             go mod vendor
       - run:
@@ -72,34 +83,39 @@ commands:
           command: |
             # https://circleci.com/changelog#container-cgroup-limits-now-visible-inside-the-docker-executor
             CPUS="$(echo $(($(cat /sys/fs/cgroup/cpu/cpu.shares) / 1024)))"
-            echo "export CPUS=${CPUS}" >> $BASH_ENV
-
-  set_goflags:
-    steps:
-      - run:
-          name: "Set GOFLAGS"
-          command: |
             echo "export GOFLAGS='-p=${CPUS} -cpu=${CPUS}'" >> $BASH_ENV
 
 jobs:
   tools:
-    executor: golang
-    resource_class: large
+    parameters:
+      go-version:
+        type: string
+    executor:
+      name: golang
+      go-version: "<< parameters.go-version >>"
+    resource_class: xlarge
     steps:
       - checkout
-      - restore_dependencies
+      - restore_dependencies:
+          go-version: "<< parameters.go-version >>"
       - install_tools
-      - save_dependencies
+      - save_dependencies:
+          go-version: "<< parameters.go-version >>"
+      - persist_to_workspace:
+          root: /go
+          paths:
+            - bin
+            - pkg/mod/cache
 
   test:
-    executor: golang
+    parameters:
+      go-version:
+        type: string
+    executor:
+      name: golang
+      go-version: "<< parameters.go-version >>"
     resource_class: xlarge
-    parallelism: 2
     steps:
-      - attach_workspace:
-          name: "Attach tools"
-          at: "/go"
-      - set_goflags
       - run:
           name: Test and take a coverage
           environment:
@@ -108,46 +124,42 @@ jobs:
             GOTESTSUM_JSONFILE: /tmp/test-results/tests.json
           command: |
             mkdir -p /tmp/test-results
-            make $(circleci tests split .circleci/coverage-targets)
-      - save_cache:
-          name: "Save module cache"
-          key: *cache_key
-          paths:
-            - /go/pkg/mod/cache
-      - codecov/upload:
-          file: "coverage.out"
-          flags: $(if [ $CIRCLE_NODE_INDEX == 0 ]; then echo "json"; else echo "gojay"; fi)
+            make coverage
+      - run:
+          name: Upload coverage result to Codecov
           when: on_success
+          command: |
+            curl -sLO https://github.com/codecov/uploader/releases/download/${CODOCOV_VERSION}/codecov-linux
+            chmod +x codecov-linux
+            ./codecov-linux --file coverage.out --flags $(go env GOOS)-<< parameters.go-version >>
 
   lint:
-    executor: golang
-    resource_class: xlarge
-    parallelism: 2
+    parameters:
+      go-version:
+        type: string
+    executor:
+      name: golang
+      go-version: "<< parameters.go-version >>"
+    resource_class: large
     steps:
-      - attach_workspace:
-          name: "Attach tools"
-          at: "/go"
       - run:
           name: Run fmt and lint for sources
           command: |
-            make lint GO_LINT_FLAGS="$(circleci tests split .circleci/lint-buildtags)" JOBS=${CPUS}
-      - save_cache:
-          name: "Save module cache"
-          key: *cache_key
-          paths:
-            - /go/pkg/mod/cache
+            make lint
+            git add -N . && git diff --exit-code
 
 workflows:
   version: 2
-  workflows:
+  go1.16:
     jobs:
       - tools:
-          context: org-global
-
+          name: go1.16-tools
+          go-version: "1.16"
       - test:
-          context: org-global
+          name: go1.16-test
+          go-version: "1.16"
           requires:
-            - tools
+            - go1.16-tools
           pre-steps:
             - setup
           post-steps:
@@ -155,10 +167,35 @@ workflows:
                 path: /tmp/test-results
             - store_artifacts:
                 path: /tmp/test-results
-
       - lint:
-          context: org-global
+          name: go1.16-lint
+          go-version: "1.16"
           requires:
-            - tools
+            - go1.16-tools
+          pre-steps:
+            - setup
+
+  go1.17:
+    jobs:
+      - tools:
+          name: go1.17-tools
+          go-version: "1.17-rc"
+      - test:
+          name: go1.17-test
+          go-version: "1.17-rc"
+          requires:
+            - go1.17-tools
+          pre-steps:
+            - setup
+          post-steps:
+            - store_test_results:
+                path: /tmp/test-results
+            - store_artifacts:
+                path: /tmp/test-results
+      - lint:
+          name: go1.17-lint
+          go-version: "1.17-rc"
+          requires:
+            - go1.17-tools
           pre-steps:
             - setup
