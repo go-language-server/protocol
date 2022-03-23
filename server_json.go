@@ -19,6 +19,7 @@ import (
 )
 
 // ServerHandler jsonrpc2.Handler of Language Server Prococol Server.
+//nolint:unparam
 func ServerHandler(server Server, handler jsonrpc2.Handler) jsonrpc2.Handler {
 	h := func(ctx context.Context, reply jsonrpc2.Replier, req jsonrpc2.Request) error {
 		if ctx.Err() != nil {
