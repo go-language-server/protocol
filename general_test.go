@@ -10,11 +10,14 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
+	"github.com/segmentio/encoding/json"
 
 	"go.lsp.dev/uri"
 )
 
-func testWorkspaceFolders(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestWorkspaceFolders(t *testing.T) {
+	t.Parallel()
+
 	const want = `[{"uri":"file:///Users/zchee/go/src/go.lsp.dev/protocol","name":"protocol"},{"uri":"file:///Users/zchee/go/src/go.lsp.dev/jsonrpc2","name":"jsonrpc2"}]`
 	wantType := WorkspaceFolders{
 		{
@@ -51,7 +54,7 @@ func testWorkspaceFolders(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -88,7 +91,7 @@ func testWorkspaceFolders(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 				t.Parallel()
 
 				var got WorkspaceFolders
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -100,7 +103,9 @@ func testWorkspaceFolders(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 	})
 }
 
-func testClientInfo(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestClientInfo(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want       = `{"name":"testClient","version":"v0.0.0"}`
 		wantNilAll = `{"name":"testClient"}`
@@ -144,7 +149,7 @@ func testClientInfo(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -188,7 +193,7 @@ func testClientInfo(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 				t.Parallel()
 
 				var got ClientInfo
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -200,7 +205,9 @@ func testClientInfo(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 	})
 }
 
-func testInitializeParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestInitializeParams(t *testing.T) {
+	t.Parallel()
+
 	const wantWorkDoneToken = "156edea9-9d8d-422f-b7ee-81a84594afbb"
 	const (
 		want    = `{"workDoneToken":"` + wantWorkDoneToken + `","processId":25556,"clientInfo":{"name":"testClient","version":"v0.0.0"},"locale":"en-US","rootPath":"~/go/src/go.lsp.dev/protocol","rootUri":"file:///Users/zchee/go/src/go.lsp.dev/protocol","initializationOptions":"testdata","capabilities":{},"trace":"on","workspaceFolders":[{"uri":"file:///Users/zchee/go/src/go.lsp.dev/protocol","name":"protocol"},{"uri":"file:///Users/zchee/go/src/go.lsp.dev/jsonrpc2","name":"jsonrpc2"}]}`
@@ -269,7 +276,7 @@ func testInitializeParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -313,7 +320,7 @@ func testInitializeParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 				t.Parallel()
 
 				var got InitializeParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -331,7 +338,9 @@ func testInitializeParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 	})
 }
 
-func testLogTraceParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestLogTraceParams(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"message":"testMessage","verbose":"verbose"}`
 		wantNil = `{"message":"testMessage"}`
@@ -375,7 +384,7 @@ func testLogTraceParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -419,7 +428,7 @@ func testLogTraceParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 				t.Parallel()
 
 				var got LogTraceParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -431,7 +440,9 @@ func testLogTraceParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 	})
 }
 
-func testSetTraceParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestSetTraceParams(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"value":"verbose"}`
 		wantInvalid = `{"value":"invalid"}`
@@ -471,7 +482,7 @@ func testSetTraceParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -515,7 +526,7 @@ func testSetTraceParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 				t.Parallel()
 
 				var got SetTraceParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -527,7 +538,9 @@ func testSetTraceParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 	})
 }
 
-func testCreateFilesParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestCreateFilesParams(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"files":[{"uri":"file:///path/to/basic.go"}]}`
 		wantInvalid = `{"files":[{"uri":"file:///path/to/invalid.go"}]}`
@@ -571,7 +584,7 @@ func testCreateFilesParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -615,7 +628,7 @@ func testCreateFilesParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 				t.Parallel()
 
 				var got CreateFilesParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -627,7 +640,9 @@ func testCreateFilesParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 	})
 }
 
-func testRenameFilesParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestRenameFilesParams(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"files":[{"oldUri":"file:///path/to/old.go","newUri":"file:///path/to/new.go"}]}`
 		wantInvalid = `{"files":[{"oldUri":"file:///path/to/invalidOld.go","newUri":"file:///path/to/invalidNew.go"}]}`
@@ -672,7 +687,7 @@ func testRenameFilesParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -716,7 +731,7 @@ func testRenameFilesParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 				t.Parallel()
 
 				var got RenameFilesParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -728,7 +743,9 @@ func testRenameFilesParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 	})
 }
 
-func testDeleteFilesParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestDeleteFilesParams(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"files":[{"uri":"file:///path/to/basic.go"}]}`
 		wantInvalid = `{"files":[{"uri":"file:///path/to/invalid.go"}]}`
@@ -772,7 +789,7 @@ func testDeleteFilesParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -816,7 +833,7 @@ func testDeleteFilesParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 				t.Parallel()
 
 				var got DeleteFilesParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -828,7 +845,9 @@ func testDeleteFilesParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 	})
 }
 
-func testReferencesParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestReferencesParams(t *testing.T) {
+	t.Parallel()
+
 	const (
 		wantWorkDoneToken      = "156edea9-9d8d-422f-b7ee-81a84594afbb"
 		wantPartialResultToken = "dd134d84-c134-4d7a-a2a3-f8af3ef4a568"
@@ -911,7 +930,7 @@ func testReferencesParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -962,7 +981,7 @@ func testReferencesParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 				t.Parallel()
 
 				var got ReferenceParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -986,7 +1005,9 @@ func testReferencesParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 	})
 }
 
-func testDocumentHighlightOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestDocumentHighlightOptions(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"workDoneProgress":true}`
 		wantNil     = `{}`
@@ -1036,7 +1057,7 @@ func testDocumentHighlightOptions(t *testing.T, marshal marshalFunc, unmarshal u
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -1087,7 +1108,7 @@ func testDocumentHighlightOptions(t *testing.T, marshal marshalFunc, unmarshal u
 				t.Parallel()
 
 				var got DocumentHighlightOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -1099,7 +1120,9 @@ func testDocumentHighlightOptions(t *testing.T, marshal marshalFunc, unmarshal u
 	})
 }
 
-func testDocumentHighlightParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestDocumentHighlightParams(t *testing.T) {
+	t.Parallel()
+
 	const (
 		wantWorkDoneToken      = "156edea9-9d8d-422f-b7ee-81a84594afbb"
 		wantPartialResultToken = "dd134d84-c134-4d7a-a2a3-f8af3ef4a568"
@@ -1176,7 +1199,7 @@ func testDocumentHighlightParams(t *testing.T, marshal marshalFunc, unmarshal un
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -1227,7 +1250,7 @@ func testDocumentHighlightParams(t *testing.T, marshal marshalFunc, unmarshal un
 				t.Parallel()
 
 				var got DocumentHighlightParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -1251,7 +1274,9 @@ func testDocumentHighlightParams(t *testing.T, marshal marshalFunc, unmarshal un
 	})
 }
 
-func testDocumentSymbolOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestDocumentSymbolOptions(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"workDoneProgress":true,"label":"testLabel"}`
 		wantInvalid = `{"workDoneProgress":false}`
@@ -1302,7 +1327,7 @@ func testDocumentSymbolOptions(t *testing.T, marshal marshalFunc, unmarshal unma
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -1353,7 +1378,7 @@ func testDocumentSymbolOptions(t *testing.T, marshal marshalFunc, unmarshal unma
 				t.Parallel()
 
 				var got DocumentSymbolOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -1365,7 +1390,9 @@ func testDocumentSymbolOptions(t *testing.T, marshal marshalFunc, unmarshal unma
 	})
 }
 
-func testWorkspaceSymbolOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestWorkspaceSymbolOptions(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"workDoneProgress":true}`
 		wantInvalid = `{"workDoneProgress":false}`
@@ -1415,7 +1442,7 @@ func testWorkspaceSymbolOptions(t *testing.T, marshal marshalFunc, unmarshal unm
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -1466,7 +1493,7 @@ func testWorkspaceSymbolOptions(t *testing.T, marshal marshalFunc, unmarshal unm
 				t.Parallel()
 
 				var got WorkspaceSymbolOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -1478,7 +1505,9 @@ func testWorkspaceSymbolOptions(t *testing.T, marshal marshalFunc, unmarshal unm
 	})
 }
 
-func testDocumentFormattingOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestDocumentFormattingOptions(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"workDoneProgress":true}`
 		wantInvalid = `{"workDoneProgress":false}`
@@ -1528,7 +1557,7 @@ func testDocumentFormattingOptions(t *testing.T, marshal marshalFunc, unmarshal 
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -1579,7 +1608,7 @@ func testDocumentFormattingOptions(t *testing.T, marshal marshalFunc, unmarshal 
 				t.Parallel()
 
 				var got DocumentFormattingOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -1591,7 +1620,9 @@ func testDocumentFormattingOptions(t *testing.T, marshal marshalFunc, unmarshal 
 	})
 }
 
-func testDocumentRangeFormattingOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestDocumentRangeFormattingOptions(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"workDoneProgress":true}`
 		wantNil     = `{}`
@@ -1641,7 +1672,7 @@ func testDocumentRangeFormattingOptions(t *testing.T, marshal marshalFunc, unmar
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -1692,7 +1723,7 @@ func testDocumentRangeFormattingOptions(t *testing.T, marshal marshalFunc, unmar
 				t.Parallel()
 
 				var got DocumentRangeFormattingOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -1704,7 +1735,9 @@ func testDocumentRangeFormattingOptions(t *testing.T, marshal marshalFunc, unmar
 	})
 }
 
-func testDeclarationOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestDeclarationOptions(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"workDoneProgress":true}`
 		wantNil     = `{}`
@@ -1754,7 +1787,7 @@ func testDeclarationOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -1805,7 +1838,7 @@ func testDeclarationOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 				t.Parallel()
 
 				var got DeclarationOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -1817,7 +1850,9 @@ func testDeclarationOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 	})
 }
 
-func testDeclarationRegistrationOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestDeclarationRegistrationOptions(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"workDoneProgress":true,"documentSelector":[{"language":"go","scheme":"file","pattern":"*"}],"id":"1"}`
 		wantNil     = `{"documentSelector":[{"language":"go","scheme":"file","pattern":"*"}]}`
@@ -1892,7 +1927,7 @@ func testDeclarationRegistrationOptions(t *testing.T, marshal marshalFunc, unmar
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -1943,7 +1978,7 @@ func testDeclarationRegistrationOptions(t *testing.T, marshal marshalFunc, unmar
 				t.Parallel()
 
 				var got DeclarationRegistrationOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -1955,7 +1990,9 @@ func testDeclarationRegistrationOptions(t *testing.T, marshal marshalFunc, unmar
 	})
 }
 
-func testDeclarationParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestDeclarationParams(t *testing.T) {
+	t.Parallel()
+
 	const (
 		wantWorkDoneToken      = "156edea9-9d8d-422f-b7ee-81a84594afbb"
 		wantPartialResultToken = "dd134d84-c134-4d7a-a2a3-f8af3ef4a568"
@@ -2032,7 +2069,7 @@ func testDeclarationParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -2083,7 +2120,7 @@ func testDeclarationParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 				t.Parallel()
 
 				var got DeclarationParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -2107,7 +2144,9 @@ func testDeclarationParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 	})
 }
 
-func testDefinitionOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestDefinitionOptions(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"workDoneProgress":true}`
 		wantNil     = `{}`
@@ -2157,7 +2196,7 @@ func testDefinitionOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -2208,7 +2247,7 @@ func testDefinitionOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 				t.Parallel()
 
 				var got DefinitionOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -2220,7 +2259,9 @@ func testDefinitionOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 	})
 }
 
-func testDefinitionParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestDefinitionParams(t *testing.T) {
+	t.Parallel()
+
 	const (
 		wantWorkDoneToken      = "156edea9-9d8d-422f-b7ee-81a84594afbb"
 		wantPartialResultToken = "dd134d84-c134-4d7a-a2a3-f8af3ef4a568"
@@ -2297,7 +2338,7 @@ func testDefinitionParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -2348,7 +2389,7 @@ func testDefinitionParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 				t.Parallel()
 
 				var got DefinitionParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -2372,7 +2413,9 @@ func testDefinitionParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 	})
 }
 
-func testTypeDefinitionOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestTypeDefinitionOptions(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"workDoneProgress":true}`
 		wantNil     = `{}`
@@ -2422,7 +2465,7 @@ func testTypeDefinitionOptions(t *testing.T, marshal marshalFunc, unmarshal unma
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -2473,7 +2516,7 @@ func testTypeDefinitionOptions(t *testing.T, marshal marshalFunc, unmarshal unma
 				t.Parallel()
 
 				var got TypeDefinitionOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -2485,7 +2528,9 @@ func testTypeDefinitionOptions(t *testing.T, marshal marshalFunc, unmarshal unma
 	})
 }
 
-func testTypeDefinitionRegistrationOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestTypeDefinitionRegistrationOptions(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"documentSelector":[{"language":"go","scheme":"file","pattern":"*"}],"workDoneProgress":true,"id":"1"}`
 		wantNil     = `{"documentSelector":[{"language":"go","scheme":"file","pattern":"*"}]}`
@@ -2560,7 +2605,7 @@ func testTypeDefinitionRegistrationOptions(t *testing.T, marshal marshalFunc, un
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -2611,7 +2656,7 @@ func testTypeDefinitionRegistrationOptions(t *testing.T, marshal marshalFunc, un
 				t.Parallel()
 
 				var got TypeDefinitionRegistrationOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -2623,7 +2668,9 @@ func testTypeDefinitionRegistrationOptions(t *testing.T, marshal marshalFunc, un
 	})
 }
 
-func testTypeDefinitionParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestTypeDefinitionParams(t *testing.T) {
+	t.Parallel()
+
 	const (
 		wantWorkDoneToken      = "156edea9-9d8d-422f-b7ee-81a84594afbb"
 		wantPartialResultToken = "dd134d84-c134-4d7a-a2a3-f8af3ef4a568"
@@ -2700,7 +2747,7 @@ func testTypeDefinitionParams(t *testing.T, marshal marshalFunc, unmarshal unmar
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -2751,7 +2798,7 @@ func testTypeDefinitionParams(t *testing.T, marshal marshalFunc, unmarshal unmar
 				t.Parallel()
 
 				var got TypeDefinitionParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -2775,7 +2822,9 @@ func testTypeDefinitionParams(t *testing.T, marshal marshalFunc, unmarshal unmar
 	})
 }
 
-func testImplementationOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestImplementationOptions(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want       = `{"workDoneProgress":true}`
 		wantNilAll = `{}`
@@ -2818,7 +2867,7 @@ func testImplementationOptions(t *testing.T, marshal marshalFunc, unmarshal unma
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -2862,7 +2911,7 @@ func testImplementationOptions(t *testing.T, marshal marshalFunc, unmarshal unma
 				t.Parallel()
 
 				var got ImplementationOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -2874,7 +2923,9 @@ func testImplementationOptions(t *testing.T, marshal marshalFunc, unmarshal unma
 	})
 }
 
-func testImplementationRegistrationOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestImplementationRegistrationOptions(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"documentSelector":[{"language":"go","scheme":"file","pattern":"*"}],"workDoneProgress":true,"id":"1"}`
 		wantNilAll  = `{"documentSelector":[{"language":"go","scheme":"file","pattern":"*"}]}`
@@ -2949,7 +3000,7 @@ func testImplementationRegistrationOptions(t *testing.T, marshal marshalFunc, un
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -3000,7 +3051,7 @@ func testImplementationRegistrationOptions(t *testing.T, marshal marshalFunc, un
 				t.Parallel()
 
 				var got ImplementationRegistrationOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -3012,7 +3063,9 @@ func testImplementationRegistrationOptions(t *testing.T, marshal marshalFunc, un
 	})
 }
 
-func testImplementationParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestImplementationParams(t *testing.T) {
+	t.Parallel()
+
 	const (
 		wantWorkDoneToken      = "156edea9-9d8d-422f-b7ee-81a84594afbb"
 		wantPartialResultToken = "dd134d84-c134-4d7a-a2a3-f8af3ef4a568"
@@ -3089,7 +3142,7 @@ func testImplementationParams(t *testing.T, marshal marshalFunc, unmarshal unmar
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -3140,7 +3193,7 @@ func testImplementationParams(t *testing.T, marshal marshalFunc, unmarshal unmar
 				t.Parallel()
 
 				var got ImplementationParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -3164,7 +3217,9 @@ func testImplementationParams(t *testing.T, marshal marshalFunc, unmarshal unmar
 	})
 }
 
-func testDocumentColorOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestDocumentColorOptions(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"workDoneProgress":true}`
 		wantNil     = `{}`
@@ -3214,7 +3269,7 @@ func testDocumentColorOptions(t *testing.T, marshal marshalFunc, unmarshal unmar
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -3265,7 +3320,7 @@ func testDocumentColorOptions(t *testing.T, marshal marshalFunc, unmarshal unmar
 				t.Parallel()
 
 				var got DocumentColorOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -3277,7 +3332,9 @@ func testDocumentColorOptions(t *testing.T, marshal marshalFunc, unmarshal unmar
 	})
 }
 
-func testDocumentColorRegistrationOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestDocumentColorRegistrationOptions(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"documentSelector":[{"language":"go","scheme":"file","pattern":"*"}],"id":"1","workDoneProgress":true}`
 		wantNil     = `{"documentSelector":[{"language":"go","scheme":"file","pattern":"*"}]}`
@@ -3352,7 +3409,7 @@ func testDocumentColorRegistrationOptions(t *testing.T, marshal marshalFunc, unm
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -3403,7 +3460,7 @@ func testDocumentColorRegistrationOptions(t *testing.T, marshal marshalFunc, unm
 				t.Parallel()
 
 				var got DocumentColorRegistrationOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -3446,7 +3503,9 @@ func TestPrepareSupportDefaultBehavior_String(t *testing.T) {
 	}
 }
 
-func testFoldingRangeOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestFoldingRangeOptions(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"workDoneProgress":true}`
 		wantNil     = `{}`
@@ -3496,7 +3555,7 @@ func testFoldingRangeOptions(t *testing.T, marshal marshalFunc, unmarshal unmars
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -3547,7 +3606,7 @@ func testFoldingRangeOptions(t *testing.T, marshal marshalFunc, unmarshal unmars
 				t.Parallel()
 
 				var got FoldingRangeOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -3559,7 +3618,9 @@ func testFoldingRangeOptions(t *testing.T, marshal marshalFunc, unmarshal unmars
 	})
 }
 
-func testFoldingRangeRegistrationOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestFoldingRangeRegistrationOptions(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"documentSelector":[{"language":"go","scheme":"file","pattern":"*"}],"workDoneProgress":true,"id":"1"}`
 		wantNil     = `{"documentSelector":[{"language":"go","scheme":"file","pattern":"*"}]}`
@@ -3634,7 +3695,7 @@ func testFoldingRangeRegistrationOptions(t *testing.T, marshal marshalFunc, unma
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -3685,7 +3746,7 @@ func testFoldingRangeRegistrationOptions(t *testing.T, marshal marshalFunc, unma
 				t.Parallel()
 
 				var got FoldingRangeRegistrationOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -3697,7 +3758,9 @@ func testFoldingRangeRegistrationOptions(t *testing.T, marshal marshalFunc, unma
 	})
 }
 
-func testInitializeResult(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestInitializeResult(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"capabilities":{"textDocumentSync":1,"completionProvider":{"resolveProvider":true,"triggerCharacters":["Tab"]},"hoverProvider":true,"signatureHelpProvider":{"triggerCharacters":["C-K"],"retriggerCharacters":["."]},"declarationProvider":true,"definitionProvider":true,"typeDefinitionProvider":true,"implementationProvider":true,"referencesProvider":true,"documentHighlightProvider":true,"documentSymbolProvider":true,"codeActionProvider":true,"codeLensProvider":{"resolveProvider":true},"documentLinkProvider":{"resolveProvider":true},"colorProvider":true,"workspaceSymbolProvider":true,"documentFormattingProvider":true,"documentRangeFormattingProvider":true,"documentOnTypeFormattingProvider":{"firstTriggerCharacter":".","moreTriggerCharacter":["f"]},"renameProvider":true,"foldingRangeProvider":true,"selectionRangeProvider":true,"executeCommandProvider":{"commands":["test","command"]},"callHierarchyProvider":true,"linkedEditingRangeProvider":true,"workspace":{"workspaceFolders":{"supported":true,"changeNotifications":"testNotifications"},"fileOperations":{"didCreate":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"file","options":{"ignoreCase":true}}}]},"willCreate":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"folder","options":{"ignoreCase":true}}}]},"didRename":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"file","options":{"ignoreCase":true}}}]},"willRename":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"folder","options":{"ignoreCase":true}}}]},"didDelete":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"file","options":{"ignoreCase":true}}}]},"willDelete":{"filters":[{"scheme":"file","pattern":{"glob":"*","matches":"folder","options":{"ignoreCase":true}}}]}}},"monikerProvider":true,"experimental":"Awesome Experimentals"},"serverInfo":{"name":"testServer","version":"v0.0.0"}}`
 		wantNil = `{"capabilities":{}}`
@@ -3878,7 +3941,7 @@ func testInitializeResult(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -3923,7 +3986,7 @@ func testInitializeResult(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 				t.Parallel()
 
 				var got InitializeResult
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -3947,7 +4010,9 @@ func testInitializeResult(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 	})
 }
 
-func testInitializeError(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestInitializeError(t *testing.T) {
+	t.Parallel()
+
 	const want = `{"retry":true}`
 	wantType := InitializeError{
 		Retry: true,
@@ -3977,7 +4042,7 @@ func testInitializeError(t *testing.T, marshal marshalFunc, unmarshal unmarshalF
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -4014,7 +4079,7 @@ func testInitializeError(t *testing.T, marshal marshalFunc, unmarshal unmarshalF
 				t.Parallel()
 
 				var got InitializeError
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -4026,7 +4091,9 @@ func testInitializeError(t *testing.T, marshal marshalFunc, unmarshal unmarshalF
 	})
 }
 
-func testShowDocumentParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestShowDocumentParams(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"uri":"file:///path/to/basic.go","external":true,"takeFocus":true,"selection":{"start":{"line":255,"character":4},"end":{"line":255,"character":10}}}`
 		wantNil = `{"uri":"file:///path/to/basic.go"}`
@@ -4081,7 +4148,7 @@ func testShowDocumentParams(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -4125,7 +4192,7 @@ func testShowDocumentParams(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 				t.Parallel()
 
 				var got ShowDocumentParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -4137,7 +4204,9 @@ func testShowDocumentParams(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 	})
 }
 
-func testShowDocumentResult(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestShowDocumentResult(t *testing.T) {
+	t.Parallel()
+
 	const want = `{"success":true}`
 	wantType := ShowDocumentResult{
 		Success: true,
@@ -4167,7 +4236,7 @@ func testShowDocumentResult(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -4204,7 +4273,7 @@ func testShowDocumentResult(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 				t.Parallel()
 
 				var got ShowDocumentResult
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -4257,7 +4326,9 @@ func TestTextDocumentSyncKind_String(t *testing.T) {
 	}
 }
 
-func testReferencesOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestReferencesOptions(t *testing.T) {
+	t.Parallel()
+
 	const want = `{"workDoneProgress":true}`
 	wantType := ReferencesOptions{
 		WorkDoneProgressOptions: WorkDoneProgressOptions{
@@ -4289,7 +4360,7 @@ func testReferencesOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -4326,7 +4397,7 @@ func testReferencesOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 				t.Parallel()
 
 				var got ReferencesOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -4338,7 +4409,9 @@ func testReferencesOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 	})
 }
 
-func testCodeActionOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestCodeActionOptions(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"codeActionKinds":["quickfix","refactor"],"resolveProvider":true}`
 		wantNil = `{}`
@@ -4383,7 +4456,7 @@ func testCodeActionOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -4427,7 +4500,7 @@ func testCodeActionOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 				t.Parallel()
 
 				var got CodeActionOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -4439,7 +4512,9 @@ func testCodeActionOptions(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 	})
 }
 
-func testRenameOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestRenameOptions(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"prepareProvider":true}`
 		wantNil = `{}`
@@ -4480,7 +4555,7 @@ func testRenameOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFun
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -4524,7 +4599,7 @@ func testRenameOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFun
 				t.Parallel()
 
 				var got RenameOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -4536,7 +4611,9 @@ func testRenameOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFun
 	})
 }
 
-func testSaveOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestSaveOptions(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"includeText":true}`
 		wantNil = `{}`
@@ -4577,7 +4654,7 @@ func testSaveOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc)
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -4621,7 +4698,7 @@ func testSaveOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc)
 				t.Parallel()
 
 				var got SaveOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -4633,7 +4710,9 @@ func testSaveOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc)
 	})
 }
 
-func testTextDocumentSyncOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestTextDocumentSyncOptions(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"openClose":true,"change":1,"willSave":true,"willSaveWaitUntil":true,"save":{"includeText":true}}`
 		wantNil = `{}`
@@ -4680,7 +4759,7 @@ func testTextDocumentSyncOptions(t *testing.T, marshal marshalFunc, unmarshal un
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -4724,7 +4803,7 @@ func testTextDocumentSyncOptions(t *testing.T, marshal marshalFunc, unmarshal un
 				t.Parallel()
 
 				var got TextDocumentSyncOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -4736,7 +4815,9 @@ func testTextDocumentSyncOptions(t *testing.T, marshal marshalFunc, unmarshal un
 	})
 }
 
-func testHoverOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestHoverOptions(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"workDoneProgress":true}`
 		wantNil = `{}`
@@ -4779,7 +4860,7 @@ func testHoverOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -4823,7 +4904,7 @@ func testHoverOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc
 				t.Parallel()
 
 				var got HoverOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -4835,7 +4916,9 @@ func testHoverOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc
 	})
 }
 
-func testStaticRegistrationOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestStaticRegistrationOptions(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"id":"testID"}`
 		wantNil = `{}`
@@ -4876,7 +4959,7 @@ func testStaticRegistrationOptions(t *testing.T, marshal marshalFunc, unmarshal 
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -4920,7 +5003,7 @@ func testStaticRegistrationOptions(t *testing.T, marshal marshalFunc, unmarshal 
 				t.Parallel()
 
 				var got StaticRegistrationOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -4932,7 +5015,9 @@ func testStaticRegistrationOptions(t *testing.T, marshal marshalFunc, unmarshal 
 	})
 }
 
-func testDocumentLinkRegistrationOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestDocumentLinkRegistrationOptions(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"documentSelector":[{"language":"go","scheme":"file","pattern":"*"}],"resolveProvider":true}`
 		wantNil = `{"documentSelector":[]}`
@@ -4986,7 +5071,7 @@ func testDocumentLinkRegistrationOptions(t *testing.T, marshal marshalFunc, unma
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -5030,7 +5115,7 @@ func testDocumentLinkRegistrationOptions(t *testing.T, marshal marshalFunc, unma
 				t.Parallel()
 
 				var got DocumentLinkRegistrationOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -5042,7 +5127,9 @@ func testDocumentLinkRegistrationOptions(t *testing.T, marshal marshalFunc, unma
 	})
 }
 
-func testInitializedParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestInitializedParams(t *testing.T) {
+	t.Parallel()
+
 	const want = `{}`
 
 	t.Run("Marshal", func(t *testing.T) {
@@ -5069,7 +5156,7 @@ func testInitializedParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -5106,7 +5193,7 @@ func testInitializedParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 				t.Parallel()
 
 				var got InitializedParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 

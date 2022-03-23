@@ -8,9 +8,12 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/segmentio/encoding/json"
 )
 
-func testWorkDoneProgressBegin(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestWorkDoneProgressBegin(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"kind":"begin","title":"testTitle","cancellable":true,"message":"testMessage","percentage":30}`
 		wantNil     = `{"kind":"begin","title":"testTitle"}`
@@ -63,7 +66,7 @@ func testWorkDoneProgressBegin(t *testing.T, marshal marshalFunc, unmarshal unma
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -111,7 +114,7 @@ func testWorkDoneProgressBegin(t *testing.T, marshal marshalFunc, unmarshal unma
 				t.Parallel()
 
 				var got WorkDoneProgressBegin
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -123,7 +126,9 @@ func testWorkDoneProgressBegin(t *testing.T, marshal marshalFunc, unmarshal unma
 	})
 }
 
-func testWorkDoneProgressReport(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestWorkDoneProgressReport(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"kind":"report","cancellable":true,"message":"testMessage","percentage":30}`
 		wantNil     = `{"kind":"report"}`
@@ -174,7 +179,7 @@ func testWorkDoneProgressReport(t *testing.T, marshal marshalFunc, unmarshal unm
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -222,7 +227,7 @@ func testWorkDoneProgressReport(t *testing.T, marshal marshalFunc, unmarshal unm
 				t.Parallel()
 
 				var got WorkDoneProgressReport
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -234,7 +239,9 @@ func testWorkDoneProgressReport(t *testing.T, marshal marshalFunc, unmarshal unm
 	})
 }
 
-func testWorkDoneProgressEnd(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestWorkDoneProgressEnd(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"kind":"end","message":"testMessage"}`
 		wantNil     = `{"kind":"end"}`
@@ -283,7 +290,7 @@ func testWorkDoneProgressEnd(t *testing.T, marshal marshalFunc, unmarshal unmars
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -331,7 +338,7 @@ func testWorkDoneProgressEnd(t *testing.T, marshal marshalFunc, unmarshal unmars
 				t.Parallel()
 
 				var got WorkDoneProgressEnd
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -343,7 +350,9 @@ func testWorkDoneProgressEnd(t *testing.T, marshal marshalFunc, unmarshal unmars
 	})
 }
 
-func testWorkDoneProgressParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestWorkDoneProgressParams(t *testing.T) {
+	t.Parallel()
+
 	const wantWorkDoneToken = "156edea9-9d8d-422f-b7ee-81a84594afbb"
 	const want = `{"workDoneToken":"` + wantWorkDoneToken + `"}`
 
@@ -372,7 +381,7 @@ func testWorkDoneProgressParams(t *testing.T, marshal marshalFunc, unmarshal unm
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -406,7 +415,7 @@ func testWorkDoneProgressParams(t *testing.T, marshal marshalFunc, unmarshal unm
 				t.Parallel()
 
 				var got WorkDoneProgressParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -420,7 +429,9 @@ func testWorkDoneProgressParams(t *testing.T, marshal marshalFunc, unmarshal unm
 	})
 }
 
-func testPartialResultParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestPartialResultParams(t *testing.T) {
+	t.Parallel()
+
 	const wantPartialResultParams = "156edea9-9d8d-422f-b7ee-81a84594afbb"
 	const want = `{"partialResultToken":"` + wantPartialResultParams + `"}`
 
@@ -449,7 +460,7 @@ func testPartialResultParams(t *testing.T, marshal marshalFunc, unmarshal unmars
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -483,7 +494,7 @@ func testPartialResultParams(t *testing.T, marshal marshalFunc, unmarshal unmars
 				t.Parallel()
 
 				var got PartialResultParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 

@@ -7,11 +7,14 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/segmentio/encoding/json"
 
 	"go.lsp.dev/uri"
 )
 
-func testDiagnostic(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestDiagnostic(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want                      = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","codeDescription":{"href":"file:///path/to/test.go"},"source":"test foo bar","message":"foo bar","tags":[1,2],"relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}],"data":"testData"}`
 		wantNilSeverity           = `{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"code":"foo/bar","codeDescription":{"href":"file:///path/to/test.go"},"source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}],"data":"testData"}`
@@ -228,7 +231,7 @@ func testDiagnostic(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -299,7 +302,7 @@ func testDiagnostic(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) 
 				t.Parallel()
 
 				var got Diagnostic
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -393,7 +396,9 @@ func TestDiagnosticTag_String(t *testing.T) {
 	}
 }
 
-func testDiagnosticRelatedInformation(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestDiagnosticRelatedInformation(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"basic_gen.go"}`
 		wantInvalid = `{"location":{"uri":"file:///path/to/basic.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}},"message":"basic_gen.go"}`
@@ -445,7 +450,7 @@ func testDiagnosticRelatedInformation(t *testing.T, marshal marshalFunc, unmarsh
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -488,7 +493,7 @@ func testDiagnosticRelatedInformation(t *testing.T, marshal marshalFunc, unmarsh
 				t.Parallel()
 
 				var got DiagnosticRelatedInformation
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -500,7 +505,9 @@ func testDiagnosticRelatedInformation(t *testing.T, marshal marshalFunc, unmarsh
 	})
 }
 
-func testPublishDiagnosticsParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestPublishDiagnosticsParams(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"uri":"file:///path/to/diagnostics.go","version":1,"diagnostics":[{"range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/diagnostics.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}},"message":"diagnostics.go"}]}]}`
 		wantInvalid = `{"uri":"file:///path/to/diagnostics_gen.go","version":2,"diagnostics":[{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"severity":1,"code":"foo/bar","source":"test foo bar","message":"foo bar","relatedInformation":[{"location":{"uri":"file:///path/to/diagnostics_gen.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}},"message":"diagnostics_gen.go"}]}]}`
@@ -577,7 +584,7 @@ func testPublishDiagnosticsParams(t *testing.T, marshal marshalFunc, unmarshal u
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -621,7 +628,7 @@ func testPublishDiagnosticsParams(t *testing.T, marshal marshalFunc, unmarshal u
 				t.Parallel()
 
 				var got PublishDiagnosticsParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {

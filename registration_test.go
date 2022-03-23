@@ -7,9 +7,12 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/segmentio/encoding/json"
 )
 
-func testRegistration(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestRegistration(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want           = `{"id":"1","method":"testMethod","registerOptions":{"foo":"bar"}}`
 		wantInterfaces = `{"id":"1","method":"testMethod","registerOptions":["foo","bar"]}`
@@ -92,7 +95,7 @@ func testRegistration(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -147,7 +150,7 @@ func testRegistration(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc
 				t.Parallel()
 
 				var got Registration
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -159,7 +162,9 @@ func testRegistration(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc
 	})
 }
 
-func testRegistrationParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestRegistrationParams(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"registrations":[{"id":"1","method":"testMethod","registerOptions":{"foo":"bar"}}]}`
 		wantNil     = `{"registrations":[{"id":"1","method":"testMethod"}]}`
@@ -220,7 +225,7 @@ func testRegistrationParams(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -268,7 +273,7 @@ func testRegistrationParams(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 				t.Parallel()
 
 				var got RegistrationParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -280,7 +285,9 @@ func testRegistrationParams(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 	})
 }
 
-func testTextDocumentRegistrationOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestTextDocumentRegistrationOptions(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"documentSelector":[{"language":"go","scheme":"file","pattern":"*.go"},{"language":"cpp","scheme":"untitled","pattern":"*.{cpp,hpp}"}]}`
 		wantInvalid = `{"documentSelector":[{"language":"typescript","scheme":"file","pattern":"*.{ts,js}"},{"language":"c","scheme":"untitled","pattern":"*.{c,h}"}]}`
@@ -328,7 +335,7 @@ func testTextDocumentRegistrationOptions(t *testing.T, marshal marshalFunc, unma
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -369,7 +376,7 @@ func testTextDocumentRegistrationOptions(t *testing.T, marshal marshalFunc, unma
 				t.Parallel()
 
 				var got TextDocumentRegistrationOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -381,7 +388,9 @@ func testTextDocumentRegistrationOptions(t *testing.T, marshal marshalFunc, unma
 	})
 }
 
-func testUnregistration(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestUnregistration(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"id":"1","method":"testMethod"}`
 		wantInvalid = `{"id":"2","method":"invalidMethod"}`
@@ -419,7 +428,7 @@ func testUnregistration(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -460,7 +469,7 @@ func testUnregistration(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 				t.Parallel()
 
 				var got Unregistration
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -472,7 +481,9 @@ func testUnregistration(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 	})
 }
 
-func testUnregistrationParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestUnregistrationParams(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"unregisterations":[{"id":"1","method":"testMethod"}]}`
 		wantInvalid = `{"unregisterations":[{"id":"2","method":"invalidMethod"}]}`
@@ -514,7 +525,7 @@ func testUnregistrationParams(t *testing.T, marshal marshalFunc, unmarshal unmar
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -555,7 +566,7 @@ func testUnregistrationParams(t *testing.T, marshal marshalFunc, unmarshal unmar
 				t.Parallel()
 
 				var got UnregistrationParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 

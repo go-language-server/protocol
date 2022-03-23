@@ -7,9 +7,12 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/segmentio/encoding/json"
 )
 
-func testClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestClientCapabilities(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"workspace":{"applyEdit":true,"workspaceEdit":{"documentChanges":true,"failureHandling":"FailureHandling","resourceOperations":["ResourceOperations"]},"didChangeConfiguration":{"dynamicRegistration":true},"didChangeWatchedFiles":{"dynamicRegistration":true},"symbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]}},"executeCommand":{"dynamicRegistration":true},"workspaceFolders":true,"configuration":true},"textDocument":{"synchronization":{"dynamicRegistration":true,"willSave":true,"willSaveWaitUntil":true,"didSave":true},"completion":{"dynamicRegistration":true,"completionItem":{"snippetSupport":true,"commitCharactersSupport":true,"documentationFormat":["plaintext","markdown"],"deprecatedSupport":true,"preselectSupport":true},"completionItemKind":{"valueSet":[1]},"contextSupport":true},"hover":{"dynamicRegistration":true,"contentFormat":["plaintext","markdown"]},"signatureHelp":{"dynamicRegistration":true,"signatureInformation":{"documentationFormat":["plaintext","markdown"]}},"declaration":{"dynamicRegistration":true,"linkSupport":true},"definition":{"dynamicRegistration":true,"linkSupport":true},"typeDefinition":{"dynamicRegistration":true,"linkSupport":true},"implementation":{"dynamicRegistration":true,"linkSupport":true},"references":{"dynamicRegistration":true},"documentHighlight":{"dynamicRegistration":true},"documentSymbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]},"hierarchicalDocumentSymbolSupport":true},"codeAction":{"dynamicRegistration":true,"codeActionLiteralSupport":{"codeActionKind":{"valueSet":["quickfix","refactor","refactor.extract","refactor.rewrite","source","source.organizeImports"]}}},"codeLens":{"dynamicRegistration":true},"documentLink":{"dynamicRegistration":true},"colorProvider":{"dynamicRegistration":true},"formatting":{"dynamicRegistration":true},"rangeFormatting":{"dynamicRegistration":true},"onTypeFormatting":{"dynamicRegistration":true},"publishDiagnostics":{"relatedInformation":true},"rename":{"dynamicRegistration":true,"prepareSupport":true},"foldingRange":{"dynamicRegistration":true,"rangeLimit":5,"lineFoldingOnly":true},"selectionRange":{"dynamicRegistration":true},"callHierarchy":{"dynamicRegistration":true},"semanticTokens":{"dynamicRegistration":true,"requests":{"range":true,"full":true},"tokenTypes":["test","tokenTypes"],"tokenModifiers":["test","tokenModifiers"],"formats":["relative"],"overlappingTokenSupport":true,"multilineTokenSupport":true},"linkedEditingRange":{"dynamicRegistration":true},"moniker":{"dynamicRegistration":true}},"window":{"workDoneProgress":true,"showMessage":{"messageActionItem":{"additionalPropertiesSupport":true}},"showDocument":{"support":true}},"general":{"regularExpressions":{"engine":"ECMAScript","version":"ES2020"},"markdown":{"parser":"marked","version":"1.1.0"}},"experimental":"testExperimental"}`
 		wantNil = `{}`
@@ -250,7 +253,7 @@ func testClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -294,7 +297,7 @@ func testClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 				t.Parallel()
 
 				var got ClientCapabilities
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -306,7 +309,9 @@ func testClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarsh
 	})
 }
 
-func testWorkspaceClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestWorkspaceClientCapabilities(t *testing.T) {
+	t.Parallel()
+
 	const want = `{"applyEdit":true,"workspaceEdit":{"documentChanges":true,"failureHandling":"FailureHandling","resourceOperations":["ResourceOperations"],"normalizesLineEndings":true,"changeAnnotationSupport":{"groupsOnLabel":true}},"didChangeConfiguration":{"dynamicRegistration":true},"didChangeWatchedFiles":{"dynamicRegistration":true},"symbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]}},"executeCommand":{"dynamicRegistration":true},"workspaceFolders":true,"configuration":true,"semanticTokens":{"refreshSupport":true},"codeLens":{"refreshSupport":true},"fileOperations":{"dynamicRegistration":true,"didCreate":true,"willCreate":true,"didRename":true,"willRename":true,"didDelete":true,"willDelete":true}}`
 	wantType := WorkspaceClientCapabilities{
 		ApplyEdit: true,
@@ -384,7 +389,7 @@ func testWorkspaceClientCapabilities(t *testing.T, marshal marshalFunc, unmarsha
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -421,7 +426,7 @@ func testWorkspaceClientCapabilities(t *testing.T, marshal marshalFunc, unmarsha
 				t.Parallel()
 
 				var got WorkspaceClientCapabilities
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -433,7 +438,9 @@ func testWorkspaceClientCapabilities(t *testing.T, marshal marshalFunc, unmarsha
 	})
 }
 
-func testWorkspaceClientCapabilitiesWorkspaceEdit(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestWorkspaceClientCapabilitiesWorkspaceEdit(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"documentChanges":true,"failureHandling":"abort","resourceOperations":["create"],"normalizesLineEndings":true,"changeAnnotationSupport":{"groupsOnLabel":true}}`
 		wantNil = `{}`
@@ -481,7 +488,7 @@ func testWorkspaceClientCapabilitiesWorkspaceEdit(t *testing.T, marshal marshalF
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -525,7 +532,7 @@ func testWorkspaceClientCapabilitiesWorkspaceEdit(t *testing.T, marshal marshalF
 				t.Parallel()
 
 				var got WorkspaceClientCapabilitiesWorkspaceEdit
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -537,7 +544,9 @@ func testWorkspaceClientCapabilitiesWorkspaceEdit(t *testing.T, marshal marshalF
 	})
 }
 
-func testTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestTextDocumentClientCapabilities(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"synchronization":{"dynamicRegistration":true,"willSave":true,"willSaveWaitUntil":true,"didSave":true},"completion":{"dynamicRegistration":true,"completionItem":{"snippetSupport":true,"commitCharactersSupport":true,"documentationFormat":["plaintext","markdown"],"deprecatedSupport":true,"preselectSupport":true},"completionItemKind":{"valueSet":[1]},"contextSupport":true},"hover":{"dynamicRegistration":true,"contentFormat":["plaintext","markdown"]},"signatureHelp":{"dynamicRegistration":true,"signatureInformation":{"documentationFormat":["plaintext","markdown"]}},"declaration":{"dynamicRegistration":true,"linkSupport":true},"definition":{"dynamicRegistration":true,"linkSupport":true},"typeDefinition":{"dynamicRegistration":true,"linkSupport":true},"implementation":{"dynamicRegistration":true,"linkSupport":true},"references":{"dynamicRegistration":true},"documentHighlight":{"dynamicRegistration":true},"documentSymbol":{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]},"hierarchicalDocumentSymbolSupport":true},"codeAction":{"dynamicRegistration":true,"codeActionLiteralSupport":{"codeActionKind":{"valueSet":["quickfix","refactor","refactor.extract","refactor.rewrite","source","source.organizeImports"]}}},"codeLens":{"dynamicRegistration":true},"documentLink":{"dynamicRegistration":true},"colorProvider":{"dynamicRegistration":true},"formatting":{"dynamicRegistration":true},"rangeFormatting":{"dynamicRegistration":true},"onTypeFormatting":{"dynamicRegistration":true},"publishDiagnostics":{"relatedInformation":true},"rename":{"dynamicRegistration":true,"prepareSupport":true},"foldingRange":{"dynamicRegistration":true,"rangeLimit":5,"lineFoldingOnly":true},"selectionRange":{"dynamicRegistration":true},"callHierarchy":{"dynamicRegistration":true},"semanticTokens":{"dynamicRegistration":true,"requests":{"range":true,"full":true},"tokenTypes":["test","tokenTypes"],"tokenModifiers":["test","tokenModifiers"],"formats":["relative"],"overlappingTokenSupport":true,"multilineTokenSupport":true},"linkedEditingRange":{"dynamicRegistration":true},"moniker":{"dynamicRegistration":true}}`
 		wantNil = `{}`
@@ -722,7 +731,7 @@ func testTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmar
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -766,7 +775,7 @@ func testTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmar
 				t.Parallel()
 
 				var got TextDocumentClientCapabilities
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -778,7 +787,9 @@ func testTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmar
 	})
 }
 
-func testTextDocumentSyncClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestTextDocumentSyncClientCapabilities(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"dynamicRegistration":true,"willSave":true,"willSaveWaitUntil":true,"didSave":true}`
 		wantNil = `{}`
@@ -821,7 +832,7 @@ func testTextDocumentSyncClientCapabilities(t *testing.T, marshal marshalFunc, u
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -865,7 +876,7 @@ func testTextDocumentSyncClientCapabilities(t *testing.T, marshal marshalFunc, u
 				t.Parallel()
 
 				var got TextDocumentSyncClientCapabilities
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -877,7 +888,9 @@ func testTextDocumentSyncClientCapabilities(t *testing.T, marshal marshalFunc, u
 	})
 }
 
-func testCompletionTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestCompletionTextDocumentClientCapabilities(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"dynamicRegistration":true,"completionItem":{"snippetSupport":true,"commitCharactersSupport":true,"documentationFormat":["plaintext","markdown"],"deprecatedSupport":true,"preselectSupport":true,"tagSupport":{"valueSet":[1]},"insertReplaceSupport":true,"resolveSupport":{"properties":["test","properties"]},"insertTextModeSupport":{"valueSet":[1,2]}},"completionItemKind":{"valueSet":[1]},"contextSupport":true}`
 		wantNil = `{}`
@@ -946,7 +959,7 @@ func testCompletionTextDocumentClientCapabilities(t *testing.T, marshal marshalF
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -990,7 +1003,7 @@ func testCompletionTextDocumentClientCapabilities(t *testing.T, marshal marshalF
 				t.Parallel()
 
 				var got CompletionTextDocumentClientCapabilities
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -1002,7 +1015,9 @@ func testCompletionTextDocumentClientCapabilities(t *testing.T, marshal marshalF
 	})
 }
 
-func testHoverTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestHoverTextDocumentClientCapabilities(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"dynamicRegistration":true,"contentFormat":["plaintext","markdown"]}`
 		wantNil = `{}`
@@ -1046,7 +1061,7 @@ func testHoverTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, 
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -1090,7 +1105,7 @@ func testHoverTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, 
 				t.Parallel()
 
 				var got HoverTextDocumentClientCapabilities
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -1102,7 +1117,9 @@ func testHoverTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, 
 	})
 }
 
-func testSignatureHelpTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestSignatureHelpTextDocumentClientCapabilities(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"dynamicRegistration":true,"signatureInformation":{"documentationFormat":["plaintext","markdown"],"parameterInformation":{"labelOffsetSupport":true},"activeParameterSupport":true},"contextSupport":true}`
 		wantNil = `{}`
@@ -1153,7 +1170,7 @@ func testSignatureHelpTextDocumentClientCapabilities(t *testing.T, marshal marsh
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -1197,7 +1214,7 @@ func testSignatureHelpTextDocumentClientCapabilities(t *testing.T, marshal marsh
 				t.Parallel()
 
 				var got SignatureHelpTextDocumentClientCapabilities
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -1209,7 +1226,9 @@ func testSignatureHelpTextDocumentClientCapabilities(t *testing.T, marshal marsh
 	})
 }
 
-func testDeclarationTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestDeclarationTextDocumentClientCapabilities(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"dynamicRegistration":true,"linkSupport":true}`
 		wantNil = `{}`
@@ -1250,7 +1269,7 @@ func testDeclarationTextDocumentClientCapabilities(t *testing.T, marshal marshal
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -1294,7 +1313,7 @@ func testDeclarationTextDocumentClientCapabilities(t *testing.T, marshal marshal
 				t.Parallel()
 
 				var got DeclarationTextDocumentClientCapabilities
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -1306,7 +1325,9 @@ func testDeclarationTextDocumentClientCapabilities(t *testing.T, marshal marshal
 	})
 }
 
-func testDefinitionTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestDefinitionTextDocumentClientCapabilities(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"dynamicRegistration":true,"linkSupport":true}`
 		wantNil = `{}`
@@ -1347,7 +1368,7 @@ func testDefinitionTextDocumentClientCapabilities(t *testing.T, marshal marshalF
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -1391,7 +1412,7 @@ func testDefinitionTextDocumentClientCapabilities(t *testing.T, marshal marshalF
 				t.Parallel()
 
 				var got DefinitionTextDocumentClientCapabilities
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -1403,7 +1424,9 @@ func testDefinitionTextDocumentClientCapabilities(t *testing.T, marshal marshalF
 	})
 }
 
-func testTypeDefinitionTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestTypeDefinitionTextDocumentClientCapabilities(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"dynamicRegistration":true,"linkSupport":true}`
 		wantNil = `{}`
@@ -1444,7 +1467,7 @@ func testTypeDefinitionTextDocumentClientCapabilities(t *testing.T, marshal mars
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -1488,7 +1511,7 @@ func testTypeDefinitionTextDocumentClientCapabilities(t *testing.T, marshal mars
 				t.Parallel()
 
 				var got TypeDefinitionTextDocumentClientCapabilities
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -1500,7 +1523,9 @@ func testTypeDefinitionTextDocumentClientCapabilities(t *testing.T, marshal mars
 	})
 }
 
-func testImplementationTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestImplementationTextDocumentClientCapabilities(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"dynamicRegistration":true,"linkSupport":true}`
 		wantNil = `{}`
@@ -1541,7 +1566,7 @@ func testImplementationTextDocumentClientCapabilities(t *testing.T, marshal mars
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -1585,7 +1610,7 @@ func testImplementationTextDocumentClientCapabilities(t *testing.T, marshal mars
 				t.Parallel()
 
 				var got ImplementationTextDocumentClientCapabilities
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -1597,7 +1622,9 @@ func testImplementationTextDocumentClientCapabilities(t *testing.T, marshal mars
 	})
 }
 
-func testReferencesTextDocumentClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestReferencesTextDocumentClientCapabilities(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"dynamicRegistration":true}`
 		wantNil = `{}`
@@ -1637,7 +1664,7 @@ func testReferencesTextDocumentClientCapabilities(t *testing.T, marshal marshalF
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -1681,7 +1708,7 @@ func testReferencesTextDocumentClientCapabilities(t *testing.T, marshal marshalF
 				t.Parallel()
 
 				var got ReferencesTextDocumentClientCapabilities
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -1693,7 +1720,9 @@ func testReferencesTextDocumentClientCapabilities(t *testing.T, marshal marshalF
 	})
 }
 
-func testDocumentHighlightClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestDocumentHighlightClientCapabilities(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"dynamicRegistration":true}`
 		wantNil = `{}`
@@ -1733,7 +1762,7 @@ func testDocumentHighlightClientCapabilities(t *testing.T, marshal marshalFunc, 
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -1777,7 +1806,7 @@ func testDocumentHighlightClientCapabilities(t *testing.T, marshal marshalFunc, 
 				t.Parallel()
 
 				var got DocumentHighlightClientCapabilities
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -1789,7 +1818,9 @@ func testDocumentHighlightClientCapabilities(t *testing.T, marshal marshalFunc, 
 	})
 }
 
-func testDocumentSymbolClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestDocumentSymbolClientCapabilities(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"dynamicRegistration":true,"symbolKind":{"valueSet":[1,2,3,4,5,6]},"hierarchicalDocumentSymbolSupport":true,"tagSupport":{"valueSet":[1]},"labelSupport":true}`
 		wantNil = `{}`
@@ -1846,7 +1877,7 @@ func testDocumentSymbolClientCapabilities(t *testing.T, marshal marshalFunc, unm
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -1890,7 +1921,7 @@ func testDocumentSymbolClientCapabilities(t *testing.T, marshal marshalFunc, unm
 				t.Parallel()
 
 				var got DocumentSymbolClientCapabilities
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -1902,7 +1933,9 @@ func testDocumentSymbolClientCapabilities(t *testing.T, marshal marshalFunc, unm
 	})
 }
 
-func testCodeActionClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestCodeActionClientCapabilities(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"dynamicRegistration":true,"codeActionLiteralSupport":{"codeActionKind":{"valueSet":["quickfix","refactor","refactor.extract","refactor.rewrite","source","source.organizeImports"]}},"isPreferredSupport":true,"disabledSupport":true,"dataSupport":true,"resolveSupport":{"properties":["testProperties"]},"honorsChangeAnnotations":true}`
 		wantNil = `{}`
@@ -1961,7 +1994,7 @@ func testCodeActionClientCapabilities(t *testing.T, marshal marshalFunc, unmarsh
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -2005,7 +2038,7 @@ func testCodeActionClientCapabilities(t *testing.T, marshal marshalFunc, unmarsh
 				t.Parallel()
 
 				var got CodeActionClientCapabilities
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -2017,7 +2050,9 @@ func testCodeActionClientCapabilities(t *testing.T, marshal marshalFunc, unmarsh
 	})
 }
 
-func testCodeLensClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestCodeLensClientCapabilities(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"dynamicRegistration":true}`
 		wantNil = `{}`
@@ -2057,7 +2092,7 @@ func testCodeLensClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -2101,7 +2136,7 @@ func testCodeLensClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal
 				t.Parallel()
 
 				var got CodeLensClientCapabilities
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -2113,7 +2148,9 @@ func testCodeLensClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal
 	})
 }
 
-func testDocumentLinkClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestDocumentLinkClientCapabilities(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"dynamicRegistration":true,"tooltipSupport":true}`
 		wantNil = `{}`
@@ -2154,7 +2191,7 @@ func testDocumentLinkClientCapabilities(t *testing.T, marshal marshalFunc, unmar
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -2198,7 +2235,7 @@ func testDocumentLinkClientCapabilities(t *testing.T, marshal marshalFunc, unmar
 				t.Parallel()
 
 				var got DocumentLinkClientCapabilities
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -2210,7 +2247,9 @@ func testDocumentLinkClientCapabilities(t *testing.T, marshal marshalFunc, unmar
 	})
 }
 
-func testDocumentColorClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestDocumentColorClientCapabilities(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"dynamicRegistration":true}`
 		wantNil = `{}`
@@ -2250,7 +2289,7 @@ func testDocumentColorClientCapabilities(t *testing.T, marshal marshalFunc, unma
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -2294,7 +2333,7 @@ func testDocumentColorClientCapabilities(t *testing.T, marshal marshalFunc, unma
 				t.Parallel()
 
 				var got DocumentColorClientCapabilities
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -2306,7 +2345,9 @@ func testDocumentColorClientCapabilities(t *testing.T, marshal marshalFunc, unma
 	})
 }
 
-func testPublishDiagnosticsClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestPublishDiagnosticsClientCapabilities(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"relatedInformation":true,"tagSupport":{"valueSet":[2,1]},"versionSupport":true,"codeDescriptionSupport":true,"dataSupport":true}`
 		wantNil = `{}`
@@ -2355,7 +2396,7 @@ func testPublishDiagnosticsClientCapabilities(t *testing.T, marshal marshalFunc,
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -2399,7 +2440,7 @@ func testPublishDiagnosticsClientCapabilities(t *testing.T, marshal marshalFunc,
 				t.Parallel()
 
 				var got PublishDiagnosticsClientCapabilities
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -2411,7 +2452,9 @@ func testPublishDiagnosticsClientCapabilities(t *testing.T, marshal marshalFunc,
 	})
 }
 
-func testRenameClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestRenameClientCapabilities(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"dynamicRegistration":true,"prepareSupport":true,"prepareSupportDefaultBehavior":1,"honorsChangeAnnotations":true}`
 		wantNil = `{}`
@@ -2454,7 +2497,7 @@ func testRenameClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal u
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -2498,7 +2541,7 @@ func testRenameClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal u
 				t.Parallel()
 
 				var got RenameClientCapabilities
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -2510,7 +2553,9 @@ func testRenameClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal u
 	})
 }
 
-func testFoldingRangeClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestFoldingRangeClientCapabilities(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"dynamicRegistration":true,"rangeLimit":5,"lineFoldingOnly":true}`
 		wantNil = `{}`
@@ -2552,7 +2597,7 @@ func testFoldingRangeClientCapabilities(t *testing.T, marshal marshalFunc, unmar
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -2596,7 +2641,7 @@ func testFoldingRangeClientCapabilities(t *testing.T, marshal marshalFunc, unmar
 				t.Parallel()
 
 				var got FoldingRangeClientCapabilities
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -2608,7 +2653,9 @@ func testFoldingRangeClientCapabilities(t *testing.T, marshal marshalFunc, unmar
 	})
 }
 
-func testSemanticTokensClientCapabilities(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestSemanticTokensClientCapabilities(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want    = `{"dynamicRegistration":true,"requests":{"range":true,"full":true},"tokenTypes":["namespace","type","class"],"tokenModifiers":["declaration","definition","readonly"],"formats":["relative"],"overlappingTokenSupport":true,"multilineTokenSupport":true}`
 		wantNil = `{"requests":{},"tokenTypes":["namespace","type","class"],"tokenModifiers":["declaration","definition","readonly"],"formats":["relative"]}`
@@ -2683,7 +2730,7 @@ func testSemanticTokensClientCapabilities(t *testing.T, marshal marshalFunc, unm
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -2727,7 +2774,7 @@ func testSemanticTokensClientCapabilities(t *testing.T, marshal marshalFunc, unm
 				t.Parallel()
 
 				var got SemanticTokensClientCapabilities
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 

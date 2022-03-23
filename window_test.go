@@ -9,9 +9,12 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/segmentio/encoding/json"
 )
 
-func testShowMessageParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestShowMessageParams(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"message":"error message","type":1}`
 		wantUnknown = `{"message":"unknown message","type":0}`
@@ -56,7 +59,7 @@ func testShowMessageParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -100,7 +103,7 @@ func testShowMessageParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 				t.Parallel()
 
 				var got ShowMessageParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -112,7 +115,9 @@ func testShowMessageParams(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 	})
 }
 
-func testShowMessageRequestParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestShowMessageRequestParams(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"actions":[{"title":"Retry"}],"message":"error message","type":1}`
 		wantUnknown = `{"actions":[{"title":"Retry"}],"message":"unknown message","type":0}`
@@ -167,7 +172,7 @@ func testShowMessageRequestParams(t *testing.T, marshal marshalFunc, unmarshal u
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -211,7 +216,7 @@ func testShowMessageRequestParams(t *testing.T, marshal marshalFunc, unmarshal u
 				t.Parallel()
 
 				var got ShowMessageRequestParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -223,7 +228,9 @@ func testShowMessageRequestParams(t *testing.T, marshal marshalFunc, unmarshal u
 	})
 }
 
-func testMessageActionItem(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestMessageActionItem(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"title":"Retry"}`
 		wantOpenLog = `{"title":"Open Log"}`
@@ -266,7 +273,7 @@ func testMessageActionItem(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -310,7 +317,7 @@ func testMessageActionItem(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 				t.Parallel()
 
 				var got MessageActionItem
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -322,7 +329,9 @@ func testMessageActionItem(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 	})
 }
 
-func testLogMessageParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestLogMessageParams(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"message":"error message","type":1}`
 		wantUnknown = `{"message":"unknown message","type":0}`
@@ -367,7 +376,7 @@ func testLogMessageParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -411,7 +420,7 @@ func testLogMessageParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 				t.Parallel()
 
 				var got LogMessageParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -423,7 +432,9 @@ func testLogMessageParams(t *testing.T, marshal marshalFunc, unmarshal unmarshal
 	})
 }
 
-func testWorkDoneProgressCreateParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestWorkDoneProgressCreateParams(t *testing.T) {
+	t.Parallel()
+
 	const (
 		wantToken    = int32(1569)
 		invalidToken = int32(1348)
@@ -485,7 +496,7 @@ func testWorkDoneProgressCreateParams(t *testing.T, marshal marshalFunc, unmarsh
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -540,7 +551,7 @@ func testWorkDoneProgressCreateParams(t *testing.T, marshal marshalFunc, unmarsh
 				t.Parallel()
 
 				var got WorkDoneProgressCreateParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -552,7 +563,9 @@ func testWorkDoneProgressCreateParams(t *testing.T, marshal marshalFunc, unmarsh
 	})
 }
 
-func testWorkDoneProgressCancelParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestWorkDoneProgressCancelParams(t *testing.T) {
+	t.Parallel()
+
 	const (
 		wantToken    = int32(1569)
 		invalidToken = int32(1348)
@@ -594,7 +607,7 @@ func testWorkDoneProgressCancelParams(t *testing.T, marshal marshalFunc, unmarsh
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -635,7 +648,7 @@ func testWorkDoneProgressCancelParams(t *testing.T, marshal marshalFunc, unmarsh
 				t.Parallel()
 
 				var got WorkDoneProgressCancelParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 

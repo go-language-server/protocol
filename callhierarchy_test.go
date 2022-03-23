@@ -9,11 +9,12 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
+	"github.com/segmentio/encoding/json"
 
 	"go.lsp.dev/uri"
 )
 
-func testCallHierarchy(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestCallHierarchy(t *testing.T) {
 	const (
 		want        = `{"dynamicRegistration":true}`
 		wantNil     = `{}`
@@ -62,7 +63,7 @@ func testCallHierarchy(t *testing.T, marshal marshalFunc, unmarshal unmarshalFun
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -113,7 +114,7 @@ func testCallHierarchy(t *testing.T, marshal marshalFunc, unmarshal unmarshalFun
 				t.Parallel()
 
 				var got CallHierarchy
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -125,7 +126,7 @@ func testCallHierarchy(t *testing.T, marshal marshalFunc, unmarshal unmarshalFun
 	})
 }
 
-func testCallHierarchyOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestCallHierarchyOptions(t *testing.T) {
 	const (
 		want        = `{"workDoneProgress":true}`
 		wantNil     = `{}`
@@ -176,7 +177,7 @@ func testCallHierarchyOptions(t *testing.T, marshal marshalFunc, unmarshal unmar
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -227,7 +228,7 @@ func testCallHierarchyOptions(t *testing.T, marshal marshalFunc, unmarshal unmar
 				t.Parallel()
 
 				var got CallHierarchyOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -239,7 +240,7 @@ func testCallHierarchyOptions(t *testing.T, marshal marshalFunc, unmarshal unmar
 	})
 }
 
-func testCallHierarchyRegistrationOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestCallHierarchyRegistrationOptions(t *testing.T) {
 	const (
 		want        = `{"documentSelector":[{"language":"go","scheme":"file","pattern":"*.go"}],"workDoneProgress":true,"id":"testID"}`
 		wantNil     = `{"documentSelector":[]}`
@@ -308,7 +309,7 @@ func testCallHierarchyRegistrationOptions(t *testing.T, marshal marshalFunc, unm
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -359,7 +360,7 @@ func testCallHierarchyRegistrationOptions(t *testing.T, marshal marshalFunc, unm
 				t.Parallel()
 
 				var got CallHierarchyRegistrationOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -371,7 +372,7 @@ func testCallHierarchyRegistrationOptions(t *testing.T, marshal marshalFunc, unm
 	})
 }
 
-func testCallHierarchyPrepareParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestCallHierarchyPrepareParams(t *testing.T) {
 	const (
 		wantWorkDoneToken    = "156edea9-9d8d-422f-b7ee-81a84594afbb"
 		invalidWorkDoneToken = "dd134d84-c134-4d7a-a2a3-f8af3ef4a568"
@@ -445,7 +446,7 @@ func testCallHierarchyPrepareParams(t *testing.T, marshal marshalFunc, unmarshal
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -496,7 +497,7 @@ func testCallHierarchyPrepareParams(t *testing.T, marshal marshalFunc, unmarshal
 				t.Parallel()
 
 				var got CallHierarchyPrepareParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -514,7 +515,7 @@ func testCallHierarchyPrepareParams(t *testing.T, marshal marshalFunc, unmarshal
 	})
 }
 
-func testCallHierarchyItem(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestCallHierarchyItem(t *testing.T) {
 	const (
 		want        = `{"name":"testName","kind":1,"tags":[1],"detail":"testDetail","uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"selectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"data":"testData"}`
 		wantNil     = `{"name":"testName","kind":1,"uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"selectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`
@@ -614,7 +615,7 @@ func testCallHierarchyItem(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -665,7 +666,7 @@ func testCallHierarchyItem(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 				t.Parallel()
 
 				var got CallHierarchyItem
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -677,7 +678,7 @@ func testCallHierarchyItem(t *testing.T, marshal marshalFunc, unmarshal unmarsha
 	})
 }
 
-func testCallHierarchyIncomingCallsParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestCallHierarchyIncomingCallsParams(t *testing.T) {
 	const (
 		wantWorkDoneToken      = "156edea9-9d8d-422f-b7ee-81a84594afbb"
 		wantPartialResultToken = "dd134d84-c134-4d7a-a2a3-f8af3ef4a568"
@@ -791,7 +792,7 @@ func testCallHierarchyIncomingCallsParams(t *testing.T, marshal marshalFunc, unm
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -842,7 +843,7 @@ func testCallHierarchyIncomingCallsParams(t *testing.T, marshal marshalFunc, unm
 				t.Parallel()
 
 				var got CallHierarchyIncomingCallsParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -866,7 +867,7 @@ func testCallHierarchyIncomingCallsParams(t *testing.T, marshal marshalFunc, unm
 	})
 }
 
-func testCallHierarchyIncomingCall(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestCallHierarchyIncomingCall(t *testing.T) {
 	const (
 		want        = `{"from":{"name":"testName","kind":1,"tags":[1],"detail":"testDetail","uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"selectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"data":"testData"},"fromRanges":[{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}]}`
 		wantInvalid = `{"from":{"name":"invalidName","kind":0,"tags":[0],"detail":"invalidDetail","uri":"file:///path/to/invalid.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"selectionRange":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"data":"invalidData"},"fromRanges":[{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}]}`
@@ -947,7 +948,7 @@ func testCallHierarchyIncomingCall(t *testing.T, marshal marshalFunc, unmarshal 
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -991,7 +992,7 @@ func testCallHierarchyIncomingCall(t *testing.T, marshal marshalFunc, unmarshal 
 				t.Parallel()
 
 				var got CallHierarchyIncomingCall
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -1003,7 +1004,7 @@ func testCallHierarchyIncomingCall(t *testing.T, marshal marshalFunc, unmarshal 
 	})
 }
 
-func testCallHierarchyOutgoingCallsParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestCallHierarchyOutgoingCallsParams(t *testing.T) {
 	const (
 		wantWorkDoneToken      = "156edea9-9d8d-422f-b7ee-81a84594afbb"
 		wantPartialResultToken = "dd134d84-c134-4d7a-a2a3-f8af3ef4a568"
@@ -1117,7 +1118,7 @@ func testCallHierarchyOutgoingCallsParams(t *testing.T, marshal marshalFunc, unm
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -1168,7 +1169,7 @@ func testCallHierarchyOutgoingCallsParams(t *testing.T, marshal marshalFunc, unm
 				t.Parallel()
 
 				var got CallHierarchyOutgoingCallsParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -1192,7 +1193,7 @@ func testCallHierarchyOutgoingCallsParams(t *testing.T, marshal marshalFunc, unm
 	})
 }
 
-func testCallHierarchyOutgoingCall(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestCallHierarchyOutgoingCall(t *testing.T) {
 	const (
 		want        = `{"to":{"name":"testName","kind":1,"tags":[1],"detail":"testDetail","uri":"file:///path/to/basic.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"selectionRange":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}},"data":"testData"},"fromRanges":[{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}]}`
 		wantInvalid = `{"to":{"name":"invalidName","kind":0,"tags":[0],"detail":"invalidDetail","uri":"file:///path/to/invalid.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"selectionRange":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}},"data":"invalidData"},"fromRanges":[{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}]}`
@@ -1273,7 +1274,7 @@ func testCallHierarchyOutgoingCall(t *testing.T, marshal marshalFunc, unmarshal 
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -1317,7 +1318,7 @@ func testCallHierarchyOutgoingCall(t *testing.T, marshal marshalFunc, unmarshal 
 				t.Parallel()
 
 				var got CallHierarchyOutgoingCall
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 

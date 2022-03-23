@@ -10,9 +10,12 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
+	"github.com/segmentio/encoding/json"
 )
 
-func testCancelParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestCancelParams(t *testing.T) {
+	t.Parallel()
+
 	const want = `{"id":"testID"}`
 	wantType := CancelParams{
 		ID: "testID",
@@ -42,7 +45,7 @@ func testCancelParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -79,7 +82,7 @@ func testCancelParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc
 				t.Parallel()
 
 				var got CancelParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -91,7 +94,9 @@ func testCancelParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc
 	})
 }
 
-func testProgressParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestProgressParams(t *testing.T) {
+	t.Parallel()
+
 	const wantWorkDoneToken = "156edea9-9d8d-422f-b7ee-81a84594afbb"
 	const want = `{"token":"` + wantWorkDoneToken + `","value":"testValue"}`
 
@@ -125,7 +130,7 @@ func testProgressParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -162,7 +167,7 @@ func testProgressParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFu
 				t.Parallel()
 
 				var got ProgressParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 

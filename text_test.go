@@ -7,11 +7,14 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/segmentio/encoding/json"
 
 	"go.lsp.dev/uri"
 )
 
-func testDidOpenTextDocumentParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestDidOpenTextDocumentParams(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"textDocument":{"uri":"file:///path/to/basic.go","languageId":"go","version":10,"text":"Go Language"}}`
 		wantInvalid = `{"textDocument":{"uri":"file:///path/to/basic_gen.go","languageId":"cpp","version":10,"text":"C++ Language"}}`
@@ -53,7 +56,7 @@ func testDidOpenTextDocumentParams(t *testing.T, marshal marshalFunc, unmarshal 
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -94,7 +97,7 @@ func testDidOpenTextDocumentParams(t *testing.T, marshal marshalFunc, unmarshal 
 				t.Parallel()
 
 				var got DidOpenTextDocumentParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -106,7 +109,9 @@ func testDidOpenTextDocumentParams(t *testing.T, marshal marshalFunc, unmarshal 
 	})
 }
 
-func testDidChangeTextDocumentParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestDidChangeTextDocumentParams(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"textDocument":{"uri":"file:///path/to/test.go","version":10},"contentChanges":[{"range":{"start":{"line":25,"character":1},"end":{"line":25,"character":3}},"rangeLength":2,"text":"testText"}]}`
 		wantInvalid = `{"textDocument":{"uri":"file:///path/to/test.go","version":10},"contentChanges":[{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":4}},"rangeLength":3,"text":"invalidText"}]}`
@@ -164,7 +169,7 @@ func testDidChangeTextDocumentParams(t *testing.T, marshal marshalFunc, unmarsha
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -205,7 +210,7 @@ func testDidChangeTextDocumentParams(t *testing.T, marshal marshalFunc, unmarsha
 				t.Parallel()
 
 				var got DidChangeTextDocumentParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -258,7 +263,9 @@ func TestTextDocumentSaveReason_String(t *testing.T) {
 	}
 }
 
-func testTextDocumentContentChangeEvent(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestTextDocumentContentChangeEvent(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"range":{"start":{"line":25,"character":1},"end":{"line":25,"character":3}},"rangeLength":2,"text":"testText"}`
 		wantInvalid = `{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":4}},"rangeLength":3,"text":"invalidText"}`
@@ -306,7 +313,7 @@ func testTextDocumentContentChangeEvent(t *testing.T, marshal marshalFunc, unmar
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -347,7 +354,7 @@ func testTextDocumentContentChangeEvent(t *testing.T, marshal marshalFunc, unmar
 				t.Parallel()
 
 				var got TextDocumentContentChangeEvent
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -359,7 +366,9 @@ func testTextDocumentContentChangeEvent(t *testing.T, marshal marshalFunc, unmar
 	})
 }
 
-func testTextDocumentChangeRegistrationOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestTextDocumentChangeRegistrationOptions(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"documentSelector":[{"language":"go","scheme":"file","pattern":"*.go"}],"syncKind":2}`
 		wantInvalid = `{"documentSelector":[{"language":"typescript","scheme":"file","pattern":"*.{ts,js}"}],"syncKind":1}`
@@ -405,7 +414,7 @@ func testTextDocumentChangeRegistrationOptions(t *testing.T, marshal marshalFunc
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -446,7 +455,7 @@ func testTextDocumentChangeRegistrationOptions(t *testing.T, marshal marshalFunc
 				t.Parallel()
 
 				var got TextDocumentChangeRegistrationOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -458,7 +467,9 @@ func testTextDocumentChangeRegistrationOptions(t *testing.T, marshal marshalFunc
 	})
 }
 
-func testWillSaveTextDocumentParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestWillSaveTextDocumentParams(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"textDocument":{"uri":"file:///path/to/test.go"},"reason":3}`
 		wantNilAll  = `{"textDocument":{"uri":"file:///path/to/test.go"}}`
@@ -511,7 +522,7 @@ func testWillSaveTextDocumentParams(t *testing.T, marshal marshalFunc, unmarshal
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -559,7 +570,7 @@ func testWillSaveTextDocumentParams(t *testing.T, marshal marshalFunc, unmarshal
 				t.Parallel()
 
 				var got WillSaveTextDocumentParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -571,7 +582,9 @@ func testWillSaveTextDocumentParams(t *testing.T, marshal marshalFunc, unmarshal
 	})
 }
 
-func testDidSaveTextDocumentParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestDidSaveTextDocumentParams(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"text":"testText","textDocument":{"uri":"file:///path/to/test.go"}}`
 		wantNilAll  = `{"textDocument":{"uri":"file:///path/to/test.go"}}`
@@ -624,7 +637,7 @@ func testDidSaveTextDocumentParams(t *testing.T, marshal marshalFunc, unmarshal 
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -672,7 +685,7 @@ func testDidSaveTextDocumentParams(t *testing.T, marshal marshalFunc, unmarshal 
 				t.Parallel()
 
 				var got DidSaveTextDocumentParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -684,7 +697,9 @@ func testDidSaveTextDocumentParams(t *testing.T, marshal marshalFunc, unmarshal 
 	})
 }
 
-func testTextDocumentSaveRegistrationOptions(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestTextDocumentSaveRegistrationOptions(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"documentSelector":[{"language":"go","scheme":"file","pattern":"*.go"}],"includeText":true}`
 		wantNilAll  = `{"documentSelector":[{"language":"go","scheme":"file","pattern":"*.go"}]}`
@@ -749,7 +764,7 @@ func testTextDocumentSaveRegistrationOptions(t *testing.T, marshal marshalFunc, 
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -797,7 +812,7 @@ func testTextDocumentSaveRegistrationOptions(t *testing.T, marshal marshalFunc, 
 				t.Parallel()
 
 				var got TextDocumentSaveRegistrationOptions
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -809,7 +824,9 @@ func testTextDocumentSaveRegistrationOptions(t *testing.T, marshal marshalFunc, 
 	})
 }
 
-func testDidCloseTextDocumentParams(t *testing.T, marshal marshalFunc, unmarshal unmarshalFunc) {
+func TestDidCloseTextDocumentParams(t *testing.T) {
+	t.Parallel()
+
 	const (
 		want        = `{"textDocument":{"uri":"file:///path/to/test.go"}}`
 		wantInvalid = `{"textDocument":{"uri":"file:///path/to/invalid.go"}}`
@@ -848,7 +865,7 @@ func testDidCloseTextDocumentParams(t *testing.T, marshal marshalFunc, unmarshal
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := marshal(&tt.field)
+				got, err := json.Marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -889,7 +906,7 @@ func testDidCloseTextDocumentParams(t *testing.T, marshal marshalFunc, unmarshal
 				t.Parallel()
 
 				var got DidCloseTextDocumentParams
-				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
