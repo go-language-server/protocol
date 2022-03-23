@@ -7,8 +7,9 @@
 package protocol
 
 import (
-	"encoding/json"
 	"fmt"
+
+	"github.com/segmentio/encoding/json"
 )
 
 // ProgressToken is the progress token provided by the client or server.

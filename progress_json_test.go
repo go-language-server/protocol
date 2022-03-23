@@ -7,8 +7,9 @@
 package protocol
 
 import (
-	"encoding/json"
 	"testing"
+
+	"github.com/segmentio/encoding/json"
 )
 
 func TestWorkDoneProgressBegin(t *testing.T) {
