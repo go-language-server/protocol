@@ -85,6 +85,7 @@ commands:
             # https://circleci.com/changelog#container-cgroup-limits-now-visible-inside-the-docker-executor
             CPUS="$(echo $(($(cat /sys/fs/cgroup/cpu/cpu.shares) / 1024)))"
             echo "export GOFLAGS='-p=${CPUS} -cpu=${CPUS}'" >> $BASH_ENV
+            echo "export CPUS=${CPUS}" >> $BASH_ENV
 
 jobs:
   tools:
