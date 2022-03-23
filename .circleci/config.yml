@@ -1,14 +1,15 @@
 version: 2.1
 
+orbs:
+  codecov: codecov/codecov@3.2.2
+
 executors:
   golang:
     parameters:
       go-version:
         type: string
     docker:
-      - image: "golang:<< parameters.go-version >>-buster"
-        environment:
-          CODOCOV_VERSION: v0.1.0_5313
+      - image: "golang:<< parameters.go-version >>-bullseye"
     working_directory: /go/src/go.lsp.dev/protocol
 
 command_vars:
@@ -125,13 +126,8 @@ jobs:
           command: |
             mkdir -p /tmp/test-results
             make coverage
-      - run:
-          name: Upload coverage result to Codecov
+      - codecov/upload:
           when: on_success
-          command: |
-            curl -sLO https://github.com/codecov/uploader/releases/download/${CODOCOV_VERSION}/codecov-linux
-            chmod +x codecov-linux
-            ./codecov-linux --file coverage.out --flags $(go env GOOS)-<< parameters.go-version >>
 
   lint:
     parameters:
@@ -145,21 +141,21 @@ jobs:
       - run:
           name: Run fmt and lint for sources
           command: |
-            make lint
+            make lint JOBS=${CPUS}
             git add -N . && git diff --exit-code
 
 workflows:
   version: 2
-  go1.16:
+  go1.18:
     jobs:
       - tools:
-          name: go1.16-tools
-          go-version: "1.16"
+          name: go1.18-tools
+          go-version: "1.18"
       - test:
-          name: go1.16-test
-          go-version: "1.16"
+          name: go1.18-test
+          go-version: "1.18"
           requires:
-            - go1.16-tools
+            - go1.18-tools
           pre-steps:
             - setup
           post-steps:
@@ -168,34 +164,9 @@ workflows:
             - store_artifacts:
                 path: /tmp/test-results
       - lint:
-          name: go1.16-lint
-          go-version: "1.16"
+          name: go1.18-lint
+          go-version: "1.18"
           requires:
-            - go1.16-tools
-          pre-steps:
-            - setup
-
-  go1.17:
-    jobs:
-      - tools:
-          name: go1.17-tools
-          go-version: "1.17-rc"
-      - test:
-          name: go1.17-test
-          go-version: "1.17-rc"
-          requires:
-            - go1.17-tools
-          pre-steps:
-            - setup
-          post-steps:
-            - store_test_results:
-                path: /tmp/test-results
-            - store_artifacts:
-                path: /tmp/test-results
-      - lint:
-          name: go1.17-lint
-          go-version: "1.17-rc"
-          requires:
-            - go1.17-tools
+            - go1.18-tools
           pre-steps:
             - setup
