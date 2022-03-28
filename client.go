@@ -214,7 +214,7 @@ type Client interface {
 	Telemetry(ctx context.Context, params interface{}) (err error)
 	RegisterCapability(ctx context.Context, params *RegistrationParams) (err error)
 	UnregisterCapability(ctx context.Context, params *UnregistrationParams) (err error)
-	ApplyEdit(ctx context.Context, params *ApplyWorkspaceEditParams) (result bool, err error)
+	ApplyEdit(ctx context.Context, params *ApplyWorkspaceEditParams) (result *ApplyWorkspaceEditResponse, err error)
 	Configuration(ctx context.Context, params *ConfigurationParams) (result []interface{}, err error)
 	WorkspaceFolders(ctx context.Context) (result []WorkspaceFolder, err error)
 }
@@ -367,12 +367,12 @@ func (c *client) UnregisterCapability(ctx context.Context, params *Unregistratio
 }
 
 // ApplyEdit sends the request from the server to the client to modify resource on the client side.
-func (c *client) ApplyEdit(ctx context.Context, params *ApplyWorkspaceEditParams) (result bool, err error) {
+func (c *client) ApplyEdit(ctx context.Context, params *ApplyWorkspaceEditParams) (result *ApplyWorkspaceEditResponse, err error) {
 	c.logger.Debug("call " + MethodWorkspaceApplyEdit)
 	defer c.logger.Debug("end "+MethodWorkspaceApplyEdit, zap.Error(err))
 
 	if err := Call(ctx, c.Conn, MethodWorkspaceApplyEdit, params, &result); err != nil {
-		return false, err
+		return nil, err
 	}
 
 	return result, nil
