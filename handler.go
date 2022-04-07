@@ -7,7 +7,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/segmentio/encoding/json"
+	json "github.com/bytedance/sonic"
 
 	"go.lsp.dev/jsonrpc2"
 	"go.lsp.dev/pkg/xcontext"

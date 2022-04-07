@@ -4,11 +4,10 @@
 package protocol
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 
-	"github.com/segmentio/encoding/json"
+	"github.com/bytedance/sonic/decoder"
 	"go.uber.org/zap"
 
 	"go.lsp.dev/jsonrpc2"
@@ -51,7 +50,7 @@ func clientDispatch(ctx context.Context, client Client, reply jsonrpc2.Replier, 
 		return true, reply(ctx, nil, ErrRequestCancelled)
 	}
 
-	dec := json.NewDecoder(bytes.NewReader(req.Params()))
+	dec := decoder.NewDecoder(string(req.Params()))
 	logger := LoggerFromContext(ctx)
 
 	switch req.Method() {

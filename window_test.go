@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"testing"
 
+	json "github.com/bytedance/sonic"
 	"github.com/google/go-cmp/cmp"
-	"github.com/segmentio/encoding/json"
 )
 
 func TestShowMessageParams(t *testing.T) {

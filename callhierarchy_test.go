@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"testing"
 
+	json "github.com/bytedance/sonic"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
-	"github.com/segmentio/encoding/json"
 
 	"go.lsp.dev/uri"
 )

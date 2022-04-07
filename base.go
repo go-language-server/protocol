@@ -6,7 +6,7 @@ package protocol
 import (
 	"fmt"
 
-	"github.com/segmentio/encoding/json"
+	json "github.com/bytedance/sonic"
 )
 
 // CancelParams params of cancelRequest.
@@ -36,10 +36,8 @@ type ProgressToken struct {
 
 // compile time check whether the ProgressToken implements a fmt.Formatter, fmt.Stringer, json.Marshaler and json.Unmarshaler interfaces.
 var (
-	_ fmt.Formatter    = (*ProgressToken)(nil)
-	_ fmt.Stringer     = (*ProgressToken)(nil)
-	_ json.Marshaler   = (*ProgressToken)(nil)
-	_ json.Unmarshaler = (*ProgressToken)(nil)
+	_ fmt.Formatter = (*ProgressToken)(nil)
+	_ fmt.Stringer  = (*ProgressToken)(nil)
 )
 
 // NewProgressToken returns a new ProgressToken.
