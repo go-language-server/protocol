@@ -208,11 +208,11 @@ func TestLocation(t *testing.T) {
 	t.Parallel()
 
 	const (
-		want        = `{"uri":"file:///Users/gopher/go/src/go.lsp.dev/protocol/basic_test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`
-		wantInvalid = `{"uri":"file:///Users/gopher/go/src/go.lsp.dev/protocol/basic_test.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}}`
+		want        = `{"uri":"file:///Users/gopher/go/src/github.com/a-h/protocol/basic_test.go","range":{"start":{"line":25,"character":1},"end":{"line":27,"character":3}}}`
+		wantInvalid = `{"uri":"file:///Users/gopher/go/src/github.com/a-h/protocol/basic_test.go","range":{"start":{"line":2,"character":1},"end":{"line":3,"character":2}}}`
 	)
 	wantType := Location{
-		URI: uri.File("/Users/gopher/go/src/go.lsp.dev/protocol/basic_test.go"),
+		URI: uri.File("/Users/gopher/go/src/github.com/a-h/protocol/basic_test.go"),
 		Range: Range{
 			Start: Position{
 				Line:      25,

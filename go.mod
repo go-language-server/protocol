@@ -1,4 +1,4 @@
-module go.lsp.dev/protocol
+module github.com/a-h/protocol
 
 go 1.17
 

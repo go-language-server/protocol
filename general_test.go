@@ -18,10 +18,10 @@ import (
 func TestWorkspaceFolders(t *testing.T) {
 	t.Parallel()
 
-	const want = `[{"uri":"file:///Users/zchee/go/src/go.lsp.dev/protocol","name":"protocol"},{"uri":"file:///Users/zchee/go/src/go.lsp.dev/jsonrpc2","name":"jsonrpc2"}]`
+	const want = `[{"uri":"file:///Users/zchee/go/src/github.com/a-h/protocol","name":"protocol"},{"uri":"file:///Users/zchee/go/src/go.lsp.dev/jsonrpc2","name":"jsonrpc2"}]`
 	wantType := WorkspaceFolders{
 		{
-			URI:  string(uri.File("/Users/zchee/go/src/go.lsp.dev/protocol")),
+			URI:  string(uri.File("/Users/zchee/go/src/github.com/a-h/protocol")),
 			Name: "protocol",
 		},
 		{
@@ -210,8 +210,8 @@ func TestInitializeParams(t *testing.T) {
 
 	const wantWorkDoneToken = "156edea9-9d8d-422f-b7ee-81a84594afbb"
 	const (
-		want    = `{"workDoneToken":"` + wantWorkDoneToken + `","processId":25556,"clientInfo":{"name":"testClient","version":"v0.0.0"},"locale":"en-US","rootPath":"~/go/src/go.lsp.dev/protocol","rootUri":"file:///Users/zchee/go/src/go.lsp.dev/protocol","initializationOptions":"testdata","capabilities":{},"trace":"on","workspaceFolders":[{"uri":"file:///Users/zchee/go/src/go.lsp.dev/protocol","name":"protocol"},{"uri":"file:///Users/zchee/go/src/go.lsp.dev/jsonrpc2","name":"jsonrpc2"}]}`
-		wantNil = `{"processId":25556,"rootUri":"file:///Users/zchee/go/src/go.lsp.dev/protocol","capabilities":{}}`
+		want    = `{"workDoneToken":"` + wantWorkDoneToken + `","processId":25556,"clientInfo":{"name":"testClient","version":"v0.0.0"},"locale":"en-US","rootPath":"~/go/src/github.com/a-h/protocol","rootUri":"file:///Users/zchee/go/src/github.com/a-h/protocol","initializationOptions":"testdata","capabilities":{},"trace":"on","workspaceFolders":[{"uri":"file:///Users/zchee/go/src/github.com/a-h/protocol","name":"protocol"},{"uri":"file:///Users/zchee/go/src/go.lsp.dev/jsonrpc2","name":"jsonrpc2"}]}`
+		wantNil = `{"processId":25556,"rootUri":"file:///Users/zchee/go/src/github.com/a-h/protocol","capabilities":{}}`
 	)
 	wantType := InitializeParams{
 		WorkDoneProgressParams: WorkDoneProgressParams{
@@ -223,15 +223,15 @@ func TestInitializeParams(t *testing.T) {
 			Version: "v0.0.0",
 		},
 		Locale:                "en-US",
-		RootPath:              "~/go/src/go.lsp.dev/protocol",
-		RootURI:               uri.File("/Users/zchee/go/src/go.lsp.dev/protocol"),
+		RootPath:              "~/go/src/github.com/a-h/protocol",
+		RootURI:               uri.File("/Users/zchee/go/src/github.com/a-h/protocol"),
 		InitializationOptions: "testdata",
 		Capabilities:          ClientCapabilities{},
 		Trace:                 "on",
 		WorkspaceFolders: []WorkspaceFolder{
 			{
-				Name: filepath.Base("/Users/zchee/go/src/go.lsp.dev/protocol"),
-				URI:  string(uri.File("/Users/zchee/go/src/go.lsp.dev/protocol")),
+				Name: filepath.Base("/Users/zchee/go/src/github.com/a-h/protocol"),
+				URI:  string(uri.File("/Users/zchee/go/src/github.com/a-h/protocol")),
 			},
 			{
 				Name: filepath.Base("/Users/zchee/go/src/go.lsp.dev/jsonrpc2"),
@@ -241,7 +241,7 @@ func TestInitializeParams(t *testing.T) {
 	}
 	wantTypeNilAll := InitializeParams{
 		ProcessID:    25556,
-		RootURI:      uri.File("//Users/zchee/go/src/go.lsp.dev/protocol"),
+		RootURI:      uri.File("//Users/zchee/go/src/github.com/a-h/protocol"),
 		Capabilities: ClientCapabilities{},
 	}
 
