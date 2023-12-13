@@ -87,7 +87,7 @@ type DidSaveTextDocumentParams struct {
 // the new text is considered to be the full content of the document.
 type TextDocumentContentChangeEvent struct {
 	// Range is the range of the document that changed.
-	Range Range `json:"range"`
+	Range *Range `json:"range,omitempty"`
 
 	// RangeLength is the length of the range that got replaced.
 	RangeLength uint32 `json:"rangeLength,omitempty"`

@@ -125,7 +125,7 @@ func TestDidChangeTextDocumentParams(t *testing.T) {
 		},
 		ContentChanges: []TextDocumentContentChangeEvent{
 			{
-				Range: Range{
+				Range: &Range{
 					Start: Position{
 						Line:      25,
 						Character: 1,
@@ -267,11 +267,12 @@ func TestTextDocumentContentChangeEvent(t *testing.T) {
 	t.Parallel()
 
 	const (
-		want        = `{"range":{"start":{"line":25,"character":1},"end":{"line":25,"character":3}},"rangeLength":2,"text":"testText"}`
-		wantInvalid = `{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":4}},"rangeLength":3,"text":"invalidText"}`
+		want           = `{"range":{"start":{"line":25,"character":1},"end":{"line":25,"character":3}},"rangeLength":2,"text":"testText"}`
+		wantInvalid    = `{"range":{"start":{"line":2,"character":1},"end":{"line":3,"character":4}},"rangeLength":3,"text":"invalidText"}`
+		wantReplaceAll = `{"text":"replace all"}`
 	)
 	wantType := TextDocumentContentChangeEvent{
-		Range: Range{
+		Range: &Range{
 			Start: Position{
 				Line:      25,
 				Character: 1,
@@ -283,6 +284,9 @@ func TestTextDocumentContentChangeEvent(t *testing.T) {
 		},
 		RangeLength: 2,
 		Text:        "testText",
+	}
+	wantReplaceAllType := TextDocumentContentChangeEvent{
+		Text: "replace all",
 	}
 
 	t.Run("Marshal", func(t *testing.T) {
@@ -306,6 +310,13 @@ func TestTextDocumentContentChangeEvent(t *testing.T) {
 				want:           wantInvalid,
 				wantMarshalErr: false,
 				wantErr:        true,
+			},
+			{
+				name:           "ReplaceAll",
+				field:          wantReplaceAllType,
+				want:           wantReplaceAll,
+				wantMarshalErr: false,
+				wantErr:        false,
 			},
 		}
 		for _, tt := range tests {
