@@ -426,11 +426,21 @@ type LinkedEditingRangeRegistrationOptions struct {
 	StaticRegistrationOptions
 }
 
+// SemanticTokensFullOptions option of SemanticTokensOptions to indicate support for full and/or full with delta semantic tokens requests.
+//
+// 
+type SemanticTokensFullOptions struct {
+    Delta bool `json:"delta"`
+}
+
 // SemanticTokensOptions option of semantic tokens provider server capabilities.
 //
 // @since 3.16.0.
 type SemanticTokensOptions struct {
 	WorkDoneProgressOptions
+    Legend *SemanticTokensLegend `json:"legend,omitempty"`
+    Range bool `json:"range"`
+    Full interface{} `json:"full,omitempty"`
 }
 
 // SemanticTokensRegistrationOptions registration option of semantic tokens provider server capabilities.
