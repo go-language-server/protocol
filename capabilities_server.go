@@ -428,6 +428,7 @@ type LinkedEditingRangeRegistrationOptions struct {
 
 // SemanticTokensFullOptions option of SemanticTokensOptions to indicate support for full and/or full with delta semantic tokens requests.
 type SemanticTokensFullOptions struct {
+    // The server supports deltas for full documents.
 	Delta bool `json:"delta"`
 }
 
@@ -436,8 +437,11 @@ type SemanticTokensFullOptions struct {
 // @since 3.16.0.
 type SemanticTokensOptions struct {
 	WorkDoneProgressOptions
+    // The legend used by the server
 	Legend *SemanticTokensLegend `json:"legend,omitempty"`
+    // Server supports providing semantic tokens for a specific range of a document.
 	Range  bool                  `json:"range"`
+    // Server supports providing semantic tokens for a full document.
 	Full   interface{}           `json:"full,omitempty"`
 }
 
