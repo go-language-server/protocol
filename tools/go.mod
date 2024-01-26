@@ -2,6 +2,8 @@ module go.lsp.dev/protocol/tools
 
 go 1.21
 
+toolchain go1.21.6
+
 require (
 	github.com/golangci/golangci-lint v1.45.0
 	github.com/zchee/goimportz v1.0.0
