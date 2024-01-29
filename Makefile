@@ -19,7 +19,7 @@ GO_FLAGS ?= -tags='$(subst $(space),$(comma),${GO_BUILDTAGS})' -ldflags='${GO_LD
 
 TOOLS_DIR := ${CURDIR}/tools
 TOOLS_BIN := ${TOOLS_DIR}/bin
-TOOLS := $(shell cd ${TOOLS_DIR} && go list -v -x -f '{{ join .Imports " " }}' -tags=tools)
+TOOLS := $(shell cd ${TOOLS_DIR} && go list -e -f '{{ join .Imports " " }}' -tags=tools)
 
 GO_PKGS := ./...
 
@@ -39,6 +39,15 @@ JOBS := $(shell getconf _NPROCESSORS_CONF)
 
 define target
 @printf "+ $(patsubst ,$@,$(1))\\n" >&2
+endef
+
+define build_tool
+for t in ${TOOLS}; do \
+	if [ -z '$1' ] || [ $$(basename $${t%%/v*}) = '$1' ]; then \
+		echo "Install $$t ..." >&2; \
+		GOBIN=${TOOLS_BIN} CGO_ENABLED=0 go install -v -mod=readonly ${GO_FLAGS} "$${t}"; \
+	fi \
+done
 endef
 
 # -----------------------------------------------------------------------------
@@ -67,33 +76,26 @@ coverage: tools/bin/gotestsum  ## Takes packages test coverage.
 lint: fmt lint/golangci-lint  ## Run all linters.
 
 .PHONY: fmt
-fmt: tools/goimportz tools/gofumpt  ## Run goimportz and gofumpt.
+fmt: tools/bin/goimports-reviser tools/bin/gofumpt  ## Run goimports-reviser and gofumpt.
 	$(call target)
-	find . -iname "*.go" -not -path "./vendor/**" | xargs -P ${JOBS} ${TOOLS_BIN}/goimportz -local=${PKG},$(subst /protocol,,$(PKG)) -w
-	find . -iname "*.go" -not -path "./vendor/**" | xargs -P ${JOBS} ${TOOLS_BIN}/gofumpt -extra -w
+	${TOOLS_BIN}/goimports-reviser -project-name ${PACKAGES} -company-prefixes ${ORG_NAME} -imports-order "std,general,company,project" -rm-unused -set-alias -format -apply-to-generated-files -use-cache -excludes 'vendor/*,tools/tools.go,tools/vendor/*' . 
+	${TOOLS_BIN}/gofumpt -extra -w .
 
 .PHONY: lint/golangci-lint
-lint/golangci-lint: tools/golangci-lint .golangci.yml  ## Run golangci-lint.
+lint/golangci-lint: tools/bin/golangci-lint .golangci.yml  ## Run golangci-lint.
 	$(call target)
 	${TOOLS_BIN}/golangci-lint -j ${JOBS} run $(strip ${GO_LINT_FLAGS}) ./...
 
 
 ##@ tools
 
-.PHONY: tools
-tools: tools/bin/''  ## Install tools
-
-tools/%:  ## install an individual dependent tool
-	@${MAKE} tools/bin/$* 1>/dev/null
-
 tools/bin/%: ${TOOLS_DIR}/go.mod ${TOOLS_DIR}/go.sum
-	@cd tools; \
-		for t in ${TOOLS}; do \
-			if [ -z '$*' ] || [ $$(basename $$t) = '$*' ]; then \
-				echo "Install $$t ..." >&2; \
-				GOBIN=${TOOLS_BIN} CGO_ENABLED=0 go install -mod=mod ${GO_FLAGS} "$${t}"; \
-			fi \
-		done
+tools/bin/%:  ## Install an individual dependency tool
+	@cd ${TOOLS_DIR} && $(call build_tool,$(@F))
+
+.PHONY: tools
+tools:  ## Install tools
+	@@cd ${TOOLS_DIR} && $(call build_tool)
 
 
 ##@ clean
