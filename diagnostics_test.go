@@ -8,7 +8,6 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/segmentio/encoding/json"
-
 	"go.lsp.dev/uri"
 )
 

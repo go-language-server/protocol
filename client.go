@@ -9,10 +9,9 @@ import (
 	"fmt"
 
 	"github.com/segmentio/encoding/json"
-	"go.uber.org/zap"
-
 	"go.lsp.dev/jsonrpc2"
 	"go.lsp.dev/pkg/xcontext"
+	"go.uber.org/zap"
 )
 
 // ClientDispatcher returns a Client that dispatches LSP requests across the
@@ -45,6 +44,7 @@ func ClientHandler(client Client, handler jsonrpc2.Handler) jsonrpc2.Handler {
 }
 
 // clientDispatch implements jsonrpc2.Handler.
+//
 //nolint:funlen,cyclop
 func clientDispatch(ctx context.Context, client Client, reply jsonrpc2.Replier, req jsonrpc2.Request) (handled bool, err error) {
 	if ctx.Err() != nil {

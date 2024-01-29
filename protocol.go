@@ -6,9 +6,8 @@ package protocol
 import (
 	"context"
 
-	"go.uber.org/zap"
-
 	"go.lsp.dev/jsonrpc2"
+	"go.uber.org/zap"
 )
 
 // NewServer returns the context in which client is embedded, jsonrpc2.Conn, and the Client.
