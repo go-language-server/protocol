@@ -63,14 +63,14 @@ coverage: tools/bin/gotestsum  ## Takes packages test coverage.
 
 ##@ fmt, lint
 
-.PHONY: lint
-lint: fmt lint/golangci-lint  ## Run all linters.
-
 .PHONY: fmt
 fmt: tools/goimportz tools/gofumpt  ## Run goimportz and gofumpt.
 	$(call target)
 	find . -iname "*.go" -not -path "./vendor/**" | xargs -P ${JOBS} ${TOOLS_BIN}/goimportz -local=${PKG},$(subst /protocol,,$(PKG)) -w
 	find . -iname "*.go" -not -path "./vendor/**" | xargs -P ${JOBS} ${TOOLS_BIN}/gofumpt -extra -w
+
+.PHONY: lint
+lint: lint/golangci-lint  ## Run all linters.
 
 .PHONY: lint/golangci-lint
 lint/golangci-lint: tools/golangci-lint .golangci.yml  ## Run golangci-lint.
