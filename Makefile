@@ -19,7 +19,7 @@ GO_FLAGS ?= -tags='$(subst $(space),$(comma),${GO_BUILDTAGS})' -ldflags='${GO_LD
 
 TOOLS_DIR := ${CURDIR}/tools
 TOOLS_BIN := ${TOOLS_DIR}/bin
-TOOLS := $(shell cd ${TOOLS_DIR} && go list -v -x -f '{{ join .Imports " " }}' -tags=tools)
+TOOLS := $(shell cd ${TOOLS_DIR} && go list -e -v -x -f '{{ join .Imports " " }}' -tags=tools)
 
 GO_PKGS := ./...
 
