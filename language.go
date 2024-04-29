@@ -119,14 +119,14 @@ type InsertReplaceEdit struct {
 type InsertTextMode float64
 
 const (
-	// AsIs is the insertion or replace strings is taken as it is. If the
+	// InsertTextModeAsIs is the insertion or replace strings is taken as it is. If the
 	// value is multi line the lines below the cursor will be
 	// inserted using the indentation defined in the string value.
 	// The client will not apply any kind of adjustments to the
 	// string.
 	InsertTextModeAsIs InsertTextMode = 1
 
-	// AdjustIndentation is the editor adjusts leading whitespace of new lines so that
+	// InsertTextModeAdjustIndentation is the editor adjusts leading whitespace of new lines so that
 	// they match the indentation up to the cursor of the line for
 	// which the item is accepted.
 	//

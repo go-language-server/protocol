@@ -13,12 +13,12 @@ const (
 	// @since 3.16.0.
 	LSPReservedErrorRangeStart jsonrpc2.Code = -32899
 
-	// ContentModified is the state change that invalidates the result of a request in execution.
+	// CodeContentModified is the state change that invalidates the result of a request in execution.
 	//
 	// Defined by the protocol.
 	CodeContentModified jsonrpc2.Code = -32801
 
-	// RequestCancelled is the cancellation error.
+	// CodeRequestCancelled is the cancellation error.
 	//
 	// Defined by the protocol.
 	CodeRequestCancelled jsonrpc2.Code = -32800

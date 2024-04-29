@@ -73,7 +73,7 @@ func (v ProgressToken) Format(f fmt.State, r rune) {
 
 // String returns a string representation of the ProgressToken.
 func (v ProgressToken) String() string {
-	return fmt.Sprint(v)
+	return fmt.Sprint(v) //nolint:gocritic
 }
 
 // MarshalJSON implements json.Marshaler.

@@ -4,7 +4,6 @@
 package protocol
 
 import (
-	"fmt"
 	"path/filepath"
 	"testing"
 
@@ -329,7 +328,7 @@ func TestInitializeParams(t *testing.T) {
 				}
 
 				if token := got.WorkDoneToken; token != nil {
-					if diff := cmp.Diff(fmt.Sprint(token), wantWorkDoneToken); (diff != "") != tt.wantErr {
+					if diff := cmp.Diff(token.String(), wantWorkDoneToken); (diff != "") != tt.wantErr {
 						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}
@@ -990,13 +989,13 @@ func TestReferencesParams(t *testing.T) {
 				}
 
 				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
-					if diff := cmp.Diff(fmt.Sprint(workDoneToken), wantWorkDoneToken); (diff != "") != tt.wantErr {
+					if diff := cmp.Diff(workDoneToken.String(), wantWorkDoneToken); (diff != "") != tt.wantErr {
 						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}
 
 				if partialResultToken := got.PartialResultToken; partialResultToken != nil {
-					if diff := cmp.Diff(fmt.Sprint(partialResultToken), wantPartialResultToken); (diff != "") != tt.wantErr {
+					if diff := cmp.Diff(partialResultToken.String(), wantPartialResultToken); (diff != "") != tt.wantErr {
 						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}
@@ -1259,13 +1258,13 @@ func TestDocumentHighlightParams(t *testing.T) {
 				}
 
 				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
-					if diff := cmp.Diff(fmt.Sprint(workDoneToken), wantWorkDoneToken); (diff != "") != tt.wantErr {
+					if diff := cmp.Diff(workDoneToken.String(), wantWorkDoneToken); (diff != "") != tt.wantErr {
 						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}
 
 				if partialResultToken := got.PartialResultToken; partialResultToken != nil {
-					if diff := cmp.Diff(fmt.Sprint(partialResultToken), wantPartialResultToken); (diff != "") != tt.wantErr {
+					if diff := cmp.Diff(partialResultToken.String(), wantPartialResultToken); (diff != "") != tt.wantErr {
 						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}
@@ -2129,13 +2128,13 @@ func TestDeclarationParams(t *testing.T) {
 				}
 
 				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
-					if diff := cmp.Diff(fmt.Sprint(workDoneToken), wantWorkDoneToken); (diff != "") != tt.wantErr {
+					if diff := cmp.Diff(workDoneToken.String(), wantWorkDoneToken); (diff != "") != tt.wantErr {
 						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}
 
 				if partialResultToken := got.PartialResultToken; partialResultToken != nil {
-					if diff := cmp.Diff(fmt.Sprint(partialResultToken), wantPartialResultToken); (diff != "") != tt.wantErr {
+					if diff := cmp.Diff(partialResultToken.String(), wantPartialResultToken); (diff != "") != tt.wantErr {
 						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}
@@ -2398,13 +2397,13 @@ func TestDefinitionParams(t *testing.T) {
 				}
 
 				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
-					if diff := cmp.Diff(fmt.Sprint(workDoneToken), wantWorkDoneToken); (diff != "") != tt.wantErr {
+					if diff := cmp.Diff(workDoneToken.String(), wantWorkDoneToken); (diff != "") != tt.wantErr {
 						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}
 
 				if partialResultToken := got.PartialResultToken; partialResultToken != nil {
-					if diff := cmp.Diff(fmt.Sprint(partialResultToken), wantPartialResultToken); (diff != "") != tt.wantErr {
+					if diff := cmp.Diff(partialResultToken.String(), wantPartialResultToken); (diff != "") != tt.wantErr {
 						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}
@@ -2807,13 +2806,13 @@ func TestTypeDefinitionParams(t *testing.T) {
 				}
 
 				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
-					if diff := cmp.Diff(fmt.Sprint(workDoneToken), wantWorkDoneToken); (diff != "") != tt.wantErr {
+					if diff := cmp.Diff(workDoneToken.String(), wantWorkDoneToken); (diff != "") != tt.wantErr {
 						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}
 
 				if partialResultToken := got.PartialResultToken; partialResultToken != nil {
-					if diff := cmp.Diff(fmt.Sprint(partialResultToken), wantPartialResultToken); (diff != "") != tt.wantErr {
+					if diff := cmp.Diff(partialResultToken.String(), wantPartialResultToken); (diff != "") != tt.wantErr {
 						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}
@@ -3202,13 +3201,13 @@ func TestImplementationParams(t *testing.T) {
 				}
 
 				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
-					if diff := cmp.Diff(fmt.Sprint(workDoneToken), wantWorkDoneToken); (diff != "") != tt.wantErr {
+					if diff := cmp.Diff(workDoneToken.String(), wantWorkDoneToken); (diff != "") != tt.wantErr {
 						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}
 
 				if partialResultToken := got.PartialResultToken; partialResultToken != nil {
-					if diff := cmp.Diff(fmt.Sprint(partialResultToken), wantPartialResultToken); (diff != "") != tt.wantErr {
+					if diff := cmp.Diff(partialResultToken.String(), wantPartialResultToken); (diff != "") != tt.wantErr {
 						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}

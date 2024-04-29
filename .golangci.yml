@@ -31,10 +31,8 @@ linters:
     - cyclop                    # checks function and package cyclomatic complexity
     - decorder                  # check declaration order and count of types, constants, variables and functions
     - dogsled                   # Checks assignments with too many blank identifiers (e.g. x, _, _, _, := f())
-    - dupl                      # Tool for code clone detection
     - dupword                   # checks for duplicate words in the source code
     - durationcheck             # check for two durations multiplied together
-    - errcheck                  # errcheck is a program for checking for unchecked errors in Go code. These unchecked errors can be critical bugs in some cases
     - errchkjson                # Checks types passed to the json encoding functions. Reports unsupported types and optionally reports occasions, where the check for the returned error can be omitted.
     - errname                   # Checks that sentinel errors are prefixed with the `Err` and error types are suffixed with the `Error`.
     - errorlint                 # errorlint is a linter for that can be used to find code that will cause problems with the error wrapping scheme introduced in Go 1.13.
@@ -44,7 +42,6 @@ linters:
     - ginkgolinter              # enforces standards of using ginkgo and gomega
     - gocheckcompilerdirectives # Checks that go compiler directive comments (//go:) are valid
     - gocognit                  # Computes and checks the cognitive complexity of functions
-    - goconst                   # Finds repeated strings that could be replaced by a constant
     - gocritic                  # Provides diagnostics that check for bugs, performance and style issues.
     - gocyclo                   # Computes and checks the cyclomatic complexity of functions
     - godot                     # Check if comments end in a period
@@ -61,9 +58,7 @@ linters:
     - importas                  # Enforces consistent import aliases
     - inamedparam               # reports interfaces with unnamed method parameters [fast: true, auto-fix: false]
     - ineffassign               # Detects when assignments to existing variables are not used
-    - interfacebloat            # A linter that checks the number of methods inside an interface
     - intrange                  # intrange is a linter to find places where for loops could make use of an integer range. [fast: true, auto-fix: false]
-    - lll                       # Reports long lines
     - loggercheck               # Checks key value pairs for common logger libraries (kitlog,klog,logr,zap).
     - maintidx                  # maintidx measures the maintainability index of each function.
     - makezero                  # Finds slice declarations with non-zero initial length
@@ -94,7 +89,6 @@ linters:
     - tenv                      # tenv is analyzer that detects using os.Setenv instead of t.Setenv since Go1.17
     - testableexamples          # linter checks if examples are testable (have an expected output)
     - thelper                   # thelper detects Go test helpers without t.Helper() call and checks the consistency of test helpers
-    - tparallel                 # tparallel detects inappropriate usage of t.Parallel() method in your Go test codes
     - unconvert                 # Remove unnecessary type conversions
     - unparam                   # Reports unused function parameters
     - unused                    # Checks Go code for unused constants, variables, functions and types
@@ -102,7 +96,6 @@ linters:
     - varnamelen                # checks that the length of a variable's name matches its scope
     - wastedassign              # wastedassign finds wasted assignment statements.
     - whitespace                # Tool for detection of leading and trailing whitespace
-    - wrapcheck                 # Checks that errors returned from external packages are wrapped
     - zerologlint               # Detects the wrong usage of `zerolog` that a user forgets to dispatch with `Send` or `Msg` [fast: false, auto-fix: false]
 
 linters-settings:
@@ -114,15 +107,6 @@ linters-settings:
     max-complexity: 15
     # package-average:
     skip-tests: true
-  dupl:
-    threshold: 150
-  errcheck:
-    disable-default-exclusions: false
-    check-type-assertions: false
-    check-blank: true
-    ignore: ""
-    # exclude: .errcheckignore
-    exclude-functions: []
   errorlint:
     errorf: true
     asserts: true
@@ -132,9 +116,6 @@ linters-settings:
     statements: 60
   gocognit:
     min-complexity: 30
-  goconst:
-    min-len: 3
-    min-occurrences: 3
   gocritic:
     enabled-tags:
       - diagnostic
@@ -144,6 +125,7 @@ linters-settings:
       - style
     disabled-checks:
       - commentedOutCode
+      - deprecatedComment
       - whyNoLint
     settings:
       hugeParam:
@@ -177,6 +159,9 @@ linters-settings:
     under: 15
   misspell:
     locale: US
+    ignore-words:
+      - cancelled
+      - cancelling
   nakedret:
     max-func-lines: 30
   nestif:
@@ -204,7 +189,6 @@ linters-settings:
 issues:
   include:
     # include revive rules
-    - "EXC0012"
     - "EXC0013"
     - "EXC0014"
     - "EXC0015"

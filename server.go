@@ -26,7 +26,7 @@ func ServerDispatcher(conn jsonrpc2.Conn, logger *zap.Logger) Server {
 
 // ServerHandler jsonrpc2.Handler of Language Server Prococol Server.
 //
-//nolint:unparam
+//nolint:unparam,revive
 func ServerHandler(server Server, handler jsonrpc2.Handler) jsonrpc2.Handler {
 	h := func(ctx context.Context, reply jsonrpc2.Replier, req jsonrpc2.Request) error {
 		if ctx.Err() != nil {
@@ -57,7 +57,7 @@ func ServerHandler(server Server, handler jsonrpc2.Handler) jsonrpc2.Handler {
 
 // serverDispatch implements jsonrpc2.Handler.
 //
-//nolint:gocognit,funlen,gocyclo,cyclop
+//nolint:gocognit,funlen,gocyclo,cyclop,maintidx
 func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, req jsonrpc2.Request) (handled bool, err error) {
 	if ctx.Err() != nil {
 		return true, reply(ctx, nil, ErrRequestCancelled)

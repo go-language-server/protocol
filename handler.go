@@ -84,5 +84,5 @@ func notifyCancel(ctx context.Context, conn jsonrpc2.Conn, id jsonrpc2.ID) {
 }
 
 func replyParseError(ctx context.Context, reply jsonrpc2.Replier, err error) error {
-	return reply(ctx, nil, fmt.Errorf("%s: %w", jsonrpc2.ErrParse, err))
+	return reply(ctx, nil, fmt.Errorf("%w: %w", jsonrpc2.ErrParse, err))
 }

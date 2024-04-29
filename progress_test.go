@@ -4,7 +4,6 @@
 package protocol
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -420,7 +419,7 @@ func TestWorkDoneProgressParams(t *testing.T) {
 				}
 
 				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
-					if diff := cmp.Diff(fmt.Sprint(workDoneToken), wantWorkDoneToken); (diff != "") != tt.wantErr {
+					if diff := cmp.Diff(workDoneToken.String(), wantWorkDoneToken); (diff != "") != tt.wantErr {
 						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}
@@ -499,7 +498,7 @@ func TestPartialResultParams(t *testing.T) {
 				}
 
 				if partialResultToken := got.PartialResultToken; partialResultToken != nil {
-					if diff := cmp.Diff(fmt.Sprint(partialResultToken), wantPartialResultParams); (diff != "") != tt.wantErr {
+					if diff := cmp.Diff(partialResultToken.String(), wantPartialResultParams); (diff != "") != tt.wantErr {
 						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}

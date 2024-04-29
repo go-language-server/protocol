@@ -4,7 +4,6 @@
 package protocol
 
 import (
-	"fmt"
 	"reflect"
 	"testing"
 
@@ -176,7 +175,7 @@ func TestProgressParams(t *testing.T) {
 				}
 
 				if token := got.Token; !reflect.ValueOf(token).IsZero() {
-					if diff := cmp.Diff(fmt.Sprint(token), wantWorkDoneToken); (diff != "") != tt.wantErr {
+					if diff := cmp.Diff(token.String(), wantWorkDoneToken); (diff != "") != tt.wantErr {
 						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}

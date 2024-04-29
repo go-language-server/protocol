@@ -102,7 +102,7 @@ type WorkDoneProgressCreateParams struct {
 	Token ProgressToken `json:"token"`
 }
 
-// WorkDoneProgressCreateParams params of WorkDoneProgressCancel request.
+// WorkDoneProgressCancelParams params of WorkDoneProgressCancel request.
 //
 // @since 3.15.0.
 type WorkDoneProgressCancelParams struct {

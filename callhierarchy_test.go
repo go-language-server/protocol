@@ -4,7 +4,6 @@
 package protocol
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -506,7 +505,7 @@ func TestCallHierarchyPrepareParams(t *testing.T) {
 				}
 
 				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
-					if diff := cmp.Diff(fmt.Sprint(workDoneToken), wantWorkDoneToken); (diff != "") != tt.wantErr {
+					if diff := cmp.Diff(workDoneToken.String(), wantWorkDoneToken); (diff != "") != tt.wantErr {
 						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}
@@ -852,13 +851,13 @@ func TestCallHierarchyIncomingCallsParams(t *testing.T) {
 				}
 
 				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
-					if diff := cmp.Diff(fmt.Sprint(workDoneToken), wantWorkDoneToken); (diff != "") != tt.wantErr {
+					if diff := cmp.Diff(workDoneToken.String(), wantWorkDoneToken); (diff != "") != tt.wantErr {
 						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}
 
 				if partialResultToken := got.PartialResultToken; partialResultToken != nil {
-					if diff := cmp.Diff(fmt.Sprint(partialResultToken), wantPartialResultToken); (diff != "") != tt.wantErr {
+					if diff := cmp.Diff(partialResultToken.String(), wantPartialResultToken); (diff != "") != tt.wantErr {
 						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}
@@ -1178,13 +1177,13 @@ func TestCallHierarchyOutgoingCallsParams(t *testing.T) {
 				}
 
 				if workDoneToken := got.WorkDoneToken; workDoneToken != nil {
-					if diff := cmp.Diff(fmt.Sprint(workDoneToken), wantWorkDoneToken); (diff != "") != tt.wantErr {
+					if diff := cmp.Diff(workDoneToken.String(), wantWorkDoneToken); (diff != "") != tt.wantErr {
 						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}
 
 				if partialResultToken := got.PartialResultToken; partialResultToken != nil {
-					if diff := cmp.Diff(fmt.Sprint(partialResultToken), wantPartialResultToken); (diff != "") != tt.wantErr {
+					if diff := cmp.Diff(partialResultToken.String(), wantPartialResultToken); (diff != "") != tt.wantErr {
 						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}

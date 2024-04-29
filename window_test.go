@@ -4,7 +4,6 @@
 package protocol
 
 import (
-	"fmt"
 	"strconv"
 	"testing"
 
@@ -555,7 +554,7 @@ func TestWorkDoneProgressCreateParams(t *testing.T) {
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(fmt.Sprint(got.Token), strconv.FormatInt(int64(wantToken), 10)); (diff != "") != tt.wantErr {
+				if diff := cmp.Diff(got.Token.String(), strconv.FormatInt(int64(wantToken), 10)); (diff != "") != tt.wantErr {
 					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
@@ -652,7 +651,7 @@ func TestWorkDoneProgressCancelParams(t *testing.T) {
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(fmt.Sprint(got.Token), strconv.FormatInt(int64(wantToken), 10)); (diff != "") != tt.wantErr {
+				if diff := cmp.Diff(got.Token.String(), strconv.FormatInt(int64(wantToken), 10)); (diff != "") != tt.wantErr {
 					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
