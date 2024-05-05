@@ -86,7 +86,7 @@ func (gen *Generator) writeTo(pp []Printer) (err error) {
 			if err != nil {
 				return err
 			}
-			root := filepath.Join(filepath.Dir(filepath.Dir(cwd)), ".protocol")
+			root := filepath.Join(filepath.Dir(filepath.Dir(cwd)), "protocol")
 			f, err = os.Create(filepath.Join(root, filename))
 			if err != nil {
 				return fmt.Errorf("unable to open %s file: %w", filename, err)
@@ -184,7 +184,7 @@ func (p *printer) WriteTo() (err error) {
 	if err != nil {
 		return err
 	}
-	root := filepath.Join(filepath.Dir(filepath.Dir(cwd)), ".protocol")
+	root := filepath.Join(filepath.Dir(filepath.Dir(cwd)), "protocol")
 	f, err := os.Create(filepath.Join(root, p.filename))
 	if err != nil {
 		return fmt.Errorf("unable to open %s file: %w", p.filename, err)
