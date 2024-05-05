@@ -85,7 +85,6 @@ linters:
     - staticcheck               # It's a set of rules from staticcheck. It's not the same thing as the staticcheck binary. The author of staticcheck doesn't support or approve the use of staticcheck as a library inside golangci-lint.
     - stylecheck                # Stylecheck is a replacement for golint
     - tagalign                  # check that struct tags are well aligned
-    - tagliatelle               # Checks the struct tags.
     - tenv                      # tenv is analyzer that detects using os.Setenv instead of t.Setenv since Go1.17
     - testableexamples          # linter checks if examples are testable (have an expected output)
     - thelper                   # thelper detects Go test helpers without t.Helper() call and checks the consistency of test helpers

@@ -9,15 +9,15 @@
 // It is a literal transcription, with unmodified comments, and only the changes
 // required to make it Go code.
 //
-// - Names are uppercased to export them.
+// Names are uppercased to export them.
 //
-// - All fields have JSON tags added to correct the names.
+// All fields have JSON tags added to correct the names.
 //
-// - Fields marked with a ? are also marked as "omitempty".
+// Fields marked with a ? are also marked as "omitempty".
 //
-// - Fields that are "|| null" are made pointers.
+// Fields that are "|| null" are made pointers.
 //
-// - Fields that are string or number are left as string.
+// Fields that are string or number are left as string.
 //
-// - Fields that are type "number" are made float64.
+// Fields that are type "number" are made float64.
 package protocol // import "go.lsp.dev/protocol"

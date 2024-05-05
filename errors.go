@@ -1,9 +1,11 @@
-// SPDX-FileCopyrightText: 2021 The Go Language Server Authors
+// Copyright 2024 The Go Language Server Authors
 // SPDX-License-Identifier: BSD-3-Clause
 
 package protocol
 
-import "go.lsp.dev/jsonrpc2"
+import (
+	"go.lsp.dev/jsonrpc2"
+)
 
 const (
 	// LSPReservedErrorRangeStart is the start range of LSP reserved error codes.
