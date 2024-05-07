@@ -1892,4 +1892,3 @@ func (s *server) Request(ctx context.Context, method string, params interface{})
 
 	return result, nil
 }
-

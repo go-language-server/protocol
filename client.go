@@ -411,4 +411,3 @@ func (c *client) WorkspaceFolders(ctx context.Context) (result []WorkspaceFolder
 
 	return result, nil
 }
-
