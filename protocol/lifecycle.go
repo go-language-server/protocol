@@ -3,6 +3,8 @@
 
 package protocol
 
+import "bytes"
+
 // TextDocumentSyncKind defines how the host (editor) should sync document changes to the language server.
 type TextDocumentSyncKind uint32
 
@@ -1287,6 +1289,24 @@ type ServerCapabilities struct {
 
 	// Experimental experimental server capabilities.
 	Experimental any `json:"experimental,omitempty"`
+}
+
+func (t ServerCapabilities) MarshalJSON() ([]byte, error) {
+	var b bytes.Buffer
+	buf, err := t.TextDocumentSync.MarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	b.Write(buf)
+
+	return b.Bytes(), nil
+}
+
+func (t *ServerCapabilities) UnmarshalJSON(x []byte) error {
+	if err := t.TextDocumentSync.UnmarshalJSON(x); err != nil {
+		return err
+	}
+	return nil
 }
 
 // ServerInfo information about the server  3.15.0  3.18.0 ServerInfo type name added. @proposed.
