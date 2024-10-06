@@ -433,6 +433,13 @@ func (c *client) WorkspaceConfiguration(ctx context.Context, params *Configurati
 	return result, nil
 }
 
+func (c *client) refresh(ctx context.Context, method string) (err error) {
+	c.logger.Debug("call " + method)
+	defer c.logger.Debug("end "+method, zap.Error(err))
+
+	return c.Conn.Notify(ctx, method, nil)
+}
+
 func (c *client) WorkspaceDiagnosticRefresh(ctx context.Context) (err error) {
 	return c.refresh(ctx, MethodWorkspaceDiagnosticRefresh)
 }
@@ -453,11 +460,18 @@ func (c *client) WorkspaceSemanticTokensRefresh(ctx context.Context) (err error)
 	return c.refresh(ctx, MethodWorkspaceSemanticTokensRefresh)
 }
 
-func (c *client) refresh(ctx context.Context, method string) (err error) {
-	c.logger.Debug("call " + method)
-	defer c.logger.Debug("end "+method, zap.Error(err))
+// WorkspaceTextDocumentContentRefresh the `workspace/textDocumentContent` request is sent from the server to the client to refresh the content of a specific text document. 3.18.0 @proposed.
+//
+// @since 3.18.0 proposed
+func (c *client) WorkspaceTextDocumentContentRefresh(ctx context.Context, params *TextDocumentContentRefreshParams) (err error) {
+	c.logger.Debug("call " + MethodWorkspaceTextDocumentContentRefresh)
+	defer c.logger.Debug("end "+MethodWorkspaceTextDocumentContentRefresh, zap.Error(err))
 
-	return c.Conn.Notify(ctx, method, nil)
+	if err := Call(ctx, c.Conn, MethodWorkspaceTextDocumentContentRefresh, params, nil); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // WorkspaceFolders sends the request from the server to the client to fetch the current open list of workspace folders.

@@ -80,6 +80,7 @@ const (
 	MethodWorkspaceDiagnostic                 ServerMethod = "workspace/diagnostic"                   // server request
 	MethodWorkspaceExecuteCommand             ServerMethod = "workspace/executeCommand"               // server request
 	MethodWorkspaceSymbol                     ServerMethod = "workspace/symbol"                       // server request
+	MethodWorkspaceTextDocumentContent        ServerMethod = "workspace/textDocumentContent"          // server request
 	MethodWorkspaceWillCreateFiles            ServerMethod = "workspace/willCreateFiles"              // server request
 	MethodWorkspaceWillDeleteFiles            ServerMethod = "workspace/willDeleteFiles"              // server request
 	MethodWorkspaceWillRenameFiles            ServerMethod = "workspace/willRenameFiles"              // server request
@@ -356,6 +357,11 @@ type Server interface {
 	//
 	// @since 3.17.0 - support for WorkspaceSymbol in the returned data. Clients need to advertise support for WorkspaceSymbols via the client capability `workspace.symbol.resolveSupport`.
 	WorkspaceSymbol(ctx context.Context, params *WorkspaceSymbolParams) (*WorkspaceSymbolResult, error)
+
+	// WorkspaceTextDocumentContent the `workspace/textDocumentContent` request is sent from the client to the server to request the content of a text document. 3.18.0 @proposed.
+	//
+	// @since 3.18.0 proposed
+	WorkspaceTextDocumentContent(ctx context.Context, params *TextDocumentContentParams) (*TextDocumentContentResult, error)
 
 	// WorkspaceWillCreateFiles the will create files request is sent from the client to the server before files are actually created as long as the creation is triggered from within the client. The request can return a `WorkspaceEdit` which will be applied to workspace before the files are created. Hence the `WorkspaceEdit` can not manipulate the content of the file to be created.
 	//
@@ -661,6 +667,10 @@ func (UnimplementedServer) WorkspaceExecuteCommand(ctx context.Context, params *
 }
 
 func (UnimplementedServer) WorkspaceSymbol(ctx context.Context, params *WorkspaceSymbolParams) (*WorkspaceSymbolResult, error) {
+	return nil, jsonrpc2.ErrInternal
+}
+
+func (UnimplementedServer) WorkspaceTextDocumentContent(ctx context.Context, params *TextDocumentContentParams) (*TextDocumentContentResult, error) {
 	return nil, jsonrpc2.ErrInternal
 }
 

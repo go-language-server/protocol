@@ -10,27 +10,28 @@ import (
 )
 
 const (
-	MethodClientCancelRequest            ClientMethod = "$/cancelRequest"                  // bidirect client notification
-	MethodClientProgress                 ClientMethod = "$/progress"                       // bidirect client notification
-	MethodLogTrace                       ClientMethod = "$/logTrace"                       // client notification
-	MethodTelemetryEvent                 ClientMethod = "telemetry/event"                  // client notification
-	MethodTextDocumentPublishDiagnostics ClientMethod = "textDocument/publishDiagnostics"  // client notification
-	MethodWindowLogMessage               ClientMethod = "window/logMessage"                // client notification
-	MethodWindowShowMessage              ClientMethod = "window/showMessage"               // client notification
-	MethodClientRegisterCapability       ClientMethod = "client/registerCapability"        // client request
-	MethodClientUnregisterCapability     ClientMethod = "client/unregisterCapability"      // client request
-	MethodWindowShowDocument             ClientMethod = "window/showDocument"              // client request
-	MethodWindowShowMessageRequest       ClientMethod = "window/showMessageRequest"        // client request
-	MethodWindowWorkDoneProgressCreate   ClientMethod = "window/workDoneProgress/create"   // client request
-	MethodWorkspaceApplyEdit             ClientMethod = "workspace/applyEdit"              // client request
-	MethodWorkspaceCodeLensRefresh       ClientMethod = "workspace/codeLens/refresh"       // client request
-	MethodWorkspaceConfiguration         ClientMethod = "workspace/configuration"          // client request
-	MethodWorkspaceDiagnosticRefresh     ClientMethod = "workspace/diagnostic/refresh"     // client request
-	MethodWorkspaceFoldingRangeRefresh   ClientMethod = "workspace/foldingRange/refresh"   // client request
-	MethodWorkspaceInlayHintRefresh      ClientMethod = "workspace/inlayHint/refresh"      // client request
-	MethodWorkspaceInlineValueRefresh    ClientMethod = "workspace/inlineValue/refresh"    // client request
-	MethodWorkspaceSemanticTokensRefresh ClientMethod = "workspace/semanticTokens/refresh" // client request
-	MethodWorkspaceWorkspaceFolders      ClientMethod = "workspace/workspaceFolders"       // client request
+	MethodClientCancelRequest                 ClientMethod = "$/cancelRequest"                       // bidirect client notification
+	MethodClientProgress                      ClientMethod = "$/progress"                            // bidirect client notification
+	MethodLogTrace                            ClientMethod = "$/logTrace"                            // client notification
+	MethodTelemetryEvent                      ClientMethod = "telemetry/event"                       // client notification
+	MethodTextDocumentPublishDiagnostics      ClientMethod = "textDocument/publishDiagnostics"       // client notification
+	MethodWindowLogMessage                    ClientMethod = "window/logMessage"                     // client notification
+	MethodWindowShowMessage                   ClientMethod = "window/showMessage"                    // client notification
+	MethodClientRegisterCapability            ClientMethod = "client/registerCapability"             // client request
+	MethodClientUnregisterCapability          ClientMethod = "client/unregisterCapability"           // client request
+	MethodWindowShowDocument                  ClientMethod = "window/showDocument"                   // client request
+	MethodWindowShowMessageRequest            ClientMethod = "window/showMessageRequest"             // client request
+	MethodWindowWorkDoneProgressCreate        ClientMethod = "window/workDoneProgress/create"        // client request
+	MethodWorkspaceApplyEdit                  ClientMethod = "workspace/applyEdit"                   // client request
+	MethodWorkspaceCodeLensRefresh            ClientMethod = "workspace/codeLens/refresh"            // client request
+	MethodWorkspaceConfiguration              ClientMethod = "workspace/configuration"               // client request
+	MethodWorkspaceDiagnosticRefresh          ClientMethod = "workspace/diagnostic/refresh"          // client request
+	MethodWorkspaceFoldingRangeRefresh        ClientMethod = "workspace/foldingRange/refresh"        // client request
+	MethodWorkspaceInlayHintRefresh           ClientMethod = "workspace/inlayHint/refresh"           // client request
+	MethodWorkspaceInlineValueRefresh         ClientMethod = "workspace/inlineValue/refresh"         // client request
+	MethodWorkspaceSemanticTokensRefresh      ClientMethod = "workspace/semanticTokens/refresh"      // client request
+	MethodWorkspaceTextDocumentContentRefresh ClientMethod = "workspace/textDocumentContent/refresh" // client request
+	MethodWorkspaceWorkspaceFolders           ClientMethod = "workspace/workspaceFolders"            // client request
 )
 
 type Client interface {
@@ -104,6 +105,11 @@ type Client interface {
 	//
 	// @since 3.16.0
 	WorkspaceSemanticTokensRefresh(ctx context.Context) error
+
+	// WorkspaceTextDocumentContentRefresh the `workspace/textDocumentContent` request is sent from the server to the client to refresh the content of a specific text document. 3.18.0 @proposed.
+	//
+	// @since 3.18.0 proposed
+	WorkspaceTextDocumentContentRefresh(ctx context.Context, params *TextDocumentContentRefreshParams) error
 
 	// WorkspaceWorkspaceFolders the `workspace/workspaceFolders` is sent from the server to the client to fetch the open workspace folders.
 	WorkspaceWorkspaceFolders(ctx context.Context) ([]*WorkspaceFolder, error)
@@ -189,6 +195,10 @@ func (UnimplementedClient) WorkspaceInlineValueRefresh(ctx context.Context) erro
 }
 
 func (UnimplementedClient) WorkspaceSemanticTokensRefresh(ctx context.Context) error {
+	return jsonrpc2.ErrInternal
+}
+
+func (UnimplementedClient) WorkspaceTextDocumentContentRefresh(ctx context.Context, params *TextDocumentContentRefreshParams) error {
 	return jsonrpc2.ErrInternal
 }
 

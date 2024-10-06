@@ -130,9 +130,9 @@ func (gen *Generator) TypeAliases(typeAliases []*protocol.TypeAlias) error {
 					g.P(` | `)
 				}
 			}
-			g.PP(`](x T) `, aliasName, ` {`)
+			g.PP(`](val T) `, aliasName, ` {`)
 			g.PP(`	return `, aliasName, `{`)
-			g.PP(`		Value: x,`)
+			g.PP(`		Value: val,`)
 			g.PP(`	}`)
 			g.PP(`}`, "\n")
 		}
@@ -140,7 +140,7 @@ func (gen *Generator) TypeAliases(typeAliases []*protocol.TypeAlias) error {
 		switch a := alias.Type.(type) {
 		case *protocol.OrType:
 			g.PP(`func (t `, aliasName, `) MarshalJSON() ([]byte, error) {`)
-			g.PP(`	switch x := t.Value.(type) {`)
+			g.PP(`	switch val := t.Value.(type) {`)
 			for i, item := range a.Items {
 				switch item := item.(type) {
 				case protocol.BaseType:
@@ -159,7 +159,7 @@ func (gen *Generator) TypeAliases(typeAliases []*protocol.TypeAlias) error {
 					panic(fmt.Sprintf("typealias.OrType: %#v\n", item))
 				}
 				if i <= len(a.Items)-1 {
-					g.PP(`		return marshal(x)`)
+					g.PP(`		return marshal(val)`)
 				}
 			}
 			g.PP(`	case nil:`)
@@ -171,8 +171,8 @@ func (gen *Generator) TypeAliases(typeAliases []*protocol.TypeAlias) error {
 
 		switch a := alias.Type.(type) {
 		case *protocol.OrType:
-			g.PP(`func (t *`, aliasName, `) UnmarshalJSON(x []byte) error {`)
-			g.PP(`if string(x) == "null" {`)
+			g.PP(`func (t *`, aliasName, `) UnmarshalJSON(val []byte) error {`)
+			g.PP(`if string(val) == "null" {`)
 			g.PP(`	t.Value = nil`)
 			g.PP(`	return nil`)
 			g.PP(`}`)
@@ -194,7 +194,7 @@ func (gen *Generator) TypeAliases(typeAliases []*protocol.TypeAlias) error {
 				default:
 					panic(fmt.Sprintf("typealias.OrType: %#v\n", item))
 				}
-				g.PP(`if err := unmarshal(x, &h`, i, `); err == nil {`)
+				g.PP(`if err := unmarshal(val, &h`, i, `); err == nil {`)
 				g.PP(`	t.Value = h`, i)
 				g.PP(`	return nil`)
 				g.PP(`}`)

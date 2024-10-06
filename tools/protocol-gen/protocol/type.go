@@ -167,7 +167,7 @@ var _ Type = (*ArrayType)(nil)
 func (ArrayType) isType()             {}
 func (ArrayType) HasSubTypes() bool   { return true }
 func (t *ArrayType) SubTypes() []Type { return []Type{t.Element} }
-func (t *ArrayType) String() string   { return "TODO(zchee): ArrayType" } // TODO(zchee): implements
+func (t *ArrayType) String() string   { return "[]" + t.Element.String() }
 
 // BooleanLiteralType represents a boolean literal type (e.g. kind: true).
 // kind: booleanLiteral
@@ -178,7 +178,7 @@ var _ Type = BooleanLiteralType{}
 func (BooleanLiteralType) isType()           {}
 func (BooleanLiteralType) HasSubTypes() bool { return false }
 func (BooleanLiteralType) SubTypes() []Type  { return nil }
-func (t BooleanLiteralType) String() string  { return strconv.FormatBool(t.Value) } // TODO(zchee): implements
+func (t BooleanLiteralType) String() string  { return strconv.FormatBool(t.Value) }
 
 // IntegerLiteralType represents an integer literal type (e.g. kind: 1).
 type IntegerLiteralType struct{ Value int }
@@ -188,7 +188,7 @@ var _ Type = IntegerLiteralType{}
 func (IntegerLiteralType) isType()           {}
 func (IntegerLiteralType) HasSubTypes() bool { return false }
 func (IntegerLiteralType) SubTypes() []Type  { return nil }
-func (t IntegerLiteralType) String() string  { return strconv.FormatInt(int64(t.Value), 10) } // TODO(zchee): implements
+func (t IntegerLiteralType) String() string  { return strconv.FormatInt(int64(t.Value), 10) }
 
 // MapType represents a JSON object map (e.g. interface Map<K extends string | integer, V> { [key: K] => V; }).
 type MapType struct {
@@ -201,7 +201,7 @@ var _ Type = (*MapType)(nil)
 func (MapType) isType()             {}
 func (MapType) HasSubTypes() bool   { return true }
 func (t *MapType) SubTypes() []Type { return []Type{t.Key, t.Value} }
-func (t *MapType) String() string   { return "TODO(zchee): MapType" } // TODO(zchee): implements
+func (t *MapType) String() string   { return "map[" + t.Key.String() + "]" + t.Value.String() }
 
 // OrType represents an or type (e.g. Location | LocationLink)
 type OrType struct{ Items []Type }
@@ -221,7 +221,7 @@ var _ Type = (*StringLiteralType)(nil)
 func (StringLiteralType) isType()           {}
 func (StringLiteralType) HasSubTypes() bool { return false }
 func (StringLiteralType) SubTypes() []Type  { return nil }
-func (t *StringLiteralType) String() string { return t.Value } // TODO(zchee): implements
+func (t *StringLiteralType) String() string { return t.Value }
 
 // StructureLiteralType represents a literal structure (e.g. property: { start: uinteger; end: uinteger; }).
 type StructureLiteralType struct{ Value *StructureLiteral }
@@ -231,7 +231,15 @@ var _ Type = (*StructureLiteralType)(nil)
 func (StructureLiteralType) isType()           {}
 func (StructureLiteralType) HasSubTypes() bool { return false }
 func (StructureLiteralType) SubTypes() []Type  { return nil }
-func (t *StructureLiteralType) String() string { return "TODO(zchee): StructureLiteralType" } // TODO(zchee): implements
+func (t *StructureLiteralType) String() string {
+	s := "struct { "
+	for _, prop := range t.Value.Properties {
+		s += prop.Name + " " + prop.Type.String() + "\n"
+	}
+	s += "}"
+
+	return s
+}
 
 // ReferenceType represents a reference to another type (e.g. TextDocument).
 // This is either a Structure, a Enumeration or a TypeAlias in the same meta model.
@@ -252,7 +260,21 @@ type TupleType struct{ Items []Type }
 
 var _ Type = (*TupleType)(nil)
 
+var xyz = []string{
+	"x",
+	"y",
+	"z",
+}
+
 func (TupleType) isType()             {}
 func (TupleType) HasSubTypes() bool   { return true }
 func (t *TupleType) SubTypes() []Type { return t.Items }
-func (t *TupleType) String() string   { return "TODO(zchee): TupleType" } // TODO(zchee): implements
+func (t *TupleType) String() string {
+	s := "struct { "
+	for i, item := range t.Items {
+		s += xyz[i] + " " + item.String() + ";"
+	}
+	s += "}"
+
+	return s
+}

@@ -107,8 +107,11 @@ func (r *resolver) enumeration(in schema.Enumeration) *protocol.Enumeration {
 		Proposed:             in.Proposed,
 		Since:                in.Since,
 		SupportsCustomValues: in.SupportsCustomValues,
-		Type:                 r.type_(in.Type),
-		Values:               transform(in.Values, r.enumerationEntry),
+		Type: protocol.EnumerationType{
+			Kind: in.Type.Kind,
+			Name: protocol.EnumerationTypeName(in.Type.Name),
+		},
+		Values: transform(in.Values, r.enumerationEntry),
 	}
 }
 

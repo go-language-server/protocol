@@ -50,6 +50,9 @@ var enumerationNames = map[string]string{
 	"FailureHandlingKind":           "basic",
 	"PrepareSupportDefaultBehavior": "language",
 	"TokenFormat":                   "language",
+
+	"CodeActionTag": "language",
+	"ApplyKind":     "language",
 }
 
 // Enumerations generates Enumerations Go type from the metaModel schema definition.
@@ -81,11 +84,15 @@ func (gen *Generator) Enumerations(enumerations []*protocol.Enumeration) error {
 		}
 
 		g.P(`type `, enumName)
-		switch e := enum.Type.(type) {
-		case protocol.BaseType:
-			g.P(` `, e.String())
+		switch enum.Type.Name {
+		case protocol.EnumerationNameInteger:
+			g.P(` int32`)
+		case protocol.EnumerationNameString:
+			g.P(` string`)
+		case protocol.EnumerationNameUinteger:
+			g.P(` uint32`)
 		default:
-			panic(fmt.Sprintf("enumerations: %#v\n", e))
+			panic(fmt.Sprintf("enum: %#v\n", enum))
 		}
 		g.PP("\n")
 

@@ -24,13 +24,29 @@ type Enumeration struct {
 	SupportsCustomValues bool
 
 	// The type of the elements.
-	Type Type
+	Type EnumerationType
 
 	// The enum values.
 	Values []*EnumerationEntry
 }
 
 func (Enumeration) isTypeDecl() {}
+
+type EnumerationType struct {
+	// Kind corresponds to the JSON schema field "kind".
+	Kind string
+
+	// Name corresponds to the JSON schema field "name".
+	Name EnumerationTypeName
+}
+
+type EnumerationTypeName string
+
+const (
+	EnumerationNameInteger  EnumerationTypeName = "integer"
+	EnumerationNameString   EnumerationTypeName = "string"
+	EnumerationNameUinteger EnumerationTypeName = "uinteger"
+)
 
 // EnumerationEntry defines an enumeration entry.
 type EnumerationEntry struct {

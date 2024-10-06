@@ -19,43 +19,43 @@ type NotebookDocumentFilter struct {
 	Value any `json:"value"`
 }
 
-func NewNotebookDocumentFilter[T NotebookDocumentFilterNotebookType | NotebookDocumentFilterScheme | NotebookDocumentFilterPattern](x T) NotebookDocumentFilter {
+func NewNotebookDocumentFilter[T NotebookDocumentFilterNotebookType | NotebookDocumentFilterScheme | NotebookDocumentFilterPattern](val T) NotebookDocumentFilter {
 	return NotebookDocumentFilter{
-		Value: x,
+		Value: val,
 	}
 }
 
 func (t NotebookDocumentFilter) MarshalJSON() ([]byte, error) {
-	switch x := t.Value.(type) {
+	switch val := t.Value.(type) {
 	case NotebookDocumentFilterNotebookType:
-		return marshal(x)
+		return marshal(val)
 	case NotebookDocumentFilterScheme:
-		return marshal(x)
+		return marshal(val)
 	case NotebookDocumentFilterPattern:
-		return marshal(x)
+		return marshal(val)
 	case nil:
 		return []byte("null"), nil
 	}
 	return nil, fmt.Errorf("unkonwn type: %T", t)
 }
 
-func (t *NotebookDocumentFilter) UnmarshalJSON(x []byte) error {
-	if string(x) == "null" {
+func (t *NotebookDocumentFilter) UnmarshalJSON(val []byte) error {
+	if string(val) == "null" {
 		t.Value = nil
 		return nil
 	}
 	var h0 NotebookDocumentFilterNotebookType
-	if err := unmarshal(x, &h0); err == nil {
+	if err := unmarshal(val, &h0); err == nil {
 		t.Value = h0
 		return nil
 	}
 	var h1 NotebookDocumentFilterScheme
-	if err := unmarshal(x, &h1); err == nil {
+	if err := unmarshal(val, &h1); err == nil {
 		t.Value = h1
 		return nil
 	}
 	var h2 NotebookDocumentFilterPattern
-	if err := unmarshal(x, &h2); err == nil {
+	if err := unmarshal(val, &h2); err == nil {
 		t.Value = h2
 		return nil
 	}
@@ -69,43 +69,43 @@ type TextDocumentFilter struct {
 	Value any `json:"value"`
 }
 
-func NewTextDocumentFilter[T TextDocumentFilterLanguage | TextDocumentFilterScheme | TextDocumentFilterPattern](x T) TextDocumentFilter {
+func NewTextDocumentFilter[T TextDocumentFilterLanguage | TextDocumentFilterScheme | TextDocumentFilterPattern](val T) TextDocumentFilter {
 	return TextDocumentFilter{
-		Value: x,
+		Value: val,
 	}
 }
 
 func (t TextDocumentFilter) MarshalJSON() ([]byte, error) {
-	switch x := t.Value.(type) {
+	switch val := t.Value.(type) {
 	case TextDocumentFilterLanguage:
-		return marshal(x)
+		return marshal(val)
 	case TextDocumentFilterScheme:
-		return marshal(x)
+		return marshal(val)
 	case TextDocumentFilterPattern:
-		return marshal(x)
+		return marshal(val)
 	case nil:
 		return []byte("null"), nil
 	}
 	return nil, fmt.Errorf("unkonwn type: %T", t)
 }
 
-func (t *TextDocumentFilter) UnmarshalJSON(x []byte) error {
-	if string(x) == "null" {
+func (t *TextDocumentFilter) UnmarshalJSON(val []byte) error {
+	if string(val) == "null" {
 		t.Value = nil
 		return nil
 	}
 	var h0 TextDocumentFilterLanguage
-	if err := unmarshal(x, &h0); err == nil {
+	if err := unmarshal(val, &h0); err == nil {
 		t.Value = h0
 		return nil
 	}
 	var h1 TextDocumentFilterScheme
-	if err := unmarshal(x, &h1); err == nil {
+	if err := unmarshal(val, &h1); err == nil {
 		t.Value = h1
 		return nil
 	}
 	var h2 TextDocumentFilterPattern
-	if err := unmarshal(x, &h2); err == nil {
+	if err := unmarshal(val, &h2); err == nil {
 		t.Value = h2
 		return nil
 	}
@@ -119,36 +119,36 @@ type GlobPattern struct {
 	Value any `json:"value"`
 }
 
-func NewGlobPattern[T Pattern | RelativePattern](x T) GlobPattern {
+func NewGlobPattern[T Pattern | RelativePattern](val T) GlobPattern {
 	return GlobPattern{
-		Value: x,
+		Value: val,
 	}
 }
 
 func (t GlobPattern) MarshalJSON() ([]byte, error) {
-	switch x := t.Value.(type) {
+	switch val := t.Value.(type) {
 	case Pattern:
-		return marshal(x)
+		return marshal(val)
 	case RelativePattern:
-		return marshal(x)
+		return marshal(val)
 	case nil:
 		return []byte("null"), nil
 	}
 	return nil, fmt.Errorf("unkonwn type: %T", t)
 }
 
-func (t *GlobPattern) UnmarshalJSON(x []byte) error {
-	if string(x) == "null" {
+func (t *GlobPattern) UnmarshalJSON(val []byte) error {
+	if string(val) == "null" {
 		t.Value = nil
 		return nil
 	}
 	var h0 Pattern
-	if err := unmarshal(x, &h0); err == nil {
+	if err := unmarshal(val, &h0); err == nil {
 		t.Value = h0
 		return nil
 	}
 	var h1 RelativePattern
-	if err := unmarshal(x, &h1); err == nil {
+	if err := unmarshal(val, &h1); err == nil {
 		t.Value = h1
 		return nil
 	}
@@ -163,36 +163,36 @@ type DocumentFilter struct {
 	Value any `json:"value"`
 }
 
-func NewDocumentFilter[T TextDocumentFilter | NotebookCellTextDocumentFilter](x T) DocumentFilter {
+func NewDocumentFilter[T TextDocumentFilter | NotebookCellTextDocumentFilter](val T) DocumentFilter {
 	return DocumentFilter{
-		Value: x,
+		Value: val,
 	}
 }
 
 func (t DocumentFilter) MarshalJSON() ([]byte, error) {
-	switch x := t.Value.(type) {
+	switch val := t.Value.(type) {
 	case TextDocumentFilter:
-		return marshal(x)
+		return marshal(val)
 	case NotebookCellTextDocumentFilter:
-		return marshal(x)
+		return marshal(val)
 	case nil:
 		return []byte("null"), nil
 	}
 	return nil, fmt.Errorf("unkonwn type: %T", t)
 }
 
-func (t *DocumentFilter) UnmarshalJSON(x []byte) error {
-	if string(x) == "null" {
+func (t *DocumentFilter) UnmarshalJSON(val []byte) error {
+	if string(val) == "null" {
 		t.Value = nil
 		return nil
 	}
 	var h0 TextDocumentFilter
-	if err := unmarshal(x, &h0); err == nil {
+	if err := unmarshal(val, &h0); err == nil {
 		t.Value = h0
 		return nil
 	}
 	var h1 NotebookCellTextDocumentFilter
-	if err := unmarshal(x, &h1); err == nil {
+	if err := unmarshal(val, &h1); err == nil {
 		t.Value = h1
 		return nil
 	}
@@ -205,36 +205,36 @@ type MarkedString struct {
 	Value any `json:"value"`
 }
 
-func NewMarkedString[T string | MarkedStringWithLanguage](x T) MarkedString {
+func NewMarkedString[T string | MarkedStringWithLanguage](val T) MarkedString {
 	return MarkedString{
-		Value: x,
+		Value: val,
 	}
 }
 
 func (t MarkedString) MarshalJSON() ([]byte, error) {
-	switch x := t.Value.(type) {
+	switch val := t.Value.(type) {
 	case string:
-		return marshal(x)
+		return marshal(val)
 	case MarkedStringWithLanguage:
-		return marshal(x)
+		return marshal(val)
 	case nil:
 		return []byte("null"), nil
 	}
 	return nil, fmt.Errorf("unkonwn type: %T", t)
 }
 
-func (t *MarkedString) UnmarshalJSON(x []byte) error {
-	if string(x) == "null" {
+func (t *MarkedString) UnmarshalJSON(val []byte) error {
+	if string(val) == "null" {
 		t.Value = nil
 		return nil
 	}
 	var h0 string
-	if err := unmarshal(x, &h0); err == nil {
+	if err := unmarshal(val, &h0); err == nil {
 		t.Value = h0
 		return nil
 	}
 	var h1 MarkedStringWithLanguage
-	if err := unmarshal(x, &h1); err == nil {
+	if err := unmarshal(val, &h1); err == nil {
 		t.Value = h1
 		return nil
 	}
@@ -246,36 +246,36 @@ type TextDocumentContentChangeEvent struct {
 	Value any `json:"value"`
 }
 
-func NewTextDocumentContentChangeEvent[T TextDocumentContentChangePartial | TextDocumentContentChangeWholeDocument](x T) TextDocumentContentChangeEvent {
+func NewTextDocumentContentChangeEvent[T TextDocumentContentChangePartial | TextDocumentContentChangeWholeDocument](val T) TextDocumentContentChangeEvent {
 	return TextDocumentContentChangeEvent{
-		Value: x,
+		Value: val,
 	}
 }
 
 func (t TextDocumentContentChangeEvent) MarshalJSON() ([]byte, error) {
-	switch x := t.Value.(type) {
+	switch val := t.Value.(type) {
 	case TextDocumentContentChangePartial:
-		return marshal(x)
+		return marshal(val)
 	case TextDocumentContentChangeWholeDocument:
-		return marshal(x)
+		return marshal(val)
 	case nil:
 		return []byte("null"), nil
 	}
 	return nil, fmt.Errorf("unkonwn type: %T", t)
 }
 
-func (t *TextDocumentContentChangeEvent) UnmarshalJSON(x []byte) error {
-	if string(x) == "null" {
+func (t *TextDocumentContentChangeEvent) UnmarshalJSON(val []byte) error {
+	if string(val) == "null" {
 		t.Value = nil
 		return nil
 	}
 	var h0 TextDocumentContentChangePartial
-	if err := unmarshal(x, &h0); err == nil {
+	if err := unmarshal(val, &h0); err == nil {
 		t.Value = h0
 		return nil
 	}
 	var h1 TextDocumentContentChangeWholeDocument
-	if err := unmarshal(x, &h1); err == nil {
+	if err := unmarshal(val, &h1); err == nil {
 		t.Value = h1
 		return nil
 	}
@@ -289,36 +289,36 @@ type WorkspaceDocumentDiagnosticReport struct {
 	Value any `json:"value"`
 }
 
-func NewWorkspaceDocumentDiagnosticReport[T WorkspaceFullDocumentDiagnosticReport | WorkspaceUnchangedDocumentDiagnosticReport](x T) WorkspaceDocumentDiagnosticReport {
+func NewWorkspaceDocumentDiagnosticReport[T WorkspaceFullDocumentDiagnosticReport | WorkspaceUnchangedDocumentDiagnosticReport](val T) WorkspaceDocumentDiagnosticReport {
 	return WorkspaceDocumentDiagnosticReport{
-		Value: x,
+		Value: val,
 	}
 }
 
 func (t WorkspaceDocumentDiagnosticReport) MarshalJSON() ([]byte, error) {
-	switch x := t.Value.(type) {
+	switch val := t.Value.(type) {
 	case WorkspaceFullDocumentDiagnosticReport:
-		return marshal(x)
+		return marshal(val)
 	case WorkspaceUnchangedDocumentDiagnosticReport:
-		return marshal(x)
+		return marshal(val)
 	case nil:
 		return []byte("null"), nil
 	}
 	return nil, fmt.Errorf("unkonwn type: %T", t)
 }
 
-func (t *WorkspaceDocumentDiagnosticReport) UnmarshalJSON(x []byte) error {
-	if string(x) == "null" {
+func (t *WorkspaceDocumentDiagnosticReport) UnmarshalJSON(val []byte) error {
+	if string(val) == "null" {
 		t.Value = nil
 		return nil
 	}
 	var h0 WorkspaceFullDocumentDiagnosticReport
-	if err := unmarshal(x, &h0); err == nil {
+	if err := unmarshal(val, &h0); err == nil {
 		t.Value = h0
 		return nil
 	}
 	var h1 WorkspaceUnchangedDocumentDiagnosticReport
-	if err := unmarshal(x, &h1); err == nil {
+	if err := unmarshal(val, &h1); err == nil {
 		t.Value = h1
 		return nil
 	}
@@ -332,36 +332,36 @@ type ProgressToken struct {
 	Value any `json:"value"`
 }
 
-func NewProgressToken[T int32 | string](x T) ProgressToken {
+func NewProgressToken[T int32 | string](val T) ProgressToken {
 	return ProgressToken{
-		Value: x,
+		Value: val,
 	}
 }
 
 func (t ProgressToken) MarshalJSON() ([]byte, error) {
-	switch x := t.Value.(type) {
+	switch val := t.Value.(type) {
 	case int32:
-		return marshal(x)
+		return marshal(val)
 	case string:
-		return marshal(x)
+		return marshal(val)
 	case nil:
 		return []byte("null"), nil
 	}
 	return nil, fmt.Errorf("unkonwn type: %T", t)
 }
 
-func (t *ProgressToken) UnmarshalJSON(x []byte) error {
-	if string(x) == "null" {
+func (t *ProgressToken) UnmarshalJSON(val []byte) error {
+	if string(val) == "null" {
 		t.Value = nil
 		return nil
 	}
 	var h0 int32
-	if err := unmarshal(x, &h0); err == nil {
+	if err := unmarshal(val, &h0); err == nil {
 		t.Value = h0
 		return nil
 	}
 	var h1 string
-	if err := unmarshal(x, &h1); err == nil {
+	if err := unmarshal(val, &h1); err == nil {
 		t.Value = h1
 		return nil
 	}
@@ -377,43 +377,43 @@ type PrepareRenameResult struct {
 	Value any `json:"value"`
 }
 
-func NewPrepareRenameResult[T Range | PrepareRenamePlaceholder | PrepareRenameDefaultBehavior](x T) PrepareRenameResult {
+func NewPrepareRenameResult[T Range | PrepareRenamePlaceholder | PrepareRenameDefaultBehavior](val T) PrepareRenameResult {
 	return PrepareRenameResult{
-		Value: x,
+		Value: val,
 	}
 }
 
 func (t PrepareRenameResult) MarshalJSON() ([]byte, error) {
-	switch x := t.Value.(type) {
+	switch val := t.Value.(type) {
 	case Range:
-		return marshal(x)
+		return marshal(val)
 	case PrepareRenamePlaceholder:
-		return marshal(x)
+		return marshal(val)
 	case PrepareRenameDefaultBehavior:
-		return marshal(x)
+		return marshal(val)
 	case nil:
 		return []byte("null"), nil
 	}
 	return nil, fmt.Errorf("unkonwn type: %T", t)
 }
 
-func (t *PrepareRenameResult) UnmarshalJSON(x []byte) error {
-	if string(x) == "null" {
+func (t *PrepareRenameResult) UnmarshalJSON(val []byte) error {
+	if string(val) == "null" {
 		t.Value = nil
 		return nil
 	}
 	var h0 Range
-	if err := unmarshal(x, &h0); err == nil {
+	if err := unmarshal(val, &h0); err == nil {
 		t.Value = h0
 		return nil
 	}
 	var h1 PrepareRenamePlaceholder
-	if err := unmarshal(x, &h1); err == nil {
+	if err := unmarshal(val, &h1); err == nil {
 		t.Value = h1
 		return nil
 	}
 	var h2 PrepareRenameDefaultBehavior
-	if err := unmarshal(x, &h2); err == nil {
+	if err := unmarshal(val, &h2); err == nil {
 		t.Value = h2
 		return nil
 	}
@@ -427,36 +427,36 @@ type DocumentDiagnosticReport struct {
 	Value any `json:"value"`
 }
 
-func NewDocumentDiagnosticReport[T RelatedFullDocumentDiagnosticReport | RelatedUnchangedDocumentDiagnosticReport](x T) DocumentDiagnosticReport {
+func NewDocumentDiagnosticReport[T RelatedFullDocumentDiagnosticReport | RelatedUnchangedDocumentDiagnosticReport](val T) DocumentDiagnosticReport {
 	return DocumentDiagnosticReport{
-		Value: x,
+		Value: val,
 	}
 }
 
 func (t DocumentDiagnosticReport) MarshalJSON() ([]byte, error) {
-	switch x := t.Value.(type) {
+	switch val := t.Value.(type) {
 	case RelatedFullDocumentDiagnosticReport:
-		return marshal(x)
+		return marshal(val)
 	case RelatedUnchangedDocumentDiagnosticReport:
-		return marshal(x)
+		return marshal(val)
 	case nil:
 		return []byte("null"), nil
 	}
 	return nil, fmt.Errorf("unkonwn type: %T", t)
 }
 
-func (t *DocumentDiagnosticReport) UnmarshalJSON(x []byte) error {
-	if string(x) == "null" {
+func (t *DocumentDiagnosticReport) UnmarshalJSON(val []byte) error {
+	if string(val) == "null" {
 		t.Value = nil
 		return nil
 	}
 	var h0 RelatedFullDocumentDiagnosticReport
-	if err := unmarshal(x, &h0); err == nil {
+	if err := unmarshal(val, &h0); err == nil {
 		t.Value = h0
 		return nil
 	}
 	var h1 RelatedUnchangedDocumentDiagnosticReport
-	if err := unmarshal(x, &h1); err == nil {
+	if err := unmarshal(val, &h1); err == nil {
 		t.Value = h1
 		return nil
 	}
@@ -470,43 +470,43 @@ type InlineValue struct {
 	Value any `json:"value"`
 }
 
-func NewInlineValue[T InlineValueText | InlineValueVariableLookup | InlineValueEvaluatableExpression](x T) InlineValue {
+func NewInlineValue[T InlineValueText | InlineValueVariableLookup | InlineValueEvaluatableExpression](val T) InlineValue {
 	return InlineValue{
-		Value: x,
+		Value: val,
 	}
 }
 
 func (t InlineValue) MarshalJSON() ([]byte, error) {
-	switch x := t.Value.(type) {
+	switch val := t.Value.(type) {
 	case InlineValueText:
-		return marshal(x)
+		return marshal(val)
 	case InlineValueVariableLookup:
-		return marshal(x)
+		return marshal(val)
 	case InlineValueEvaluatableExpression:
-		return marshal(x)
+		return marshal(val)
 	case nil:
 		return []byte("null"), nil
 	}
 	return nil, fmt.Errorf("unkonwn type: %T", t)
 }
 
-func (t *InlineValue) UnmarshalJSON(x []byte) error {
-	if string(x) == "null" {
+func (t *InlineValue) UnmarshalJSON(val []byte) error {
+	if string(val) == "null" {
 		t.Value = nil
 		return nil
 	}
 	var h0 InlineValueText
-	if err := unmarshal(x, &h0); err == nil {
+	if err := unmarshal(val, &h0); err == nil {
 		t.Value = h0
 		return nil
 	}
 	var h1 InlineValueVariableLookup
-	if err := unmarshal(x, &h1); err == nil {
+	if err := unmarshal(val, &h1); err == nil {
 		t.Value = h1
 		return nil
 	}
 	var h2 InlineValueEvaluatableExpression
-	if err := unmarshal(x, &h2); err == nil {
+	if err := unmarshal(val, &h2); err == nil {
 		t.Value = h2
 		return nil
 	}
@@ -521,36 +521,36 @@ type Declaration struct {
 	Value any `json:"value"`
 }
 
-func NewDeclaration[T Location | []Location](x T) Declaration {
+func NewDeclaration[T Location | []Location](val T) Declaration {
 	return Declaration{
-		Value: x,
+		Value: val,
 	}
 }
 
 func (t Declaration) MarshalJSON() ([]byte, error) {
-	switch x := t.Value.(type) {
+	switch val := t.Value.(type) {
 	case Location:
-		return marshal(x)
+		return marshal(val)
 	case []Location:
-		return marshal(x)
+		return marshal(val)
 	case nil:
 		return []byte("null"), nil
 	}
 	return nil, fmt.Errorf("unkonwn type: %T", t)
 }
 
-func (t *Declaration) UnmarshalJSON(x []byte) error {
-	if string(x) == "null" {
+func (t *Declaration) UnmarshalJSON(val []byte) error {
+	if string(val) == "null" {
 		t.Value = nil
 		return nil
 	}
 	var h0 Location
-	if err := unmarshal(x, &h0); err == nil {
+	if err := unmarshal(val, &h0); err == nil {
 		t.Value = h0
 		return nil
 	}
 	var h1 []Location
-	if err := unmarshal(x, &h1); err == nil {
+	if err := unmarshal(val, &h1); err == nil {
 		t.Value = h1
 		return nil
 	}
@@ -565,36 +565,36 @@ type Definition struct {
 	Value any `json:"value"`
 }
 
-func NewDefinition[T Location | []Location](x T) Definition {
+func NewDefinition[T Location | []Location](val T) Definition {
 	return Definition{
-		Value: x,
+		Value: val,
 	}
 }
 
 func (t Definition) MarshalJSON() ([]byte, error) {
-	switch x := t.Value.(type) {
+	switch val := t.Value.(type) {
 	case Location:
-		return marshal(x)
+		return marshal(val)
 	case []Location:
-		return marshal(x)
+		return marshal(val)
 	case nil:
 		return []byte("null"), nil
 	}
 	return nil, fmt.Errorf("unkonwn type: %T", t)
 }
 
-func (t *Definition) UnmarshalJSON(x []byte) error {
-	if string(x) == "null" {
+func (t *Definition) UnmarshalJSON(val []byte) error {
+	if string(val) == "null" {
 		t.Value = nil
 		return nil
 	}
 	var h0 Location
-	if err := unmarshal(x, &h0); err == nil {
+	if err := unmarshal(val, &h0); err == nil {
 		t.Value = h0
 		return nil
 	}
 	var h1 []Location
-	if err := unmarshal(x, &h1); err == nil {
+	if err := unmarshal(val, &h1); err == nil {
 		t.Value = h1
 		return nil
 	}

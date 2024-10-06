@@ -263,6 +263,9 @@ type StructureLiteral struct {
 
 	// Whether the literal is deprecated or not. If deprecated the property contains the deprecation message.
 	Deprecated string `json:"deprecated,omitempty" yaml:"deprecated,omitempty"`
+
+	// All since tags in case there was more than one tag. Is undefined if not known.
+	SinceTags []string `json:"sinceTags,omitempty" yaml:"sinceTags,omitempty"`
 }
 
 // StringLiteralType represents a string literal type (e.g. kind: 'rename')
@@ -325,11 +328,17 @@ type Request struct {
 	// Since when (release number) this request is available. Is undefined if not known.
 	Since string `json:"since,omitempty" yaml:"since,omitempty"`
 
+	// All since tags in case there was more than one tag. Is undefined if not known.
+	SinceTags []string `json:"sinceTags,omitempty" yaml:"sinceTags,omitempty"`
+
 	// Whether this is a proposed feature. If omitted the feature is final.
 	Proposed bool `json:"proposed,omitempty" yaml:"proposed,omitempty"`
 
 	// Whether the request is deprecated or not. If deprecated the property contains the deprecation message.
 	Deprecated string `json:"deprecated,omitempty" yaml:"deprecated,omitempty"`
+
+	// The type name of the request if any.
+	TypeName string `json:"typeName,omitempty" yaml:"typeName,omitempty"`
 }
 
 // Notification represents a LSP notification
@@ -355,12 +364,18 @@ type Notification struct {
 	// Since when (release number) this notification is available. Is undefined if not known.
 	Since string `json:"since,omitempty" yaml:"since,omitempty"`
 
+	// All since tags in case there was more than one tag. Is undefined if not known.
+	SinceTags []string `json:"sinceTags,omitempty" yaml:"sinceTags,omitempty"`
+
 	// Whether this is a proposed notification. If omitted the notification is final.
 	Proposed bool `json:"proposed,omitempty" yaml:"proposed,omitempty"`
 
 	// Whether the notification is deprecated or not.
 	// If deprecated the property contains the deprecation message.
 	Deprecated string `json:"deprecated,omitempty" yaml:"deprecated,omitempty"`
+
+	// The type name of the request if any.
+	TypeName string `json:"typeName,omitempty" yaml:"typeName,omitempty"`
 }
 
 // Structure defines the structure of an object literal
@@ -388,6 +403,9 @@ type Structure struct {
 
 	// Whether the structure is deprecated or not. If deprecated the property contains the deprecation message.
 	Deprecated string `json:"deprecated,omitempty" yaml:"deprecated,omitempty"`
+
+	// All since tags in case there was more than one tag. Is undefined if not known.
+	SinceTags []string `json:"sinceTags,omitempty" yaml:"sinceTags,omitempty"`
 }
 
 // Enumeration defines an enumeration.
@@ -396,7 +414,7 @@ type Enumeration struct {
 	Name string `json:"name" yaml:"name"`
 
 	// The type of the elements.
-	Type Type `json:"type" yaml:"type"`
+	Type EnumerationType `json:"type" yaml:"type"`
 
 	// The enum values.
 	Values []EnumerationEntry `json:"values" yaml:"values"`
@@ -409,6 +427,9 @@ type Enumeration struct {
 
 	// Since when (release number) this enumeration is available. Is empty if not known.
 	Since string `json:"since,omitempty" yaml:"since,omitempty"`
+
+	// All since tags in case there was more than one tag. Is undefined if not known.
+	SinceTags []string `json:"sinceTags,omitempty" yaml:"sinceTags,omitempty"`
 
 	// Whether this is a proposed enumeration. If omitted, the enumeration is final.
 	Proposed bool `json:"proposed,omitempty" yaml:"proposed,omitempty"`
@@ -431,12 +452,34 @@ type EnumerationEntry struct {
 	// Since when (release number) this enumeration entry is available. Is undefined if not known.
 	Since string `json:"since,omitempty" yaml:"since,omitempty"`
 
+	// All since tags in case there was more than one tag. Is undefined if not known.
+	SinceTags []string `json:"sinceTags,omitempty" yaml:"sinceTags,omitempty"`
+
 	// Whether this is a proposed enumeration entry. If omitted, the enumeration entry is final.
 	Proposed bool `json:"proposed,omitempty" yaml:"proposed,omitempty"`
 
 	// Whether the enum entry is deprecated or not. If deprecated the property contains the deprecation message.
 	Deprecated string `json:"deprecated,omitempty" yaml:"deprecated,omitempty"`
+
+	// The type name of the request if any.
+	TypeName string `json:"typeName,omitempty" yaml:"typeName,omitempty"`
 }
+
+type EnumerationType struct {
+	// Kind corresponds to the JSON schema field "kind".
+	Kind string `json:"kind" yaml:"kind"`
+
+	// Name corresponds to the JSON schema field "name".
+	Name EnumerationName `json:"name" yaml:"name"`
+}
+
+type EnumerationName string
+
+const (
+	EnumerationNameInteger  EnumerationName = "integer"
+	EnumerationNameString   EnumerationName = "string"
+	EnumerationNameUinteger EnumerationName = "uinteger"
+)
 
 // TypeAlias defines a type alias. (e.g. type Definition = Location | LocationLink)
 type TypeAlias struct {
@@ -458,6 +501,9 @@ type TypeAlias struct {
 	// Whether the type alias is deprecated or not.
 	// If deprecated the property contains the deprecation message.
 	Deprecated string `json:"deprecated,omitempty" yaml:"deprecated,omitempty"`
+
+	// All since tags in case there was more than one tag. Is undefined if not known.
+	SinceTags []string `json:"sinceTags,omitempty" yaml:"sinceTags,omitempty"`
 }
 
 // Property represents an object property
@@ -482,4 +528,7 @@ type Property struct {
 
 	// Whether the property is deprecated or not. If deprecated the property contains the deprecation message.
 	Deprecated string `json:"deprecated,omitempty" yaml:"deprecated,omitempty"`
+
+	// All since tags in case there was more than one tag. Is undefined if not known.
+	SinceTags []string `json:"sinceTags,omitempty" yaml:"sinceTags,omitempty"`
 }

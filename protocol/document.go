@@ -115,39 +115,39 @@ type DidOpenNotebookDocumentParams struct {
 
 // NotebookCellLanguage.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type NotebookCellLanguage struct {
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Language string `json:"language"`
 }
 
 // NotebookDocumentFilterWithCells.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type NotebookDocumentFilterWithCells struct {
 	// Notebook the notebook to be synced If a string value is provided it matches against the notebook type. '*' matches every notebook.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Notebook NotebookDocumentFilterWithCellsNotebook `json:"notebook,omitempty"`
 
 	// Cells the cells of the matching notebook to be synced.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Cells []NotebookCellLanguage `json:"cells"`
 }
 
 // NotebookDocumentFilterWithNotebook.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type NotebookDocumentFilterWithNotebook struct {
 	// Notebook the notebook to be synced If a string value is provided it matches against the notebook type. '*' matches every notebook.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Notebook NotebookDocumentFilterWithNotebookNotebook `json:"notebook"`
 
 	// Cells the cells of the matching notebook to be synced.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Cells []NotebookCellLanguage `json:"cells,omitempty"`
 }
 
@@ -212,54 +212,54 @@ type NotebookCellArrayChange struct {
 	Cells []NotebookCell `json:"cells,omitempty"`
 }
 
-// NotebookDocumentCellChangeStructure structural changes to cells in a notebook document.  3.18.0 @proposed.
+// NotebookDocumentCellChangeStructure structural changes to cells in a notebook document.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type NotebookDocumentCellChangeStructure struct {
 	// Array the change to the cell array.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Array NotebookCellArrayChange `json:"array"`
 
 	// DidOpen additional opened cell text documents.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	DidOpen []TextDocumentItem `json:"didOpen,omitempty"`
 
 	// DidClose additional closed cell text documents.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	DidClose []TextDocumentIdentifier `json:"didClose,omitempty"`
 }
 
-// NotebookDocumentCellContentChanges content changes to a cell in a notebook document.  3.18.0 @proposed.
+// NotebookDocumentCellContentChanges content changes to a cell in a notebook document.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type NotebookDocumentCellContentChanges struct {
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Document VersionedTextDocumentIdentifier `json:"document"`
 
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Changes []TextDocumentContentChangeEvent `json:"changes"`
 }
 
-// NotebookDocumentCellChanges cell changes to a notebook document.  3.18.0 @proposed.
+// NotebookDocumentCellChanges cell changes to a notebook document.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type NotebookDocumentCellChanges struct {
 	// Structure changes to the cell structure to add or remove cells.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Structure *NotebookDocumentCellChangeStructure `json:"structure,omitempty"`
 
 	// Data changes to notebook cells properties like its kind, execution summary or metadata.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Data []NotebookCell `json:"data,omitempty"`
 
 	// TextContent changes to the text content of notebook cells.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	TextContent []NotebookDocumentCellContentChanges `json:"textContent,omitempty"`
 }
 
@@ -409,62 +409,62 @@ type WillSaveTextDocumentParams struct {
 	Reason TextDocumentSaveReason `json:"reason"`
 }
 
-// NotebookDocumentFilterNotebookType a notebook document filter where `notebookType` is required field.  3.18.0 @proposed.
+// NotebookDocumentFilterNotebookType a notebook document filter where `notebookType` is required field.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type NotebookDocumentFilterNotebookType struct {
 	// NotebookType the type of the enclosing notebook.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	NotebookType string `json:"notebookType"`
 
 	// Scheme a Uri Uri.scheme scheme, like `file` or `untitled`.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Scheme string `json:"scheme,omitempty"`
 
 	// Pattern a glob pattern.
 	//
-	// @since 3.18.0 proposed
-	Pattern string `json:"pattern,omitempty"`
+	// @since 3.18.0
+	Pattern *GlobPattern `json:"pattern,omitempty"`
 }
 
-// NotebookDocumentFilterScheme a notebook document filter where `scheme` is required field.  3.18.0 @proposed.
+// NotebookDocumentFilterScheme a notebook document filter where `scheme` is required field.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type NotebookDocumentFilterScheme struct {
 	// NotebookType the type of the enclosing notebook.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	NotebookType string `json:"notebookType,omitempty"`
 
 	// Scheme a Uri Uri.scheme scheme, like `file` or `untitled`.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Scheme string `json:"scheme"`
 
 	// Pattern a glob pattern.
 	//
-	// @since 3.18.0 proposed
-	Pattern string `json:"pattern,omitempty"`
+	// @since 3.18.0
+	Pattern *GlobPattern `json:"pattern,omitempty"`
 }
 
-// NotebookDocumentFilterPattern a notebook document filter where `pattern` is required field.  3.18.0 @proposed.
+// NotebookDocumentFilterPattern a notebook document filter where `pattern` is required field.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type NotebookDocumentFilterPattern struct {
 	// NotebookType the type of the enclosing notebook.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	NotebookType string `json:"notebookType,omitempty"`
 
 	// Scheme a Uri Uri.scheme scheme, like `file` or `untitled`.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Scheme string `json:"scheme,omitempty"`
 
 	// Pattern a glob pattern.
 	//
-	// @since 3.18.0 proposed
-	Pattern string `json:"pattern"`
+	// @since 3.18.0
+	Pattern GlobPattern `json:"pattern"`
 }

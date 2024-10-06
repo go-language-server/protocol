@@ -39,7 +39,7 @@ const (
 	// ContentModifiedLSPErrorCodes the server detected that the content of a document got modified outside normal conditions. A server should NOT send this error code if it detects a content change in it unprocessed messages. The result even computed on an older state might still be useful for the client. If a client decides that a result is not of any use anymore the client should cancel the request.
 	ContentModifiedLSPErrorCodes LSPErrorCodes = -32801
 
-	// RequestCancelledLSPErrorCodes the client has canceled a request and a server as detected the cancel.
+	// RequestCancelledLSPErrorCodes the client has canceled a request and a server has detected the cancel.
 	RequestCancelledLSPErrorCodes LSPErrorCodes = -32800
 )
 

@@ -387,6 +387,19 @@ var structureNames = map[string]string{
 	"NotebookDocumentFilterNotebookType":          "document",
 	"NotebookDocumentFilterScheme":                "document",
 	"NotebookDocumentFilterPattern":               "document",
+
+	"SnippetTextEdit":                        "basic",
+	"TextDocumentContentParams":              "basic",
+	"TextDocumentContentResult":              "basic",
+	"TextDocumentContentOptions":             "basic",
+	"TextDocumentContentRegistrationOptions": "basic",
+	"TextDocumentContentRefreshParams":       "basic",
+	"TextDocumentContentClientCapabilities":  "lifecycle",
+	"ClientCodeLensResolveOptions":           "lifecycle",
+	"DiagnosticsCapabilities":                "lifecycle",
+	"WorkspaceEditMetadata":                  "workspace",
+	"CodeActionTagOptions":                   "language",
+	"CompletionItemApplyKinds":               "language",
 }
 
 // Structures generates Structure Go type from the metaModel schema definition.
@@ -396,7 +409,7 @@ func (gen *Generator) Structures(structures []*protocol.Structure) error {
 
 		filename, ok := structureNames[structuresName]
 		if !ok {
-			panic(fmt.Sprintf("not found %s enumerations file", structuresName))
+			panic(fmt.Sprintf("not found %s structures file", structuresName))
 		}
 
 		// Init structures printers

@@ -3,8 +3,6 @@
 
 package protocol
 
-import "bytes"
-
 // TextDocumentSyncKind defines how the host (editor) should sync document changes to the language server.
 type TextDocumentSyncKind uint32
 
@@ -55,18 +53,18 @@ type UnregistrationParams struct {
 	Unregisterations []Unregistration `json:"unregisterations"`
 }
 
-// ClientInfo information about the client  3.15.0  3.18.0 ClientInfo type name added. @proposed.
+// ClientInfo information about the client  3.15.0  3.18.0 ClientInfo type name added.
 //
-// @since 3.18.0 ClientInfo type name added. proposed
+// @since 3.18.0 ClientInfo type name added.
 type ClientInfo struct {
 	// Name the name of the client as defined by the client.
 	//
-	// @since 3.18.0 ClientInfo type name added. proposed
+	// @since 3.18.0 ClientInfo type name added.
 	Name string `json:"name"`
 
 	// Version the client's version as defined by the client.
 	//
-	// @since 3.18.0 ClientInfo type name added. proposed
+	// @since 3.18.0 ClientInfo type name added.
 	Version string `json:"version,omitempty"`
 }
 
@@ -172,6 +170,16 @@ type FoldingRangeWorkspaceClientCapabilities struct {
 	RefreshSupport bool `json:"refreshSupport,omitempty"`
 }
 
+// TextDocumentContentClientCapabilities client capabilities for a text document content provider.  3.18.0 @proposed.
+//
+// @since 3.18.0 proposed
+type TextDocumentContentClientCapabilities struct {
+	// DynamicRegistration text document content provider supports dynamic registration.
+	//
+	// @since 3.18.0 proposed
+	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+}
+
 // WorkspaceClientCapabilities workspace specific client capabilities.
 type WorkspaceClientCapabilities struct {
 	// ApplyEdit the client supports applying batch edits to the workspace by supporting the request 'workspace/applyEdit'.
@@ -218,6 +226,9 @@ type WorkspaceClientCapabilities struct {
 
 	// FoldingRange capabilities specific to the folding range requests scoped to the workspace.  3.18.0 @proposed.
 	FoldingRange *FoldingRangeWorkspaceClientCapabilities `json:"foldingRange,omitempty"`
+
+	// TextDocumentContent capabilities specific to the `workspace/textDocumentContent` request.  3.18.0 @proposed.
+	TextDocumentContent *TextDocumentContentClientCapabilities `json:"textDocumentContent,omitempty"`
 }
 
 type TextDocumentSyncClientCapabilities struct {
@@ -236,90 +247,90 @@ type TextDocumentSyncClientCapabilities struct {
 
 // CompletionItemTagOptions.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type CompletionItemTagOptions struct {
 	// ValueSet the tags supported by the client.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	ValueSet []CompletionItemTag `json:"valueSet"`
 }
 
 // ClientCompletionItemResolveOptions.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type ClientCompletionItemResolveOptions struct {
 	// Properties the properties that a client can resolve lazily.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Properties []string `json:"properties"`
 }
 
 // ClientCompletionItemInsertTextModeOptions.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type ClientCompletionItemInsertTextModeOptions struct {
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	ValueSet []InsertTextMode `json:"valueSet"`
 }
 
 // ClientCompletionItemOptions.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type ClientCompletionItemOptions struct {
 	// SnippetSupport client supports snippets as insert text. A snippet can define tab stops and placeholders with `$1`, `$2` and `${3:foo}`. `$0` defines the final tab stop, it defaults to the end of the snippet. Placeholders with equal identifiers are linked, that is typing in one will update others too.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	SnippetSupport bool `json:"snippetSupport,omitempty"`
 
 	// CommitCharactersSupport client supports commit characters on a completion item.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	CommitCharactersSupport bool `json:"commitCharactersSupport,omitempty"`
 
 	// DocumentationFormat client supports the following content formats for the documentation property. The order describes the preferred format of the client.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	DocumentationFormat []MarkupKind `json:"documentationFormat,omitempty"`
 
 	// DeprecatedSupport client supports the deprecated property on a completion item.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	DeprecatedSupport bool `json:"deprecatedSupport,omitempty"`
 
 	// PreselectSupport client supports the preselect property on a completion item.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	PreselectSupport bool `json:"preselectSupport,omitempty"`
 
 	// TagSupport client supports the tag property on a completion item. Clients supporting tags have to handle unknown tags gracefully. Clients especially need to preserve unknown tags when sending a completion item back to the server in a resolve call.
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	TagSupport *CompletionItemTagOptions `json:"tagSupport,omitempty"`
 
 	// InsertReplaceSupport client support insert replace edit to control different behavior if a completion item is inserted in
 	// the text or should replace text.
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	InsertReplaceSupport bool `json:"insertReplaceSupport,omitempty"`
 
 	// ResolveSupport indicates which properties a client can resolve lazily on a completion item. Before version 3.16.0 only the predefined properties `documentation` and `details` could be resolved lazily.
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	ResolveSupport *ClientCompletionItemResolveOptions `json:"resolveSupport,omitempty"`
 
 	// InsertTextModeSupport the client supports the `insertTextMode` property on a completion item to override the whitespace handling mode as defined by the client (see `insertTextMode`).
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	InsertTextModeSupport *ClientCompletionItemInsertTextModeOptions `json:"insertTextModeSupport,omitempty"`
 
 	// LabelDetailsSupport the client has support for completion item label details (see also `CompletionItemLabelDetails`).
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	LabelDetailsSupport bool `json:"labelDetailsSupport,omitempty"`
 }
 
 // ClientCompletionItemOptionsKind.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type ClientCompletionItemOptionsKind struct {
 	// ValueSet the completion item kind values the client supports. When this property exists the client also guarantees that it will handle values outside its set gracefully and falls back to a default value when unknown. If this property is not present the client only supports the completion items kinds from `Text` to `Reference` as defined in the initial version of the protocol.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	ValueSet []CompletionItemKind `json:"valueSet,omitempty"`
 }
 
@@ -330,6 +341,11 @@ type CompletionListCapabilities struct {
 	// ItemDefaults the client supports the following itemDefaults on a completion list. The value lists the supported property names of the `CompletionList.itemDefaults` object. If omitted no properties are supported.
 	// @since 3.17.0
 	ItemDefaults []string `json:"itemDefaults,omitempty"`
+
+	// ApplyKindSupport specifies whether the client supports `CompletionList.applyKind` to indicate how supported values from `completionList.itemDefaults` and `completion` will be combined. If a client supports `applyKind`
+	// it must support it for all fields that it supports that are listed in `CompletionList.applyKind`. This means when clients add support for new/future fields in completion items the MUST also support merge for them if those fields are defined in `CompletionList.applyKind`.
+	// @since 3.17.0
+	ApplyKindSupport bool `json:"applyKindSupport,omitempty"`
 }
 
 // CompletionClientCapabilities completion client capabilities.
@@ -363,33 +379,33 @@ type HoverClientCapabilities struct {
 
 // ClientSignatureParameterInformationOptions.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type ClientSignatureParameterInformationOptions struct {
 	// LabelOffsetSupport the client supports processing label offsets instead of a simple label string.
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	LabelOffsetSupport bool `json:"labelOffsetSupport,omitempty"`
 }
 
 // ClientSignatureInformationOptions.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type ClientSignatureInformationOptions struct {
 	// DocumentationFormat client supports the following content formats for the documentation property. The order describes the preferred format of the client.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	DocumentationFormat []MarkupKind `json:"documentationFormat,omitempty"`
 
 	// ParameterInformation client capabilities specific to parameter information.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	ParameterInformation *ClientSignatureParameterInformationOptions `json:"parameterInformation,omitempty"`
 
 	// ActiveParameterSupport the client supports the `activeParameter` property on `SignatureInformation` literal.
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	ActiveParameterSupport bool `json:"activeParameterSupport,omitempty"`
 
 	// NoActiveParameterSupport the client supports the `activeParameter` property on `SignatureHelp`/`SignatureInformation` being set to `null` to indicate that no parameter should be active. 3.18.0 @proposed.
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	NoActiveParameterSupport bool `json:"noActiveParameterSupport,omitempty"`
 }
 
@@ -484,31 +500,31 @@ type DocumentSymbolClientCapabilities struct {
 
 // ClientCodeActionKindOptions.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type ClientCodeActionKindOptions struct {
 	// ValueSet the code action kind values the client supports. When this property exists the client also guarantees that it will handle values outside its set gracefully and falls back to a default value when unknown.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	ValueSet []CodeActionKind `json:"valueSet"`
 }
 
 // ClientCodeActionLiteralOptions.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type ClientCodeActionLiteralOptions struct {
 	// CodeActionKind the code action kind is support with the following value set.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	CodeActionKind ClientCodeActionKindOptions `json:"codeActionKind"`
 }
 
 // ClientCodeActionResolveOptions.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type ClientCodeActionResolveOptions struct {
 	// Properties the properties that a client can resolve lazily.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Properties []string `json:"properties"`
 }
 
@@ -537,12 +553,28 @@ type CodeActionClientCapabilities struct {
 
 	// DocumentationSupport whether the client supports documentation for a class of code actions.  3.18.0 @proposed.
 	DocumentationSupport bool `json:"documentationSupport,omitempty"`
+
+	// TagSupport client supports the tag property on a code action. Clients supporting tags have to handle unknown tags gracefully. 3.18.0 - proposed.
+	TagSupport *CodeActionTagOptions `json:"tagSupport,omitempty"`
+}
+
+// ClientCodeLensResolveOptions.
+//
+// @since 3.18.0
+type ClientCodeLensResolveOptions struct {
+	// Properties the properties that a client can resolve lazily.
+	//
+	// @since 3.18.0
+	Properties []string `json:"properties"`
 }
 
 // CodeLensClientCapabilities the client capabilities of a CodeLensRequest.
 type CodeLensClientCapabilities struct {
 	// DynamicRegistration whether code lens supports dynamic registration.
 	DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
+
+	// ResolveSupport whether the client supports resolving additional code lens properties via a separate `codeLens/resolve` request.
+	ResolveSupport *ClientCodeLensResolveOptions `json:"resolveSupport,omitempty"`
 }
 
 // DocumentLinkClientCapabilities the client capabilities of a DocumentLinkRequest.
@@ -596,20 +628,20 @@ type RenameClientCapabilities struct {
 
 // ClientFoldingRangeKindOptions.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type ClientFoldingRangeKindOptions struct {
 	// ValueSet the folding range kind values the client supports. When this property exists the client also guarantees that it will handle values outside its set gracefully and falls back to a default value when unknown.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	ValueSet []FoldingRangeKind `json:"valueSet,omitempty"`
 }
 
 // ClientFoldingRangeOptions.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type ClientFoldingRangeOptions struct {
 	// CollapsedText if set, the client signals that it supports setting collapsedText on folding ranges to display custom labels instead of the default text.
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	CollapsedText bool `json:"collapsedText,omitempty"`
 }
 
@@ -637,30 +669,36 @@ type SelectionRangeClientCapabilities struct {
 
 // ClientDiagnosticsTagOptions.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type ClientDiagnosticsTagOptions struct {
 	// ValueSet the tags supported by the client.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	ValueSet []DiagnosticTag `json:"valueSet"`
 }
 
-// PublishDiagnosticsClientCapabilities the publish diagnostic client capabilities.
-type PublishDiagnosticsClientCapabilities struct {
+// DiagnosticsCapabilities general diagnostics capabilities for pull and push model.
+type DiagnosticsCapabilities struct {
 	// RelatedInformation whether the clients accepts diagnostics with related information.
 	RelatedInformation bool `json:"relatedInformation,omitempty"`
 
 	// TagSupport client supports the tag property to provide meta data about a diagnostic. Clients supporting tags have to handle unknown tags gracefully.
 	TagSupport *ClientDiagnosticsTagOptions `json:"tagSupport,omitempty"`
 
-	// VersionSupport whether the client interprets the version property of the `textDocument/publishDiagnostics` notification's parameter.
-	VersionSupport bool `json:"versionSupport,omitempty"`
-
 	// CodeDescriptionSupport client supports a codeDescription property
 	CodeDescriptionSupport bool `json:"codeDescriptionSupport,omitempty"`
 
 	// DataSupport whether code action supports the `data` property which is preserved between a `textDocument/publishDiagnostics` and `textDocument/codeAction` request.
 	DataSupport bool `json:"dataSupport,omitempty"`
+}
+
+// PublishDiagnosticsClientCapabilities the publish diagnostic client capabilities.
+type PublishDiagnosticsClientCapabilities struct {
+	// extends
+	DiagnosticsCapabilities
+
+	// VersionSupport whether the client interprets the version property of the `textDocument/publishDiagnostics` notification's parameter.
+	VersionSupport bool `json:"versionSupport,omitempty"`
 }
 
 // CallHierarchyClientCapabilities.
@@ -675,26 +713,26 @@ type CallHierarchyClientCapabilities struct {
 
 // ClientSemanticTokensRequestFullDelta.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type ClientSemanticTokensRequestFullDelta struct {
 	// Delta the client will send the `textDocument/semanticTokens/full/delta` request if the server provides a corresponding handler.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Delta bool `json:"delta,omitempty"`
 }
 
 // ClientSemanticTokensRequestOptions.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type ClientSemanticTokensRequestOptions struct {
 	// Range the client will send the `textDocument/semanticTokens/range` request if the server provides a corresponding handler.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Range ClientSemanticTokensRequestOptionsRange `json:"range,omitempty"`
 
 	// Full the client will send the `textDocument/semanticTokens/full` request if the server provides a corresponding handler.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Full ClientSemanticTokensRequestOptionsFull `json:"full,omitempty"`
 }
 
@@ -789,11 +827,11 @@ type InlineValueClientCapabilities struct {
 
 // ClientInlayHintResolveOptions.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type ClientInlayHintResolveOptions struct {
 	// Properties the properties that a client can resolve lazily.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Properties []string `json:"properties"`
 }
 
@@ -816,6 +854,9 @@ type InlayHintClientCapabilities struct {
 //
 // @since 3.17.0
 type DiagnosticClientCapabilities struct {
+	// extends
+	DiagnosticsCapabilities
+
 	// DynamicRegistration whether implementation supports dynamic registration. If this is set to `true` the client supports the new `(TextDocumentRegistrationOptions & StaticRegistrationOptions)` return value for the corresponding server capability as well.
 	//
 	// @since 3.17.0
@@ -959,12 +1000,12 @@ type NotebookDocumentClientCapabilities struct {
 
 // ClientShowMessageActionItemOptions.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type ClientShowMessageActionItemOptions struct {
 	// AdditionalPropertiesSupport whether the client supports additional attributes which are preserved and send back to the server in
 	// the request's response.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	AdditionalPropertiesSupport bool `json:"additionalPropertiesSupport,omitempty"`
 }
 
@@ -997,16 +1038,16 @@ type WindowClientCapabilities struct {
 
 // StaleRequestSupportOptions.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type StaleRequestSupportOptions struct {
 	// Cancel the client will actively cancel the request.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Cancel bool `json:"cancel"`
 
 	// RetryOnContentModified the list of requests for which the client will retry the request if it receives a response with error code `ContentModified`.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	RetryOnContentModified []string `json:"retryOnContentModified"`
 }
 
@@ -1166,17 +1207,21 @@ type FileOperationOptions struct {
 	WillDelete *FileOperationRegistrationOptions `json:"willDelete,omitempty"`
 }
 
-// WorkspaceOptions defines workspace specific capabilities of the server.  3.18.0 @proposed.
+// WorkspaceOptions defines workspace specific capabilities of the server.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type WorkspaceOptions struct {
 	// WorkspaceFolders the server supports workspace folder.
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	WorkspaceFolders *WorkspaceFoldersServerCapabilities `json:"workspaceFolders,omitempty"`
 
 	// FileOperations the server is interested in notifications/requests for operations on files.
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	FileOperations *FileOperationOptions `json:"fileOperations,omitempty"`
+
+	// TextDocumentContent the server supports the `workspace/textDocumentContent` request.  3.18.0 @proposed.
+	// @since 3.18.0
+	TextDocumentContent WorkspaceOptionsTextDocumentContent `json:"textDocumentContent,omitempty"`
 }
 
 // ServerCapabilities defines the capabilities provided by a language server.
@@ -1291,36 +1336,18 @@ type ServerCapabilities struct {
 	Experimental any `json:"experimental,omitempty"`
 }
 
-func (t ServerCapabilities) MarshalJSON() ([]byte, error) {
-	var b bytes.Buffer
-	buf, err := t.TextDocumentSync.MarshalJSON()
-	if err != nil {
-		return nil, err
-	}
-	b.Write(buf)
-
-	return b.Bytes(), nil
-}
-
-func (t *ServerCapabilities) UnmarshalJSON(x []byte) error {
-	if err := t.TextDocumentSync.UnmarshalJSON(x); err != nil {
-		return err
-	}
-	return nil
-}
-
-// ServerInfo information about the server  3.15.0  3.18.0 ServerInfo type name added. @proposed.
+// ServerInfo information about the server  3.15.0  3.18.0 ServerInfo type name added.
 //
-// @since 3.18.0 ServerInfo type name added. proposed
+// @since 3.18.0 ServerInfo type name added.
 type ServerInfo struct {
 	// Name the name of the server as defined by the server.
 	//
-	// @since 3.18.0 ServerInfo type name added. proposed
+	// @since 3.18.0 ServerInfo type name added.
 	Name string `json:"name"`
 
 	// Version the server's version as defined by the server.
 	//
-	// @since 3.18.0 ServerInfo type name added. proposed
+	// @since 3.18.0 ServerInfo type name added.
 	Version string `json:"version,omitempty"`
 }
 

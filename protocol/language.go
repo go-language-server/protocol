@@ -63,6 +63,11 @@ const (
 	//
 	// @since 3.17.0
 	DecoratorSemanticTokenTypes SemanticTokenTypes = "decorator"
+
+	// LabelSemanticTokenTypes.
+	//
+	// @since 3.18.0
+	LabelSemanticTokenTypes SemanticTokenTypes = "label"
 )
 
 // SemanticTokenModifiers a set of predefined token modifiers. This set is not fixed an clients can specify additional token types via the corresponding client capabilities.
@@ -387,6 +392,16 @@ const (
 	NotebookCodeActionKind CodeActionKind = "notebook"
 )
 
+// CodeActionTag code action tags are extra annotations that tweak the behavior of a code action.  3.18.0 - proposed.
+//
+// @since 3.18.0 - proposed
+type CodeActionTag uint32
+
+const (
+	// LlmgeneratedCodeActionTag marks the code action as LLM-generated.
+	LlmgeneratedCodeActionTag CodeActionTag = 1
+)
+
 // InlineCompletionTriggerKind describes how an InlineCompletionItemProvider inline completion provider was triggered. 3.18.0 @proposed.
 //
 // @since 3.18.0 proposed
@@ -412,6 +427,19 @@ const (
 
 	// TriggerForIncompleteCompletionsCompletionTriggerKind completion was re-triggered as current completion list is incomplete.
 	TriggerForIncompleteCompletionsCompletionTriggerKind CompletionTriggerKind = 3
+)
+
+// ApplyKind defines how values from a set of defaults and an individual item will be merged.
+//
+// @since 3.18.0
+type ApplyKind string
+
+const (
+	// ReplaceApplyKind the value from the individual item (if provided and not `null`) will be used instead of the default.
+	ReplaceApplyKind ApplyKind = "replace"
+
+	// MergeApplyKind the value from the item will be merged with the default. The specific rules for mergeing values are defined against each field that supports merging.
+	MergeApplyKind ApplyKind = "merge"
 )
 
 // SignatureHelpTriggerKind how a signature help was triggered.
@@ -856,13 +884,13 @@ type SemanticTokensLegend struct {
 	TokenModifiers []string `json:"tokenModifiers"`
 }
 
-// SemanticTokensFullDelta semantic tokens options to support deltas for full documents  3.18.0 @proposed.
+// SemanticTokensFullDelta semantic tokens options to support deltas for full documents
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type SemanticTokensFullDelta struct {
 	// Delta the server supports deltas for full documents.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Delta bool `json:"delta,omitempty"`
 }
 
@@ -1579,12 +1607,22 @@ type InlineCompletionRegistrationOptions struct {
 	StaticRegistrationOptions
 }
 
+// CodeActionTagOptions.
+//
+// @since 3.18.0 - proposed
+type CodeActionTagOptions struct {
+	// ValueSet the tags supported by the client.
+	//
+	// @since 3.18.0 - proposed
+	ValueSet []CodeActionTag `json:"valueSet"`
+}
+
 // ServerCompletionItemOptions.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type ServerCompletionItemOptions struct {
 	// LabelDetailsSupport the server has support for completion item label details (see also `CompletionItemLabelDetails`) when receiving a completion item in a resolve call.
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	LabelDetailsSupport bool `json:"labelDetailsSupport,omitempty"`
 }
 
@@ -1886,19 +1924,18 @@ type CompletionItem struct {
 	Data any `json:"data,omitempty"`
 }
 
-// EditRangeWithInsertReplace edit range variant that includes ranges for insert and replace operations.  3.18.0 @proposed.
+// EditRangeWithInsertReplace edit range variant that includes ranges for insert and replace operations.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type EditRangeWithInsertReplace struct {
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Insert Range `json:"insert"`
 
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Replace Range `json:"replace"`
 }
 
-// CompletionItemDefaults in many cases the items of an actual completion result share the same value for properties like `commitCharacters` or the range of a text edit. A completion list can therefore define item defaults which will be used if a completion item itself doesn't specify the value. If a completion list specifies a default value and a completion item also specifies a corresponding value the one from the item is used. Servers are only allowed to return default values if the client signals support for this via
-// the `completionList.itemDefaults` capability.
+// CompletionItemDefaults in many cases the items of an actual completion result share the same value for properties like `commitCharacters` or the range of a text edit. A completion list can therefore define item defaults which will be used if a completion item itself doesn't specify the value. If a completion list specifies a default value and a completion item also specifies a corresponding value, the rules for combining these are defined by `applyKinds` (if the client supports it), defaulting to "replace". Servers are only allowed to return default values if the client signals support for this via the `completionList.itemDefaults` capability.
 //
 // @since 3.17.0
 type CompletionItemDefaults struct {
@@ -1923,14 +1960,30 @@ type CompletionItemDefaults struct {
 	Data any `json:"data,omitempty"`
 }
 
+// CompletionItemApplyKinds specifies how fields from a completion item should be combined with those from `completionList.itemDefaults`. If unspecified, all fields will be treated as "replace". If a field's value is "replace", the value from a completion item (if provided and not `null`) will always be used instead of the value from `completionItem.itemDefaults`. If a field's value is "merge", the values will be merged using the rules defined against each field below. Servers are only allowed to return `applyKind` if the client signals support for this via the `completionList.applyKindSupport` capability.
+//
+// @since 3.18.0
+type CompletionItemApplyKinds struct {
+	// CommitCharacters specifies whether commitCharacters on a completion will replace or be merged with those in `completionList.itemDefaults.commitCharacters`. If "replace", the commit characters from the completion item will always be used unless not provided, in which case those from `completionList.itemDefaults.commitCharacters` will be used. An empty list can be used if a completion item does not have any commit characters and also should not use those from `completionList.itemDefaults.commitCharacters`. If "merge" the commitCharacters for the completion will be the union of all values in both `completionList.itemDefaults.commitCharacters` and the completion's own `commitCharacters`.
+	// @since 3.18.0
+	CommitCharacters ApplyKind `json:"commitCharacters,omitempty"`
+
+	// Data specifies whether the `data` field on a completion will replace or be merged with data from `completionList.itemDefaults.data`. If "replace", the data from the completion item will be used if provided
+	// (and not `null`), otherwise `completionList.itemDefaults.data` will be used. An empty object can be used if a completion item does not have any data but also should not use the value from `completionList.itemDefaults.data`. If "merge", a shallow merge will be performed between `completionList.itemDefaults.data` and the completion's own data using the following rules: - If a completion's `data` field is not provided (or `null`), the entire `data` field from `completionList.itemDefaults.data` will be used as-is. - If a completion's `data` field is provided, each field will overwrite the field of the same name in `completionList.itemDefaults.data` but no merging of nested fields within that value will occur.
+	// @since 3.18.0
+	Data ApplyKind `json:"data,omitempty"`
+}
+
 // CompletionList represents a collection of CompletionItem completion items to be presented in the editor.
 type CompletionList struct {
 	// IsIncomplete this list it not complete. Further typing results in recomputing this list. Recomputed lists have all their items replaced (not appended) in the incomplete completion sessions.
 	IsIncomplete bool `json:"isIncomplete"`
 
-	// ItemDefaults in many cases the items of an actual completion result share the same value for properties like `commitCharacters` or the range of a text edit. A completion list can therefore define item defaults which will be used if a completion item itself doesn't specify the value. If a completion list specifies a default value and a completion item also specifies a corresponding value the one from the item is used. Servers are only allowed to return default values if the client signals support for this via
-	// the `completionList.itemDefaults` capability.
+	// ItemDefaults in many cases the items of an actual completion result share the same value for properties like `commitCharacters` or the range of a text edit. A completion list can therefore define item defaults which will be used if a completion item itself doesn't specify the value. If a completion list specifies a default value and a completion item also specifies a corresponding value, the rules for combining these are defined by `applyKinds` (if the client supports it), defaulting to "replace". Servers are only allowed to return default values if the client signals support for this via the `completionList.itemDefaults` capability.
 	ItemDefaults *CompletionItemDefaults `json:"itemDefaults,omitempty"`
+
+	// ApplyKind specifies how fields from a completion item should be combined with those from `completionList.itemDefaults`. If unspecified, all fields will be treated as "replace". If a field's value is "replace", the value from a completion item (if provided and not `null`) will always be used instead of the value from `completionItem.itemDefaults`. If a field's value is "merge", the values will be merged using the rules defined against each field below. Servers are only allowed to return `applyKind` if the client signals support for this via the `completionList.applyKindSupport` capability.
+	ApplyKind *CompletionItemApplyKinds `json:"applyKind,omitempty"`
 
 	// Items the completion items.
 	Items []CompletionItem `json:"items"`
@@ -2220,13 +2273,13 @@ type CodeActionParams struct {
 	Context CodeActionContext `json:"context"`
 }
 
-// CodeActionDisabled captures why the code action is currently disabled.  3.18.0 @proposed.
+// CodeActionDisabled captures why the code action is currently disabled.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type CodeActionDisabled struct {
 	// Reason human readable description of why the code action is currently disabled. This is displayed in the code actions UI.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Reason string `json:"reason"`
 }
 
@@ -2258,6 +2311,9 @@ type CodeAction struct {
 
 	// Data a data entry field that is preserved on a code action between a `textDocument/codeAction` and a `codeAction/resolve` request.
 	Data any `json:"data,omitempty"`
+
+	// Tags tags for this code action.  3.18.0 - proposed.
+	Tags []CodeActionTag `json:"tags,omitempty"`
 }
 
 // CodeActionRegistrationOptions registration options for a CodeActionRequest.
@@ -2267,11 +2323,11 @@ type CodeActionRegistrationOptions struct {
 	CodeActionOptions
 }
 
-// LocationURIOnly location with only uri and does not include range.  3.18.0 @proposed.
+// LocationURIOnly location with only uri and does not include range.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type LocationURIOnly struct {
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	URI DocumentURI `json:"uri"`
 }
 
@@ -2564,20 +2620,20 @@ type RelatedUnchangedDocumentDiagnosticReport struct {
 
 // PrepareRenamePlaceholder.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type PrepareRenamePlaceholder struct {
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Range Range `json:"range"`
 
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Placeholder string `json:"placeholder"`
 }
 
 // PrepareRenameDefaultBehavior.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type PrepareRenameDefaultBehavior struct {
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	DefaultBehavior bool `json:"defaultBehavior"`
 }
 
@@ -2619,44 +2675,44 @@ type WorkspaceUnchangedDocumentDiagnosticReport struct {
 
 // TextDocumentContentChangePartial.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type TextDocumentContentChangePartial struct {
 	// Range the range of the document that changed.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Range Range `json:"range"`
 
 	// RangeLength the optional length of the range that got replaced.
 	//
 	// Deprecated: use range instead.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	RangeLength uint32 `json:"rangeLength,omitempty"`
 
 	// Text the new text for the provided range.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Text string `json:"text"`
 }
 
 // TextDocumentContentChangeWholeDocument.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type TextDocumentContentChangeWholeDocument struct {
 	// Text the new text of the whole document.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Text string `json:"text"`
 }
 
 // MarkedStringWithLanguage.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type MarkedStringWithLanguage struct {
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Language string `json:"language"`
 
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Value string `json:"value"`
 }
 
@@ -2675,62 +2731,59 @@ type NotebookCellTextDocumentFilter struct {
 	Language string `json:"language,omitempty"`
 }
 
-// TextDocumentFilterLanguage a document filter where `language` is required field.  3.18.0 @proposed.
+// TextDocumentFilterLanguage a document filter where `language` is required field.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type TextDocumentFilterLanguage struct {
 	// Language a language id, like `typescript`.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Language string `json:"language"`
 
 	// Scheme a Uri Uri.scheme scheme, like `file` or `untitled`.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Scheme string `json:"scheme,omitempty"`
 
-	// Pattern a glob pattern, like **​/*.{ts,js}. See TextDocumentFilter for examples.
-	//
-	// @since 3.18.0 proposed
-	Pattern string `json:"pattern,omitempty"`
+	// Pattern a glob pattern, like **​/*.{ts,js}. See TextDocumentFilter for examples. 3.18.0 - support for relative patterns.
+	// @since 3.18.0
+	Pattern *GlobPattern `json:"pattern,omitempty"`
 }
 
-// TextDocumentFilterScheme a document filter where `scheme` is required field.  3.18.0 @proposed.
+// TextDocumentFilterScheme a document filter where `scheme` is required field.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type TextDocumentFilterScheme struct {
 	// Language a language id, like `typescript`.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Language string `json:"language,omitempty"`
 
 	// Scheme a Uri Uri.scheme scheme, like `file` or `untitled`.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Scheme string `json:"scheme"`
 
-	// Pattern a glob pattern, like **​/*.{ts,js}. See TextDocumentFilter for examples.
-	//
-	// @since 3.18.0 proposed
-	Pattern string `json:"pattern,omitempty"`
+	// Pattern a glob pattern, like **​/*.{ts,js}. See TextDocumentFilter for examples. 3.18.0 - support for relative patterns.
+	// @since 3.18.0
+	Pattern *GlobPattern `json:"pattern,omitempty"`
 }
 
-// TextDocumentFilterPattern a document filter where `pattern` is required field.  3.18.0 @proposed.
+// TextDocumentFilterPattern a document filter where `pattern` is required field.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type TextDocumentFilterPattern struct {
 	// Language a language id, like `typescript`.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Language string `json:"language,omitempty"`
 
 	// Scheme a Uri Uri.scheme scheme, like `file` or `untitled`.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Scheme string `json:"scheme,omitempty"`
 
-	// Pattern a glob pattern, like **​/*.{ts,js}. See TextDocumentFilter for examples.
-	//
-	// @since 3.18.0 proposed
-	Pattern string `json:"pattern"`
+	// Pattern a glob pattern, like **​/*.{ts,js}. See TextDocumentFilter for examples. 3.18.0 - support for relative patterns.
+	// @since 3.18.0
+	Pattern GlobPattern `json:"pattern"`
 }

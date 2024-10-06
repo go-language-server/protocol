@@ -1916,6 +1916,21 @@ func (s *server) WorkspaceSymbol(ctx context.Context, params *WorkspaceSymbolPar
 	return result, nil
 }
 
+// WorkspaceTextDocumentContent the `workspace/textDocumentContent` request is sent from the client to the server to request the content of a text document. 3.18.0 @proposed.
+//
+// @since 3.18.0 proposed
+func (s *server) WorkspaceTextDocumentContent(ctx context.Context, params *TextDocumentContentParams) (_ *TextDocumentContentResult, err error) {
+	s.logger.Debug("call " + MethodWorkspaceTextDocumentContent)
+	defer s.logger.Debug("end "+MethodWorkspaceTextDocumentContent, zap.Error(err))
+
+	var result *TextDocumentContentResult
+	if err := Call(ctx, s.Conn, MethodWorkspaceTextDocumentContent, params, &result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
 // WillCreateFiles sends the will create files request is sent from the client to the server before files are actually created as long as the creation is triggered from within the client.
 //
 // The request can return a WorkspaceEdit which will be applied to workspace before the files are created.

@@ -294,31 +294,31 @@ type DidChangeWatchedFilesClientCapabilities struct {
 
 // ClientSymbolKindOptions.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type ClientSymbolKindOptions struct {
 	// ValueSet the symbol kind values the client supports. When this property exists the client also guarantees that it will handle values outside its set gracefully and falls back to a default value when unknown. If this property is not present the client only supports the symbol kinds from `File` to `Array` as defined in the initial version of the protocol.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	ValueSet []SymbolKind `json:"valueSet,omitempty"`
 }
 
 // ClientSymbolTagOptions.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type ClientSymbolTagOptions struct {
 	// ValueSet the tags supported by the client.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	ValueSet []SymbolTag `json:"valueSet"`
 }
 
 // ClientSymbolResolveOptions.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type ClientSymbolResolveOptions struct {
 	// Properties the properties that a client can resolve lazily. Usually `location.range`.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	Properties []string `json:"properties"`
 }
 
@@ -398,7 +398,7 @@ type WorkspaceSymbolParams struct {
 	WorkDoneProgressParams
 	PartialResultParams
 
-	// Query a query string to filter symbols by. Clients may send an empty string here to request all symbols.
+	// Query a query string to filter symbols by. Clients may send an empty string here to request all symbols. The `query`-parameter should be interpreted in a *relaxed way* as editors will apply their own highlighting and scoring on the results. A good rule of thumb is to match case-insensitive and to simply check that the characters of *query* appear in their order in a candidate symbol. Servers shouldn't use prefix, substring, or similar strict matching.
 	Query string `json:"query"`
 }
 
@@ -428,6 +428,16 @@ type WorkspaceSymbolRegistrationOptions struct {
 	WorkspaceSymbolOptions
 }
 
+// WorkspaceEditMetadata additional data about a workspace edit.  3.18.0 @proposed.
+//
+// @since 3.18.0 proposed
+type WorkspaceEditMetadata struct {
+	// IsRefactoring signal to the editor that this edit is a refactoring.
+	//
+	// @since 3.18.0 proposed
+	IsRefactoring bool `json:"isRefactoring,omitempty"`
+}
+
 // ApplyWorkspaceEditParams the parameters passed via an apply workspace edit request.
 type ApplyWorkspaceEditParams struct {
 	// Label an optional label of the workspace edit. This label is presented in the user interface for example on an undo stack to undo the workspace edit.
@@ -435,6 +445,9 @@ type ApplyWorkspaceEditParams struct {
 
 	// Edit the edits to apply.
 	Edit WorkspaceEdit `json:"edit"`
+
+	// Metadata additional data about the edit.  3.18.0 @proposed.
+	Metadata *WorkspaceEditMetadata `json:"metadata,omitempty"`
 }
 
 // ApplyWorkspaceEditResult the result returned from the apply workspace edit request. 3.17 renamed from ApplyWorkspaceEditResponse.

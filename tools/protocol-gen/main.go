@@ -21,9 +21,8 @@ import (
 )
 
 const (
-	lspVersion    = "3.17"
 	LSPSchemaURI  = "https://github.com/microsoft/lsprotocol/raw/%s/generator/lsp.json"
-	schemaVersion = "2024.0.0a1"
+	schemaVersion = "v2024.0.0b1"
 )
 
 func init() {

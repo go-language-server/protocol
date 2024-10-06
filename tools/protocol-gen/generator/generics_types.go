@@ -45,7 +45,7 @@ func (gen *Generator) GenericsTypes() error {
 		}
 
 		g.PP(`type `, generics.Name, ` struct {`)
-		g.PP(`	Value any `, "`json:\"value\"`")
+		g.PP(`	value any `)
 		g.PP(`}`)
 
 		g.P("\n")
@@ -54,6 +54,7 @@ func (gen *Generator) GenericsTypes() error {
 		g.P(`[T `)
 		var typs []string
 		seem := map[string]bool{}
+		isRetPointer := false
 		for i, gt := range types {
 			switch gt := gt.(type) {
 			case protocol.BaseType:
@@ -73,6 +74,7 @@ func (gen *Generator) GenericsTypes() error {
 					seem[t] = true
 					typs = append(typs, t)
 					g.P(t)
+					isRetPointer = true
 				}
 
 			case *protocol.ArrayType:
@@ -106,6 +108,7 @@ func (gen *Generator) GenericsTypes() error {
 							t := name
 							typs = append(typs, t)
 							g.P(t)
+							isRetPointer = true
 						}
 					default:
 						panic(fmt.Sprintf("GenericsTypes.TupleType: %[1]T = %#[1]v\n", item))
@@ -120,26 +123,35 @@ func (gen *Generator) GenericsTypes() error {
 				g.P(` | `)
 			}
 		}
-		g.PP(`](x T) `, generics.Name, ` {`)
-		g.PP(`	return `, generics.Name, `{`)
-		g.PP(`		Value: x,`)
+
+		g.P(`](val T) `)
+		if isRetPointer {
+			g.P(`*`)
+		}
+		g.P(generics.Name, ` {`, "\n")
+		g.P(`	return `)
+		if isRetPointer {
+			g.P(`&`)
+		}
+		g.P(generics.Name, `{`, "\n")
+		g.PP(`		value: val,`)
 		g.PP(`	}`)
 		g.PP(`}`, "\n")
 
 		g.PP(`func (t `, generics.Name, `) MarshalJSON() ([]byte, error) {`)
-		g.PP(`	switch x := t.Value.(type) {`)
+		g.PP(`	switch val := t.value.(type) {`)
 		for _, gt := range types {
 			switch gt := gt.(type) {
 			case protocol.BaseType:
 				g.PP(`	case `, gt.String(), `:`)
-				g.PP(`		return marshal(x)`)
+				g.PP(`		return marshal(val)`)
 
 			case *protocol.NullType:
 				// nothing to do
 
 			case *protocol.ReferenceType:
 				g.PP(`	case `, normalizeLSPTypes(strings.ReplaceAll(gt.String(), "Uri", "URI")), `:`)
-				g.PP(`		return marshal(x)`)
+				g.PP(`		return marshal(val)`)
 
 			case *protocol.ArrayType:
 				elem := gt.Element
@@ -151,7 +163,7 @@ func (gen *Generator) GenericsTypes() error {
 				default:
 					panic(fmt.Sprintf("GenericsTypes.Array: %#v\n", elem))
 				}
-				g.PP(`		return marshal(x)`)
+				g.PP(`		return marshal(val)`)
 
 			case *protocol.TupleType:
 				seem := map[string]bool{}
@@ -168,7 +180,7 @@ func (gen *Generator) GenericsTypes() error {
 						panic(fmt.Sprintf("GenericsTypes.TupleType: %[1]T = %#[1]v\n", item))
 					}
 					if i < len(gt.Items) {
-						g.PP(`		return marshal(x)`)
+						g.PP(`		return marshal(val)`)
 					}
 				}
 
@@ -182,9 +194,9 @@ func (gen *Generator) GenericsTypes() error {
 		g.PP(`	return nil, fmt.Errorf("unknown type: %T", t)`)
 		g.PP(`}`)
 
-		g.PP(`func (t *`, generics.Name, `) UnmarshalJSON(x []byte) error {`)
-		g.PP(`if string(x) == "null" {`)
-		g.PP(`	t.Value = nil`)
+		g.PP(`func (t *`, generics.Name, `) UnmarshalJSON(val []byte) error {`)
+		g.PP(`if string(val) == "null" {`)
+		g.PP(`	t.value = nil`)
 		g.PP(`	return nil`)
 		g.PP(`}`)
 
@@ -192,8 +204,8 @@ func (gen *Generator) GenericsTypes() error {
 			switch gt := gt.(type) {
 			case protocol.BaseType:
 				g.PP(`var h`, i, ` `, gt.String())
-				g.PP(`if err := unmarshal(x, &h`, i, `); err == nil {`)
-				g.PP(`	t.Value = h`, i)
+				g.PP(`if err := unmarshal(val, &h`, i, `); err == nil {`)
+				g.PP(`	t.value = h`, i)
 				g.PP(`	return nil`)
 				g.PP(`}`)
 
@@ -202,8 +214,8 @@ func (gen *Generator) GenericsTypes() error {
 
 			case *protocol.ReferenceType:
 				g.PP(`var h`, i, ` `, normalizeLSPTypes(strings.ReplaceAll(gt.String(), "Uri", "URI")))
-				g.PP(`if err := unmarshal(x, &h`, i, `); err == nil {`)
-				g.PP(`	t.Value = h`, i)
+				g.PP(`if err := unmarshal(val, &h`, i, `); err == nil {`)
+				g.PP(`	t.value = h`, i)
 				g.PP(`	return nil`)
 				g.PP(`}`)
 
@@ -218,8 +230,8 @@ func (gen *Generator) GenericsTypes() error {
 				default:
 					panic(fmt.Sprintf("GenericsTypes.Array: %#v\n", elem))
 				}
-				g.PP(`if err := unmarshal(x, &h`, i, `); err == nil {`)
-				g.PP(`	t.Value = h`, i)
+				g.PP(`if err := unmarshal(val, &h`, i, `); err == nil {`)
+				g.PP(`	t.value = h`, i)
 				g.PP(`	return nil`)
 				g.PP(`}`)
 
@@ -237,8 +249,8 @@ func (gen *Generator) GenericsTypes() error {
 						panic(fmt.Sprintf("GenericsTypes.TupleType: %[1]T = %#[1]v\n", item))
 					}
 					if j < len(gt.Items)-1 {
-						g.PP(`if err := unmarshal(x, &h`, i+j, `); err == nil {`)
-						g.PP(`	t.Value = h`, i+j)
+						g.PP(`if err := unmarshal(val, &h`, i+j, `); err == nil {`)
+						g.PP(`	t.value = h`, i+j)
 						g.PP(`	return nil`)
 						g.PP(`}`)
 					}

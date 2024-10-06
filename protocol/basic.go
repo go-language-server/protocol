@@ -88,6 +88,8 @@ const (
 
 	HandlebarsLanguageKind LanguageKind = "handlebars"
 
+	HaskellLanguageKind LanguageKind = "haskell"
+
 	HTMLLanguageKind LanguageKind = "html"
 
 	IniLanguageKind LanguageKind = "ini"
@@ -256,12 +258,12 @@ type TextDocumentIdentifier struct {
 //
 // @since 3.17.0 - support for negotiated position encoding.
 type Position struct {
-	// Line line position in a document (zero-based). If a line number is greater than the number of lines in a document, it defaults back to the number of lines in the document. If a line number is negative, it defaults to .
+	// Line line position in a document (zero-based).
 	//
 	// @since 3.17.0 - support for negotiated position encoding.
 	Line uint32 `json:"line"`
 
-	// Character character offset on a line in a document (zero-based). The meaning of this offset is determined by the negotiated `PositionEncodingKind`. If the character value is greater than the line length it defaults back to the line length.
+	// Character character offset on a line in a document (zero-based). The meaning of this offset is determined by the negotiated `PositionEncodingKind`.
 	//
 	// @since 3.17.0 - support for negotiated position encoding.
 	Character uint32 `json:"character"`
@@ -316,6 +318,38 @@ type OptionalVersionedTextDocumentIdentifier struct {
 	Version int32 `json:"version,omitempty"`
 }
 
+// StringValue a string value used as a snippet is a template which allows to insert text and to control the editor
+// cursor when insertion happens. A snippet can define tab stops and placeholders with `$1`, `$2`
+// and `${3:foo}`. `$0` defines the final tab stop, it defaults to the end of the snippet. Variables are defined with `$name` and `${name:default value}`. 3.18.0 @proposed.
+//
+// @since 3.18.0 proposed
+type StringValue struct {
+	// Value the snippet string.
+	//
+	// @since 3.18.0 proposed
+	Value string `json:"value"`
+}
+
+// SnippetTextEdit an interactive text edit.  3.18.0 @proposed.
+//
+// @since 3.18.0 proposed
+type SnippetTextEdit struct {
+	// Range the range of the text document to be manipulated.
+	//
+	// @since 3.18.0 proposed
+	Range Range `json:"range"`
+
+	// Snippet the snippet to be inserted.
+	//
+	// @since 3.18.0 proposed
+	Snippet StringValue `json:"snippet"`
+
+	// AnnotationID the actual identifier of the snippet edit.
+	//
+	// @since 3.18.0 proposed
+	AnnotationID *ChangeAnnotationIdentifier `json:"annotationId,omitempty"`
+}
+
 // AnnotatedTextEdit a special text edit with an additional change annotation.
 //
 // @since 3.16.0.
@@ -335,7 +369,7 @@ type TextDocumentEdit struct {
 	// TextDocument the text document to change.
 	TextDocument OptionalVersionedTextDocumentIdentifier `json:"textDocument"`
 
-	// Edits the edits to be applied. 3.16.0 - support for AnnotatedTextEdit. This is guarded using a client capability.
+	// Edits the edits to be applied. 3.16.0 - support for AnnotatedTextEdit. This is guarded using a client capability. 3.18.0 - support for SnippetTextEdit. This is guarded using a client capability.
 	Edits TextDocumentEditEdits `json:"edits"`
 }
 
@@ -425,7 +459,7 @@ type Diagnostic struct {
 	// Range the range at which the message applies.
 	Range Range `json:"range"`
 
-	// Severity the diagnostic's severity. Can be omitted. If omitted it is up to the client to interpret diagnostics as error, warning, info or hint.
+	// Severity the diagnostic's severity. To avoid interpretation mismatches when a server is used with different clients it is highly recommended that servers always provide a severity value.
 	Severity DiagnosticSeverity `json:"severity,omitempty"`
 
 	// Code the diagnostic's code, which usually appear in the user interface.
@@ -475,25 +509,64 @@ type VersionedTextDocumentIdentifier struct {
 	Version int32 `json:"version"`
 }
 
-// StringValue a string value used as a snippet is a template which allows to insert text and to control the editor
-// cursor when insertion happens. A snippet can define tab stops and placeholders with `$1`, `$2`
-// and `${3:foo}`. `$0` defines the final tab stop, it defaults to the end of the snippet. Variables are defined with `$name` and `${name:default value}`. 3.18.0 @proposed.
+// TextDocumentContentParams parameters for the `workspace/textDocumentContent` request.  3.18.0 @proposed.
 //
 // @since 3.18.0 proposed
-type StringValue struct {
-	// Value the snippet string.
+type TextDocumentContentParams struct {
+	// URI the uri of the text document.
 	//
 	// @since 3.18.0 proposed
-	Value string `json:"value"`
+	URI DocumentURI `json:"uri"`
+}
+
+// TextDocumentContentResult result of the `workspace/textDocumentContent` request.  3.18.0 @proposed.
+//
+// @since 3.18.0 proposed
+type TextDocumentContentResult struct {
+	// Text the text content of the text document. Please note, that the content of any subsequent open notifications for the text document might differ from the returned content due to whitespace and line ending
+	// normalizations done on the client.
+	//
+	// @since 3.18.0 proposed
+	Text string `json:"text"`
+}
+
+// TextDocumentContentOptions text document content provider options.  3.18.0 @proposed.
+//
+// @since 3.18.0 proposed
+type TextDocumentContentOptions struct {
+	// Schemes the schemes for which the server provides content.
+	//
+	// @since 3.18.0 proposed
+	Schemes []string `json:"schemes"`
+}
+
+// TextDocumentContentRegistrationOptions text document content provider registration options.  3.18.0 @proposed.
+//
+// @since 3.18.0 proposed
+type TextDocumentContentRegistrationOptions struct {
+	// extends
+	TextDocumentContentOptions
+	// mixins
+	StaticRegistrationOptions
+}
+
+// TextDocumentContentRefreshParams parameters for the `workspace/textDocumentContent/refresh` request.  3.18.0 @proposed.
+//
+// @since 3.18.0 proposed
+type TextDocumentContentRefreshParams struct {
+	// URI the uri of the text document to refresh.
+	//
+	// @since 3.18.0 proposed
+	URI DocumentURI `json:"uri"`
 }
 
 // ChangeAnnotationsSupportOptions.
 //
-// @since 3.18.0 proposed
+// @since 3.18.0
 type ChangeAnnotationsSupportOptions struct {
 	// GroupsOnLabel whether the client groups edits with equal labels into tree nodes, for instance all edits labelled with "Changes in Strings" would be a tree node.
 	//
-	// @since 3.18.0 proposed
+	// @since 3.18.0
 	GroupsOnLabel bool `json:"groupsOnLabel,omitempty"`
 }
 
@@ -512,6 +585,12 @@ type WorkspaceEditClientCapabilities struct {
 
 	// ChangeAnnotationSupport whether the client in general supports change annotations on text edits, create file, rename file and delete file changes.
 	ChangeAnnotationSupport *ChangeAnnotationsSupportOptions `json:"changeAnnotationSupport,omitempty"`
+
+	// MetadataSupport whether the client supports `WorkspaceEditMetadata` in `WorkspaceEdit`s.  3.18.0 @proposed.
+	MetadataSupport bool `json:"metadataSupport,omitempty"`
+
+	// SnippetEditSupport whether the client supports snippets as text edits.  3.18.0 @proposed.
+	SnippetEditSupport bool `json:"snippetEditSupport,omitempty"`
 }
 
 type WorkDoneProgressBegin struct {
