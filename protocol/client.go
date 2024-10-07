@@ -98,7 +98,7 @@ func clientDispatch(ctx context.Context, client Client, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		err := client.TextDocumentPublishDiagnostics(ctx, &params)
+		err := client.PublishDiagnostics(ctx, &params)
 
 		return true, reply(ctx, nil, err)
 
@@ -110,7 +110,7 @@ func clientDispatch(ctx context.Context, client Client, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		err := client.WindowLogMessage(ctx, &params)
+		err := client.LogMessage(ctx, &params)
 
 		return true, reply(ctx, nil, err)
 
@@ -122,7 +122,7 @@ func clientDispatch(ctx context.Context, client Client, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		err := client.WindowShowMessage(ctx, &params)
+		err := client.ShowMessage(ctx, &params)
 
 		return true, reply(ctx, nil, err)
 
@@ -134,7 +134,7 @@ func clientDispatch(ctx context.Context, client Client, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		err := client.ClientRegisterCapability(ctx, &params)
+		err := client.Registration(ctx, &params)
 
 		return true, reply(ctx, nil, err)
 
@@ -146,7 +146,7 @@ func clientDispatch(ctx context.Context, client Client, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		err := client.ClientUnregisterCapability(ctx, &params)
+		err := client.Unregistration(ctx, &params)
 
 		return true, reply(ctx, nil, err)
 
@@ -158,7 +158,7 @@ func clientDispatch(ctx context.Context, client Client, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := client.WindowShowDocument(ctx, &params)
+		resp, err := client.ShowDocument(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -170,7 +170,7 @@ func clientDispatch(ctx context.Context, client Client, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := client.WindowShowMessageRequest(ctx, &params)
+		resp, err := client.ShowMessageRequest(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -182,7 +182,7 @@ func clientDispatch(ctx context.Context, client Client, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		err := client.WindowWorkDoneProgressCreate(ctx, &params)
+		err := client.WorkDoneProgressCreate(ctx, &params)
 
 		return true, reply(ctx, nil, err)
 
@@ -194,14 +194,14 @@ func clientDispatch(ctx context.Context, client Client, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := client.WorkspaceApplyEdit(ctx, &params)
+		resp, err := client.ApplyWorkspaceEdit(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
 	case MethodWorkspaceCodeLensRefresh: // request
 		defer logger.Debug(MethodWorkspaceCodeLensRefresh, zap.Error(err))
 
-		err := client.WorkspaceCodeLensRefresh(ctx)
+		err := client.CodeLensRefresh(ctx)
 
 		return true, reply(ctx, nil, err)
 
@@ -213,35 +213,35 @@ func clientDispatch(ctx context.Context, client Client, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := client.WorkspaceConfiguration(ctx, &params)
+		resp, err := client.Configuration(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
 	case MethodWorkspaceDiagnosticRefresh: // request
 		defer logger.Debug(MethodWorkspaceDiagnosticRefresh, zap.Error(err))
 
-		err := client.WorkspaceDiagnosticRefresh(ctx)
+		err := client.DiagnosticRefresh(ctx)
 
 		return true, reply(ctx, nil, err)
 
 	case MethodWorkspaceFoldingRangeRefresh: // request
 		defer logger.Debug(MethodWorkspaceFoldingRangeRefresh, zap.Error(err))
 
-		err := client.WorkspaceFoldingRangeRefresh(ctx)
+		err := client.FoldingRangeRefresh(ctx)
 
 		return true, reply(ctx, nil, err)
 
 	case MethodWorkspaceInlayHintRefresh: // request
 		defer logger.Debug(MethodWorkspaceInlayHintRefresh, zap.Error(err))
 
-		err := client.WorkspaceInlayHintRefresh(ctx)
+		err := client.InlayHintRefresh(ctx)
 
 		return true, reply(ctx, nil, err)
 
 	case MethodWorkspaceSemanticTokensRefresh: // request
 		defer logger.Debug(MethodWorkspaceSemanticTokensRefresh, zap.Error(err))
 
-		err := client.WorkspaceSemanticTokensRefresh(ctx)
+		err := client.SemanticTokensRefresh(ctx)
 
 		return true, reply(ctx, nil, err)
 
@@ -252,7 +252,7 @@ func clientDispatch(ctx context.Context, client Client, reply jsonrpc2.Replier, 
 			return true, reply(ctx, nil, fmt.Errorf("expected no params: %w", jsonrpc2.ErrInvalidParams))
 		}
 
-		resp, err := client.WorkspaceWorkspaceFolders(ctx)
+		resp, err := client.WorkspaceFolders(ctx)
 
 		return true, reply(ctx, resp, err)
 
@@ -271,7 +271,7 @@ type client struct {
 // compiler time check whether the Client implements ClientInterface interface.
 var _ Client = (*client)(nil)
 
-func (c *client) CancelRequest(ctx context.Context, params *CancelParams) (err error) {
+func (c *client) Cancel(ctx context.Context, params *CancelParams) (err error) {
 	c.logger.Debug("notify " + MethodClientCancelRequest)
 	defer c.logger.Debug("end "+MethodClientCancelRequest, zap.Error(err))
 
@@ -291,19 +291,19 @@ func (c *client) Progress(ctx context.Context, params *ProgressParams) (err erro
 	return c.Conn.Notify(ctx, MethodClientProgress, params)
 }
 
+// LogMessage sends the notification from the server to the client to ask the client to log a particular message.
+func (c *client) LogMessage(ctx context.Context, params *LogMessageParams) (err error) {
+	c.logger.Debug("notify " + MethodWindowLogMessage)
+	defer c.logger.Debug("end "+MethodWindowLogMessage, zap.Error(err))
+
+	return c.Conn.Notify(ctx, MethodWindowLogMessage, params)
+}
+
 func (c *client) LogTrace(ctx context.Context, params *LogTraceParams) (err error) {
 	c.logger.Debug("notify " + MethodLogTrace)
 	defer c.logger.Debug("end "+MethodLogTrace, zap.Error(err))
 
 	return c.Conn.Notify(ctx, MethodLogTrace, params)
-}
-
-// Telemetry sends the notification from the server to the client to ask the client to log a telemetry event.
-func (c *client) TelemetryEvent(ctx context.Context, params any) (err error) {
-	c.logger.Debug("notify " + MethodTelemetryEvent)
-	defer c.logger.Debug("end "+MethodTelemetryEvent, zap.Error(err))
-
-	return c.Conn.Notify(ctx, MethodTelemetryEvent, params)
 }
 
 // PublishDiagnostics sends the notification from the server to the client to signal results of validation runs.
@@ -316,54 +316,99 @@ func (c *client) TelemetryEvent(ctx context.Context, params any) (err error) {
 // When a file changes it is the server’s responsibility to re-compute diagnostics and push them to the client.
 // If the computed set is empty it has to push the empty array to clear former diagnostics.
 // Newly pushed diagnostics always replace previously pushed diagnostics. There is no merging that happens on the client side.
-func (c *client) TextDocumentPublishDiagnostics(ctx context.Context, params *PublishDiagnosticsParams) (err error) {
+func (c *client) PublishDiagnostics(ctx context.Context, params *PublishDiagnosticsParams) (err error) {
 	c.logger.Debug("notify " + MethodTextDocumentPublishDiagnostics)
 	defer c.logger.Debug("end "+MethodTextDocumentPublishDiagnostics, zap.Error(err))
 
 	return c.Conn.Notify(ctx, MethodTextDocumentPublishDiagnostics, params)
 }
 
-// LogMessage sends the notification from the server to the client to ask the client to log a particular message.
-func (c *client) WindowLogMessage(ctx context.Context, params *LogMessageParams) (err error) {
-	c.logger.Debug("notify " + MethodWindowLogMessage)
-	defer c.logger.Debug("end "+MethodWindowLogMessage, zap.Error(err))
-
-	return c.Conn.Notify(ctx, MethodWindowLogMessage, params)
-}
-
 // ShowMessage sends the notification from a server to a client to ask the
 // client to display a particular message in the user interface.
-func (c *client) WindowShowMessage(ctx context.Context, params *ShowMessageParams) (err error) {
+func (c *client) ShowMessage(ctx context.Context, params *ShowMessageParams) (err error) {
 	c.logger.Debug("notify " + MethodWindowShowMessage)
 	defer c.logger.Debug("end "+MethodWindowShowMessage, zap.Error(err))
 
 	return c.Conn.Notify(ctx, MethodWindowShowMessage, params)
 }
 
-// RegisterCapability sends the request from the server to the client to register for a new capability on the client side.
+// Telemetry sends the notification from the server to the client to ask the client to log a telemetry event.
+func (c *client) TelemetryEvent(ctx context.Context, params any) (err error) {
+	c.logger.Debug("notify " + MethodTelemetryEvent)
+	defer c.logger.Debug("end "+MethodTelemetryEvent, zap.Error(err))
+
+	return c.Conn.Notify(ctx, MethodTelemetryEvent, params)
+}
+
+// ApplyWorkspaceEdit sends the request from the server to the client to modify resource on the client side.
+func (c *client) ApplyWorkspaceEdit(ctx context.Context, params *ApplyWorkspaceEditParams) (result *ApplyWorkspaceEditResult, err error) {
+	c.logger.Debug("call " + MethodWorkspaceApplyEdit)
+	defer c.logger.Debug("end "+MethodWorkspaceApplyEdit, zap.Error(err))
+
+	if err := Call(ctx, c.Conn, MethodWorkspaceApplyEdit, params, &result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (c *client) CodeLensRefresh(ctx context.Context) (err error) {
+	return c.refresh(ctx, MethodWorkspaceCodeLensRefresh)
+}
+
+// Configuration sends the request from the server to the client to fetch configuration settings from the client.
+//
+// The request can fetch several configuration settings in one roundtrip.
+// The order of the returned configuration settings correspond to the order of the
+// passed ConfigurationItems (e.g. the first item in the response is the result for the first configuration item in the params).
+func (c *client) Configuration(ctx context.Context, params *ConfigurationParams) (_ []any, err error) {
+	c.logger.Debug("call " + MethodWorkspaceConfiguration)
+	defer c.logger.Debug("end "+MethodWorkspaceConfiguration, zap.Error(err))
+
+	var result []any
+	if err := Call(ctx, c.Conn, MethodWorkspaceConfiguration, params, &result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (c *client) DiagnosticRefresh(ctx context.Context) (err error) {
+	return c.refresh(ctx, MethodWorkspaceDiagnosticRefresh)
+}
+
+func (c *client) FoldingRangeRefresh(ctx context.Context) (err error) {
+	return c.refresh(ctx, MethodWorkspaceFoldingRangeRefresh)
+}
+
+func (c *client) InlayHintRefresh(ctx context.Context) (err error) {
+	return c.refresh(ctx, MethodWorkspaceInlayHintRefresh)
+}
+
+func (c *client) InlineValueRefresh(ctx context.Context) (err error) {
+	return c.refresh(ctx, MethodWorkspaceInlineValueRefresh)
+}
+
+// Registration sends the request from the server to the client to register for a new capability on the client side.
 //
 // Not all clients need to support dynamic capability registration.
 //
 // A client opts in via the dynamicRegistration property on the specific client capabilities.
 // A client can even provide dynamic registration for capability A but not for capability B (see TextDocumentClientCapabilities as an example).
-func (c *client) ClientRegisterCapability(ctx context.Context, params *RegistrationParams) (err error) {
+func (c *client) Registration(ctx context.Context, params *RegistrationParams) (err error) {
 	c.logger.Debug("call " + MethodClientRegisterCapability)
 	defer c.logger.Debug("end "+MethodClientRegisterCapability, zap.Error(err))
 
 	return Call(ctx, c.Conn, MethodClientRegisterCapability, params, nil)
 }
 
-// UnregisterCapability sends the request from the server to the client to unregister a previously registered capability.
-func (c *client) ClientUnregisterCapability(ctx context.Context, params *UnregistrationParams) (err error) {
-	c.logger.Debug("call " + MethodClientUnregisterCapability)
-	defer c.logger.Debug("end "+MethodClientUnregisterCapability, zap.Error(err))
-
-	return Call(ctx, c.Conn, MethodClientUnregisterCapability, params, nil)
+func (c *client) SemanticTokensRefresh(ctx context.Context) (err error) {
+	return c.refresh(ctx, MethodWorkspaceSemanticTokensRefresh)
 }
 
-// ShowMessage sends the notification from a server to a client to ask the
+// ShowDocument sends the notification from a server to a client to ask the
 // client to display a particular message in the user interface.
-func (c *client) WindowShowDocument(ctx context.Context, params *ShowDocumentParams) (_ *ShowDocumentResult, err error) {
+func (c *client) ShowDocument(ctx context.Context, params *ShowDocumentParams) (_ *ShowDocumentResult, err error) {
 	c.logger.Debug("call " + MethodWindowShowDocument)
 	defer c.logger.Debug("end "+MethodWindowShowDocument, zap.Error(err))
 
@@ -378,7 +423,7 @@ func (c *client) WindowShowDocument(ctx context.Context, params *ShowDocumentPar
 // ShowMessageRequest sends the request from a server to a client to ask the client to display a particular message in the user interface.
 //
 // In addition to the show message notification the request allows to pass actions and to wait for an answer from the client.
-func (c *client) WindowShowMessageRequest(ctx context.Context, params *ShowMessageRequestParams) (_ *MessageActionItem, err error) {
+func (c *client) ShowMessageRequest(ctx context.Context, params *ShowMessageRequestParams) (_ *MessageActionItem, err error) {
 	c.logger.Debug("call " + MethodWindowShowMessageRequest)
 	defer c.logger.Debug("end "+MethodWindowShowMessageRequest, zap.Error(err))
 
@@ -390,80 +435,10 @@ func (c *client) WindowShowMessageRequest(ctx context.Context, params *ShowMessa
 	return result, nil
 }
 
-// WorkDoneProgressCreate sends the request is sent from the server to the client to ask the client to create a work done progress.
-//
-// @since 3.16.0.
-func (c *client) WindowWorkDoneProgressCreate(ctx context.Context, params *WorkDoneProgressCreateParams) (err error) {
-	c.logger.Debug("call " + MethodWindowWorkDoneProgressCreate)
-	defer c.logger.Debug("end "+MethodWindowWorkDoneProgressCreate, zap.Error(err))
-
-	return Call(ctx, c.Conn, MethodWindowWorkDoneProgressCreate, params, nil)
-}
-
-// ApplyEdit sends the request from the server to the client to modify resource on the client side.
-func (c *client) WorkspaceApplyEdit(ctx context.Context, params *ApplyWorkspaceEditParams) (result *ApplyWorkspaceEditResult, err error) {
-	c.logger.Debug("call " + MethodWorkspaceApplyEdit)
-	defer c.logger.Debug("end "+MethodWorkspaceApplyEdit, zap.Error(err))
-
-	if err := Call(ctx, c.Conn, MethodWorkspaceApplyEdit, params, &result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (c *client) WorkspaceCodeLensRefresh(ctx context.Context) (err error) {
-	return c.refresh(ctx, MethodWorkspaceCodeLensRefresh)
-}
-
-// Configuration sends the request from the server to the client to fetch configuration settings from the client.
-//
-// The request can fetch several configuration settings in one roundtrip.
-// The order of the returned configuration settings correspond to the order of the
-// passed ConfigurationItems (e.g. the first item in the response is the result for the first configuration item in the params).
-func (c *client) WorkspaceConfiguration(ctx context.Context, params *ConfigurationParams) (_ []any, err error) {
-	c.logger.Debug("call " + MethodWorkspaceConfiguration)
-	defer c.logger.Debug("end "+MethodWorkspaceConfiguration, zap.Error(err))
-
-	var result []any
-	if err := Call(ctx, c.Conn, MethodWorkspaceConfiguration, params, &result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func (c *client) refresh(ctx context.Context, method string) (err error) {
-	c.logger.Debug("call " + method)
-	defer c.logger.Debug("end "+method, zap.Error(err))
-
-	return c.Conn.Notify(ctx, method, nil)
-}
-
-func (c *client) WorkspaceDiagnosticRefresh(ctx context.Context) (err error) {
-	return c.refresh(ctx, MethodWorkspaceDiagnosticRefresh)
-}
-
-func (c *client) WorkspaceFoldingRangeRefresh(ctx context.Context) (err error) {
-	return c.refresh(ctx, MethodWorkspaceFoldingRangeRefresh)
-}
-
-func (c *client) WorkspaceInlayHintRefresh(ctx context.Context) (err error) {
-	return c.refresh(ctx, MethodWorkspaceInlayHintRefresh)
-}
-
-func (c *client) WorkspaceInlineValueRefresh(ctx context.Context) (err error) {
-	return c.refresh(ctx, MethodWorkspaceInlineValueRefresh)
-}
-
-func (c *client) WorkspaceSemanticTokensRefresh(ctx context.Context) (err error) {
-	return c.refresh(ctx, MethodWorkspaceSemanticTokensRefresh)
-}
-
-// WorkspaceTextDocumentContentRefresh the `workspace/textDocumentContent` request is sent from the server to the client to refresh the content of a specific text document. 3.18.0 @proposed.
+// TextDocumentContentRefresh the `workspace/textDocumentContent` request is sent from the server to the client to refresh the content of a specific text document. 3.18.0 @proposed.
 //
 // @since 3.18.0 proposed
-func (c *client) WorkspaceTextDocumentContentRefresh(ctx context.Context, params *TextDocumentContentRefreshParams) (err error) {
+func (c *client) TextDocumentContentRefresh(ctx context.Context, params *TextDocumentContentRefreshParams) (err error) {
 	c.logger.Debug("call " + MethodWorkspaceTextDocumentContentRefresh)
 	defer c.logger.Debug("end "+MethodWorkspaceTextDocumentContentRefresh, zap.Error(err))
 
@@ -474,12 +449,37 @@ func (c *client) WorkspaceTextDocumentContentRefresh(ctx context.Context, params
 	return nil
 }
 
+// Unregistration sends the request from the server to the client to unregister a previously registered capability.
+func (c *client) Unregistration(ctx context.Context, params *UnregistrationParams) (err error) {
+	c.logger.Debug("call " + MethodClientUnregisterCapability)
+	defer c.logger.Debug("end "+MethodClientUnregisterCapability, zap.Error(err))
+
+	return Call(ctx, c.Conn, MethodClientUnregisterCapability, params, nil)
+}
+
+// WorkDoneProgressCreate sends the request is sent from the server to the client to ask the client to create a work done progress.
+//
+// @since 3.16.0.
+func (c *client) WorkDoneProgressCreate(ctx context.Context, params *WorkDoneProgressCreateParams) (err error) {
+	c.logger.Debug("call " + MethodWindowWorkDoneProgressCreate)
+	defer c.logger.Debug("end "+MethodWindowWorkDoneProgressCreate, zap.Error(err))
+
+	return Call(ctx, c.Conn, MethodWindowWorkDoneProgressCreate, params, nil)
+}
+
+func (c *client) refresh(ctx context.Context, method string) (err error) {
+	c.logger.Debug("call " + method)
+	defer c.logger.Debug("end "+method, zap.Error(err))
+
+	return c.Conn.Notify(ctx, method, nil)
+}
+
 // WorkspaceFolders sends the request from the server to the client to fetch the current open list of workspace folders.
 //
 // Returns null in the response if only a single file is open in the tool. Returns an empty array if a workspace is open but no folders are configured.
 //
 // @since 3.6.0.
-func (c *client) WorkspaceWorkspaceFolders(ctx context.Context) (result []*WorkspaceFolder, err error) {
+func (c *client) WorkspaceFolders(ctx context.Context) (result []*WorkspaceFolder, err error) {
 	c.logger.Debug("call " + MethodWorkspaceWorkspaceFolders)
 	defer c.logger.Debug("end "+MethodWorkspaceWorkspaceFolders, zap.Error(err))
 

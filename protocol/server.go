@@ -120,7 +120,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		err := server.NotebookDocumentDidChange(ctx, &params)
+		err := server.DidChangeNotebookDocument(ctx, &params)
 
 		return true, reply(ctx, nil, err)
 
@@ -132,7 +132,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		err := server.NotebookDocumentDidClose(ctx, &params)
+		err := server.DidCloseNotebookDocument(ctx, &params)
 
 		return true, reply(ctx, nil, err)
 
@@ -144,7 +144,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		err := server.NotebookDocumentDidOpen(ctx, &params)
+		err := server.DidOpenNotebookDocument(ctx, &params)
 
 		return true, reply(ctx, nil, err)
 
@@ -156,7 +156,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		err := server.NotebookDocumentDidSave(ctx, &params)
+		err := server.DidSaveNotebookDocument(ctx, &params)
 
 		return true, reply(ctx, nil, err)
 
@@ -168,7 +168,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		err := server.TextDocumentDidChange(ctx, &params)
+		err := server.DidChangeTextDocument(ctx, &params)
 
 		return true, reply(ctx, nil, err)
 
@@ -180,7 +180,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		err := server.TextDocumentDidClose(ctx, &params)
+		err := server.DidCloseTextDocument(ctx, &params)
 
 		return true, reply(ctx, nil, err)
 
@@ -192,7 +192,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		err := server.TextDocumentDidOpen(ctx, &params)
+		err := server.DidOpenTextDocument(ctx, &params)
 
 		return true, reply(ctx, nil, err)
 
@@ -204,7 +204,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		err := server.TextDocumentDidSave(ctx, &params)
+		err := server.DidSaveTextDocument(ctx, &params)
 
 		return true, reply(ctx, nil, err)
 
@@ -216,7 +216,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		err := server.TextDocumentWillSave(ctx, &params)
+		err := server.WillSaveTextDocument(ctx, &params)
 
 		return true, reply(ctx, nil, err)
 
@@ -228,7 +228,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		err := server.WindowWorkDoneProgressCancel(ctx, &params)
+		err := server.WorkDoneProgressCancel(ctx, &params)
 
 		return true, reply(ctx, nil, err)
 
@@ -240,7 +240,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		err := server.WorkspaceDidChangeConfiguration(ctx, &params)
+		err := server.DidChangeConfiguration(ctx, &params)
 
 		return true, reply(ctx, nil, err)
 
@@ -252,7 +252,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		err := server.WorkspaceDidChangeWatchedFiles(ctx, &params)
+		err := server.DidChangeWatchedFiles(ctx, &params)
 
 		return true, reply(ctx, nil, err)
 
@@ -264,7 +264,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		err := server.WorkspaceDidChangeWorkspaceFolders(ctx, &params)
+		err := server.DidChangeWorkspaceFolders(ctx, &params)
 
 		return true, reply(ctx, nil, err)
 
@@ -276,7 +276,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		err := server.WorkspaceDidCreateFiles(ctx, &params)
+		err := server.DidCreateFiles(ctx, &params)
 
 		return true, reply(ctx, nil, err)
 
@@ -288,7 +288,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		err := server.WorkspaceDidDeleteFiles(ctx, &params)
+		err := server.DidDeleteFiles(ctx, &params)
 
 		return true, reply(ctx, nil, err)
 
@@ -300,7 +300,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		err := server.WorkspaceDidRenameFiles(ctx, &params)
+		err := server.DidRenameFiles(ctx, &params)
 
 		return true, reply(ctx, nil, err)
 
@@ -360,7 +360,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.CompletionItemResolve(ctx, &params)
+		resp, err := server.CompletionResolve(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -419,7 +419,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentCodeAction(ctx, &params)
+		resp, err := server.CodeAction(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -431,7 +431,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentCodeLens(ctx, &params)
+		resp, err := server.CodeLens(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -443,7 +443,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentColorPresentation(ctx, &params)
+		resp, err := server.ColorPresentation(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -455,7 +455,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentCompletion(ctx, &params)
+		resp, err := server.Completion(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -467,7 +467,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentDeclaration(ctx, &params)
+		resp, err := server.Declaration(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -479,7 +479,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentDefinition(ctx, &params)
+		resp, err := server.Definition(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -491,7 +491,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentDiagnostic(ctx, &params)
+		resp, err := server.DocumentDiagnostic(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -503,7 +503,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentDocumentColor(ctx, &params)
+		resp, err := server.DocumentColor(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -515,7 +515,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentDocumentHighlight(ctx, &params)
+		resp, err := server.DocumentHighlight(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -527,7 +527,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentDocumentLink(ctx, &params)
+		resp, err := server.DocumentLink(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -539,7 +539,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentDocumentSymbol(ctx, &params)
+		resp, err := server.DocumentSymbol(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -551,7 +551,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentFoldingRange(ctx, &params)
+		resp, err := server.FoldingRange(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -563,7 +563,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentFormatting(ctx, &params)
+		resp, err := server.DocumentFormatting(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -575,7 +575,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentHover(ctx, &params)
+		resp, err := server.Hover(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -587,7 +587,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentImplementation(ctx, &params)
+		resp, err := server.Implementation(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -599,7 +599,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentInlayHint(ctx, &params)
+		resp, err := server.InlayHint(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -611,7 +611,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentInlineCompletion(ctx, &params)
+		resp, err := server.InlineCompletion(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -623,7 +623,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentInlineValue(ctx, &params)
+		resp, err := server.InlineValue(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -635,7 +635,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentLinkedEditingRange(ctx, &params)
+		resp, err := server.LinkedEditingRange(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -647,7 +647,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentMoniker(ctx, &params)
+		resp, err := server.Moniker(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -659,7 +659,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentOnTypeFormatting(ctx, &params)
+		resp, err := server.DocumentOnTypeFormatting(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -671,7 +671,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentPrepareCallHierarchy(ctx, &params)
+		resp, err := server.CallHierarchyPrepare(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -683,7 +683,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentPrepareRename(ctx, &params)
+		resp, err := server.PrepareRename(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -695,7 +695,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentPrepareTypeHierarchy(ctx, &params)
+		resp, err := server.TypeHierarchyPrepare(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -707,7 +707,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentRangeFormatting(ctx, &params)
+		resp, err := server.DocumentRangeFormatting(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -719,7 +719,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentRangesFormatting(ctx, &params)
+		resp, err := server.DocumentRangesFormatting(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -731,7 +731,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentReferences(ctx, &params)
+		resp, err := server.References(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -743,7 +743,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentRename(ctx, &params)
+		resp, err := server.Rename(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -755,7 +755,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentSelectionRange(ctx, &params)
+		resp, err := server.SelectionRange(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -767,7 +767,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentSemanticTokensFull(ctx, &params)
+		resp, err := server.SemanticTokens(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -779,7 +779,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentSemanticTokensFullDelta(ctx, &params)
+		resp, err := server.SemanticTokensDelta(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -791,7 +791,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentSemanticTokensRange(ctx, &params)
+		resp, err := server.SemanticTokensRange(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -803,7 +803,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentSignatureHelp(ctx, &params)
+		resp, err := server.SignatureHelp(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -815,7 +815,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentTypeDefinition(ctx, &params)
+		resp, err := server.TypeDefinition(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -827,7 +827,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.TextDocumentWillSaveWaitUntil(ctx, &params)
+		resp, err := server.WillSaveTextDocumentWaitUntil(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -875,7 +875,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.WorkspaceExecuteCommand(ctx, &params)
+		resp, err := server.ExecuteCommand(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -899,7 +899,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.WorkspaceWillCreateFiles(ctx, &params)
+		resp, err := server.WillCreateFiles(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -911,7 +911,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.WorkspaceWillDeleteFiles(ctx, &params)
+		resp, err := server.WillDeleteFiles(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -923,7 +923,7 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 			return true, replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.WorkspaceWillRenameFiles(ctx, &params)
+		resp, err := server.WillRenameFiles(ctx, &params)
 
 		return true, reply(ctx, resp, err)
 
@@ -953,7 +953,7 @@ type server struct {
 
 var _ Server = (*server)(nil)
 
-func (s *server) CancelRequest(ctx context.Context, params *CancelParams) (err error) {
+func (s *server) Cancel(ctx context.Context, params *CancelParams) (err error) {
 	s.logger.Debug("notify " + MethodClientCancelRequest)
 	defer s.logger.Debug("end "+MethodClientCancelRequest, zap.Error(err))
 
@@ -1005,7 +1005,7 @@ func (s *server) Initialized(ctx context.Context, params *InitializedParams) (er
 	return s.Conn.Notify(ctx, MethodInitialized, params)
 }
 
-func (s *server) NotebookDocumentDidChange(ctx context.Context, params *DidChangeNotebookDocumentParams) (err error) {
+func (s *server) DidChangeNotebookDocument(ctx context.Context, params *DidChangeNotebookDocumentParams) (err error) {
 	s.logger.Debug("call " + MethodNotebookDocumentDidChange)
 	defer s.logger.Debug("end "+MethodNotebookDocumentDidChange, zap.Error(err))
 
@@ -1015,7 +1015,7 @@ func (s *server) NotebookDocumentDidChange(ctx context.Context, params *DidChang
 // NotebookDocumentDidClose a notification sent when a notebook closes.
 //
 // @since 3.17.0
-func (s *server) NotebookDocumentDidClose(ctx context.Context, params *DidCloseNotebookDocumentParams) (err error) {
+func (s *server) DidCloseNotebookDocument(ctx context.Context, params *DidCloseNotebookDocumentParams) (err error) {
 	s.logger.Debug("call " + MethodNotebookDocumentDidClose)
 	defer s.logger.Debug("end "+MethodNotebookDocumentDidClose, zap.Error(err))
 
@@ -1025,7 +1025,7 @@ func (s *server) NotebookDocumentDidClose(ctx context.Context, params *DidCloseN
 // NotebookDocumentDidOpen a notification sent when a notebook opens.
 //
 // @since 3.17.0
-func (s *server) NotebookDocumentDidOpen(ctx context.Context, params *DidOpenNotebookDocumentParams) (err error) {
+func (s *server) DidOpenNotebookDocument(ctx context.Context, params *DidOpenNotebookDocumentParams) (err error) {
 	s.logger.Debug("call " + MethodNotebookDocumentDidOpen)
 	defer s.logger.Debug("end "+MethodNotebookDocumentDidOpen, zap.Error(err))
 
@@ -1035,7 +1035,7 @@ func (s *server) NotebookDocumentDidOpen(ctx context.Context, params *DidOpenNot
 // NotebookDocumentDidSave a notification sent when a notebook document is saved.
 //
 // @since 3.17.0
-func (s *server) NotebookDocumentDidSave(ctx context.Context, params *DidSaveNotebookDocumentParams) (err error) {
+func (s *server) DidSaveNotebookDocument(ctx context.Context, params *DidSaveNotebookDocumentParams) (err error) {
 	s.logger.Debug("call " + MethodNotebookDocumentDidSave)
 	defer s.logger.Debug("end "+MethodNotebookDocumentDidSave, zap.Error(err))
 
@@ -1045,7 +1045,7 @@ func (s *server) NotebookDocumentDidSave(ctx context.Context, params *DidSaveNot
 // DidChange sends the notification from the client to the server to signal changes to a text document.
 //
 // In 2.0 the shape of the params has changed to include proper version numbers and language ids.
-func (s *server) TextDocumentDidChange(ctx context.Context, params *DidChangeTextDocumentParams) (err error) {
+func (s *server) DidChangeTextDocument(ctx context.Context, params *DidChangeTextDocumentParams) (err error) {
 	s.logger.Debug("notify " + MethodTextDocumentDidChange)
 	defer s.logger.Debug("end "+MethodTextDocumentDidChange, zap.Error(err))
 
@@ -1060,7 +1060,7 @@ func (s *server) TextDocumentDidChange(ctx context.Context, params *DidChangeTex
 //
 // A close notification requires a previous open notification to be sent.
 // Note that a server’s ability to fulfill requests is independent of whether a text document is open or closed.
-func (s *server) TextDocumentDidClose(ctx context.Context, params *DidCloseTextDocumentParams) (err error) {
+func (s *server) DidCloseTextDocument(ctx context.Context, params *DidCloseTextDocumentParams) (err error) {
 	s.logger.Debug("call " + MethodTextDocumentDidClose)
 	defer s.logger.Debug("end "+MethodTextDocumentDidClose, zap.Error(err))
 
@@ -1075,7 +1075,7 @@ func (s *server) TextDocumentDidClose(ctx context.Context, params *DidCloseTextD
 // An open notification must not be sent more than once without a corresponding close notification send before.
 // This means open and close notification must be balanced and the max open count for a particular textDocument is one.
 // Note that a server’s ability to fulfill requests is independent of whether a text document is open or closed.
-func (s *server) TextDocumentDidOpen(ctx context.Context, params *DidOpenTextDocumentParams) (err error) {
+func (s *server) DidOpenTextDocument(ctx context.Context, params *DidOpenTextDocumentParams) (err error) {
 	s.logger.Debug("call " + MethodTextDocumentDidOpen)
 	defer s.logger.Debug("end "+MethodTextDocumentDidOpen, zap.Error(err))
 
@@ -1083,7 +1083,7 @@ func (s *server) TextDocumentDidOpen(ctx context.Context, params *DidOpenTextDoc
 }
 
 // DidSave sends the notification from the client to the server when the document was saved in the client.
-func (s *server) TextDocumentDidSave(ctx context.Context, params *DidSaveTextDocumentParams) (err error) {
+func (s *server) DidSaveTextDocument(ctx context.Context, params *DidSaveTextDocumentParams) (err error) {
 	s.logger.Debug("call " + MethodTextDocumentDidSave)
 	defer s.logger.Debug("end "+MethodTextDocumentDidSave, zap.Error(err))
 
@@ -1091,7 +1091,7 @@ func (s *server) TextDocumentDidSave(ctx context.Context, params *DidSaveTextDoc
 }
 
 // WillSave sends the notification from the client to the server before the document is actually saved.
-func (s *server) TextDocumentWillSave(ctx context.Context, params *WillSaveTextDocumentParams) (err error) {
+func (s *server) WillSaveTextDocument(ctx context.Context, params *WillSaveTextDocumentParams) (err error) {
 	s.logger.Debug("call " + MethodTextDocumentWillSave)
 	defer s.logger.Debug("end "+MethodTextDocumentWillSave, zap.Error(err))
 
@@ -1100,7 +1100,7 @@ func (s *server) TextDocumentWillSave(ctx context.Context, params *WillSaveTextD
 
 // WindowWorkDoneProgressCancel is the sends notification from the client to the server to cancel a progress initiated on the
 // server side using the "window/workDoneProgress/create".
-func (s *server) WindowWorkDoneProgressCancel(ctx context.Context, params *WorkDoneProgressCancelParams) (err error) {
+func (s *server) WorkDoneProgressCancel(ctx context.Context, params *WorkDoneProgressCancelParams) (err error) {
 	s.logger.Debug("call " + MethodWindowWorkDoneProgressCancel)
 	defer s.logger.Debug("end "+MethodWindowWorkDoneProgressCancel, zap.Error(err))
 
@@ -1108,7 +1108,7 @@ func (s *server) WindowWorkDoneProgressCancel(ctx context.Context, params *WorkD
 }
 
 // DidChangeConfiguration sends the notification from the client to the server to signal the change of configuration settings.
-func (s *server) WorkspaceDidChangeConfiguration(ctx context.Context, params *DidChangeConfigurationParams) (err error) {
+func (s *server) DidChangeConfiguration(ctx context.Context, params *DidChangeConfigurationParams) (err error) {
 	s.logger.Debug("call " + MethodWorkspaceDidChangeConfiguration)
 	defer s.logger.Debug("end "+MethodWorkspaceDidChangeConfiguration, zap.Error(err))
 
@@ -1119,7 +1119,7 @@ func (s *server) WorkspaceDidChangeConfiguration(ctx context.Context, params *Di
 //
 // It is recommended that servers register for these file events using the registration mechanism.
 // In former implementations clients pushed file events without the server actively asking for it.
-func (s *server) WorkspaceDidChangeWatchedFiles(ctx context.Context, params *DidChangeWatchedFilesParams) (err error) {
+func (s *server) DidChangeWatchedFiles(ctx context.Context, params *DidChangeWatchedFilesParams) (err error) {
 	s.logger.Debug("call " + MethodWorkspaceDidChangeWatchedFiles)
 	defer s.logger.Debug("end "+MethodWorkspaceDidChangeWatchedFiles, zap.Error(err))
 
@@ -1133,7 +1133,7 @@ func (s *server) WorkspaceDidChangeWatchedFiles(ctx context.Context, params *Did
 // To register for the workspace/didChangeWorkspaceFolders send a client/registerCapability request from the server to the client.
 //
 // The registration parameter must have a registrations item of the following form, where id is a unique id used to unregister the capability (the example uses a UUID).
-func (s *server) WorkspaceDidChangeWorkspaceFolders(ctx context.Context, params *DidChangeWorkspaceFoldersParams) (err error) {
+func (s *server) DidChangeWorkspaceFolders(ctx context.Context, params *DidChangeWorkspaceFoldersParams) (err error) {
 	s.logger.Debug("call " + MethodWorkspaceDidChangeWorkspaceFolders)
 	defer s.logger.Debug("end "+MethodWorkspaceDidChangeWorkspaceFolders, zap.Error(err))
 
@@ -1143,7 +1143,7 @@ func (s *server) WorkspaceDidChangeWorkspaceFolders(ctx context.Context, params 
 // DidCreateFiles sends the did create files notification is sent from the client to the server when files were created from within the client.
 //
 // @since 3.16.0.
-func (s *server) WorkspaceDidCreateFiles(ctx context.Context, params *CreateFilesParams) (err error) {
+func (s *server) DidCreateFiles(ctx context.Context, params *CreateFilesParams) (err error) {
 	s.logger.Debug("call " + MethodWorkspaceDidCreateFiles)
 	defer s.logger.Debug("end "+MethodWorkspaceDidCreateFiles, zap.Error(err))
 
@@ -1153,7 +1153,7 @@ func (s *server) WorkspaceDidCreateFiles(ctx context.Context, params *CreateFile
 // DidDeleteFiles sends the did delete files notification is sent from the client to the server when files were deleted from within the client.
 //
 // @since 3.16.0.
-func (s *server) WorkspaceDidDeleteFiles(ctx context.Context, params *DeleteFilesParams) (err error) {
+func (s *server) DidDeleteFiles(ctx context.Context, params *DeleteFilesParams) (err error) {
 	s.logger.Debug("call " + MethodWorkspaceDidDeleteFiles)
 	defer s.logger.Debug("end "+MethodWorkspaceDidDeleteFiles, zap.Error(err))
 
@@ -1163,7 +1163,7 @@ func (s *server) WorkspaceDidDeleteFiles(ctx context.Context, params *DeleteFile
 // DidRenameFiles sends the did rename files notification is sent from the client to the server when files were renamed from within the client.
 //
 // @since 3.16.0.
-func (s *server) WorkspaceDidRenameFiles(ctx context.Context, params *RenameFilesParams) (err error) {
+func (s *server) DidRenameFiles(ctx context.Context, params *RenameFilesParams) (err error) {
 	s.logger.Debug("call " + MethodWorkspaceDidRenameFiles)
 	defer s.logger.Debug("end "+MethodWorkspaceDidRenameFiles, zap.Error(err))
 
@@ -1230,7 +1230,7 @@ func (s *server) CodeLensResolve(ctx context.Context, params *CodeLens) (_ *Code
 }
 
 // CompletionResolve sends the request from the client to the server to resolve additional information for a given completion item.
-func (s *server) CompletionItemResolve(ctx context.Context, params *CompletionItem) (_ *CompletionItem, err error) {
+func (s *server) CompletionResolve(ctx context.Context, params *CompletionItem) (_ *CompletionItem, err error) {
 	s.logger.Debug("call " + MethodCompletionItemResolve)
 	defer s.logger.Debug("end "+MethodCompletionItemResolve, zap.Error(err))
 
@@ -1314,11 +1314,11 @@ func (s *server) Shutdown(ctx context.Context) (err error) {
 // To ensure that a server is useful in many clients the commands specified in a code actions should be handled by the
 // server and not by the client (see `workspace/executeCommand` and `ServerCapabilities.executeCommandProvider`).
 // If the client supports providing edits with a code action then the mode should be used.
-func (s *server) TextDocumentCodeAction(ctx context.Context, params *CodeActionParams) (_ *TextDocumentCodeActionResult, err error) {
+func (s *server) CodeAction(ctx context.Context, params *CodeActionParams) (_ *CodeActionRequestResult, err error) {
 	s.logger.Debug("call " + MethodTextDocumentCodeAction)
 	defer s.logger.Debug("end "+MethodTextDocumentCodeAction, zap.Error(err))
 
-	var result *TextDocumentCodeActionResult
+	var result *CodeActionRequestResult
 	if err := Call(ctx, s.Conn, MethodTextDocumentCodeAction, params, &result); err != nil {
 		return nil, err
 	}
@@ -1327,7 +1327,7 @@ func (s *server) TextDocumentCodeAction(ctx context.Context, params *CodeActionP
 }
 
 // CodeLens sends the request from the client to the server to compute code lenses for a given text document.
-func (s *server) TextDocumentCodeLens(ctx context.Context, params *CodeLensParams) (_ []*CodeLens, err error) {
+func (s *server) CodeLens(ctx context.Context, params *CodeLensParams) (_ []*CodeLens, err error) {
 	s.logger.Debug("call " + MethodTextDocumentCodeLens)
 	defer s.logger.Debug("end "+MethodTextDocumentCodeLens, zap.Error(err))
 
@@ -1345,7 +1345,7 @@ func (s *server) TextDocumentCodeLens(ctx context.Context, params *CodeLensParam
 //
 // - modify a color reference.
 // - show in a color picker and let users pick one of the presentations.
-func (s *server) TextDocumentColorPresentation(ctx context.Context, params *ColorPresentationParams) (_ []*ColorPresentation, err error) {
+func (s *server) ColorPresentation(ctx context.Context, params *ColorPresentationParams) (_ []*ColorPresentation, err error) {
 	s.logger.Debug("call " + MethodTextDocumentColorPresentation)
 	defer s.logger.Debug("end "+MethodTextDocumentColorPresentation, zap.Error(err))
 
@@ -1370,11 +1370,11 @@ func (s *server) TextDocumentColorPresentation(ctx context.Context, params *Colo
 // The returned completion item should have the documentation property filled in. The request can delay the computation of
 // the `detail` and `documentation` properties. However, properties that are needed for the initial sorting and filtering,
 // like `sortText`, `filterText`, `insertText`, and `textEdit` must be provided in the `textDocument/completion` response and must not be changed during resolve.
-func (s *server) TextDocumentCompletion(ctx context.Context, params *CompletionParams) (_ *TextDocumentCompletionResult, err error) {
+func (s *server) Completion(ctx context.Context, params *CompletionParams) (_ *CompletionResult, err error) {
 	s.logger.Debug("call " + MethodTextDocumentCompletion)
 	defer s.logger.Debug("end "+MethodTextDocumentCompletion, zap.Error(err))
 
-	var result *TextDocumentCompletionResult
+	var result *CompletionResult
 	if err := Call(ctx, s.Conn, MethodTextDocumentCompletion, params, &result); err != nil {
 		return nil, err
 	}
@@ -1387,11 +1387,11 @@ func (s *server) TextDocumentCompletion(ctx context.Context, params *CompletionP
 // The result type LocationLink[] got introduce with version 3.14.0 and depends in the corresponding client capability `clientCapabilities.textDocument.declaration.linkSupport`.
 //
 // @since 3.14.0.
-func (s *server) TextDocumentDeclaration(ctx context.Context, params *DeclarationParams) (_ *TextDocumentDeclarationResult, err error) {
+func (s *server) Declaration(ctx context.Context, params *DeclarationParams) (_ *DeclarationResult, err error) {
 	s.logger.Debug("call " + MethodTextDocumentDeclaration)
 	defer s.logger.Debug("end "+MethodTextDocumentDeclaration, zap.Error(err))
 
-	var result *TextDocumentDeclarationResult
+	var result *DeclarationResult
 	if err := Call(ctx, s.Conn, MethodTextDocumentDeclaration, params, &result); err != nil {
 		return nil, err
 	}
@@ -1404,11 +1404,11 @@ func (s *server) TextDocumentDeclaration(ctx context.Context, params *Declaratio
 // The result type `[]LocationLink` got introduce with version 3.14.0 and depends in the corresponding client capability `clientCapabilities.textDocument.definition.linkSupport`.
 //
 // @since 3.14.0.
-func (s *server) TextDocumentDefinition(ctx context.Context, params *DefinitionParams) (_ *TextDocumentDefinitionResult, err error) {
+func (s *server) Definition(ctx context.Context, params *DefinitionParams) (_ *DefinitionResult, err error) {
 	s.logger.Debug("call " + MethodTextDocumentDefinition)
 	defer s.logger.Debug("end "+MethodTextDocumentDefinition, zap.Error(err))
 
-	var result *TextDocumentDefinitionResult
+	var result *DefinitionResult
 	if err := Call(ctx, s.Conn, MethodTextDocumentDefinition, params, &result); err != nil {
 		return nil, err
 	}
@@ -1416,7 +1416,7 @@ func (s *server) TextDocumentDefinition(ctx context.Context, params *DefinitionP
 	return result, nil
 }
 
-func (s *server) TextDocumentDiagnostic(ctx context.Context, params *DocumentDiagnosticParams) (_ *DocumentDiagnosticReport, err error) {
+func (s *server) DocumentDiagnostic(ctx context.Context, params *DocumentDiagnosticParams) (_ *DocumentDiagnosticReport, err error) {
 	s.logger.Debug("call " + MethodTextDocumentDiagnostic)
 	defer s.logger.Debug("end "+MethodTextDocumentDiagnostic, zap.Error(err))
 
@@ -1437,7 +1437,7 @@ func (s *server) TextDocumentDiagnostic(ctx context.Context, params *DocumentDia
 //
 // - Color boxes showing the actual color next to the reference
 // - Show a color picker when a color reference is edited.
-func (s *server) TextDocumentDocumentColor(ctx context.Context, params *DocumentColorParams) (_ []*ColorInformation, err error) {
+func (s *server) DocumentColor(ctx context.Context, params *DocumentColorParams) (_ []*ColorInformation, err error) {
 	s.logger.Debug("call " + MethodTextDocumentDocumentColor)
 	defer s.logger.Debug("end "+MethodTextDocumentDocumentColor, zap.Error(err))
 
@@ -1455,7 +1455,7 @@ func (s *server) TextDocumentDocumentColor(ctx context.Context, params *Document
 // However we kept ‘textDocument/documentHighlight’ and ‘textDocument/references’ separate requests since the first one is allowed to be more fuzzy.
 //
 // Symbol matches usually have a `DocumentHighlightKind` of `Read` or `Write` whereas fuzzy or textual matches use `Text` as the kind.
-func (s *server) TextDocumentDocumentHighlight(ctx context.Context, params *DocumentHighlightParams) (_ []*DocumentHighlight, err error) {
+func (s *server) DocumentHighlight(ctx context.Context, params *DocumentHighlightParams) (_ []*DocumentHighlight, err error) {
 	s.logger.Debug("call " + MethodTextDocumentDocumentHighlight)
 	defer s.logger.Debug("end "+MethodTextDocumentDocumentHighlight, zap.Error(err))
 
@@ -1468,7 +1468,7 @@ func (s *server) TextDocumentDocumentHighlight(ctx context.Context, params *Docu
 }
 
 // DocumentLink sends the request from the client to the server to request the location of links in a document.
-func (s *server) TextDocumentDocumentLink(ctx context.Context, params *DocumentLinkParams) (_ []*DocumentLink, err error) {
+func (s *server) DocumentLink(ctx context.Context, params *DocumentLinkParams) (_ []*DocumentLink, err error) {
 	s.logger.Debug("call " + MethodTextDocumentDocumentLink)
 	defer s.logger.Debug("end "+MethodTextDocumentDocumentLink, zap.Error(err))
 
@@ -1483,11 +1483,11 @@ func (s *server) TextDocumentDocumentLink(ctx context.Context, params *DocumentL
 // DocumentSymbol sends the request from the client to the server to return a flat list of all symbols found in a given text document.
 //
 // Neither the symbol’s location range nor the symbol’s container name should be used to infer a hierarchy.
-func (s *server) TextDocumentDocumentSymbol(ctx context.Context, params *DocumentSymbolParams) (_ *TextDocumentDocumentSymbolResult, err error) {
+func (s *server) DocumentSymbol(ctx context.Context, params *DocumentSymbolParams) (_ *DocumentSymbolResult, err error) {
 	s.logger.Debug("call " + MethodTextDocumentDocumentSymbol)
 	defer s.logger.Debug("end "+MethodTextDocumentDocumentSymbol, zap.Error(err))
 
-	var result *TextDocumentDocumentSymbolResult
+	var result *DocumentSymbolResult
 	if err := Call(ctx, s.Conn, MethodTextDocumentDocumentSymbol, params, &result); err != nil {
 		return nil, err
 	}
@@ -1498,7 +1498,7 @@ func (s *server) TextDocumentDocumentSymbol(ctx context.Context, params *Documen
 // FoldingRanges sends the request from the client to the server to return all folding ranges found in a given text document.
 //
 // @since version 3.10.0.
-func (s *server) TextDocumentFoldingRange(ctx context.Context, params *FoldingRangeParams) (_ []*FoldingRange, err error) {
+func (s *server) FoldingRange(ctx context.Context, params *FoldingRangeParams) (_ []*FoldingRange, err error) {
 	s.logger.Debug("call " + MethodTextDocumentFoldingRange)
 	defer s.logger.Debug("end "+MethodTextDocumentFoldingRange, zap.Error(err))
 
@@ -1510,8 +1510,8 @@ func (s *server) TextDocumentFoldingRange(ctx context.Context, params *FoldingRa
 	return result, nil
 }
 
-// Formatting sends the request from the client to the server to format a whole document.
-func (s *server) TextDocumentFormatting(ctx context.Context, params *DocumentFormattingParams) (_ []*TextEdit, err error) {
+// DocumentFormatting sends the request from the client to the server to format a whole document.
+func (s *server) DocumentFormatting(ctx context.Context, params *DocumentFormattingParams) (_ []*TextEdit, err error) {
 	s.logger.Debug("call " + MethodTextDocumentFormatting)
 	defer s.logger.Debug("end "+MethodTextDocumentFormatting, zap.Error(err))
 
@@ -1524,7 +1524,7 @@ func (s *server) TextDocumentFormatting(ctx context.Context, params *DocumentFor
 }
 
 // Hover sends the request is from the client to the server to request hover information at a given text document position.
-func (s *server) TextDocumentHover(ctx context.Context, params *HoverParams) (_ *Hover, err error) {
+func (s *server) Hover(ctx context.Context, params *HoverParams) (_ *Hover, err error) {
 	s.logger.Debug("call " + MethodTextDocumentHover)
 	defer s.logger.Debug("end "+MethodTextDocumentHover, zap.Error(err))
 
@@ -1539,11 +1539,11 @@ func (s *server) TextDocumentHover(ctx context.Context, params *HoverParams) (_ 
 // Implementation sends the request from the client to the server to resolve the implementation location of a symbol at a given text document position.
 //
 // The result type `[]LocationLink` got introduce with version 3.14.0 and depends in the corresponding client capability `clientCapabilities.implementation.typeDefinition.linkSupport`.
-func (s *server) TextDocumentImplementation(ctx context.Context, params *ImplementationParams) (_ *TextDocumentImplementationResult, err error) {
+func (s *server) Implementation(ctx context.Context, params *ImplementationParams) (_ *ImplementationResult, err error) {
 	s.logger.Debug("call " + MethodTextDocumentImplementation)
 	defer s.logger.Debug("end "+MethodTextDocumentImplementation, zap.Error(err))
 
-	var result *TextDocumentImplementationResult
+	var result *ImplementationResult
 	if err := Call(ctx, s.Conn, MethodTextDocumentImplementation, params, &result); err != nil {
 		return nil, err
 	}
@@ -1551,7 +1551,7 @@ func (s *server) TextDocumentImplementation(ctx context.Context, params *Impleme
 	return result, nil
 }
 
-func (s *server) TextDocumentInlayHint(ctx context.Context, params *InlayHintParams) (_ []*InlayHint, err error) {
+func (s *server) InlayHint(ctx context.Context, params *InlayHintParams) (_ []*InlayHint, err error) {
 	s.logger.Debug("call " + MethodTextDocumentInlayHint)
 	defer s.logger.Debug("end "+MethodTextDocumentInlayHint, zap.Error(err))
 
@@ -1563,11 +1563,11 @@ func (s *server) TextDocumentInlayHint(ctx context.Context, params *InlayHintPar
 	return result, nil
 }
 
-func (s *server) TextDocumentInlineCompletion(ctx context.Context, params *InlineCompletionParams) (_ *TextDocumentInlineCompletionResult, err error) {
+func (s *server) InlineCompletion(ctx context.Context, params *InlineCompletionParams) (_ *InlineCompletionResult, err error) {
 	s.logger.Debug("call " + MethodTextDocumentInlineCompletion)
 	defer s.logger.Debug("end "+MethodTextDocumentInlineCompletion, zap.Error(err))
 
-	var result *TextDocumentInlineCompletionResult
+	var result *InlineCompletionResult
 	if err := Call(ctx, s.Conn, MethodTextDocumentInlineCompletion, params, &result); err != nil {
 		return nil, err
 	}
@@ -1575,7 +1575,7 @@ func (s *server) TextDocumentInlineCompletion(ctx context.Context, params *Inlin
 	return result, nil
 }
 
-func (s *server) TextDocumentInlineValue(ctx context.Context, params *InlineValueParams) (_ []*InlineValue, err error) {
+func (s *server) InlineValue(ctx context.Context, params *InlineValueParams) (_ []*InlineValue, err error) {
 	s.logger.Debug("call " + MethodTextDocumentInlineValue)
 	defer s.logger.Debug("end "+MethodTextDocumentInlineValue, zap.Error(err))
 
@@ -1594,7 +1594,7 @@ func (s *server) TextDocumentInlineValue(ctx context.Context, params *InlineValu
 // A rename to one of the ranges can be applied to all other ranges if the new content is valid. If no result-specific word pattern is provided, the word pattern from the client’s language configuration is used.
 //
 // @since 3.16.0.
-func (s *server) TextDocumentLinkedEditingRange(ctx context.Context, params *LinkedEditingRangeParams) (_ *LinkedEditingRanges, err error) {
+func (s *server) LinkedEditingRange(ctx context.Context, params *LinkedEditingRangeParams) (_ *LinkedEditingRanges, err error) {
 	s.logger.Debug("call " + MethodTextDocumentLinkedEditingRange)
 	defer s.logger.Debug("end "+MethodTextDocumentLinkedEditingRange, zap.Error(err))
 
@@ -1613,7 +1613,7 @@ func (s *server) TextDocumentLinkedEditingRange(ctx context.Context, params *Lin
 // If no monikers can be calculated, an empty array or null should be returned.
 //
 // @since 3.16.0.
-func (s *server) TextDocumentMoniker(ctx context.Context, params *MonikerParams) (_ []*Moniker, err error) {
+func (s *server) Moniker(ctx context.Context, params *MonikerParams) (_ []*Moniker, err error) {
 	s.logger.Debug("call " + MethodTextDocumentMoniker)
 	defer s.logger.Debug("end "+MethodTextDocumentMoniker, zap.Error(err))
 
@@ -1626,7 +1626,7 @@ func (s *server) TextDocumentMoniker(ctx context.Context, params *MonikerParams)
 }
 
 // OnTypeFormatting sends the request from the client to the server to format parts of the document during typing.
-func (s *server) TextDocumentOnTypeFormatting(ctx context.Context, params *DocumentOnTypeFormattingParams) (_ []*TextEdit, err error) {
+func (s *server) DocumentOnTypeFormatting(ctx context.Context, params *DocumentOnTypeFormattingParams) (_ []*TextEdit, err error) {
 	s.logger.Debug("call " + MethodTextDocumentOnTypeFormatting)
 	defer s.logger.Debug("end "+MethodTextDocumentOnTypeFormatting, zap.Error(err))
 
@@ -1645,7 +1645,7 @@ func (s *server) TextDocumentOnTypeFormatting(ctx context.Context, params *Docum
 //  2. for a call hierarchy item the incoming or outgoing call hierarchy items are resolved.
 //
 // @since 3.16.0.
-func (s *server) TextDocumentPrepareCallHierarchy(ctx context.Context, params *CallHierarchyPrepareParams) (_ []*CallHierarchyItem, err error) {
+func (s *server) CallHierarchyPrepare(ctx context.Context, params *CallHierarchyPrepareParams) (_ []*CallHierarchyItem, err error) {
 	s.logger.Debug("call " + MethodTextDocumentPrepareCallHierarchy)
 	defer s.logger.Debug("end "+MethodTextDocumentPrepareCallHierarchy, zap.Error(err))
 
@@ -1660,7 +1660,7 @@ func (s *server) TextDocumentPrepareCallHierarchy(ctx context.Context, params *C
 // PrepareRename sends the request from the client to the server to setup and test the validity of a rename operation at a given location.
 //
 // @since version 3.12.0.
-func (s *server) TextDocumentPrepareRename(ctx context.Context, params *PrepareRenameParams) (_ *PrepareRenameResult, err error) {
+func (s *server) PrepareRename(ctx context.Context, params *PrepareRenameParams) (_ *PrepareRenameResult, err error) {
 	s.logger.Debug("call " + MethodTextDocumentPrepareRename)
 	defer s.logger.Debug("end "+MethodTextDocumentPrepareRename, zap.Error(err))
 
@@ -1672,7 +1672,7 @@ func (s *server) TextDocumentPrepareRename(ctx context.Context, params *PrepareR
 	return result, nil
 }
 
-func (s *server) TextDocumentPrepareTypeHierarchy(ctx context.Context, params *TypeHierarchyPrepareParams) (_ []*TypeHierarchyItem, err error) {
+func (s *server) TypeHierarchyPrepare(ctx context.Context, params *TypeHierarchyPrepareParams) (_ []*TypeHierarchyItem, err error) {
 	s.logger.Debug("call " + MethodTextDocumentPrepareTypeHierarchy)
 	defer s.logger.Debug("end "+MethodTextDocumentPrepareTypeHierarchy, zap.Error(err))
 
@@ -1685,7 +1685,7 @@ func (s *server) TextDocumentPrepareTypeHierarchy(ctx context.Context, params *T
 }
 
 // RangeFormatting sends the request from the client to the server to format a given range in a document.
-func (s *server) TextDocumentRangeFormatting(ctx context.Context, params *DocumentRangeFormattingParams) (_ []*TextEdit, err error) {
+func (s *server) DocumentRangeFormatting(ctx context.Context, params *DocumentRangeFormattingParams) (_ []*TextEdit, err error) {
 	s.logger.Debug("call " + MethodTextDocumentRangeFormatting)
 	defer s.logger.Debug("end "+MethodTextDocumentRangeFormatting, zap.Error(err))
 
@@ -1697,7 +1697,7 @@ func (s *server) TextDocumentRangeFormatting(ctx context.Context, params *Docume
 	return result, nil
 }
 
-func (s *server) TextDocumentRangesFormatting(ctx context.Context, params *DocumentRangesFormattingParams) (_ []*TextEdit, err error) {
+func (s *server) DocumentRangesFormatting(ctx context.Context, params *DocumentRangesFormattingParams) (_ []*TextEdit, err error) {
 	s.logger.Debug("call " + MethodTextDocumentRangesFormatting)
 	defer s.logger.Debug("end "+MethodTextDocumentRangesFormatting, zap.Error(err))
 
@@ -1710,7 +1710,7 @@ func (s *server) TextDocumentRangesFormatting(ctx context.Context, params *Docum
 }
 
 // References sends the request from the client to the server to resolve project-wide references for the symbol denoted by the given text document position.
-func (s *server) TextDocumentReferences(ctx context.Context, params *ReferenceParams) (_ []*Location, err error) {
+func (s *server) References(ctx context.Context, params *ReferenceParams) (_ []*Location, err error) {
 	s.logger.Debug("call " + MethodTextDocumentReferences)
 	defer s.logger.Debug("end "+MethodTextDocumentReferences, zap.Error(err))
 
@@ -1723,7 +1723,7 @@ func (s *server) TextDocumentReferences(ctx context.Context, params *ReferencePa
 }
 
 // Rename sends the request from the client to the server to perform a workspace-wide rename of a symbol.
-func (s *server) TextDocumentRename(ctx context.Context, params *RenameParams) (_ *WorkspaceEdit, err error) {
+func (s *server) Rename(ctx context.Context, params *RenameParams) (_ *WorkspaceEdit, err error) {
 	s.logger.Debug("call " + MethodTextDocumentRename)
 	defer s.logger.Debug("end "+MethodTextDocumentRename, zap.Error(err))
 
@@ -1735,7 +1735,7 @@ func (s *server) TextDocumentRename(ctx context.Context, params *RenameParams) (
 	return result, nil
 }
 
-func (s *server) TextDocumentSelectionRange(ctx context.Context, params *SelectionRangeParams) (_ []*SelectionRange, err error) {
+func (s *server) SelectionRange(ctx context.Context, params *SelectionRangeParams) (_ []*SelectionRange, err error) {
 	s.logger.Debug("call " + MethodTextDocumentSelectionRange)
 	defer s.logger.Debug("end "+MethodTextDocumentSelectionRange, zap.Error(err))
 
@@ -1754,7 +1754,7 @@ func (s *server) TextDocumentSelectionRange(ctx context.Context, params *Selecti
 // A semantic token request usually produces a large result. The protocol therefore supports encoding tokens with numbers.
 //
 // @since 3.16.0.
-func (s *server) TextDocumentSemanticTokensFull(ctx context.Context, params *SemanticTokensParams) (_ *SemanticTokens, err error) {
+func (s *server) SemanticTokens(ctx context.Context, params *SemanticTokensParams) (_ *SemanticTokens, err error) {
 	s.logger.Debug("call " + MethodTextDocumentSemanticTokensFull)
 	defer s.logger.Debug("end "+MethodTextDocumentSemanticTokensFull, zap.Error(err))
 
@@ -1773,11 +1773,11 @@ func (s *server) TextDocumentSemanticTokensFull(ctx context.Context, params *Sem
 // A semantic token request usually produces a large result. The protocol therefore supports encoding tokens with numbers.
 //
 // @since 3.16.0.
-func (s *server) TextDocumentSemanticTokensFullDelta(ctx context.Context, params *SemanticTokensDeltaParams) (_ *TextDocumentSemanticTokensFullDeltaResult, err error) {
+func (s *server) SemanticTokensDelta(ctx context.Context, params *SemanticTokensDeltaParams) (_ *SemanticTokensDeltaResult, err error) {
 	s.logger.Debug("call " + MethodTextDocumentSemanticTokensFullDelta)
 	defer s.logger.Debug("end "+MethodTextDocumentSemanticTokensFullDelta, zap.Error(err))
 
-	var result *TextDocumentSemanticTokensFullDeltaResult
+	var result *SemanticTokensDeltaResult
 	if err := Call(ctx, s.Conn, MethodTextDocumentSemanticTokensFullDelta, params, &result); err != nil {
 		return nil, err
 	}
@@ -1793,7 +1793,7 @@ func (s *server) TextDocumentSemanticTokensFullDelta(ctx context.Context, params
 // Please note that if a client also announces that it will send the "textDocument/semanticTokens/range" server should implement this request as well to allow for flicker free scrolling and semantic coloring of a minimap.
 //
 // @since 3.16.0.
-func (s *server) TextDocumentSemanticTokensRange(ctx context.Context, params *SemanticTokensRangeParams) (_ *SemanticTokens, err error) {
+func (s *server) SemanticTokensRange(ctx context.Context, params *SemanticTokensRangeParams) (_ *SemanticTokens, err error) {
 	s.logger.Debug("call " + MethodTextDocumentSemanticTokensRange)
 	defer s.logger.Debug("end "+MethodTextDocumentSemanticTokensRange, zap.Error(err))
 
@@ -1806,7 +1806,7 @@ func (s *server) TextDocumentSemanticTokensRange(ctx context.Context, params *Se
 }
 
 // SignatureHelp sends the request from the client to the server to request signature information at a given cursor position.
-func (s *server) TextDocumentSignatureHelp(ctx context.Context, params *SignatureHelpParams) (_ *SignatureHelp, err error) {
+func (s *server) SignatureHelp(ctx context.Context, params *SignatureHelpParams) (_ *SignatureHelp, err error) {
 	s.logger.Debug("call " + MethodTextDocumentSignatureHelp)
 	defer s.logger.Debug("end "+MethodTextDocumentSignatureHelp, zap.Error(err))
 
@@ -1823,11 +1823,11 @@ func (s *server) TextDocumentSignatureHelp(ctx context.Context, params *Signatur
 // The result type `[]LocationLink` got introduce with version 3.14.0 and depends in the corresponding client capability `clientCapabilities.textDocument.typeDefinition.linkSupport`.
 //
 // @since version 3.6.0.
-func (s *server) TextDocumentTypeDefinition(ctx context.Context, params *TypeDefinitionParams) (_ *TextDocumentTypeDefinitionResult, err error) {
+func (s *server) TypeDefinition(ctx context.Context, params *TypeDefinitionParams) (_ *TypeDefinitionResult, err error) {
 	s.logger.Debug("call " + MethodTextDocumentTypeDefinition)
 	defer s.logger.Debug("end "+MethodTextDocumentTypeDefinition, zap.Error(err))
 
-	var result *TextDocumentTypeDefinitionResult
+	var result *TypeDefinitionResult
 	if err := Call(ctx, s.Conn, MethodTextDocumentTypeDefinition, params, &result); err != nil {
 		return nil, err
 	}
@@ -1840,7 +1840,7 @@ func (s *server) TextDocumentTypeDefinition(ctx context.Context, params *TypeDef
 // The request can return an array of TextEdits which will be applied to the text document before it is saved.
 // Please note that clients might drop results if computing the text edits took too long or if a server constantly fails on this request.
 // This is done to keep the save fast and reliable.
-func (s *server) TextDocumentWillSaveWaitUntil(ctx context.Context, params *WillSaveTextDocumentParams) (_ []*TextEdit, err error) {
+func (s *server) WillSaveTextDocumentWaitUntil(ctx context.Context, params *WillSaveTextDocumentParams) (_ []*TextEdit, err error) {
 	s.logger.Debug("call " + MethodTextDocumentWillSaveWaitUntil)
 	defer s.logger.Debug("end "+MethodTextDocumentWillSaveWaitUntil, zap.Error(err))
 
@@ -1892,7 +1892,7 @@ func (s *server) WorkspaceDiagnostic(ctx context.Context, params *WorkspaceDiagn
 //
 // In most cases the server creates a `WorkspaceEdit` structure and applies the changes to the workspace using the
 // request `workspace/applyEdit` which is sent from the server to the client.
-func (s *server) WorkspaceExecuteCommand(ctx context.Context, params *ExecuteCommandParams) (result any, err error) {
+func (s *server) ExecuteCommand(ctx context.Context, params *ExecuteCommandParams) (result any, err error) {
 	s.logger.Debug("call " + MethodWorkspaceExecuteCommand)
 	defer s.logger.Debug("end "+MethodWorkspaceExecuteCommand, zap.Error(err))
 
@@ -1916,10 +1916,10 @@ func (s *server) WorkspaceSymbol(ctx context.Context, params *WorkspaceSymbolPar
 	return result, nil
 }
 
-// WorkspaceTextDocumentContent the `workspace/textDocumentContent` request is sent from the client to the server to request the content of a text document. 3.18.0 @proposed.
+// TextDocumentContent the `workspace/textDocumentContent` request is sent from the client to the server to request the content of a text document. 3.18.0 @proposed.
 //
 // @since 3.18.0 proposed
-func (s *server) WorkspaceTextDocumentContent(ctx context.Context, params *TextDocumentContentParams) (_ *TextDocumentContentResult, err error) {
+func (s *server) TextDocumentContent(ctx context.Context, params *TextDocumentContentParams) (_ *TextDocumentContentResult, err error) {
 	s.logger.Debug("call " + MethodWorkspaceTextDocumentContent)
 	defer s.logger.Debug("end "+MethodWorkspaceTextDocumentContent, zap.Error(err))
 
@@ -1938,7 +1938,7 @@ func (s *server) WorkspaceTextDocumentContent(ctx context.Context, params *TextD
 // Please note that clients might drop results if computing the edit took too long or if a server constantly fails on this request. This is done to keep creates fast and reliable.
 //
 // @since 3.16.0.
-func (s *server) WorkspaceWillCreateFiles(ctx context.Context, params *CreateFilesParams) (_ *WorkspaceEdit, err error) {
+func (s *server) WillCreateFiles(ctx context.Context, params *CreateFilesParams) (_ *WorkspaceEdit, err error) {
 	s.logger.Debug("call " + MethodWorkspaceWillCreateFiles)
 	defer s.logger.Debug("end "+MethodWorkspaceWillCreateFiles, zap.Error(err))
 
@@ -1957,7 +1957,7 @@ func (s *server) WorkspaceWillCreateFiles(ctx context.Context, params *CreateFil
 // Please note that clients might drop results if computing the edit took too long or if a server constantly fails on this request. This is done to keep deletes fast and reliable.
 //
 // @since 3.16.0.
-func (s *server) WorkspaceWillDeleteFiles(ctx context.Context, params *DeleteFilesParams) (_ *WorkspaceEdit, err error) {
+func (s *server) WillDeleteFiles(ctx context.Context, params *DeleteFilesParams) (_ *WorkspaceEdit, err error) {
 	s.logger.Debug("call " + MethodWorkspaceWillDeleteFiles)
 	defer s.logger.Debug("end "+MethodWorkspaceWillDeleteFiles, zap.Error(err))
 
@@ -1976,7 +1976,7 @@ func (s *server) WorkspaceWillDeleteFiles(ctx context.Context, params *DeleteFil
 // Please note that clients might drop results if computing the edit took too long or if a server constantly fails on this request. This is done to keep renames fast and reliable.
 //
 // @since 3.16.0.
-func (s *server) WorkspaceWillRenameFiles(ctx context.Context, params *RenameFilesParams) (_ *WorkspaceEdit, err error) {
+func (s *server) WillRenameFiles(ctx context.Context, params *RenameFilesParams) (_ *WorkspaceEdit, err error) {
 	s.logger.Debug("call " + MethodWorkspaceWillRenameFiles)
 	defer s.logger.Debug("end "+MethodWorkspaceWillRenameFiles, zap.Error(err))
 

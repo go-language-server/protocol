@@ -20,40 +20,28 @@ func (gen *Generator) ClientToServer(clientNotifications, bidiNotifications []*p
 	g.PP(`const (`)
 	if len(bidiNotifications) > 0 {
 		slices.SortFunc(bidiNotifications, func(a, b *protocol.Notification) int {
-			if !strings.Contains(a.Method, "/") && !strings.Contains(b.Method, "/") {
-				return cmp.Compare(a.Method, b.Method)
-			}
-			return cmp.Compare(strings.ToLower(a.Method), strings.ToLower(b.Method))
+			return cmp.Compare(strings.ToLower(a.TypeName), strings.ToLower(b.TypeName))
 		})
 		for _, meth := range bidiNotifications {
 			g.PP(`	`, `MethodClient`+normalizeMethodName(meth.Method), ` ClientMethod `, ` = `, strconv.Quote(meth.Method), ` // bidirect client notification`)
 		}
 	}
 	slices.SortFunc(clientNotifications, func(a, b *protocol.Notification) int {
-		if !strings.Contains(a.Method, "/") && !strings.Contains(b.Method, "/") {
-			return cmp.Compare(a.Method, b.Method)
-		}
-		return cmp.Compare(strings.ToLower(a.Method), strings.ToLower(b.Method))
+		return cmp.Compare(strings.ToLower(a.TypeName), strings.ToLower(b.TypeName))
 	})
 	for _, meth := range clientNotifications {
 		g.PP(`	`, `Method`+normalizeMethodName(meth.Method), ` ClientMethod `, ` = `, strconv.Quote(meth.Method), ` // client notification`)
 	}
 	if len(bidiRequests) > 0 {
 		slices.SortFunc(bidiRequests, func(a, b *protocol.Request) int {
-			if !strings.Contains(a.Method, "/") && !strings.Contains(b.Method, "/") {
-				return cmp.Compare(a.Method, b.Method)
-			}
-			return cmp.Compare(strings.ToLower(a.Method), strings.ToLower(b.Method))
+			return cmp.Compare(strings.ToLower(a.TypeName), strings.ToLower(b.TypeName))
 		})
 		for _, meth := range bidiRequests {
 			g.PP(`	`, `MethodClient`+normalizeMethodName(meth.Method), ` ClientMethod `, ` = `, strconv.Quote(meth.Method), ` // bidirect client request`)
 		}
 	}
 	slices.SortFunc(clientRequests, func(a, b *protocol.Request) int {
-		if !strings.Contains(a.Method, "/") && !strings.Contains(b.Method, "/") {
-			return cmp.Compare(a.Method, b.Method)
-		}
-		return cmp.Compare(strings.ToLower(a.Method), strings.ToLower(b.Method))
+		return cmp.Compare(strings.ToLower(a.TypeName), strings.ToLower(b.TypeName))
 	})
 	for _, meth := range clientRequests {
 		g.PP(`	`, `Method`+normalizeMethodName(meth.Method), ` ClientMethod `, ` = `, strconv.Quote(meth.Method), ` // client request`)
@@ -66,7 +54,8 @@ func (gen *Generator) ClientToServer(clientNotifications, bidiNotifications []*p
 	reqests := append(bidiRequests, clientRequests...)
 
 	for i, notify := range notifications {
-		meth := normalizeMethodName(notify.Method)
+		meth := normalizeMethodName(notify.TypeName)
+		meth = strings.TrimSuffix(meth, "Notification")
 		// write Documentation
 		if notify.Documentation != "" {
 			g.PP(`// `, meth, normalizeDocumentation(notify.Documentation))
@@ -91,7 +80,10 @@ func (gen *Generator) ClientToServer(clientNotifications, bidiNotifications []*p
 		}
 	}
 	for i, req := range reqests {
-		meth := normalizeMethodName(req.Method)
+		meth := normalizeMethodName(req.TypeName)
+		if meth != "ShowMessageRequest" {
+			meth = strings.TrimSuffix(meth, "Request")
+		}
 		// write Documentation
 		if req.Documentation != "" {
 			g.PP(`// `, meth, normalizeDocumentation(req.Documentation))
@@ -122,7 +114,8 @@ func (gen *Generator) ClientToServer(clientNotifications, bidiNotifications []*p
 	g.PP(`type UnimplementedClient struct {}`)
 	g.P("\n")
 	for i, notify := range notifications {
-		meth := normalizeMethodName(notify.Method)
+		meth := normalizeMethodName(notify.TypeName)
+		meth = strings.TrimSuffix(meth, "Notification")
 		g.P(`func (UnimplementedClient) `)
 		if err := gen.notification(g, meth, notify); err != nil {
 			return err
@@ -136,7 +129,10 @@ func (gen *Generator) ClientToServer(clientNotifications, bidiNotifications []*p
 		}
 	}
 	for i, req := range reqests {
-		meth := normalizeMethodName(req.Method)
+		meth := normalizeMethodName(req.TypeName)
+		if meth != "ShowMessageRequest" {
+			meth = strings.TrimSuffix(meth, "Request")
+		}
 		if meth == "" {
 			continue
 		}
@@ -172,40 +168,28 @@ func (gen *Generator) ServerToClient(serverNotifications, bidiNotifications []*p
 	g.PP(`const (`)
 	if len(bidiNotifications) > 0 {
 		slices.SortFunc(bidiNotifications, func(a, b *protocol.Notification) int {
-			if !strings.Contains(a.Method, "/") && !strings.Contains(b.Method, "/") {
-				return cmp.Compare(a.Method, b.Method)
-			}
-			return cmp.Compare(a.Method, b.Method)
+			return cmp.Compare(a.TypeName, b.TypeName)
 		})
 		for _, meth := range bidiNotifications {
 			g.PP(`	`, `MethodServer`+normalizeMethodName(meth.Method), ` ServerMethod `, ` = `, strconv.Quote(meth.Method), ` // bidirect server notification`)
 		}
 	}
 	slices.SortFunc(serverNotifications, func(a, b *protocol.Notification) int {
-		if !strings.Contains(a.Method, "/") && !strings.Contains(b.Method, "/") {
-			return cmp.Compare(a.Method, b.Method)
-		}
-		return cmp.Compare(a.Method, b.Method)
+		return cmp.Compare(a.TypeName, b.TypeName)
 	})
 	for _, meth := range serverNotifications {
 		g.PP(`	`, `Method`+normalizeMethodName(meth.Method), ` ServerMethod `, ` = `, strconv.Quote(meth.Method), ` // server notification`)
 	}
 	if len(bidiRequests) > 0 {
 		slices.SortFunc(bidiRequests, func(a, b *protocol.Request) int {
-			if !strings.Contains(a.Method, "/") && !strings.Contains(b.Method, "/") {
-				return cmp.Compare(a.Method, b.Method)
-			}
-			return cmp.Compare(a.Method, b.Method)
+			return cmp.Compare(a.TypeName, b.TypeName)
 		})
 		for _, meth := range bidiRequests {
 			g.PP(`	`, `MethodServer`+normalizeMethodName(meth.Method), ` ServerMethod `, ` = `, strconv.Quote(meth.Method), ` // bidirect server request`)
 		}
 	}
 	slices.SortFunc(serverNequests, func(a, b *protocol.Request) int {
-		if !strings.Contains(a.Method, "/") && !strings.Contains(b.Method, "/") {
-			return cmp.Compare(a.Method, b.Method)
-		}
-		return cmp.Compare(a.Method, b.Method)
+		return cmp.Compare(a.TypeName, b.TypeName)
 	})
 	for _, meth := range serverNequests {
 		g.PP(`	`, `Method`+normalizeMethodName(meth.Method), ` ServerMethod `, ` = `, strconv.Quote(meth.Method), ` // server request`)
@@ -218,7 +202,8 @@ func (gen *Generator) ServerToClient(serverNotifications, bidiNotifications []*p
 	reqests := slices.Clip(serverNequests)
 
 	for i, notify := range notifications {
-		meth := normalizeMethodName(notify.Method)
+		meth := normalizeMethodName(notify.TypeName)
+		meth = strings.TrimSuffix(meth, "Notification")
 		// write Documentation
 		if notify.Documentation != "" {
 			g.PP(`// `, meth, normalizeDocumentation(notify.Documentation))
@@ -243,7 +228,10 @@ func (gen *Generator) ServerToClient(serverNotifications, bidiNotifications []*p
 		}
 	}
 	for i, req := range reqests {
-		meth := normalizeMethodName(req.Method)
+		meth := normalizeMethodName(req.TypeName)
+		if meth != "ShowMessageRequest" {
+			meth = strings.TrimSuffix(meth, "Request")
+		}
 		// write Documentation
 		if req.Documentation != "" {
 			g.PP(`// `, meth, normalizeDocumentation(req.Documentation))
@@ -276,7 +264,8 @@ func (gen *Generator) ServerToClient(serverNotifications, bidiNotifications []*p
 	g.PP(`type UnimplementedServer struct {}`)
 	g.P("\n")
 	for i, notify := range notifications {
-		meth := normalizeMethodName(notify.Method)
+		meth := normalizeMethodName(notify.TypeName)
+		meth = strings.TrimSuffix(meth, "Notification")
 		g.P(`func (UnimplementedServer) `)
 		if err := gen.notification(g, meth, notify); err != nil {
 			return err
@@ -290,7 +279,10 @@ func (gen *Generator) ServerToClient(serverNotifications, bidiNotifications []*p
 		}
 	}
 	for i, req := range reqests {
-		meth := normalizeMethodName(req.Method)
+		meth := normalizeMethodName(req.TypeName)
+		if meth != "ShowMessageRequest" {
+			meth = strings.TrimSuffix(meth, "Request")
+		}
 		g.P(`func (UnimplementedServer) `)
 		n, err := gen.request(g, meth, req)
 		if err != nil {
@@ -419,7 +411,7 @@ func (gen *Generator) renderRequestsArrayType(g Printer, req *protocol.Request, 
 			gen.renderRequestssOrTypeNull(g, req, elem)
 		default:
 			genericsType := genericsType{
-				Name:          normalizeMethodName(req.Method) + "Result",
+				Name:          normalizeMethodName(req.TypeName) + "Result",
 				Documentation: req.Documentation,
 				Since:         req.Since,
 				Proposed:      req.Proposed,

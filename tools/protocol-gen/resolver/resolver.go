@@ -101,29 +101,32 @@ func (r *resolver) model(in schema.MetaModel) *protocol.Protocol {
 func (r *resolver) enumeration(in schema.Enumeration) *protocol.Enumeration {
 	defer r.pushScope("resolving enumeration '%v'", in.Name)()
 	return &protocol.Enumeration{
-		Deprecated:           in.Deprecated,
-		Documentation:        r.documentation(in.Documentation),
-		Name:                 r.className(in.Name),
-		Proposed:             in.Proposed,
-		Since:                in.Since,
-		SupportsCustomValues: in.SupportsCustomValues,
+		Name: r.className(in.Name),
 		Type: protocol.EnumerationType{
 			Kind: in.Type.Kind,
 			Name: protocol.EnumerationTypeName(in.Type.Name),
 		},
-		Values: transform(in.Values, r.enumerationEntry),
+		Values:               transform(in.Values, r.enumerationEntry),
+		SupportsCustomValues: in.SupportsCustomValues,
+		Documentation:        r.documentation(in.Documentation),
+		Since:                in.Since,
+		SinceTags:            in.SinceTags,
+		Proposed:             in.Proposed,
+		Deprecated:           in.Deprecated,
 	}
 }
 
 func (r *resolver) enumerationEntry(in schema.EnumerationEntry) *protocol.EnumerationEntry {
 	defer r.pushScope("resolving enumeration entry '%v'", in.Name)()
 	return &protocol.EnumerationEntry{
-		Deprecated:    in.Deprecated,
-		Documentation: r.documentation(in.Documentation),
 		Name:          r.className(in.Name),
-		Proposed:      in.Proposed,
-		Since:         in.Since,
 		Value:         r.value(in.Value),
+		Documentation: r.documentation(in.Documentation),
+		Since:         in.Since,
+		SinceTags:     in.SinceTags,
+		Proposed:      in.Proposed,
+		Deprecated:    in.Deprecated,
+		TypeName:      in.TypeName,
 	}
 }
 
@@ -135,33 +138,37 @@ func (r *resolver) metadata(in schema.MetaData) *protocol.MetaData {
 func (r *resolver) notification(in schema.Notification) *protocol.Notification {
 	defer r.pushScope("resolving notification '%v'", in.Method)()
 	return &protocol.Notification{
-		Deprecated:          in.Deprecated,
-		Documentation:       r.documentation(in.Documentation),
-		MessageDirection:    r.messageDirection(in.MessageDirection),
 		Method:              in.Method,
 		Params:              r.types(in.Params),
-		Proposed:            in.Proposed,
 		RegistrationMethod:  in.RegistrationMethod,
 		RegistrationOptions: r.type_(in.RegistrationOptions),
+		MessageDirection:    r.messageDirection(in.MessageDirection),
+		Documentation:       r.documentation(in.Documentation),
 		Since:               in.Since,
+		SinceTags:           in.SinceTags,
+		Proposed:            in.Proposed,
+		Deprecated:          in.Deprecated,
+		TypeName:            in.TypeName,
 	}
 }
 
 func (r *resolver) request(in schema.Request) *protocol.Request {
 	defer r.pushScope("resolving request '%v'", in.Method)()
 	return &protocol.Request{
-		Deprecated:          in.Deprecated,
-		Documentation:       r.documentation(in.Documentation),
-		ErrorData:           r.type_(in.ErrorData),
-		MessageDirection:    r.messageDirection(in.MessageDirection),
 		Method:              in.Method,
 		Params:              r.types(in.Params),
+		Result:              r.type_(in.Result),
 		PartialResult:       r.type_(in.PartialResult),
-		Proposed:            in.Proposed,
+		ErrorData:           r.type_(in.ErrorData),
 		RegistrationMethod:  in.RegistrationMethod,
 		RegistrationOptions: r.type_(in.RegistrationOptions),
-		Result:              r.type_(in.Result),
+		MessageDirection:    r.messageDirection(in.MessageDirection),
+		Documentation:       r.documentation(in.Documentation),
 		Since:               in.Since,
+		SinceTags:           in.SinceTags,
+		Proposed:            in.Proposed,
+		Deprecated:          in.Deprecated,
+		TypeName:            in.TypeName,
 	}
 }
 
@@ -169,13 +176,14 @@ func (r *resolver) structure(in schema.Structure) *protocol.Structure {
 	defer r.pushScope("resolving structure '%v'", in.Name)()
 	name := r.className(in.Name)
 	out := &protocol.Structure{
-		Deprecated:    in.Deprecated,
-		Documentation: r.documentation(in.Documentation),
+		Name:          name,
 		Extends:       transform(in.Extends, r.type_),
 		Mixins:        transform(in.Mixins, r.type_),
-		Name:          name,
-		Proposed:      in.Proposed,
+		Documentation: r.documentation(in.Documentation),
 		Since:         in.Since,
+		SinceTags:     in.SinceTags,
+		Proposed:      in.Proposed,
+		Deprecated:    in.Deprecated,
 		NestedNames:   []string{name},
 	}
 	for _, propertyIn := range in.Properties {
@@ -211,26 +219,28 @@ func (r *resolver) structure(in schema.Structure) *protocol.Structure {
 func (r *resolver) property(in schema.Property) *protocol.Property {
 	defer r.pushScope("resolving property '%v'", in.Name)()
 	return &protocol.Property{
-		Deprecated:    in.Deprecated,
-		Documentation: r.documentation(in.Documentation),
-		JSONName:      in.Name,
 		Name:          flect.Underscore(in.Name),
-		Optional:      in.Optional,
-		Proposed:      in.Proposed,
-		Since:         in.Since,
 		Type:          r.type_(in.Type),
+		Optional:      in.Optional,
+		Documentation: r.documentation(in.Documentation),
+		Since:         in.Since,
+		SinceTags:     in.SinceTags,
+		Proposed:      in.Proposed,
+		Deprecated:    in.Deprecated,
+		JSONName:      in.Name,
 	}
 }
 
 func (r *resolver) typeAlias(in schema.TypeAlias) *protocol.TypeAlias {
 	defer r.pushScope("resolving type alias '%v'", in.Name)()
 	return &protocol.TypeAlias{
-		Deprecated:    in.Deprecated,
-		Documentation: r.documentation(in.Documentation),
 		Name:          r.className(in.Name),
-		Proposed:      in.Proposed,
-		Since:         in.Since,
 		Type:          r.type_(in.Type),
+		Documentation: r.documentation(in.Documentation),
+		Since:         in.Since,
+		SinceTags:     in.SinceTags,
+		Proposed:      in.Proposed,
+		Deprecated:    in.Deprecated,
 	}
 }
 
@@ -310,11 +320,12 @@ func (r *resolver) typeImpl(in schema.Node) protocol.Type {
 func (r *resolver) structureLiteral(in schema.StructureLiteral) *protocol.StructureLiteral {
 	defer r.pushScope("resolving structure literal")()
 	return &protocol.StructureLiteral{
-		Deprecated:    in.Deprecated,
-		Documentation: r.documentation(in.Documentation),
 		Properties:    transform(in.Properties, r.property),
-		Proposed:      in.Proposed,
+		Documentation: r.documentation(in.Documentation),
 		Since:         in.Since,
+		SinceTags:     in.SinceTags,
+		Proposed:      in.Proposed,
+		Deprecated:    in.Deprecated,
 	}
 }
 

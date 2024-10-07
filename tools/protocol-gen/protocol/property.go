@@ -5,27 +5,30 @@ package protocol
 
 // Property represents an object property.
 type Property struct {
-	// Whether the property is deprecated or not. If deprecated the property contains the deprecation message.
-	Deprecated string
-
-	// An optional documentation.
-	Documentation string
-
-	// The property JSON name.
-	JSONName string
-
 	// The property name.
 	Name string
+
+	// The type of the property.
+	Type Type
 
 	// Whether the property is optional. If omitted, the property is mandatory.
 	Optional bool
 
-	// Whether this is a proposed property. If omitted, the structure is final.
-	Proposed bool
+	// An optional documentation.
+	Documentation string
 
 	// Since when (release number) this property is available. Is undefined if not known.
 	Since string
 
-	// The type of the property.
-	Type Type
+	// All since tags in case there was more than one tag. Is undefined if not known.
+	SinceTags []string
+
+	// Whether this is a proposed property. If omitted, the structure is final.
+	Proposed bool
+
+	// Whether the property is deprecated or not. If deprecated the property contains the deprecation message.
+	Deprecated string
+
+	// The property JSON name.
+	JSONName string
 }
