@@ -13,7 +13,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/davecgh/go-spew/spew"
+	"github.com/kortschak/utter"
 
 	"go.lsp.dev/protocol/tools/protocol-gen/generator"
 	"go.lsp.dev/protocol/tools/protocol-gen/resolver"
@@ -26,10 +26,17 @@ const (
 )
 
 func init() {
-	spew.Config = spew.ConfigState{
-		Indent:           " ",
-		ContinueOnMethod: true,
-		SortKeys:         true,
+	utter.Config = utter.ConfigState{
+		Indent:          " ",
+		NumericWidth:    1,
+		StringWidth:     1,
+		Quoting:         utter.AvoidEscapes,
+		BytesWidth:      16,
+		CommentBytes:    true,
+		AddressBytes:    true,
+		CommentPointers: true,
+		ElideType:       true,
+		SortKeys:        true,
 	}
 }
 

@@ -187,31 +187,34 @@ func (r *resolver) structure(in schema.Structure) *protocol.Structure {
 		NestedNames:   []string{name},
 	}
 	for _, propertyIn := range in.Properties {
-		defer scopedAssignment(&r.newStructureLiteralType, func(in *schema.StructureLiteralType) protocol.Type {
-			name := cases.Title(language.Und, cases.NoLower).String(propertyIn.Name)
-			out.NestedStructures = append(out.NestedStructures,
-				&protocol.Structure{
-					Deprecated:    in.Value.Deprecated,
-					Documentation: r.documentation(in.Value.Documentation),
-					Properties:    transform(in.Value.Properties, r.property),
-					Name:          name,
-					Proposed:      in.Value.Proposed,
-					Since:         in.Value.Since,
-					NestedNames:   append(append([]string{}, out.NestedNames...), name),
-				},
-			)
-			ref := &protocol.ReferenceType{Name: name}
-			r.allReferenceTypes = append(r.allReferenceTypes, ref)
-			return ref
-		})()
-		propertyOut := r.property(propertyIn)
-		if propertyOut.JSONName == "kind" {
-			if lit, ok := propertyOut.Type.(*protocol.StringLiteralType); ok {
-				out.Kind = lit.Value
-				continue
+		func() {
+			defer scopedAssignment(&r.newStructureLiteralType, func(in *schema.StructureLiteralType) protocol.Type {
+				name := cases.Title(language.Und, cases.NoLower).String(propertyIn.Name)
+				out.NestedStructures = append(out.NestedStructures,
+					&protocol.Structure{
+						Deprecated:    in.Value.Deprecated,
+						Documentation: r.documentation(in.Value.Documentation),
+						Properties:    transform(in.Value.Properties, r.property),
+						Name:          name,
+						Proposed:      in.Value.Proposed,
+						Since:         in.Value.Since,
+						NestedNames:   append(append([]string{}, out.NestedNames...), name),
+					},
+				)
+				ref := &protocol.ReferenceType{Name: name}
+				r.allReferenceTypes = append(r.allReferenceTypes, ref)
+				return ref
+			})()
+
+			propertyOut := r.property(propertyIn)
+			if propertyOut.JSONName == "kind" {
+				if lit, ok := propertyOut.Type.(*protocol.StringLiteralType); ok {
+					out.Kind = lit.Value
+					return
+				}
 			}
-		}
-		out.Properties = append(out.Properties, propertyOut)
+			out.Properties = append(out.Properties, propertyOut)
+		}()
 	}
 	return out
 }

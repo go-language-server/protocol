@@ -374,13 +374,13 @@ func (gen *Generator) request(g Printer, meth string, req *protocol.Request) (nR
 			gen.renderRequestssOrTypeNull(g, req, r)
 			g.P(`, `)
 		default:
-			genericsType := genericsType{
+			genericsProp := &protocol.Property{
 				Name:          meth + "Result",
 				Documentation: req.Documentation,
 				Since:         req.Since,
 				Proposed:      req.Proposed,
 			}
-			gen.renderRequestssOrType(g, r, genericsType)
+			gen.renderRequestssOrType(g, r, genericsProp)
 			g.P(`, `)
 		}
 
@@ -410,13 +410,13 @@ func (gen *Generator) renderRequestsArrayType(g Printer, req *protocol.Request, 
 			g.P(`[]*`)
 			gen.renderRequestssOrTypeNull(g, req, elem)
 		default:
-			genericsType := genericsType{
+			genericsProp := &protocol.Property{
 				Name:          normalizeMethodName(req.TypeName) + "Result",
 				Documentation: req.Documentation,
 				Since:         req.Since,
 				Proposed:      req.Proposed,
 			}
-			gen.renderRequestssOrType(g, elem, genericsType)
+			gen.renderRequestssOrType(g, elem, genericsProp)
 		}
 
 	default:
@@ -447,7 +447,7 @@ func (gen *Generator) renderRequestssOrTypeNull(g Printer, req *protocol.Request
 	}
 }
 
-func (gen *Generator) renderRequestssOrType(g Printer, or *protocol.OrType, genericsType genericsType) {
-	g.P(` *`, genericsType.Name)
-	gen.genericsTypes[genericsType] = or.Items
+func (gen *Generator) renderRequestssOrType(g Printer, or *protocol.OrType, genericsProp *protocol.Property) {
+	g.P(` *`, genericsProp.Name)
+	gen.genericsTypes[genericsProp] = or.Items
 }

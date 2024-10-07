@@ -14,8 +14,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/gobuffalo/flect"
+	"github.com/kortschak/utter"
 
 	"go.lsp.dev/protocol/tools/protocol-gen/protocol"
 )
@@ -25,10 +25,17 @@ var acronyms = [...]string{
 }
 
 func init() {
-	spew.Config = spew.ConfigState{
-		Indent:           " ",
-		ContinueOnMethod: true,
-		SortKeys:         true,
+	utter.Config = utter.ConfigState{
+		Indent:          " ",
+		NumericWidth:    1,
+		StringWidth:     1,
+		Quoting:         utter.AvoidEscapes,
+		BytesWidth:      16,
+		CommentBytes:    true,
+		AddressBytes:    true,
+		CommentPointers: true,
+		ElideType:       true,
+		SortKeys:        true,
 	}
 
 	var buf bytes.Buffer
@@ -51,13 +58,6 @@ const (
 	pkgJSONRPC = `"go.lsp.dev/jsonrpc2"`
 )
 
-type genericsType struct {
-	Name          string
-	Documentation string
-	Since         string
-	Proposed      bool
-}
-
 type Generator struct {
 	enumerations  []Printer
 	typeAliases   []Printer
@@ -65,13 +65,13 @@ type Generator struct {
 	client        []Printer
 	server        []Printer
 	generics      map[string]bool
-	genericsTypes map[genericsType][]protocol.Type
+	genericsTypes map[*protocol.Property][]protocol.Type
 	files         map[string]*os.File
 }
 
 func (gen *Generator) Init() {
 	gen.generics = make(map[string]bool)
-	gen.genericsTypes = make(map[genericsType][]protocol.Type)
+	gen.genericsTypes = make(map[*protocol.Property][]protocol.Type)
 	gen.files = make(map[string]*os.File)
 }
 

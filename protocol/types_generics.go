@@ -51,8 +51,6 @@ func (t *CancelParamsID) UnmarshalJSON(val []byte) error {
 }
 
 // ClientSemanticTokensRequestOptionsFull the client will send the `textDocument/semanticTokens/full` request if the server provides a corresponding handler.
-//
-// @since 3.18.0
 type ClientSemanticTokensRequestOptionsFull struct {
 	value any
 }
@@ -94,8 +92,6 @@ func (t *ClientSemanticTokensRequestOptionsFull) UnmarshalJSON(val []byte) error
 }
 
 // ClientSemanticTokensRequestOptionsRange the client will send the `textDocument/semanticTokens/range` request if the server provides a corresponding handler.
-//
-// @since 3.18.0
 type ClientSemanticTokensRequestOptionsRange struct {
 	value any
 }
@@ -134,6 +130,47 @@ func (t *ClientSemanticTokensRequestOptionsRange) UnmarshalJSON(val []byte) erro
 		return nil
 	}
 	return &UnmarshalError{"unmarshal failed to match one of [bool Range]"}
+}
+
+// CodeActionRequestResult a request to provide commands for the given text document and range.
+type CodeActionRequestResult struct {
+	value any
+}
+
+func NewCodeActionRequestResult[T Command | CodeAction](val T) *CodeActionRequestResult {
+	return &CodeActionRequestResult{
+		value: val,
+	}
+}
+
+func (t CodeActionRequestResult) MarshalJSON() ([]byte, error) {
+	switch val := t.value.(type) {
+	case Command:
+		return marshal(val)
+	case CodeAction:
+		return marshal(val)
+	case nil:
+		return []byte("null"), nil
+	}
+	return nil, fmt.Errorf("unknown type: %T", t)
+}
+
+func (t *CodeActionRequestResult) UnmarshalJSON(val []byte) error {
+	if string(val) == "null" {
+		t.value = nil
+		return nil
+	}
+	var h0 Command
+	if err := unmarshal(val, &h0); err == nil {
+		t.value = h0
+		return nil
+	}
+	var h1 CodeAction
+	if err := unmarshal(val, &h1); err == nil {
+		t.value = h1
+		return nil
+	}
+	return &UnmarshalError{"unmarshal failed to match one of [Command CodeAction]"}
 }
 
 // CodeActionRequestResult a request to provide commands for the given text document and range.
@@ -262,6 +299,8 @@ func (t *CompletionItemDocumentation) UnmarshalJSON(val []byte) error {
 }
 
 // CompletionItemTextEdit an TextEdit edit which is applied to a document when selecting this completion. When an edit is provided the value of CompletionItem.insertText insertText is ignored. Most editors support two different operations when accepting a completion item. One is to insert a completion text and the other is to replace an existing text with a completion text. Since this can usually not be predetermined by a server it can report both ranges. Clients need to signal support for `InsertReplaceEdits` via the `textDocument.completion.insertReplaceSupport` client capability property. *Note 1:* The text edit's range as well as both ranges from an insert replace edit must be a [single line] and they must contain the position at which completion has been requested. *Note 2:* If an `InsertReplaceEdit` is returned the edit's insert range must be a prefix of the edit's replace range, that means it must be contained and starting at the same position. 3.16.0 additional type `InsertReplaceEdit`.
+//
+// @since 3.16.0 additional type `InsertReplaceEdit`
 type CompletionItemTextEdit struct {
 	value any
 }
@@ -300,6 +339,48 @@ func (t *CompletionItemTextEdit) UnmarshalJSON(val []byte) error {
 		return nil
 	}
 	return &UnmarshalError{"unmarshal failed to match one of [TextEdit InsertReplaceEdit]"}
+}
+
+// CompletionResult request to request completion at a given text document position. The request's parameter is of type TextDocumentPosition the response is of type CompletionItem CompletionItem[] or CompletionList or a Thenable that resolves to such. The request can delay the computation of the CompletionItem.detail `detail` and CompletionItem.documentation `documentation` properties to the `completionItem/resolve` request. However, properties that are needed for the initial sorting and filtering, like `sortText`,
+// `filterText`, `insertText`, and `textEdit`, must not be changed during resolve.
+type CompletionResult struct {
+	value any
+}
+
+func NewCompletionResult[T []CompletionItem | CompletionList](val T) *CompletionResult {
+	return &CompletionResult{
+		value: val,
+	}
+}
+
+func (t CompletionResult) MarshalJSON() ([]byte, error) {
+	switch val := t.value.(type) {
+	case []CompletionItem:
+		return marshal(val)
+	case CompletionList:
+		return marshal(val)
+	case nil:
+		return []byte("null"), nil
+	}
+	return nil, fmt.Errorf("unknown type: %T", t)
+}
+
+func (t *CompletionResult) UnmarshalJSON(val []byte) error {
+	if string(val) == "null" {
+		t.value = nil
+		return nil
+	}
+	var h0 []CompletionItem
+	if err := unmarshal(val, &h0); err == nil {
+		t.value = h0
+		return nil
+	}
+	var h1 CompletionList
+	if err := unmarshal(val, &h1); err == nil {
+		t.value = h1
+		return nil
+	}
+	return &UnmarshalError{"unmarshal failed to match one of [[]CompletionItem CompletionList]"}
 }
 
 // CompletionResult request to request completion at a given text document position. The request's parameter is of type TextDocumentPosition the response is of type CompletionItem CompletionItem[] or CompletionList or a Thenable that resolves to such. The request can delay the computation of the CompletionItem.detail `detail` and CompletionItem.documentation `documentation` properties to the `completionItem/resolve` request. However, properties that are needed for the initial sorting and filtering, like `sortText`,
@@ -384,6 +465,90 @@ func (t *DeclarationResult) UnmarshalJSON(val []byte) error {
 		return nil
 	}
 	return &UnmarshalError{"unmarshal failed to match one of [Declaration []DeclarationLink]"}
+}
+
+// DeclarationResult a request to resolve the type definition locations of a symbol at a given text document position. The request's parameter is of type TextDocumentPositionParams the response is of type Declaration or a
+// typed array of DeclarationLink or a Thenable that resolves to such.
+type DeclarationResult struct {
+	value any
+}
+
+func NewDeclarationResult[T Declaration | []DeclarationLink](val T) *DeclarationResult {
+	return &DeclarationResult{
+		value: val,
+	}
+}
+
+func (t DeclarationResult) MarshalJSON() ([]byte, error) {
+	switch val := t.value.(type) {
+	case Declaration:
+		return marshal(val)
+	case []DeclarationLink:
+		return marshal(val)
+	case nil:
+		return []byte("null"), nil
+	}
+	return nil, fmt.Errorf("unknown type: %T", t)
+}
+
+func (t *DeclarationResult) UnmarshalJSON(val []byte) error {
+	if string(val) == "null" {
+		t.value = nil
+		return nil
+	}
+	var h0 Declaration
+	if err := unmarshal(val, &h0); err == nil {
+		t.value = h0
+		return nil
+	}
+	var h1 []DeclarationLink
+	if err := unmarshal(val, &h1); err == nil {
+		t.value = h1
+		return nil
+	}
+	return &UnmarshalError{"unmarshal failed to match one of [Declaration []DeclarationLink]"}
+}
+
+// DefinitionResult a request to resolve the definition location of a symbol at a given text document position. The request's parameter is of type TextDocumentPosition the response is of either type Definition or a typed
+// array of DefinitionLink or a Thenable that resolves to such.
+type DefinitionResult struct {
+	value any
+}
+
+func NewDefinitionResult[T Definition | []DefinitionLink](val T) *DefinitionResult {
+	return &DefinitionResult{
+		value: val,
+	}
+}
+
+func (t DefinitionResult) MarshalJSON() ([]byte, error) {
+	switch val := t.value.(type) {
+	case Definition:
+		return marshal(val)
+	case []DefinitionLink:
+		return marshal(val)
+	case nil:
+		return []byte("null"), nil
+	}
+	return nil, fmt.Errorf("unknown type: %T", t)
+}
+
+func (t *DefinitionResult) UnmarshalJSON(val []byte) error {
+	if string(val) == "null" {
+		t.value = nil
+		return nil
+	}
+	var h0 Definition
+	if err := unmarshal(val, &h0); err == nil {
+		t.value = h0
+		return nil
+	}
+	var h1 []DefinitionLink
+	if err := unmarshal(val, &h1); err == nil {
+		t.value = h1
+		return nil
+	}
+	return &UnmarshalError{"unmarshal failed to match one of [Definition []DefinitionLink]"}
 }
 
 // DefinitionResult a request to resolve the definition location of a symbol at a given text document position. The request's parameter is of type TextDocumentPosition the response is of either type Definition or a typed
@@ -592,6 +757,48 @@ func (t *DocumentSymbolResult) UnmarshalJSON(val []byte) error {
 	return &UnmarshalError{"unmarshal failed to match one of [[]SymbolInformation []DocumentSymbol]"}
 }
 
+// DocumentSymbolResult a request to list all symbols found in a given text document. The request's parameter is of type TextDocumentIdentifier the response is of type SymbolInformation SymbolInformation[] or a Thenable that
+// resolves to such.
+type DocumentSymbolResult struct {
+	value any
+}
+
+func NewDocumentSymbolResult[T []SymbolInformation | []DocumentSymbol](val T) DocumentSymbolResult {
+	return DocumentSymbolResult{
+		value: val,
+	}
+}
+
+func (t DocumentSymbolResult) MarshalJSON() ([]byte, error) {
+	switch val := t.value.(type) {
+	case []SymbolInformation:
+		return marshal(val)
+	case []DocumentSymbol:
+		return marshal(val)
+	case nil:
+		return []byte("null"), nil
+	}
+	return nil, fmt.Errorf("unknown type: %T", t)
+}
+
+func (t *DocumentSymbolResult) UnmarshalJSON(val []byte) error {
+	if string(val) == "null" {
+		t.value = nil
+		return nil
+	}
+	var h0 []SymbolInformation
+	if err := unmarshal(val, &h0); err == nil {
+		t.value = h0
+		return nil
+	}
+	var h1 []DocumentSymbol
+	if err := unmarshal(val, &h1); err == nil {
+		t.value = h1
+		return nil
+	}
+	return &UnmarshalError{"unmarshal failed to match one of [[]SymbolInformation []DocumentSymbol]"}
+}
+
 // HoverContents the hover's content.
 type HoverContents struct {
 	value any
@@ -682,9 +889,49 @@ func (t *ImplementationResult) UnmarshalJSON(val []byte) error {
 	return &UnmarshalError{"unmarshal failed to match one of [Definition []DefinitionLink]"}
 }
 
+// ImplementationResult a request to resolve the implementation locations of a symbol at a given text document position. The
+// request's parameter is of type TextDocumentPositionParams the response is of type Definition or a Thenable that resolves to such.
+type ImplementationResult struct {
+	value any
+}
+
+func NewImplementationResult[T Definition | []DefinitionLink](val T) *ImplementationResult {
+	return &ImplementationResult{
+		value: val,
+	}
+}
+
+func (t ImplementationResult) MarshalJSON() ([]byte, error) {
+	switch val := t.value.(type) {
+	case Definition:
+		return marshal(val)
+	case []DefinitionLink:
+		return marshal(val)
+	case nil:
+		return []byte("null"), nil
+	}
+	return nil, fmt.Errorf("unknown type: %T", t)
+}
+
+func (t *ImplementationResult) UnmarshalJSON(val []byte) error {
+	if string(val) == "null" {
+		t.value = nil
+		return nil
+	}
+	var h0 Definition
+	if err := unmarshal(val, &h0); err == nil {
+		t.value = h0
+		return nil
+	}
+	var h1 []DefinitionLink
+	if err := unmarshal(val, &h1); err == nil {
+		t.value = h1
+		return nil
+	}
+	return &UnmarshalError{"unmarshal failed to match one of [Definition []DefinitionLink]"}
+}
+
 // InlayHintLabel the label of this hint. A human readable string or an array of InlayHintLabelPart label parts. *Note* that neither the string nor the label part can be empty.
-//
-// @since 3.17.0
 type InlayHintLabel struct {
 	value any
 }
@@ -726,8 +973,6 @@ func (t *InlayHintLabel) UnmarshalJSON(val []byte) error {
 }
 
 // InlayHintLabelPartTooltip the tooltip text when you hover over this label part. Depending on the client capability `inlayHint.resolveSupport` clients might resolve this property late using the resolve request.
-//
-// @since 3.17.0
 type InlayHintLabelPartTooltip struct {
 	value any
 }
@@ -769,8 +1014,6 @@ func (t *InlayHintLabelPartTooltip) UnmarshalJSON(val []byte) error {
 }
 
 // InlayHintTooltip the tooltip text when you hover over this item.
-//
-// @since 3.17.0
 type InlayHintTooltip struct {
 	value any
 }
@@ -812,8 +1055,6 @@ func (t *InlayHintTooltip) UnmarshalJSON(val []byte) error {
 }
 
 // InlineCompletionItemInsertText the text to replace the range with. Must be set.
-//
-// @since 3.18.0 proposed
 type InlineCompletionItemInsertText struct {
 	value any
 }
@@ -897,9 +1138,50 @@ func (t *InlineCompletionResult) UnmarshalJSON(val []byte) error {
 	return &UnmarshalError{"unmarshal failed to match one of [InlineCompletionList []InlineCompletionItem]"}
 }
 
-// NotebookCellTextDocumentFilterNotebook a filter that matches against the notebook containing the notebook cell. If a string value is provided it matches against the notebook type. '*' matches every notebook.
+// InlineCompletionResult a request to provide inline completions in a document. The request's parameter is of type InlineCompletionParams, the response is of type InlineCompletion InlineCompletion[] or a Thenable that resolves to such. 3.18.0 @proposed.
 //
-// @since 3.17.0
+// @since 3.18.0 proposed
+type InlineCompletionResult struct {
+	value any
+}
+
+func NewInlineCompletionResult[T InlineCompletionList | []InlineCompletionItem](val T) *InlineCompletionResult {
+	return &InlineCompletionResult{
+		value: val,
+	}
+}
+
+func (t InlineCompletionResult) MarshalJSON() ([]byte, error) {
+	switch val := t.value.(type) {
+	case InlineCompletionList:
+		return marshal(val)
+	case []InlineCompletionItem:
+		return marshal(val)
+	case nil:
+		return []byte("null"), nil
+	}
+	return nil, fmt.Errorf("unknown type: %T", t)
+}
+
+func (t *InlineCompletionResult) UnmarshalJSON(val []byte) error {
+	if string(val) == "null" {
+		t.value = nil
+		return nil
+	}
+	var h0 InlineCompletionList
+	if err := unmarshal(val, &h0); err == nil {
+		t.value = h0
+		return nil
+	}
+	var h1 []InlineCompletionItem
+	if err := unmarshal(val, &h1); err == nil {
+		t.value = h1
+		return nil
+	}
+	return &UnmarshalError{"unmarshal failed to match one of [InlineCompletionList []InlineCompletionItem]"}
+}
+
+// NotebookCellTextDocumentFilterNotebook a filter that matches against the notebook containing the notebook cell. If a string value is provided it matches against the notebook type. '*' matches every notebook.
 type NotebookCellTextDocumentFilterNotebook struct {
 	value any
 }
@@ -941,8 +1223,6 @@ func (t *NotebookCellTextDocumentFilterNotebook) UnmarshalJSON(val []byte) error
 }
 
 // NotebookDocumentFilterWithCellsNotebook the notebook to be synced If a string value is provided it matches against the notebook type. '*' matches every notebook.
-//
-// @since 3.18.0
 type NotebookDocumentFilterWithCellsNotebook struct {
 	value any
 }
@@ -984,8 +1264,6 @@ func (t *NotebookDocumentFilterWithCellsNotebook) UnmarshalJSON(val []byte) erro
 }
 
 // NotebookDocumentFilterWithNotebookNotebook the notebook to be synced If a string value is provided it matches against the notebook type. '*' matches every notebook.
-//
-// @since 3.18.0
 type NotebookDocumentFilterWithNotebookNotebook struct {
 	value any
 }
@@ -1239,8 +1517,6 @@ func (t *RelatedUnchangedDocumentDiagnosticReportRelatedDocuments) UnmarshalJSON
 }
 
 // RelativePatternBaseURI a workspace folder or a base URI to which this pattern will be matched against relatively.
-//
-// @since 3.17.0
 type RelativePatternBaseURI struct {
 	value any
 }
@@ -1324,9 +1600,50 @@ func (t *SemanticTokensDeltaResult) UnmarshalJSON(val []byte) error {
 	return &UnmarshalError{"unmarshal failed to match one of [SemanticTokens SemanticTokensDelta]"}
 }
 
-// SemanticTokensOptionsFull server supports providing semantic tokens for a full document.
+// SemanticTokensDeltaResult.
 //
 // @since 3.16.0
+type SemanticTokensDeltaResult struct {
+	value any
+}
+
+func NewSemanticTokensDeltaResult[T SemanticTokens | SemanticTokensDelta](val T) *SemanticTokensDeltaResult {
+	return &SemanticTokensDeltaResult{
+		value: val,
+	}
+}
+
+func (t SemanticTokensDeltaResult) MarshalJSON() ([]byte, error) {
+	switch val := t.value.(type) {
+	case SemanticTokens:
+		return marshal(val)
+	case SemanticTokensDelta:
+		return marshal(val)
+	case nil:
+		return []byte("null"), nil
+	}
+	return nil, fmt.Errorf("unknown type: %T", t)
+}
+
+func (t *SemanticTokensDeltaResult) UnmarshalJSON(val []byte) error {
+	if string(val) == "null" {
+		t.value = nil
+		return nil
+	}
+	var h0 SemanticTokens
+	if err := unmarshal(val, &h0); err == nil {
+		t.value = h0
+		return nil
+	}
+	var h1 SemanticTokensDelta
+	if err := unmarshal(val, &h1); err == nil {
+		t.value = h1
+		return nil
+	}
+	return &UnmarshalError{"unmarshal failed to match one of [SemanticTokens SemanticTokensDelta]"}
+}
+
+// SemanticTokensOptionsFull server supports providing semantic tokens for a full document.
 type SemanticTokensOptionsFull struct {
 	value any
 }
@@ -1368,8 +1685,6 @@ func (t *SemanticTokensOptionsFull) UnmarshalJSON(val []byte) error {
 }
 
 // SemanticTokensOptionsRange server supports providing semantic tokens for a specific range of a document.
-//
-// @since 3.16.0
 type SemanticTokensOptionsRange struct {
 	value any
 }
@@ -1411,6 +1726,8 @@ func (t *SemanticTokensOptionsRange) UnmarshalJSON(val []byte) error {
 }
 
 // ServerCapabilitiesCallHierarchyProvider the server provides call hierarchy support.
+//
+// @since 3.16.0
 type ServerCapabilitiesCallHierarchyProvider struct {
 	value any
 }
@@ -1637,6 +1954,8 @@ func (t *ServerCapabilitiesDefinitionProvider) UnmarshalJSON(val []byte) error {
 }
 
 // ServerCapabilitiesDiagnosticProvider the server has support for pull model diagnostics.
+//
+// @since 3.17.0
 type ServerCapabilitiesDiagnosticProvider struct {
 	value any
 }
@@ -1979,6 +2298,8 @@ func (t *ServerCapabilitiesImplementationProvider) UnmarshalJSON(val []byte) err
 }
 
 // ServerCapabilitiesInlayHintProvider the server provides inlay hints.
+//
+// @since 3.17.0
 type ServerCapabilitiesInlayHintProvider struct {
 	value any
 }
@@ -2027,6 +2348,8 @@ func (t *ServerCapabilitiesInlayHintProvider) UnmarshalJSON(val []byte) error {
 }
 
 // ServerCapabilitiesInlineCompletionProvider inline completion options used during static registration.  3.18.0 @proposed.
+//
+// @since 3.18.0 proposed
 type ServerCapabilitiesInlineCompletionProvider struct {
 	value any
 }
@@ -2068,6 +2391,8 @@ func (t *ServerCapabilitiesInlineCompletionProvider) UnmarshalJSON(val []byte) e
 }
 
 // ServerCapabilitiesInlineValueProvider the server provides inline values.
+//
+// @since 3.17.0
 type ServerCapabilitiesInlineValueProvider struct {
 	value any
 }
@@ -2116,6 +2441,8 @@ func (t *ServerCapabilitiesInlineValueProvider) UnmarshalJSON(val []byte) error 
 }
 
 // ServerCapabilitiesLinkedEditingRangeProvider the server provides linked editing range support.
+//
+// @since 3.16.0
 type ServerCapabilitiesLinkedEditingRangeProvider struct {
 	value any
 }
@@ -2164,6 +2491,8 @@ func (t *ServerCapabilitiesLinkedEditingRangeProvider) UnmarshalJSON(val []byte)
 }
 
 // ServerCapabilitiesMonikerProvider the server provides moniker support.
+//
+// @since 3.16.0
 type ServerCapabilitiesMonikerProvider struct {
 	value any
 }
@@ -2212,6 +2541,8 @@ func (t *ServerCapabilitiesMonikerProvider) UnmarshalJSON(val []byte) error {
 }
 
 // ServerCapabilitiesNotebookDocumentSync defines how notebook documents are synced.
+//
+// @since 3.17.0
 type ServerCapabilitiesNotebookDocumentSync struct {
 	value any
 }
@@ -2384,6 +2715,8 @@ func (t *ServerCapabilitiesSelectionRangeProvider) UnmarshalJSON(val []byte) err
 }
 
 // ServerCapabilitiesSemanticTokensProvider the server provides semantic tokens support.
+//
+// @since 3.16.0
 type ServerCapabilitiesSemanticTokensProvider struct {
 	value any
 }
@@ -2514,6 +2847,8 @@ func (t *ServerCapabilitiesTypeDefinitionProvider) UnmarshalJSON(val []byte) err
 }
 
 // ServerCapabilitiesTypeHierarchyProvider the server provides type hierarchy support.
+//
+// @since 3.17.0
 type ServerCapabilitiesTypeHierarchyProvider struct {
 	value any
 }
@@ -2773,6 +3108,47 @@ func (t *TypeDefinitionResult) UnmarshalJSON(val []byte) error {
 	return &UnmarshalError{"unmarshal failed to match one of [Definition []DefinitionLink]"}
 }
 
+// TypeDefinitionResult a request to resolve the type definition locations of a symbol at a given text document position. The request's parameter is of type TextDocumentPositionParams the response is of type Definition or a Thenable that resolves to such.
+type TypeDefinitionResult struct {
+	value any
+}
+
+func NewTypeDefinitionResult[T Definition | []DefinitionLink](val T) *TypeDefinitionResult {
+	return &TypeDefinitionResult{
+		value: val,
+	}
+}
+
+func (t TypeDefinitionResult) MarshalJSON() ([]byte, error) {
+	switch val := t.value.(type) {
+	case Definition:
+		return marshal(val)
+	case []DefinitionLink:
+		return marshal(val)
+	case nil:
+		return []byte("null"), nil
+	}
+	return nil, fmt.Errorf("unknown type: %T", t)
+}
+
+func (t *TypeDefinitionResult) UnmarshalJSON(val []byte) error {
+	if string(val) == "null" {
+		t.value = nil
+		return nil
+	}
+	var h0 Definition
+	if err := unmarshal(val, &h0); err == nil {
+		t.value = h0
+		return nil
+	}
+	var h1 []DefinitionLink
+	if err := unmarshal(val, &h1); err == nil {
+		t.value = h1
+		return nil
+	}
+	return &UnmarshalError{"unmarshal failed to match one of [Definition []DefinitionLink]"}
+}
+
 // WorkspaceEditDocumentChanges depending on the client capability `workspace.workspaceEdit.resourceOperations` document changes are
 // either an array of `TextDocumentEdit`s to express changes to n different text documents where each text document edit addresses a specific version of a text document. Or it can contain above `TextDocumentEdit`s mixed with create, rename and delete file / folder operations. Whether a client supports versioned document edits is expressed via `workspace.workspaceEdit.documentChanges` client capability. If a client neither supports `documentChanges` nor `workspace.workspaceEdit.resourceOperations` then only plain `TextEdit`s using the `changes` property are supported.
 type WorkspaceEditDocumentChanges struct {
@@ -2872,7 +3248,7 @@ func (t *WorkspaceFoldersServerCapabilitiesChangeNotifications) UnmarshalJSON(va
 
 // WorkspaceOptionsTextDocumentContent the server supports the `workspace/textDocumentContent` request.  3.18.0 @proposed.
 //
-// @since 3.18.0
+// @since 3.18.0 proposed
 type WorkspaceOptionsTextDocumentContent struct {
 	value any
 }
@@ -2916,8 +3292,6 @@ func (t *WorkspaceOptionsTextDocumentContent) UnmarshalJSON(val []byte) error {
 // WorkspaceSymbolLocation the location of the symbol. Whether a server is allowed to return a location without a range depends
 // on the client capability `workspace.symbol.resolveSupport`. See SymbolInformation#location for
 // more details.
-//
-// @since 3.17.0
 type WorkspaceSymbolLocation struct {
 	value any
 }
@@ -2956,6 +3330,50 @@ func (t *WorkspaceSymbolLocation) UnmarshalJSON(val []byte) error {
 		return nil
 	}
 	return &UnmarshalError{"unmarshal failed to match one of [Location LocationURIOnly]"}
+}
+
+// WorkspaceSymbolResult a request to list project-wide symbols matching the query string given by the WorkspaceSymbolParams.
+// The response is of type SymbolInformation SymbolInformation[] or a Thenable that resolves to such. 3.17.0 - support for WorkspaceSymbol in the returned data. Clients need to advertise support for WorkspaceSymbols via the client capability `workspace.symbol.resolveSupport`.
+//
+// @since 3.17.0 - support for WorkspaceSymbol in the returned data. Clients need to advertise support for WorkspaceSymbols via the client capability `workspace.symbol.resolveSupport`.
+type WorkspaceSymbolResult struct {
+	value any
+}
+
+func NewWorkspaceSymbolResult[T []SymbolInformation | []WorkspaceSymbol](val T) WorkspaceSymbolResult {
+	return WorkspaceSymbolResult{
+		value: val,
+	}
+}
+
+func (t WorkspaceSymbolResult) MarshalJSON() ([]byte, error) {
+	switch val := t.value.(type) {
+	case []SymbolInformation:
+		return marshal(val)
+	case []WorkspaceSymbol:
+		return marshal(val)
+	case nil:
+		return []byte("null"), nil
+	}
+	return nil, fmt.Errorf("unknown type: %T", t)
+}
+
+func (t *WorkspaceSymbolResult) UnmarshalJSON(val []byte) error {
+	if string(val) == "null" {
+		t.value = nil
+		return nil
+	}
+	var h0 []SymbolInformation
+	if err := unmarshal(val, &h0); err == nil {
+		t.value = h0
+		return nil
+	}
+	var h1 []WorkspaceSymbol
+	if err := unmarshal(val, &h1); err == nil {
+		t.value = h1
+		return nil
+	}
+	return &UnmarshalError{"unmarshal failed to match one of [[]SymbolInformation []WorkspaceSymbol]"}
 }
 
 // WorkspaceSymbolResult a request to list project-wide symbols matching the query string given by the WorkspaceSymbolParams.
