@@ -173,47 +173,6 @@ func (t *CodeActionRequestResult) UnmarshalJSON(val []byte) error {
 	return &UnmarshalError{"unmarshal failed to match one of [Command CodeAction]"}
 }
 
-// CodeActionRequestResult a request to provide commands for the given text document and range.
-type CodeActionRequestResult struct {
-	value any
-}
-
-func NewCodeActionRequestResult[T Command | CodeAction](val T) *CodeActionRequestResult {
-	return &CodeActionRequestResult{
-		value: val,
-	}
-}
-
-func (t CodeActionRequestResult) MarshalJSON() ([]byte, error) {
-	switch val := t.value.(type) {
-	case Command:
-		return marshal(val)
-	case CodeAction:
-		return marshal(val)
-	case nil:
-		return []byte("null"), nil
-	}
-	return nil, fmt.Errorf("unknown type: %T", t)
-}
-
-func (t *CodeActionRequestResult) UnmarshalJSON(val []byte) error {
-	if string(val) == "null" {
-		t.value = nil
-		return nil
-	}
-	var h0 Command
-	if err := unmarshal(val, &h0); err == nil {
-		t.value = h0
-		return nil
-	}
-	var h1 CodeAction
-	if err := unmarshal(val, &h1); err == nil {
-		t.value = h1
-		return nil
-	}
-	return &UnmarshalError{"unmarshal failed to match one of [Command CodeAction]"}
-}
-
 // CompletionItemDefaultsEditRange a default edit range.
 //
 // @since 3.17.0
@@ -383,48 +342,6 @@ func (t *CompletionResult) UnmarshalJSON(val []byte) error {
 	return &UnmarshalError{"unmarshal failed to match one of [[]CompletionItem CompletionList]"}
 }
 
-// CompletionResult request to request completion at a given text document position. The request's parameter is of type TextDocumentPosition the response is of type CompletionItem CompletionItem[] or CompletionList or a Thenable that resolves to such. The request can delay the computation of the CompletionItem.detail `detail` and CompletionItem.documentation `documentation` properties to the `completionItem/resolve` request. However, properties that are needed for the initial sorting and filtering, like `sortText`,
-// `filterText`, `insertText`, and `textEdit`, must not be changed during resolve.
-type CompletionResult struct {
-	value any
-}
-
-func NewCompletionResult[T []CompletionItem | CompletionList](val T) *CompletionResult {
-	return &CompletionResult{
-		value: val,
-	}
-}
-
-func (t CompletionResult) MarshalJSON() ([]byte, error) {
-	switch val := t.value.(type) {
-	case []CompletionItem:
-		return marshal(val)
-	case CompletionList:
-		return marshal(val)
-	case nil:
-		return []byte("null"), nil
-	}
-	return nil, fmt.Errorf("unknown type: %T", t)
-}
-
-func (t *CompletionResult) UnmarshalJSON(val []byte) error {
-	if string(val) == "null" {
-		t.value = nil
-		return nil
-	}
-	var h0 []CompletionItem
-	if err := unmarshal(val, &h0); err == nil {
-		t.value = h0
-		return nil
-	}
-	var h1 CompletionList
-	if err := unmarshal(val, &h1); err == nil {
-		t.value = h1
-		return nil
-	}
-	return &UnmarshalError{"unmarshal failed to match one of [[]CompletionItem CompletionList]"}
-}
-
 // DeclarationResult a request to resolve the type definition locations of a symbol at a given text document position. The request's parameter is of type TextDocumentPositionParams the response is of type Declaration or a
 // typed array of DeclarationLink or a Thenable that resolves to such.
 type DeclarationResult struct {
@@ -465,90 +382,6 @@ func (t *DeclarationResult) UnmarshalJSON(val []byte) error {
 		return nil
 	}
 	return &UnmarshalError{"unmarshal failed to match one of [Declaration []DeclarationLink]"}
-}
-
-// DeclarationResult a request to resolve the type definition locations of a symbol at a given text document position. The request's parameter is of type TextDocumentPositionParams the response is of type Declaration or a
-// typed array of DeclarationLink or a Thenable that resolves to such.
-type DeclarationResult struct {
-	value any
-}
-
-func NewDeclarationResult[T Declaration | []DeclarationLink](val T) *DeclarationResult {
-	return &DeclarationResult{
-		value: val,
-	}
-}
-
-func (t DeclarationResult) MarshalJSON() ([]byte, error) {
-	switch val := t.value.(type) {
-	case Declaration:
-		return marshal(val)
-	case []DeclarationLink:
-		return marshal(val)
-	case nil:
-		return []byte("null"), nil
-	}
-	return nil, fmt.Errorf("unknown type: %T", t)
-}
-
-func (t *DeclarationResult) UnmarshalJSON(val []byte) error {
-	if string(val) == "null" {
-		t.value = nil
-		return nil
-	}
-	var h0 Declaration
-	if err := unmarshal(val, &h0); err == nil {
-		t.value = h0
-		return nil
-	}
-	var h1 []DeclarationLink
-	if err := unmarshal(val, &h1); err == nil {
-		t.value = h1
-		return nil
-	}
-	return &UnmarshalError{"unmarshal failed to match one of [Declaration []DeclarationLink]"}
-}
-
-// DefinitionResult a request to resolve the definition location of a symbol at a given text document position. The request's parameter is of type TextDocumentPosition the response is of either type Definition or a typed
-// array of DefinitionLink or a Thenable that resolves to such.
-type DefinitionResult struct {
-	value any
-}
-
-func NewDefinitionResult[T Definition | []DefinitionLink](val T) *DefinitionResult {
-	return &DefinitionResult{
-		value: val,
-	}
-}
-
-func (t DefinitionResult) MarshalJSON() ([]byte, error) {
-	switch val := t.value.(type) {
-	case Definition:
-		return marshal(val)
-	case []DefinitionLink:
-		return marshal(val)
-	case nil:
-		return []byte("null"), nil
-	}
-	return nil, fmt.Errorf("unknown type: %T", t)
-}
-
-func (t *DefinitionResult) UnmarshalJSON(val []byte) error {
-	if string(val) == "null" {
-		t.value = nil
-		return nil
-	}
-	var h0 Definition
-	if err := unmarshal(val, &h0); err == nil {
-		t.value = h0
-		return nil
-	}
-	var h1 []DefinitionLink
-	if err := unmarshal(val, &h1); err == nil {
-		t.value = h1
-		return nil
-	}
-	return &UnmarshalError{"unmarshal failed to match one of [Definition []DefinitionLink]"}
 }
 
 // DefinitionResult a request to resolve the definition location of a symbol at a given text document position. The request's parameter is of type TextDocumentPosition the response is of either type Definition or a typed
@@ -674,7 +507,6 @@ func (t *DidChangeConfigurationRegistrationOptionsSection) UnmarshalJSON(val []b
 	return &UnmarshalError{"unmarshal failed to match one of [string []string]"}
 }
 
-// @since 3.17.0
 type DocumentDiagnosticReportPartialResultRelatedDocuments struct {
 	value any
 }
@@ -713,48 +545,6 @@ func (t *DocumentDiagnosticReportPartialResultRelatedDocuments) UnmarshalJSON(va
 		return nil
 	}
 	return &UnmarshalError{"unmarshal failed to match one of [FullDocumentDiagnosticReport UnchangedDocumentDiagnosticReport]"}
-}
-
-// DocumentSymbolResult a request to list all symbols found in a given text document. The request's parameter is of type TextDocumentIdentifier the response is of type SymbolInformation SymbolInformation[] or a Thenable that
-// resolves to such.
-type DocumentSymbolResult struct {
-	value any
-}
-
-func NewDocumentSymbolResult[T []SymbolInformation | []DocumentSymbol](val T) DocumentSymbolResult {
-	return DocumentSymbolResult{
-		value: val,
-	}
-}
-
-func (t DocumentSymbolResult) MarshalJSON() ([]byte, error) {
-	switch val := t.value.(type) {
-	case []SymbolInformation:
-		return marshal(val)
-	case []DocumentSymbol:
-		return marshal(val)
-	case nil:
-		return []byte("null"), nil
-	}
-	return nil, fmt.Errorf("unknown type: %T", t)
-}
-
-func (t *DocumentSymbolResult) UnmarshalJSON(val []byte) error {
-	if string(val) == "null" {
-		t.value = nil
-		return nil
-	}
-	var h0 []SymbolInformation
-	if err := unmarshal(val, &h0); err == nil {
-		t.value = h0
-		return nil
-	}
-	var h1 []DocumentSymbol
-	if err := unmarshal(val, &h1); err == nil {
-		t.value = h1
-		return nil
-	}
-	return &UnmarshalError{"unmarshal failed to match one of [[]SymbolInformation []DocumentSymbol]"}
 }
 
 // DocumentSymbolResult a request to list all symbols found in a given text document. The request's parameter is of type TextDocumentIdentifier the response is of type SymbolInformation SymbolInformation[] or a Thenable that
@@ -845,48 +635,6 @@ func (t *HoverContents) UnmarshalJSON(val []byte) error {
 		return nil
 	}
 	return &UnmarshalError{"unmarshal failed to match one of [MarkupContent MarkedString []MarkedString]"}
-}
-
-// ImplementationResult a request to resolve the implementation locations of a symbol at a given text document position. The
-// request's parameter is of type TextDocumentPositionParams the response is of type Definition or a Thenable that resolves to such.
-type ImplementationResult struct {
-	value any
-}
-
-func NewImplementationResult[T Definition | []DefinitionLink](val T) *ImplementationResult {
-	return &ImplementationResult{
-		value: val,
-	}
-}
-
-func (t ImplementationResult) MarshalJSON() ([]byte, error) {
-	switch val := t.value.(type) {
-	case Definition:
-		return marshal(val)
-	case []DefinitionLink:
-		return marshal(val)
-	case nil:
-		return []byte("null"), nil
-	}
-	return nil, fmt.Errorf("unknown type: %T", t)
-}
-
-func (t *ImplementationResult) UnmarshalJSON(val []byte) error {
-	if string(val) == "null" {
-		t.value = nil
-		return nil
-	}
-	var h0 Definition
-	if err := unmarshal(val, &h0); err == nil {
-		t.value = h0
-		return nil
-	}
-	var h1 []DefinitionLink
-	if err := unmarshal(val, &h1); err == nil {
-		t.value = h1
-		return nil
-	}
-	return &UnmarshalError{"unmarshal failed to match one of [Definition []DefinitionLink]"}
 }
 
 // ImplementationResult a request to resolve the implementation locations of a symbol at a given text document position. The
@@ -1138,49 +886,6 @@ func (t *InlineCompletionResult) UnmarshalJSON(val []byte) error {
 	return &UnmarshalError{"unmarshal failed to match one of [InlineCompletionList []InlineCompletionItem]"}
 }
 
-// InlineCompletionResult a request to provide inline completions in a document. The request's parameter is of type InlineCompletionParams, the response is of type InlineCompletion InlineCompletion[] or a Thenable that resolves to such. 3.18.0 @proposed.
-//
-// @since 3.18.0 proposed
-type InlineCompletionResult struct {
-	value any
-}
-
-func NewInlineCompletionResult[T InlineCompletionList | []InlineCompletionItem](val T) *InlineCompletionResult {
-	return &InlineCompletionResult{
-		value: val,
-	}
-}
-
-func (t InlineCompletionResult) MarshalJSON() ([]byte, error) {
-	switch val := t.value.(type) {
-	case InlineCompletionList:
-		return marshal(val)
-	case []InlineCompletionItem:
-		return marshal(val)
-	case nil:
-		return []byte("null"), nil
-	}
-	return nil, fmt.Errorf("unknown type: %T", t)
-}
-
-func (t *InlineCompletionResult) UnmarshalJSON(val []byte) error {
-	if string(val) == "null" {
-		t.value = nil
-		return nil
-	}
-	var h0 InlineCompletionList
-	if err := unmarshal(val, &h0); err == nil {
-		t.value = h0
-		return nil
-	}
-	var h1 []InlineCompletionItem
-	if err := unmarshal(val, &h1); err == nil {
-		t.value = h1
-		return nil
-	}
-	return &UnmarshalError{"unmarshal failed to match one of [InlineCompletionList []InlineCompletionItem]"}
-}
-
 // NotebookCellTextDocumentFilterNotebook a filter that matches against the notebook containing the notebook cell. If a string value is provided it matches against the notebook type. '*' matches every notebook.
 type NotebookCellTextDocumentFilterNotebook struct {
 	value any
@@ -1305,8 +1010,6 @@ func (t *NotebookDocumentFilterWithNotebookNotebook) UnmarshalJSON(val []byte) e
 }
 
 // NotebookDocumentSyncOptionsNotebookSelector the notebooks to be synced.
-//
-// @since 3.17.0
 type NotebookDocumentSyncOptionsNotebookSelector struct {
 	value any
 }
@@ -1555,49 +1258,6 @@ func (t *RelativePatternBaseURI) UnmarshalJSON(val []byte) error {
 		return nil
 	}
 	return &UnmarshalError{"unmarshal failed to match one of [WorkspaceFolder uri.URI]"}
-}
-
-// SemanticTokensDeltaResult.
-//
-// @since 3.16.0
-type SemanticTokensDeltaResult struct {
-	value any
-}
-
-func NewSemanticTokensDeltaResult[T SemanticTokens | SemanticTokensDelta](val T) *SemanticTokensDeltaResult {
-	return &SemanticTokensDeltaResult{
-		value: val,
-	}
-}
-
-func (t SemanticTokensDeltaResult) MarshalJSON() ([]byte, error) {
-	switch val := t.value.(type) {
-	case SemanticTokens:
-		return marshal(val)
-	case SemanticTokensDelta:
-		return marshal(val)
-	case nil:
-		return []byte("null"), nil
-	}
-	return nil, fmt.Errorf("unknown type: %T", t)
-}
-
-func (t *SemanticTokensDeltaResult) UnmarshalJSON(val []byte) error {
-	if string(val) == "null" {
-		t.value = nil
-		return nil
-	}
-	var h0 SemanticTokens
-	if err := unmarshal(val, &h0); err == nil {
-		t.value = h0
-		return nil
-	}
-	var h1 SemanticTokensDelta
-	if err := unmarshal(val, &h1); err == nil {
-		t.value = h1
-		return nil
-	}
-	return &UnmarshalError{"unmarshal failed to match one of [SemanticTokens SemanticTokensDelta]"}
 }
 
 // SemanticTokensDeltaResult.
@@ -2979,6 +2639,8 @@ func (t *SignatureInformationDocumentation) UnmarshalJSON(val []byte) error {
 }
 
 // TextDocumentEditEdits the edits to be applied. 3.16.0 - support for AnnotatedTextEdit. This is guarded using a client capability. 3.18.0 - support for SnippetTextEdit. This is guarded using a client capability.
+//
+// @since 3.18.0 - support for SnippetTextEdit. This is guarded using a client capability.
 type TextDocumentEditEdits struct {
 	value any
 }
@@ -3065,47 +2727,6 @@ func (t *TextDocumentSyncOptionsSave) UnmarshalJSON(val []byte) error {
 		return nil
 	}
 	return &UnmarshalError{"unmarshal failed to match one of [bool SaveOptions]"}
-}
-
-// TypeDefinitionResult a request to resolve the type definition locations of a symbol at a given text document position. The request's parameter is of type TextDocumentPositionParams the response is of type Definition or a Thenable that resolves to such.
-type TypeDefinitionResult struct {
-	value any
-}
-
-func NewTypeDefinitionResult[T Definition | []DefinitionLink](val T) *TypeDefinitionResult {
-	return &TypeDefinitionResult{
-		value: val,
-	}
-}
-
-func (t TypeDefinitionResult) MarshalJSON() ([]byte, error) {
-	switch val := t.value.(type) {
-	case Definition:
-		return marshal(val)
-	case []DefinitionLink:
-		return marshal(val)
-	case nil:
-		return []byte("null"), nil
-	}
-	return nil, fmt.Errorf("unknown type: %T", t)
-}
-
-func (t *TypeDefinitionResult) UnmarshalJSON(val []byte) error {
-	if string(val) == "null" {
-		t.value = nil
-		return nil
-	}
-	var h0 Definition
-	if err := unmarshal(val, &h0); err == nil {
-		t.value = h0
-		return nil
-	}
-	var h1 []DefinitionLink
-	if err := unmarshal(val, &h1); err == nil {
-		t.value = h1
-		return nil
-	}
-	return &UnmarshalError{"unmarshal failed to match one of [Definition []DefinitionLink]"}
 }
 
 // TypeDefinitionResult a request to resolve the type definition locations of a symbol at a given text document position. The request's parameter is of type TextDocumentPositionParams the response is of type Definition or a Thenable that resolves to such.
@@ -3330,50 +2951,6 @@ func (t *WorkspaceSymbolLocation) UnmarshalJSON(val []byte) error {
 		return nil
 	}
 	return &UnmarshalError{"unmarshal failed to match one of [Location LocationURIOnly]"}
-}
-
-// WorkspaceSymbolResult a request to list project-wide symbols matching the query string given by the WorkspaceSymbolParams.
-// The response is of type SymbolInformation SymbolInformation[] or a Thenable that resolves to such. 3.17.0 - support for WorkspaceSymbol in the returned data. Clients need to advertise support for WorkspaceSymbols via the client capability `workspace.symbol.resolveSupport`.
-//
-// @since 3.17.0 - support for WorkspaceSymbol in the returned data. Clients need to advertise support for WorkspaceSymbols via the client capability `workspace.symbol.resolveSupport`.
-type WorkspaceSymbolResult struct {
-	value any
-}
-
-func NewWorkspaceSymbolResult[T []SymbolInformation | []WorkspaceSymbol](val T) WorkspaceSymbolResult {
-	return WorkspaceSymbolResult{
-		value: val,
-	}
-}
-
-func (t WorkspaceSymbolResult) MarshalJSON() ([]byte, error) {
-	switch val := t.value.(type) {
-	case []SymbolInformation:
-		return marshal(val)
-	case []WorkspaceSymbol:
-		return marshal(val)
-	case nil:
-		return []byte("null"), nil
-	}
-	return nil, fmt.Errorf("unknown type: %T", t)
-}
-
-func (t *WorkspaceSymbolResult) UnmarshalJSON(val []byte) error {
-	if string(val) == "null" {
-		t.value = nil
-		return nil
-	}
-	var h0 []SymbolInformation
-	if err := unmarshal(val, &h0); err == nil {
-		t.value = h0
-		return nil
-	}
-	var h1 []WorkspaceSymbol
-	if err := unmarshal(val, &h1); err == nil {
-		t.value = h1
-		return nil
-	}
-	return &UnmarshalError{"unmarshal failed to match one of [[]SymbolInformation []WorkspaceSymbol]"}
 }
 
 // WorkspaceSymbolResult a request to list project-wide symbols matching the query string given by the WorkspaceSymbolParams.

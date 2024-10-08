@@ -45,9 +45,7 @@ func ServerHandler(server Server, handler jsonrpc2.Handler) jsonrpc2.Handler {
 			return replyParseError(ctx, reply, err)
 		}
 
-		resp, err := server.Request(ctx, req.Method(), params)
-
-		return reply(ctx, resp, err)
+		return nil
 	}
 
 	return h

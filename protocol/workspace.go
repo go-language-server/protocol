@@ -349,7 +349,7 @@ type WorkspaceFoldersServerCapabilities struct {
 	Supported bool `json:"supported,omitempty"`
 
 	// ChangeNotifications whether the server wants to receive workspace folder change notifications. If a string is provided the string is treated as an ID under which the notification is registered on the client side. The ID can be used to unregister for these events using the `client/unregisterCapability` request.
-	ChangeNotifications WorkspaceFoldersServerCapabilitiesChangeNotifications `json:"changeNotifications,omitempty"`
+	ChangeNotifications *WorkspaceFoldersServerCapabilitiesChangeNotifications `json:"changeNotifications,omitempty"`
 }
 
 // DidChangeConfigurationParams the parameters of a change configuration notification.
@@ -359,7 +359,7 @@ type DidChangeConfigurationParams struct {
 }
 
 type DidChangeConfigurationRegistrationOptions struct {
-	Section DidChangeConfigurationRegistrationOptionsSection `json:"section,omitempty"`
+	Section *DidChangeConfigurationRegistrationOptionsSection `json:"section,omitempty"`
 }
 
 // FileEvent an event describing a file change.

@@ -20,28 +20,28 @@ func (gen *Generator) ClientToServer(clientNotifications, bidiNotifications []*p
 	g.PP(`const (`)
 	if len(bidiNotifications) > 0 {
 		slices.SortFunc(bidiNotifications, func(a, b *protocol.Notification) int {
-			return cmp.Compare(strings.ToLower(a.TypeName), strings.ToLower(b.TypeName))
+			return cmp.Compare(strings.ToLower(a.Method), strings.ToLower(b.Method))
 		})
 		for _, meth := range bidiNotifications {
 			g.PP(`	`, `MethodClient`+normalizeMethodName(meth.Method), ` ClientMethod `, ` = `, strconv.Quote(meth.Method), ` // bidirect client notification`)
 		}
 	}
 	slices.SortFunc(clientNotifications, func(a, b *protocol.Notification) int {
-		return cmp.Compare(strings.ToLower(a.TypeName), strings.ToLower(b.TypeName))
+		return cmp.Compare(strings.ToLower(a.Method), strings.ToLower(b.Method))
 	})
 	for _, meth := range clientNotifications {
 		g.PP(`	`, `Method`+normalizeMethodName(meth.Method), ` ClientMethod `, ` = `, strconv.Quote(meth.Method), ` // client notification`)
 	}
 	if len(bidiRequests) > 0 {
 		slices.SortFunc(bidiRequests, func(a, b *protocol.Request) int {
-			return cmp.Compare(strings.ToLower(a.TypeName), strings.ToLower(b.TypeName))
+			return cmp.Compare(strings.ToLower(a.Method), strings.ToLower(b.Method))
 		})
 		for _, meth := range bidiRequests {
 			g.PP(`	`, `MethodClient`+normalizeMethodName(meth.Method), ` ClientMethod `, ` = `, strconv.Quote(meth.Method), ` // bidirect client request`)
 		}
 	}
 	slices.SortFunc(clientRequests, func(a, b *protocol.Request) int {
-		return cmp.Compare(strings.ToLower(a.TypeName), strings.ToLower(b.TypeName))
+		return cmp.Compare(strings.ToLower(a.Method), strings.ToLower(b.Method))
 	})
 	for _, meth := range clientRequests {
 		g.PP(`	`, `Method`+normalizeMethodName(meth.Method), ` ClientMethod `, ` = `, strconv.Quote(meth.Method), ` // client request`)
@@ -113,6 +113,8 @@ func (gen *Generator) ClientToServer(clientNotifications, bidiNotifications []*p
 	g.PP(`// UnimplementedClient should be embedded to have forward compatible implementations.`)
 	g.PP(`type UnimplementedClient struct {}`)
 	g.P("\n")
+	g.PP(`var _ Client = UnimplementedClient{}`)
+	g.P("\n")
 	for i, notify := range notifications {
 		meth := normalizeMethodName(notify.TypeName)
 		meth = strings.TrimSuffix(meth, "Notification")
@@ -168,28 +170,28 @@ func (gen *Generator) ServerToClient(serverNotifications, bidiNotifications []*p
 	g.PP(`const (`)
 	if len(bidiNotifications) > 0 {
 		slices.SortFunc(bidiNotifications, func(a, b *protocol.Notification) int {
-			return cmp.Compare(a.TypeName, b.TypeName)
+			return cmp.Compare(a.Method, b.Method)
 		})
 		for _, meth := range bidiNotifications {
 			g.PP(`	`, `MethodServer`+normalizeMethodName(meth.Method), ` ServerMethod `, ` = `, strconv.Quote(meth.Method), ` // bidirect server notification`)
 		}
 	}
 	slices.SortFunc(serverNotifications, func(a, b *protocol.Notification) int {
-		return cmp.Compare(a.TypeName, b.TypeName)
+		return cmp.Compare(a.Method, b.Method)
 	})
 	for _, meth := range serverNotifications {
 		g.PP(`	`, `Method`+normalizeMethodName(meth.Method), ` ServerMethod `, ` = `, strconv.Quote(meth.Method), ` // server notification`)
 	}
 	if len(bidiRequests) > 0 {
 		slices.SortFunc(bidiRequests, func(a, b *protocol.Request) int {
-			return cmp.Compare(a.TypeName, b.TypeName)
+			return cmp.Compare(a.Method, b.Method)
 		})
 		for _, meth := range bidiRequests {
 			g.PP(`	`, `MethodServer`+normalizeMethodName(meth.Method), ` ServerMethod `, ` = `, strconv.Quote(meth.Method), ` // bidirect server request`)
 		}
 	}
 	slices.SortFunc(serverNequests, func(a, b *protocol.Request) int {
-		return cmp.Compare(a.TypeName, b.TypeName)
+		return cmp.Compare(a.Method, b.Method)
 	})
 	for _, meth := range serverNequests {
 		g.PP(`	`, `Method`+normalizeMethodName(meth.Method), ` ServerMethod `, ` = `, strconv.Quote(meth.Method), ` // server request`)
@@ -255,13 +257,13 @@ func (gen *Generator) ServerToClient(serverNotifications, bidiNotifications []*p
 			g.P("\n")
 		}
 	}
-	g.P("\n")
-	g.PP(`Request(ctx context.Context, method string, params any) (any, error)`)
 	g.PP(`}`)
 	g.P("\n")
 
 	g.PP(`// UnimplementedServer should be embedded to have forward compatible implementations.`)
 	g.PP(`type UnimplementedServer struct {}`)
+	g.P("\n")
+	g.PP(`var _ Server = UnimplementedServer{}`)
 	g.P("\n")
 	for i, notify := range notifications {
 		meth := normalizeMethodName(notify.TypeName)
@@ -374,11 +376,12 @@ func (gen *Generator) request(g Printer, meth string, req *protocol.Request) (nR
 			gen.renderRequestssOrTypeNull(g, req, r)
 			g.P(`, `)
 		default:
-			genericsProp := &protocol.Property{
+			genericsProp := GenericsTypes{
 				Name:          meth + "Result",
 				Documentation: req.Documentation,
 				Since:         req.Since,
 				Proposed:      req.Proposed,
+				Deprecated:    req.Deprecated,
 			}
 			gen.renderRequestssOrType(g, r, genericsProp)
 			g.P(`, `)
@@ -410,11 +413,12 @@ func (gen *Generator) renderRequestsArrayType(g Printer, req *protocol.Request, 
 			g.P(`[]*`)
 			gen.renderRequestssOrTypeNull(g, req, elem)
 		default:
-			genericsProp := &protocol.Property{
+			genericsProp := GenericsTypes{
 				Name:          normalizeMethodName(req.TypeName) + "Result",
 				Documentation: req.Documentation,
 				Since:         req.Since,
 				Proposed:      req.Proposed,
+				Deprecated:    req.Deprecated,
 			}
 			gen.renderRequestssOrType(g, elem, genericsProp)
 		}
@@ -447,7 +451,7 @@ func (gen *Generator) renderRequestssOrTypeNull(g Printer, req *protocol.Request
 	}
 }
 
-func (gen *Generator) renderRequestssOrType(g Printer, or *protocol.OrType, genericsProp *protocol.Property) {
+func (gen *Generator) renderRequestssOrType(g Printer, or *protocol.OrType, genericsProp GenericsTypes) {
 	g.P(` *`, genericsProp.Name)
 	gen.genericsTypes[genericsProp] = or.Items
 }

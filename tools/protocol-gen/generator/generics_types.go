@@ -16,13 +16,13 @@ import (
 func (gen *Generator) GenericsTypes() error {
 	g := NewPrinter("types_generics")
 
-	sorted := make([]*protocol.Property, len(gen.genericsTypes))
+	sorted := make([]GenericsTypes, len(gen.genericsTypes))
 	i := 0
 	for generics := range gen.genericsTypes {
 		sorted[i] = generics
 		i++
 	}
-	slices.SortFunc(sorted, func(a, b *protocol.Property) int {
+	slices.SortFunc(sorted, func(a, b GenericsTypes) int {
 		return cmp.Compare(a.Name, b.Name)
 	})
 

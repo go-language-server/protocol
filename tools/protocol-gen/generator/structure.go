@@ -512,23 +512,27 @@ func (gen *Generator) Structures(structures []*protocol.Structure) error {
 					gen.renderStructuresReferenceType(g, prop, node)
 
 				case *protocol.ArrayType:
-					genericsProp := &protocol.Property{
+					prop := GenericsTypes{
 						Name:          structuresName + propName,
+						Optional:      prop.Optional,
 						Documentation: prop.Documentation,
-						Since:         structure.Since,
-						Proposed:      structure.Proposed,
+						Since:         prop.Since,
+						Proposed:      prop.Proposed,
+						Deprecated:    prop.Deprecated,
 					}
 					g.P(` `)
-					gen.renderStructuresArrayTypeGeneric(g, node, genericsProp)
+					gen.renderStructuresArrayTypeGeneric(g, node, prop)
 
 				case *protocol.MapType:
-					genericsProp := &protocol.Property{
+					prop := GenericsTypes{
 						Name:          structuresName + propName,
+						Optional:      prop.Optional,
 						Documentation: prop.Documentation,
-						Since:         structure.Since,
-						Proposed:      structure.Proposed,
+						Since:         prop.Since,
+						Proposed:      prop.Proposed,
+						Deprecated:    prop.Deprecated,
 					}
-					gen.renderStructuresMapType(g, node, genericsProp)
+					gen.renderStructuresMapType(g, node, prop)
 
 				case *protocol.OrType:
 					switch {
@@ -554,7 +558,7 @@ func (gen *Generator) Structures(structures []*protocol.Structure) error {
 						if isNull(node.Items...) {
 							prop.Optional = true
 						}
-						genericsProp := &protocol.Property{
+						genericsProp := GenericsTypes{
 							Name:          structuresName + propName,
 							Optional:      prop.Optional,
 							Documentation: prop.Documentation,
@@ -562,7 +566,12 @@ func (gen *Generator) Structures(structures []*protocol.Structure) error {
 							Since:         prop.Since,
 							Deprecated:    prop.Deprecated,
 						}
-						gen.renderStructuresOrType(g, node, genericsProp)
+						if _, ok := gen.genericsTypes[genericsProp]; !ok {
+							if _, ok := enumerationNames[genericsProp.Name]; !ok && genericsProp.Optional {
+								g.P(`*`)
+							}
+							gen.renderStructuresOrType(g, node, genericsProp)
+						}
 					}
 
 				default:
@@ -620,7 +629,7 @@ func (gen *Generator) renderStructuresArrayType(g Printer, array *protocol.Array
 	}
 }
 
-func (gen *Generator) renderStructuresArrayTypeGeneric(g Printer, array *protocol.ArrayType, genericsProp *protocol.Property) {
+func (gen *Generator) renderStructuresArrayTypeGeneric(g Printer, array *protocol.ArrayType, genericsProp GenericsTypes) {
 	elem := array.Element
 	switch elem := elem.(type) {
 	case protocol.BaseType:
@@ -630,14 +639,19 @@ func (gen *Generator) renderStructuresArrayTypeGeneric(g Printer, array *protoco
 		g.P(`[]` + normalizeLSPTypes(elem.String()))
 
 	case *protocol.OrType:
-		gen.renderStructuresOrType(g, elem, genericsProp)
+		if _, ok := gen.genericsTypes[genericsProp]; !ok {
+			if _, ok := enumerationNames[genericsProp.Name]; !ok && genericsProp.Optional {
+				g.P(`*`)
+			}
+			gen.renderStructuresOrType(g, elem, genericsProp)
+		}
 
 	default:
 		panic(fmt.Sprintf("structures.ArrayKind: %#v\n", elem))
 	}
 }
 
-func (gen *Generator) renderStructuresMapType(g Printer, m *protocol.MapType, genericsProp *protocol.Property) {
+func (gen *Generator) renderStructuresMapType(g Printer, m *protocol.MapType, genericsProp GenericsTypes) {
 	g.P(` map`)
 
 	// write map key
@@ -661,14 +675,19 @@ func (gen *Generator) renderStructuresMapType(g Printer, m *protocol.MapType, ge
 		gen.renderStructuresArrayTypeGeneric(g, val, genericsProp)
 
 	case *protocol.OrType:
-		gen.renderStructuresOrType(g, val, genericsProp)
+		if _, ok := gen.genericsTypes[genericsProp]; !ok {
+			if _, ok := enumerationNames[genericsProp.Name]; !ok && genericsProp.Optional {
+				g.P(`*`)
+			}
+			gen.renderStructuresOrType(g, val, genericsProp)
+		}
 
 	default:
 		panic(fmt.Sprintf("structures.MapType.Value: %[1]T = %#[1]v\n", m.Value))
 	}
 }
 
-func (gen *Generator) renderStructuresOrType(g Printer, or *protocol.OrType, genericsProp *protocol.Property) {
+func (gen *Generator) renderStructuresOrType(g Printer, or *protocol.OrType, genericsProp GenericsTypes) {
 	g.P(` `, genericsProp.Name)
 	gen.genericsTypes[genericsProp] = or.Items
 }

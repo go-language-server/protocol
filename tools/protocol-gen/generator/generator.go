@@ -58,6 +58,29 @@ const (
 	pkgJSONRPC = `"go.lsp.dev/jsonrpc2"`
 )
 
+type GenericsTypes struct {
+	// The property name.
+	Name string
+
+	// Whether the property is optional. If omitted, the property is mandatory.
+	Optional bool
+
+	// An optional documentation.
+	Documentation string
+
+	// Since when (release number) this property is available. Is undefined if not known.
+	Since string
+
+	// Whether this is a proposed property. If omitted, the structure is final.
+	Proposed bool
+
+	// Whether the property is deprecated or not. If deprecated the property contains the deprecation message.
+	Deprecated string
+
+	// The property JSON name.
+	JSONName string
+}
+
 type Generator struct {
 	enumerations  []Printer
 	typeAliases   []Printer
@@ -65,13 +88,13 @@ type Generator struct {
 	client        []Printer
 	server        []Printer
 	generics      map[string]bool
-	genericsTypes map[*protocol.Property][]protocol.Type
+	genericsTypes map[GenericsTypes][]protocol.Type
 	files         map[string]*os.File
 }
 
 func (gen *Generator) Init() {
 	gen.generics = make(map[string]bool)
-	gen.genericsTypes = make(map[*protocol.Property][]protocol.Type)
+	gen.genericsTypes = make(map[GenericsTypes][]protocol.Type)
 	gen.files = make(map[string]*os.File)
 }
 

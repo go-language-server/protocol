@@ -909,12 +909,12 @@ type SemanticTokensOptions struct {
 	// Range server supports providing semantic tokens for a specific range of a document.
 	//
 	// @since 3.16.0
-	Range SemanticTokensOptionsRange `json:"range,omitempty"`
+	Range *SemanticTokensOptionsRange `json:"range,omitempty"`
 
 	// Full server supports providing semantic tokens for a full document.
 	//
 	// @since 3.16.0
-	Full SemanticTokensOptionsFull `json:"full,omitempty"`
+	Full *SemanticTokensOptionsFull `json:"full,omitempty"`
 }
 
 // SemanticTokensRegistrationOptions.
@@ -1272,7 +1272,7 @@ type InlayHintLabelPart struct {
 	// Tooltip the tooltip text when you hover over this label part. Depending on the client capability `inlayHint.resolveSupport` clients might resolve this property late using the resolve request.
 	//
 	// @since 3.17.0
-	Tooltip InlayHintLabelPartTooltip `json:"tooltip,omitempty"`
+	Tooltip *InlayHintLabelPartTooltip `json:"tooltip,omitempty"`
 
 	// Location an optional source code location that represents this label part. The editor will use this location for the hover and for code navigation features: This part will become a clickable link that resolves
 	// to the definition of the symbol at the given location (not necessarily the location itself), it shows the hover that shows at the given location, and it shows a context menu with further code navigation commands. Depending on the client capability `inlayHint.resolveSupport` clients might resolve this property late using the resolve request.
@@ -1315,7 +1315,7 @@ type InlayHint struct {
 	// Tooltip the tooltip text when you hover over this item.
 	//
 	// @since 3.17.0
-	Tooltip InlayHintTooltip `json:"tooltip,omitempty"`
+	Tooltip *InlayHintTooltip `json:"tooltip,omitempty"`
 
 	// PaddingLeft render padding before the hint. Note: Padding should use the editor's background color, not the background color of the hint itself. That means padding can be used to visually align/separate an inlay hint.
 	//
@@ -1877,7 +1877,7 @@ type CompletionItem struct {
 	Detail string `json:"detail,omitempty"`
 
 	// Documentation a human-readable string that represents a doc-comment.
-	Documentation CompletionItemDocumentation `json:"documentation,omitempty"`
+	Documentation *CompletionItemDocumentation `json:"documentation,omitempty"`
 
 	// Deprecated indicates if this item is deprecated.
 	//
@@ -1904,7 +1904,7 @@ type CompletionItem struct {
 	InsertTextMode InsertTextMode `json:"insertTextMode,omitempty"`
 
 	// TextEdit an TextEdit edit which is applied to a document when selecting this completion. When an edit is provided the value of CompletionItem.insertText insertText is ignored. Most editors support two different operations when accepting a completion item. One is to insert a completion text and the other is to replace an existing text with a completion text. Since this can usually not be predetermined by a server it can report both ranges. Clients need to signal support for `InsertReplaceEdits` via the `textDocument.completion.insertReplaceSupport` client capability property. *Note 1:* The text edit's range as well as both ranges from an insert replace edit must be a [single line] and they must contain the position at which completion has been requested. *Note 2:* If an `InsertReplaceEdit` is returned the edit's insert range must be a prefix of the edit's replace range, that means it must be contained and starting at the same position. 3.16.0 additional type `InsertReplaceEdit`.
-	TextEdit CompletionItemTextEdit `json:"textEdit,omitempty"`
+	TextEdit *CompletionItemTextEdit `json:"textEdit,omitempty"`
 
 	// TextEditText the edit text used if the completion item is part of a CompletionList and CompletionList defines an item default for the text edit range. Clients will only honor this property if they opt into completion list item defaults using the capability `completionList.itemDefaults`. If not provided and a list's default range is provided the label property is used as a text.
 	TextEditText string `json:"textEditText,omitempty"`
@@ -1945,7 +1945,7 @@ type CompletionItemDefaults struct {
 
 	// EditRange a default edit range.
 	// @since 3.17.0
-	EditRange CompletionItemDefaultsEditRange `json:"editRange,omitempty"`
+	EditRange *CompletionItemDefaultsEditRange `json:"editRange,omitempty"`
 
 	// InsertTextFormat a default insert text format.
 	// @since 3.17.0
@@ -2028,7 +2028,7 @@ type ParameterInformation struct {
 	Label ParameterInformationLabel `json:"label"`
 
 	// Documentation the human-readable doc-comment of this parameter. Will be shown in the UI but can be omitted.
-	Documentation ParameterInformationDocumentation `json:"documentation,omitempty"`
+	Documentation *ParameterInformationDocumentation `json:"documentation,omitempty"`
 }
 
 // SignatureInformation represents the signature of something callable. A signature can have a label, like a function-name, a doc-comment, and a set of parameters.
@@ -2037,7 +2037,7 @@ type SignatureInformation struct {
 	Label string `json:"label"`
 
 	// Documentation the human-readable doc-comment of this signature. Will be shown in the UI but can be omitted.
-	Documentation SignatureInformationDocumentation `json:"documentation,omitempty"`
+	Documentation *SignatureInformationDocumentation `json:"documentation,omitempty"`
 
 	// Parameters the parameters of this signature.
 	Parameters []ParameterInformation `json:"parameters,omitempty"`
@@ -2603,7 +2603,7 @@ type RelatedFullDocumentDiagnosticReport struct {
 
 	// RelatedDocuments diagnostics of related documents. This information is useful in programming languages where code in a file A can generate diagnostics in a file B which A depends on. An example of such a language is C/C++ where marco definitions in a file a.cpp and result in errors in a header file b.hpp.
 	// @since 3.17.0
-	RelatedDocuments map[DocumentURI]RelatedFullDocumentDiagnosticReportRelatedDocuments `json:"relatedDocuments,omitempty"`
+	RelatedDocuments map[DocumentURI]*RelatedFullDocumentDiagnosticReportRelatedDocuments `json:"relatedDocuments,omitempty"`
 }
 
 // RelatedUnchangedDocumentDiagnosticReport an unchanged diagnostic report with a set of related documents.
@@ -2615,7 +2615,7 @@ type RelatedUnchangedDocumentDiagnosticReport struct {
 
 	// RelatedDocuments diagnostics of related documents. This information is useful in programming languages where code in a file A can generate diagnostics in a file B which A depends on. An example of such a language is C/C++ where marco definitions in a file a.cpp and result in errors in a header file b.hpp.
 	// @since 3.17.0
-	RelatedDocuments map[DocumentURI]RelatedUnchangedDocumentDiagnosticReportRelatedDocuments `json:"relatedDocuments,omitempty"`
+	RelatedDocuments map[DocumentURI]*RelatedUnchangedDocumentDiagnosticReportRelatedDocuments `json:"relatedDocuments,omitempty"`
 }
 
 // PrepareRenamePlaceholder.

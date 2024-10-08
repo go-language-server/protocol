@@ -128,7 +128,7 @@ type NotebookDocumentFilterWithCells struct {
 	// Notebook the notebook to be synced If a string value is provided it matches against the notebook type. '*' matches every notebook.
 	//
 	// @since 3.18.0
-	Notebook NotebookDocumentFilterWithCellsNotebook `json:"notebook,omitempty"`
+	Notebook *NotebookDocumentFilterWithCellsNotebook `json:"notebook,omitempty"`
 
 	// Cells the cells of the matching notebook to be synced.
 	//
@@ -349,7 +349,7 @@ type TextDocumentSyncOptions struct {
 	WillSaveWaitUntil bool `json:"willSaveWaitUntil,omitempty"`
 
 	// Save if present save notifications are sent to the server. If omitted the notification should not be sent.
-	Save TextDocumentSyncOptionsSave `json:"save,omitempty"`
+	Save *TextDocumentSyncOptionsSave `json:"save,omitempty"`
 }
 
 // DidOpenTextDocumentParams the parameters sent in an open text document notification.

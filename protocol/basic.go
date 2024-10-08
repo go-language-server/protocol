@@ -401,7 +401,7 @@ type WorkspaceEdit struct {
 
 	// DocumentChanges depending on the client capability `workspace.workspaceEdit.resourceOperations` document changes are
 	// either an array of `TextDocumentEdit`s to express changes to n different text documents where each text document edit addresses a specific version of a text document. Or it can contain above `TextDocumentEdit`s mixed with create, rename and delete file / folder operations. Whether a client supports versioned document edits is expressed via `workspace.workspaceEdit.documentChanges` client capability. If a client neither supports `documentChanges` nor `workspace.workspaceEdit.resourceOperations` then only plain `TextEdit`s using the `changes` property are supported.
-	DocumentChanges WorkspaceEditDocumentChanges `json:"documentChanges,omitempty"`
+	DocumentChanges *WorkspaceEditDocumentChanges `json:"documentChanges,omitempty"`
 
 	// ChangeAnnotations a map of change annotations that can be referenced in `AnnotatedTextEdit`s or create, rename and delete file / folder operations. Whether clients honor this property depends on the client capability `workspace.changeAnnotationSupport`.
 	ChangeAnnotations map[ChangeAnnotationIdentifier]ChangeAnnotation `json:"changeAnnotations,omitempty"`
@@ -463,7 +463,7 @@ type Diagnostic struct {
 	Severity DiagnosticSeverity `json:"severity,omitempty"`
 
 	// Code the diagnostic's code, which usually appear in the user interface.
-	Code DiagnosticCode `json:"code,omitempty"`
+	Code *DiagnosticCode `json:"code,omitempty"`
 
 	// CodeDescription an optional property to describe the error code. Requires the code field (above) to be present/not null.
 	CodeDescription *CodeDescription `json:"codeDescription,omitempty"`
