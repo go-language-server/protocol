@@ -64,9 +64,10 @@ coverage: tools/bin/gotestsum  ## Takes packages test coverage.
 ##@ fmt, lint
 
 .PHONY: fmt
-fmt: tools/goimportz tools/gofumpt  ## Run goimportz and gofumpt.
+fmt: tools/goimports-reviser tools/gofumpt  ## Run goimports-reviser and gofumpt.
 	$(call target)
-	find . -iname "*.go" -not -path "./vendor/**" | xargs -P ${JOBS} ${TOOLS_BIN}/goimportz -local=${PKG},$(subst /protocol,,$(PKG)) -w
+	@${TOOLS_BIN}/goimports-reviser -use-cache -project-name ${PKG} -company-prefixes $(dir ${PKG}) -set-alias -excludes "vendor/*,tools/*,_*,**/.*" ./...
+	${TOOLS_BIN}/gofumpt -extra -w .
 	find . -iname "*.go" -not -path "./vendor/**" | xargs -P ${JOBS} ${TOOLS_BIN}/gofumpt -extra -w
 
 .PHONY: lint
@@ -89,7 +90,7 @@ tools/%:  ## install an individual dependent tool
 tools/bin/%: ${TOOLS_DIR}/go.mod ${TOOLS_DIR}/go.sum
 	@cd tools; \
 		for t in ${TOOLS}; do \
-			if [ -z '$*' ] || [ $$(basename $$t) = '$*' ]; then \
+			if [ -z '$*' ] || [ $$(basename $${t%%/v[0-9]*}) = '$*' ]; then \
 				echo "Install $$t ..." >&2; \
 				GOBIN=${TOOLS_BIN} CGO_ENABLED=0 go install -mod=mod ${GO_FLAGS} "$${t}"; \
 			fi \
