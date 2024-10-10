@@ -12,13 +12,13 @@ import (
 )
 
 var typeAliasNames = [...]string{
-	"typealias",
+	"type_alias",
 }
 
 // TypeAliases generates TypeAliases Go type from the metaModel schema definition.
 func (gen *Generator) TypeAliases(typeAliases []*protocol.TypeAlias) error {
 	// Init typeAliases printers
-	g := NewPrinter("typealias")
+	g := NewPrinter("type_alias")
 	gen.typeAliases = append(gen.typeAliases, g)
 
 	for _, alias := range typeAliases {
@@ -79,7 +79,7 @@ func (gen *Generator) TypeAliases(typeAliases []*protocol.TypeAlias) error {
 
 		case *protocol.OrType:
 			g.PP(`type `, aliasName, ` struct {`)
-			g.PP(`	Value any `, "`json:\"value\"`")
+			g.PP(`	value any`)
 			g.PP(`}`)
 		}
 
@@ -132,7 +132,7 @@ func (gen *Generator) TypeAliases(typeAliases []*protocol.TypeAlias) error {
 			}
 			g.PP(`](val T) `, aliasName, ` {`)
 			g.PP(`	return `, aliasName, `{`)
-			g.PP(`		Value: val,`)
+			g.PP(`		value: val,`)
 			g.PP(`	}`)
 			g.PP(`}`, "\n")
 		}
@@ -140,7 +140,7 @@ func (gen *Generator) TypeAliases(typeAliases []*protocol.TypeAlias) error {
 		switch a := alias.Type.(type) {
 		case *protocol.OrType:
 			g.PP(`func (t `, aliasName, `) MarshalJSON() ([]byte, error) {`)
-			g.PP(`	switch val := t.Value.(type) {`)
+			g.PP(`	switch val := t.value.(type) {`)
 			for i, item := range a.Items {
 				switch item := item.(type) {
 				case protocol.BaseType:
@@ -173,7 +173,7 @@ func (gen *Generator) TypeAliases(typeAliases []*protocol.TypeAlias) error {
 		case *protocol.OrType:
 			g.PP(`func (t *`, aliasName, `) UnmarshalJSON(val []byte) error {`)
 			g.PP(`if string(val) == "null" {`)
-			g.PP(`	t.Value = nil`)
+			g.PP(`	t.value = nil`)
 			g.PP(`	return nil`)
 			g.PP(`}`)
 			for i, item := range a.Items {
@@ -195,7 +195,7 @@ func (gen *Generator) TypeAliases(typeAliases []*protocol.TypeAlias) error {
 					panic(fmt.Sprintf("typealias.OrType: %#v\n", item))
 				}
 				g.PP(`if err := unmarshal(val, &h`, i, `); err == nil {`)
-				g.PP(`	t.Value = h`, i)
+				g.PP(`	t.value = h`, i)
 				g.PP(`	return nil`)
 				g.PP(`}`)
 			}

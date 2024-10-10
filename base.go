@@ -1,96 +1,57 @@
-// SPDX-FileCopyrightText: 2021 The Go Language Server Authors
+// Copyright 2024 The Go Language Server Authors
 // SPDX-License-Identifier: BSD-3-Clause
 
 package protocol
 
-import (
-	"fmt"
+// ErrorCodes predefined error codes.
+type ErrorCodes int32
 
-	"github.com/segmentio/encoding/json"
+const (
+	ParseErrorErrorCodes ErrorCodes = -32700
+
+	InvalidRequestErrorCodes ErrorCodes = -32600
+
+	MethodNotFoundErrorCodes ErrorCodes = -32601
+
+	InvalidParamsErrorCodes ErrorCodes = -32602
+
+	InternalErrorErrorCodes ErrorCodes = -32603
+
+	// ServerNotInitializedErrorCodes error code indicating that a server received a notification or request before the server has received the `initialize` request.
+	ServerNotInitializedErrorCodes ErrorCodes = -32002
+
+	UnknownErrorCodeErrorCodes ErrorCodes = -32001
 )
 
-// CancelParams params of cancelRequest.
+type LSPErrorCodes int32
+
+const (
+	// RequestFailedLSPErrorCodes a request failed but it was syntactically correct, e.g the method name was known and the parameters were valid. The error message should contain human readable information about why the request failed.
+	//
+	// @since 3.17.0
+	RequestFailedLSPErrorCodes LSPErrorCodes = -32803
+
+	// ServerCancelledLSPErrorCodes the server cancelled the request. This error code should only be used for requests that explicitly support being server cancellable.
+	//
+	// @since 3.17.0
+	ServerCancelledLSPErrorCodes LSPErrorCodes = -32802
+
+	// ContentModifiedLSPErrorCodes the server detected that the content of a document got modified outside normal conditions. A server should NOT send this error code if it detects a content change in it unprocessed messages. The result even computed on an older state might still be useful for the client. If a client decides that a result is not of any use anymore the client should cancel the request.
+	ContentModifiedLSPErrorCodes LSPErrorCodes = -32801
+
+	// RequestCancelledLSPErrorCodes the client has canceled a request and a server has detected the cancel.
+	RequestCancelledLSPErrorCodes LSPErrorCodes = -32800
+)
+
 type CancelParams struct {
-	// ID is the request id to cancel.
-	ID interface{} `json:"id"` // int32 | string
+	// ID the request id to cancel.
+	ID CancelParamsID `json:"id"`
 }
 
-// ProgressParams params of Progress netification.
-//
-// @since 3.15.0.
 type ProgressParams struct {
-	// Token is the progress token provided by the client or server.
+	// Token the progress token provided by the client or server.
 	Token ProgressToken `json:"token"`
 
-	// Value is the progress data.
-	Value interface{} `json:"value"`
-}
-
-// ProgressToken is the progress token provided by the client or server.
-//
-// @since 3.15.0.
-type ProgressToken struct {
-	name   string
-	number int32
-}
-
-// compile time check whether the ProgressToken implements a fmt.Formatter, fmt.Stringer, json.Marshaler and json.Unmarshaler interfaces.
-var (
-	_ fmt.Formatter    = (*ProgressToken)(nil)
-	_ fmt.Stringer     = (*ProgressToken)(nil)
-	_ json.Marshaler   = (*ProgressToken)(nil)
-	_ json.Unmarshaler = (*ProgressToken)(nil)
-)
-
-// NewProgressToken returns a new ProgressToken.
-func NewProgressToken(s string) *ProgressToken {
-	return &ProgressToken{name: s}
-}
-
-// NewNumberProgressToken returns a new number ProgressToken.
-func NewNumberProgressToken(n int32) *ProgressToken {
-	return &ProgressToken{number: n}
-}
-
-// Format writes the ProgressToken to the formatter.
-//
-// If the rune is q the representation is non ambiguous,
-// string forms are quoted.
-func (v ProgressToken) Format(f fmt.State, r rune) {
-	const numF = `%d`
-	strF := `%s`
-	if r == 'q' {
-		strF = `%q`
-	}
-
-	switch {
-	case v.name != "":
-		fmt.Fprintf(f, strF, v.name)
-	default:
-		fmt.Fprintf(f, numF, v.number)
-	}
-}
-
-// String returns a string representation of the ProgressToken.
-func (v ProgressToken) String() string {
-	return fmt.Sprint(v) //nolint:gocritic
-}
-
-// MarshalJSON implements json.Marshaler.
-func (v *ProgressToken) MarshalJSON() ([]byte, error) {
-	if v.name != "" {
-		return json.Marshal(v.name)
-	}
-
-	return json.Marshal(v.number)
-}
-
-// UnmarshalJSON implements json.Unmarshaler.
-func (v *ProgressToken) UnmarshalJSON(data []byte) error {
-	*v = ProgressToken{}
-	if err := json.Unmarshal(data, &v.number); err == nil {
-		return nil
-	}
-
-	return json.Unmarshal(data, &v.name)
+	// Value the progress data.
+	Value any `json:"value"`
 }

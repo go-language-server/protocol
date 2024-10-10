@@ -1,111 +1,110 @@
-// SPDX-FileCopyrightText: 2019 The Go Language Server Authors
+// Copyright 2024 The Go Language Server Authors
 // SPDX-License-Identifier: BSD-3-Clause
 
 package protocol
 
-import "strconv"
-
-// ShowMessageParams params of ShowMessage notification.
-type ShowMessageParams struct {
-	// Message is the actual message.
-	Message string `json:"message"`
-
-	// Type is the message type.
-	Type MessageType `json:"type"`
-}
-
-// MessageType type of ShowMessageParams type.
-type MessageType float64
-
-const (
-	// MessageTypeError an error message.
-	MessageTypeError MessageType = 1
-	// MessageTypeWarning a warning message.
-	MessageTypeWarning MessageType = 2
-	// MessageTypeInfo an information message.
-	MessageTypeInfo MessageType = 3
-	// MessageTypeLog a log message.
-	MessageTypeLog MessageType = 4
+import (
+	"go.lsp.dev/uri"
 )
 
-// String implements fmt.Stringer.
-func (m MessageType) String() string {
-	switch m {
-	case MessageTypeError:
-		return "error"
-	case MessageTypeWarning:
-		return "warning"
-	case MessageTypeInfo:
-		return "info"
-	case MessageTypeLog:
-		return "log"
-	default:
-		return strconv.FormatFloat(float64(m), 'f', -10, 64)
-	}
+// MessageType the message type.
+type MessageType uint32
+
+const (
+	// ErrorMessageType an error message.
+	ErrorMessageType MessageType = 1
+
+	// WarningMessageType a warning message.
+	WarningMessageType MessageType = 2
+
+	// InfoMessageType an information message.
+	InfoMessageType MessageType = 3
+
+	// LogMessageType a log message.
+	LogMessageType MessageType = 4
+
+	// DebugMessageType a debug message.  3.18.0 @proposed.
+	//
+	// @since 3.18.0 proposed
+	DebugMessageType MessageType = 5
+)
+
+type WorkDoneProgressCreateParams struct {
+	// Token the token to be used to report progress.
+	Token ProgressToken `json:"token"`
 }
 
-// Enabled reports whether the level is enabled.
-func (m MessageType) Enabled(level MessageType) bool {
-	return level > 0 && m >= level
+type WorkDoneProgressCancelParams struct {
+	// Token the token to be used to report progress.
+	Token ProgressToken `json:"token"`
 }
 
-// messageTypeMap map of MessageTypes.
-var messageTypeMap = map[string]MessageType{
-	"error":   MessageTypeError,
-	"warning": MessageTypeWarning,
-	"info":    MessageTypeInfo,
-	"log":     MessageTypeLog,
+// ShowDocumentParams params to show a resource in the UI.
+//
+// @since 3.16.0
+type ShowDocumentParams struct {
+	// URI the uri to show.
+	//
+	// @since 3.16.0
+	URI uri.URI `json:"uri"`
+
+	// External indicates to show the resource in an external program. To show, for example, `https://code.visualstudio.com/` in the default WEB browser set `external` to `true`.
+	//
+	// @since 3.16.0
+	External bool `json:"external,omitempty"`
+
+	// TakeFocus an optional property to indicate whether the editor showing the document should take focus or not. Clients might ignore this property if an external program is started.
+	//
+	// @since 3.16.0
+	TakeFocus bool `json:"takeFocus,omitempty"`
+
+	// Selection an optional selection range if the document is a text document. Clients might ignore the property if
+	// an external program is started or the file is not a text file.
+	//
+	// @since 3.16.0
+	Selection *Range `json:"selection,omitempty"`
 }
 
-// ToMessageType converts level to the MessageType.
-func ToMessageType(level string) MessageType {
-	mt, ok := messageTypeMap[level]
-	if !ok {
-		return MessageType(0) // unknown
-	}
-
-	return mt
+// ShowDocumentResult the result of a showDocument request.
+//
+// @since 3.16.0
+type ShowDocumentResult struct {
+	// Success a boolean indicating if the show was successful.
+	//
+	// @since 3.16.0
+	Success bool `json:"success"`
 }
 
-// ShowMessageRequestParams params of ShowMessage request.
-type ShowMessageRequestParams struct {
-	// Actions is the message action items to present.
-	Actions []MessageActionItem `json:"actions"`
-
-	// Message is the actual message
-	Message string `json:"message"`
-
-	// Type is the message type. See {@link MessageType}
+// ShowMessageParams the parameters of a notification message.
+type ShowMessageParams struct {
+	// Type the message type. See MessageType.
 	Type MessageType `json:"type"`
+
+	// Message the actual message.
+	Message string `json:"message"`
 }
 
-// MessageActionItem item of ShowMessageRequestParams action.
 type MessageActionItem struct {
 	// Title a short title like 'Retry', 'Open Log' etc.
 	Title string `json:"title"`
 }
 
-// LogMessageParams params of LogMessage notification.
-type LogMessageParams struct {
-	// Message is the actual message
+type ShowMessageRequestParams struct {
+	// Type the message type. See MessageType.
+	Type MessageType `json:"type"`
+
+	// Message the actual message.
 	Message string `json:"message"`
 
-	// Type is the message type. See {@link MessageType}
+	// Actions the message action items to present.
+	Actions []MessageActionItem `json:"actions,omitempty"`
+}
+
+// LogMessageParams the log message parameters.
+type LogMessageParams struct {
+	// Type the message type. See MessageType.
 	Type MessageType `json:"type"`
-}
 
-// WorkDoneProgressCreateParams params of WorkDoneProgressCreate request.
-//
-// @since 3.15.0.
-type WorkDoneProgressCreateParams struct {
-	// Token is the token to be used to report progress.
-	Token ProgressToken `json:"token"`
-}
-
-// WorkDoneProgressCancelParams params of WorkDoneProgressCancel request.
-//
-// @since 3.15.0.
-type WorkDoneProgressCancelParams struct {
-	// Token is the token to be used to report progress.
-	Token ProgressToken `json:"token"`
+	// Message the actual message.
+	Message string `json:"message"`
 }

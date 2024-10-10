@@ -96,7 +96,6 @@ func run() error {
 
 func fetchLSPSchema(ctx context.Context) ([]byte, error) {
 	uri := fmt.Sprintf(LSPSchemaURI, schemaVersion)
-	// uri := "https://raw.githubusercontent.com/microsoft/language-server-protocol/gh-pages/_specifications/lsp/3.18/metaModel/metaModel.json"
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, uri, http.NoBody)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create http request: %w", err)

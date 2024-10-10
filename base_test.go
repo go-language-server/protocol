@@ -9,7 +9,6 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
-	"github.com/segmentio/encoding/json"
 )
 
 func TestCancelParams(t *testing.T) {
@@ -17,7 +16,7 @@ func TestCancelParams(t *testing.T) {
 
 	const want = `{"id":"testID"}`
 	wantType := CancelParams{
-		ID: "testID",
+		ID: NewCancelParamsID("testID"),
 	}
 
 	t.Run("Marshal", func(t *testing.T) {
@@ -40,11 +39,10 @@ func TestCancelParams(t *testing.T) {
 		}
 
 		for _, tt := range tests {
-			tt := tt
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := json.Marshal(&tt.field)
+				got, err := marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -76,16 +74,17 @@ func TestCancelParams(t *testing.T) {
 		}
 
 		for _, tt := range tests {
-			tt := tt
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
 				var got CancelParams
-				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
-				if diff := cmp.Diff(tt.want, got); (diff != "") != tt.wantErr {
+				if diff := cmp.Diff(tt.want, got,
+					cmpopts.EquateComparable(CancelParams{}),
+				); (diff != "") != tt.wantErr {
 					t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 				}
 			})
@@ -101,7 +100,7 @@ func TestProgressParams(t *testing.T) {
 
 	token := NewProgressToken(wantWorkDoneToken)
 	wantType := ProgressParams{
-		Token: *token,
+		Token: token,
 		Value: "testValue",
 	}
 
@@ -125,11 +124,10 @@ func TestProgressParams(t *testing.T) {
 		}
 
 		for _, tt := range tests {
-			tt := tt
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
-				got, err := json.Marshal(&tt.field)
+				got, err := marshal(&tt.field)
 				if (err != nil) != tt.wantMarshalErr {
 					t.Fatal(err)
 				}
@@ -161,12 +159,11 @@ func TestProgressParams(t *testing.T) {
 		}
 
 		for _, tt := range tests {
-			tt := tt
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
 				var got ProgressParams
-				if err := json.Unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
+				if err := unmarshal([]byte(tt.field), &got); (err != nil) != tt.wantUnmarshalErr {
 					t.Fatal(err)
 				}
 
@@ -175,7 +172,7 @@ func TestProgressParams(t *testing.T) {
 				}
 
 				if token := got.Token; !reflect.ValueOf(token).IsZero() {
-					if diff := cmp.Diff(token.String(), wantWorkDoneToken); (diff != "") != tt.wantErr {
+					if diff := cmp.Diff(token, wantWorkDoneToken); (diff != "") != tt.wantErr {
 						t.Errorf("%s: wantErr: %t\n(-want +got)\n%s", tt.name, tt.wantErr, diff)
 					}
 				}
