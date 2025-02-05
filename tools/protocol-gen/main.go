@@ -22,7 +22,7 @@ import (
 
 const (
 	LSPSchemaURI  = "https://github.com/microsoft/lsprotocol/raw/%s/generator/lsp.json"
-	schemaVersion = "v2024.0.0b1"
+	schemaVersion = "main"
 )
 
 func init() {

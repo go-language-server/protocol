@@ -1,4 +1,4 @@
-// Copyright 2024 The Go Language Server Authors
+// Copyright 2025 The Go Language Server Authors
 // SPDX-License-Identifier: BSD-3-Clause
 
 package protocol
@@ -432,14 +432,14 @@ const (
 // ApplyKind defines how values from a set of defaults and an individual item will be merged.
 //
 // @since 3.18.0
-type ApplyKind string
+type ApplyKind uint32
 
 const (
 	// ReplaceApplyKind the value from the individual item (if provided and not `null`) will be used instead of the default.
-	ReplaceApplyKind ApplyKind = "replace"
+	ReplaceApplyKind ApplyKind = 1
 
 	// MergeApplyKind the value from the item will be merged with the default. The specific rules for mergeing values are defined against each field that supports merging.
-	MergeApplyKind ApplyKind = "merge"
+	MergeApplyKind ApplyKind = 2
 )
 
 // SignatureHelpTriggerKind how a signature help was triggered.
@@ -1607,6 +1607,11 @@ type InlineCompletionRegistrationOptions struct {
 	StaticRegistrationOptions
 }
 
+type TextDocumentFilterClientCapabilities struct {
+	// RelativePatternSupport the client supports Relative Patterns.
+	RelativePatternSupport bool `json:"relativePatternSupport,omitempty"`
+}
+
 // CodeActionTagOptions.
 //
 // @since 3.18.0 - proposed
@@ -1935,7 +1940,7 @@ type EditRangeWithInsertReplace struct {
 	Replace Range `json:"replace"`
 }
 
-// CompletionItemDefaults in many cases the items of an actual completion result share the same value for properties like `commitCharacters` or the range of a text edit. A completion list can therefore define item defaults which will be used if a completion item itself doesn't specify the value. If a completion list specifies a default value and a completion item also specifies a corresponding value, the rules for combining these are defined by `applyKinds` (if the client supports it), defaulting to "replace". Servers are only allowed to return default values if the client signals support for this via the `completionList.itemDefaults` capability.
+// CompletionItemDefaults in many cases the items of an actual completion result share the same value for properties like `commitCharacters` or the range of a text edit. A completion list can therefore define item defaults which will be used if a completion item itself doesn't specify the value. If a completion list specifies a default value and a completion item also specifies a corresponding value, the rules for combining these are defined by `applyKinds` (if the client supports it), defaulting to ApplyKind.Replace. Servers are only allowed to return default values if the client signals support for this via the `completionList.itemDefaults` capability.
 //
 // @since 3.17.0
 type CompletionItemDefaults struct {
@@ -1960,16 +1965,16 @@ type CompletionItemDefaults struct {
 	Data any `json:"data,omitempty"`
 }
 
-// CompletionItemApplyKinds specifies how fields from a completion item should be combined with those from `completionList.itemDefaults`. If unspecified, all fields will be treated as "replace". If a field's value is "replace", the value from a completion item (if provided and not `null`) will always be used instead of the value from `completionItem.itemDefaults`. If a field's value is "merge", the values will be merged using the rules defined against each field below. Servers are only allowed to return `applyKind` if the client signals support for this via the `completionList.applyKindSupport` capability.
+// CompletionItemApplyKinds specifies how fields from a completion item should be combined with those from `completionList.itemDefaults`. If unspecified, all fields will be treated as ApplyKind.Replace. If a field's value is ApplyKind.Replace, the value from a completion item (if provided and not `null`) will always be used instead of the value from `completionItem.itemDefaults`. If a field's value is ApplyKind.Merge, the values will be merged using the rules defined against each field below. Servers are only allowed to return `applyKind` if the client signals support for this via the `completionList.applyKindSupport` capability.
 //
 // @since 3.18.0
 type CompletionItemApplyKinds struct {
-	// CommitCharacters specifies whether commitCharacters on a completion will replace or be merged with those in `completionList.itemDefaults.commitCharacters`. If "replace", the commit characters from the completion item will always be used unless not provided, in which case those from `completionList.itemDefaults.commitCharacters` will be used. An empty list can be used if a completion item does not have any commit characters and also should not use those from `completionList.itemDefaults.commitCharacters`. If "merge" the commitCharacters for the completion will be the union of all values in both `completionList.itemDefaults.commitCharacters` and the completion's own `commitCharacters`.
+	// CommitCharacters specifies whether commitCharacters on a completion will replace or be merged with those in `completionList.itemDefaults.commitCharacters`. If ApplyKind.Replace, the commit characters from the completion item will always be used unless not provided, in which case those from `completionList.itemDefaults.commitCharacters` will be used. An empty list can be used if a completion item does not have any commit characters and also should not use those from `completionList.itemDefaults.commitCharacters`.
+	// If ApplyKind.Merge the commitCharacters for the completion will be the union of all values in both `completionList.itemDefaults.commitCharacters` and the completion's own `commitCharacters`.
 	// @since 3.18.0
 	CommitCharacters ApplyKind `json:"commitCharacters,omitempty"`
 
-	// Data specifies whether the `data` field on a completion will replace or be merged with data from `completionList.itemDefaults.data`. If "replace", the data from the completion item will be used if provided
-	// (and not `null`), otherwise `completionList.itemDefaults.data` will be used. An empty object can be used if a completion item does not have any data but also should not use the value from `completionList.itemDefaults.data`. If "merge", a shallow merge will be performed between `completionList.itemDefaults.data` and the completion's own data using the following rules: - If a completion's `data` field is not provided (or `null`), the entire `data` field from `completionList.itemDefaults.data` will be used as-is. - If a completion's `data` field is provided, each field will overwrite the field of the same name in `completionList.itemDefaults.data` but no merging of nested fields within that value will occur.
+	// Data specifies whether the `data` field on a completion will replace or be merged with data from `completionList.itemDefaults.data`. If ApplyKind.Replace, the data from the completion item will be used if provided (and not `null`), otherwise `completionList.itemDefaults.data` will be used. An empty object can be used if a completion item does not have any data but also should not use the value from `completionList.itemDefaults.data`. If ApplyKind.Merge, a shallow merge will be performed between `completionList.itemDefaults.data` and the completion's own data using the following rules: - If a completion's `data` field is not provided (or `null`), the entire `data` field from `completionList.itemDefaults.data` will be used as-is. - If a completion's `data` field is provided, each field will overwrite the field of the same name in `completionList.itemDefaults.data` but no merging of nested fields within that value will occur.
 	// @since 3.18.0
 	Data ApplyKind `json:"data,omitempty"`
 }
@@ -1979,10 +1984,10 @@ type CompletionList struct {
 	// IsIncomplete this list it not complete. Further typing results in recomputing this list. Recomputed lists have all their items replaced (not appended) in the incomplete completion sessions.
 	IsIncomplete bool `json:"isIncomplete"`
 
-	// ItemDefaults in many cases the items of an actual completion result share the same value for properties like `commitCharacters` or the range of a text edit. A completion list can therefore define item defaults which will be used if a completion item itself doesn't specify the value. If a completion list specifies a default value and a completion item also specifies a corresponding value, the rules for combining these are defined by `applyKinds` (if the client supports it), defaulting to "replace". Servers are only allowed to return default values if the client signals support for this via the `completionList.itemDefaults` capability.
+	// ItemDefaults in many cases the items of an actual completion result share the same value for properties like `commitCharacters` or the range of a text edit. A completion list can therefore define item defaults which will be used if a completion item itself doesn't specify the value. If a completion list specifies a default value and a completion item also specifies a corresponding value, the rules for combining these are defined by `applyKinds` (if the client supports it), defaulting to ApplyKind.Replace. Servers are only allowed to return default values if the client signals support for this via the `completionList.itemDefaults` capability.
 	ItemDefaults *CompletionItemDefaults `json:"itemDefaults,omitempty"`
 
-	// ApplyKind specifies how fields from a completion item should be combined with those from `completionList.itemDefaults`. If unspecified, all fields will be treated as "replace". If a field's value is "replace", the value from a completion item (if provided and not `null`) will always be used instead of the value from `completionItem.itemDefaults`. If a field's value is "merge", the values will be merged using the rules defined against each field below. Servers are only allowed to return `applyKind` if the client signals support for this via the `completionList.applyKindSupport` capability.
+	// ApplyKind specifies how fields from a completion item should be combined with those from `completionList.itemDefaults`. If unspecified, all fields will be treated as ApplyKind.Replace. If a field's value is ApplyKind.Replace, the value from a completion item (if provided and not `null`) will always be used instead of the value from `completionItem.itemDefaults`. If a field's value is ApplyKind.Merge, the values will be merged using the rules defined against each field below. Servers are only allowed to return `applyKind` if the client signals support for this via the `completionList.applyKindSupport` capability.
 	ApplyKind *CompletionItemApplyKinds `json:"applyKind,omitempty"`
 
 	// Items the completion items.
@@ -2745,7 +2750,7 @@ type TextDocumentFilterLanguage struct {
 	// @since 3.18.0
 	Scheme string `json:"scheme,omitempty"`
 
-	// Pattern a glob pattern, like **​/*.{ts,js}. See TextDocumentFilter for examples. 3.18.0 - support for relative patterns.
+	// Pattern a glob pattern, like **​/*.{ts,js}. See TextDocumentFilter for examples. 3.18.0 - support for relative patterns. Whether clients support relative patterns depends on the client capability `textDocuments.filters.relativePatternSupport`.
 	// @since 3.18.0
 	Pattern *GlobPattern `json:"pattern,omitempty"`
 }
@@ -2764,7 +2769,7 @@ type TextDocumentFilterScheme struct {
 	// @since 3.18.0
 	Scheme string `json:"scheme"`
 
-	// Pattern a glob pattern, like **​/*.{ts,js}. See TextDocumentFilter for examples. 3.18.0 - support for relative patterns.
+	// Pattern a glob pattern, like **​/*.{ts,js}. See TextDocumentFilter for examples. 3.18.0 - support for relative patterns. Whether clients support relative patterns depends on the client capability `textDocuments.filters.relativePatternSupport`.
 	// @since 3.18.0
 	Pattern *GlobPattern `json:"pattern,omitempty"`
 }
@@ -2783,7 +2788,7 @@ type TextDocumentFilterPattern struct {
 	// @since 3.18.0
 	Scheme string `json:"scheme,omitempty"`
 
-	// Pattern a glob pattern, like **​/*.{ts,js}. See TextDocumentFilter for examples. 3.18.0 - support for relative patterns.
+	// Pattern a glob pattern, like **​/*.{ts,js}. See TextDocumentFilter for examples. 3.18.0 - support for relative patterns. Whether clients support relative patterns depends on the client capability `textDocuments.filters.relativePatternSupport`.
 	// @since 3.18.0
 	Pattern GlobPattern `json:"pattern"`
 }

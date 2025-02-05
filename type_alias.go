@@ -155,10 +155,9 @@ func (t *GlobPattern) UnmarshalJSON(val []byte) error {
 	return &UnmarshalError{fmt.Sprintf("failed to unmarshal %T", t)}
 }
 
-// DocumentFilter a document filter describes a top level text document or a notebook cell document. 3.17.0 - proposed
-// support for NotebookCellTextDocumentFilter.
+// DocumentFilter a document filter describes a top level text document or a notebook cell document. 3.17.0 - support for NotebookCellTextDocumentFilter.
 //
-// @since 3.17.0 - proposed support for NotebookCellTextDocumentFilter.
+// @since 3.17.0 - support for NotebookCellTextDocumentFilter.
 type DocumentFilter struct {
 	value any
 }

@@ -384,6 +384,7 @@ var structureNames = map[string]string{
 	"TextDocumentFilterLanguage":                  "language",
 	"TextDocumentFilterScheme":                    "language",
 	"TextDocumentFilterPattern":                   "language",
+	"TextDocumentFilterClientCapabilities":        "language",
 	"NotebookDocumentFilterNotebookType":          "document",
 	"NotebookDocumentFilterScheme":                "document",
 	"NotebookDocumentFilterPattern":               "document",

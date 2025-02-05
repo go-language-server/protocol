@@ -118,7 +118,7 @@ func (gen *Generator) writeTo(pp []Printer) (err error) {
 			gen.files[filename] = f
 
 			// Writes header content to the file at first
-			f.WriteString(`// Copyright 2024 The Go Language Server Authors` + "\n")
+			f.WriteString(`// Copyright 2025 The Go Language Server Authors` + "\n")
 			f.WriteString(`// SPDX-License-Identifier: BSD-3-Clause` + "\n")
 			f.WriteString("\n")
 			f.WriteString(`package protocol` + "\n")
@@ -238,8 +238,7 @@ func (p *printer) WriteTo() (err error) {
 }
 
 func normalizeMethodName(methName string) (methIdent string) {
-	pairs := strings.Split(methName, "/")
-	for _, s := range pairs {
+	for s := range strings.SplitSeq(methName, "/") {
 		methIdent += flect.Pascalize(s)
 	}
 
