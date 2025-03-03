@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 The Go Language Server Authors
+// Copyright 2018 The Go Language Server Authors
 // SPDX-License-Identifier: BSD-3-Clause
 
 package protocol
