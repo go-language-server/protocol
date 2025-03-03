@@ -45,7 +45,7 @@ const (
 
 type CancelParams struct {
 	// ID the request id to cancel.
-	ID CancelParamsID `json:"id"`
+	ID OneOf[int32, string] `json:"id"`
 }
 
 type ProgressParams struct {

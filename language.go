@@ -909,12 +909,12 @@ type SemanticTokensOptions struct {
 	// Range server supports providing semantic tokens for a specific range of a document.
 	//
 	// @since 3.16.0
-	Range *SemanticTokensOptionsRange `json:"range,omitempty"`
+	Range *OneOf[bool, Range] `json:"range,omitempty"`
 
 	// Full server supports providing semantic tokens for a full document.
 	//
 	// @since 3.16.0
-	Full *SemanticTokensOptionsFull `json:"full,omitempty"`
+	Full *OneOf[bool, SemanticTokensFullDelta] `json:"full,omitempty"`
 }
 
 // SemanticTokensRegistrationOptions.
@@ -1272,7 +1272,7 @@ type InlayHintLabelPart struct {
 	// Tooltip the tooltip text when you hover over this label part. Depending on the client capability `inlayHint.resolveSupport` clients might resolve this property late using the resolve request.
 	//
 	// @since 3.17.0
-	Tooltip *InlayHintLabelPartTooltip `json:"tooltip,omitempty"`
+	Tooltip *OneOf[string, MarkupContent] `json:"tooltip,omitempty"`
 
 	// Location an optional source code location that represents this label part. The editor will use this location for the hover and for code navigation features: This part will become a clickable link that resolves
 	// to the definition of the symbol at the given location (not necessarily the location itself), it shows the hover that shows at the given location, and it shows a context menu with further code navigation commands. Depending on the client capability `inlayHint.resolveSupport` clients might resolve this property late using the resolve request.
@@ -1299,7 +1299,7 @@ type InlayHint struct {
 	// Label the label of this hint. A human readable string or an array of InlayHintLabelPart label parts. *Note* that neither the string nor the label part can be empty.
 	//
 	// @since 3.17.0
-	Label InlayHintLabel `json:"label"`
+	Label OneOf[string, []InlayHintLabelPart] `json:"label"`
 
 	// Kind the kind of this hint. Can be omitted in which case the client should fall back to a reasonable default.
 	//
@@ -1315,7 +1315,7 @@ type InlayHint struct {
 	// Tooltip the tooltip text when you hover over this item.
 	//
 	// @since 3.17.0
-	Tooltip *InlayHintTooltip `json:"tooltip,omitempty"`
+	Tooltip *OneOf[string, MarkupContent] `json:"tooltip,omitempty"`
 
 	// PaddingLeft render padding before the hint. Note: Padding should use the editor's background color, not the background color of the hint itself. That means padding can be used to visually align/separate an inlay hint.
 	//
@@ -1411,7 +1411,7 @@ type FullDocumentDiagnosticReport struct {
 // @since 3.17.0
 type DocumentDiagnosticReportPartialResult struct {
 	// @since 3.17.0
-	RelatedDocuments map[DocumentURI]DocumentDiagnosticReportPartialResultRelatedDocuments `json:"relatedDocuments"`
+	RelatedDocuments map[DocumentURI]OneOf[FullDocumentDiagnosticReport, UnchangedDocumentDiagnosticReport] `json:"relatedDocuments"`
 }
 
 // DiagnosticServerCancellationData cancellation data returned from a diagnostic request.
@@ -1560,7 +1560,7 @@ type InlineCompletionItem struct {
 	// InsertText the text to replace the range with. Must be set.
 	//
 	// @since 3.18.0 proposed
-	InsertText InlineCompletionItemInsertText `json:"insertText"`
+	InsertText OneOf[string, StringValue] `json:"insertText"`
 
 	// FilterText a text that is used to decide if this inline completion should be shown. When `falsy` the InlineCompletionItem.insertText is used.
 	//
@@ -1882,7 +1882,7 @@ type CompletionItem struct {
 	Detail string `json:"detail,omitempty"`
 
 	// Documentation a human-readable string that represents a doc-comment.
-	Documentation *CompletionItemDocumentation `json:"documentation,omitempty"`
+	Documentation *OneOf[string, MarkupContent] `json:"documentation,omitempty"`
 
 	// Deprecated indicates if this item is deprecated.
 	//
@@ -1909,7 +1909,7 @@ type CompletionItem struct {
 	InsertTextMode InsertTextMode `json:"insertTextMode,omitempty"`
 
 	// TextEdit an TextEdit edit which is applied to a document when selecting this completion. When an edit is provided the value of CompletionItem.insertText insertText is ignored. Most editors support two different operations when accepting a completion item. One is to insert a completion text and the other is to replace an existing text with a completion text. Since this can usually not be predetermined by a server it can report both ranges. Clients need to signal support for `InsertReplaceEdits` via the `textDocument.completion.insertReplaceSupport` client capability property. *Note 1:* The text edit's range as well as both ranges from an insert replace edit must be a [single line] and they must contain the position at which completion has been requested. *Note 2:* If an `InsertReplaceEdit` is returned the edit's insert range must be a prefix of the edit's replace range, that means it must be contained and starting at the same position. 3.16.0 additional type `InsertReplaceEdit`.
-	TextEdit *CompletionItemTextEdit `json:"textEdit,omitempty"`
+	TextEdit *OneOf[TextEdit, InsertReplaceEdit] `json:"textEdit,omitempty"`
 
 	// TextEditText the edit text used if the completion item is part of a CompletionList and CompletionList defines an item default for the text edit range. Clients will only honor this property if they opt into completion list item defaults using the capability `completionList.itemDefaults`. If not provided and a list's default range is provided the label property is used as a text.
 	TextEditText string `json:"textEditText,omitempty"`
@@ -1950,7 +1950,7 @@ type CompletionItemDefaults struct {
 
 	// EditRange a default edit range.
 	// @since 3.17.0
-	EditRange *CompletionItemDefaultsEditRange `json:"editRange,omitempty"`
+	EditRange *OneOf[Range, EditRangeWithInsertReplace] `json:"editRange,omitempty"`
 
 	// InsertTextFormat a default insert text format.
 	// @since 3.17.0
@@ -2012,7 +2012,7 @@ type HoverParams struct {
 // Hover the result of a hover request.
 type Hover struct {
 	// Contents the hover's content.
-	Contents HoverContents `json:"contents"`
+	Contents OneOf3[MarkupContent, MarkedString, []MarkedString] `json:"contents"`
 
 	// Range an optional range inside the text document that is used to visualize the hover, e.g. by changing the
 	// background color.
@@ -2030,10 +2030,13 @@ type HoverRegistrationOptions struct {
 type ParameterInformation struct {
 	// Label the label of this parameter information. Either a string or an inclusive start and exclusive end offsets within its containing signature label. (see SignatureInformation.label). The offsets are based on a UTF-16 string representation as `Position` and `Range` does. To avoid ambiguities a server should use the [start, end] offset value instead of using a substring. Whether a client support this is controlled via `labelOffsetSupport` client capability. *Note*: a label of type string should be a substring of its containing signature label. Its intended use case is to highlight the parameter label
 	// part in the `SignatureInformation.label`.
-	Label ParameterInformationLabel `json:"label"`
+	Label OneOf[string, struct {
+		x uint32
+		y uint32
+	}] `json:"label"`
 
 	// Documentation the human-readable doc-comment of this parameter. Will be shown in the UI but can be omitted.
-	Documentation *ParameterInformationDocumentation `json:"documentation,omitempty"`
+	Documentation *OneOf[string, MarkupContent] `json:"documentation,omitempty"`
 }
 
 // SignatureInformation represents the signature of something callable. A signature can have a label, like a function-name, a doc-comment, and a set of parameters.
@@ -2042,7 +2045,7 @@ type SignatureInformation struct {
 	Label string `json:"label"`
 
 	// Documentation the human-readable doc-comment of this signature. Will be shown in the UI but can be omitted.
-	Documentation *SignatureInformationDocumentation `json:"documentation,omitempty"`
+	Documentation *OneOf[string, MarkupContent] `json:"documentation,omitempty"`
 
 	// Parameters the parameters of this signature.
 	Parameters []ParameterInformation `json:"parameters,omitempty"`
@@ -2608,7 +2611,7 @@ type RelatedFullDocumentDiagnosticReport struct {
 
 	// RelatedDocuments diagnostics of related documents. This information is useful in programming languages where code in a file A can generate diagnostics in a file B which A depends on. An example of such a language is C/C++ where marco definitions in a file a.cpp and result in errors in a header file b.hpp.
 	// @since 3.17.0
-	RelatedDocuments map[DocumentURI]*RelatedFullDocumentDiagnosticReportRelatedDocuments `json:"relatedDocuments,omitempty"`
+	RelatedDocuments map[DocumentURI]*OneOf[FullDocumentDiagnosticReport, UnchangedDocumentDiagnosticReport] `json:"relatedDocuments,omitempty"`
 }
 
 // RelatedUnchangedDocumentDiagnosticReport an unchanged diagnostic report with a set of related documents.
@@ -2620,7 +2623,7 @@ type RelatedUnchangedDocumentDiagnosticReport struct {
 
 	// RelatedDocuments diagnostics of related documents. This information is useful in programming languages where code in a file A can generate diagnostics in a file B which A depends on. An example of such a language is C/C++ where marco definitions in a file a.cpp and result in errors in a header file b.hpp.
 	// @since 3.17.0
-	RelatedDocuments map[DocumentURI]*RelatedUnchangedDocumentDiagnosticReportRelatedDocuments `json:"relatedDocuments,omitempty"`
+	RelatedDocuments map[DocumentURI]*OneOf[FullDocumentDiagnosticReport, UnchangedDocumentDiagnosticReport] `json:"relatedDocuments,omitempty"`
 }
 
 // PrepareRenamePlaceholder.
@@ -2728,7 +2731,7 @@ type NotebookCellTextDocumentFilter struct {
 	// Notebook a filter that matches against the notebook containing the notebook cell. If a string value is provided it matches against the notebook type. '*' matches every notebook.
 	//
 	// @since 3.17.0
-	Notebook NotebookCellTextDocumentFilterNotebook `json:"notebook"`
+	Notebook OneOf[string, NotebookDocumentFilter] `json:"notebook"`
 
 	// Language a language id like `python`. Will be matched against the language id of the notebook cell document. '*' matches every language.
 	//

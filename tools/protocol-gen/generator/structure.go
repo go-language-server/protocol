@@ -689,6 +689,28 @@ func (gen *Generator) renderStructuresMapType(g Printer, m *protocol.MapType, ge
 }
 
 func (gen *Generator) renderStructuresOrType(g Printer, or *protocol.OrType, genericsProp GenericsTypes) {
-	g.P(` `, genericsProp.Name)
+	var sb strings.Builder
+	switch len(or.Items) {
+	case 2:
+		sb.WriteString(` OneOf`)
+	case 3:
+		sb.WriteString(` OneOf3`)
+	case 4:
+		sb.WriteString(` OneOf4`)
+	default:
+		g.P(` `, genericsProp.Name, ` // or.Items: `, or.Items)
+		gen.genericsTypes[genericsProp] = or.Items
+		return
+	}
+	sb.WriteString(`[`)
+	for i, item := range or.Items {
+		sb.WriteString(item.String())
+		if i < len(or.Items)-1 {
+			sb.WriteString(`,`)
+		}
+	}
+	sb.WriteString(`]`)
+	g.P(sb.String())
+
 	gen.genericsTypes[genericsProp] = or.Items
 }

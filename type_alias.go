@@ -38,7 +38,6 @@ func (t NotebookDocumentFilter) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unkonwn type: %T", t)
 }
-
 func (t *NotebookDocumentFilter) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -88,7 +87,6 @@ func (t TextDocumentFilter) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unkonwn type: %T", t)
 }
-
 func (t *TextDocumentFilter) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -136,7 +134,6 @@ func (t GlobPattern) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unkonwn type: %T", t)
 }
-
 func (t *GlobPattern) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -179,7 +176,6 @@ func (t DocumentFilter) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unkonwn type: %T", t)
 }
-
 func (t *DocumentFilter) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -221,7 +217,6 @@ func (t MarkedString) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unkonwn type: %T", t)
 }
-
 func (t *MarkedString) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -262,7 +257,6 @@ func (t TextDocumentContentChangeEvent) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unkonwn type: %T", t)
 }
-
 func (t *TextDocumentContentChangeEvent) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -305,7 +299,6 @@ func (t WorkspaceDocumentDiagnosticReport) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unkonwn type: %T", t)
 }
-
 func (t *WorkspaceDocumentDiagnosticReport) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -348,7 +341,6 @@ func (t ProgressToken) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unkonwn type: %T", t)
 }
-
 func (t *ProgressToken) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -395,7 +387,6 @@ func (t PrepareRenameResult) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unkonwn type: %T", t)
 }
-
 func (t *PrepareRenameResult) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -443,7 +434,6 @@ func (t DocumentDiagnosticReport) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unkonwn type: %T", t)
 }
-
 func (t *DocumentDiagnosticReport) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -488,7 +478,6 @@ func (t InlineValue) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unkonwn type: %T", t)
 }
-
 func (t *InlineValue) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -537,7 +526,6 @@ func (t Declaration) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unkonwn type: %T", t)
 }
-
 func (t *Declaration) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -581,7 +569,6 @@ func (t Definition) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unkonwn type: %T", t)
 }
-
 func (t *Definition) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil

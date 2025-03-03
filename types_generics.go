@@ -31,7 +31,6 @@ func (t CancelParamsID) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *CancelParamsID) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -72,7 +71,6 @@ func (t ClientSemanticTokensRequestOptionsFull) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ClientSemanticTokensRequestOptionsFull) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -113,7 +111,6 @@ func (t ClientSemanticTokensRequestOptionsRange) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ClientSemanticTokensRequestOptionsRange) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -154,7 +151,6 @@ func (t CodeActionRequestResult) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *CodeActionRequestResult) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -197,7 +193,6 @@ func (t CompletionItemDefaultsEditRange) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *CompletionItemDefaultsEditRange) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -238,7 +233,6 @@ func (t CompletionItemDocumentation) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *CompletionItemDocumentation) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -281,7 +275,6 @@ func (t CompletionItemTextEdit) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *CompletionItemTextEdit) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -323,7 +316,6 @@ func (t CompletionResult) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *CompletionResult) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -365,7 +357,6 @@ func (t DeclarationResult) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *DeclarationResult) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -407,7 +398,6 @@ func (t DefinitionResult) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *DefinitionResult) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -448,7 +438,6 @@ func (t DiagnosticCode) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *DiagnosticCode) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -488,7 +477,6 @@ func (t DidChangeConfigurationRegistrationOptionsSection) MarshalJSON() ([]byte,
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *DidChangeConfigurationRegistrationOptionsSection) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -528,7 +516,6 @@ func (t DocumentDiagnosticReportPartialResultRelatedDocuments) MarshalJSON() ([]
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *DocumentDiagnosticReportPartialResultRelatedDocuments) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -570,7 +557,6 @@ func (t DocumentSymbolResult) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *DocumentSymbolResult) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -613,7 +599,6 @@ func (t HoverContents) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *HoverContents) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -660,7 +645,6 @@ func (t ImplementationResult) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ImplementationResult) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -701,7 +685,6 @@ func (t InlayHintLabel) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *InlayHintLabel) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -742,7 +725,6 @@ func (t InlayHintLabelPartTooltip) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *InlayHintLabelPartTooltip) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -783,7 +765,6 @@ func (t InlayHintTooltip) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *InlayHintTooltip) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -824,7 +805,6 @@ func (t InlineCompletionItemInsertText) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *InlineCompletionItemInsertText) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -867,7 +847,6 @@ func (t InlineCompletionResult) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *InlineCompletionResult) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -908,7 +887,6 @@ func (t NotebookCellTextDocumentFilterNotebook) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *NotebookCellTextDocumentFilterNotebook) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -949,7 +927,6 @@ func (t NotebookDocumentFilterWithCellsNotebook) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *NotebookDocumentFilterWithCellsNotebook) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -990,7 +967,6 @@ func (t NotebookDocumentFilterWithNotebookNotebook) MarshalJSON() ([]byte, error
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *NotebookDocumentFilterWithNotebookNotebook) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -1031,7 +1007,6 @@ func (t NotebookDocumentSyncOptionsNotebookSelector) MarshalJSON() ([]byte, erro
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *NotebookDocumentSyncOptionsNotebookSelector) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -1072,7 +1047,6 @@ func (t ParameterInformationDocumentation) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ParameterInformationDocumentation) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -1114,7 +1088,6 @@ func (t ParameterInformationLabel) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ParameterInformationLabel) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -1157,7 +1130,6 @@ func (t RelatedFullDocumentDiagnosticReportRelatedDocuments) MarshalJSON() ([]by
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *RelatedFullDocumentDiagnosticReportRelatedDocuments) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -1200,7 +1172,6 @@ func (t RelatedUnchangedDocumentDiagnosticReportRelatedDocuments) MarshalJSON() 
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *RelatedUnchangedDocumentDiagnosticReportRelatedDocuments) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -1241,7 +1212,6 @@ func (t RelativePatternBaseURI) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *RelativePatternBaseURI) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -1284,7 +1254,6 @@ func (t SemanticTokensDeltaResult) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *SemanticTokensDeltaResult) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -1325,7 +1294,6 @@ func (t SemanticTokensOptionsFull) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *SemanticTokensOptionsFull) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -1366,7 +1334,6 @@ func (t SemanticTokensOptionsRange) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *SemanticTokensOptionsRange) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -1411,7 +1378,6 @@ func (t ServerCapabilitiesCallHierarchyProvider) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ServerCapabilitiesCallHierarchyProvider) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -1457,7 +1423,6 @@ func (t ServerCapabilitiesCodeActionProvider) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ServerCapabilitiesCodeActionProvider) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -1500,7 +1465,6 @@ func (t ServerCapabilitiesColorProvider) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ServerCapabilitiesColorProvider) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -1548,7 +1512,6 @@ func (t ServerCapabilitiesDeclarationProvider) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ServerCapabilitiesDeclarationProvider) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -1594,7 +1557,6 @@ func (t ServerCapabilitiesDefinitionProvider) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ServerCapabilitiesDefinitionProvider) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -1637,7 +1599,6 @@ func (t ServerCapabilitiesDiagnosticProvider) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ServerCapabilitiesDiagnosticProvider) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -1678,7 +1639,6 @@ func (t ServerCapabilitiesDocumentFormattingProvider) MarshalJSON() ([]byte, err
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ServerCapabilitiesDocumentFormattingProvider) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -1719,7 +1679,6 @@ func (t ServerCapabilitiesDocumentHighlightProvider) MarshalJSON() ([]byte, erro
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ServerCapabilitiesDocumentHighlightProvider) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -1760,7 +1719,6 @@ func (t ServerCapabilitiesDocumentRangeFormattingProvider) MarshalJSON() ([]byte
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ServerCapabilitiesDocumentRangeFormattingProvider) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -1801,7 +1759,6 @@ func (t ServerCapabilitiesDocumentSymbolProvider) MarshalJSON() ([]byte, error) 
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ServerCapabilitiesDocumentSymbolProvider) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -1844,7 +1801,6 @@ func (t ServerCapabilitiesFoldingRangeProvider) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ServerCapabilitiesFoldingRangeProvider) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -1890,7 +1846,6 @@ func (t ServerCapabilitiesHoverProvider) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ServerCapabilitiesHoverProvider) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -1933,7 +1888,6 @@ func (t ServerCapabilitiesImplementationProvider) MarshalJSON() ([]byte, error) 
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ServerCapabilitiesImplementationProvider) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -1983,7 +1937,6 @@ func (t ServerCapabilitiesInlayHintProvider) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ServerCapabilitiesInlayHintProvider) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -2031,7 +1984,6 @@ func (t ServerCapabilitiesInlineCompletionProvider) MarshalJSON() ([]byte, error
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ServerCapabilitiesInlineCompletionProvider) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -2076,7 +2028,6 @@ func (t ServerCapabilitiesInlineValueProvider) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ServerCapabilitiesInlineValueProvider) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -2126,7 +2077,6 @@ func (t ServerCapabilitiesLinkedEditingRangeProvider) MarshalJSON() ([]byte, err
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ServerCapabilitiesLinkedEditingRangeProvider) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -2176,7 +2126,6 @@ func (t ServerCapabilitiesMonikerProvider) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ServerCapabilitiesMonikerProvider) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -2224,7 +2173,6 @@ func (t ServerCapabilitiesNotebookDocumentSync) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ServerCapabilitiesNotebookDocumentSync) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -2265,7 +2213,6 @@ func (t ServerCapabilitiesReferencesProvider) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ServerCapabilitiesReferencesProvider) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -2307,7 +2254,6 @@ func (t ServerCapabilitiesRenameProvider) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ServerCapabilitiesRenameProvider) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -2350,7 +2296,6 @@ func (t ServerCapabilitiesSelectionRangeProvider) MarshalJSON() ([]byte, error) 
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ServerCapabilitiesSelectionRangeProvider) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -2398,7 +2343,6 @@ func (t ServerCapabilitiesSemanticTokensProvider) MarshalJSON() ([]byte, error) 
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ServerCapabilitiesSemanticTokensProvider) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -2439,7 +2383,6 @@ func (t ServerCapabilitiesTextDocumentSync) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ServerCapabilitiesTextDocumentSync) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -2482,7 +2425,6 @@ func (t ServerCapabilitiesTypeDefinitionProvider) MarshalJSON() ([]byte, error) 
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ServerCapabilitiesTypeDefinitionProvider) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -2532,7 +2474,6 @@ func (t ServerCapabilitiesTypeHierarchyProvider) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ServerCapabilitiesTypeHierarchyProvider) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -2578,7 +2519,6 @@ func (t ServerCapabilitiesWorkspaceSymbolProvider) MarshalJSON() ([]byte, error)
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *ServerCapabilitiesWorkspaceSymbolProvider) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -2619,7 +2559,6 @@ func (t SignatureInformationDocumentation) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *SignatureInformationDocumentation) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -2664,7 +2603,6 @@ func (t TextDocumentEditEdits) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *TextDocumentEditEdits) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -2710,7 +2648,6 @@ func (t TextDocumentSyncOptionsSave) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *TextDocumentSyncOptionsSave) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -2751,7 +2688,6 @@ func (t TypeDefinitionResult) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *TypeDefinitionResult) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -2797,7 +2733,6 @@ func (t WorkspaceEditDocumentChanges) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *WorkspaceEditDocumentChanges) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -2848,7 +2783,6 @@ func (t WorkspaceFoldersServerCapabilitiesChangeNotifications) MarshalJSON() ([]
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *WorkspaceFoldersServerCapabilitiesChangeNotifications) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -2891,7 +2825,6 @@ func (t WorkspaceOptionsTextDocumentContent) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *WorkspaceOptionsTextDocumentContent) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -2934,7 +2867,6 @@ func (t WorkspaceSymbolLocation) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *WorkspaceSymbolLocation) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil
@@ -2978,7 +2910,6 @@ func (t WorkspaceSymbolResult) MarshalJSON() ([]byte, error) {
 	}
 	return nil, fmt.Errorf("unknown type: %T", t)
 }
-
 func (t *WorkspaceSymbolResult) UnmarshalJSON(val []byte) error {
 	if string(val) == "null" {
 		t.value = nil

@@ -349,7 +349,7 @@ type WorkspaceFoldersServerCapabilities struct {
 	Supported bool `json:"supported,omitempty"`
 
 	// ChangeNotifications whether the server wants to receive workspace folder change notifications. If a string is provided the string is treated as an ID under which the notification is registered on the client side. The ID can be used to unregister for these events using the `client/unregisterCapability` request.
-	ChangeNotifications *WorkspaceFoldersServerCapabilitiesChangeNotifications `json:"changeNotifications,omitempty"`
+	ChangeNotifications *OneOf[string, bool] `json:"changeNotifications,omitempty"`
 }
 
 // DidChangeConfigurationParams the parameters of a change configuration notification.
@@ -359,7 +359,7 @@ type DidChangeConfigurationParams struct {
 }
 
 type DidChangeConfigurationRegistrationOptions struct {
-	Section *DidChangeConfigurationRegistrationOptionsSection `json:"section,omitempty"`
+	Section *OneOf[string, []string] `json:"section,omitempty"`
 }
 
 // FileEvent an event describing a file change.
@@ -414,7 +414,7 @@ type WorkspaceSymbol struct {
 	// more details.
 	//
 	// @since 3.17.0
-	Location WorkspaceSymbolLocation `json:"location"`
+	Location OneOf[Location, LocationURIOnly] `json:"location"`
 
 	// Data a data entry field that is preserved on a workspace symbol between a workspace symbol request and a workspace symbol resolve request.
 	//
@@ -479,7 +479,7 @@ type RelativePattern struct {
 	// BaseURI a workspace folder or a base URI to which this pattern will be matched against relatively.
 	//
 	// @since 3.17.0
-	BaseURI RelativePatternBaseURI `json:"baseUri"`
+	BaseURI OneOf[WorkspaceFolder, uri.URI] `json:"baseUri"`
 
 	// Pattern the actual glob pattern;.
 	//

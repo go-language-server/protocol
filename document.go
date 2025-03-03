@@ -128,7 +128,7 @@ type NotebookDocumentFilterWithCells struct {
 	// Notebook the notebook to be synced If a string value is provided it matches against the notebook type. '*' matches every notebook.
 	//
 	// @since 3.18.0
-	Notebook *NotebookDocumentFilterWithCellsNotebook `json:"notebook,omitempty"`
+	Notebook *OneOf[string, NotebookDocumentFilter] `json:"notebook,omitempty"`
 
 	// Cells the cells of the matching notebook to be synced.
 	//
@@ -143,7 +143,7 @@ type NotebookDocumentFilterWithNotebook struct {
 	// Notebook the notebook to be synced If a string value is provided it matches against the notebook type. '*' matches every notebook.
 	//
 	// @since 3.18.0
-	Notebook NotebookDocumentFilterWithNotebookNotebook `json:"notebook"`
+	Notebook OneOf[string, NotebookDocumentFilter] `json:"notebook"`
 
 	// Cells the cells of the matching notebook to be synced.
 	//
@@ -159,7 +159,7 @@ type NotebookDocumentSyncOptions struct {
 	// NotebookSelector the notebooks to be synced.
 	//
 	// @since 3.17.0
-	NotebookSelector NotebookDocumentSyncOptionsNotebookSelector `json:"notebookSelector"`
+	NotebookSelector OneOf[NotebookDocumentFilterWithNotebook, NotebookDocumentFilterWithCells] `json:"notebookSelector"`
 
 	// Save whether save notification should be forwarded to the server. Will only be honored if mode === `notebook`.
 	//
@@ -349,7 +349,7 @@ type TextDocumentSyncOptions struct {
 	WillSaveWaitUntil bool `json:"willSaveWaitUntil,omitempty"`
 
 	// Save if present save notifications are sent to the server. If omitted the notification should not be sent.
-	Save *TextDocumentSyncOptionsSave `json:"save,omitempty"`
+	Save *OneOf[bool, SaveOptions] `json:"save,omitempty"`
 }
 
 // DidOpenTextDocumentParams the parameters sent in an open text document notification.

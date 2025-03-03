@@ -1,9 +1,9 @@
 module go.lsp.dev/protocol
 
-go 1.22.2
+go 1.23
 
 require (
-	github.com/google/go-cmp v0.6.0
+	github.com/google/go-cmp v0.7.0
 	go.lsp.dev/jsonrpc2 v0.10.0
 	go.lsp.dev/uri v0.3.0
 	go.uber.org/zap v1.27.0

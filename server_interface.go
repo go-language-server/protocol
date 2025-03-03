@@ -473,7 +473,6 @@ func (UnimplementedServer) DidDeleteFiles(ctx context.Context, params *DeleteFil
 func (UnimplementedServer) DidRenameFiles(ctx context.Context, params *RenameFilesParams) error {
 	return jsonrpc2.ErrInternal
 }
-
 func (UnimplementedServer) CallHierarchyIncomingCalls(ctx context.Context, params *CallHierarchyIncomingCallsParams) ([]*CallHierarchyIncomingCall, error) {
 	return nil, jsonrpc2.ErrInternal
 }

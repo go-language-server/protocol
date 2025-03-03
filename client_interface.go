@@ -147,7 +147,6 @@ func (UnimplementedClient) LogMessage(ctx context.Context, params *LogMessagePar
 func (UnimplementedClient) ShowMessage(ctx context.Context, params *ShowMessageParams) error {
 	return jsonrpc2.ErrInternal
 }
-
 func (UnimplementedClient) Registration(ctx context.Context, params *RegistrationParams) error {
 	return jsonrpc2.ErrInternal
 }

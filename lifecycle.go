@@ -728,12 +728,12 @@ type ClientSemanticTokensRequestOptions struct {
 	// Range the client will send the `textDocument/semanticTokens/range` request if the server provides a corresponding handler.
 	//
 	// @since 3.18.0
-	Range *ClientSemanticTokensRequestOptionsRange `json:"range,omitempty"`
+	Range *OneOf[bool, Range] `json:"range,omitempty"`
 
 	// Full the client will send the `textDocument/semanticTokens/full` request if the server provides a corresponding handler.
 	//
 	// @since 3.18.0
-	Full *ClientSemanticTokensRequestOptionsFull `json:"full,omitempty"`
+	Full *OneOf[bool, ClientSemanticTokensRequestFullDelta] `json:"full,omitempty"`
 }
 
 // SemanticTokensClientCapabilities.
@@ -1224,7 +1224,7 @@ type WorkspaceOptions struct {
 
 	// TextDocumentContent the server supports the `workspace/textDocumentContent` request.  3.18.0 @proposed.
 	// @since 3.18.0
-	TextDocumentContent *WorkspaceOptionsTextDocumentContent `json:"textDocumentContent,omitempty"`
+	TextDocumentContent *OneOf[TextDocumentContentOptions, TextDocumentContentRegistrationOptions] `json:"textDocumentContent,omitempty"`
 }
 
 // ServerCapabilities defines the capabilities provided by a language server.
@@ -1233,43 +1233,43 @@ type ServerCapabilities struct {
 	PositionEncoding PositionEncodingKind `json:"positionEncoding,omitempty"`
 
 	// TextDocumentSync defines how text documents are synced. Is either a detailed structure defining each notification or for backwards compatibility the TextDocumentSyncKind number.
-	TextDocumentSync *ServerCapabilitiesTextDocumentSync `json:"textDocumentSync,omitempty"`
+	TextDocumentSync *OneOf[TextDocumentSyncOptions, TextDocumentSyncKind] `json:"textDocumentSync,omitempty"`
 
 	// NotebookDocumentSync defines how notebook documents are synced.
-	NotebookDocumentSync *ServerCapabilitiesNotebookDocumentSync `json:"notebookDocumentSync,omitempty"`
+	NotebookDocumentSync *OneOf[NotebookDocumentSyncOptions, NotebookDocumentSyncRegistrationOptions] `json:"notebookDocumentSync,omitempty"`
 
 	// CompletionProvider the server provides completion support.
 	CompletionProvider *CompletionOptions `json:"completionProvider,omitempty"`
 
 	// HoverProvider the server provides hover support.
-	HoverProvider *ServerCapabilitiesHoverProvider `json:"hoverProvider,omitempty"`
+	HoverProvider *OneOf[bool, HoverOptions] `json:"hoverProvider,omitempty"`
 
 	// SignatureHelpProvider the server provides signature help support.
 	SignatureHelpProvider *SignatureHelpOptions `json:"signatureHelpProvider,omitempty"`
 
 	// DeclarationProvider the server provides Goto Declaration support.
-	DeclarationProvider *ServerCapabilitiesDeclarationProvider `json:"declarationProvider,omitempty"`
+	DeclarationProvider *OneOf3[bool, DeclarationOptions, DeclarationRegistrationOptions] `json:"declarationProvider,omitempty"`
 
 	// DefinitionProvider the server provides goto definition support.
-	DefinitionProvider *ServerCapabilitiesDefinitionProvider `json:"definitionProvider,omitempty"`
+	DefinitionProvider *OneOf[bool, DefinitionOptions] `json:"definitionProvider,omitempty"`
 
 	// TypeDefinitionProvider the server provides Goto Type Definition support.
-	TypeDefinitionProvider *ServerCapabilitiesTypeDefinitionProvider `json:"typeDefinitionProvider,omitempty"`
+	TypeDefinitionProvider *OneOf3[bool, TypeDefinitionOptions, TypeDefinitionRegistrationOptions] `json:"typeDefinitionProvider,omitempty"`
 
 	// ImplementationProvider the server provides Goto Implementation support.
-	ImplementationProvider *ServerCapabilitiesImplementationProvider `json:"implementationProvider,omitempty"`
+	ImplementationProvider *OneOf3[bool, ImplementationOptions, ImplementationRegistrationOptions] `json:"implementationProvider,omitempty"`
 
 	// ReferencesProvider the server provides find references support.
-	ReferencesProvider *ServerCapabilitiesReferencesProvider `json:"referencesProvider,omitempty"`
+	ReferencesProvider *OneOf[bool, ReferenceOptions] `json:"referencesProvider,omitempty"`
 
 	// DocumentHighlightProvider the server provides document highlight support.
-	DocumentHighlightProvider *ServerCapabilitiesDocumentHighlightProvider `json:"documentHighlightProvider,omitempty"`
+	DocumentHighlightProvider *OneOf[bool, DocumentHighlightOptions] `json:"documentHighlightProvider,omitempty"`
 
 	// DocumentSymbolProvider the server provides document symbol support.
-	DocumentSymbolProvider *ServerCapabilitiesDocumentSymbolProvider `json:"documentSymbolProvider,omitempty"`
+	DocumentSymbolProvider *OneOf[bool, DocumentSymbolOptions] `json:"documentSymbolProvider,omitempty"`
 
 	// CodeActionProvider the server provides code actions. CodeActionOptions may only be specified if the client states that it supports `codeActionLiteralSupport` in its initial `initialize` request.
-	CodeActionProvider *ServerCapabilitiesCodeActionProvider `json:"codeActionProvider,omitempty"`
+	CodeActionProvider *OneOf[bool, CodeActionOptions] `json:"codeActionProvider,omitempty"`
 
 	// CodeLensProvider the server provides code lens.
 	CodeLensProvider *CodeLensOptions `json:"codeLensProvider,omitempty"`
@@ -1278,59 +1278,59 @@ type ServerCapabilities struct {
 	DocumentLinkProvider *DocumentLinkOptions `json:"documentLinkProvider,omitempty"`
 
 	// ColorProvider the server provides color provider support.
-	ColorProvider *ServerCapabilitiesColorProvider `json:"colorProvider,omitempty"`
+	ColorProvider *OneOf3[bool, DocumentColorOptions, DocumentColorRegistrationOptions] `json:"colorProvider,omitempty"`
 
 	// WorkspaceSymbolProvider the server provides workspace symbol support.
-	WorkspaceSymbolProvider *ServerCapabilitiesWorkspaceSymbolProvider `json:"workspaceSymbolProvider,omitempty"`
+	WorkspaceSymbolProvider *OneOf[bool, WorkspaceSymbolOptions] `json:"workspaceSymbolProvider,omitempty"`
 
 	// DocumentFormattingProvider the server provides document formatting.
-	DocumentFormattingProvider *ServerCapabilitiesDocumentFormattingProvider `json:"documentFormattingProvider,omitempty"`
+	DocumentFormattingProvider *OneOf[bool, DocumentFormattingOptions] `json:"documentFormattingProvider,omitempty"`
 
 	// DocumentRangeFormattingProvider the server provides document range formatting.
-	DocumentRangeFormattingProvider *ServerCapabilitiesDocumentRangeFormattingProvider `json:"documentRangeFormattingProvider,omitempty"`
+	DocumentRangeFormattingProvider *OneOf[bool, DocumentRangeFormattingOptions] `json:"documentRangeFormattingProvider,omitempty"`
 
 	// DocumentOnTypeFormattingProvider the server provides document formatting on typing.
 	DocumentOnTypeFormattingProvider *DocumentOnTypeFormattingOptions `json:"documentOnTypeFormattingProvider,omitempty"`
 
 	// RenameProvider the server provides rename support. RenameOptions may only be specified if the client states that it
 	// supports `prepareSupport` in its initial `initialize` request.
-	RenameProvider *ServerCapabilitiesRenameProvider `json:"renameProvider,omitempty"`
+	RenameProvider *OneOf[bool, RenameOptions] `json:"renameProvider,omitempty"`
 
 	// FoldingRangeProvider the server provides folding provider support.
-	FoldingRangeProvider *ServerCapabilitiesFoldingRangeProvider `json:"foldingRangeProvider,omitempty"`
+	FoldingRangeProvider *OneOf3[bool, FoldingRangeOptions, FoldingRangeRegistrationOptions] `json:"foldingRangeProvider,omitempty"`
 
 	// SelectionRangeProvider the server provides selection range support.
-	SelectionRangeProvider *ServerCapabilitiesSelectionRangeProvider `json:"selectionRangeProvider,omitempty"`
+	SelectionRangeProvider *OneOf3[bool, SelectionRangeOptions, SelectionRangeRegistrationOptions] `json:"selectionRangeProvider,omitempty"`
 
 	// ExecuteCommandProvider the server provides execute command support.
 	ExecuteCommandProvider *ExecuteCommandOptions `json:"executeCommandProvider,omitempty"`
 
 	// CallHierarchyProvider the server provides call hierarchy support.
-	CallHierarchyProvider *ServerCapabilitiesCallHierarchyProvider `json:"callHierarchyProvider,omitempty"`
+	CallHierarchyProvider *OneOf3[bool, CallHierarchyOptions, CallHierarchyRegistrationOptions] `json:"callHierarchyProvider,omitempty"`
 
 	// LinkedEditingRangeProvider the server provides linked editing range support.
-	LinkedEditingRangeProvider *ServerCapabilitiesLinkedEditingRangeProvider `json:"linkedEditingRangeProvider,omitempty"`
+	LinkedEditingRangeProvider *OneOf3[bool, LinkedEditingRangeOptions, LinkedEditingRangeRegistrationOptions] `json:"linkedEditingRangeProvider,omitempty"`
 
 	// SemanticTokensProvider the server provides semantic tokens support.
-	SemanticTokensProvider *ServerCapabilitiesSemanticTokensProvider `json:"semanticTokensProvider,omitempty"`
+	SemanticTokensProvider *OneOf[SemanticTokensOptions, SemanticTokensRegistrationOptions] `json:"semanticTokensProvider,omitempty"`
 
 	// MonikerProvider the server provides moniker support.
-	MonikerProvider *ServerCapabilitiesMonikerProvider `json:"monikerProvider,omitempty"`
+	MonikerProvider *OneOf3[bool, MonikerOptions, MonikerRegistrationOptions] `json:"monikerProvider,omitempty"`
 
 	// TypeHierarchyProvider the server provides type hierarchy support.
-	TypeHierarchyProvider *ServerCapabilitiesTypeHierarchyProvider `json:"typeHierarchyProvider,omitempty"`
+	TypeHierarchyProvider *OneOf3[bool, TypeHierarchyOptions, TypeHierarchyRegistrationOptions] `json:"typeHierarchyProvider,omitempty"`
 
 	// InlineValueProvider the server provides inline values.
-	InlineValueProvider *ServerCapabilitiesInlineValueProvider `json:"inlineValueProvider,omitempty"`
+	InlineValueProvider *OneOf3[bool, InlineValueOptions, InlineValueRegistrationOptions] `json:"inlineValueProvider,omitempty"`
 
 	// InlayHintProvider the server provides inlay hints.
-	InlayHintProvider *ServerCapabilitiesInlayHintProvider `json:"inlayHintProvider,omitempty"`
+	InlayHintProvider *OneOf3[bool, InlayHintOptions, InlayHintRegistrationOptions] `json:"inlayHintProvider,omitempty"`
 
 	// DiagnosticProvider the server has support for pull model diagnostics.
-	DiagnosticProvider *ServerCapabilitiesDiagnosticProvider `json:"diagnosticProvider,omitempty"`
+	DiagnosticProvider *OneOf[DiagnosticOptions, DiagnosticRegistrationOptions] `json:"diagnosticProvider,omitempty"`
 
 	// InlineCompletionProvider inline completion options used during static registration.  3.18.0 @proposed.
-	InlineCompletionProvider *ServerCapabilitiesInlineCompletionProvider `json:"inlineCompletionProvider,omitempty"`
+	InlineCompletionProvider *OneOf[bool, InlineCompletionOptions] `json:"inlineCompletionProvider,omitempty"`
 
 	// Workspace workspace specific server capabilities.
 	Workspace *WorkspaceOptions `json:"workspace,omitempty"`
@@ -1370,7 +1370,8 @@ type InitializeError struct {
 	Retry bool `json:"retry"`
 }
 
-type InitializedParams struct{}
+type InitializedParams struct {
+}
 
 type SetTraceParams struct {
 	Value TraceValue `json:"value"`
