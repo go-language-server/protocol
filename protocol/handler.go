@@ -18,7 +18,7 @@ func Handlers(handler jsonrpc2.Handler) jsonrpc2.Handler {
 }
 
 // Call calls method to params and result.
-func Call(ctx context.Context, conn jsonrpc2.Conn, method string, params, result interface{}) error {
+func Call(ctx context.Context, conn jsonrpc2.Conn, method string, params, result any) error {
 	_, err := conn.Call(ctx, method, params, result)
 	if ctx.Err() != nil {
 	}
