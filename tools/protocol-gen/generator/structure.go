@@ -704,7 +704,12 @@ func (gen *Generator) renderStructuresOrType(g Printer, or *protocol.OrType, gen
 	}
 	sb.WriteString(`[`)
 	for i, item := range or.Items {
-		sb.WriteString(item.String())
+		s := item.String()
+		// TODO(zchee): ugly way
+		if s == "LocationUriOnly" {
+			s = "LocationURIOnly"
+		}
+		sb.WriteString(s)
 		if i < len(or.Items)-1 {
 			sb.WriteString(`,`)
 		}
