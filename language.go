@@ -2012,7 +2012,7 @@ type HoverParams struct {
 // Hover the result of a hover request.
 type Hover struct {
 	// Contents the hover's content.
-	Contents OneOf3[MarkupContent, MarkedString, []MarkedString] `json:"contents"`
+	Contents OneOf3[MarkupContent, MarkedString[string, MarkedStringWithLanguage], []MarkedString[string, MarkedStringWithLanguage]] `json:"contents"`
 
 	// Range an optional range inside the text document that is used to visualize the hover, e.g. by changing the
 	// background color.
@@ -2755,7 +2755,7 @@ type TextDocumentFilterLanguage struct {
 
 	// Pattern a glob pattern, like **​/*.{ts,js}. See TextDocumentFilter for examples. 3.18.0 - support for relative patterns. Whether clients support relative patterns depends on the client capability `textDocuments.filters.relativePatternSupport`.
 	// @since 3.18.0
-	Pattern *GlobPattern `json:"pattern,omitempty"`
+	Pattern *GlobPattern[Pattern, RelativePattern] `json:"pattern,omitempty"`
 }
 
 // TextDocumentFilterScheme a document filter where `scheme` is required field.
@@ -2774,7 +2774,7 @@ type TextDocumentFilterScheme struct {
 
 	// Pattern a glob pattern, like **​/*.{ts,js}. See TextDocumentFilter for examples. 3.18.0 - support for relative patterns. Whether clients support relative patterns depends on the client capability `textDocuments.filters.relativePatternSupport`.
 	// @since 3.18.0
-	Pattern *GlobPattern `json:"pattern,omitempty"`
+	Pattern *GlobPattern[Pattern, RelativePattern] `json:"pattern,omitempty"`
 }
 
 // TextDocumentFilterPattern a document filter where `pattern` is required field.
@@ -2793,5 +2793,5 @@ type TextDocumentFilterPattern struct {
 
 	// Pattern a glob pattern, like **​/*.{ts,js}. See TextDocumentFilter for examples. 3.18.0 - support for relative patterns. Whether clients support relative patterns depends on the client capability `textDocuments.filters.relativePatternSupport`.
 	// @since 3.18.0
-	Pattern GlobPattern `json:"pattern"`
+	Pattern GlobPattern[Pattern, RelativePattern] `json:"pattern"`
 }

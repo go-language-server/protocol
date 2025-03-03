@@ -128,7 +128,7 @@ type NotebookDocumentFilterWithCells struct {
 	// Notebook the notebook to be synced If a string value is provided it matches against the notebook type. '*' matches every notebook.
 	//
 	// @since 3.18.0
-	Notebook *OneOf[string, NotebookDocumentFilter] `json:"notebook,omitempty"`
+	Notebook *OneOf[string, NotebookDocumentFilter[NotebookDocumentFilterNotebookType, NotebookDocumentFilterScheme, NotebookDocumentFilterPattern]] `json:"notebook,omitempty"`
 
 	// Cells the cells of the matching notebook to be synced.
 	//
@@ -143,7 +143,7 @@ type NotebookDocumentFilterWithNotebook struct {
 	// Notebook the notebook to be synced If a string value is provided it matches against the notebook type. '*' matches every notebook.
 	//
 	// @since 3.18.0
-	Notebook OneOf[string, NotebookDocumentFilter] `json:"notebook"`
+	Notebook OneOf[string, NotebookDocumentFilter[NotebookDocumentFilterNotebookType, NotebookDocumentFilterScheme, NotebookDocumentFilterPattern]] `json:"notebook"`
 
 	// Cells the cells of the matching notebook to be synced.
 	//
@@ -426,7 +426,7 @@ type NotebookDocumentFilterNotebookType struct {
 	// Pattern a glob pattern.
 	//
 	// @since 3.18.0
-	Pattern *GlobPattern `json:"pattern,omitempty"`
+	Pattern *GlobPattern[Pattern, RelativePattern] `json:"pattern,omitempty"`
 }
 
 // NotebookDocumentFilterScheme a notebook document filter where `scheme` is required field.
@@ -446,7 +446,7 @@ type NotebookDocumentFilterScheme struct {
 	// Pattern a glob pattern.
 	//
 	// @since 3.18.0
-	Pattern *GlobPattern `json:"pattern,omitempty"`
+	Pattern *GlobPattern[Pattern, RelativePattern] `json:"pattern,omitempty"`
 }
 
 // NotebookDocumentFilterPattern a notebook document filter where `pattern` is required field.
@@ -466,5 +466,5 @@ type NotebookDocumentFilterPattern struct {
 	// Pattern a glob pattern.
 	//
 	// @since 3.18.0
-	Pattern GlobPattern `json:"pattern"`
+	Pattern GlobPattern[Pattern, RelativePattern] `json:"pattern"`
 }

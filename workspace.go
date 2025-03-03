@@ -380,7 +380,7 @@ type DidChangeWatchedFilesParams struct {
 type FileSystemWatcher struct {
 	// GlobPattern the glob pattern to watch. See GlobPattern glob pattern for more detail. 3.17.0 support for relative
 	// patterns.
-	GlobPattern GlobPattern `json:"globPattern"`
+	GlobPattern GlobPattern[Pattern, RelativePattern] `json:"globPattern"`
 
 	// Kind the kind of events of interest. If omitted it defaults to WatchKind.Create | WatchKind.Change | WatchKind.Delete which is .
 	Kind WatchKind `json:"kind,omitempty"`
