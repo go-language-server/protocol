@@ -13,6 +13,12 @@ import (
 	"go.lsp.dev/jsonrpc2"
 )
 
+// Marshaler is the interface implemented by types that
+// can marshal themselves into valid JSON.
+type Marshaler interface {
+	MarshalJSON() ([]byte, error)
+}
+
 // MarshalFunc function type of marshal JSON data.
 //
 // Default is used [json.Marshal].
@@ -22,6 +28,15 @@ var marshal MarshalFunc = json.Marshal
 
 func RegiserMarshaler(fn MarshalFunc) {
 	marshal = fn
+}
+
+// Unmarshaler is the interface implemented by types
+// that can unmarshal a JSON description of themselves.
+// The input can be assumed to be a valid encoding of
+// a JSON value. UnmarshalJSON must copy the JSON data
+// if it wishes to retain the data after returning.
+type Unmarshaler interface {
+	UnmarshalJSON([]byte) error
 }
 
 // UnmarshalFunc function type of unmarshal JSON data.
