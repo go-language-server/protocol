@@ -5,8 +5,8 @@ package protocol
 
 import (
 	"context"
-
-	"go.uber.org/zap"
+	"io"
+	"log/slog"
 )
 
 type (
@@ -14,16 +14,16 @@ type (
 	ctxClient struct{}
 )
 
-// WithLogger returns the context with zap.Logger value.
-func WithLogger(ctx context.Context, logger *zap.Logger) context.Context {
+// WithLogger returns the context with slog.Logger value.
+func WithLogger(ctx context.Context, logger *slog.Logger) context.Context {
 	return context.WithValue(ctx, ctxLogger{}, logger)
 }
 
-// LoggerFromContext extracts zap.Logger from context.
-func LoggerFromContext(ctx context.Context) *zap.Logger {
-	logger, ok := ctx.Value(ctxLogger{}).(*zap.Logger)
+// LoggerFromContext extracts slog.Logger from context.
+func LoggerFromContext(ctx context.Context) *slog.Logger {
+	logger, ok := ctx.Value(ctxLogger{}).(*slog.Logger)
 	if !ok {
-		return zap.NewNop()
+		return slog.New(slog.NewTextHandler(io.Discard, nil))
 	}
 
 	return logger
