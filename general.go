@@ -104,7 +104,7 @@ type LogTraceParams struct {
 
 	// Verbose is the additional information that can be computed if the "trace" configuration
 	// is set to "verbose".
-	Verbose TraceValue `json:"verbose,omitempty"`
+	Verbose string `json:"verbose,omitempty"`
 }
 
 // SetTraceParams params of SetTrace notification.

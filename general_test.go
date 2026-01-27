@@ -341,12 +341,12 @@ func TestLogTraceParams(t *testing.T) {
 	t.Parallel()
 
 	const (
-		want    = `{"message":"testMessage","verbose":"verbose"}`
+		want    = `{"message":"testMessage","verbose":"testVerbose"}`
 		wantNil = `{"message":"testMessage"}`
 	)
 	wantType := LogTraceParams{
 		Message: "testMessage",
-		Verbose: TraceVerbose,
+		Verbose: "testVerbose",
 	}
 	wantTypeNil := LogTraceParams{
 		Message: "testMessage",
