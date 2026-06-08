@@ -85,21 +85,11 @@ func (testClient) ApplyEdit(context.Context, *ApplyWorkspaceEditParams) (*ApplyW
 //  3. a server->client request issued from within a handler round-trips
 //     (workspace/applyEdit).
 //
-// NOTE: This test is currently skipped because of a latent defect in the
-// production Handlers() chain that breaks every request/reply through
-// NewServer/NewClient. The vendored go.lsp.dev/jsonrpc2 CancelHandler (the
-// "fastest" branch) cancels each request's per-request context before forwarding
-// the reply to the inner replier. protocol.CancelHandler's reply wrapper (see
-// handler.go: "if ctx.Err() != nil && err == nil { err = ErrRequestCancelled }")
-// then observes that cancellation on the success path and substitutes
-// ErrRequestCancelled, so a handler that returns a successful result has its
-// reply clobbered into "cancelled JSON-RPC". A minimal repro is a plain Hover
-// request with no server->client callback. Notifications are unaffected because
-// jsonrpc2.CancelHandler only wraps *Call. Remove the t.Skip once the
-// reply-time self-cancel is distinguished from a genuine $/cancelRequest.
+// TestIntegrationRoundTrip drives the production Handlers() chain through
+// NewServer/NewClient over an in-memory pipe: a client->server request, a
+// notification, and a server->client callback. It is the regression guard for
+// the reply-clobbering defect once present in protocol.CancelHandler.
 func TestIntegrationRoundTrip(t *testing.T) {
-	t.Skip("blocked: Handlers() clobbers successful request replies into ErrRequestCancelled (vendored jsonrpc2.CancelHandler cancels the per-request ctx before reply; protocol.CancelHandler then substitutes ErrRequestCancelled on success). See the doc comment for the minimal repro and candidate fix sites.")
-
 	ctx, cancel := context.WithTimeout(t.Context(), 10*time.Second)
 	defer cancel()
 

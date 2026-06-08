@@ -32,8 +32,9 @@ const (
 )
 
 var (
-	// ErrContentModified should be used when a request is canceled early.
-	ErrContentModified = jsonrpc2.NewError(CodeContentModified, "cancelled JSON-RPC")
+	// ErrContentModified should be used when a request's result is invalidated by
+	// a change to the document or workspace before the request completes.
+	ErrContentModified = jsonrpc2.NewError(CodeContentModified, "content modified")
 
 	// ErrRequestCancelled should be used when a request is canceled early.
 	ErrRequestCancelled = jsonrpc2.NewError(CodeRequestCancelled, "cancelled JSON-RPC")

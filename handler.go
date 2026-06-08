@@ -27,8 +27,9 @@ func (c detachedContext) Value(k any) any           { return c.parent.Value(k) }
 func detach(ctx context.Context) context.Context { return detachedContext{ctx} }
 
 // CancelHandler returns a [jsonrpc2.Handler] that observes "$/cancelRequest"
-// notifications and cancels the in-flight request they name, while substituting
-// [ErrRequestCancelled] for any reply whose context was canceled.
+// notifications and cancels the in-flight request they name. Replies are issued
+// over a detached context so they are written even after the request's own
+// context is canceled.
 func CancelHandler(handler jsonrpc2.Handler) jsonrpc2.Handler {
 	handler, canceller := jsonrpc2.CancelHandler(handler)
 
@@ -38,14 +39,16 @@ func CancelHandler(handler jsonrpc2.Handler) jsonrpc2.Handler {
 			// cancelled at the point of cancellation rather than waiting for gopls to
 			// naturally reply. To do that, we need to keep track of whether a reply has
 			// been sent already and be careful about racing between the two paths.
+			// The vendored jsonrpc2.CancelHandler cancels each request's context
+			// at reply time as cleanup, then forwards that already-canceled
+			// context here. A reply-time ctx.Err() check therefore cannot tell a
+			// genuine $/cancelRequest from normal completion, so deriving
+			// ErrRequestCancelled here would clobber every successful reply.
+			// Genuine cancellations are surfaced by the dispatchers' pre-dispatch
+			// ctx.Err() gate; here we only detach so the response is still written
+			// after that self-cancel.
 			wrapped := func(ctx context.Context, resp any, err error) error {
-				// https://microsoft.github.io/language-server-protocol/specifications/specification-current/#cancelRequest
-				if ctx.Err() != nil && err == nil {
-					err = ErrRequestCancelled
-				}
-				ctx = detach(ctx)
-
-				return reply(ctx, resp, err)
+				return reply(detach(ctx), resp, err)
 			}
 
 			return handler(ctx, wrapped, req)
