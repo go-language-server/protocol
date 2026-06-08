@@ -21,11 +21,12 @@ func FuzzUnionDispatchOracle(f *testing.F) {
 	for _, seed := range malformedInputs() {
 		f.Add(seed)
 	}
-	// JSON-escaped key/value seeds so the fuzzer explores the unescape path.
+	// JSON-escaped key/value seeds so the fuzzer explores the unescape path
+	// from genuinely escaped starting points (\uXXXX is a real escape here).
 	for _, seed := range [][]byte{
-		[]byte(`{"uri":"x","range":{}}`),
-		[]byte(`{"kind":"create"}`),
-		[]byte(`{"command":"x"}`),
+		[]byte(`{"\u0075ri":"x","\u0072ange":{}}`),
+		[]byte(`{"\u006bind":"create"}`),
+		[]byte(`{"comma\u006ed":"x"}`),
 	} {
 		f.Add(seed)
 	}
