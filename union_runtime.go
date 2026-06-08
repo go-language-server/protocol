@@ -3,7 +3,11 @@
 
 package protocol
 
-import "github.com/go-json-experiment/json/jsontext"
+import (
+	"bytes"
+
+	"github.com/go-json-experiment/json/jsontext"
+)
 
 // This file implements union-arm discrimination over a raw [jsontext.Value]
 // without materializing the object into a map. A [jsontext.Value] is already a
@@ -102,10 +106,10 @@ func skipValue(raw []byte, i int) int {
 // It stops early if fn returns false. It reports whether raw is a well-formed
 // top-level object; a non-object value yields ok=false and no callbacks.
 //
-// The key slice passed to fn aliases raw and is only the bytes between the
-// surrounding quotes; callers comparing against Go string literals rely on LSP
-// member names being plain ASCII with no JSON escapes, which holds for every
-// discriminator key in the meta-model.
+// The key slice passed to fn aliases raw and is the still-escaped bytes between
+// the surrounding quotes. Callers comparing it against a Go string literal must
+// use [keyEquals], which decodes JSON escapes on the slow path so an escaped
+// spelling of a member name still matches.
 func objectKeys(raw []byte, fn func(key []byte) bool) (ok bool) {
 	i := skipSpace(raw, 0)
 	if i >= len(raw) || raw[i] != '{' {
@@ -147,13 +151,9 @@ func objectKeys(raw []byte, fn func(key []byte) bool) (ok bool) {
 
 // objectKind returns the value of a JSON object's "kind" string member, used as
 // a discriminator when disambiguating union arms. It returns false if raw is
-// not an object, has no "kind" member, or the member is not a JSON string.
-//
-// Like objectKeys' treatment of member names, it assumes the discriminator
-// value is an escape-free string: every "kind" value in the meta-model is a
-// fixed ASCII enum (e.g. "create", "rename", "quickfix"), so a value containing
-// a JSON escape yields false. A general decoder would unescape it; that case
-// does not arise for LSP discriminators.
+// not an object, has no "kind" member, or the member is not a JSON string. A
+// JSON-escaped value (e.g. "create") is decoded to its true string, so it
+// matches the same discriminator a full JSON decode would.
 func objectKind(raw jsontext.Value) (string, bool) {
 	var kind string
 	var found bool
@@ -196,7 +196,7 @@ func objectMember(raw []byte, want string, fn func(val []byte)) {
 		i++
 		vs := skipSpace(raw, i)
 		ve := skipValue(raw, vs)
-		if string(key) == want {
+		if keyEquals(key, want) {
 			fn(raw[vs:ve])
 			return
 		}
@@ -208,22 +208,45 @@ func objectMember(raw []byte, want string, fn func(val []byte)) {
 	}
 }
 
-// unquoteJSONString returns the string content of a JSON string value with no
-// escape sequences. It reports false if val is not a quoted string or contains
-// an escape, in which case the caller must fall back to a full decode. The
-// discriminator values in the meta-model are plain ASCII enum names, so the
-// fast path applies in practice.
+// unquoteJSONString returns the decoded string content of a JSON string value.
+// It reports false if val is not a quoted JSON string. An escape-free string
+// takes a zero-allocation fast path (the common case for LSP discriminators);
+// a string containing a JSON escape (e.g. "kind") is decoded so the result
+// is the true string value, matching what a full JSON decode would produce.
 func unquoteJSONString(val []byte) (string, bool) {
 	if len(val) < 2 || val[0] != '"' || val[len(val)-1] != '"' {
 		return "", false
 	}
 	body := val[1 : len(val)-1]
-	for _, c := range body {
-		if c == '\\' {
-			return "", false
-		}
+	if bytes.IndexByte(body, '\\') < 0 {
+		return string(body), true // fast path: no escapes
 	}
-	return string(body), true
+	dst, err := jsontext.AppendUnquote(nil, val)
+	if err != nil {
+		return "", false
+	}
+	return string(dst), true
+}
+
+// keyEquals reports whether the raw JSON object-member key bytes (the content
+// between the surrounding quotes, as produced by [objectKeys]/[objectMember])
+// equal the Go string literal want. An escape-free key compares byte-for-byte
+// with no allocation; a key containing a JSON escape is decoded first so that an
+// escaped spelling of a member name (valid JSON, e.g. "range" for "range")
+// matches its literal, exactly as a map-based decode would.
+func keyEquals(key []byte, want string) bool {
+	if bytes.IndexByte(key, '\\') < 0 {
+		return string(key) == want // fast path: no escapes
+	}
+	quoted := make([]byte, 0, len(key)+2)
+	quoted = append(quoted, '"')
+	quoted = append(quoted, key...)
+	quoted = append(quoted, '"')
+	dst, err := jsontext.AppendUnquote(nil, quoted)
+	if err != nil {
+		return false
+	}
+	return string(dst) == want
 }
 
 // objectHasKeys reports whether the JSON object raw contains every given
@@ -238,7 +261,7 @@ func objectHasKeys(raw jsontext.Value, keys ...string) bool {
 	want := len(keys)
 	ok := objectKeys(raw, func(key []byte) bool {
 		for j, k := range keys {
-			if seen&(1<<uint(j)) == 0 && string(key) == k {
+			if seen&(1<<uint(j)) == 0 && keyEquals(key, k) {
 				seen |= 1 << uint(j)
 				want--
 				if want == 0 {
@@ -267,7 +290,7 @@ func objectHasAndKnown(raw jsontext.Value, required, known []string) (has, allKn
 	ok := objectKeys(raw, func(key []byte) bool {
 		inKnown := false
 		for _, k := range known {
-			if string(key) == k {
+			if keyEquals(key, k) {
 				inKnown = true
 				break
 			}
@@ -277,7 +300,7 @@ func objectHasAndKnown(raw jsontext.Value, required, known []string) (has, allKn
 			return false // a foreign key disqualifies the arm; stop early
 		}
 		for j, r := range required {
-			if seen&(1<<uint(j)) == 0 && string(key) == r {
+			if seen&(1<<uint(j)) == 0 && keyEquals(key, r) {
 				seen |= 1 << uint(j)
 				want--
 			}
@@ -305,7 +328,7 @@ func objectKeysKnown(raw jsontext.Value, known ...string) bool {
 	allKnown := true
 	ok := objectKeys(raw, func(key []byte) bool {
 		for _, k := range known {
-			if string(key) == k {
+			if keyEquals(key, k) {
 				return true // known; continue
 			}
 		}

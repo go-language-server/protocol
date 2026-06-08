@@ -144,6 +144,14 @@ var staticWellFormed = [][]byte{
 	[]byte(`{"a":"he said \"hi\"","b":2}`),
 	// escaped backslash immediately before the closing quote.
 	[]byte(`{"a":"trailing\\","b":2}`),
+	// JSON-escaped object KEYS (valid JSON): the scanner compares raw key bytes
+	// against literals, so it must decode these to match. Each \uXXXX is a real
+	// escape in the JSON (a backtick raw string keeps the backslash literal).
+	[]byte(`{"\u0075ri":"file:///a","\u0072ange":{"start":{"line":0,"character":0},"end":{"line":0,"character":1}}}`),
+	[]byte(`{"\u006bind":"create","uri":"file:///a.go"}`),
+	[]byte(`{"comma\u006ed":"do.it","title":"x"}`),
+	// escaped discriminator VALUE: "cr\u0065ate" decodes to "create".
+	[]byte(`{"kind":"cr\u0065ate","uri":"file:///a.go"}`),
 	// nested objects/arrays.
 	[]byte(`{"outer":{"inner":{"k":[1,2,{"x":3}]}},"flag":true}`),
 	// whitespace everywhere.

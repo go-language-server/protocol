@@ -21,6 +21,14 @@ func FuzzUnionDispatchOracle(f *testing.F) {
 	for _, seed := range malformedInputs() {
 		f.Add(seed)
 	}
+	// JSON-escaped key/value seeds so the fuzzer explores the unescape path.
+	for _, seed := range [][]byte{
+		[]byte(`{"uri":"x","range":{}}`),
+		[]byte(`{"kind":"create"}`),
+		[]byte(`{"command":"x"}`),
+	} {
+		f.Add(seed)
+	}
 
 	keys := []string{"kind", "uri", "range", "command", "title", "language"}
 
