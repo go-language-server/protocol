@@ -672,20 +672,31 @@ func (g *Generator) structRequired(s *Structure) []string {
 	return out
 }
 
-// optionalStructDropsPointer reports whether an optional field of type goType
-// may be emitted as a plain value with ",omitzero" instead of a pointer. This
-// holds only when goType is a struct whose zero value can never be a legitimate
-// present value (it has a required field whose zero is invalid, e.g. a required
-// string), so omitting it via omitzero is indistinguishable from absent.
-// Pointers are kept for primitives, enums, named scalars, and zero-meaningful
-// structs (Range, Position, all-optional capability/options containers) so a
-// present-zero or present-{} value round-trips faithfully.
-func (g *Generator) optionalStructDropsPointer(goType string) bool {
-	s := g.resolveStruct(goType)
-	if s == nil {
-		return false
+// optionalDropsPointer reports whether an optional field of type goType may be
+// emitted as a plain value with ",omitzero" instead of a pointer. This holds when
+// the type's zero value can never be a legitimate present value, so omitting it
+// via omitzero is indistinguishable from absent:
+//
+//   - structs whose zero is not meaningful (a required field has an invalid zero);
+//   - enums with no zero member (their zero, 0 or "", is never a valid value);
+//   - named scalar aliases whose underlying type drops the pointer (string aliases).
+//
+// Pointers are kept for raw base primitives (bool/int/uint/decimal/string, where
+// an explicit zero must stay distinguishable from absent), enums that declare a
+// zero member, numeric aliases, and zero-meaningful structs (Range, Position,
+// all-optional capability/options containers) so a present-zero or present-{}
+// value round-trips faithfully.
+func (g *Generator) optionalDropsPointer(goType string) bool {
+	if s := g.resolveStruct(goType); s != nil {
+		return !g.zeroStructMeaningful(s, map[string]bool{})
 	}
-	return !g.zeroStructMeaningful(s, map[string]bool{})
+	if e, ok := g.enums[goType]; ok {
+		return !enumHasZeroMember(e)
+	}
+	if a, ok := g.aliases[goType]; ok {
+		return !g.zeroValueValid(a.Type, map[string]bool{})
+	}
+	return false
 }
 
 // zeroStructMeaningful reports whether a struct's zero value (all fields zero)

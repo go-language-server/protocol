@@ -47,7 +47,7 @@ type FoldingRange struct {
 	// Kind Describes the kind of the folding range such as 'comment' or 'region'. The kind
 	// is used to categorize folding ranges and used by commands like 'Fold all comments'.
 	// See {@link FoldingRangeKind} for an enumeration of standardized kinds.
-	Kind *FoldingRangeKind `json:"kind,omitzero"`
+	Kind FoldingRangeKind `json:"kind,omitzero"`
 
 	// CollapsedText The text that the client should show when the specified range is
 	// collapsed. If not defined or not supported by the client, a default

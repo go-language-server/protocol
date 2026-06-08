@@ -168,7 +168,7 @@ type CompletionItem struct {
 
 	// Kind The kind of this completion item. Based of the kind
 	// an icon is chosen by the editor.
-	Kind *CompletionItemKind `json:"kind,omitzero"`
+	Kind CompletionItemKind `json:"kind,omitzero"`
 
 	// Tags Tags for this completion item.
 	//
@@ -226,7 +226,7 @@ type CompletionItem struct {
 	//
 	// Please note that the insertTextFormat doesn't apply to
 	// `additionalTextEdits`.
-	InsertTextFormat *InsertTextFormat `json:"insertTextFormat,omitzero"`
+	InsertTextFormat InsertTextFormat `json:"insertTextFormat,omitzero"`
 
 	// InsertTextMode How whitespace and indentation is handled during completion
 	// item insertion. If not provided the clients default value depends on
@@ -235,7 +235,7 @@ type CompletionItem struct {
 	// @since 3.16.0
 	//
 	// Since: 3.16.0
-	InsertTextMode *InsertTextMode `json:"insertTextMode,omitzero"`
+	InsertTextMode InsertTextMode `json:"insertTextMode,omitzero"`
 
 	// TextEdit An {@link TextEdit edit} which is applied to a document when selecting
 	// this completion. When an edit is provided the value of
@@ -420,14 +420,14 @@ type CompletionItemDefaults struct {
 	// @since 3.17.0
 	//
 	// Since: 3.17.0
-	InsertTextFormat *InsertTextFormat `json:"insertTextFormat,omitzero"`
+	InsertTextFormat InsertTextFormat `json:"insertTextFormat,omitzero"`
 
 	// InsertTextMode A default insert text mode.
 	//
 	// @since 3.17.0
 	//
 	// Since: 3.17.0
-	InsertTextMode *InsertTextMode `json:"insertTextMode,omitzero"`
+	InsertTextMode InsertTextMode `json:"insertTextMode,omitzero"`
 
 	// Data A default data value.
 	//
@@ -474,7 +474,7 @@ type CompletionItemApplyKinds struct {
 	// @since 3.18.0
 	//
 	// Since: 3.18.0
-	CommitCharacters *ApplyKind `json:"commitCharacters,omitzero"`
+	CommitCharacters ApplyKind `json:"commitCharacters,omitzero"`
 
 	// Data Specifies whether the `data` field on a completion will replace or
 	// be merged with data from `completionList.itemDefaults.data`.
@@ -500,7 +500,7 @@ type CompletionItemApplyKinds struct {
 	// @since 3.18.0
 	//
 	// Since: 3.18.0
-	Data *ApplyKind `json:"data,omitzero"`
+	Data ApplyKind `json:"data,omitzero"`
 }
 
 // CompletionOptions Completion options.
@@ -601,7 +601,7 @@ type CompletionClientCapabilities struct {
 	// @since 3.17.0
 	//
 	// Since: 3.17.0
-	InsertTextMode *InsertTextMode `json:"insertTextMode,omitzero"`
+	InsertTextMode InsertTextMode `json:"insertTextMode,omitzero"`
 
 	// ContextSupport The client supports to send additional context information for a
 	// `textDocument/completion` request.

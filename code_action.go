@@ -226,7 +226,7 @@ type CodeActionContext struct {
 	// @since 3.17.0
 	//
 	// Since: 3.17.0
-	TriggerKind *CodeActionTriggerKind `json:"triggerKind,omitzero"`
+	TriggerKind CodeActionTriggerKind `json:"triggerKind,omitzero"`
 }
 
 // CodeActionDisabled Captures why the code action is currently disabled.

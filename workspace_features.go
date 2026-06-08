@@ -317,7 +317,7 @@ type FileOperationPattern struct {
 	// Matches Whether to match files or folders with this pattern.
 	//
 	// Matches both if undefined.
-	Matches *FileOperationPatternKind `json:"matches,omitzero"`
+	Matches FileOperationPatternKind `json:"matches,omitzero"`
 
 	// Options Additional options used during matching.
 	Options *FileOperationPatternOptions `json:"options,omitzero"`
@@ -422,7 +422,7 @@ type FileSystemWatcher struct {
 	// Kind The kind of events of interest. If omitted it defaults
 	// to WatchKind.Create | WatchKind.Change | WatchKind.Delete
 	// which is 7.
-	Kind *WatchKind `json:"kind,omitzero"`
+	Kind WatchKind `json:"kind,omitzero"`
 }
 
 // RelativePattern A relative pattern is a helper to construct glob patterns that are matched

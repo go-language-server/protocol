@@ -92,7 +92,7 @@ type _InitializeParams struct {
 	InitializationOptions LSPAny `json:"initializationOptions,omitzero"`
 
 	// Trace The initial trace setting. If omitted trace is disabled ('off').
-	Trace *TraceValue `json:"trace,omitzero"`
+	Trace TraceValue `json:"trace,omitzero"`
 }
 
 // ServerCapabilities Defines the capabilities provided by a language
@@ -109,7 +109,7 @@ type ServerCapabilities struct {
 	// @since 3.17.0
 	//
 	// Since: 3.17.0
-	PositionEncoding *PositionEncodingKind `json:"positionEncoding,omitzero"`
+	PositionEncoding PositionEncodingKind `json:"positionEncoding,omitzero"`
 
 	// TextDocumentSync Defines how text documents are synced. Is either a detailed structure
 	// defining each notification or for backwards compatibility the

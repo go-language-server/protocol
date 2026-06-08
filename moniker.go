@@ -68,7 +68,7 @@ type Moniker struct {
 	Unique UniquenessLevel `json:"unique"`
 
 	// Kind The moniker kind if known.
-	Kind *MonikerKind `json:"kind,omitzero"`
+	Kind MonikerKind `json:"kind,omitzero"`
 }
 
 // MonikerRegistrationOptions is defined by the LSP specification.

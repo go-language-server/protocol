@@ -116,7 +116,7 @@ type RenameClientCapabilities struct {
 	// @since 3.16.0
 	//
 	// Since: 3.16.0
-	PrepareSupportDefaultBehavior *PrepareSupportDefaultBehavior `json:"prepareSupportDefaultBehavior,omitzero"`
+	PrepareSupportDefaultBehavior PrepareSupportDefaultBehavior `json:"prepareSupportDefaultBehavior,omitzero"`
 
 	// HonorsChangeAnnotations Whether the client honors the change annotations in
 	// text edits and resource operations returned via the

@@ -55,7 +55,7 @@ type InlayHint struct {
 
 	// Kind The kind of this hint. Can be omitted in which case the client
 	// should fall back to a reasonable default.
-	Kind *InlayHintKind `json:"kind,omitzero"`
+	Kind InlayHintKind `json:"kind,omitzero"`
 
 	// TextEdits Optional text edits that are performed when accepting this inlay hint.
 	//

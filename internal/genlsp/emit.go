@@ -211,7 +211,7 @@ func (g *Generator) decorate(goType string, optional, nullable bool) (typ, tag s
 		goType == "LSPAny" || goType == "LSPObject" || goType == "LSPArray"
 	switch {
 	case optional:
-		if !nilable && !g.optionalStructDropsPointer(goType) {
+		if !nilable && !g.optionalDropsPointer(goType) {
 			goType = "*" + goType
 		}
 		return goType, ",omitzero"

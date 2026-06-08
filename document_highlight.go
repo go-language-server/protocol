@@ -33,7 +33,7 @@ type DocumentHighlight struct {
 	Range Range `json:"range"`
 
 	// Kind The highlight kind, default is {@link DocumentHighlightKind.Text text}.
-	Kind *DocumentHighlightKind `json:"kind,omitzero"`
+	Kind DocumentHighlightKind `json:"kind,omitzero"`
 }
 
 // DocumentHighlightRegistrationOptions Registration options for a {@link DocumentHighlightRequest}.

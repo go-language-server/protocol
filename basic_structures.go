@@ -946,7 +946,7 @@ type Diagnostic struct {
 	// Severity The diagnostic's severity. To avoid interpretation mismatches when a
 	// server is used with different clients it is highly recommended that servers
 	// always provide a severity value.
-	Severity *DiagnosticSeverity `json:"severity,omitzero"`
+	Severity DiagnosticSeverity `json:"severity,omitzero"`
 
 	// Code The diagnostic's code, which usually appear in the user interface.
 	Code ProgressToken `json:"code,omitzero"`
@@ -1078,7 +1078,7 @@ type SnippetTextEdit struct {
 	Snippet StringValue `json:"snippet"`
 
 	// AnnotationID The actual identifier of the snippet edit.
-	AnnotationID *ChangeAnnotationIdentifier `json:"annotationId,omitzero"`
+	AnnotationID ChangeAnnotationIdentifier `json:"annotationId,omitzero"`
 }
 
 // ResourceOperation A generic resource operation.
@@ -1091,7 +1091,7 @@ type ResourceOperation struct {
 	// @since 3.16.0
 	//
 	// Since: 3.16.0
-	AnnotationID *ChangeAnnotationIdentifier `json:"annotationId,omitzero"`
+	AnnotationID ChangeAnnotationIdentifier `json:"annotationId,omitzero"`
 }
 
 // CreateFileOptions Options to create a file.
@@ -1238,7 +1238,7 @@ type WorkspaceEditClientCapabilities struct {
 	// @since 3.13.0
 	//
 	// Since: 3.13.0
-	FailureHandling *FailureHandlingKind `json:"failureHandling,omitzero"`
+	FailureHandling FailureHandlingKind `json:"failureHandling,omitzero"`
 
 	// NormalizesLineEndings Whether the client normalizes line endings to the client specific
 	// setting.
