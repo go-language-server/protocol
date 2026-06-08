@@ -74,6 +74,15 @@ lint/golangci-lint: .golangci.yml  ## Run golangci-lint.
 	go tool golangci-lint run $(strip ${GO_LINT_FLAGS}) ./...
 
 
+##@ generate
+
+.PHONY: generate
+generate:  ## Regenerate the protocol package from metaModel.json and format it.
+	$(call target)
+	go run go.lsp.dev/protocol/internal/genlsp/cmd/genlsp -input internal/genlsp/testdata/metaModel.json -output . -pkg protocol
+	go tool gofumpt -extra -w .
+
+
 ##@ tools
 
 .PHONY: tools

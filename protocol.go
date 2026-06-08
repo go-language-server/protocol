@@ -5,40 +5,33 @@ package protocol
 
 import (
 	"context"
-
-	"go.uber.org/zap"
+	"log/slog"
 
 	"go.lsp.dev/jsonrpc2"
 )
 
-// NewServer returns the context in which client is embedded, jsonrpc2.Conn, and the Client.
-func NewServer(ctx context.Context, server Server, stream jsonrpc2.Stream, logger *zap.Logger) (context.Context, jsonrpc2.Conn, Client) {
-	conn := jsonrpc2.NewConn(stream)
-	cliint := ClientDispatcher(conn, logger.Named("client"))
-	ctx = WithClient(ctx, cliint)
-
-	conn.Go(
-		ctx,
-		Handlers(
-			ServerHandler(server, jsonrpc2.MethodNotFoundHandler),
-		),
-	)
-
-	return ctx, conn, cliint
-}
-
-// NewClient returns the context in which Client is embedded, jsonrpc2.Conn, and the Server.
-func NewClient(ctx context.Context, client Client, stream jsonrpc2.Stream, logger *zap.Logger) (context.Context, jsonrpc2.Conn, Server) {
+// NewServer returns the context in which the [Client] dispatcher is embedded, the
+// jsonrpc2 connection, and that [Client]. The connection serves the supplied
+// [Server] and is wired with the union-aware [lspCodec].
+func NewServer(ctx context.Context, server Server, stream jsonrpc2.Stream, logger *slog.Logger) (context.Context, jsonrpc2.Conn, Client) {
+	conn := jsonrpc2.NewConn(stream, jsonrpc2.WithCodec(lspCodec{}))
+	client := ClientDispatcher(conn, logger.With("name", "client"))
 	ctx = WithClient(ctx, client)
 
-	conn := jsonrpc2.NewConn(stream)
-	conn.Go(
-		ctx,
-		Handlers(
-			ClientHandler(client, jsonrpc2.MethodNotFoundHandler),
-		),
-	)
-	server := ServerDispatcher(conn, logger.Named("server"))
+	conn.Go(ctx, Handlers(ServerHandler(server, jsonrpc2.MethodNotFoundHandler)))
+
+	return ctx, conn, client
+}
+
+// NewClient returns the context in which the [Client] is embedded, the jsonrpc2
+// connection, and the [Server] dispatcher. The connection serves the supplied
+// [Client] and is wired with the union-aware [lspCodec].
+func NewClient(ctx context.Context, client Client, stream jsonrpc2.Stream, logger *slog.Logger) (context.Context, jsonrpc2.Conn, Server) {
+	ctx = WithClient(ctx, client)
+
+	conn := jsonrpc2.NewConn(stream, jsonrpc2.WithCodec(lspCodec{}))
+	conn.Go(ctx, Handlers(ClientHandler(client, jsonrpc2.MethodNotFoundHandler)))
+	server := ServerDispatcher(conn, logger.With("name", "server"))
 
 	return ctx, conn, server
 }
