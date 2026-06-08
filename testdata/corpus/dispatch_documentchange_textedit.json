@@ -1,0 +1,1 @@
+{"textDocument":{"uri":"file:///a.go","version":1},"edits":[{"range":{"start":{"line":0,"character":0},"end":{"line":0,"character":1}},"newText":"x"}]}

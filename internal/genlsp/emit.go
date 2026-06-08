@@ -620,17 +620,11 @@ func (g *Generator) renderObjectDispatch(b *strings.Builder, union string, membe
 	byAllKeys := append([]*unionMember(nil), structural...)
 	sort.SliceStable(byAllKeys, func(i, j int) bool { return len(byAllKeys[i].AllKeys) > len(byAllKeys[j].AllKeys) })
 	for _, m := range byAllKeys {
-		var parts []string
-		if len(m.Required) > 0 {
-			parts = append(parts, fmt.Sprintf("objectHasKeys(raw, %s)", quoteList(m.Required)))
-		}
-		if len(m.AllKeys) > 0 {
-			parts = append(parts, fmt.Sprintf("objectKeysKnown(raw, %s)", quoteList(m.AllKeys)))
-		}
-		if len(parts) == 0 {
+		guard := objectGuard(m.Required, m.AllKeys)
+		if guard == "" {
 			continue // no signal; handled by the lenient tier
 		}
-		emitAttempt(b, strings.Join(parts, " && "), m)
+		emitAttempt(b, guard, m)
 	}
 
 	byReq := append([]*unionMember(nil), structural...)
@@ -658,17 +652,11 @@ func (g *Generator) renderArrayDispatch(b *strings.Builder, union string, member
 	byAllKeys := append([]*unionMember(nil), members...)
 	sort.SliceStable(byAllKeys, func(i, j int) bool { return len(byAllKeys[i].ElemAllKeys) > len(byAllKeys[j].ElemAllKeys) })
 	for _, m := range byAllKeys {
-		var parts []string
-		if len(m.ElemRequired) > 0 {
-			parts = append(parts, fmt.Sprintf("arrayFirstHasKeys(raw, %s)", quoteList(m.ElemRequired)))
-		}
-		if len(m.ElemAllKeys) > 0 {
-			parts = append(parts, fmt.Sprintf("arrayFirstKeysKnown(raw, %s)", quoteList(m.ElemAllKeys)))
-		}
-		if len(parts) == 0 {
+		guard := arrayGuard(m.ElemRequired, m.ElemAllKeys)
+		if guard == "" {
 			continue
 		}
-		emitAttempt(b, strings.Join(parts, " && "), m)
+		emitAttempt(b, guard, m)
 	}
 
 	byReq := append([]*unionMember(nil), members...)
@@ -917,4 +905,41 @@ func quoteList(keys []string) string {
 		parts[i] = strconv.Quote(k)
 	}
 	return strings.Join(parts, ", ")
+}
+
+// quoteSlice renders keys as a Go string-slice literal, e.g. []string{"a", "b"}.
+func quoteSlice(keys []string) string {
+	return "[]string{" + quoteList(keys) + "}"
+}
+
+// objectGuard returns the guard expression for an object arm whose required and
+// full key sets are required and all. When both are present it emits the fused
+// objectHasAndKnown call so the arm scans the object once; otherwise it emits
+// the single applicable predicate. It returns "" when neither carries a signal,
+// in which case the caller defers the arm to the lenient tier.
+func objectGuard(required, all []string) string {
+	switch {
+	case len(required) > 0 && len(all) > 0:
+		return fmt.Sprintf("objectHasAndKnownGuard(raw, %s, %s)", quoteSlice(required), quoteSlice(all))
+	case len(required) > 0:
+		return fmt.Sprintf("objectHasKeys(raw, %s)", quoteList(required))
+	case len(all) > 0:
+		return fmt.Sprintf("objectKeysKnown(raw, %s)", quoteList(all))
+	default:
+		return ""
+	}
+}
+
+// arrayGuard is objectGuard for an array arm, probing the first element.
+func arrayGuard(required, all []string) string {
+	switch {
+	case len(required) > 0 && len(all) > 0:
+		return fmt.Sprintf("arrayFirstHasAndKnown(raw, %s, %s)", quoteSlice(required), quoteSlice(all))
+	case len(required) > 0:
+		return fmt.Sprintf("arrayFirstHasKeys(raw, %s)", quoteList(required))
+	case len(all) > 0:
+		return fmt.Sprintf("arrayFirstKeysKnown(raw, %s)", quoteList(all))
+	default:
+		return ""
+	}
 }

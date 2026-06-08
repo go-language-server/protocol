@@ -7,6 +7,7 @@ package protocol
 
 import (
 	"fmt"
+
 	"github.com/go-json-experiment/json/jsontext"
 )
 
@@ -56,8 +57,7 @@ type MarkedStringSlice []MarkedString
 type ParameterInformationLabelTuple [2]uint32
 
 // SemanticTokensOptionsRange is a generated inline object literal type.
-type SemanticTokensOptionsRange struct {
-}
+type SemanticTokensOptionsRange struct{}
 
 // Definition The definition of a symbol represented as one or many {@link Location locations}.
 // For most programming languages there is only one location at which a symbol is
@@ -80,7 +80,7 @@ func unmarshalDeclaration(dec *jsontext.Decoder, val *Declaration) error {
 		*val = nil
 		return nil
 	case '{':
-		if objectHasKeys(raw, "uri", "range") && objectKeysKnown(raw, "uri", "range") {
+		if objectHasAndKnownGuard(raw, []string{"uri", "range"}, []string{"uri", "range"}) {
 			var v Location
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -137,21 +137,21 @@ func unmarshalInlineValue(dec *jsontext.Decoder, val *InlineValue) error {
 		*val = nil
 		return nil
 	case '{':
-		if objectHasKeys(raw, "range", "caseSensitiveLookup") && objectKeysKnown(raw, "range", "variableName", "caseSensitiveLookup") {
+		if objectHasAndKnownGuard(raw, []string{"range", "caseSensitiveLookup"}, []string{"range", "variableName", "caseSensitiveLookup"}) {
 			var v InlineValueVariableLookup
 			if decodeWith(raw, &v) == nil {
 				*val = &v
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "range", "text") && objectKeysKnown(raw, "range", "text") {
+		if objectHasAndKnownGuard(raw, []string{"range", "text"}, []string{"range", "text"}) {
 			var v InlineValueText
 			if decodeWith(raw, &v) == nil {
 				*val = &v
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "range") && objectKeysKnown(raw, "range", "expression") {
+		if objectHasAndKnownGuard(raw, []string{"range"}, []string{"range", "expression"}) {
 			var v InlineValueEvaluatableExpression
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -267,21 +267,21 @@ func unmarshalPrepareRenameResult(dec *jsontext.Decoder, val *PrepareRenameResul
 		*val = nil
 		return nil
 	case '{':
-		if objectHasKeys(raw, "start", "end") && objectKeysKnown(raw, "start", "end") {
+		if objectHasAndKnownGuard(raw, []string{"start", "end"}, []string{"start", "end"}) {
 			var v Range
 			if decodeWith(raw, &v) == nil {
 				*val = &v
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "range", "placeholder") && objectKeysKnown(raw, "range", "placeholder") {
+		if objectHasAndKnownGuard(raw, []string{"range", "placeholder"}, []string{"range", "placeholder"}) {
 			var v PrepareRenamePlaceholder
 			if decodeWith(raw, &v) == nil {
 				*val = &v
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "defaultBehavior") && objectKeysKnown(raw, "defaultBehavior") {
+		if objectHasAndKnownGuard(raw, []string{"defaultBehavior"}, []string{"defaultBehavior"}) {
 			var v PrepareRenameDefaultBehavior
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -426,14 +426,14 @@ func unmarshalTextDocumentContentChangeEvent(dec *jsontext.Decoder, val *TextDoc
 		*val = nil
 		return nil
 	case '{':
-		if objectHasKeys(raw, "range", "text") && objectKeysKnown(raw, "range", "rangeLength", "text") {
+		if objectHasAndKnownGuard(raw, []string{"range", "text"}, []string{"range", "rangeLength", "text"}) {
 			var v TextDocumentContentChangePartial
 			if decodeWith(raw, &v) == nil {
 				*val = &v
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "text") && objectKeysKnown(raw, "text") {
+		if objectHasAndKnownGuard(raw, []string{"text"}, []string{"text"}) {
 			var v TextDocumentContentChangeWholeDocument
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -508,7 +508,7 @@ func unmarshalMarkedString(dec *jsontext.Decoder, val *MarkedString) error {
 		*val = v
 		return nil
 	case '{':
-		if objectHasKeys(raw, "language", "value") && objectKeysKnown(raw, "language", "value") {
+		if objectHasAndKnownGuard(raw, []string{"language", "value"}, []string{"language", "value"}) {
 			var v MarkedStringWithLanguage
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -556,28 +556,28 @@ func unmarshalDocumentFilter(dec *jsontext.Decoder, val *DocumentFilter) error {
 		*val = nil
 		return nil
 	case '{':
-		if objectHasKeys(raw, "language") && objectKeysKnown(raw, "language", "scheme", "pattern") {
+		if objectHasAndKnownGuard(raw, []string{"language"}, []string{"language", "scheme", "pattern"}) {
 			var v TextDocumentFilterLanguage
 			if decodeWith(raw, &v) == nil {
 				*val = &v
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "scheme") && objectKeysKnown(raw, "language", "scheme", "pattern") {
+		if objectHasAndKnownGuard(raw, []string{"scheme"}, []string{"language", "scheme", "pattern"}) {
 			var v TextDocumentFilterScheme
 			if decodeWith(raw, &v) == nil {
 				*val = &v
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "pattern") && objectKeysKnown(raw, "language", "scheme", "pattern") {
+		if objectHasAndKnownGuard(raw, []string{"pattern"}, []string{"language", "scheme", "pattern"}) {
 			var v TextDocumentFilterPattern
 			if decodeWith(raw, &v) == nil {
 				*val = &v
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "notebook") && objectKeysKnown(raw, "notebook", "language") {
+		if objectHasAndKnownGuard(raw, []string{"notebook"}, []string{"notebook", "language"}) {
 			var v NotebookCellTextDocumentFilter
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -671,7 +671,7 @@ func unmarshalGlobPattern(dec *jsontext.Decoder, val *GlobPattern) error {
 		*val = v
 		return nil
 	case '{':
-		if objectHasKeys(raw, "baseUri", "pattern") && objectKeysKnown(raw, "baseUri", "pattern") {
+		if objectHasAndKnownGuard(raw, []string{"baseUri", "pattern"}, []string{"baseUri", "pattern"}) {
 			var v RelativePattern
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -730,21 +730,21 @@ func unmarshalTextDocumentFilter(dec *jsontext.Decoder, val *TextDocumentFilter)
 		*val = nil
 		return nil
 	case '{':
-		if objectHasKeys(raw, "language") && objectKeysKnown(raw, "language", "scheme", "pattern") {
+		if objectHasAndKnownGuard(raw, []string{"language"}, []string{"language", "scheme", "pattern"}) {
 			var v TextDocumentFilterLanguage
 			if decodeWith(raw, &v) == nil {
 				*val = &v
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "scheme") && objectKeysKnown(raw, "language", "scheme", "pattern") {
+		if objectHasAndKnownGuard(raw, []string{"scheme"}, []string{"language", "scheme", "pattern"}) {
 			var v TextDocumentFilterScheme
 			if decodeWith(raw, &v) == nil {
 				*val = &v
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "pattern") && objectKeysKnown(raw, "language", "scheme", "pattern") {
+		if objectHasAndKnownGuard(raw, []string{"pattern"}, []string{"language", "scheme", "pattern"}) {
 			var v TextDocumentFilterPattern
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -820,21 +820,21 @@ func unmarshalNotebookDocumentFilter(dec *jsontext.Decoder, val *NotebookDocumen
 		*val = nil
 		return nil
 	case '{':
-		if objectHasKeys(raw, "notebookType") && objectKeysKnown(raw, "notebookType", "scheme", "pattern") {
+		if objectHasAndKnownGuard(raw, []string{"notebookType"}, []string{"notebookType", "scheme", "pattern"}) {
 			var v NotebookDocumentFilterNotebookType
 			if decodeWith(raw, &v) == nil {
 				*val = &v
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "scheme") && objectKeysKnown(raw, "notebookType", "scheme", "pattern") {
+		if objectHasAndKnownGuard(raw, []string{"scheme"}, []string{"notebookType", "scheme", "pattern"}) {
 			var v NotebookDocumentFilterScheme
 			if decodeWith(raw, &v) == nil {
 				*val = &v
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "pattern") && objectKeysKnown(raw, "notebookType", "scheme", "pattern") {
+		if objectHasAndKnownGuard(raw, []string{"pattern"}, []string{"notebookType", "scheme", "pattern"}) {
 			var v NotebookDocumentFilterPattern
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -910,7 +910,7 @@ func unmarshalCompletionResult(dec *jsontext.Decoder, val *CompletionResult) err
 		*val = v
 		return nil
 	case '{':
-		if objectHasKeys(raw, "isIncomplete", "items") && objectKeysKnown(raw, "isIncomplete", "itemDefaults", "applyKind", "items") {
+		if objectHasAndKnownGuard(raw, []string{"isIncomplete", "items"}, []string{"isIncomplete", "itemDefaults", "applyKind", "items"}) {
 			var v CompletionList
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -952,7 +952,7 @@ func unmarshalDeclarationResult(dec *jsontext.Decoder, val *DeclarationResult) e
 		*val = nil
 		return nil
 	case '{':
-		if objectHasKeys(raw, "uri", "range") && objectKeysKnown(raw, "uri", "range") {
+		if objectHasAndKnownGuard(raw, []string{"uri", "range"}, []string{"uri", "range"}) {
 			var v Location
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -974,14 +974,14 @@ func unmarshalDeclarationResult(dec *jsontext.Decoder, val *DeclarationResult) e
 			}
 		}
 	case '[':
-		if arrayFirstHasKeys(raw, "targetUri", "targetRange", "targetSelectionRange") && arrayFirstKeysKnown(raw, "originSelectionRange", "targetUri", "targetRange", "targetSelectionRange") {
+		if arrayFirstHasAndKnown(raw, []string{"targetUri", "targetRange", "targetSelectionRange"}, []string{"originSelectionRange", "targetUri", "targetRange", "targetSelectionRange"}) {
 			var v DeclarationLinkSlice
 			if decodeWith(raw, &v) == nil {
 				*val = v
 				return nil
 			}
 		}
-		if arrayFirstHasKeys(raw, "uri", "range") && arrayFirstKeysKnown(raw, "uri", "range") {
+		if arrayFirstHasAndKnown(raw, []string{"uri", "range"}, []string{"uri", "range"}) {
 			var v LocationSlice
 			if decodeWith(raw, &v) == nil {
 				*val = v
@@ -1037,7 +1037,7 @@ func unmarshalDefinitionResult(dec *jsontext.Decoder, val *DefinitionResult) err
 		*val = nil
 		return nil
 	case '{':
-		if objectHasKeys(raw, "uri", "range") && objectKeysKnown(raw, "uri", "range") {
+		if objectHasAndKnownGuard(raw, []string{"uri", "range"}, []string{"uri", "range"}) {
 			var v Location
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -1059,14 +1059,14 @@ func unmarshalDefinitionResult(dec *jsontext.Decoder, val *DefinitionResult) err
 			}
 		}
 	case '[':
-		if arrayFirstHasKeys(raw, "targetUri", "targetRange", "targetSelectionRange") && arrayFirstKeysKnown(raw, "originSelectionRange", "targetUri", "targetRange", "targetSelectionRange") {
+		if arrayFirstHasAndKnown(raw, []string{"targetUri", "targetRange", "targetSelectionRange"}, []string{"originSelectionRange", "targetUri", "targetRange", "targetSelectionRange"}) {
 			var v DefinitionLinkSlice
 			if decodeWith(raw, &v) == nil {
 				*val = v
 				return nil
 			}
 		}
-		if arrayFirstHasKeys(raw, "uri", "range") && arrayFirstKeysKnown(raw, "uri", "range") {
+		if arrayFirstHasAndKnown(raw, []string{"uri", "range"}, []string{"uri", "range"}) {
 			var v LocationSlice
 			if decodeWith(raw, &v) == nil {
 				*val = v
@@ -1121,14 +1121,14 @@ func unmarshalDocumentSymbolResult(dec *jsontext.Decoder, val *DocumentSymbolRes
 		*val = nil
 		return nil
 	case '[':
-		if arrayFirstHasKeys(raw, "name", "kind", "range", "selectionRange") && arrayFirstKeysKnown(raw, "name", "detail", "kind", "tags", "deprecated", "range", "selectionRange", "children") {
+		if arrayFirstHasAndKnown(raw, []string{"name", "kind", "range", "selectionRange"}, []string{"name", "detail", "kind", "tags", "deprecated", "range", "selectionRange", "children"}) {
 			var v DocumentSymbolSlice
 			if decodeWith(raw, &v) == nil {
 				*val = v
 				return nil
 			}
 		}
-		if arrayFirstHasKeys(raw, "location", "name", "kind") && arrayFirstKeysKnown(raw, "deprecated", "location", "name", "kind", "tags", "containerName") {
+		if arrayFirstHasAndKnown(raw, []string{"location", "name", "kind"}, []string{"deprecated", "location", "name", "kind", "tags", "containerName"}) {
 			var v SymbolInformationSlice
 			if decodeWith(raw, &v) == nil {
 				*val = v
@@ -1183,7 +1183,7 @@ func unmarshalInlineCompletionResult(dec *jsontext.Decoder, val *InlineCompletio
 		*val = nil
 		return nil
 	case '{':
-		if objectHasKeys(raw, "items") && objectKeysKnown(raw, "items") {
+		if objectHasAndKnownGuard(raw, []string{"items"}, []string{"items"}) {
 			var v InlineCompletionList
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -1231,14 +1231,14 @@ func unmarshalSemanticTokensDeltaResult(dec *jsontext.Decoder, val *SemanticToke
 		*val = nil
 		return nil
 	case '{':
-		if objectHasKeys(raw, "data") && objectKeysKnown(raw, "resultId", "data") {
+		if objectHasAndKnownGuard(raw, []string{"data"}, []string{"resultId", "data"}) {
 			var v SemanticTokens
 			if decodeWith(raw, &v) == nil {
 				*val = &v
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "edits") && objectKeysKnown(raw, "resultId", "edits") {
+		if objectHasAndKnownGuard(raw, []string{"edits"}, []string{"resultId", "edits"}) {
 			var v SemanticTokensDelta
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -1293,14 +1293,14 @@ func unmarshalWorkspaceSymbolResult(dec *jsontext.Decoder, val *WorkspaceSymbolR
 		*val = nil
 		return nil
 	case '[':
-		if arrayFirstHasKeys(raw, "location", "name", "kind") && arrayFirstKeysKnown(raw, "deprecated", "location", "name", "kind", "tags", "containerName") {
+		if arrayFirstHasAndKnown(raw, []string{"location", "name", "kind"}, []string{"deprecated", "location", "name", "kind", "tags", "containerName"}) {
 			var v SymbolInformationSlice
 			if decodeWith(raw, &v) == nil {
 				*val = v
 				return nil
 			}
 		}
-		if arrayFirstHasKeys(raw, "location", "name", "kind") && arrayFirstKeysKnown(raw, "location", "data", "name", "kind", "tags", "containerName") {
+		if arrayFirstHasAndKnown(raw, []string{"location", "name", "kind"}, []string{"location", "data", "name", "kind", "tags", "containerName"}) {
 			var v WorkspaceSymbolSlice
 			if decodeWith(raw, &v) == nil {
 				*val = v
@@ -1382,7 +1382,7 @@ func unmarshalDocumentChange(dec *jsontext.Decoder, val *DocumentChange) error {
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "textDocument", "edits") && objectKeysKnown(raw, "textDocument", "edits") {
+		if objectHasAndKnownGuard(raw, []string{"textDocument", "edits"}, []string{"textDocument", "edits"}) {
 			var v TextDocumentEdit
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -1463,7 +1463,7 @@ func unmarshalInlayHintTooltip(dec *jsontext.Decoder, val *InlayHintTooltip) err
 		*val = v
 		return nil
 	case '{':
-		if objectHasKeys(raw, "kind", "value") && objectKeysKnown(raw, "kind", "value") {
+		if objectHasAndKnownGuard(raw, []string{"kind", "value"}, []string{"kind", "value"}) {
 			var v MarkupContent
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -1575,14 +1575,14 @@ func unmarshalCompletionItemTextEdit(dec *jsontext.Decoder, val *CompletionItemT
 		*val = nil
 		return nil
 	case '{':
-		if objectHasKeys(raw, "newText", "insert", "replace") && objectKeysKnown(raw, "newText", "insert", "replace") {
+		if objectHasAndKnownGuard(raw, []string{"newText", "insert", "replace"}, []string{"newText", "insert", "replace"}) {
 			var v InsertReplaceEdit
 			if decodeWith(raw, &v) == nil {
 				*val = &v
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "range", "newText") && objectKeysKnown(raw, "range", "newText") {
+		if objectHasAndKnownGuard(raw, []string{"range", "newText"}, []string{"range", "newText"}) {
 			var v TextEdit
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -1639,14 +1639,14 @@ func unmarshalHoverContents(dec *jsontext.Decoder, val *HoverContents) error {
 		*val = nil
 		return nil
 	case '{':
-		if objectHasKeys(raw, "kind", "value") && objectKeysKnown(raw, "kind", "value") {
+		if objectHasAndKnownGuard(raw, []string{"kind", "value"}, []string{"kind", "value"}) {
 			var v MarkupContent
 			if decodeWith(raw, &v) == nil {
 				*val = &v
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "language", "value") && objectKeysKnown(raw, "language", "value") {
+		if objectHasAndKnownGuard(raw, []string{"language", "value"}, []string{"language", "value"}) {
 			var v MarkedStringWithLanguage
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -1715,14 +1715,14 @@ func unmarshalWorkspaceSymbolLocation(dec *jsontext.Decoder, val *WorkspaceSymbo
 		*val = nil
 		return nil
 	case '{':
-		if objectHasKeys(raw, "uri", "range") && objectKeysKnown(raw, "uri", "range") {
+		if objectHasAndKnownGuard(raw, []string{"uri", "range"}, []string{"uri", "range"}) {
 			var v Location
 			if decodeWith(raw, &v) == nil {
 				*val = &v
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "uri") && objectKeysKnown(raw, "uri") {
+		if objectHasAndKnownGuard(raw, []string{"uri"}, []string{"uri"}) {
 			var v LocationUriOnly
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -1819,21 +1819,21 @@ func unmarshalTextDocumentEditElement(dec *jsontext.Decoder, val *TextDocumentEd
 		*val = nil
 		return nil
 	case '{':
-		if objectHasKeys(raw, "annotationId", "range", "newText") && objectKeysKnown(raw, "annotationId", "range", "newText") {
+		if objectHasAndKnownGuard(raw, []string{"annotationId", "range", "newText"}, []string{"annotationId", "range", "newText"}) {
 			var v AnnotatedTextEdit
 			if decodeWith(raw, &v) == nil {
 				*val = &v
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "range", "snippet") && objectKeysKnown(raw, "range", "snippet", "annotationId") {
+		if objectHasAndKnownGuard(raw, []string{"range", "snippet"}, []string{"range", "snippet", "annotationId"}) {
 			var v SnippetTextEdit
 			if decodeWith(raw, &v) == nil {
 				*val = &v
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "range", "newText") && objectKeysKnown(raw, "range", "newText") {
+		if objectHasAndKnownGuard(raw, []string{"range", "newText"}, []string{"range", "newText"}) {
 			var v TextEdit
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -1902,14 +1902,14 @@ func unmarshalNotebookSelector(dec *jsontext.Decoder, val *NotebookSelector) err
 		*val = nil
 		return nil
 	case '{':
-		if objectHasKeys(raw, "notebook") && objectKeysKnown(raw, "notebook", "cells") {
+		if objectHasAndKnownGuard(raw, []string{"notebook"}, []string{"notebook", "cells"}) {
 			var v NotebookDocumentFilterWithNotebook
 			if decodeWith(raw, &v) == nil {
 				*val = &v
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "cells") && objectKeysKnown(raw, "notebook", "cells") {
+		if objectHasAndKnownGuard(raw, []string{"cells"}, []string{"notebook", "cells"}) {
 			var v NotebookDocumentFilterWithCells
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -2005,14 +2005,14 @@ func unmarshalNotebookDocumentSync(dec *jsontext.Decoder, val *NotebookDocumentS
 		*val = nil
 		return nil
 	case '{':
-		if objectHasKeys(raw, "notebookSelector") && objectKeysKnown(raw, "notebookSelector", "save", "id") {
+		if objectHasAndKnownGuard(raw, []string{"notebookSelector"}, []string{"notebookSelector", "save", "id"}) {
 			var v NotebookDocumentSyncRegistrationOptions
 			if decodeWith(raw, &v) == nil {
 				*val = &v
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "notebookSelector") && objectKeysKnown(raw, "notebookSelector", "save") {
+		if objectHasAndKnownGuard(raw, []string{"notebookSelector"}, []string{"notebookSelector", "save"}) {
 			var v NotebookDocumentSyncOptions
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -2116,7 +2116,7 @@ func unmarshalDeclarationProvider(dec *jsontext.Decoder, val *DeclarationProvide
 		*val = v
 		return nil
 	case '{':
-		if objectHasKeys(raw, "documentSelector") && objectKeysKnown(raw, "workDoneProgress", "documentSelector", "id") {
+		if objectHasAndKnownGuard(raw, []string{"documentSelector"}, []string{"workDoneProgress", "documentSelector", "id"}) {
 			var v DeclarationRegistrationOptions
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -2220,7 +2220,7 @@ func unmarshalTypeDefinitionProvider(dec *jsontext.Decoder, val *TypeDefinitionP
 		*val = v
 		return nil
 	case '{':
-		if objectHasKeys(raw, "documentSelector") && objectKeysKnown(raw, "documentSelector", "workDoneProgress", "id") {
+		if objectHasAndKnownGuard(raw, []string{"documentSelector"}, []string{"documentSelector", "workDoneProgress", "id"}) {
 			var v TypeDefinitionRegistrationOptions
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -2283,7 +2283,7 @@ func unmarshalImplementationProvider(dec *jsontext.Decoder, val *ImplementationP
 		*val = v
 		return nil
 	case '{':
-		if objectHasKeys(raw, "documentSelector") && objectKeysKnown(raw, "documentSelector", "workDoneProgress", "id") {
+		if objectHasAndKnownGuard(raw, []string{"documentSelector"}, []string{"documentSelector", "workDoneProgress", "id"}) {
 			var v ImplementationRegistrationOptions
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -2510,7 +2510,7 @@ func unmarshalColorProvider(dec *jsontext.Decoder, val *ColorProvider) error {
 		*val = v
 		return nil
 	case '{':
-		if objectHasKeys(raw, "documentSelector") && objectKeysKnown(raw, "documentSelector", "workDoneProgress", "id") {
+		if objectHasAndKnownGuard(raw, []string{"documentSelector"}, []string{"documentSelector", "workDoneProgress", "id"}) {
 			var v DocumentColorRegistrationOptions
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -2737,7 +2737,7 @@ func unmarshalFoldingRangeProvider(dec *jsontext.Decoder, val *FoldingRangeProvi
 		*val = v
 		return nil
 	case '{':
-		if objectHasKeys(raw, "documentSelector") && objectKeysKnown(raw, "documentSelector", "workDoneProgress", "id") {
+		if objectHasAndKnownGuard(raw, []string{"documentSelector"}, []string{"documentSelector", "workDoneProgress", "id"}) {
 			var v FoldingRangeRegistrationOptions
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -2800,7 +2800,7 @@ func unmarshalSelectionRangeProvider(dec *jsontext.Decoder, val *SelectionRangeP
 		*val = v
 		return nil
 	case '{':
-		if objectHasKeys(raw, "documentSelector") && objectKeysKnown(raw, "workDoneProgress", "documentSelector", "id") {
+		if objectHasAndKnownGuard(raw, []string{"documentSelector"}, []string{"workDoneProgress", "documentSelector", "id"}) {
 			var v SelectionRangeRegistrationOptions
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -2863,7 +2863,7 @@ func unmarshalCallHierarchyProvider(dec *jsontext.Decoder, val *CallHierarchyPro
 		*val = v
 		return nil
 	case '{':
-		if objectHasKeys(raw, "documentSelector") && objectKeysKnown(raw, "documentSelector", "workDoneProgress", "id") {
+		if objectHasAndKnownGuard(raw, []string{"documentSelector"}, []string{"documentSelector", "workDoneProgress", "id"}) {
 			var v CallHierarchyRegistrationOptions
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -2926,7 +2926,7 @@ func unmarshalLinkedEditingRangeProvider(dec *jsontext.Decoder, val *LinkedEditi
 		*val = v
 		return nil
 	case '{':
-		if objectHasKeys(raw, "documentSelector") && objectKeysKnown(raw, "documentSelector", "workDoneProgress", "id") {
+		if objectHasAndKnownGuard(raw, []string{"documentSelector"}, []string{"documentSelector", "workDoneProgress", "id"}) {
 			var v LinkedEditingRangeRegistrationOptions
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -2981,14 +2981,14 @@ func unmarshalSemanticTokensProvider(dec *jsontext.Decoder, val *SemanticTokensP
 		*val = nil
 		return nil
 	case '{':
-		if objectHasKeys(raw, "documentSelector", "legend") && objectKeysKnown(raw, "documentSelector", "legend", "range", "full", "workDoneProgress", "id") {
+		if objectHasAndKnownGuard(raw, []string{"documentSelector", "legend"}, []string{"documentSelector", "legend", "range", "full", "workDoneProgress", "id"}) {
 			var v SemanticTokensRegistrationOptions
 			if decodeWith(raw, &v) == nil {
 				*val = &v
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "legend") && objectKeysKnown(raw, "legend", "range", "full", "workDoneProgress") {
+		if objectHasAndKnownGuard(raw, []string{"legend"}, []string{"legend", "range", "full", "workDoneProgress"}) {
 			var v SemanticTokensOptions
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -3051,7 +3051,7 @@ func unmarshalMonikerProvider(dec *jsontext.Decoder, val *MonikerProvider) error
 		*val = v
 		return nil
 	case '{':
-		if objectHasKeys(raw, "documentSelector") && objectKeysKnown(raw, "documentSelector", "workDoneProgress") {
+		if objectHasAndKnownGuard(raw, []string{"documentSelector"}, []string{"documentSelector", "workDoneProgress"}) {
 			var v MonikerRegistrationOptions
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -3114,7 +3114,7 @@ func unmarshalTypeHierarchyProvider(dec *jsontext.Decoder, val *TypeHierarchyPro
 		*val = v
 		return nil
 	case '{':
-		if objectHasKeys(raw, "documentSelector") && objectKeysKnown(raw, "documentSelector", "workDoneProgress", "id") {
+		if objectHasAndKnownGuard(raw, []string{"documentSelector"}, []string{"documentSelector", "workDoneProgress", "id"}) {
 			var v TypeHierarchyRegistrationOptions
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -3177,7 +3177,7 @@ func unmarshalInlineValueProvider(dec *jsontext.Decoder, val *InlineValueProvide
 		*val = v
 		return nil
 	case '{':
-		if objectHasKeys(raw, "documentSelector") && objectKeysKnown(raw, "workDoneProgress", "documentSelector", "id") {
+		if objectHasAndKnownGuard(raw, []string{"documentSelector"}, []string{"workDoneProgress", "documentSelector", "id"}) {
 			var v InlineValueRegistrationOptions
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -3240,7 +3240,7 @@ func unmarshalInlayHintProvider(dec *jsontext.Decoder, val *InlayHintProvider) e
 		*val = v
 		return nil
 	case '{':
-		if objectHasKeys(raw, "documentSelector") && objectKeysKnown(raw, "resolveProvider", "workDoneProgress", "documentSelector", "id") {
+		if objectHasAndKnownGuard(raw, []string{"documentSelector"}, []string{"resolveProvider", "workDoneProgress", "documentSelector", "id"}) {
 			var v InlayHintRegistrationOptions
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -3295,14 +3295,14 @@ func unmarshalDiagnosticProvider(dec *jsontext.Decoder, val *DiagnosticProvider)
 		*val = nil
 		return nil
 	case '{':
-		if objectHasKeys(raw, "documentSelector", "interFileDependencies", "workspaceDiagnostics") && objectKeysKnown(raw, "documentSelector", "identifier", "interFileDependencies", "workspaceDiagnostics", "workDoneProgress", "id") {
+		if objectHasAndKnownGuard(raw, []string{"documentSelector", "interFileDependencies", "workspaceDiagnostics"}, []string{"documentSelector", "identifier", "interFileDependencies", "workspaceDiagnostics", "workDoneProgress", "id"}) {
 			var v DiagnosticRegistrationOptions
 			if decodeWith(raw, &v) == nil {
 				*val = &v
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "interFileDependencies", "workspaceDiagnostics") && objectKeysKnown(raw, "identifier", "interFileDependencies", "workspaceDiagnostics", "workDoneProgress") {
+		if objectHasAndKnownGuard(raw, []string{"interFileDependencies", "workspaceDiagnostics"}, []string{"identifier", "interFileDependencies", "workspaceDiagnostics", "workDoneProgress"}) {
 			var v DiagnosticOptions
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -3398,14 +3398,14 @@ func unmarshalCompletionItemDefaultsEditRange(dec *jsontext.Decoder, val *Comple
 		*val = nil
 		return nil
 	case '{':
-		if objectHasKeys(raw, "start", "end") && objectKeysKnown(raw, "start", "end") {
+		if objectHasAndKnownGuard(raw, []string{"start", "end"}, []string{"start", "end"}) {
 			var v Range
 			if decodeWith(raw, &v) == nil {
 				*val = &v
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "insert", "replace") && objectKeysKnown(raw, "insert", "replace") {
+		if objectHasAndKnownGuard(raw, []string{"insert", "replace"}, []string{"insert", "replace"}) {
 			var v EditRangeWithInsertReplace
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -3469,21 +3469,21 @@ func unmarshalNotebookDocumentFilterNotebook(dec *jsontext.Decoder, val *Noteboo
 		*val = v
 		return nil
 	case '{':
-		if objectHasKeys(raw, "notebookType") && objectKeysKnown(raw, "notebookType", "scheme", "pattern") {
+		if objectHasAndKnownGuard(raw, []string{"notebookType"}, []string{"notebookType", "scheme", "pattern"}) {
 			var v NotebookDocumentFilterNotebookType
 			if decodeWith(raw, &v) == nil {
 				*val = &v
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "scheme") && objectKeysKnown(raw, "notebookType", "scheme", "pattern") {
+		if objectHasAndKnownGuard(raw, []string{"scheme"}, []string{"notebookType", "scheme", "pattern"}) {
 			var v NotebookDocumentFilterScheme
 			if decodeWith(raw, &v) == nil {
 				*val = &v
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "pattern") && objectKeysKnown(raw, "notebookType", "scheme", "pattern") {
+		if objectHasAndKnownGuard(raw, []string{"pattern"}, []string{"notebookType", "scheme", "pattern"}) {
 			var v NotebookDocumentFilterPattern
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -3593,14 +3593,14 @@ func unmarshalWorkspaceOptionsTextDocumentContent(dec *jsontext.Decoder, val *Wo
 		*val = nil
 		return nil
 	case '{':
-		if objectHasKeys(raw, "schemes") && objectKeysKnown(raw, "schemes", "id") {
+		if objectHasAndKnownGuard(raw, []string{"schemes"}, []string{"schemes", "id"}) {
 			var v TextDocumentContentRegistrationOptions
 			if decodeWith(raw, &v) == nil {
 				*val = &v
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "schemes") && objectKeysKnown(raw, "schemes") {
+		if objectHasAndKnownGuard(raw, []string{"schemes"}, []string{"schemes"}) {
 			var v TextDocumentContentOptions
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -3721,7 +3721,7 @@ func unmarshalRelativePatternBaseURI(dec *jsontext.Decoder, val *RelativePattern
 		*val = nil
 		return nil
 	case '{':
-		if objectHasKeys(raw, "uri", "name") && objectKeysKnown(raw, "uri", "name") {
+		if objectHasAndKnownGuard(raw, []string{"uri", "name"}, []string{"uri", "name"}) {
 			var v WorkspaceFolder
 			if decodeWith(raw, &v) == nil {
 				*val = &v
@@ -3833,6 +3833,7 @@ type FullDocumentDiagnosticReportOrUnchangedDocumentDiagnosticReport interface{ 
 
 func (*FullDocumentDiagnosticReport) isFullDocumentDiagnosticReportOrUnchangedDocumentDiagnosticReport() {
 }
+
 func (*UnchangedDocumentDiagnosticReport) isFullDocumentDiagnosticReportOrUnchangedDocumentDiagnosticReport() {
 }
 
@@ -3884,14 +3885,14 @@ func unmarshalCommandOrCodeAction(dec *jsontext.Decoder, val *CommandOrCodeActio
 		*val = nil
 		return nil
 	case '{':
-		if objectHasKeys(raw, "title") && objectKeysKnown(raw, "title", "kind", "diagnostics", "isPreferred", "disabled", "edit", "command", "data", "tags") {
+		if objectHasAndKnownGuard(raw, []string{"title"}, []string{"title", "kind", "diagnostics", "isPreferred", "disabled", "edit", "command", "data", "tags"}) {
 			var v CodeAction
 			if decodeWith(raw, &v) == nil {
 				*val = &v
 				return nil
 			}
 		}
-		if objectHasKeys(raw, "title", "command") && objectKeysKnown(raw, "title", "tooltip", "command", "arguments") {
+		if objectHasAndKnownGuard(raw, []string{"title", "command"}, []string{"title", "tooltip", "command", "arguments"}) {
 			var v Command
 			if decodeWith(raw, &v) == nil {
 				*val = &v
