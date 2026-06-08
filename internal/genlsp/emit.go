@@ -874,12 +874,14 @@ func (g *Generator) fieldDocText(name, doc, since, deprecated string, proposed b
 	}
 	var b strings.Builder
 	for _, ln := range lines {
-		for _, phys := range strings.Split(ln, "\n") {
+		for phys := range strings.SplitSeq(ln, "\n") {
 			phys = strings.TrimRight(phys, " \t")
 			if phys == "" {
 				b.WriteString("//\n")
 			} else {
-				b.WriteString("// " + phys + "\n")
+				b.WriteString("// ")
+				b.WriteString(phys)
+				b.WriteString("\n")
 			}
 		}
 	}
@@ -892,7 +894,9 @@ func indent(block, prefix string) string {
 	lines := strings.Split(strings.TrimRight(block, "\n"), "\n")
 	var b strings.Builder
 	for _, ln := range lines {
-		b.WriteString(prefix + ln + "\n")
+		b.WriteString(prefix)
+		b.WriteString(ln)
+		b.WriteString("\n")
 	}
 	return b.String()
 }

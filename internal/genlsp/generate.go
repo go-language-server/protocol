@@ -614,8 +614,7 @@ func (g *Generator) aliasToken(t *Type) byte {
 	case KindMap, KindLiteral:
 		return '{'
 	case KindReference:
-		if s, ok := g.structures[t.Name]; ok {
-			_ = s
+		if _, ok := g.structures[t.Name]; ok {
 			return '{'
 		}
 		if e, ok := g.enums[t.Name]; ok {
