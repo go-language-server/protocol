@@ -11,5 +11,8 @@ func isZeroOmitValue(v any) bool {
 	if v == nil {
 		return true
 	}
+	if z, ok := v.(interface{ IsZero() bool }); ok {
+		return z.IsZero()
+	}
 	return reflect.ValueOf(v).IsZero()
 }

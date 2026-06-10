@@ -5,6 +5,14 @@ package protocol
 
 import "testing"
 
+type customZero struct {
+	val int
+}
+
+func (c customZero) IsZero() bool {
+	return c.val == 42
+}
+
 func TestIsZeroOmitValue(t *testing.T) {
 	tests := []struct {
 		name string
@@ -44,6 +52,26 @@ func TestIsZeroOmitValue(t *testing.T) {
 		{
 			name: "non-empty raw json value",
 			v:    LSPAny(`{"x":1}`),
+			want: false,
+		},
+		{
+			name: "custom Zeroer type returning true",
+			v:    customZero{val: 42},
+			want: true,
+		},
+		{
+			name: "custom Zeroer type returning false",
+			v:    customZero{val: 12},
+			want: false,
+		},
+		{
+			name: "Optional with value but not set",
+			v:    Optional[string]{value: "hello", set: false},
+			want: true,
+		},
+		{
+			name: "Optional set with zero value",
+			v:    Optional[string]{value: "", set: true},
 			want: false,
 		},
 	}
