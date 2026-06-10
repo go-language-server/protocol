@@ -62,6 +62,7 @@ func boxedStringInlayHintTooltip(p *String) InlayHintTooltip {
 	return x
 }
 
+//nolint:gocritic // ptrToRefParam: val is an out-parameter; the boxed union slot is assigned in place.
 func unmarshalProgressTokenValueBoxed(raw jsontext.Value, val *ProgressToken, scalarBoxes *[]String) error {
 	switch raw.Kind() {
 	case 'n':
@@ -85,6 +86,7 @@ func unmarshalProgressTokenValueBoxed(raw jsontext.Value, val *ProgressToken, sc
 	return unmarshalProgressTokenValue(raw, val)
 }
 
+//nolint:gocritic // ptrToRefParam: val is an out-parameter; the boxed union slot is assigned in place.
 func unmarshalInlayHintTooltipValueBoxed(raw jsontext.Value, val *InlayHintTooltip, scalarBoxes *[]String) error {
 	switch raw.Kind() {
 	case 'n':
@@ -101,6 +103,7 @@ func unmarshalInlayHintTooltipValueBoxed(raw jsontext.Value, val *InlayHintToolt
 	return unmarshalInlayHintTooltipValue(raw, val)
 }
 
+//nolint:gocritic // ptrToRefParam: val is an out-parameter; the boxed union slot is assigned in place.
 func unmarshalWorkspaceSymbolLocationValueBoxed(raw jsontext.Value, val *WorkspaceSymbolLocation, locationBoxes *[]Location, locationURIOnlyBoxes *[]LocationUriOnly) error {
 	switch raw.Kind() {
 	case 'n':

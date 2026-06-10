@@ -11,7 +11,7 @@ import (
 )
 
 type appendMarshaler interface {
-	appendLSPJSON([]byte) ([]byte, error)
+	appendLSPJSON(dst []byte) (out []byte, err error)
 }
 
 func appendObjectName(dst []byte, first *bool, name string) []byte {

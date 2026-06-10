@@ -58,9 +58,17 @@ func Marshal(v any) ([]byte, error) {
 		}
 		return appendSemanticTokensDataObject(nil, x.Data), nil
 	case *CompletionResult:
-		return appendCompletionResultJSON(nil, x)
+		if x == nil {
+			return []byte("null"), nil
+		}
+		return appendCompletionResultJSON(nil, *x)
 	case *WorkspaceSymbolResult:
-		return appendWorkspaceSymbolResultJSON(nil, x)
+		if x == nil {
+			return []byte("null"), nil
+		}
+		return appendWorkspaceSymbolResultJSON(nil, *x)
+	case *SymbolInformation:
+		return appendSymbolInformationJSON(nil, x), nil
 	}
 	if m, ok := v.(appendMarshaler); ok {
 		return m.appendLSPJSON(nil)
@@ -110,7 +118,7 @@ func isNilUnmarshalDestination(v any) bool {
 		return true
 	}
 	rv := reflect.ValueOf(v)
-	return rv.Kind() == reflect.Ptr && rv.IsNil()
+	return rv.Kind() == reflect.Pointer && rv.IsNil()
 }
 
 // decodeWith decodes raw into v with the union unmarshalers applied, so that

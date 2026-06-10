@@ -120,22 +120,24 @@ func TestBoxedScalarUnionDecodePreservesStringDynamicType(t *testing.T) {
 func TestZeroCopyStringOwnershipContract(t *testing.T) {
 	t.Parallel()
 
-	data := []byte(`{"label":"pin","xPad":"` + strings.Repeat("x", 1<<16) + `"}`)
 	var got CompletionItem
-	if err := Unmarshal(data, &got); err != nil {
-		t.Fatalf("Unmarshal CompletionItem: %v", err)
-	}
-	if diff := gocmp.Diff("pin", got.Label); diff != "" {
-		t.Fatalf("label mismatch (-want +got):\n%s", diff)
+	var originalLabelData *byte
+	{
+		data := []byte(`{"label":"pin","xPad":"` + strings.Repeat("x", 1<<16) + `"}`)
+		if err := Unmarshal(data, &got); err != nil {
+			t.Fatalf("Unmarshal CompletionItem: %v", err)
+		}
+		if diff := gocmp.Diff("pin", got.Label); diff != "" {
+			t.Fatalf("label mismatch (-want +got):\n%s", diff)
+		}
+
+		labelData := unsafe.StringData(got.Label)
+		if pointsIntoBytes(labelData, data) {
+			t.Fatal("decoded label aliases caller-owned input; want per-message owned copy")
+		}
+		originalLabelData = labelData
 	}
 
-	labelData := unsafe.StringData(got.Label)
-	if pointsIntoBytes(labelData, data) {
-		t.Fatal("decoded label aliases caller-owned input; want per-message owned copy")
-	}
-	originalLabelData := labelData
-
-	data = nil
 	for range 3 {
 		runtime.GC()
 	}
@@ -174,17 +176,17 @@ func TestCloneDetachesAliasedStrings(t *testing.T) {
 	}
 }
 
-func mutateCallerInput(t *testing.T, data []byte, old, new string) {
+func mutateCallerInput(t *testing.T, data []byte, old, replacement string) {
 	t.Helper()
 
-	if len(old) != len(new) {
-		t.Fatalf("replacement length %d does not match original length %d", len(new), len(old))
+	if len(old) != len(replacement) {
+		t.Fatalf("replacement length %d does not match original length %d", len(replacement), len(old))
 	}
 	i := bytes.Index(data, []byte(old))
 	if i < 0 {
 		t.Fatalf("input %q does not contain %q", data, old)
 	}
-	copy(data[i:i+len(old)], new)
+	copy(data[i:i+len(old)], replacement)
 }
 
 func pointsIntoBytes(p *byte, data []byte) bool {

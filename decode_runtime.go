@@ -356,6 +356,8 @@ func dvFloat64(raw []byte, i int) (v float64, next int, err error) {
 // dvUint32Slice consumes a JSON array of unsigned integers into dst, reusing
 // its backing storage. A null yields a nil slice, matching the reflection
 // path.
+//
+//nolint:cyclop // single-pass semantic-token array parser; splitting the hot numeric state machine adds per-element call overhead.
 func dvUint32Slice[T ~uint32](raw []byte, i int, dst []T) (v []T, next int, err error) {
 	if n, ok := dvNull(raw, i); ok {
 		return nil, n, nil

@@ -5,17 +5,17 @@ package protocol
 
 import "slices"
 
-func appendCompletionResultJSON(dst []byte, x *CompletionResult) ([]byte, error) {
-	if x == nil || *x == nil {
+func appendCompletionResultJSON(dst []byte, x CompletionResult) ([]byte, error) {
+	if x == nil {
 		return append(dst, "null"...), nil
 	}
-	switch v := (*x).(type) {
+	switch v := x.(type) {
 	case CompletionItemSlice:
 		return v.appendLSPJSON(dst)
 	case *CompletionList:
 		return v.appendLSPJSON(dst)
 	default:
-		return appendJSONMarshal(dst, *x)
+		return appendJSONMarshal(dst, x)
 	}
 }
 
@@ -78,8 +78,22 @@ func (x *CompletionItem) appendLSPJSON(dst []byte) ([]byte, error) {
 	first := true
 	dst = appendObjectName(dst, &first, "label")
 	dst = appendJSONString(dst, x.Label)
+	var err error
+	if dst, err = appendCompletionItemDescriptionJSON(dst, &first, x); err != nil {
+		return nil, err
+	}
+	if dst, err = appendCompletionItemInsertionJSON(dst, &first, x); err != nil {
+		return nil, err
+	}
+	if dst, err = appendCompletionItemCommandJSON(dst, &first, x); err != nil {
+		return nil, err
+	}
+	return append(dst, '}'), nil
+}
+
+func appendCompletionItemDescriptionJSON(dst []byte, first *bool, x *CompletionItem) ([]byte, error) {
 	if x.LabelDetails != nil {
-		dst = appendObjectName(dst, &first, "labelDetails")
+		dst = appendObjectName(dst, first, "labelDetails")
 		var err error
 		dst, err = appendJSONMarshal(dst, x.LabelDetails)
 		if err != nil {
@@ -87,11 +101,11 @@ func (x *CompletionItem) appendLSPJSON(dst []byte) ([]byte, error) {
 		}
 	}
 	if x.Kind != 0 {
-		dst = appendObjectName(dst, &first, "kind")
+		dst = appendObjectName(dst, first, "kind")
 		dst = appendUint32JSON(dst, uint32(x.Kind))
 	}
 	if len(x.Tags) > 0 {
-		dst = appendObjectName(dst, &first, "tags")
+		dst = appendObjectName(dst, first, "tags")
 		var err error
 		dst, err = appendJSONMarshal(dst, x.Tags)
 		if err != nil {
@@ -99,51 +113,47 @@ func (x *CompletionItem) appendLSPJSON(dst []byte) ([]byte, error) {
 		}
 	}
 	if v, ok := x.Detail.Get(); ok {
-		dst = appendObjectName(dst, &first, "detail")
+		dst = appendObjectName(dst, first, "detail")
 		dst = appendJSONString(dst, v)
 	}
 	if x.Documentation != nil {
-		dst = appendObjectName(dst, &first, "documentation")
-		if v, ok := x.Documentation.(String); ok {
-			dst = appendJSONString(dst, string(v))
-		} else {
-			var err error
-			dst, err = appendJSONMarshal(dst, x.Documentation)
-			if err != nil {
-				return nil, err
-			}
-		}
+		dst = appendObjectName(dst, first, "documentation")
+		return appendInlayHintTooltipJSON(dst, x.Documentation)
 	}
+	return dst, nil
+}
+
+func appendCompletionItemInsertionJSON(dst []byte, first *bool, x *CompletionItem) ([]byte, error) {
 	if v, ok := x.Deprecated.Get(); ok {
-		dst = appendObjectName(dst, &first, "deprecated")
+		dst = appendObjectName(dst, first, "deprecated")
 		dst = appendBoolJSON(dst, v)
 	}
 	if v, ok := x.Preselect.Get(); ok {
-		dst = appendObjectName(dst, &first, "preselect")
+		dst = appendObjectName(dst, first, "preselect")
 		dst = appendBoolJSON(dst, v)
 	}
 	if v, ok := x.SortText.Get(); ok {
-		dst = appendObjectName(dst, &first, "sortText")
+		dst = appendObjectName(dst, first, "sortText")
 		dst = appendJSONString(dst, v)
 	}
 	if v, ok := x.FilterText.Get(); ok {
-		dst = appendObjectName(dst, &first, "filterText")
+		dst = appendObjectName(dst, first, "filterText")
 		dst = appendJSONString(dst, v)
 	}
 	if v, ok := x.InsertText.Get(); ok {
-		dst = appendObjectName(dst, &first, "insertText")
+		dst = appendObjectName(dst, first, "insertText")
 		dst = appendJSONString(dst, v)
 	}
 	if x.InsertTextFormat != 0 {
-		dst = appendObjectName(dst, &first, "insertTextFormat")
+		dst = appendObjectName(dst, first, "insertTextFormat")
 		dst = appendUint32JSON(dst, uint32(x.InsertTextFormat))
 	}
 	if x.InsertTextMode != 0 {
-		dst = appendObjectName(dst, &first, "insertTextMode")
+		dst = appendObjectName(dst, first, "insertTextMode")
 		dst = appendUint32JSON(dst, uint32(x.InsertTextMode))
 	}
 	if x.TextEdit != nil {
-		dst = appendObjectName(dst, &first, "textEdit")
+		dst = appendObjectName(dst, first, "textEdit")
 		var err error
 		dst, err = appendJSONMarshal(dst, x.TextEdit)
 		if err != nil {
@@ -151,11 +161,15 @@ func (x *CompletionItem) appendLSPJSON(dst []byte) ([]byte, error) {
 		}
 	}
 	if v, ok := x.TextEditText.Get(); ok {
-		dst = appendObjectName(dst, &first, "textEditText")
+		dst = appendObjectName(dst, first, "textEditText")
 		dst = appendJSONString(dst, v)
 	}
+	return dst, nil
+}
+
+func appendCompletionItemCommandJSON(dst []byte, first *bool, x *CompletionItem) ([]byte, error) {
 	if len(x.AdditionalTextEdits) > 0 {
-		dst = appendObjectName(dst, &first, "additionalTextEdits")
+		dst = appendObjectName(dst, first, "additionalTextEdits")
 		var err error
 		dst, err = appendJSONMarshal(dst, x.AdditionalTextEdits)
 		if err != nil {
@@ -163,7 +177,7 @@ func (x *CompletionItem) appendLSPJSON(dst []byte) ([]byte, error) {
 		}
 	}
 	if len(x.CommitCharacters) > 0 {
-		dst = appendObjectName(dst, &first, "commitCharacters")
+		dst = appendObjectName(dst, first, "commitCharacters")
 		var err error
 		dst, err = appendJSONMarshal(dst, x.CommitCharacters)
 		if err != nil {
@@ -171,7 +185,7 @@ func (x *CompletionItem) appendLSPJSON(dst []byte) ([]byte, error) {
 		}
 	}
 	if !isZeroCommand(x.Command) {
-		dst = appendObjectName(dst, &first, "command")
+		dst = appendObjectName(dst, first, "command")
 		var err error
 		dst, err = appendJSONMarshal(dst, x.Command)
 		if err != nil {
@@ -179,14 +193,14 @@ func (x *CompletionItem) appendLSPJSON(dst []byte) ([]byte, error) {
 		}
 	}
 	if len(x.Data) > 0 {
-		dst = appendObjectName(dst, &first, "data")
+		dst = appendObjectName(dst, first, "data")
 		var err error
 		dst, err = appendRawJSONValue(dst, x.Data)
 		if err != nil {
 			return nil, err
 		}
 	}
-	return append(dst, '}'), nil
+	return dst, nil
 }
 
 func (x *PublishDiagnosticsParams) appendLSPJSON(dst []byte) ([]byte, error) {
@@ -227,22 +241,57 @@ func appendDiagnosticSliceJSON(dst []byte, x []Diagnostic) ([]byte, error) {
 	return append(dst, ']'), nil
 }
 
+func appendInlayHintTooltipJSON(dst []byte, x InlayHintTooltip) ([]byte, error) {
+	switch v := x.(type) {
+	case nil:
+		return append(dst, "null"...), nil
+	case String:
+		return appendJSONString(dst, string(v)), nil
+	case *String:
+		if v == nil {
+			return append(dst, "null"...), nil
+		}
+		return appendJSONString(dst, string(*v)), nil
+	case *MarkupContent:
+		if v == nil {
+			return append(dst, "null"...), nil
+		}
+		return appendJSONMarshal(dst, v)
+	default:
+		return appendJSONMarshal(dst, x)
+	}
+}
+
 func (x *Diagnostic) appendLSPJSON(dst []byte) ([]byte, error) {
 	if x == nil {
 		return append(dst, "null"...), nil
 	}
 	dst = slices.Grow(dst, 200)
-	dst = slices.Grow(dst, 128)
 	dst = append(dst, '{')
 	first := true
 	dst = appendObjectName(dst, &first, "range")
 	dst = appendRangeJSON(dst, x.Range)
+	var err error
+	if dst, err = appendDiagnosticMetadataJSON(dst, &first, x); err != nil {
+		return nil, err
+	}
+	dst = appendObjectName(dst, &first, "message")
+	if dst, err = appendInlayHintTooltipJSON(dst, x.Message); err != nil {
+		return nil, err
+	}
+	if dst, err = appendDiagnosticDetailsJSON(dst, &first, x); err != nil {
+		return nil, err
+	}
+	return append(dst, '}'), nil
+}
+
+func appendDiagnosticMetadataJSON(dst []byte, first *bool, x *Diagnostic) ([]byte, error) {
 	if x.Severity != 0 {
-		dst = appendObjectName(dst, &first, "severity")
+		dst = appendObjectName(dst, first, "severity")
 		dst = appendUint32JSON(dst, uint32(x.Severity))
 	}
 	if x.Code != nil {
-		dst = appendObjectName(dst, &first, "code")
+		dst = appendObjectName(dst, first, "code")
 		var err error
 		dst, err = appendProgressTokenJSON(dst, x.Code)
 		if err != nil {
@@ -250,7 +299,7 @@ func (x *Diagnostic) appendLSPJSON(dst []byte) ([]byte, error) {
 		}
 	}
 	if x.CodeDescription != (CodeDescription{}) {
-		dst = appendObjectName(dst, &first, "codeDescription")
+		dst = appendObjectName(dst, first, "codeDescription")
 		var err error
 		dst, err = appendJSONMarshal(dst, x.CodeDescription)
 		if err != nil {
@@ -258,31 +307,19 @@ func (x *Diagnostic) appendLSPJSON(dst []byte) ([]byte, error) {
 		}
 	}
 	if v, ok := x.Source.Get(); ok {
-		dst = appendObjectName(dst, &first, "source")
+		dst = appendObjectName(dst, first, "source")
 		dst = appendJSONString(dst, v)
 	}
-	dst = appendObjectName(dst, &first, "message")
-	if v, ok := x.Message.(String); ok {
-		dst = appendJSONString(dst, string(v))
-	} else if v, ok := x.Message.(*String); ok {
-		if v == nil {
-			dst = append(dst, "null"...)
-		} else {
-			dst = appendJSONString(dst, string(*v))
-		}
-	} else {
-		var err error
-		dst, err = appendJSONMarshal(dst, x.Message)
-		if err != nil {
-			return nil, err
-		}
-	}
+	return dst, nil
+}
+
+func appendDiagnosticDetailsJSON(dst []byte, first *bool, x *Diagnostic) ([]byte, error) {
 	if !x.Tags.IsZero() {
-		dst = appendObjectName(dst, &first, "tags")
+		dst = appendObjectName(dst, first, "tags")
 		dst = appendDiagnosticTagsJSON(dst, x.Tags)
 	}
 	if len(x.RelatedInformation) > 0 {
-		dst = appendObjectName(dst, &first, "relatedInformation")
+		dst = appendObjectName(dst, first, "relatedInformation")
 		var err error
 		dst, err = appendJSONMarshal(dst, x.RelatedInformation)
 		if err != nil {
@@ -290,27 +327,27 @@ func (x *Diagnostic) appendLSPJSON(dst []byte) ([]byte, error) {
 		}
 	}
 	if len(x.Data) > 0 {
-		dst = appendObjectName(dst, &first, "data")
+		dst = appendObjectName(dst, first, "data")
 		var err error
 		dst, err = appendRawJSONValue(dst, x.Data)
 		if err != nil {
 			return nil, err
 		}
 	}
-	return append(dst, '}'), nil
+	return dst, nil
 }
 
-func appendWorkspaceSymbolResultJSON(dst []byte, x *WorkspaceSymbolResult) ([]byte, error) {
-	if x == nil || *x == nil {
+func appendWorkspaceSymbolResultJSON(dst []byte, x WorkspaceSymbolResult) ([]byte, error) {
+	if x == nil {
 		return append(dst, "null"...), nil
 	}
-	switch v := (*x).(type) {
+	switch v := x.(type) {
 	case WorkspaceSymbolSlice:
 		return v.appendLSPJSON(dst)
 	case SymbolInformationSlice:
 		return v.appendLSPJSON(dst)
 	default:
-		return appendJSONMarshal(dst, *x)
+		return appendJSONMarshal(dst, x)
 	}
 }
 
@@ -337,11 +374,7 @@ func (x SymbolInformationSlice) appendLSPJSON(dst []byte) ([]byte, error) {
 		if i > 0 {
 			dst = append(dst, ',')
 		}
-		var err error
-		dst, err = (&x[i]).appendLSPJSON(dst)
-		if err != nil {
-			return nil, err
-		}
+		dst = appendSymbolInformationJSON(dst, &x[i])
 	}
 	return append(dst, ']'), nil
 }
@@ -371,9 +404,9 @@ func (x *WorkspaceSymbol) appendLSPJSON(dst []byte) ([]byte, error) {
 	return append(dst, '}'), nil
 }
 
-func (x *SymbolInformation) appendLSPJSON(dst []byte) ([]byte, error) {
+func appendSymbolInformationJSON(dst []byte, x *SymbolInformation) []byte {
 	if x == nil {
-		return append(dst, "null"...), nil
+		return append(dst, "null"...)
 	}
 	dst = append(dst, '{')
 	first := true
@@ -384,7 +417,7 @@ func (x *SymbolInformation) appendLSPJSON(dst []byte) ([]byte, error) {
 	}
 	dst = appendObjectName(dst, &first, "location")
 	dst = appendLocationJSON(dst, x.Location)
-	return append(dst, '}'), nil
+	return append(dst, '}')
 }
 
 func appendBaseSymbolInformationFields(dst []byte, first *bool, x BaseSymbolInformation) []byte {
