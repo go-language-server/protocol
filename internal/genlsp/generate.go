@@ -29,6 +29,7 @@ type Generator struct {
 	ands         map[string]*andDecl
 	arrayWrap    map[string]*arrayWrapDecl // element-expr -> wrapper
 	tupleWrap    map[string]*tupleWrapDecl
+	byteCtx      *byteDecCtx           // byte-decoder coverage, resolved during Emit
 	scalarUsed   map[BaseTypeName]bool // scalar wrappers referenced by unions
 	literalOrder []string              // signature insertion order
 	andOrder     []string

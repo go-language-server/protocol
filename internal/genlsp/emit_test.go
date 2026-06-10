@@ -76,47 +76,6 @@ func TestRenderMarshalersSortsUnionNames(t *testing.T) {
 	}
 }
 
-func TestRenderDecodersEmitsOnlyAllowlistedHotStructs(t *testing.T) {
-	g := &Generator{}
-	got := g.renderDecoders([]*renderedStruct{
-		{
-			Name: "CompletionItem",
-			Fields: []renderedField{
-				{Name: "Label", Type: "string", JSONName: "label", Tag: "label"},
-				{Name: "Kind", Type: "CompletionItemKind", JSONName: "kind", Tag: "kind,omitzero"},
-				{Name: "Detail", Type: "Optional[string]", JSONName: "detail", Tag: "detail,omitzero"},
-				{Name: "Documentation", Type: "InlayHintTooltip", JSONName: "documentation", Tag: "documentation,omitzero"},
-			},
-		},
-		{
-			Name: "CompletionList",
-			Fields: []renderedField{
-				{Name: "Items", Type: "[]CompletionItem", JSONName: "items", Tag: "items"},
-			},
-		},
-	})
-
-	for _, want := range []string{
-		"func (x *CompletionItem) UnmarshalJSONFrom(dec *jsontext.Decoder) error",
-		`case "label":`,
-		`case "kind":`,
-		`case "detail":`,
-		`case "documentation":`,
-		"decodeStringLikeFrom(dec, &x.Label)",
-		"decodeUint32From(dec, &x.Kind)",
-		"decodeOptionalStringFrom(dec, &x.Detail)",
-		"decodeInlayHintTooltipFrom(dec, &x.Documentation)",
-		"return errors.ErrUnsupported",
-	} {
-		if !strings.Contains(got, want) {
-			t.Fatalf("renderDecoders() missing %q:\n%s", want, got)
-		}
-	}
-	if strings.Contains(got, "CompletionList") {
-		t.Fatalf("renderDecoders() emitted non-allowlisted struct:\n%s", got)
-	}
-}
-
 func TestHotOptionalField(t *testing.T) {
 	tests := []struct {
 		name      string
@@ -285,11 +244,19 @@ func TestEmitIncludesGeneratedMarkerAndExpectedFiles(t *testing.T) {
 		}
 	}
 	decoderFile := string(files["decoders_generated.go"])
-	if !strings.Contains(decoderFile, "func (x *CompletionItem) UnmarshalJSONFrom") {
-		t.Fatalf("decoders_generated.go missing CompletionItem decoder:\n%s", decoderFile)
+	for _, want := range []string{
+		"func (x *CompletionItem) unmarshalLSP(raw []byte, i int) (int, error)",
+		"func (x *CompletionItem) UnmarshalJSONFrom",
+		"func (x *CompletionList) unmarshalLSP(raw []byte, i int) (int, error)",
+		"func unmarshalUnionRoot(data []byte, v any) (bool, error)",
+		"func unmarshalSliceCompletionItem(",
+	} {
+		if !strings.Contains(decoderFile, want) {
+			t.Fatalf("decoders_generated.go missing byte decoder piece %q", want)
+		}
 	}
-	if strings.Contains(decoderFile, "func (x *CompletionList) UnmarshalJSONFrom") {
-		t.Fatalf("decoders_generated.go unexpectedly contains CompletionList decoder:\n%s", decoderFile)
+	if strings.Contains(decoderFile, "func (x *ClientCapabilities) unmarshalLSP") {
+		t.Fatal("decoders_generated.go covers the excluded capability tree")
 	}
 	encoderFile := string(files["encoders_generated.go"])
 	if !strings.Contains(encoderFile, "func (x CompletionItem) MarshalJSONTo") {

@@ -75,28 +75,32 @@ func unmarshalDeclaration(dec *jsontext.Decoder, val *Declaration) error {
 	if err != nil {
 		return err
 	}
+	return unmarshalDeclarationValue(raw, val)
+}
+
+func unmarshalDeclarationValue(raw jsontext.Value, val *Declaration) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"uri", "range"}, []string{"uri", "range"}) {
 			var v Location
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		if objectHasKeys(raw, "uri", "range") {
 			var v Location
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		{
 			var v Location
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
@@ -130,10 +134,14 @@ func unmarshalInlineValue(dec *jsontext.Decoder, val *InlineValue) error {
 	if err != nil {
 		return err
 	}
+	return unmarshalInlineValueValue(raw, val)
+}
+
+func unmarshalInlineValueValue(raw jsontext.Value, val *InlineValue) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"range", "caseSensitiveLookup"}, []string{"range", "variableName", "caseSensitiveLookup"}) {
 			var v InlineValueVariableLookup
@@ -219,10 +227,14 @@ func unmarshalDocumentDiagnosticReport(dec *jsontext.Decoder, val *DocumentDiagn
 	if err != nil {
 		return err
 	}
+	return unmarshalDocumentDiagnosticReportValue(raw, val)
+}
+
+func unmarshalDocumentDiagnosticReportValue(raw jsontext.Value, val *DocumentDiagnosticReport) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if kv, ok := objectKind(raw); ok {
 			switch kv {
@@ -258,14 +270,18 @@ func unmarshalPrepareRenameResult(dec *jsontext.Decoder, val *PrepareRenameResul
 	if err != nil {
 		return err
 	}
+	return unmarshalPrepareRenameResultValue(raw, val)
+}
+
+func unmarshalPrepareRenameResultValue(raw jsontext.Value, val *PrepareRenameResult) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"start", "end"}, []string{"start", "end"}) {
 			var v Range
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
@@ -286,7 +302,7 @@ func unmarshalPrepareRenameResult(dec *jsontext.Decoder, val *PrepareRenameResul
 		}
 		if objectHasKeys(raw, "start", "end") {
 			var v Range
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
@@ -307,7 +323,7 @@ func unmarshalPrepareRenameResult(dec *jsontext.Decoder, val *PrepareRenameResul
 		}
 		{
 			var v Range
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
@@ -341,23 +357,27 @@ func unmarshalProgressToken(dec *jsontext.Decoder, val *ProgressToken) error {
 	if err != nil {
 		return err
 	}
+	return unmarshalProgressTokenValue(raw, val)
+}
+
+func unmarshalProgressTokenValue(raw jsontext.Value, val *ProgressToken) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '0':
-		var v Integer
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarInt32(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Integer(v)
 		return nil
 	case '"':
-		var v String
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarString(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = String(v)
 		return nil
 	}
 	return fmt.Errorf("cannot unmarshal %s into ProgressToken", raw)
@@ -376,10 +396,14 @@ func unmarshalWorkspaceDocumentDiagnosticReport(dec *jsontext.Decoder, val *Work
 	if err != nil {
 		return err
 	}
+	return unmarshalWorkspaceDocumentDiagnosticReportValue(raw, val)
+}
+
+func unmarshalWorkspaceDocumentDiagnosticReportValue(raw jsontext.Value, val *WorkspaceDocumentDiagnosticReport) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if kv, ok := objectKind(raw); ok {
 			switch kv {
@@ -415,49 +439,53 @@ func unmarshalTextDocumentContentChangeEvent(dec *jsontext.Decoder, val *TextDoc
 	if err != nil {
 		return err
 	}
+	return unmarshalTextDocumentContentChangeEventValue(raw, val)
+}
+
+func unmarshalTextDocumentContentChangeEventValue(raw jsontext.Value, val *TextDocumentContentChangeEvent) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"range", "text"}, []string{"range", "rangeLength", "text"}) {
 			var v TextDocumentContentChangePartial
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		if objectHasAndKnownGuard(raw, []string{"text"}, []string{"text"}) {
 			var v TextDocumentContentChangeWholeDocument
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		if objectHasKeys(raw, "range", "text") {
 			var v TextDocumentContentChangePartial
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		if objectHasKeys(raw, "text") {
 			var v TextDocumentContentChangeWholeDocument
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		{
 			var v TextDocumentContentChangePartial
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		{
 			var v TextDocumentContentChangeWholeDocument
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
@@ -489,16 +517,20 @@ func unmarshalMarkedString(dec *jsontext.Decoder, val *MarkedString) error {
 	if err != nil {
 		return err
 	}
+	return unmarshalMarkedStringValue(raw, val)
+}
+
+func unmarshalMarkedStringValue(raw jsontext.Value, val *MarkedString) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '"':
-		var v String
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarString(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = String(v)
 		return nil
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"language", "value"}, []string{"language", "value"}) {
@@ -544,10 +576,14 @@ func unmarshalDocumentFilter(dec *jsontext.Decoder, val *DocumentFilter) error {
 	if err != nil {
 		return err
 	}
+	return unmarshalDocumentFilterValue(raw, val)
+}
+
+func unmarshalDocumentFilterValue(raw jsontext.Value, val *DocumentFilter) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"language"}, []string{"language", "scheme", "pattern"}) {
 			var v TextDocumentFilterLanguage
@@ -650,10 +686,14 @@ func unmarshalGlobPattern(dec *jsontext.Decoder, val *GlobPattern) error {
 	if err != nil {
 		return err
 	}
+	return unmarshalGlobPatternValue(raw, val)
+}
+
+func unmarshalGlobPatternValue(raw jsontext.Value, val *GlobPattern) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '"':
 		var v Pattern
 		if err := decodeWith(raw, &v); err != nil {
@@ -714,10 +754,14 @@ func unmarshalTextDocumentFilter(dec *jsontext.Decoder, val *TextDocumentFilter)
 	if err != nil {
 		return err
 	}
+	return unmarshalTextDocumentFilterValue(raw, val)
+}
+
+func unmarshalTextDocumentFilterValue(raw jsontext.Value, val *TextDocumentFilter) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"language"}, []string{"language", "scheme", "pattern"}) {
 			var v TextDocumentFilterLanguage
@@ -802,10 +846,14 @@ func unmarshalNotebookDocumentFilter(dec *jsontext.Decoder, val *NotebookDocumen
 	if err != nil {
 		return err
 	}
+	return unmarshalNotebookDocumentFilterValue(raw, val)
+}
+
+func unmarshalNotebookDocumentFilterValue(raw jsontext.Value, val *NotebookDocumentFilter) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"notebookType"}, []string{"notebookType", "scheme", "pattern"}) {
 			var v NotebookDocumentFilterNotebookType
@@ -885,13 +933,17 @@ func unmarshalCompletionResult(dec *jsontext.Decoder, val *CompletionResult) err
 	if err != nil {
 		return err
 	}
+	return unmarshalCompletionResultValue(raw, val)
+}
+
+func unmarshalCompletionResultValue(raw jsontext.Value, val *CompletionResult) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '[':
 		var v CompletionItemSlice
-		if err := decodeWith(raw, &v); err != nil {
+		if err := v.unmarshalLSPValue(raw); err != nil {
 			return err
 		}
 		*val = v
@@ -899,21 +951,21 @@ func unmarshalCompletionResult(dec *jsontext.Decoder, val *CompletionResult) err
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"isIncomplete", "items"}, []string{"isIncomplete", "itemDefaults", "applyKind", "items"}) {
 			var v CompletionList
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		if objectHasKeys(raw, "isIncomplete", "items") {
 			var v CompletionList
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		{
 			var v CompletionList
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
@@ -934,28 +986,32 @@ func unmarshalDeclarationResult(dec *jsontext.Decoder, val *DeclarationResult) e
 	if err != nil {
 		return err
 	}
+	return unmarshalDeclarationResultValue(raw, val)
+}
+
+func unmarshalDeclarationResultValue(raw jsontext.Value, val *DeclarationResult) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"uri", "range"}, []string{"uri", "range"}) {
 			var v Location
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		if objectHasKeys(raw, "uri", "range") {
 			var v Location
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		{
 			var v Location
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
@@ -1019,28 +1075,32 @@ func unmarshalDefinitionResult(dec *jsontext.Decoder, val *DefinitionResult) err
 	if err != nil {
 		return err
 	}
+	return unmarshalDefinitionResultValue(raw, val)
+}
+
+func unmarshalDefinitionResultValue(raw jsontext.Value, val *DefinitionResult) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"uri", "range"}, []string{"uri", "range"}) {
 			var v Location
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		if objectHasKeys(raw, "uri", "range") {
 			var v Location
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		{
 			var v Location
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
@@ -1103,10 +1163,14 @@ func unmarshalDocumentSymbolResult(dec *jsontext.Decoder, val *DocumentSymbolRes
 	if err != nil {
 		return err
 	}
+	return unmarshalDocumentSymbolResultValue(raw, val)
+}
+
+func unmarshalDocumentSymbolResultValue(raw jsontext.Value, val *DocumentSymbolResult) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '[':
 		if arrayFirstHasAndKnown(raw, []string{"name", "kind", "range", "selectionRange"}, []string{"name", "detail", "kind", "tags", "deprecated", "range", "selectionRange", "children"}) {
 			var v DocumentSymbolSlice
@@ -1117,7 +1181,7 @@ func unmarshalDocumentSymbolResult(dec *jsontext.Decoder, val *DocumentSymbolRes
 		}
 		if arrayFirstHasAndKnown(raw, []string{"location", "name", "kind"}, []string{"deprecated", "location", "name", "kind", "tags", "containerName"}) {
 			var v SymbolInformationSlice
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = v
 				return nil
 			}
@@ -1131,7 +1195,7 @@ func unmarshalDocumentSymbolResult(dec *jsontext.Decoder, val *DocumentSymbolRes
 		}
 		if arrayFirstHasKeys(raw, "location", "name", "kind") {
 			var v SymbolInformationSlice
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = v
 				return nil
 			}
@@ -1145,7 +1209,7 @@ func unmarshalDocumentSymbolResult(dec *jsontext.Decoder, val *DocumentSymbolRes
 		}
 		{
 			var v SymbolInformationSlice
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = v
 				return nil
 			}
@@ -1165,10 +1229,14 @@ func unmarshalInlineCompletionResult(dec *jsontext.Decoder, val *InlineCompletio
 	if err != nil {
 		return err
 	}
+	return unmarshalInlineCompletionResultValue(raw, val)
+}
+
+func unmarshalInlineCompletionResultValue(raw jsontext.Value, val *InlineCompletionResult) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"items"}, []string{"items"}) {
 			var v InlineCompletionList
@@ -1213,14 +1281,18 @@ func unmarshalSemanticTokensDeltaResult(dec *jsontext.Decoder, val *SemanticToke
 	if err != nil {
 		return err
 	}
+	return unmarshalSemanticTokensDeltaResultValue(raw, val)
+}
+
+func unmarshalSemanticTokensDeltaResultValue(raw jsontext.Value, val *SemanticTokensDeltaResult) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"data"}, []string{"resultId", "data"}) {
 			var v SemanticTokens
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
@@ -1234,7 +1306,7 @@ func unmarshalSemanticTokensDeltaResult(dec *jsontext.Decoder, val *SemanticToke
 		}
 		if objectHasKeys(raw, "data") {
 			var v SemanticTokens
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
@@ -1248,7 +1320,7 @@ func unmarshalSemanticTokensDeltaResult(dec *jsontext.Decoder, val *SemanticToke
 		}
 		{
 			var v SemanticTokens
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
@@ -1275,49 +1347,53 @@ func unmarshalWorkspaceSymbolResult(dec *jsontext.Decoder, val *WorkspaceSymbolR
 	if err != nil {
 		return err
 	}
+	return unmarshalWorkspaceSymbolResultValue(raw, val)
+}
+
+func unmarshalWorkspaceSymbolResultValue(raw jsontext.Value, val *WorkspaceSymbolResult) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '[':
 		if arrayFirstHasAndKnown(raw, []string{"location", "name", "kind"}, []string{"deprecated", "location", "name", "kind", "tags", "containerName"}) {
 			var v SymbolInformationSlice
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = v
 				return nil
 			}
 		}
 		if arrayFirstHasAndKnown(raw, []string{"location", "name", "kind"}, []string{"location", "data", "name", "kind", "tags", "containerName"}) {
 			var v WorkspaceSymbolSlice
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = v
 				return nil
 			}
 		}
 		if arrayFirstHasKeys(raw, "location", "name", "kind") {
 			var v SymbolInformationSlice
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = v
 				return nil
 			}
 		}
 		if arrayFirstHasKeys(raw, "location", "name", "kind") {
 			var v WorkspaceSymbolSlice
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = v
 				return nil
 			}
 		}
 		{
 			var v SymbolInformationSlice
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = v
 				return nil
 			}
 		}
 		{
 			var v WorkspaceSymbolSlice
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = v
 				return nil
 			}
@@ -1339,10 +1415,14 @@ func unmarshalDocumentChange(dec *jsontext.Decoder, val *DocumentChange) error {
 	if err != nil {
 		return err
 	}
+	return unmarshalDocumentChangeValue(raw, val)
+}
+
+func unmarshalDocumentChangeValue(raw jsontext.Value, val *DocumentChange) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if kv, ok := objectKind(raw); ok {
 			switch kv {
@@ -1405,16 +1485,20 @@ func unmarshalInlayHintLabel(dec *jsontext.Decoder, val *InlayHintLabel) error {
 	if err != nil {
 		return err
 	}
+	return unmarshalInlayHintLabelValue(raw, val)
+}
+
+func unmarshalInlayHintLabelValue(raw jsontext.Value, val *InlayHintLabel) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '"':
-		var v String
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarString(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = String(v)
 		return nil
 	case '[':
 		var v InlayHintLabelPartSlice
@@ -1438,35 +1522,39 @@ func unmarshalInlayHintTooltip(dec *jsontext.Decoder, val *InlayHintTooltip) err
 	if err != nil {
 		return err
 	}
+	return unmarshalInlayHintTooltipValue(raw, val)
+}
+
+func unmarshalInlayHintTooltipValue(raw jsontext.Value, val *InlayHintTooltip) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '"':
-		var v String
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarString(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = String(v)
 		return nil
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"kind", "value"}, []string{"kind", "value"}) {
 			var v MarkupContent
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		if objectHasKeys(raw, "kind", "value") {
 			var v MarkupContent
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		{
 			var v MarkupContent
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
@@ -1486,16 +1574,20 @@ func unmarshalInlineCompletionItemInsertText(dec *jsontext.Decoder, val *InlineC
 	if err != nil {
 		return err
 	}
+	return unmarshalInlineCompletionItemInsertTextValue(raw, val)
+}
+
+func unmarshalInlineCompletionItemInsertTextValue(raw jsontext.Value, val *InlineCompletionItemInsertText) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '"':
-		var v String
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarString(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = String(v)
 		return nil
 	case '{':
 		if kv, ok := objectKind(raw); ok {
@@ -1524,16 +1616,20 @@ func unmarshalDidChangeConfigurationRegistrationOptionsSection(dec *jsontext.Dec
 	if err != nil {
 		return err
 	}
+	return unmarshalDidChangeConfigurationRegistrationOptionsSectionValue(raw, val)
+}
+
+func unmarshalDidChangeConfigurationRegistrationOptionsSectionValue(raw jsontext.Value, val *DidChangeConfigurationRegistrationOptionsSection) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '"':
-		var v String
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarString(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = String(v)
 		return nil
 	case '[':
 		var v StringSlice
@@ -1557,49 +1653,53 @@ func unmarshalCompletionItemTextEdit(dec *jsontext.Decoder, val *CompletionItemT
 	if err != nil {
 		return err
 	}
+	return unmarshalCompletionItemTextEditValue(raw, val)
+}
+
+func unmarshalCompletionItemTextEditValue(raw jsontext.Value, val *CompletionItemTextEdit) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"newText", "insert", "replace"}, []string{"newText", "insert", "replace"}) {
 			var v InsertReplaceEdit
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		if objectHasAndKnownGuard(raw, []string{"range", "newText"}, []string{"range", "newText"}) {
 			var v TextEdit
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		if objectHasKeys(raw, "newText", "insert", "replace") {
 			var v InsertReplaceEdit
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		if objectHasKeys(raw, "range", "newText") {
 			var v TextEdit
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		{
 			var v InsertReplaceEdit
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		{
 			var v TextEdit
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
@@ -1621,14 +1721,18 @@ func unmarshalHoverContents(dec *jsontext.Decoder, val *HoverContents) error {
 	if err != nil {
 		return err
 	}
+	return unmarshalHoverContentsValue(raw, val)
+}
+
+func unmarshalHoverContentsValue(raw jsontext.Value, val *HoverContents) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"kind", "value"}, []string{"kind", "value"}) {
 			var v MarkupContent
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
@@ -1642,7 +1746,7 @@ func unmarshalHoverContents(dec *jsontext.Decoder, val *HoverContents) error {
 		}
 		if objectHasKeys(raw, "kind", "value") {
 			var v MarkupContent
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
@@ -1656,7 +1760,7 @@ func unmarshalHoverContents(dec *jsontext.Decoder, val *HoverContents) error {
 		}
 		{
 			var v MarkupContent
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
@@ -1669,11 +1773,11 @@ func unmarshalHoverContents(dec *jsontext.Decoder, val *HoverContents) error {
 			}
 		}
 	case '"':
-		var v String
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarString(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = String(v)
 		return nil
 	case '[':
 		var v MarkedStringSlice
@@ -1697,49 +1801,53 @@ func unmarshalWorkspaceSymbolLocation(dec *jsontext.Decoder, val *WorkspaceSymbo
 	if err != nil {
 		return err
 	}
+	return unmarshalWorkspaceSymbolLocationValue(raw, val)
+}
+
+func unmarshalWorkspaceSymbolLocationValue(raw jsontext.Value, val *WorkspaceSymbolLocation) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"uri", "range"}, []string{"uri", "range"}) {
 			var v Location
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		if objectHasAndKnownGuard(raw, []string{"uri"}, []string{"uri"}) {
 			var v LocationUriOnly
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		if objectHasKeys(raw, "uri", "range") {
 			var v Location
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		if objectHasKeys(raw, "uri") {
 			var v LocationUriOnly
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		{
 			var v Location
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		{
 			var v LocationUriOnly
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
@@ -1759,16 +1867,20 @@ func unmarshalSemanticTokensOptionsFull(dec *jsontext.Decoder, val *SemanticToke
 	if err != nil {
 		return err
 	}
+	return unmarshalSemanticTokensOptionsFullValue(raw, val)
+}
+
+func unmarshalSemanticTokensOptionsFullValue(raw jsontext.Value, val *SemanticTokensOptionsFull) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	case '{':
 		if objectKeysKnown(raw, "delta") {
@@ -1801,10 +1913,14 @@ func unmarshalTextDocumentEditElement(dec *jsontext.Decoder, val *TextDocumentEd
 	if err != nil {
 		return err
 	}
+	return unmarshalTextDocumentEditElementValue(raw, val)
+}
+
+func unmarshalTextDocumentEditElementValue(raw jsontext.Value, val *TextDocumentEditElement) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"annotationId", "range", "newText"}, []string{"annotationId", "range", "newText"}) {
 			var v AnnotatedTextEdit
@@ -1822,7 +1938,7 @@ func unmarshalTextDocumentEditElement(dec *jsontext.Decoder, val *TextDocumentEd
 		}
 		if objectHasAndKnownGuard(raw, []string{"range", "newText"}, []string{"range", "newText"}) {
 			var v TextEdit
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
@@ -1836,7 +1952,7 @@ func unmarshalTextDocumentEditElement(dec *jsontext.Decoder, val *TextDocumentEd
 		}
 		if objectHasKeys(raw, "range", "newText") {
 			var v TextEdit
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
@@ -1864,7 +1980,7 @@ func unmarshalTextDocumentEditElement(dec *jsontext.Decoder, val *TextDocumentEd
 		}
 		{
 			var v TextEdit
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
@@ -1884,10 +2000,14 @@ func unmarshalNotebookSelector(dec *jsontext.Decoder, val *NotebookSelector) err
 	if err != nil {
 		return err
 	}
+	return unmarshalNotebookSelectorValue(raw, val)
+}
+
+func unmarshalNotebookSelectorValue(raw jsontext.Value, val *NotebookSelector) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"notebook"}, []string{"notebook", "cells"}) {
 			var v NotebookDocumentFilterWithNotebook
@@ -1946,10 +2066,14 @@ func unmarshalTextDocumentSync(dec *jsontext.Decoder, val *TextDocumentSync) err
 	if err != nil {
 		return err
 	}
+	return unmarshalTextDocumentSyncValue(raw, val)
+}
+
+func unmarshalTextDocumentSyncValue(raw jsontext.Value, val *TextDocumentSync) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if objectKeysKnown(raw, "openClose", "change", "willSave", "willSaveWaitUntil", "save") {
 			var v TextDocumentSyncOptions
@@ -1987,10 +2111,14 @@ func unmarshalNotebookDocumentSync(dec *jsontext.Decoder, val *NotebookDocumentS
 	if err != nil {
 		return err
 	}
+	return unmarshalNotebookDocumentSyncValue(raw, val)
+}
+
+func unmarshalNotebookDocumentSyncValue(raw jsontext.Value, val *NotebookDocumentSync) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"notebookSelector"}, []string{"notebookSelector", "save", "id"}) {
 			var v NotebookDocumentSyncRegistrationOptions
@@ -2049,16 +2177,20 @@ func unmarshalHoverProvider(dec *jsontext.Decoder, val *HoverProvider) error {
 	if err != nil {
 		return err
 	}
+	return unmarshalHoverProviderValue(raw, val)
+}
+
+func unmarshalHoverProviderValue(raw jsontext.Value, val *HoverProvider) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	case '{':
 		if objectKeysKnown(raw, "workDoneProgress") {
@@ -2091,16 +2223,20 @@ func unmarshalDeclarationProvider(dec *jsontext.Decoder, val *DeclarationProvide
 	if err != nil {
 		return err
 	}
+	return unmarshalDeclarationProviderValue(raw, val)
+}
+
+func unmarshalDeclarationProviderValue(raw jsontext.Value, val *DeclarationProvider) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"documentSelector"}, []string{"workDoneProgress", "documentSelector", "id"}) {
@@ -2153,16 +2289,20 @@ func unmarshalDefinitionProvider(dec *jsontext.Decoder, val *DefinitionProvider)
 	if err != nil {
 		return err
 	}
+	return unmarshalDefinitionProviderValue(raw, val)
+}
+
+func unmarshalDefinitionProviderValue(raw jsontext.Value, val *DefinitionProvider) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	case '{':
 		if objectKeysKnown(raw, "workDoneProgress") {
@@ -2195,16 +2335,20 @@ func unmarshalTypeDefinitionProvider(dec *jsontext.Decoder, val *TypeDefinitionP
 	if err != nil {
 		return err
 	}
+	return unmarshalTypeDefinitionProviderValue(raw, val)
+}
+
+func unmarshalTypeDefinitionProviderValue(raw jsontext.Value, val *TypeDefinitionProvider) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"documentSelector"}, []string{"documentSelector", "workDoneProgress", "id"}) {
@@ -2258,16 +2402,20 @@ func unmarshalImplementationProvider(dec *jsontext.Decoder, val *ImplementationP
 	if err != nil {
 		return err
 	}
+	return unmarshalImplementationProviderValue(raw, val)
+}
+
+func unmarshalImplementationProviderValue(raw jsontext.Value, val *ImplementationProvider) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"documentSelector"}, []string{"documentSelector", "workDoneProgress", "id"}) {
@@ -2320,16 +2468,20 @@ func unmarshalReferencesProvider(dec *jsontext.Decoder, val *ReferencesProvider)
 	if err != nil {
 		return err
 	}
+	return unmarshalReferencesProviderValue(raw, val)
+}
+
+func unmarshalReferencesProviderValue(raw jsontext.Value, val *ReferencesProvider) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	case '{':
 		if objectKeysKnown(raw, "workDoneProgress") {
@@ -2361,16 +2513,20 @@ func unmarshalDocumentHighlightProvider(dec *jsontext.Decoder, val *DocumentHigh
 	if err != nil {
 		return err
 	}
+	return unmarshalDocumentHighlightProviderValue(raw, val)
+}
+
+func unmarshalDocumentHighlightProviderValue(raw jsontext.Value, val *DocumentHighlightProvider) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	case '{':
 		if objectKeysKnown(raw, "workDoneProgress") {
@@ -2402,16 +2558,20 @@ func unmarshalDocumentSymbolProvider(dec *jsontext.Decoder, val *DocumentSymbolP
 	if err != nil {
 		return err
 	}
+	return unmarshalDocumentSymbolProviderValue(raw, val)
+}
+
+func unmarshalDocumentSymbolProviderValue(raw jsontext.Value, val *DocumentSymbolProvider) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	case '{':
 		if objectKeysKnown(raw, "label", "workDoneProgress") {
@@ -2443,16 +2603,20 @@ func unmarshalCodeActionProvider(dec *jsontext.Decoder, val *CodeActionProvider)
 	if err != nil {
 		return err
 	}
+	return unmarshalCodeActionProviderValue(raw, val)
+}
+
+func unmarshalCodeActionProviderValue(raw jsontext.Value, val *CodeActionProvider) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	case '{':
 		if objectKeysKnown(raw, "codeActionKinds", "documentation", "resolveProvider", "workDoneProgress") {
@@ -2485,16 +2649,20 @@ func unmarshalColorProvider(dec *jsontext.Decoder, val *ColorProvider) error {
 	if err != nil {
 		return err
 	}
+	return unmarshalColorProviderValue(raw, val)
+}
+
+func unmarshalColorProviderValue(raw jsontext.Value, val *ColorProvider) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"documentSelector"}, []string{"documentSelector", "workDoneProgress", "id"}) {
@@ -2547,16 +2715,20 @@ func unmarshalWorkspaceSymbolProvider(dec *jsontext.Decoder, val *WorkspaceSymbo
 	if err != nil {
 		return err
 	}
+	return unmarshalWorkspaceSymbolProviderValue(raw, val)
+}
+
+func unmarshalWorkspaceSymbolProviderValue(raw jsontext.Value, val *WorkspaceSymbolProvider) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	case '{':
 		if objectKeysKnown(raw, "resolveProvider", "workDoneProgress") {
@@ -2588,16 +2760,20 @@ func unmarshalDocumentFormattingProvider(dec *jsontext.Decoder, val *DocumentFor
 	if err != nil {
 		return err
 	}
+	return unmarshalDocumentFormattingProviderValue(raw, val)
+}
+
+func unmarshalDocumentFormattingProviderValue(raw jsontext.Value, val *DocumentFormattingProvider) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	case '{':
 		if objectKeysKnown(raw, "workDoneProgress") {
@@ -2629,16 +2805,20 @@ func unmarshalDocumentRangeFormattingProvider(dec *jsontext.Decoder, val *Docume
 	if err != nil {
 		return err
 	}
+	return unmarshalDocumentRangeFormattingProviderValue(raw, val)
+}
+
+func unmarshalDocumentRangeFormattingProviderValue(raw jsontext.Value, val *DocumentRangeFormattingProvider) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	case '{':
 		if objectKeysKnown(raw, "rangesSupport", "workDoneProgress") {
@@ -2670,16 +2850,20 @@ func unmarshalRenameProvider(dec *jsontext.Decoder, val *RenameProvider) error {
 	if err != nil {
 		return err
 	}
+	return unmarshalRenameProviderValue(raw, val)
+}
+
+func unmarshalRenameProviderValue(raw jsontext.Value, val *RenameProvider) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	case '{':
 		if objectKeysKnown(raw, "prepareProvider", "workDoneProgress") {
@@ -2712,16 +2896,20 @@ func unmarshalFoldingRangeProvider(dec *jsontext.Decoder, val *FoldingRangeProvi
 	if err != nil {
 		return err
 	}
+	return unmarshalFoldingRangeProviderValue(raw, val)
+}
+
+func unmarshalFoldingRangeProviderValue(raw jsontext.Value, val *FoldingRangeProvider) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"documentSelector"}, []string{"documentSelector", "workDoneProgress", "id"}) {
@@ -2775,16 +2963,20 @@ func unmarshalSelectionRangeProvider(dec *jsontext.Decoder, val *SelectionRangeP
 	if err != nil {
 		return err
 	}
+	return unmarshalSelectionRangeProviderValue(raw, val)
+}
+
+func unmarshalSelectionRangeProviderValue(raw jsontext.Value, val *SelectionRangeProvider) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"documentSelector"}, []string{"workDoneProgress", "documentSelector", "id"}) {
@@ -2838,16 +3030,20 @@ func unmarshalCallHierarchyProvider(dec *jsontext.Decoder, val *CallHierarchyPro
 	if err != nil {
 		return err
 	}
+	return unmarshalCallHierarchyProviderValue(raw, val)
+}
+
+func unmarshalCallHierarchyProviderValue(raw jsontext.Value, val *CallHierarchyProvider) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"documentSelector"}, []string{"documentSelector", "workDoneProgress", "id"}) {
@@ -2901,16 +3097,20 @@ func unmarshalLinkedEditingRangeProvider(dec *jsontext.Decoder, val *LinkedEditi
 	if err != nil {
 		return err
 	}
+	return unmarshalLinkedEditingRangeProviderValue(raw, val)
+}
+
+func unmarshalLinkedEditingRangeProviderValue(raw jsontext.Value, val *LinkedEditingRangeProvider) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"documentSelector"}, []string{"documentSelector", "workDoneProgress", "id"}) {
@@ -2963,10 +3163,14 @@ func unmarshalSemanticTokensProvider(dec *jsontext.Decoder, val *SemanticTokensP
 	if err != nil {
 		return err
 	}
+	return unmarshalSemanticTokensProviderValue(raw, val)
+}
+
+func unmarshalSemanticTokensProviderValue(raw jsontext.Value, val *SemanticTokensProvider) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"documentSelector", "legend"}, []string{"documentSelector", "legend", "range", "full", "workDoneProgress", "id"}) {
 			var v SemanticTokensRegistrationOptions
@@ -3026,16 +3230,20 @@ func unmarshalMonikerProvider(dec *jsontext.Decoder, val *MonikerProvider) error
 	if err != nil {
 		return err
 	}
+	return unmarshalMonikerProviderValue(raw, val)
+}
+
+func unmarshalMonikerProviderValue(raw jsontext.Value, val *MonikerProvider) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"documentSelector"}, []string{"documentSelector", "workDoneProgress"}) {
@@ -3089,16 +3297,20 @@ func unmarshalTypeHierarchyProvider(dec *jsontext.Decoder, val *TypeHierarchyPro
 	if err != nil {
 		return err
 	}
+	return unmarshalTypeHierarchyProviderValue(raw, val)
+}
+
+func unmarshalTypeHierarchyProviderValue(raw jsontext.Value, val *TypeHierarchyProvider) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"documentSelector"}, []string{"documentSelector", "workDoneProgress", "id"}) {
@@ -3152,16 +3364,20 @@ func unmarshalInlineValueProvider(dec *jsontext.Decoder, val *InlineValueProvide
 	if err != nil {
 		return err
 	}
+	return unmarshalInlineValueProviderValue(raw, val)
+}
+
+func unmarshalInlineValueProviderValue(raw jsontext.Value, val *InlineValueProvider) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"documentSelector"}, []string{"workDoneProgress", "documentSelector", "id"}) {
@@ -3215,16 +3431,20 @@ func unmarshalInlayHintProvider(dec *jsontext.Decoder, val *InlayHintProvider) e
 	if err != nil {
 		return err
 	}
+	return unmarshalInlayHintProviderValue(raw, val)
+}
+
+func unmarshalInlayHintProviderValue(raw jsontext.Value, val *InlayHintProvider) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"documentSelector"}, []string{"resolveProvider", "workDoneProgress", "documentSelector", "id"}) {
@@ -3277,10 +3497,14 @@ func unmarshalDiagnosticProvider(dec *jsontext.Decoder, val *DiagnosticProvider)
 	if err != nil {
 		return err
 	}
+	return unmarshalDiagnosticProviderValue(raw, val)
+}
+
+func unmarshalDiagnosticProviderValue(raw jsontext.Value, val *DiagnosticProvider) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"documentSelector", "interFileDependencies", "workspaceDiagnostics"}, []string{"documentSelector", "identifier", "interFileDependencies", "workspaceDiagnostics", "workDoneProgress", "id"}) {
 			var v DiagnosticRegistrationOptions
@@ -3339,16 +3563,20 @@ func unmarshalInlineCompletionProvider(dec *jsontext.Decoder, val *InlineComplet
 	if err != nil {
 		return err
 	}
+	return unmarshalInlineCompletionProviderValue(raw, val)
+}
+
+func unmarshalInlineCompletionProviderValue(raw jsontext.Value, val *InlineCompletionProvider) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	case '{':
 		if objectKeysKnown(raw, "workDoneProgress") {
@@ -3380,49 +3608,53 @@ func unmarshalCompletionItemDefaultsEditRange(dec *jsontext.Decoder, val *Comple
 	if err != nil {
 		return err
 	}
+	return unmarshalCompletionItemDefaultsEditRangeValue(raw, val)
+}
+
+func unmarshalCompletionItemDefaultsEditRangeValue(raw jsontext.Value, val *CompletionItemDefaultsEditRange) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"start", "end"}, []string{"start", "end"}) {
 			var v Range
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		if objectHasAndKnownGuard(raw, []string{"insert", "replace"}, []string{"insert", "replace"}) {
 			var v EditRangeWithInsertReplace
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		if objectHasKeys(raw, "start", "end") {
 			var v Range
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		if objectHasKeys(raw, "insert", "replace") {
 			var v EditRangeWithInsertReplace
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		{
 			var v Range
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		{
 			var v EditRangeWithInsertReplace
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
@@ -3444,16 +3676,20 @@ func unmarshalNotebookDocumentFilterNotebook(dec *jsontext.Decoder, val *Noteboo
 	if err != nil {
 		return err
 	}
+	return unmarshalNotebookDocumentFilterNotebookValue(raw, val)
+}
+
+func unmarshalNotebookDocumentFilterNotebookValue(raw jsontext.Value, val *NotebookDocumentFilterNotebook) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '"':
-		var v String
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarString(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = String(v)
 		return nil
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"notebookType"}, []string{"notebookType", "scheme", "pattern"}) {
@@ -3534,16 +3770,20 @@ func unmarshalTextDocumentSyncOptionsSave(dec *jsontext.Decoder, val *TextDocume
 	if err != nil {
 		return err
 	}
+	return unmarshalTextDocumentSyncOptionsSaveValue(raw, val)
+}
+
+func unmarshalTextDocumentSyncOptionsSaveValue(raw jsontext.Value, val *TextDocumentSyncOptionsSave) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	case '{':
 		if objectKeysKnown(raw, "includeText") {
@@ -3575,10 +3815,14 @@ func unmarshalWorkspaceOptionsTextDocumentContent(dec *jsontext.Decoder, val *Wo
 	if err != nil {
 		return err
 	}
+	return unmarshalWorkspaceOptionsTextDocumentContentValue(raw, val)
+}
+
+func unmarshalWorkspaceOptionsTextDocumentContentValue(raw jsontext.Value, val *WorkspaceOptionsTextDocumentContent) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"schemes"}, []string{"schemes", "id"}) {
 			var v TextDocumentContentRegistrationOptions
@@ -3637,16 +3881,20 @@ func unmarshalParameterInformationLabel(dec *jsontext.Decoder, val *ParameterInf
 	if err != nil {
 		return err
 	}
+	return unmarshalParameterInformationLabelValue(raw, val)
+}
+
+func unmarshalParameterInformationLabelValue(raw jsontext.Value, val *ParameterInformationLabel) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '"':
-		var v String
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarString(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = String(v)
 		return nil
 	case '[':
 		var v ParameterInformationLabelTuple
@@ -3670,23 +3918,27 @@ func unmarshalChangeNotifications(dec *jsontext.Decoder, val *ChangeNotification
 	if err != nil {
 		return err
 	}
+	return unmarshalChangeNotificationsValue(raw, val)
+}
+
+func unmarshalChangeNotificationsValue(raw jsontext.Value, val *ChangeNotifications) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '"':
-		var v String
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarString(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = String(v)
 		return nil
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	}
 	return fmt.Errorf("cannot unmarshal %s into ChangeNotifications", raw)
@@ -3703,28 +3955,32 @@ func unmarshalRelativePatternBaseURI(dec *jsontext.Decoder, val *RelativePattern
 	if err != nil {
 		return err
 	}
+	return unmarshalRelativePatternBaseURIValue(raw, val)
+}
+
+func unmarshalRelativePatternBaseURIValue(raw jsontext.Value, val *RelativePatternBaseURI) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"uri", "name"}, []string{"uri", "name"}) {
 			var v WorkspaceFolder
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		if objectHasKeys(raw, "uri", "name") {
 			var v WorkspaceFolder
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		{
 			var v WorkspaceFolder
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
@@ -3751,16 +4007,20 @@ func unmarshalClientSemanticTokensRequestOptionsRange(dec *jsontext.Decoder, val
 	if err != nil {
 		return err
 	}
+	return unmarshalClientSemanticTokensRequestOptionsRangeValue(raw, val)
+}
+
+func unmarshalClientSemanticTokensRequestOptionsRangeValue(raw jsontext.Value, val *ClientSemanticTokensRequestOptionsRange) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	case '{':
 		{
@@ -3785,16 +4045,20 @@ func unmarshalClientSemanticTokensRequestOptionsFull(dec *jsontext.Decoder, val 
 	if err != nil {
 		return err
 	}
+	return unmarshalClientSemanticTokensRequestOptionsFullValue(raw, val)
+}
+
+func unmarshalClientSemanticTokensRequestOptionsFullValue(raw jsontext.Value, val *ClientSemanticTokensRequestOptionsFull) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case 't', 'f':
-		var v Boolean
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarBool(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = Boolean(v)
 		return nil
 	case '{':
 		if objectKeysKnown(raw, "delta") {
@@ -3828,10 +4092,14 @@ func unmarshalFullDocumentDiagnosticReportOrUnchangedDocumentDiagnosticReport(de
 	if err != nil {
 		return err
 	}
+	return unmarshalFullDocumentDiagnosticReportOrUnchangedDocumentDiagnosticReportValue(raw, val)
+}
+
+func unmarshalFullDocumentDiagnosticReportOrUnchangedDocumentDiagnosticReportValue(raw jsontext.Value, val *FullDocumentDiagnosticReportOrUnchangedDocumentDiagnosticReport) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if kv, ok := objectKind(raw); ok {
 			switch kv {
@@ -3866,10 +4134,14 @@ func unmarshalCommandOrCodeAction(dec *jsontext.Decoder, val *CommandOrCodeActio
 	if err != nil {
 		return err
 	}
+	return unmarshalCommandOrCodeActionValue(raw, val)
+}
+
+func unmarshalCommandOrCodeActionValue(raw jsontext.Value, val *CommandOrCodeAction) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
-		return nil
+		return dvNullValue(raw)
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"title"}, []string{"title", "kind", "diagnostics", "isPreferred", "disabled", "edit", "command", "data", "tags"}) {
 			var v CodeAction
@@ -3880,14 +4152,14 @@ func unmarshalCommandOrCodeAction(dec *jsontext.Decoder, val *CommandOrCodeActio
 		}
 		if objectHasAndKnownGuard(raw, []string{"title", "command"}, []string{"title", "tooltip", "command", "arguments"}) {
 			var v Command
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
 		}
 		if objectHasKeys(raw, "title", "command") {
 			var v Command
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}
@@ -3908,7 +4180,7 @@ func unmarshalCommandOrCodeAction(dec *jsontext.Decoder, val *CommandOrCodeActio
 		}
 		{
 			var v Command
-			if decodeWith(raw, &v) == nil {
+			if v.unmarshalLSPValue(raw) == nil {
 				*val = &v
 				return nil
 			}

@@ -6,218 +6,3280 @@
 package protocol
 
 import (
-	"errors"
-	"github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
+	"slices"
 )
 
-func (x *CompletionItem) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
-	switch dec.PeekKind() {
-	case 'n':
+func (x *ClientInfo) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = ClientInfo{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "name"):
+			v, n, err := dvString(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Name = v
+			i = n
+		case keyEquals(key, "version"):
+			if n, ok := dvNull(raw, i); ok {
+				x.Version = nil
+				i = n
+			} else {
+				v, n, err := dvString(raw, i)
+				if err != nil {
+					return n, err
+				}
+				if x.Version == nil {
+					x.Version = new(string)
+				}
+				*x.Version = v
+				i = n
+			}
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *ClientInfo) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *ClientInfo) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *CodeDescription) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = CodeDescription{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "href"):
+			v, n, err := dvString(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Href = URI(v)
+			i = n
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *CodeDescription) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *CodeDescription) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *Command) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = Command{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "title"):
+			v, n, err := dvString(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Title = v
+			i = n
+		case keyEquals(key, "tooltip"):
+			if n, ok := dvNull(raw, i); ok {
+				x.Tooltip = nil
+				i = n
+			} else {
+				v, n, err := dvString(raw, i)
+				if err != nil {
+					return n, err
+				}
+				if x.Tooltip == nil {
+					x.Tooltip = new(string)
+				}
+				*x.Tooltip = v
+				i = n
+			}
+		case keyEquals(key, "command"):
+			v, n, err := dvString(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Command = v
+			i = n
+		case keyEquals(key, "arguments"):
+			val, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			if err := decodeWith(val, &x.Arguments); err != nil {
+				return i, err
+			}
+			i = n
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *Command) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *Command) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *CompletionItem) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
 		*x = CompletionItem{}
-		_, err := dec.ReadToken()
-		return err
-	case '{':
-	default:
-		return errors.ErrUnsupported
+		return n, nil
 	}
-	if _, err := dec.ReadToken(); err != nil {
-		return err
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
 	}
-	for dec.PeekKind() != '}' {
-		key, err := dec.ReadToken()
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
 		if err != nil {
-			return err
+			return n, err
 		}
-		switch key.String() {
-		case "label":
-			if err := decodeStringLikeFrom(dec, &x.Label); err != nil {
-				return err
+		i = n
+		switch {
+		case keyEquals(key, "label"):
+			v, n, err := dvString(raw, i)
+			if err != nil {
+				return n, err
 			}
-		case "labelDetails":
-			if err := json.UnmarshalDecode(dec, &x.LabelDetails, json.WithUnmarshalers(unionUnmarshalers)); err != nil {
-				return err
+			x.Label = v
+			i = n
+		case keyEquals(key, "labelDetails"):
+			if n, ok := dvNull(raw, i); ok {
+				x.LabelDetails = nil
+				i = n
+			} else {
+				if x.LabelDetails == nil {
+					x.LabelDetails = new(CompletionItemLabelDetails)
+				}
+				n, err := x.LabelDetails.unmarshalLSP(raw, i)
+				if err != nil {
+					return n, err
+				}
+				i = n
 			}
-		case "kind":
-			if err := decodeUint32From(dec, &x.Kind); err != nil {
-				return err
+		case keyEquals(key, "kind"):
+			v, n, err := dvUint32(raw, i)
+			if err != nil {
+				return n, err
 			}
-		case "tags":
-			if err := json.UnmarshalDecode(dec, &x.Tags, json.WithUnmarshalers(unionUnmarshalers)); err != nil {
-				return err
+			x.Kind = CompletionItemKind(v)
+			i = n
+		case keyEquals(key, "tags"):
+			v, n, err := dvUint32Slice(raw, i, x.Tags)
+			if err != nil {
+				return n, err
 			}
-		case "detail":
-			if err := decodeOptionalStringFrom(dec, &x.Detail); err != nil {
-				return err
+			x.Tags = v
+			i = n
+		case keyEquals(key, "detail"):
+			if n, ok := dvNull(raw, i); ok {
+				x.Detail.Clear()
+				i = n
+			} else {
+				v, n, err := dvString(raw, i)
+				if err != nil {
+					return n, err
+				}
+				x.Detail.Set(v)
+				i = n
 			}
-		case "documentation":
-			if err := decodeInlayHintTooltipFrom(dec, &x.Documentation); err != nil {
-				return err
+		case keyEquals(key, "documentation"):
+			val, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
 			}
-		case "deprecated":
-			if err := decodeOptionalBoolFrom(dec, &x.Deprecated); err != nil {
-				return err
+			if err := unmarshalInlayHintTooltipValue(val, &x.Documentation); err != nil {
+				return i, err
 			}
-		case "preselect":
-			if err := decodeOptionalBoolFrom(dec, &x.Preselect); err != nil {
-				return err
+			i = n
+		case keyEquals(key, "deprecated"):
+			if n, ok := dvNull(raw, i); ok {
+				x.Deprecated.Clear()
+				i = n
+			} else {
+				v, n, err := dvBool(raw, i)
+				if err != nil {
+					return n, err
+				}
+				x.Deprecated.Set(v)
+				i = n
 			}
-		case "sortText":
-			if err := decodeOptionalStringFrom(dec, &x.SortText); err != nil {
-				return err
+		case keyEquals(key, "preselect"):
+			if n, ok := dvNull(raw, i); ok {
+				x.Preselect.Clear()
+				i = n
+			} else {
+				v, n, err := dvBool(raw, i)
+				if err != nil {
+					return n, err
+				}
+				x.Preselect.Set(v)
+				i = n
 			}
-		case "filterText":
-			if err := decodeOptionalStringFrom(dec, &x.FilterText); err != nil {
-				return err
+		case keyEquals(key, "sortText"):
+			if n, ok := dvNull(raw, i); ok {
+				x.SortText.Clear()
+				i = n
+			} else {
+				v, n, err := dvString(raw, i)
+				if err != nil {
+					return n, err
+				}
+				x.SortText.Set(v)
+				i = n
 			}
-		case "insertText":
-			if err := decodeOptionalStringFrom(dec, &x.InsertText); err != nil {
-				return err
+		case keyEquals(key, "filterText"):
+			if n, ok := dvNull(raw, i); ok {
+				x.FilterText.Clear()
+				i = n
+			} else {
+				v, n, err := dvString(raw, i)
+				if err != nil {
+					return n, err
+				}
+				x.FilterText.Set(v)
+				i = n
 			}
-		case "insertTextFormat":
-			if err := decodeUint32From(dec, &x.InsertTextFormat); err != nil {
-				return err
+		case keyEquals(key, "insertText"):
+			if n, ok := dvNull(raw, i); ok {
+				x.InsertText.Clear()
+				i = n
+			} else {
+				v, n, err := dvString(raw, i)
+				if err != nil {
+					return n, err
+				}
+				x.InsertText.Set(v)
+				i = n
 			}
-		case "insertTextMode":
-			if err := decodeUint32From(dec, &x.InsertTextMode); err != nil {
-				return err
+		case keyEquals(key, "insertTextFormat"):
+			v, n, err := dvUint32(raw, i)
+			if err != nil {
+				return n, err
 			}
-		case "textEdit":
-			if err := json.UnmarshalDecode(dec, &x.TextEdit, json.WithUnmarshalers(unionUnmarshalers)); err != nil {
-				return err
+			x.InsertTextFormat = InsertTextFormat(v)
+			i = n
+		case keyEquals(key, "insertTextMode"):
+			v, n, err := dvUint32(raw, i)
+			if err != nil {
+				return n, err
 			}
-		case "textEditText":
-			if err := decodeOptionalStringFrom(dec, &x.TextEditText); err != nil {
-				return err
+			x.InsertTextMode = InsertTextMode(v)
+			i = n
+		case keyEquals(key, "textEdit"):
+			val, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
 			}
-		case "additionalTextEdits":
-			if err := json.UnmarshalDecode(dec, &x.AdditionalTextEdits, json.WithUnmarshalers(unionUnmarshalers)); err != nil {
-				return err
+			if err := unmarshalCompletionItemTextEditValue(val, &x.TextEdit); err != nil {
+				return i, err
 			}
-		case "commitCharacters":
-			if err := json.UnmarshalDecode(dec, &x.CommitCharacters, json.WithUnmarshalers(unionUnmarshalers)); err != nil {
-				return err
+			i = n
+		case keyEquals(key, "textEditText"):
+			if n, ok := dvNull(raw, i); ok {
+				x.TextEditText.Clear()
+				i = n
+			} else {
+				v, n, err := dvString(raw, i)
+				if err != nil {
+					return n, err
+				}
+				x.TextEditText.Set(v)
+				i = n
 			}
-		case "command":
-			if err := json.UnmarshalDecode(dec, &x.Command, json.WithUnmarshalers(unionUnmarshalers)); err != nil {
-				return err
+		case keyEquals(key, "additionalTextEdits"):
+			v, n, err := unmarshalSliceTextEdit(raw, i, x.AdditionalTextEdits)
+			if err != nil {
+				return n, err
 			}
-		case "data":
-			if err := json.UnmarshalDecode(dec, &x.Data, json.WithUnmarshalers(unionUnmarshalers)); err != nil {
-				return err
+			x.AdditionalTextEdits = v
+			i = n
+		case keyEquals(key, "commitCharacters"):
+			v, n, err := dvStringSlice(raw, i, x.CommitCharacters)
+			if err != nil {
+				return n, err
 			}
+			x.CommitCharacters = v
+			i = n
+		case keyEquals(key, "command"):
+			n, err := x.Command.unmarshalLSP(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		case keyEquals(key, "data"):
+			val, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Data = jsontext.Value(val)
+			i = n
 		default:
-			if err := dec.SkipValue(); err != nil {
-				return err
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
 			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
 		}
 	}
-	_, err := dec.ReadToken()
-	return err
 }
 
-func (x *Diagnostic) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
-	switch dec.PeekKind() {
-	case 'n':
+func (x *CompletionItem) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *CompletionItem) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *CompletionItemApplyKinds) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = CompletionItemApplyKinds{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "commitCharacters"):
+			v, n, err := dvUint32(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.CommitCharacters = ApplyKind(v)
+			i = n
+		case keyEquals(key, "data"):
+			v, n, err := dvUint32(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Data = ApplyKind(v)
+			i = n
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *CompletionItemApplyKinds) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *CompletionItemApplyKinds) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *CompletionItemDefaults) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = CompletionItemDefaults{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "commitCharacters"):
+			v, n, err := dvStringSlice(raw, i, x.CommitCharacters)
+			if err != nil {
+				return n, err
+			}
+			x.CommitCharacters = v
+			i = n
+		case keyEquals(key, "editRange"):
+			val, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			if err := unmarshalCompletionItemDefaultsEditRangeValue(val, &x.EditRange); err != nil {
+				return i, err
+			}
+			i = n
+		case keyEquals(key, "insertTextFormat"):
+			v, n, err := dvUint32(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.InsertTextFormat = InsertTextFormat(v)
+			i = n
+		case keyEquals(key, "insertTextMode"):
+			v, n, err := dvUint32(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.InsertTextMode = InsertTextMode(v)
+			i = n
+		case keyEquals(key, "data"):
+			val, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Data = jsontext.Value(val)
+			i = n
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *CompletionItemDefaults) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *CompletionItemDefaults) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *CompletionItemLabelDetails) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = CompletionItemLabelDetails{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "detail"):
+			if n, ok := dvNull(raw, i); ok {
+				x.Detail = nil
+				i = n
+			} else {
+				v, n, err := dvString(raw, i)
+				if err != nil {
+					return n, err
+				}
+				if x.Detail == nil {
+					x.Detail = new(string)
+				}
+				*x.Detail = v
+				i = n
+			}
+		case keyEquals(key, "description"):
+			if n, ok := dvNull(raw, i); ok {
+				x.Description = nil
+				i = n
+			} else {
+				v, n, err := dvString(raw, i)
+				if err != nil {
+					return n, err
+				}
+				if x.Description == nil {
+					x.Description = new(string)
+				}
+				*x.Description = v
+				i = n
+			}
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *CompletionItemLabelDetails) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *CompletionItemLabelDetails) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *CompletionList) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = CompletionList{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "isIncomplete"):
+			v, n, err := dvBool(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.IsIncomplete = v
+			i = n
+		case keyEquals(key, "itemDefaults"):
+			if n, ok := dvNull(raw, i); ok {
+				x.ItemDefaults = nil
+				i = n
+			} else {
+				if x.ItemDefaults == nil {
+					x.ItemDefaults = new(CompletionItemDefaults)
+				}
+				n, err := x.ItemDefaults.unmarshalLSP(raw, i)
+				if err != nil {
+					return n, err
+				}
+				i = n
+			}
+		case keyEquals(key, "applyKind"):
+			if n, ok := dvNull(raw, i); ok {
+				x.ApplyKind = nil
+				i = n
+			} else {
+				if x.ApplyKind == nil {
+					x.ApplyKind = new(CompletionItemApplyKinds)
+				}
+				n, err := x.ApplyKind.unmarshalLSP(raw, i)
+				if err != nil {
+					return n, err
+				}
+				i = n
+			}
+		case keyEquals(key, "items"):
+			v, n, err := unmarshalSliceCompletionItem(raw, i, x.Items)
+			if err != nil {
+				return n, err
+			}
+			x.Items = v
+			i = n
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *CompletionList) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *CompletionList) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *Diagnostic) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
 		*x = Diagnostic{}
-		_, err := dec.ReadToken()
-		return err
-	case '{':
-	default:
-		return errors.ErrUnsupported
+		return n, nil
 	}
-	if _, err := dec.ReadToken(); err != nil {
-		return err
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
 	}
-	for dec.PeekKind() != '}' {
-		key, err := dec.ReadToken()
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
 		if err != nil {
-			return err
+			return n, err
 		}
-		switch key.String() {
-		case "range":
-			if err := decodeRangeFrom(dec, &x.Range); err != nil {
-				return err
+		i = n
+		switch {
+		case keyEquals(key, "range"):
+			n, err := x.Range.unmarshalLSP(raw, i)
+			if err != nil {
+				return n, err
 			}
-		case "severity":
-			if err := decodeUint32From(dec, &x.Severity); err != nil {
-				return err
+			i = n
+		case keyEquals(key, "severity"):
+			v, n, err := dvUint32(raw, i)
+			if err != nil {
+				return n, err
 			}
-		case "code":
-			if err := decodeProgressTokenFrom(dec, &x.Code); err != nil {
-				return err
+			x.Severity = DiagnosticSeverity(v)
+			i = n
+		case keyEquals(key, "code"):
+			val, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
 			}
-		case "codeDescription":
-			if err := json.UnmarshalDecode(dec, &x.CodeDescription, json.WithUnmarshalers(unionUnmarshalers)); err != nil {
-				return err
+			if err := unmarshalProgressTokenValue(val, &x.Code); err != nil {
+				return i, err
 			}
-		case "source":
-			if err := decodeOptionalStringFrom(dec, &x.Source); err != nil {
-				return err
+			i = n
+		case keyEquals(key, "codeDescription"):
+			n, err := x.CodeDescription.unmarshalLSP(raw, i)
+			if err != nil {
+				return n, err
 			}
-		case "message":
-			if err := decodeInlayHintTooltipFrom(dec, &x.Message); err != nil {
-				return err
+			i = n
+		case keyEquals(key, "source"):
+			if n, ok := dvNull(raw, i); ok {
+				x.Source.Clear()
+				i = n
+			} else {
+				v, n, err := dvString(raw, i)
+				if err != nil {
+					return n, err
+				}
+				x.Source.Set(v)
+				i = n
 			}
-		case "tags":
-			if err := decodeDiagnosticTagsFrom(dec, &x.Tags); err != nil {
-				return err
+		case keyEquals(key, "message"):
+			val, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
 			}
-		case "relatedInformation":
-			if err := json.UnmarshalDecode(dec, &x.RelatedInformation, json.WithUnmarshalers(unionUnmarshalers)); err != nil {
-				return err
+			if err := unmarshalInlayHintTooltipValue(val, &x.Message); err != nil {
+				return i, err
 			}
-		case "data":
-			if err := json.UnmarshalDecode(dec, &x.Data, json.WithUnmarshalers(unionUnmarshalers)); err != nil {
-				return err
+			i = n
+		case keyEquals(key, "tags"):
+			n, err := dvDiagnosticTags(raw, i, &x.Tags)
+			if err != nil {
+				return n, err
 			}
+			i = n
+		case keyEquals(key, "relatedInformation"):
+			v, n, err := unmarshalSliceDiagnosticRelatedInformation(raw, i, x.RelatedInformation)
+			if err != nil {
+				return n, err
+			}
+			x.RelatedInformation = v
+			i = n
+		case keyEquals(key, "data"):
+			val, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Data = jsontext.Value(val)
+			i = n
 		default:
-			if err := dec.SkipValue(); err != nil {
-				return err
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
 			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
 		}
 	}
-	_, err := dec.ReadToken()
-	return err
 }
 
-func (x *PublishDiagnosticsParams) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
-	switch dec.PeekKind() {
-	case 'n':
-		*x = PublishDiagnosticsParams{}
-		_, err := dec.ReadToken()
-		return err
-	case '{':
-	default:
-		return errors.ErrUnsupported
-	}
-	if _, err := dec.ReadToken(); err != nil {
+func (x *Diagnostic) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
 		return err
 	}
-	for dec.PeekKind() != '}' {
-		key, err := dec.ReadToken()
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *Diagnostic) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *DiagnosticRelatedInformation) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = DiagnosticRelatedInformation{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
 		if err != nil {
-			return err
+			return n, err
 		}
-		switch key.String() {
-		case "uri":
-			if err := decodeStringLikeFrom(dec, &x.URI); err != nil {
-				return err
+		i = n
+		switch {
+		case keyEquals(key, "location"):
+			n, err := x.Location.unmarshalLSP(raw, i)
+			if err != nil {
+				return n, err
 			}
-		case "version":
-			if err := decodeOptionalInt32From(dec, &x.Version); err != nil {
-				return err
+			i = n
+		case keyEquals(key, "message"):
+			v, n, err := dvString(raw, i)
+			if err != nil {
+				return n, err
 			}
-		case "diagnostics":
-			if err := json.UnmarshalDecode(dec, &x.Diagnostics, json.WithUnmarshalers(unionUnmarshalers)); err != nil {
-				return err
+			x.Message = v
+			i = n
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *DiagnosticRelatedInformation) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *DiagnosticRelatedInformation) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *DidChangeTextDocumentParams) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = DidChangeTextDocumentParams{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "textDocument"):
+			n, err := x.TextDocument.unmarshalLSP(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		case keyEquals(key, "contentChanges"):
+			v, n, err := unmarshalSliceTextDocumentContentChangeEvent(raw, i, x.ContentChanges)
+			if err != nil {
+				return n, err
+			}
+			x.ContentChanges = v
+			i = n
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *DidChangeTextDocumentParams) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *DidChangeTextDocumentParams) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *EditRangeWithInsertReplace) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = EditRangeWithInsertReplace{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "insert"):
+			n, err := x.Insert.unmarshalLSP(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		case keyEquals(key, "replace"):
+			n, err := x.Replace.unmarshalLSP(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *EditRangeWithInsertReplace) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *EditRangeWithInsertReplace) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *InitializeParams) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = InitializeParams{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "workDoneToken"):
+			val, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			if err := unmarshalProgressTokenValue(val, &x.WorkDoneToken); err != nil {
+				return i, err
+			}
+			i = n
+		case keyEquals(key, "processId"):
+			if n, ok := dvNull(raw, i); ok {
+				x.ProcessID = nil
+				i = n
+			} else {
+				v, n, err := dvInt32(raw, i)
+				if err != nil {
+					return n, err
+				}
+				if x.ProcessID == nil {
+					x.ProcessID = new(int32)
+				}
+				*x.ProcessID = v
+				i = n
+			}
+		case keyEquals(key, "clientInfo"):
+			n, err := x.ClientInfo.unmarshalLSP(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		case keyEquals(key, "locale"):
+			if n, ok := dvNull(raw, i); ok {
+				x.Locale = nil
+				i = n
+			} else {
+				v, n, err := dvString(raw, i)
+				if err != nil {
+					return n, err
+				}
+				if x.Locale == nil {
+					x.Locale = new(string)
+				}
+				*x.Locale = v
+				i = n
+			}
+		case keyEquals(key, "rootPath"):
+			if n, ok := dvNull(raw, i); ok {
+				x.RootPath = Nullable[string]{set: true, null: true}
+				i = n
+			} else {
+				v, n, err := dvString(raw, i)
+				if err != nil {
+					return n, err
+				}
+				x.RootPath = Nullable[string]{set: true, value: v}
+				i = n
+			}
+		case keyEquals(key, "rootUri"):
+			if n, ok := dvNull(raw, i); ok {
+				x.RootURI = nil
+				i = n
+			} else {
+				v, n, err := dvString(raw, i)
+				if err != nil {
+					return n, err
+				}
+				if x.RootURI == nil {
+					x.RootURI = new(DocumentURI)
+				}
+				*x.RootURI = DocumentURI(v)
+				i = n
+			}
+		case keyEquals(key, "capabilities"):
+			val, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			if err := decodeWith(val, &x.Capabilities); err != nil {
+				return i, err
+			}
+			i = n
+		case keyEquals(key, "initializationOptions"):
+			val, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.InitializationOptions = jsontext.Value(val)
+			i = n
+		case keyEquals(key, "trace"):
+			v, n, err := dvString(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Trace = TraceValue(v)
+			i = n
+		case keyEquals(key, "workspaceFolders"):
+			if n, ok := dvNull(raw, i); ok {
+				x.WorkspaceFolders = Nullable[[]WorkspaceFolder]{set: true, null: true}
+				i = n
+			} else {
+				val, n, err := dvValue(raw, i)
+				if err != nil {
+					return n, err
+				}
+				var v []WorkspaceFolder
+				if err := decodeWith(val, &v); err != nil {
+					return i, err
+				}
+				x.WorkspaceFolders = Nullable[[]WorkspaceFolder]{set: true, value: v}
+				i = n
 			}
 		default:
-			if err := dec.SkipValue(); err != nil {
-				return err
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
 			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
 		}
 	}
-	_, err := dec.ReadToken()
-	return err
+}
+
+func (x *InitializeParams) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *InitializeParams) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *InitializeResult) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = InitializeResult{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "capabilities"):
+			val, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			if err := decodeWith(val, &x.Capabilities); err != nil {
+				return i, err
+			}
+			i = n
+		case keyEquals(key, "serverInfo"):
+			n, err := x.ServerInfo.unmarshalLSP(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *InitializeResult) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *InitializeResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *InsertReplaceEdit) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = InsertReplaceEdit{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "newText"):
+			v, n, err := dvString(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.NewText = v
+			i = n
+		case keyEquals(key, "insert"):
+			n, err := x.Insert.unmarshalLSP(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		case keyEquals(key, "replace"):
+			n, err := x.Replace.unmarshalLSP(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *InsertReplaceEdit) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *InsertReplaceEdit) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *Location) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = Location{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "uri"):
+			v, n, err := dvString(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.URI = DocumentURI(v)
+			i = n
+		case keyEquals(key, "range"):
+			n, err := x.Range.unmarshalLSP(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *Location) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *Location) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *LocationUriOnly) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = LocationUriOnly{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "uri"):
+			v, n, err := dvString(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.URI = DocumentURI(v)
+			i = n
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *LocationUriOnly) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *LocationUriOnly) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *MarkupContent) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = MarkupContent{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "kind"):
+			v, n, err := dvString(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Kind = MarkupKind(v)
+			i = n
+		case keyEquals(key, "value"):
+			v, n, err := dvString(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Value = v
+			i = n
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *MarkupContent) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *MarkupContent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *Position) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = Position{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "line"):
+			v, n, err := dvUint32(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Line = v
+			i = n
+		case keyEquals(key, "character"):
+			v, n, err := dvUint32(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Character = v
+			i = n
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *Position) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *Position) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *PublishDiagnosticsParams) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = PublishDiagnosticsParams{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "uri"):
+			v, n, err := dvString(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.URI = DocumentURI(v)
+			i = n
+		case keyEquals(key, "version"):
+			if n, ok := dvNull(raw, i); ok {
+				x.Version.Clear()
+				i = n
+			} else {
+				v, n, err := dvInt32(raw, i)
+				if err != nil {
+					return n, err
+				}
+				x.Version.Set(v)
+				i = n
+			}
+		case keyEquals(key, "diagnostics"):
+			v, n, err := unmarshalSliceDiagnostic(raw, i, x.Diagnostics)
+			if err != nil {
+				return n, err
+			}
+			x.Diagnostics = v
+			i = n
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *PublishDiagnosticsParams) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *PublishDiagnosticsParams) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *Range) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = Range{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "start"):
+			n, err := x.Start.unmarshalLSP(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		case keyEquals(key, "end"):
+			n, err := x.End.unmarshalLSP(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *Range) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *Range) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *SemanticTokens) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = SemanticTokens{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "resultId"):
+			if n, ok := dvNull(raw, i); ok {
+				x.ResultID = nil
+				i = n
+			} else {
+				v, n, err := dvString(raw, i)
+				if err != nil {
+					return n, err
+				}
+				if x.ResultID == nil {
+					x.ResultID = new(string)
+				}
+				*x.ResultID = v
+				i = n
+			}
+		case keyEquals(key, "data"):
+			v, n, err := dvUint32Slice(raw, i, x.Data)
+			if err != nil {
+				return n, err
+			}
+			x.Data = v
+			i = n
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *SemanticTokens) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *SemanticTokens) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *ServerInfo) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = ServerInfo{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "name"):
+			v, n, err := dvString(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Name = v
+			i = n
+		case keyEquals(key, "version"):
+			if n, ok := dvNull(raw, i); ok {
+				x.Version = nil
+				i = n
+			} else {
+				v, n, err := dvString(raw, i)
+				if err != nil {
+					return n, err
+				}
+				if x.Version == nil {
+					x.Version = new(string)
+				}
+				*x.Version = v
+				i = n
+			}
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *ServerInfo) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *ServerInfo) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *SymbolInformation) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = SymbolInformation{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "name"):
+			v, n, err := dvString(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Name = v
+			i = n
+		case keyEquals(key, "kind"):
+			v, n, err := dvUint32(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Kind = SymbolKind(v)
+			i = n
+		case keyEquals(key, "tags"):
+			v, n, err := dvUint32Slice(raw, i, x.Tags)
+			if err != nil {
+				return n, err
+			}
+			x.Tags = v
+			i = n
+		case keyEquals(key, "containerName"):
+			if n, ok := dvNull(raw, i); ok {
+				x.ContainerName = nil
+				i = n
+			} else {
+				v, n, err := dvString(raw, i)
+				if err != nil {
+					return n, err
+				}
+				if x.ContainerName == nil {
+					x.ContainerName = new(string)
+				}
+				*x.ContainerName = v
+				i = n
+			}
+		case keyEquals(key, "deprecated"):
+			if n, ok := dvNull(raw, i); ok {
+				x.Deprecated = nil
+				i = n
+			} else {
+				v, n, err := dvBool(raw, i)
+				if err != nil {
+					return n, err
+				}
+				if x.Deprecated == nil {
+					x.Deprecated = new(bool)
+				}
+				*x.Deprecated = v
+				i = n
+			}
+		case keyEquals(key, "location"):
+			n, err := x.Location.unmarshalLSP(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *SymbolInformation) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *SymbolInformation) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *TextDocumentContentChangePartial) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = TextDocumentContentChangePartial{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "range"):
+			n, err := x.Range.unmarshalLSP(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		case keyEquals(key, "rangeLength"):
+			if n, ok := dvNull(raw, i); ok {
+				x.RangeLength = nil
+				i = n
+			} else {
+				v, n, err := dvUint32(raw, i)
+				if err != nil {
+					return n, err
+				}
+				if x.RangeLength == nil {
+					x.RangeLength = new(uint32)
+				}
+				*x.RangeLength = v
+				i = n
+			}
+		case keyEquals(key, "text"):
+			v, n, err := dvString(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Text = v
+			i = n
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *TextDocumentContentChangePartial) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *TextDocumentContentChangePartial) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *TextDocumentContentChangeWholeDocument) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = TextDocumentContentChangeWholeDocument{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "text"):
+			v, n, err := dvString(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Text = v
+			i = n
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *TextDocumentContentChangeWholeDocument) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *TextDocumentContentChangeWholeDocument) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *TextEdit) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = TextEdit{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "range"):
+			n, err := x.Range.unmarshalLSP(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		case keyEquals(key, "newText"):
+			v, n, err := dvString(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.NewText = v
+			i = n
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *TextEdit) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *TextEdit) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *VersionedTextDocumentIdentifier) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = VersionedTextDocumentIdentifier{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "uri"):
+			v, n, err := dvString(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.URI = DocumentURI(v)
+			i = n
+		case keyEquals(key, "version"):
+			v, n, err := dvInt32(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Version = v
+			i = n
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *VersionedTextDocumentIdentifier) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *VersionedTextDocumentIdentifier) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *WorkspaceFolder) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = WorkspaceFolder{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "uri"):
+			v, n, err := dvString(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.URI = URI(v)
+			i = n
+		case keyEquals(key, "name"):
+			v, n, err := dvString(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Name = v
+			i = n
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *WorkspaceFolder) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *WorkspaceFolder) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *WorkspaceSymbol) unmarshalLSP(raw []byte, i int) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = WorkspaceSymbol{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "name"):
+			v, n, err := dvString(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Name = v
+			i = n
+		case keyEquals(key, "kind"):
+			v, n, err := dvUint32(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Kind = SymbolKind(v)
+			i = n
+		case keyEquals(key, "tags"):
+			v, n, err := dvUint32Slice(raw, i, x.Tags)
+			if err != nil {
+				return n, err
+			}
+			x.Tags = v
+			i = n
+		case keyEquals(key, "containerName"):
+			if n, ok := dvNull(raw, i); ok {
+				x.ContainerName = nil
+				i = n
+			} else {
+				v, n, err := dvString(raw, i)
+				if err != nil {
+					return n, err
+				}
+				if x.ContainerName == nil {
+					x.ContainerName = new(string)
+				}
+				*x.ContainerName = v
+				i = n
+			}
+		case keyEquals(key, "location"):
+			val, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			if err := unmarshalWorkspaceSymbolLocationValue(val, &x.Location); err != nil {
+				return i, err
+			}
+			i = n
+		case keyEquals(key, "data"):
+			val, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Data = jsontext.Value(val)
+			i = n
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *WorkspaceSymbol) unmarshalLSPValue(raw jsontext.Value) error {
+	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
+	if err != nil {
+		return err
+	}
+	return dvEnd(raw, i)
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *WorkspaceSymbol) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *Diagnostic) unmarshalLSPWithScalarBoxes(raw []byte, i int, scalarBoxes *[]String) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = Diagnostic{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "range"):
+			n, err := x.Range.unmarshalLSP(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		case keyEquals(key, "severity"):
+			v, n, err := dvUint32(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Severity = DiagnosticSeverity(v)
+			i = n
+		case keyEquals(key, "code"):
+			val, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			if err := unmarshalProgressTokenValueBoxed(val, &x.Code, scalarBoxes); err != nil {
+				return i, err
+			}
+			i = n
+		case keyEquals(key, "codeDescription"):
+			n, err := x.CodeDescription.unmarshalLSP(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		case keyEquals(key, "source"):
+			if n, ok := dvNull(raw, i); ok {
+				x.Source.Clear()
+				i = n
+			} else {
+				v, n, err := dvString(raw, i)
+				if err != nil {
+					return n, err
+				}
+				x.Source.Set(v)
+				i = n
+			}
+		case keyEquals(key, "message"):
+			val, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			if err := unmarshalInlayHintTooltipValueBoxed(val, &x.Message, scalarBoxes); err != nil {
+				return i, err
+			}
+			i = n
+		case keyEquals(key, "tags"):
+			n, err := dvDiagnosticTags(raw, i, &x.Tags)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		case keyEquals(key, "relatedInformation"):
+			v, n, err := unmarshalSliceDiagnosticRelatedInformation(raw, i, x.RelatedInformation)
+			if err != nil {
+				return n, err
+			}
+			x.RelatedInformation = v
+			i = n
+		case keyEquals(key, "data"):
+			val, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Data = jsontext.Value(val)
+			i = n
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *WorkspaceSymbol) unmarshalLSPWithLocationBoxes(raw []byte, i int, locationBoxes *[]Location, locationURIOnlyBoxes *[]LocationUriOnly) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = WorkspaceSymbol{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		switch {
+		case keyEquals(key, "name"):
+			v, n, err := dvString(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Name = v
+			i = n
+		case keyEquals(key, "kind"):
+			v, n, err := dvUint32(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Kind = SymbolKind(v)
+			i = n
+		case keyEquals(key, "tags"):
+			v, n, err := dvUint32Slice(raw, i, x.Tags)
+			if err != nil {
+				return n, err
+			}
+			x.Tags = v
+			i = n
+		case keyEquals(key, "containerName"):
+			if n, ok := dvNull(raw, i); ok {
+				x.ContainerName = nil
+				i = n
+			} else {
+				v, n, err := dvString(raw, i)
+				if err != nil {
+					return n, err
+				}
+				if x.ContainerName == nil {
+					x.ContainerName = new(string)
+				}
+				*x.ContainerName = v
+				i = n
+			}
+		case keyEquals(key, "location"):
+			val, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			if err := unmarshalWorkspaceSymbolLocationValueBoxed(val, &x.Location, locationBoxes, locationURIOnlyBoxes); err != nil {
+				return i, err
+			}
+			i = n
+		case keyEquals(key, "data"):
+			val, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Data = jsontext.Value(val)
+			i = n
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func unmarshalSliceCompletionItem(raw []byte, i int, dst []CompletionItem) ([]CompletionItem, int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		return nil, n, nil
+	}
+	if i >= len(raw) || raw[i] != '[' {
+		return dst, i, dvSyntaxError(i, "array")
+	}
+	i = skipSpace(raw, i+1)
+	out := dst[:0]
+	if i < len(raw) && raw[i] == ']' {
+		if out == nil {
+			out = []CompletionItem{}
+		}
+		return out, i + 1, nil
+	}
+	for {
+		if len(out) < cap(out) {
+			out = out[:len(out)+1]
+			out[len(out)-1] = CompletionItem{}
+		} else {
+			out = append(out, CompletionItem{})
+		}
+		n, err := out[len(out)-1].unmarshalLSP(raw, i)
+		if err != nil {
+			return dst, n, err
+		}
+		var done bool
+		var err2 error
+		i, done, err2 = dvArrayNext(raw, n)
+		if err2 != nil {
+			return dst, i, err2
+		}
+		if done {
+			return out, i, nil
+		}
+	}
+}
+
+func unmarshalSliceDiagnostic(raw []byte, i int, dst []Diagnostic) ([]Diagnostic, int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		return nil, n, nil
+	}
+	if i >= len(raw) || raw[i] != '[' {
+		return dst, i, dvSyntaxError(i, "array")
+	}
+	i = skipSpace(raw, i+1)
+	out := dst[:0]
+	if i < len(raw) && raw[i] == ']' {
+		if out == nil {
+			out = []Diagnostic{}
+		}
+		return out, i + 1, nil
+	}
+	var scalarBoxes []String
+	for {
+		if len(out) < cap(out) {
+			out = out[:len(out)+1]
+			out[len(out)-1] = Diagnostic{}
+		} else {
+			out = append(out, Diagnostic{})
+		}
+		n, err := out[len(out)-1].unmarshalLSPWithScalarBoxes(raw, i, &scalarBoxes)
+		if err != nil {
+			return dst, n, err
+		}
+		var done bool
+		var err2 error
+		i, done, err2 = dvArrayNext(raw, n)
+		if err2 != nil {
+			return dst, i, err2
+		}
+		if done {
+			return out, i, nil
+		}
+	}
+}
+
+func unmarshalSliceDiagnosticRelatedInformation(raw []byte, i int, dst []DiagnosticRelatedInformation) ([]DiagnosticRelatedInformation, int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		return nil, n, nil
+	}
+	if i >= len(raw) || raw[i] != '[' {
+		return dst, i, dvSyntaxError(i, "array")
+	}
+	i = skipSpace(raw, i+1)
+	out := dst[:0]
+	if i < len(raw) && raw[i] == ']' {
+		if out == nil {
+			out = []DiagnosticRelatedInformation{}
+		}
+		return out, i + 1, nil
+	}
+	for {
+		if len(out) < cap(out) {
+			out = out[:len(out)+1]
+			out[len(out)-1] = DiagnosticRelatedInformation{}
+		} else {
+			out = append(out, DiagnosticRelatedInformation{})
+		}
+		n, err := out[len(out)-1].unmarshalLSP(raw, i)
+		if err != nil {
+			return dst, n, err
+		}
+		var done bool
+		var err2 error
+		i, done, err2 = dvArrayNext(raw, n)
+		if err2 != nil {
+			return dst, i, err2
+		}
+		if done {
+			return out, i, nil
+		}
+	}
+}
+
+func unmarshalSliceSymbolInformation(raw []byte, i int, dst []SymbolInformation) ([]SymbolInformation, int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		return nil, n, nil
+	}
+	if i >= len(raw) || raw[i] != '[' {
+		return dst, i, dvSyntaxError(i, "array")
+	}
+	i = skipSpace(raw, i+1)
+	out := dst[:0]
+	if i < len(raw) && raw[i] == ']' {
+		if out == nil {
+			out = []SymbolInformation{}
+		}
+		return out, i + 1, nil
+	}
+	for {
+		if len(out) < cap(out) {
+			out = out[:len(out)+1]
+			out[len(out)-1] = SymbolInformation{}
+		} else {
+			out = append(out, SymbolInformation{})
+		}
+		n, err := out[len(out)-1].unmarshalLSP(raw, i)
+		if err != nil {
+			return dst, n, err
+		}
+		var done bool
+		var err2 error
+		i, done, err2 = dvArrayNext(raw, n)
+		if err2 != nil {
+			return dst, i, err2
+		}
+		if done {
+			return out, i, nil
+		}
+	}
+}
+
+func unmarshalSliceTextDocumentContentChangeEvent(raw []byte, i int, dst []TextDocumentContentChangeEvent) ([]TextDocumentContentChangeEvent, int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		return nil, n, nil
+	}
+	if i >= len(raw) || raw[i] != '[' {
+		return dst, i, dvSyntaxError(i, "array")
+	}
+	i = skipSpace(raw, i+1)
+	out := dst[:0]
+	if i < len(raw) && raw[i] == ']' {
+		if out == nil {
+			out = []TextDocumentContentChangeEvent{}
+		}
+		return out, i + 1, nil
+	}
+	for {
+		if len(out) < cap(out) {
+			out = out[:len(out)+1]
+			out[len(out)-1] = nil
+		} else {
+			out = append(out, nil)
+		}
+		val, n, err := dvValue(raw, i)
+		if err != nil {
+			return dst, n, err
+		}
+		if err := unmarshalTextDocumentContentChangeEventValue(val, &out[len(out)-1]); err != nil {
+			return dst, i, err
+		}
+		var done bool
+		var err2 error
+		i, done, err2 = dvArrayNext(raw, n)
+		if err2 != nil {
+			return dst, i, err2
+		}
+		if done {
+			return out, i, nil
+		}
+	}
+}
+
+func unmarshalSliceTextEdit(raw []byte, i int, dst []TextEdit) ([]TextEdit, int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		return nil, n, nil
+	}
+	if i >= len(raw) || raw[i] != '[' {
+		return dst, i, dvSyntaxError(i, "array")
+	}
+	i = skipSpace(raw, i+1)
+	out := dst[:0]
+	if i < len(raw) && raw[i] == ']' {
+		if out == nil {
+			out = []TextEdit{}
+		}
+		return out, i + 1, nil
+	}
+	for {
+		if len(out) < cap(out) {
+			out = out[:len(out)+1]
+			out[len(out)-1] = TextEdit{}
+		} else {
+			out = append(out, TextEdit{})
+		}
+		n, err := out[len(out)-1].unmarshalLSP(raw, i)
+		if err != nil {
+			return dst, n, err
+		}
+		var done bool
+		var err2 error
+		i, done, err2 = dvArrayNext(raw, n)
+		if err2 != nil {
+			return dst, i, err2
+		}
+		if done {
+			return out, i, nil
+		}
+	}
+}
+
+func unmarshalSliceWorkspaceFolder(raw []byte, i int, dst []WorkspaceFolder) ([]WorkspaceFolder, int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		return nil, n, nil
+	}
+	if i >= len(raw) || raw[i] != '[' {
+		return dst, i, dvSyntaxError(i, "array")
+	}
+	i = skipSpace(raw, i+1)
+	out := dst[:0]
+	if i < len(raw) && raw[i] == ']' {
+		if out == nil {
+			out = []WorkspaceFolder{}
+		}
+		return out, i + 1, nil
+	}
+	for {
+		if len(out) < cap(out) {
+			out = out[:len(out)+1]
+			out[len(out)-1] = WorkspaceFolder{}
+		} else {
+			out = append(out, WorkspaceFolder{})
+		}
+		n, err := out[len(out)-1].unmarshalLSP(raw, i)
+		if err != nil {
+			return dst, n, err
+		}
+		var done bool
+		var err2 error
+		i, done, err2 = dvArrayNext(raw, n)
+		if err2 != nil {
+			return dst, i, err2
+		}
+		if done {
+			return out, i, nil
+		}
+	}
+}
+
+func unmarshalSliceWorkspaceSymbol(raw []byte, i int, dst []WorkspaceSymbol) ([]WorkspaceSymbol, int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		return nil, n, nil
+	}
+	if i >= len(raw) || raw[i] != '[' {
+		return dst, i, dvSyntaxError(i, "array")
+	}
+	i = skipSpace(raw, i+1)
+	out := dst[:0]
+	if i < len(raw) && raw[i] == ']' {
+		if out == nil {
+			out = []WorkspaceSymbol{}
+		}
+		return out, i + 1, nil
+	}
+	var locationBoxes []Location
+	var locationURIOnlyBoxes []LocationUriOnly
+	for {
+		if len(out) < cap(out) {
+			out = out[:len(out)+1]
+			out[len(out)-1] = WorkspaceSymbol{}
+		} else {
+			out = append(out, WorkspaceSymbol{})
+		}
+		n, err := out[len(out)-1].unmarshalLSPWithLocationBoxes(raw, i, &locationBoxes, &locationURIOnlyBoxes)
+		if err != nil {
+			return dst, n, err
+		}
+		var done bool
+		var err2 error
+		i, done, err2 = dvArrayNext(raw, n)
+		if err2 != nil {
+			return dst, i, err2
+		}
+		if done {
+			return out, i, nil
+		}
+	}
+}
+
+func (x *CompletionItemSlice) unmarshalLSPValue(raw jsontext.Value) error {
+	v, i, err := unmarshalSliceCompletionItem(raw, skipSpace(raw, 0), []CompletionItem(*x))
+	if err != nil {
+		return err
+	}
+	if err := dvEnd(raw, i); err != nil {
+		return err
+	}
+	*x = CompletionItemSlice(v)
+	return nil
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *CompletionItemSlice) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *SymbolInformationSlice) unmarshalLSPValue(raw jsontext.Value) error {
+	v, i, err := unmarshalSliceSymbolInformation(raw, skipSpace(raw, 0), []SymbolInformation(*x))
+	if err != nil {
+		return err
+	}
+	if err := dvEnd(raw, i); err != nil {
+		return err
+	}
+	*x = SymbolInformationSlice(v)
+	return nil
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *SymbolInformationSlice) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+func (x *WorkspaceSymbolSlice) unmarshalLSPValue(raw jsontext.Value) error {
+	v, i, err := unmarshalSliceWorkspaceSymbol(raw, skipSpace(raw, 0), []WorkspaceSymbol(*x))
+	if err != nil {
+		return err
+	}
+	if err := dvEnd(raw, i); err != nil {
+		return err
+	}
+	*x = WorkspaceSymbolSlice(v)
+	return nil
+}
+
+// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
+func (x *WorkspaceSymbolSlice) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	raw, err := dec.ReadValue()
+	if err != nil {
+		return err
+	}
+	return x.unmarshalLSPValue(slices.Clone(raw))
+}
+
+// unmarshalUnionRoot decodes data directly into a union interface
+// pointer without constructing a decoder, reporting whether v was one.
+func unmarshalUnionRoot(data []byte, v any) (bool, error) {
+	var owned []byte
+	own := func() []byte {
+		if owned == nil {
+			owned = slices.Clone(data)
+		}
+		return owned
+	}
+	switch p := v.(type) {
+	case *CallHierarchyProvider:
+		return true, unmarshalCallHierarchyProviderValue(own(), p)
+	case *ChangeNotifications:
+		return true, unmarshalChangeNotificationsValue(own(), p)
+	case *ClientSemanticTokensRequestOptionsFull:
+		return true, unmarshalClientSemanticTokensRequestOptionsFullValue(own(), p)
+	case *ClientSemanticTokensRequestOptionsRange:
+		return true, unmarshalClientSemanticTokensRequestOptionsRangeValue(own(), p)
+	case *CodeActionProvider:
+		return true, unmarshalCodeActionProviderValue(own(), p)
+	case *ColorProvider:
+		return true, unmarshalColorProviderValue(own(), p)
+	case *CommandOrCodeAction:
+		return true, unmarshalCommandOrCodeActionValue(own(), p)
+	case *CompletionItemDefaultsEditRange:
+		return true, unmarshalCompletionItemDefaultsEditRangeValue(own(), p)
+	case *CompletionItemTextEdit:
+		return true, unmarshalCompletionItemTextEditValue(own(), p)
+	case *CompletionResult:
+		return true, unmarshalCompletionResultValue(own(), p)
+	case *Declaration:
+		return true, unmarshalDeclarationValue(own(), p)
+	case *DeclarationProvider:
+		return true, unmarshalDeclarationProviderValue(own(), p)
+	case *DeclarationResult:
+		return true, unmarshalDeclarationResultValue(own(), p)
+	case *DefinitionProvider:
+		return true, unmarshalDefinitionProviderValue(own(), p)
+	case *DefinitionResult:
+		return true, unmarshalDefinitionResultValue(own(), p)
+	case *DiagnosticProvider:
+		return true, unmarshalDiagnosticProviderValue(own(), p)
+	case *DidChangeConfigurationRegistrationOptionsSection:
+		return true, unmarshalDidChangeConfigurationRegistrationOptionsSectionValue(own(), p)
+	case *DocumentChange:
+		return true, unmarshalDocumentChangeValue(own(), p)
+	case *DocumentDiagnosticReport:
+		return true, unmarshalDocumentDiagnosticReportValue(own(), p)
+	case *DocumentFilter:
+		return true, unmarshalDocumentFilterValue(own(), p)
+	case *DocumentFormattingProvider:
+		return true, unmarshalDocumentFormattingProviderValue(own(), p)
+	case *DocumentHighlightProvider:
+		return true, unmarshalDocumentHighlightProviderValue(own(), p)
+	case *DocumentRangeFormattingProvider:
+		return true, unmarshalDocumentRangeFormattingProviderValue(own(), p)
+	case *DocumentSymbolProvider:
+		return true, unmarshalDocumentSymbolProviderValue(own(), p)
+	case *DocumentSymbolResult:
+		return true, unmarshalDocumentSymbolResultValue(own(), p)
+	case *FoldingRangeProvider:
+		return true, unmarshalFoldingRangeProviderValue(own(), p)
+	case *FullDocumentDiagnosticReportOrUnchangedDocumentDiagnosticReport:
+		return true, unmarshalFullDocumentDiagnosticReportOrUnchangedDocumentDiagnosticReportValue(own(), p)
+	case *GlobPattern:
+		return true, unmarshalGlobPatternValue(own(), p)
+	case *HoverContents:
+		return true, unmarshalHoverContentsValue(own(), p)
+	case *HoverProvider:
+		return true, unmarshalHoverProviderValue(own(), p)
+	case *ImplementationProvider:
+		return true, unmarshalImplementationProviderValue(own(), p)
+	case *InlayHintLabel:
+		return true, unmarshalInlayHintLabelValue(own(), p)
+	case *InlayHintProvider:
+		return true, unmarshalInlayHintProviderValue(own(), p)
+	case *InlayHintTooltip:
+		return true, unmarshalInlayHintTooltipValue(own(), p)
+	case *InlineCompletionItemInsertText:
+		return true, unmarshalInlineCompletionItemInsertTextValue(own(), p)
+	case *InlineCompletionProvider:
+		return true, unmarshalInlineCompletionProviderValue(own(), p)
+	case *InlineCompletionResult:
+		return true, unmarshalInlineCompletionResultValue(own(), p)
+	case *InlineValue:
+		return true, unmarshalInlineValueValue(own(), p)
+	case *InlineValueProvider:
+		return true, unmarshalInlineValueProviderValue(own(), p)
+	case *LinkedEditingRangeProvider:
+		return true, unmarshalLinkedEditingRangeProviderValue(own(), p)
+	case *MarkedString:
+		return true, unmarshalMarkedStringValue(own(), p)
+	case *MonikerProvider:
+		return true, unmarshalMonikerProviderValue(own(), p)
+	case *NotebookDocumentFilter:
+		return true, unmarshalNotebookDocumentFilterValue(own(), p)
+	case *NotebookDocumentFilterNotebook:
+		return true, unmarshalNotebookDocumentFilterNotebookValue(own(), p)
+	case *NotebookDocumentSync:
+		return true, unmarshalNotebookDocumentSyncValue(own(), p)
+	case *NotebookSelector:
+		return true, unmarshalNotebookSelectorValue(own(), p)
+	case *ParameterInformationLabel:
+		return true, unmarshalParameterInformationLabelValue(own(), p)
+	case *PrepareRenameResult:
+		return true, unmarshalPrepareRenameResultValue(own(), p)
+	case *ProgressToken:
+		return true, unmarshalProgressTokenValue(own(), p)
+	case *ReferencesProvider:
+		return true, unmarshalReferencesProviderValue(own(), p)
+	case *RelativePatternBaseURI:
+		return true, unmarshalRelativePatternBaseURIValue(own(), p)
+	case *RenameProvider:
+		return true, unmarshalRenameProviderValue(own(), p)
+	case *SelectionRangeProvider:
+		return true, unmarshalSelectionRangeProviderValue(own(), p)
+	case *SemanticTokensDeltaResult:
+		return true, unmarshalSemanticTokensDeltaResultValue(own(), p)
+	case *SemanticTokensOptionsFull:
+		return true, unmarshalSemanticTokensOptionsFullValue(own(), p)
+	case *SemanticTokensProvider:
+		return true, unmarshalSemanticTokensProviderValue(own(), p)
+	case *TextDocumentContentChangeEvent:
+		return true, unmarshalTextDocumentContentChangeEventValue(own(), p)
+	case *TextDocumentEditElement:
+		return true, unmarshalTextDocumentEditElementValue(own(), p)
+	case *TextDocumentFilter:
+		return true, unmarshalTextDocumentFilterValue(own(), p)
+	case *TextDocumentSync:
+		return true, unmarshalTextDocumentSyncValue(own(), p)
+	case *TextDocumentSyncOptionsSave:
+		return true, unmarshalTextDocumentSyncOptionsSaveValue(own(), p)
+	case *TypeDefinitionProvider:
+		return true, unmarshalTypeDefinitionProviderValue(own(), p)
+	case *TypeHierarchyProvider:
+		return true, unmarshalTypeHierarchyProviderValue(own(), p)
+	case *WorkspaceDocumentDiagnosticReport:
+		return true, unmarshalWorkspaceDocumentDiagnosticReportValue(own(), p)
+	case *WorkspaceOptionsTextDocumentContent:
+		return true, unmarshalWorkspaceOptionsTextDocumentContentValue(own(), p)
+	case *WorkspaceSymbolLocation:
+		return true, unmarshalWorkspaceSymbolLocationValue(own(), p)
+	case *WorkspaceSymbolProvider:
+		return true, unmarshalWorkspaceSymbolProviderValue(own(), p)
+	case *WorkspaceSymbolResult:
+		return true, unmarshalWorkspaceSymbolResultValue(own(), p)
+	}
+	return false, nil
 }

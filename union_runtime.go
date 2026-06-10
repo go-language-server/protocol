@@ -166,9 +166,12 @@ func objectKind(raw jsontext.Value) (string, bool) {
 	return kind, found
 }
 
-// objectMember invokes fn with the raw value bytes of the top-level member
-// named want, if present. The value bytes alias raw. It is a no-op if raw is
-// not an object or has no such member.
+// objectMember invokes fn with the raw value bytes of each top-level member
+// named want, in wire order. The value bytes alias raw. It is a no-op if raw
+// is not an object or has no such member.
+//
+// Callers that assign inside fn naturally implement the same last-wins
+// duplicate-member policy as the package's relaxed wireOptions.
 func objectMember(raw []byte, want string, fn func(val []byte)) {
 	i := skipSpace(raw, 0)
 	if i >= len(raw) || raw[i] != '{' {
@@ -198,7 +201,6 @@ func objectMember(raw []byte, want string, fn func(val []byte)) {
 		ve := skipValue(raw, vs)
 		if keyEquals(key, want) {
 			fn(raw[vs:ve])
-			return
 		}
 		i = ve
 		i = skipSpace(raw, i)

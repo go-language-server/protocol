@@ -62,6 +62,10 @@ func (g *Generator) Emit() (map[string][]byte, error) {
 	// registered before rendering.
 	messages := g.analyzeMessages()
 
+	// Resolve byte-decoder coverage before rendering unions so arm decodes
+	// route through the byte walkers where they exist.
+	g.byteCtx = g.buildByteDecCtx(structs, enums, aliases)
+
 	files := map[string][]byte{}
 	var firstErr error
 	add := func(name, body string) {
@@ -116,7 +120,7 @@ func (g *Generator) Emit() (map[string][]byte, error) {
 	add("types_unions.go", g.renderUnions())
 	add("metamodel_messages.go", messages)
 	add("marshalers_generated.go", g.renderMarshalers())
-	add("decoders_generated.go", g.renderDecoders(structs))
+	add("decoders_generated.go", g.renderByteDecoders(g.byteCtx))
 	add("encoders_generated.go", g.renderEncoders(structs))
 	return files, firstErr
 }
@@ -153,6 +157,12 @@ func detectImports(body string) []string {
 	}
 	if strings.Contains(body, "errors.") {
 		imports = append(imports, "errors")
+	}
+	if strings.Contains(body, "bytes.") {
+		imports = append(imports, "bytes")
+	}
+	if strings.Contains(body, "slices.") {
+		imports = append(imports, "slices")
 	}
 	if strings.Contains(body, "json.") {
 		imports = append(imports, "github.com/go-json-experiment/json")
@@ -525,6 +535,8 @@ func (g *Generator) renderUnionDecoder(b *strings.Builder, u *unionDecl) {
 	fn := "unmarshal" + u.Name
 	fmt.Fprintf(b, "func %s(dec *jsontext.Decoder, val *%s) error {\n", fn, u.Name)
 	b.WriteString("\traw, err := dec.ReadValue()\n\tif err != nil {\n\t\treturn err\n\t}\n")
+	fmt.Fprintf(b, "\treturn %sValue(raw, val)\n}\n\n", fn)
+	fmt.Fprintf(b, "func %sValue(raw jsontext.Value, val *%s) error {\n", fn, u.Name)
 	b.WriteString("\tswitch raw.Kind() {\n")
 
 	byToken := map[byte][]*unionMember{}
@@ -536,8 +548,9 @@ func (g *Generator) renderUnionDecoder(b *strings.Builder, u *unionDecl) {
 		byToken[m.Token] = append(byToken[m.Token], m)
 	}
 
-	// null always decodes to a nil interface.
-	b.WriteString("\tcase 'n':\n\t\t*val = nil\n\t\treturn nil\n")
+	// null always decodes to a nil interface (dvNullValue rejects trailing
+	// content when the value arrives from the root fast path).
+	b.WriteString("\tcase 'n':\n\t\t*val = nil\n\t\treturn dvNullValue(raw)\n")
 
 	for _, tok := range tokenOrder {
 		members := byToken[tok]
@@ -568,13 +581,27 @@ func (g *Generator) renderUnionDecoder(b *strings.Builder, u *unionDecl) {
 
 func (g *Generator) renderScalarDecode(b *strings.Builder, m *unionMember) {
 	base := strings.TrimPrefix(m.Receiver, "*")
-	fmt.Fprintf(b, "\t\tvar v %s\n", base)
-	b.WriteString("\t\tif err := decodeWith(raw, &v); err != nil {\n\t\t\treturn err\n\t\t}\n")
+	assign := "v"
 	if strings.HasPrefix(m.Receiver, "*") {
-		b.WriteString("\t\t*val = &v\n\t\treturn nil\n")
-	} else {
-		b.WriteString("\t\t*val = v\n\t\treturn nil\n")
+		assign = "&v"
 	}
+	if under, ok := scalarWrapperBase[base]; ok {
+		fmt.Fprintf(b, "\t\tv, err := dvScalar%s(raw)\n", exportName(under))
+		b.WriteString("\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n")
+		if base == under {
+			fmt.Fprintf(b, "\t\t*val = %s\n\t\treturn nil\n", assign)
+		} else {
+			fmt.Fprintf(b, "\t\t*val = %s(v)\n\t\treturn nil\n", base)
+		}
+		return
+	}
+	fmt.Fprintf(b, "\t\tvar v %s\n", base)
+	if g.byteCtx != nil && g.byteCtx.armByteCovered(m.Receiver) {
+		b.WriteString("\t\tif err := v.unmarshalLSPValue(raw); err != nil {\n\t\t\treturn err\n\t\t}\n")
+	} else {
+		b.WriteString("\t\tif err := decodeWith(raw, &v); err != nil {\n\t\t\treturn err\n\t\t}\n")
+	}
+	fmt.Fprintf(b, "\t\t*val = %s\n\t\treturn nil\n", assign)
 }
 
 // memberDecode returns the concrete type to decode into and the assignment
@@ -589,17 +616,22 @@ func memberDecode(m *unionMember) (base, assign string) {
 // emitAttempt emits one guarded decode-and-assign block at the given tab indent.
 // A failed decode falls through to the next attempt; this is how arms that
 // differ only by a field's JSON type (e.g. command: string vs object) are
-// disambiguated.
-func emitAttempt(b *strings.Builder, guard string, m *unionMember) {
+// disambiguated. Arms whose type carries a byte walker decode through it
+// directly instead of constructing a decoder.
+func (g *Generator) emitAttempt(b *strings.Builder, guard string, m *unionMember) {
 	const ind = "\t\t"
 	base, assign := memberDecode(m)
 	openTok, closeTok := "{", "}"
 	if guard != "" {
 		openTok = "if " + guard + " {"
 	}
+	decode := "decodeWith(raw, &v)"
+	if g.byteCtx != nil && g.byteCtx.armByteCovered(m.Receiver) {
+		decode = "v.unmarshalLSPValue(raw)"
+	}
 	fmt.Fprintf(b, "%s%s\n%s\tvar v %s\n", ind, openTok, ind, base)
-	fmt.Fprintf(b, "%s\tif decodeWith(raw, &v) == nil {\n%s\t\t*val = %s\n%s\t\treturn nil\n%s\t}\n%s%s\n",
-		ind, ind, assign, ind, ind, ind, closeTok)
+	fmt.Fprintf(b, "%s\tif %s == nil {\n%s\t\t*val = %s\n%s\t\treturn nil\n%s\t}\n%s%s\n",
+		ind, decode, ind, assign, ind, ind, ind, closeTok)
 }
 
 // renderObjectDispatch emits disambiguation for object arms. A "kind"
@@ -627,7 +659,11 @@ func (g *Generator) renderObjectDispatch(b *strings.Builder, union string, membe
 			base, assign := memberDecode(m)
 			fmt.Fprintf(b, "\t\t\tcase %q:\n", m.KindConst)
 			fmt.Fprintf(b, "\t\t\t\tvar v %s\n", base)
-			b.WriteString("\t\t\t\tif err := decodeWith(raw, &v); err != nil {\n\t\t\t\t\treturn err\n\t\t\t\t}\n")
+			decode := "decodeWith(raw, &v)"
+			if g.byteCtx != nil && g.byteCtx.armByteCovered(m.Receiver) {
+				decode = "v.unmarshalLSPValue(raw)"
+			}
+			fmt.Fprintf(b, "\t\t\t\tif err := %s; err != nil {\n\t\t\t\t\treturn err\n\t\t\t\t}\n", decode)
 			fmt.Fprintf(b, "\t\t\t\t*val = %s\n\t\t\t\treturn nil\n", assign)
 		}
 		b.WriteString("\t\t\t}\n\t\t}\n")
@@ -641,7 +677,7 @@ func (g *Generator) renderObjectDispatch(b *strings.Builder, union string, membe
 		if guard == "" {
 			continue // no signal; handled by the lenient tier
 		}
-		emitAttempt(b, guard, m)
+		g.emitAttempt(b, guard, m)
 	}
 
 	byReq := append([]*unionMember(nil), structural...)
@@ -650,11 +686,11 @@ func (g *Generator) renderObjectDispatch(b *strings.Builder, union string, membe
 		if len(m.Required) == 0 {
 			continue // would match unconditionally; defer to the lenient tier
 		}
-		emitAttempt(b, fmt.Sprintf("objectHasKeys(raw, %s)", quoteList(m.Required)), m)
+		g.emitAttempt(b, fmt.Sprintf("objectHasKeys(raw, %s)", quoteList(m.Required)), m)
 	}
 
 	for _, m := range byAllKeys {
-		emitAttempt(b, "", m)
+		g.emitAttempt(b, "", m)
 	}
 }
 
@@ -673,7 +709,7 @@ func (g *Generator) renderArrayDispatch(b *strings.Builder, union string, member
 		if guard == "" {
 			continue
 		}
-		emitAttempt(b, guard, m)
+		g.emitAttempt(b, guard, m)
 	}
 
 	byReq := append([]*unionMember(nil), members...)
@@ -682,11 +718,11 @@ func (g *Generator) renderArrayDispatch(b *strings.Builder, union string, member
 		if len(m.ElemRequired) == 0 {
 			continue
 		}
-		emitAttempt(b, fmt.Sprintf("arrayFirstHasKeys(raw, %s)", quoteList(m.ElemRequired)), m)
+		g.emitAttempt(b, fmt.Sprintf("arrayFirstHasKeys(raw, %s)", quoteList(m.ElemRequired)), m)
 	}
 
 	for _, m := range byAllKeys {
-		emitAttempt(b, "", m)
+		g.emitAttempt(b, "", m)
 	}
 }
 
@@ -788,97 +824,6 @@ func hotFieldType(owner, fieldName, base string, optional, nullable bool) (strin
 		return "DiagnosticTags", true
 	}
 	return "", false
-}
-
-// renderDecoders wires allowlisted hot structs into json.UnmarshalerFrom
-// methods. Hot optional fields may use specialized generated representations,
-// while nested generated union decoders remain authoritative for union fields.
-func (g *Generator) renderDecoders(structs []*renderedStruct) string {
-	selected := make([]*renderedStruct, 0, len(hotDecodeTypes))
-	for _, s := range structs {
-		if !hotDecodeTypes[s.Name] {
-			continue
-		}
-		if len(s.Embeds) > 0 {
-			g.warnf("struct decoder %s skipped: embedded fields are not supported", s.Name)
-			continue
-		}
-		selected = append(selected, s)
-	}
-	sort.Slice(selected, func(i, j int) bool { return selected[i].Name < selected[j].Name })
-
-	var b strings.Builder
-	for _, s := range selected {
-		g.renderStructDecoder(&b, s)
-	}
-	return b.String()
-}
-
-func (g *Generator) renderStructDecoder(b *strings.Builder, s *renderedStruct) {
-	fmt.Fprintf(b, "func (x *%s) UnmarshalJSONFrom(dec *jsontext.Decoder) error {\n", s.Name)
-	b.WriteString("\tswitch dec.PeekKind() {\n")
-	b.WriteString("\tcase 'n':\n")
-	fmt.Fprintf(b, "\t\t*x = %s{}\n", s.Name)
-	b.WriteString("\t\t_, err := dec.ReadToken()\n")
-	b.WriteString("\t\treturn err\n")
-	b.WriteString("\tcase '{':\n")
-	b.WriteString("\tdefault:\n")
-	b.WriteString("\t\treturn errors.ErrUnsupported\n")
-	b.WriteString("\t}\n")
-	b.WriteString("\tif _, err := dec.ReadToken(); err != nil {\n")
-	b.WriteString("\t\treturn err\n")
-	b.WriteString("\t}\n")
-	b.WriteString("\tfor dec.PeekKind() != '}' {\n")
-	b.WriteString("\t\tkey, err := dec.ReadToken()\n")
-	b.WriteString("\t\tif err != nil {\n")
-	b.WriteString("\t\t\treturn err\n")
-	b.WriteString("\t\t}\n")
-	b.WriteString("\t\tswitch key.String() {\n")
-	for i := range s.Fields {
-		f := &s.Fields[i]
-		fmt.Fprintf(b, "\t\tcase %q:\n", f.JSONName)
-		fmt.Fprintf(b, "\t\t\tif err := %s; err != nil {\n", fieldDecodeExpr(f))
-		b.WriteString("\t\t\t\treturn err\n")
-		b.WriteString("\t\t\t}\n")
-	}
-	b.WriteString("\t\tdefault:\n")
-	b.WriteString("\t\t\tif err := dec.SkipValue(); err != nil {\n")
-	b.WriteString("\t\t\t\treturn err\n")
-	b.WriteString("\t\t\t}\n")
-	b.WriteString("\t\t}\n")
-	b.WriteString("\t}\n")
-	b.WriteString("\t_, err := dec.ReadToken()\n")
-	b.WriteString("\treturn err\n")
-	b.WriteString("}\n\n")
-}
-
-func fieldDecodeExpr(f *renderedField) string {
-	switch f.Type {
-	case "string", "URI", "DocumentURI":
-		return fmt.Sprintf("decodeStringLikeFrom(dec, &x.%s)", f.Name)
-	case "Position":
-		return fmt.Sprintf("decodePositionFrom(dec, &x.%s)", f.Name)
-	case "Range":
-		return fmt.Sprintf("decodeRangeFrom(dec, &x.%s)", f.Name)
-	case "CompletionItemKind", "DiagnosticSeverity", "InsertTextFormat", "InsertTextMode", "uint32":
-		return fmt.Sprintf("decodeUint32From(dec, &x.%s)", f.Name)
-	case "int32":
-		return fmt.Sprintf("decodeInt32From(dec, &x.%s)", f.Name)
-	case "Optional[string]":
-		return fmt.Sprintf("decodeOptionalStringFrom(dec, &x.%s)", f.Name)
-	case "Optional[bool]":
-		return fmt.Sprintf("decodeOptionalBoolFrom(dec, &x.%s)", f.Name)
-	case "Optional[int32]":
-		return fmt.Sprintf("decodeOptionalInt32From(dec, &x.%s)", f.Name)
-	case "InlayHintTooltip":
-		return fmt.Sprintf("decodeInlayHintTooltipFrom(dec, &x.%s)", f.Name)
-	case "ProgressToken":
-		return fmt.Sprintf("decodeProgressTokenFrom(dec, &x.%s)", f.Name)
-	case "DiagnosticTags":
-		return fmt.Sprintf("decodeDiagnosticTagsFrom(dec, &x.%s)", f.Name)
-	default:
-		return fmt.Sprintf("json.UnmarshalDecode(dec, &x.%s, json.WithUnmarshalers(unionUnmarshalers))", f.Name)
-	}
 }
 
 func (g *Generator) renderEncoders(structs []*renderedStruct) string {
@@ -1027,6 +972,13 @@ func writeEncoderValue(b *strings.Builder, f *renderedField, indent string) {
 	case "InlayHintTooltip":
 		fmt.Fprintf(b, "%sif v, ok := x.%s.(String); ok {\n", indent, f.Name)
 		fmt.Fprintf(b, "%s\tif err := enc.WriteToken(jsontext.String(string(v))); err != nil {\n", indent)
+		fmt.Fprintf(b, "%s\t\treturn err\n", indent)
+		fmt.Fprintf(b, "%s\t}\n", indent)
+		fmt.Fprintf(b, "%s} else if v, ok := x.%s.(*String); ok {\n", indent, f.Name)
+		fmt.Fprintf(b, "%s\tif v == nil {\n", indent)
+		fmt.Fprintf(b, "%s\t\treturn enc.WriteToken(jsontext.Null)\n", indent)
+		fmt.Fprintf(b, "%s\t}\n", indent)
+		fmt.Fprintf(b, "%s\tif err := enc.WriteToken(jsontext.String(string(*v))); err != nil {\n", indent)
 		fmt.Fprintf(b, "%s\t\treturn err\n", indent)
 		fmt.Fprintf(b, "%s\t}\n", indent)
 		fmt.Fprintf(b, "%s} else if err := json.MarshalEncode(enc, x.%s); err != nil {\n", indent, f.Name)
@@ -1242,7 +1194,7 @@ func sanitizeDoc(doc string) string {
 		return unwrapLink(linkRe.FindStringSubmatch(m)[1])
 	})
 	out := make([]string, 0, strings.Count(doc, "\n")+1)
-	for _, ln := range strings.Split(doc, "\n") {
+	for ln := range strings.SplitSeq(doc, "\n") {
 		if sinceRe.MatchString(ln) {
 			if rest := strings.TrimSpace(sinceRe.ReplaceAllString(ln, "")); rest != "" {
 				out = append(out, rest)

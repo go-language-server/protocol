@@ -60,6 +60,13 @@ func (x CompletionItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 			if err := enc.WriteToken(jsontext.String(string(v))); err != nil {
 				return err
 			}
+		} else if v, ok := x.Documentation.(*String); ok {
+			if v == nil {
+				return enc.WriteToken(jsontext.Null)
+			}
+			if err := enc.WriteToken(jsontext.String(string(*v))); err != nil {
+				return err
+			}
 		} else if err := json.MarshalEncode(enc, x.Documentation); err != nil {
 			return err
 		}
@@ -218,6 +225,13 @@ func (x Diagnostic) MarshalJSONTo(enc *jsontext.Encoder) error {
 	}
 	if v, ok := x.Message.(String); ok {
 		if err := enc.WriteToken(jsontext.String(string(v))); err != nil {
+			return err
+		}
+	} else if v, ok := x.Message.(*String); ok {
+		if v == nil {
+			return enc.WriteToken(jsontext.Null)
+		}
+		if err := enc.WriteToken(jsontext.String(string(*v))); err != nil {
 			return err
 		}
 	} else if err := json.MarshalEncode(enc, x.Message); err != nil {

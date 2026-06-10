@@ -146,6 +146,23 @@ func TestTextDocumentFilterByRequiredKey(t *testing.T) {
 	}
 }
 
+func TestDuplicateKindDiscriminatorUsesLastValue(t *testing.T) {
+	t.Parallel()
+
+	in := `{"kind":"full","items":[],"kind":"unchanged","resultId":"r"}`
+	var v DocumentDiagnosticReport
+	if err := Unmarshal([]byte(in), &v); err != nil {
+		t.Fatalf("unmarshal: %v", err)
+	}
+	got, ok := v.(*RelatedUnchangedDocumentDiagnosticReport)
+	if !ok {
+		t.Fatalf("got %T, want *RelatedUnchangedDocumentDiagnosticReport", v)
+	}
+	if got.Kind != "unchanged" || got.ResultID != "r" {
+		t.Fatalf("decoded report = %+v, want kind=unchanged resultId=r", got)
+	}
+}
+
 // TestSymbolArrayDistinguishedByData ensures a WorkspaceSymbol[] carrying the
 // WorkspaceSymbol-only `data` field decodes to WorkspaceSymbolSlice (not
 // SymbolInformationSlice) and does not lose `data`.

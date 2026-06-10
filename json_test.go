@@ -8,6 +8,50 @@ import (
 	"testing"
 )
 
+func TestUnmarshalTypedNilDestinationsReturnError(t *testing.T) {
+	t.Parallel()
+
+	tests := map[string]struct {
+		data string
+		dst  any
+	}{
+		"byte walker empty object": {
+			data: `{}`,
+			dst:  (*CompletionItem)(nil),
+		},
+		"byte walker null": {
+			data: `null`,
+			dst:  (*CompletionItem)(nil),
+		},
+		"byte walker known field": {
+			data: `{"label":"x"}`,
+			dst:  (*CompletionItem)(nil),
+		},
+		"union root": {
+			data: `"token"`,
+			dst:  (*ProgressToken)(nil),
+		},
+		"nil interface": {
+			data: `{}`,
+			dst:  nil,
+		},
+	}
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			defer func() {
+				if r := recover(); r != nil {
+					t.Fatalf("Unmarshal panicked for typed nil destination: %v", r)
+				}
+			}()
+			if err := Unmarshal([]byte(tt.data), tt.dst); err == nil {
+				t.Fatalf("Unmarshal(%s, %T) succeeded, want invalid destination error", tt.data, tt.dst)
+			}
+		})
+	}
+}
+
 // TestOptionalStructZeroValueOmitted documents the one boundary of the Safe-only
 // pointer policy: a converted value struct that is present in the input but equal
 // to its zero value is omitted on re-marshal (treated as absent). This is benign

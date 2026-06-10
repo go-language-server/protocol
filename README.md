@@ -4,6 +4,16 @@
 
 Package protocol implements Language Server Protocol specification in Go.
 
+## Decode ownership and zero-copy strings
+
+Generated decoders copy typed JSON input once before walking it. The caller may
+reuse or mutate the original `[]byte` after `protocol.Unmarshal` or the LSP
+codec returns. To reduce allocation cost on hot paths, unescaped decoded strings
+and raw JSON value fields may alias that owned per-message copy. Retaining a
+small decoded string or raw value can therefore keep the whole JSON message copy
+live. Use `protocol.Clone` when a decoded protocol value must be detached from a
+much larger input message before long-term retention.
+
 
 <!-- badge links -->
 [circleci]: https://app.circleci.com/pipelines/github/go-language-server/protocol

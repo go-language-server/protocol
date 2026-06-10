@@ -388,6 +388,11 @@ func encodeProgressTokenTo(enc *jsontext.Encoder, x ProgressToken) error {
 		return enc.WriteToken(jsontext.Null)
 	case String:
 		return enc.WriteToken(jsontext.String(string(v)))
+	case *String:
+		if v == nil {
+			return enc.WriteToken(jsontext.Null)
+		}
+		return enc.WriteToken(jsontext.String(string(*v)))
 	case Integer:
 		return enc.WriteToken(jsontext.Int(int64(v)))
 	default:
