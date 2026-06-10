@@ -1,15 +1,11 @@
-name: test
+name: CI
 
 on:
   push:
     branches:
       - main
   pull_request:
-    branches:
-      - main
-
-permissions:
-  contents: read
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -17,17 +13,28 @@ concurrency:
 
 jobs:
   test:
-    name: test
-    runs-on: ubuntu-latest
+    name: test/${{ matrix.runner }}
+    runs-on: ${{ matrix.runner }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        runner:
+          - ubuntu-slim
+          - ubuntu-24.04-arm
+
+    permissions:
+      contents: read
+      id-token: write
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
-          cache: true
+          check-latest: true
 
       - name: Check versions
         run: |
@@ -37,41 +44,41 @@ jobs:
       - name: Test and take a coverage
         env:
           GOTESTSUM_FORMAT: standard-verbose
-          GOTESTSUM_JUNITFILE: _output/tests.xml
-          GOTESTSUM_JSONFILE: _output/tests.json
         run: |
           mkdir -p _output
           make coverage
 
       - name: Upload coverage to Codecov
         if: success()
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
-          files: ./coverage.out
-          token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: false
+          report_type: coverage
+          flags: ${{ runner.os }}-${{ runner.arch }}
+          use_oidc: true
+          verbose: true
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: codecov/codecov-action@v6
         with:
+          report_type: test_results
           name: test-results
-          path: _output/
+          directory: _test_results/
 
   lint:
     name: lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
-          cache: true
+          check-latest: true
 
       - name: Run fmt and lint for sources
-        run: |
+        run: |-
           make lint
           git add -N . && git diff --exit-code
