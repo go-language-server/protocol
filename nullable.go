@@ -22,12 +22,6 @@ type Nullable[T any] struct {
 	value T
 }
 
-// NewNull returns a Nullable holding an explicit JSON null.
-func NewNull[T any]() Nullable[T] { return Nullable[T]{set: true, null: true} }
-
-// NewNullable returns a Nullable holding v.
-func NewNullable[T any](v T) Nullable[T] { return Nullable[T]{set: true, value: v} }
-
 // IsZero reports whether the value is absent. It drives the ",omitzero" tag so
 // an unset Nullable is omitted entirely.
 func (n Nullable[T]) IsZero() bool { return !n.set }
