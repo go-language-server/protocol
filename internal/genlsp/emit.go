@@ -21,10 +21,11 @@ package %s
 
 // renderedField is a fully lowered Go struct field.
 type renderedField struct {
-	Name string
-	Type string
-	Tag  string
-	Doc  string
+	Name     string
+	Type     string
+	JSONName string
+	Tag      string
+	Doc      string
 }
 
 // renderedStruct is a fully lowered Go struct.
@@ -114,6 +115,8 @@ func (g *Generator) Emit() (map[string][]byte, error) {
 	add("types_unions.go", g.renderUnions())
 	add("metamodel_messages.go", messages)
 	add("marshalers_generated.go", g.renderMarshalers())
+	add("decoders_generated.go", g.renderDecoders(structs))
+	add("encoders_generated.go", g.renderEncoders(structs))
 	return files, firstErr
 }
 
@@ -146,6 +149,9 @@ func detectImports(body string) []string {
 	var imports []string
 	if strings.Contains(body, "fmt.") {
 		imports = append(imports, "fmt")
+	}
+	if strings.Contains(body, "errors.") {
+		imports = append(imports, "errors")
 	}
 	if strings.Contains(body, "json.") {
 		imports = append(imports, "github.com/go-json-experiment/json")
@@ -186,13 +192,23 @@ func (g *Generator) renderField(owner string, p *Property) renderedField {
 	fieldName := exportName(p.Name)
 	hint := owner + fieldName
 	base := g.lower(p.Type, hint)
-	typ, tagExtra := g.decorate(base, p.Optional, isNullable(p.Type))
+	nullable := isNullable(p.Type)
+	typ, tagExtra := g.decorate(base, p.Optional, nullable)
+	if override, ok := hotFieldType(owner, fieldName, base, p.Optional, nullable); ok {
+		typ = override
+		tagExtra = ",omitzero"
+	}
+	if hotOptionalField(owner, fieldName, base, p.Optional, nullable) {
+		typ = "Optional[" + base + "]"
+		tagExtra = ",omitzero"
+	}
 	tag := p.Name + tagExtra
 	return renderedField{
-		Name: fieldName,
-		Type: typ,
-		Tag:  tag,
-		Doc:  g.fieldDoc(fieldName, p),
+		Name:     fieldName,
+		Type:     typ,
+		JSONName: p.Name,
+		Tag:      tag,
+		Doc:      g.fieldDoc(fieldName, p),
 	}
 }
 
@@ -726,6 +742,296 @@ func (g *Generator) renderMarshalers() string {
 	}
 	b.WriteString("\t)\n}\n")
 	return b.String()
+}
+
+// hotDecodeTypes enumerates struct decoders that are intentionally emitted as
+// performance probes. Keep this allowlist small: each entry becomes part of the
+// public JSON behavior surface and must be guarded by differential tests.
+var hotDecodeTypes = map[string]bool{
+	"CompletionItem":           true,
+	"Diagnostic":               true,
+	"PublishDiagnosticsParams": true,
+}
+
+var hotOptionalFields = map[string]map[string]bool{
+	"CompletionItem": {
+		"Detail":       true,
+		"Deprecated":   true,
+		"Preselect":    true,
+		"SortText":     true,
+		"FilterText":   true,
+		"InsertText":   true,
+		"TextEditText": true,
+	},
+	"Diagnostic": {
+		"Source": true,
+	},
+	"PublishDiagnosticsParams": {
+		"Version": true,
+	},
+}
+
+func hotOptionalField(owner, fieldName, base string, optional, nullable bool) bool {
+	if !optional || nullable {
+		return false
+	}
+	if base != "string" && base != "bool" && base != "int32" {
+		return false
+	}
+	fields := hotOptionalFields[owner]
+	return fields[fieldName]
+}
+
+func hotFieldType(owner, fieldName, base string, optional, nullable bool) (string, bool) {
+	if owner == "Diagnostic" && fieldName == "Tags" && base == "[]DiagnosticTag" && optional && !nullable {
+		return "DiagnosticTags", true
+	}
+	return "", false
+}
+
+// renderDecoders wires allowlisted hot structs into json.UnmarshalerFrom
+// methods. Hot optional fields may use specialized generated representations,
+// while nested generated union decoders remain authoritative for union fields.
+func (g *Generator) renderDecoders(structs []*renderedStruct) string {
+	selected := make([]*renderedStruct, 0, len(hotDecodeTypes))
+	for _, s := range structs {
+		if !hotDecodeTypes[s.Name] {
+			continue
+		}
+		if len(s.Embeds) > 0 {
+			g.warnf("struct decoder %s skipped: embedded fields are not supported", s.Name)
+			continue
+		}
+		selected = append(selected, s)
+	}
+	sort.Slice(selected, func(i, j int) bool { return selected[i].Name < selected[j].Name })
+
+	var b strings.Builder
+	for _, s := range selected {
+		g.renderStructDecoder(&b, s)
+	}
+	return b.String()
+}
+
+func (g *Generator) renderStructDecoder(b *strings.Builder, s *renderedStruct) {
+	fmt.Fprintf(b, "func (x *%s) UnmarshalJSONFrom(dec *jsontext.Decoder) error {\n", s.Name)
+	b.WriteString("\tswitch dec.PeekKind() {\n")
+	b.WriteString("\tcase 'n':\n")
+	fmt.Fprintf(b, "\t\t*x = %s{}\n", s.Name)
+	b.WriteString("\t\t_, err := dec.ReadToken()\n")
+	b.WriteString("\t\treturn err\n")
+	b.WriteString("\tcase '{':\n")
+	b.WriteString("\tdefault:\n")
+	b.WriteString("\t\treturn errors.ErrUnsupported\n")
+	b.WriteString("\t}\n")
+	b.WriteString("\tif _, err := dec.ReadToken(); err != nil {\n")
+	b.WriteString("\t\treturn err\n")
+	b.WriteString("\t}\n")
+	b.WriteString("\tfor dec.PeekKind() != '}' {\n")
+	b.WriteString("\t\tkey, err := dec.ReadToken()\n")
+	b.WriteString("\t\tif err != nil {\n")
+	b.WriteString("\t\t\treturn err\n")
+	b.WriteString("\t\t}\n")
+	b.WriteString("\t\tswitch key.String() {\n")
+	for _, f := range s.Fields {
+		fmt.Fprintf(b, "\t\tcase %q:\n", f.JSONName)
+		fmt.Fprintf(b, "\t\t\tif err := %s; err != nil {\n", fieldDecodeExpr(f))
+		b.WriteString("\t\t\t\treturn err\n")
+		b.WriteString("\t\t\t}\n")
+	}
+	b.WriteString("\t\tdefault:\n")
+	b.WriteString("\t\t\tif err := dec.SkipValue(); err != nil {\n")
+	b.WriteString("\t\t\t\treturn err\n")
+	b.WriteString("\t\t\t}\n")
+	b.WriteString("\t\t}\n")
+	b.WriteString("\t}\n")
+	b.WriteString("\t_, err := dec.ReadToken()\n")
+	b.WriteString("\treturn err\n")
+	b.WriteString("}\n\n")
+}
+
+func fieldDecodeExpr(f renderedField) string {
+	switch f.Type {
+	case "string", "URI", "DocumentURI":
+		return fmt.Sprintf("decodeStringLikeFrom(dec, &x.%s)", f.Name)
+	case "Position":
+		return fmt.Sprintf("decodePositionFrom(dec, &x.%s)", f.Name)
+	case "Range":
+		return fmt.Sprintf("decodeRangeFrom(dec, &x.%s)", f.Name)
+	case "CompletionItemKind", "DiagnosticSeverity", "InsertTextFormat", "InsertTextMode", "uint32":
+		return fmt.Sprintf("decodeUint32From(dec, &x.%s)", f.Name)
+	case "int32":
+		return fmt.Sprintf("decodeInt32From(dec, &x.%s)", f.Name)
+	case "Optional[string]":
+		return fmt.Sprintf("decodeOptionalStringFrom(dec, &x.%s)", f.Name)
+	case "Optional[bool]":
+		return fmt.Sprintf("decodeOptionalBoolFrom(dec, &x.%s)", f.Name)
+	case "Optional[int32]":
+		return fmt.Sprintf("decodeOptionalInt32From(dec, &x.%s)", f.Name)
+	case "InlayHintTooltip":
+		return fmt.Sprintf("decodeInlayHintTooltipFrom(dec, &x.%s)", f.Name)
+	case "ProgressToken":
+		return fmt.Sprintf("decodeProgressTokenFrom(dec, &x.%s)", f.Name)
+	case "DiagnosticTags":
+		return fmt.Sprintf("decodeDiagnosticTagsFrom(dec, &x.%s)", f.Name)
+	default:
+		return fmt.Sprintf("json.UnmarshalDecode(dec, &x.%s, json.WithUnmarshalers(unionUnmarshalers))", f.Name)
+	}
+}
+
+func (g *Generator) renderEncoders(structs []*renderedStruct) string {
+	selected := make([]*renderedStruct, 0, len(hotDecodeTypes))
+	for _, s := range structs {
+		if !hotDecodeTypes[s.Name] || len(s.Embeds) > 0 {
+			continue
+		}
+		selected = append(selected, s)
+	}
+	sort.Slice(selected, func(i, j int) bool { return selected[i].Name < selected[j].Name })
+
+	var b strings.Builder
+	for _, s := range selected {
+		g.renderStructEncoder(&b, s)
+	}
+	g.renderWorkspaceSymbolResultEncoders(&b)
+	return b.String()
+}
+
+func (g *Generator) renderWorkspaceSymbolResultEncoders(b *strings.Builder) {
+	b.WriteString("func (x WorkspaceSymbolSlice) MarshalJSONTo(enc *jsontext.Encoder) error {\n")
+	b.WriteString("\tif err := enc.WriteToken(jsontext.BeginArray); err != nil {\n")
+	b.WriteString("\t\treturn err\n")
+	b.WriteString("\t}\n")
+	b.WriteString("\tfor _, v := range x {\n")
+	b.WriteString("\t\tif err := encodeWorkspaceSymbolTo(enc, v); err != nil {\n")
+	b.WriteString("\t\t\treturn err\n")
+	b.WriteString("\t\t}\n")
+	b.WriteString("\t}\n")
+	b.WriteString("\treturn enc.WriteToken(jsontext.EndArray)\n")
+	b.WriteString("}\n\n")
+}
+
+func (g *Generator) renderStructEncoder(b *strings.Builder, s *renderedStruct) {
+	fmt.Fprintf(b, "func (x %s) MarshalJSONTo(enc *jsontext.Encoder) error {\n", s.Name)
+	b.WriteString("\tif err := enc.WriteToken(jsontext.BeginObject); err != nil {\n")
+	b.WriteString("\t\treturn err\n")
+	b.WriteString("\t}\n")
+	for _, f := range s.Fields {
+		g.renderFieldEncoder(b, f)
+	}
+	b.WriteString("\treturn enc.WriteToken(jsontext.EndObject)\n")
+	b.WriteString("}\n\n")
+}
+
+func (g *Generator) renderFieldEncoder(b *strings.Builder, f renderedField) {
+	if f.Type == "Optional[string]" {
+		fmt.Fprintf(b, "\tif v, ok := x.%s.Get(); ok {\n", f.Name)
+		writeEncoderName(b, f.JSONName, "\t\t")
+		b.WriteString("\t\tif err := enc.WriteToken(jsontext.String(v)); err != nil {\n")
+		b.WriteString("\t\t\treturn err\n")
+		b.WriteString("\t\t}\n")
+		b.WriteString("\t}\n")
+		return
+	}
+	if f.Type == "Optional[bool]" {
+		fmt.Fprintf(b, "\tif v, ok := x.%s.Get(); ok {\n", f.Name)
+		writeEncoderName(b, f.JSONName, "\t\t")
+		b.WriteString("\t\tif err := enc.WriteToken(jsontext.Bool(v)); err != nil {\n")
+		b.WriteString("\t\t\treturn err\n")
+		b.WriteString("\t\t}\n")
+		b.WriteString("\t}\n")
+		return
+	}
+	if f.Type == "Optional[int32]" {
+		fmt.Fprintf(b, "\tif v, ok := x.%s.Get(); ok {\n", f.Name)
+		writeEncoderName(b, f.JSONName, "\t\t")
+		b.WriteString("\t\tif err := enc.WriteToken(jsontext.Int(int64(v))); err != nil {\n")
+		b.WriteString("\t\t\treturn err\n")
+		b.WriteString("\t\t}\n")
+		b.WriteString("\t}\n")
+		return
+	}
+
+	cond := fieldEncodeCondition(f)
+	if cond != "" {
+		fmt.Fprintf(b, "\tif %s {\n", cond)
+		writeEncoderName(b, f.JSONName, "\t\t")
+		writeEncoderValue(b, f, "\t\t")
+		b.WriteString("\t}\n")
+		return
+	}
+	writeEncoderName(b, f.JSONName, "\t")
+	writeEncoderValue(b, f, "\t")
+}
+
+func fieldEncodeCondition(f renderedField) string {
+	if !strings.Contains(f.Tag, ",omitzero") {
+		return ""
+	}
+	switch {
+	case strings.HasPrefix(f.Type, "*"):
+		return "x." + f.Name + " != nil"
+	case strings.HasPrefix(f.Type, "[]"), strings.HasPrefix(f.Type, "map["):
+		return "len(x." + f.Name + ") > 0"
+	case f.Type == "LSPAny" || f.Type == "LSPArray":
+		return "len(x." + f.Name + ") > 0"
+	case f.Type == "DiagnosticTags":
+		return "!x." + f.Name + ".IsZero()"
+	case f.Type == "CompletionItemTextEdit" || f.Type == "InlayHintTooltip":
+		return "x." + f.Name + " != nil"
+	case f.Type == "CompletionItemKind" || f.Type == "DiagnosticSeverity" || f.Type == "InsertTextFormat" || f.Type == "InsertTextMode" || f.Type == "uint32" || f.Type == "int32":
+		return "x." + f.Name + " != 0"
+	case f.Type == "CodeDescription":
+		return "x." + f.Name + " != (CodeDescription{})"
+	case f.Type == "ProgressToken":
+		return "x." + f.Name + " != nil"
+	case f.Type == "Command":
+		return "!isZeroCommand(x." + f.Name + ")"
+	default:
+		return ""
+	}
+}
+
+func writeEncoderName(b *strings.Builder, name, indent string) {
+	fmt.Fprintf(b, "%sif err := enc.WriteToken(jsontext.String(%q)); err != nil {\n", indent, name)
+	fmt.Fprintf(b, "%s\treturn err\n", indent)
+	fmt.Fprintf(b, "%s}\n", indent)
+}
+
+func writeEncoderValue(b *strings.Builder, f renderedField, indent string) {
+	switch f.Type {
+	case "string":
+		fmt.Fprintf(b, "%sif err := enc.WriteToken(jsontext.String(x.%s)); err != nil {\n", indent, f.Name)
+	case "URI", "DocumentURI":
+		fmt.Fprintf(b, "%sif err := enc.WriteToken(jsontext.String(string(x.%s))); err != nil {\n", indent, f.Name)
+	case "Position":
+		fmt.Fprintf(b, "%sif err := encodePositionTo(enc, x.%s); err != nil {\n", indent, f.Name)
+	case "Range":
+		fmt.Fprintf(b, "%sif err := encodeRangeTo(enc, x.%s); err != nil {\n", indent, f.Name)
+	case "CompletionItemKind", "DiagnosticSeverity", "InsertTextFormat", "InsertTextMode", "uint32":
+		fmt.Fprintf(b, "%sif err := enc.WriteToken(jsontext.Uint(uint64(x.%s))); err != nil {\n", indent, f.Name)
+	case "int32":
+		fmt.Fprintf(b, "%sif err := enc.WriteToken(jsontext.Int(int64(x.%s))); err != nil {\n", indent, f.Name)
+	case "InlayHintTooltip":
+		fmt.Fprintf(b, "%sif v, ok := x.%s.(String); ok {\n", indent, f.Name)
+		fmt.Fprintf(b, "%s\tif err := enc.WriteToken(jsontext.String(string(v))); err != nil {\n", indent)
+		fmt.Fprintf(b, "%s\t\treturn err\n", indent)
+		fmt.Fprintf(b, "%s\t}\n", indent)
+		fmt.Fprintf(b, "%s} else if err := json.MarshalEncode(enc, x.%s); err != nil {\n", indent, f.Name)
+		fmt.Fprintf(b, "%s\treturn err\n", indent)
+		fmt.Fprintf(b, "%s}\n", indent)
+		return
+	case "ProgressToken":
+		fmt.Fprintf(b, "%sif err := encodeProgressTokenTo(enc, x.%s); err != nil {\n", indent, f.Name)
+	case "DiagnosticTags":
+		fmt.Fprintf(b, "%sif err := encodeDiagnosticTagsTo(enc, x.%s); err != nil {\n", indent, f.Name)
+	case "LSPAny":
+		fmt.Fprintf(b, "%sif err := enc.WriteValue(x.%s); err != nil {\n", indent, f.Name)
+	default:
+		fmt.Fprintf(b, "%sif err := json.MarshalEncode(enc, x.%s); err != nil {\n", indent, f.Name)
+	}
+	fmt.Fprintf(b, "%s\treturn err\n", indent)
+	fmt.Fprintf(b, "%s}\n", indent)
 }
 
 // ---- messages ----

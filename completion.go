@@ -179,7 +179,7 @@ type CompletionItem struct {
 
 	// Detail A human-readable string with additional information
 	// about this item, like type or symbol information.
-	Detail *string `json:"detail,omitzero"`
+	Detail Optional[string] `json:"detail,omitzero"`
 
 	// Documentation A human-readable string that represents a doc-comment.
 	Documentation InlayHintTooltip `json:"documentation,omitzero"`
@@ -188,24 +188,24 @@ type CompletionItem struct {
 	// @deprecated Use `tags` instead.
 	//
 	// Deprecated: Use `tags` instead.
-	Deprecated *bool `json:"deprecated,omitzero"`
+	Deprecated Optional[bool] `json:"deprecated,omitzero"`
 
 	// Preselect Select this item when showing.
 	//
 	// *Note* that only one completion item can be selected and that the
 	// tool / client decides which item that is. The rule is that the *first*
 	// item of those that match best is selected.
-	Preselect *bool `json:"preselect,omitzero"`
+	Preselect Optional[bool] `json:"preselect,omitzero"`
 
 	// SortText A string that should be used when comparing this item
 	// with other items. When `falsy` the {@link CompletionItem.label label}
 	// is used.
-	SortText *string `json:"sortText,omitzero"`
+	SortText Optional[string] `json:"sortText,omitzero"`
 
 	// FilterText A string that should be used when filtering a set of
 	// completion items. When `falsy` the {@link CompletionItem.label label}
 	// is used.
-	FilterText *string `json:"filterText,omitzero"`
+	FilterText Optional[string] `json:"filterText,omitzero"`
 
 	// InsertText A string that should be inserted into a document when selecting
 	// this completion. When `falsy` the {@link CompletionItem.label label}
@@ -218,7 +218,7 @@ type CompletionItem struct {
 	// `console` is provided it will only insert `sole`. Therefore it is
 	// recommended to use `textEdit` instead since it avoids additional client
 	// side interpretation.
-	InsertText *string `json:"insertText,omitzero"`
+	InsertText Optional[string] `json:"insertText,omitzero"`
 
 	// InsertTextFormat The format of the insert text. The format applies to both the
 	// `insertText` property and the `newText` property of a provided
@@ -273,7 +273,7 @@ type CompletionItem struct {
 	// @since 3.17.0
 	//
 	// Since: 3.17.0
-	TextEditText *string `json:"textEditText,omitzero"`
+	TextEditText Optional[string] `json:"textEditText,omitzero"`
 
 	// AdditionalTextEdits An optional array of additional {@link TextEdit text edits} that are applied when
 	// selecting this completion. Edits must not overlap (including the same insert position)

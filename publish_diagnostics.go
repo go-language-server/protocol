@@ -15,7 +15,7 @@ type PublishDiagnosticsParams struct {
 	// @since 3.15.0
 	//
 	// Since: 3.15.0
-	Version *int32 `json:"version,omitzero"`
+	Version Optional[int32] `json:"version,omitzero"`
 
 	// Diagnostics An array of diagnostic information items.
 	Diagnostics []Diagnostic `json:"diagnostics"`

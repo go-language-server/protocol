@@ -962,7 +962,7 @@ type Diagnostic struct {
 	// Source A human-readable string describing the source of this
 	// diagnostic, e.g. 'typescript' or 'super lint'. It usually
 	// appears in the user interface.
-	Source *string `json:"source,omitzero"`
+	Source Optional[string] `json:"source,omitzero"`
 
 	// Message The diagnostic's message. It usually appears in the user interface.
 	//
@@ -978,7 +978,7 @@ type Diagnostic struct {
 	// @since 3.15.0
 	//
 	// Since: 3.15.0
-	Tags []DiagnosticTag `json:"tags,omitzero"`
+	Tags DiagnosticTags `json:"tags,omitzero"`
 
 	// RelatedInformation An array of related diagnostic information, e.g. when symbol-names within
 	// a scope collide all definitions can be marked via this property.
