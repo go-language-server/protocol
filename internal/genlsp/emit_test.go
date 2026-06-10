@@ -398,21 +398,29 @@ relative patterns depends on the client capability.`
 			input: dashProseIn,
 			want:  dashProseWant,
 		},
-		"success: bare link unwrapped to target": {
+		"success: bare link bracketed as doc link": {
 			input: "The result of a {@link CodeLensRequest}.",
-			want:  "The result of a CodeLensRequest.",
+			want:  "The result of a [CodeLensRequest].",
 		},
-		"success: member link unwrapped to display text": {
+		"success: member link brackets target drops display text": {
 			input: "A Uri {@link Uri.scheme scheme}, like file.",
-			want:  "A Uri scheme, like file.",
+			want:  "A Uri [Uri.scheme], like file.",
 		},
-		"success: member link without display unwrapped to target": {
+		"success: member link without display bracketed": {
 			input: "See {@link CompletionItem.detail}.",
-			want:  "See CompletionItem.detail.",
+			want:  "See [CompletionItem.detail].",
 		},
-		"success: linkcode unwrapped to target": {
+		"success: linkcode bracketed as doc link": {
 			input: "taken from {@linkcode Command.title}",
-			want:  "taken from Command.title",
+			want:  "taken from [Command.title]",
+		},
+		"success: link with array display text brackets target": {
+			input: "returns {@link ColorInformation ColorInformation[]} array",
+			want:  "returns [ColorInformation] array",
+		},
+		"success: link with double space brackets target": {
+			input: "a {@link  RelativePattern relative pattern}",
+			want:  "a [RelativePattern]",
 		},
 		"success: deprecated prose dropped": {
 			input: "@deprecated Use tags instead.",

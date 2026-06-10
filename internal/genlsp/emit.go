@@ -1188,7 +1188,8 @@ func (g *Generator) fieldDocText(name, doc, since, deprecated string, proposed b
 // the structured since/deprecated/proposed fields still drive the dedicated
 // Since:/Deprecated:/Proposed. lines.
 var (
-	// linkRe matches a {@link target display text} or {@linkcode ...} reference.
+	// linkRe matches a {@link target display text} or {@linkcode ...} reference
+	// whose target is converted into a Go doc link.
 	linkRe = regexp.MustCompile(`\{@link(?:code)?\s+([^}]*)\}`)
 	// sinceRe matches a leading "@since <version>" tag, optionally followed by a
 	// "- proposed" status marker or a "- " separator before changelog prose.
@@ -1204,24 +1205,25 @@ var (
 	blankRunRe = regexp.MustCompile(`\n{3,}`)
 )
 
-// unwrapLink resolves the body of a {@link} reference to its display text, or
-// to the bare target when no display text is present.
+// unwrapLink converts the body of a {@link} reference into a Go doc link,
+// bracketing the target symbol and discarding any trailing display text:
+// "Uri.scheme scheme" becomes "[Uri.scheme]". Targets that resolve to an
+// exported identifier render as clickable doc links; others render as literal
+// bracketed text.
 func unwrapLink(body string) string {
 	body = strings.TrimSpace(body)
 	if body == "" {
 		return ""
 	}
-	fields := strings.Fields(body)
-	if len(fields) == 1 {
-		return fields[0]
-	}
-	return strings.Join(fields[1:], " ")
+	target, _, _ := strings.Cut(body, " ")
+	return "[" + strings.TrimSpace(target) + "]"
 }
 
-// sanitizeDoc removes JSDoc-style @since and @deprecated tags and unwraps
-// {@link}/{@linkcode} references from a documentation block. Standalone @since
-// lines are dropped entirely while trailing changelog prose is preserved; the
-// duplicated @deprecated prose is dropped in favour of the structured directive.
+// sanitizeDoc removes JSDoc-style @since and @deprecated tags and converts
+// {@link}/{@linkcode} references into Go doc links from a documentation block.
+// Standalone @since lines are dropped entirely while trailing changelog prose
+// is preserved; the duplicated @deprecated prose is dropped in favour of the
+// structured directive.
 func sanitizeDoc(doc string) string {
 	doc = linkRe.ReplaceAllStringFunc(doc, func(m string) string {
 		return unwrapLink(linkRe.FindStringSubmatch(m)[1])

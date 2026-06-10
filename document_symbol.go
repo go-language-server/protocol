@@ -5,7 +5,7 @@
 
 package protocol
 
-// DocumentSymbolParams Parameters for a DocumentSymbolRequest.
+// DocumentSymbolParams Parameters for a [DocumentSymbolRequest].
 type DocumentSymbolParams struct {
 	WorkDoneProgressParams
 	PartialResultParams
@@ -52,13 +52,13 @@ type DocumentSymbol struct {
 	Children []DocumentSymbol `json:"children,omitzero"`
 }
 
-// DocumentSymbolRegistrationOptions Registration options for a DocumentSymbolRequest.
+// DocumentSymbolRegistrationOptions Registration options for a [DocumentSymbolRequest].
 type DocumentSymbolRegistrationOptions struct {
 	TextDocumentRegistrationOptions
 	DocumentSymbolOptions
 }
 
-// DocumentSymbolOptions Provider options for a DocumentSymbolRequest.
+// DocumentSymbolOptions Provider options for a [DocumentSymbolRequest].
 type DocumentSymbolOptions struct {
 	WorkDoneProgressOptions
 
@@ -69,7 +69,7 @@ type DocumentSymbolOptions struct {
 	Label *string `json:"label,omitzero"`
 }
 
-// DocumentSymbolClientCapabilities Client Capabilities for a DocumentSymbolRequest.
+// DocumentSymbolClientCapabilities Client Capabilities for a [DocumentSymbolRequest].
 type DocumentSymbolClientCapabilities struct {
 	// DynamicRegistration Whether document symbol supports dynamic registration.
 	DynamicRegistration *bool `json:"dynamicRegistration,omitzero"`

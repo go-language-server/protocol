@@ -5,7 +5,7 @@
 
 package protocol
 
-// CodeLensParams The parameters of a CodeLensRequest.
+// CodeLensParams The parameters of a [CodeLensRequest].
 type CodeLensParams struct {
 	WorkDoneProgressParams
 	PartialResultParams
@@ -14,7 +14,7 @@ type CodeLensParams struct {
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
 }
 
-// CodeLens A code lens represents a command that should be shown along with
+// CodeLens A code lens represents a [Command] that should be shown along with
 // source text, like the number of references, a way to run tests, etc.
 //
 // A code lens is _unresolved_ when no command is associated to it. For performance
@@ -27,17 +27,17 @@ type CodeLens struct {
 	Command Command `json:"command,omitzero"`
 
 	// Data A data entry field that is preserved on a code lens item between
-	// a CodeLensRequest and a CodeLensResolveRequest
+	// a [CodeLensRequest] and a [CodeLensResolveRequest]
 	Data LSPAny `json:"data,omitzero"`
 }
 
-// CodeLensRegistrationOptions Registration options for a CodeLensRequest.
+// CodeLensRegistrationOptions Registration options for a [CodeLensRequest].
 type CodeLensRegistrationOptions struct {
 	TextDocumentRegistrationOptions
 	CodeLensOptions
 }
 
-// CodeLensOptions Code Lens provider options of a CodeLensRequest.
+// CodeLensOptions Code Lens provider options of a [CodeLensRequest].
 type CodeLensOptions struct {
 	WorkDoneProgressOptions
 
@@ -59,7 +59,7 @@ type CodeLensWorkspaceClientCapabilities struct {
 	RefreshSupport *bool `json:"refreshSupport,omitzero"`
 }
 
-// CodeLensClientCapabilities The client capabilities  of a CodeLensRequest.
+// CodeLensClientCapabilities The client capabilities  of a [CodeLensRequest].
 type CodeLensClientCapabilities struct {
 	// DynamicRegistration Whether code lens supports dynamic registration.
 	DynamicRegistration *bool `json:"dynamicRegistration,omitzero"`

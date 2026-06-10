@@ -5,7 +5,7 @@
 
 package protocol
 
-// ColorPresentationParams Parameters for a ColorPresentationRequest.
+// ColorPresentationParams Parameters for a [ColorPresentationRequest].
 type ColorPresentationParams struct {
 	WorkDoneProgressParams
 	PartialResultParams
@@ -27,12 +27,12 @@ type ColorPresentation struct {
 	// this color presentation.
 	Label string `json:"label"`
 
-	// TextEdit An edit which is applied to a document when selecting
-	// this presentation for the color.  When `falsy` the label
+	// TextEdit An [TextEdit] which is applied to a document when selecting
+	// this presentation for the color.  When `falsy` the [ColorPresentation.label]
 	// is used.
 	TextEdit TextEdit `json:"textEdit,omitzero"`
 
-	// AdditionalTextEdits An optional array of additional text edits that are applied when
-	// selecting this color presentation. Edits must not overlap with the main edit nor with themselves.
+	// AdditionalTextEdits An optional array of additional [TextEdit] that are applied when
+	// selecting this color presentation. Edits must not overlap with the main [ColorPresentation.textEdit] nor with themselves.
 	AdditionalTextEdits []TextEdit `json:"additionalTextEdits,omitzero"`
 }

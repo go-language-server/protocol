@@ -5,7 +5,7 @@
 
 package protocol
 
-// DocumentFormattingParams The parameters of a DocumentFormattingRequest.
+// DocumentFormattingParams The parameters of a [DocumentFormattingRequest].
 type DocumentFormattingParams struct {
 	WorkDoneProgressParams
 
@@ -16,7 +16,7 @@ type DocumentFormattingParams struct {
 	Options FormattingOptions `json:"options"`
 }
 
-// DocumentFormattingRegistrationOptions Registration options for a DocumentFormattingRequest.
+// DocumentFormattingRegistrationOptions Registration options for a [DocumentFormattingRequest].
 type DocumentFormattingRegistrationOptions struct {
 	TextDocumentRegistrationOptions
 	DocumentFormattingOptions
@@ -46,12 +46,12 @@ type FormattingOptions struct {
 	TrimFinalNewlines *bool `json:"trimFinalNewlines,omitzero"`
 }
 
-// DocumentFormattingOptions Provider options for a DocumentFormattingRequest.
+// DocumentFormattingOptions Provider options for a [DocumentFormattingRequest].
 type DocumentFormattingOptions struct {
 	WorkDoneProgressOptions
 }
 
-// DocumentFormattingClientCapabilities Client capabilities of a DocumentFormattingRequest.
+// DocumentFormattingClientCapabilities Client capabilities of a [DocumentFormattingRequest].
 type DocumentFormattingClientCapabilities struct {
 	// DynamicRegistration Whether formatting supports dynamic registration.
 	DynamicRegistration *bool `json:"dynamicRegistration,omitzero"`

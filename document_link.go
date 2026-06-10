@@ -5,7 +5,7 @@
 
 package protocol
 
-// DocumentLinkParams The parameters of a DocumentLinkRequest.
+// DocumentLinkParams The parameters of a [DocumentLinkRequest].
 type DocumentLinkParams struct {
 	WorkDoneProgressParams
 	PartialResultParams
@@ -37,13 +37,13 @@ type DocumentLink struct {
 	Data LSPAny `json:"data,omitzero"`
 }
 
-// DocumentLinkRegistrationOptions Registration options for a DocumentLinkRequest.
+// DocumentLinkRegistrationOptions Registration options for a [DocumentLinkRequest].
 type DocumentLinkRegistrationOptions struct {
 	TextDocumentRegistrationOptions
 	DocumentLinkOptions
 }
 
-// DocumentLinkOptions Provider options for a DocumentLinkRequest.
+// DocumentLinkOptions Provider options for a [DocumentLinkRequest].
 type DocumentLinkOptions struct {
 	WorkDoneProgressOptions
 
@@ -51,7 +51,7 @@ type DocumentLinkOptions struct {
 	ResolveProvider *bool `json:"resolveProvider,omitzero"`
 }
 
-// DocumentLinkClientCapabilities The client capabilities of a DocumentLinkRequest.
+// DocumentLinkClientCapabilities The client capabilities of a [DocumentLinkRequest].
 type DocumentLinkClientCapabilities struct {
 	// DynamicRegistration Whether document link supports dynamic registration.
 	DynamicRegistration *bool `json:"dynamicRegistration,omitzero"`

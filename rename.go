@@ -15,18 +15,18 @@ const (
 	PrepareSupportDefaultBehaviorIdentifier PrepareSupportDefaultBehavior = 1
 )
 
-// RenameParams The parameters of a RenameRequest.
+// RenameParams The parameters of a [RenameRequest].
 type RenameParams struct {
 	TextDocumentPositionParams
 	WorkDoneProgressParams
 
 	// NewName The new name of the symbol. If the given name is not valid the
-	// request must return a ResponseError with an
+	// request must return a [ResponseError] with an
 	// appropriate message set.
 	NewName string `json:"newName"`
 }
 
-// RenameRegistrationOptions Registration options for a RenameRequest.
+// RenameRegistrationOptions Registration options for a [RenameRequest].
 type RenameRegistrationOptions struct {
 	TextDocumentRegistrationOptions
 	RenameOptions
@@ -55,7 +55,7 @@ type RenameFile struct {
 	Options *RenameFileOptions `json:"options,omitzero"`
 }
 
-// RenameOptions Provider options for a RenameRequest.
+// RenameOptions Provider options for a [RenameRequest].
 type RenameOptions struct {
 	WorkDoneProgressOptions
 

@@ -19,7 +19,7 @@ const (
 	FileOperationPatternKindFolder FileOperationPatternKind = "folder"
 )
 
-// WorkspaceSymbolParams The parameters of a WorkspaceSymbolRequest.
+// WorkspaceSymbolParams The parameters of a [WorkspaceSymbolRequest].
 type WorkspaceSymbolParams struct {
 	WorkDoneProgressParams
 	PartialResultParams
@@ -55,12 +55,12 @@ type WorkspaceSymbol struct {
 	Data LSPAny `json:"data,omitzero"`
 }
 
-// WorkspaceSymbolRegistrationOptions Registration options for a WorkspaceSymbolRequest.
+// WorkspaceSymbolRegistrationOptions Registration options for a [WorkspaceSymbolRequest].
 type WorkspaceSymbolRegistrationOptions struct {
 	WorkspaceSymbolOptions
 }
 
-// WorkspaceSymbolOptions Server capabilities for a WorkspaceSymbolRequest.
+// WorkspaceSymbolOptions Server capabilities for a [WorkspaceSymbolRequest].
 type WorkspaceSymbolOptions struct {
 	WorkDoneProgressOptions
 
@@ -71,7 +71,7 @@ type WorkspaceSymbolOptions struct {
 	ResolveProvider *bool `json:"resolveProvider,omitzero"`
 }
 
-// WorkspaceSymbolClientCapabilities Client capabilities for a WorkspaceSymbolRequest.
+// WorkspaceSymbolClientCapabilities Client capabilities for a [WorkspaceSymbolRequest].
 type WorkspaceSymbolClientCapabilities struct {
 	// DynamicRegistration Symbol request supports dynamic registration.
 	DynamicRegistration *bool `json:"dynamicRegistration,omitzero"`
@@ -376,7 +376,7 @@ type FileEvent struct {
 
 // FileSystemWatcher is defined by the LSP specification.
 type FileSystemWatcher struct {
-	// GlobPattern The glob pattern to watch. See glob pattern for more detail.
+	// GlobPattern The glob pattern to watch. See [GlobPattern] for more detail.
 	//
 	// support for relative patterns.
 	//
@@ -410,14 +410,14 @@ type DidChangeWatchedFilesClientCapabilities struct {
 	// from the server side.
 	DynamicRegistration *bool `json:"dynamicRegistration,omitzero"`
 
-	// RelativePatternSupport Whether the client has support for relative pattern
+	// RelativePatternSupport Whether the client has support for [RelativePattern]
 	// or not.
 	//
 	// Since: 3.17.0
 	RelativePatternSupport *bool `json:"relativePatternSupport,omitzero"`
 }
 
-// ExecuteCommandParams The parameters of a ExecuteCommandRequest.
+// ExecuteCommandParams The parameters of a [ExecuteCommandRequest].
 type ExecuteCommandParams struct {
 	WorkDoneProgressParams
 
@@ -428,12 +428,12 @@ type ExecuteCommandParams struct {
 	Arguments []LSPAny `json:"arguments,omitzero"`
 }
 
-// ExecuteCommandRegistrationOptions Registration options for a ExecuteCommandRequest.
+// ExecuteCommandRegistrationOptions Registration options for a [ExecuteCommandRequest].
 type ExecuteCommandRegistrationOptions struct {
 	ExecuteCommandOptions
 }
 
-// ExecuteCommandOptions The server capabilities of a ExecuteCommandRequest.
+// ExecuteCommandOptions The server capabilities of a [ExecuteCommandRequest].
 type ExecuteCommandOptions struct {
 	WorkDoneProgressOptions
 
@@ -441,7 +441,7 @@ type ExecuteCommandOptions struct {
 	Commands []string `json:"commands"`
 }
 
-// ExecuteCommandClientCapabilities The client capabilities of a ExecuteCommandRequest.
+// ExecuteCommandClientCapabilities The client capabilities of a [ExecuteCommandRequest].
 type ExecuteCommandClientCapabilities struct {
 	// DynamicRegistration Execute command supports dynamic registration.
 	DynamicRegistration *bool `json:"dynamicRegistration,omitzero"`

@@ -5,7 +5,7 @@
 
 package protocol
 
-// DocumentRangeFormattingParams The parameters of a DocumentRangeFormattingRequest.
+// DocumentRangeFormattingParams The parameters of a [DocumentRangeFormattingRequest].
 type DocumentRangeFormattingParams struct {
 	WorkDoneProgressParams
 
@@ -19,13 +19,13 @@ type DocumentRangeFormattingParams struct {
 	Options FormattingOptions `json:"options"`
 }
 
-// DocumentRangeFormattingRegistrationOptions Registration options for a DocumentRangeFormattingRequest.
+// DocumentRangeFormattingRegistrationOptions Registration options for a [DocumentRangeFormattingRequest].
 type DocumentRangeFormattingRegistrationOptions struct {
 	TextDocumentRegistrationOptions
 	DocumentRangeFormattingOptions
 }
 
-// DocumentRangesFormattingParams The parameters of a DocumentRangesFormattingRequest.
+// DocumentRangesFormattingParams The parameters of a [DocumentRangesFormattingRequest].
 //
 // Since: 3.18.0
 type DocumentRangesFormattingParams struct {
@@ -41,7 +41,7 @@ type DocumentRangesFormattingParams struct {
 	Options FormattingOptions `json:"options"`
 }
 
-// DocumentRangeFormattingOptions Provider options for a DocumentRangeFormattingRequest.
+// DocumentRangeFormattingOptions Provider options for a [DocumentRangeFormattingRequest].
 type DocumentRangeFormattingOptions struct {
 	WorkDoneProgressOptions
 
@@ -51,7 +51,7 @@ type DocumentRangeFormattingOptions struct {
 	RangesSupport *bool `json:"rangesSupport,omitzero"`
 }
 
-// DocumentRangeFormattingClientCapabilities Client capabilities of a DocumentRangeFormattingRequest.
+// DocumentRangeFormattingClientCapabilities Client capabilities of a [DocumentRangeFormattingRequest].
 type DocumentRangeFormattingClientCapabilities struct {
 	// DynamicRegistration Whether range formatting supports dynamic registration.
 	DynamicRegistration *bool `json:"dynamicRegistration,omitzero"`

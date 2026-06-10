@@ -37,7 +37,7 @@ type CallHierarchyItem struct {
 	Range Range `json:"range"`
 
 	// SelectionRange The range that should be selected and revealed when this symbol is being picked, e.g. the name of a function.
-	// Must be contained by the `range`.
+	// Must be contained by the [CallHierarchyItem.range].
 	SelectionRange Range `json:"selectionRange"`
 
 	// Data A data entry field that is preserved between a call hierarchy prepare and
@@ -73,7 +73,7 @@ type CallHierarchyIncomingCall struct {
 	From CallHierarchyItem `json:"from"`
 
 	// FromRanges The ranges at which the calls appear. This is relative to the caller
-	// denoted by `this.from`.
+	// denoted by [CallHierarchyIncomingCall.from].
 	FromRanges []Range `json:"fromRanges"`
 }
 
@@ -96,8 +96,8 @@ type CallHierarchyOutgoingCall struct {
 	To CallHierarchyItem `json:"to"`
 
 	// FromRanges The range at which this item is called. This is the range relative to the caller, e.g the item
-	// passed to `provideCallHierarchyOutgoingCalls`
-	// and not `this.to`.
+	// passed to [CallHierarchyItemProvider.provideCallHierarchyOutgoingCalls]
+	// and not [CallHierarchyOutgoingCall.to].
 	FromRanges []Range `json:"fromRanges"`
 }
 

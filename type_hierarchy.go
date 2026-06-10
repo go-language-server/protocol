@@ -38,7 +38,7 @@ type TypeHierarchyItem struct {
 
 	// SelectionRange The range that should be selected and revealed when this symbol is being
 	// picked, e.g. the name of a function. Must be contained by the
-	// `range`.
+	// [TypeHierarchyItem.range].
 	SelectionRange Range `json:"selectionRange"`
 
 	// Data A data entry field that is preserved between a type hierarchy prepare and

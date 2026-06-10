@@ -18,7 +18,7 @@ const (
 	FoldingRangeKindRegion FoldingRangeKind = "region"
 )
 
-// FoldingRangeParams Parameters for a FoldingRangeRequest.
+// FoldingRangeParams Parameters for a [FoldingRangeRequest].
 type FoldingRangeParams struct {
 	WorkDoneProgressParams
 	PartialResultParams
@@ -46,7 +46,7 @@ type FoldingRange struct {
 
 	// Kind Describes the kind of the folding range such as 'comment' or 'region'. The kind
 	// is used to categorize folding ranges and used by commands like 'Fold all comments'.
-	// See FoldingRangeKind for an enumeration of standardized kinds.
+	// See [FoldingRangeKind] for an enumeration of standardized kinds.
 	Kind FoldingRangeKind `json:"kind,omitzero"`
 
 	// CollapsedText The text that the client should show when the specified range is

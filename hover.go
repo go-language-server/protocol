@@ -5,7 +5,7 @@
 
 package protocol
 
-// HoverParams Parameters for a HoverRequest.
+// HoverParams Parameters for a [HoverRequest].
 type HoverParams struct {
 	TextDocumentPositionParams
 	WorkDoneProgressParams
@@ -21,7 +21,7 @@ type Hover struct {
 	Range *Range `json:"range,omitzero"`
 }
 
-// HoverRegistrationOptions Registration options for a HoverRequest.
+// HoverRegistrationOptions Registration options for a [HoverRequest].
 type HoverRegistrationOptions struct {
 	TextDocumentRegistrationOptions
 	HoverOptions

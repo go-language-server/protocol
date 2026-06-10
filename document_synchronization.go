@@ -442,7 +442,7 @@ type NotebookDocumentFilterNotebookType struct {
 	// NotebookType The type of the enclosing notebook.
 	NotebookType string `json:"notebookType"`
 
-	// Scheme A Uri scheme, like `file` or `untitled`.
+	// Scheme A Uri [Uri.scheme], like `file` or `untitled`.
 	Scheme *string `json:"scheme,omitzero"`
 
 	// Pattern A glob pattern.
@@ -456,7 +456,7 @@ type NotebookDocumentFilterScheme struct {
 	// NotebookType The type of the enclosing notebook.
 	NotebookType *string `json:"notebookType,omitzero"`
 
-	// Scheme A Uri scheme, like `file` or `untitled`.
+	// Scheme A Uri [Uri.scheme], like `file` or `untitled`.
 	Scheme string `json:"scheme"`
 
 	// Pattern A glob pattern.
@@ -470,7 +470,7 @@ type NotebookDocumentFilterPattern struct {
 	// NotebookType The type of the enclosing notebook.
 	NotebookType *string `json:"notebookType,omitzero"`
 
-	// Scheme A Uri scheme, like `file` or `untitled`.
+	// Scheme A Uri [Uri.scheme], like `file` or `untitled`.
 	Scheme *string `json:"scheme,omitzero"`
 
 	// Pattern A glob pattern.

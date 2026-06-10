@@ -5,7 +5,7 @@
 
 package protocol
 
-// InlineCompletionTriggerKind Describes how an inline completion provider was triggered.
+// InlineCompletionTriggerKind Describes how an [InlineCompletionItemProvider] was triggered.
 //
 // Since: 3.18.0
 type InlineCompletionTriggerKind uint32
@@ -30,7 +30,7 @@ type InlineCompletionParams struct {
 	Context InlineCompletionContext `json:"context"`
 }
 
-// InlineCompletionList Represents a collection of inline completion items to be presented in the editor.
+// InlineCompletionList Represents a collection of [InlineCompletionItem] to be presented in the editor.
 //
 // Since: 3.18.0
 type InlineCompletionList struct {
@@ -45,13 +45,13 @@ type InlineCompletionItem struct {
 	// InsertText The text to replace the range with. Must be set.
 	InsertText InlineCompletionItemInsertText `json:"insertText"`
 
-	// FilterText A text that is used to decide if this inline completion should be shown. When `falsy` the InlineCompletionItem.insertText is used.
+	// FilterText A text that is used to decide if this inline completion should be shown. When `falsy` the [InlineCompletionItem.insertText] is used.
 	FilterText *string `json:"filterText,omitzero"`
 
 	// Range The range to replace. Must begin and end on the same line.
 	Range *Range `json:"range,omitzero"`
 
-	// Command An optional Command that is executed *after* inserting this completion.
+	// Command An optional [Command] that is executed *after* inserting this completion.
 	Command Command `json:"command,omitzero"`
 }
 

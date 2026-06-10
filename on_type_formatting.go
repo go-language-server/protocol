@@ -5,7 +5,7 @@
 
 package protocol
 
-// DocumentOnTypeFormattingParams The parameters of a DocumentOnTypeFormattingRequest.
+// DocumentOnTypeFormattingParams The parameters of a [DocumentOnTypeFormattingRequest].
 type DocumentOnTypeFormattingParams struct {
 	// TextDocument The document to format.
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
@@ -25,13 +25,13 @@ type DocumentOnTypeFormattingParams struct {
 	Options FormattingOptions `json:"options"`
 }
 
-// DocumentOnTypeFormattingRegistrationOptions Registration options for a DocumentOnTypeFormattingRequest.
+// DocumentOnTypeFormattingRegistrationOptions Registration options for a [DocumentOnTypeFormattingRequest].
 type DocumentOnTypeFormattingRegistrationOptions struct {
 	TextDocumentRegistrationOptions
 	DocumentOnTypeFormattingOptions
 }
 
-// DocumentOnTypeFormattingOptions Provider options for a DocumentOnTypeFormattingRequest.
+// DocumentOnTypeFormattingOptions Provider options for a [DocumentOnTypeFormattingRequest].
 type DocumentOnTypeFormattingOptions struct {
 	// FirstTriggerCharacter A character on which formatting should be triggered, like `{`.
 	FirstTriggerCharacter string `json:"firstTriggerCharacter"`
@@ -40,7 +40,7 @@ type DocumentOnTypeFormattingOptions struct {
 	MoreTriggerCharacter []string `json:"moreTriggerCharacter,omitzero"`
 }
 
-// DocumentOnTypeFormattingClientCapabilities Client capabilities of a DocumentOnTypeFormattingRequest.
+// DocumentOnTypeFormattingClientCapabilities Client capabilities of a [DocumentOnTypeFormattingRequest].
 type DocumentOnTypeFormattingClientCapabilities struct {
 	// DynamicRegistration Whether on type formatting supports dynamic registration.
 	DynamicRegistration *bool `json:"dynamicRegistration,omitzero"`

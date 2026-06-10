@@ -20,7 +20,7 @@ type SelectionRangeParams struct {
 // SelectionRange A selection range represents a part of a selection hierarchy. A selection range
 // may have a parent selection range that contains it.
 type SelectionRange struct {
-	// Range The range of this selection range.
+	// Range The [Range] of this selection range.
 	Range Range `json:"range"`
 
 	// Parent The parent selection range containing this range. Therefore `parent.range` must contain `this.range`.

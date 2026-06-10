@@ -26,7 +26,7 @@ const (
 
 // ShowMessageParams The parameters of a notification message.
 type ShowMessageParams struct {
-	// Type The message type. See MessageType
+	// Type The message type. See [MessageType]
 	Type MessageType `json:"type"`
 
 	// Message The actual message.
@@ -35,7 +35,7 @@ type ShowMessageParams struct {
 
 // ShowMessageRequestParams is defined by the LSP specification.
 type ShowMessageRequestParams struct {
-	// Type The message type. See MessageType
+	// Type The message type. See [MessageType]
 	Type MessageType `json:"type"`
 
 	// Message The actual message.
@@ -69,7 +69,7 @@ type ClientShowMessageActionItemOptions struct {
 
 // LogMessageParams The log message parameters.
 type LogMessageParams struct {
-	// Type The message type. See MessageType
+	// Type The message type. See [MessageType]
 	Type MessageType `json:"type"`
 
 	// Message The actual message.

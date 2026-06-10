@@ -59,7 +59,7 @@ type ParameterInformationLabelTuple [2]uint32
 type SemanticTokensOptionsRange struct {
 }
 
-// Definition The definition of a symbol represented as one or many locations.
+// Definition The definition of a symbol represented as one or many [Location].
 // For most programming languages there is only one location at which a symbol is
 // defined.
 //
@@ -688,8 +688,8 @@ func unmarshalGlobPattern(dec *jsontext.Decoder, val *GlobPattern) error {
 }
 
 // TextDocumentFilter A document filter denotes a document by different properties like
-// the language, the scheme of
-// its resource, or a glob-pattern that is applied to the path.
+// the [TextDocument.languageId], the [Uri.scheme] of
+// its resource, or a glob-pattern that is applied to the [TextDocument.fileName].
 //
 // Glob patterns can have the following syntax:
 // - `*` to match zero or more characters in a path segment

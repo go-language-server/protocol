@@ -675,7 +675,7 @@ type PartialResultParams struct {
 	PartialResultToken ProgressToken `json:"partialResultToken,omitzero"`
 }
 
-// LocationLink Represents the connection of two locations. Provides additional metadata over normal locations,
+// LocationLink Represents the connection of two locations. Provides additional metadata over normal [Location],
 // including an origin range.
 type LocationLink struct {
 	// OriginSelectionRange Span of the origin of this link.
@@ -1108,7 +1108,7 @@ type TextDocumentFilterLanguage struct {
 	// Language A language id, like `typescript`.
 	Language string `json:"language"`
 
-	// Scheme A Uri scheme, like `file` or `untitled`.
+	// Scheme A Uri [Uri.scheme], like `file` or `untitled`.
 	Scheme *string `json:"scheme,omitzero"`
 
 	// Pattern A glob pattern, like **​/*.{ts,js}. See TextDocumentFilter for examples.
@@ -1130,7 +1130,7 @@ type TextDocumentFilterScheme struct {
 	// Language A language id, like `typescript`.
 	Language *string `json:"language,omitzero"`
 
-	// Scheme A Uri scheme, like `file` or `untitled`.
+	// Scheme A Uri [Uri.scheme], like `file` or `untitled`.
 	Scheme string `json:"scheme"`
 
 	// Pattern A glob pattern, like **​/*.{ts,js}. See TextDocumentFilter for examples.
@@ -1152,7 +1152,7 @@ type TextDocumentFilterPattern struct {
 	// Language A language id, like `typescript`.
 	Language *string `json:"language,omitzero"`
 
-	// Scheme A Uri scheme, like `file` or `untitled`.
+	// Scheme A Uri [Uri.scheme], like `file` or `untitled`.
 	Scheme *string `json:"scheme,omitzero"`
 
 	// Pattern A glob pattern, like **​/*.{ts,js}. See TextDocumentFilter for examples.

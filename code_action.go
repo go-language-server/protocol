@@ -104,7 +104,7 @@ const (
 	CodeActionTriggerKindAutomatic CodeActionTriggerKind = 2
 )
 
-// CodeActionParams The parameters of a CodeActionRequest.
+// CodeActionParams The parameters of a [CodeActionRequest].
 type CodeActionParams struct {
 	WorkDoneProgressParams
 	PartialResultParams
@@ -181,14 +181,14 @@ type CodeAction struct {
 	Tags []CodeActionTag `json:"tags,omitzero"`
 }
 
-// CodeActionRegistrationOptions Registration options for a CodeActionRequest.
+// CodeActionRegistrationOptions Registration options for a [CodeActionRequest].
 type CodeActionRegistrationOptions struct {
 	TextDocumentRegistrationOptions
 	CodeActionOptions
 }
 
 // CodeActionContext Contains additional diagnostic information about the context in which
-// a code action is run.
+// a [CodeActionProvider.provideCodeActions] is run.
 type CodeActionContext struct {
 	// Diagnostics An array of diagnostics known on the client side overlapping the range provided to the
 	// `textDocument/codeAction` request. They are provided so that the server knows which
@@ -219,7 +219,7 @@ type CodeActionDisabled struct {
 	Reason string `json:"reason"`
 }
 
-// CodeActionOptions Provider options for a CodeActionRequest.
+// CodeActionOptions Provider options for a [CodeActionRequest].
 type CodeActionOptions struct {
 	WorkDoneProgressOptions
 
@@ -265,11 +265,11 @@ type CodeActionKindDocumentation struct {
 
 	// Command Command that is ued to display the documentation to the user.
 	//
-	// The title of this documentation code action is taken from Command.title
+	// The title of this documentation code action is taken from [Command.title]
 	Command Command `json:"command"`
 }
 
-// CodeActionClientCapabilities The Client Capabilities of a CodeActionRequest.
+// CodeActionClientCapabilities The Client Capabilities of a [CodeActionRequest].
 type CodeActionClientCapabilities struct {
 	// DynamicRegistration Whether code action supports dynamic registration.
 	DynamicRegistration *bool `json:"dynamicRegistration,omitzero"`

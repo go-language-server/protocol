@@ -7,29 +7,29 @@ package protocol
 
 // DefinitionLink Information about where a symbol is defined.
 //
-// Provides additional metadata over normal location definitions, including the range of
+// Provides additional metadata over normal [Location] definitions, including the range of
 // the defining symbol
 type DefinitionLink LocationLink
 
-// DefinitionParams Parameters for a DefinitionRequest.
+// DefinitionParams Parameters for a [DefinitionRequest].
 type DefinitionParams struct {
 	TextDocumentPositionParams
 	WorkDoneProgressParams
 	PartialResultParams
 }
 
-// DefinitionRegistrationOptions Registration options for a DefinitionRequest.
+// DefinitionRegistrationOptions Registration options for a [DefinitionRequest].
 type DefinitionRegistrationOptions struct {
 	TextDocumentRegistrationOptions
 	DefinitionOptions
 }
 
-// DefinitionOptions Server Capabilities for a DefinitionRequest.
+// DefinitionOptions Server Capabilities for a [DefinitionRequest].
 type DefinitionOptions struct {
 	WorkDoneProgressOptions
 }
 
-// DefinitionClientCapabilities Client Capabilities for a DefinitionRequest.
+// DefinitionClientCapabilities Client Capabilities for a [DefinitionRequest].
 type DefinitionClientCapabilities struct {
 	// DynamicRegistration Whether definition supports dynamic registration.
 	DynamicRegistration *bool `json:"dynamicRegistration,omitzero"`

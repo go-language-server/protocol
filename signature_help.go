@@ -20,7 +20,7 @@ const (
 	SignatureHelpTriggerKindContentChange SignatureHelpTriggerKind = 3
 )
 
-// SignatureHelpParams Parameters for a SignatureHelpRequest.
+// SignatureHelpParams Parameters for a [SignatureHelpRequest].
 type SignatureHelpParams struct {
 	TextDocumentPositionParams
 	WorkDoneProgressParams
@@ -72,7 +72,7 @@ type SignatureHelp struct {
 	ActiveParameter Nullable[uint32] `json:"activeParameter,omitzero"`
 }
 
-// SignatureHelpRegistrationOptions Registration options for a SignatureHelpRequest.
+// SignatureHelpRegistrationOptions Registration options for a [SignatureHelpRequest].
 type SignatureHelpRegistrationOptions struct {
 	TextDocumentRegistrationOptions
 	SignatureHelpOptions
@@ -132,7 +132,7 @@ type SignatureInformation struct {
 	ActiveParameter Nullable[uint32] `json:"activeParameter,omitzero"`
 }
 
-// SignatureHelpOptions Server Capabilities for a SignatureHelpRequest.
+// SignatureHelpOptions Server Capabilities for a [SignatureHelpRequest].
 type SignatureHelpOptions struct {
 	WorkDoneProgressOptions
 
@@ -170,7 +170,7 @@ type ParameterInformation struct {
 	Documentation InlayHintTooltip `json:"documentation,omitzero"`
 }
 
-// SignatureHelpClientCapabilities Client Capabilities for a SignatureHelpRequest.
+// SignatureHelpClientCapabilities Client Capabilities for a [SignatureHelpRequest].
 type SignatureHelpClientCapabilities struct {
 	// DynamicRegistration Whether signature help supports dynamic registration.
 	DynamicRegistration *bool `json:"dynamicRegistration,omitzero"`

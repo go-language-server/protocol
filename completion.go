@@ -189,17 +189,17 @@ type CompletionItem struct {
 	Preselect Optional[bool] `json:"preselect,omitzero"`
 
 	// SortText A string that should be used when comparing this item
-	// with other items. When `falsy` the label
+	// with other items. When `falsy` the [CompletionItem.label]
 	// is used.
 	SortText Optional[string] `json:"sortText,omitzero"`
 
 	// FilterText A string that should be used when filtering a set of
-	// completion items. When `falsy` the label
+	// completion items. When `falsy` the [CompletionItem.label]
 	// is used.
 	FilterText Optional[string] `json:"filterText,omitzero"`
 
 	// InsertText A string that should be inserted into a document when selecting
-	// this completion. When `falsy` the label
+	// this completion. When `falsy` the [CompletionItem.label]
 	// is used.
 	//
 	// The `insertText` is subject to interpretation by the client side.
@@ -226,9 +226,9 @@ type CompletionItem struct {
 	// Since: 3.16.0
 	InsertTextMode InsertTextMode `json:"insertTextMode,omitzero"`
 
-	// TextEdit An edit which is applied to a document when selecting
+	// TextEdit An [TextEdit] which is applied to a document when selecting
 	// this completion. When an edit is provided the value of
-	// insertText is ignored.
+	// [CompletionItem.insertText] is ignored.
 	//
 	// Most editors support two different operations when accepting a completion
 	// item. One is to insert a completion text and the other is to replace an
@@ -262,9 +262,9 @@ type CompletionItem struct {
 	// Since: 3.17.0
 	TextEditText Optional[string] `json:"textEditText,omitzero"`
 
-	// AdditionalTextEdits An optional array of additional text edits that are applied when
+	// AdditionalTextEdits An optional array of additional [TextEdit] that are applied when
 	// selecting this completion. Edits must not overlap (including the same insert position)
-	// with the main edit nor with themselves.
+	// with the main [CompletionItem.textEdit] nor with themselves.
 	//
 	// Additional text edits should be used to change text unrelated to the current cursor position
 	// (for example adding an import statement at the top of the file if the completion item will
@@ -276,17 +276,17 @@ type CompletionItem struct {
 	// characters will be ignored.
 	CommitCharacters []string `json:"commitCharacters,omitzero"`
 
-	// Command An optional command that is executed *after* inserting this completion. *Note* that
+	// Command An optional [Command] that is executed *after* inserting this completion. *Note* that
 	// additional modifications to the current document should be described with the
-	// additionalTextEdits-property.
+	// [CompletionItem.additionalTextEdits]-property.
 	Command Command `json:"command,omitzero"`
 
 	// Data A data entry field that is preserved on a completion item between a
-	// CompletionRequest and a CompletionResolveRequest.
+	// [CompletionRequest] and a [CompletionResolveRequest].
 	Data LSPAny `json:"data,omitzero"`
 }
 
-// CompletionList Represents a collection of completion items to be presented
+// CompletionList Represents a collection of [CompletionItem] to be presented
 // in the editor.
 type CompletionList struct {
 	// IsIncomplete This list it not complete. Further typing results in recomputing this list.
@@ -335,7 +335,7 @@ type CompletionList struct {
 	Items []CompletionItem `json:"items"`
 }
 
-// CompletionRegistrationOptions Registration options for a CompletionRequest.
+// CompletionRegistrationOptions Registration options for a [CompletionRequest].
 type CompletionRegistrationOptions struct {
 	TextDocumentRegistrationOptions
 	CompletionOptions
@@ -355,11 +355,11 @@ type CompletionContext struct {
 //
 // Since: 3.17.0
 type CompletionItemLabelDetails struct {
-	// Detail An optional string which is rendered less prominently directly after label,
+	// Detail An optional string which is rendered less prominently directly after [CompletionItem.label],
 	// without any spacing. Should be used for function signatures and type annotations.
 	Detail *string `json:"detail,omitzero"`
 
-	// Description An optional string which is rendered less prominently after CompletionItem.detail. Should be used
+	// Description An optional string which is rendered less prominently after [CompletionItem.detail]. Should be used
 	// for fully qualified names and file paths.
 	Description *string `json:"description,omitzero"`
 }
