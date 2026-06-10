@@ -1195,9 +1195,11 @@ var (
 	// "- proposed" status marker or a "- " separator before changelog prose.
 	sinceRe = regexp.MustCompile(`(?im)^[ \t]*@since\b[ \t]*(?:version[ \t]+)?[0-9][0-9.]*[ \t]*(?:-[ \t]*proposed\b[ \t]*)?(?:-[ \t]*)?`)
 	// inlineSinceRe matches a mid-sentence "@since <version>" tag, e.g. "... is
-	// deprecated @since 3.16.0." The version match stops at the digits so a
-	// sentence-terminating period stays attached to the surrounding prose.
-	inlineSinceRe = regexp.MustCompile(`[ \t]*@since\b[ \t]*(?:version[ \t]+)?[0-9]+(?:\.[0-9]+)*`)
+	// deprecated @since 3.16.0." Unlike sinceRe it stops at the last version
+	// digit (\d+(?:\.\d+)*, not [0-9][0-9.]*) so a sentence-terminating period
+	// stays attached to the surrounding prose; the two patterns differ on
+	// purpose.
+	inlineSinceRe = regexp.MustCompile(`[ \t]*@since\b[ \t]*(?:version[ \t]+)?\d+(?:\.\d+)*`)
 	// deprRe matches a leading "@deprecated" tag; the prose duplicates the
 	// structured Deprecated: directive, so the whole line is dropped.
 	deprRe = regexp.MustCompile(`(?im)^[ \t]*@deprecated\b[ \t]*`)
@@ -1222,7 +1224,7 @@ func unwrapLink(body string) string {
 // sanitizeDoc removes JSDoc-style @since and @deprecated tags and converts
 // {@link}/{@linkcode} references into Go doc links from a documentation block.
 // Standalone @since lines are dropped entirely while trailing changelog prose
-// is preserved; the duplicated @deprecated prose is dropped in favour of the
+// is preserved; the duplicated @deprecated prose is dropped in favor of the
 // structured directive.
 func sanitizeDoc(doc string) string {
 	doc = linkRe.ReplaceAllStringFunc(doc, func(m string) string {

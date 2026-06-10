@@ -327,7 +327,7 @@ const staleGeneratedShouldBeRemoved = true
 		t.Fatalf("write handwritten file: %v", err)
 	}
 
-	cmd := exec.Command("go", "run", "./cmd/genlsp", "-input", "testdata/metaModel.json", "-output", tmp, "-pkg", "protocol")
+	cmd := exec.CommandContext(t.Context(), "go", "run", "./cmd/genlsp", "-input", "testdata/metaModel.json", "-output", tmp, "-pkg", "protocol")
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		t.Fatalf("go run ./cmd/genlsp failed: %v\n%s", err, out)
