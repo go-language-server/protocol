@@ -19,19 +19,24 @@ func TestByteDecodeCoverageFromModel(t *testing.T) {
 	}
 	c := g.byteCtx
 
-	for _, want := range byteDecodeRoots {
-		if _, isStruct := c.structs[want]; isStruct && !c.covered[want] {
-			t.Errorf("root struct %s not covered by byte decoders", want)
+	for name := range c.structs {
+		if !byteDecodeExclude[name] && !c.covered[name] {
+			t.Errorf("generated struct %s not covered by byte decoders", name)
 		}
 	}
-	for _, excluded := range []string{"ClientCapabilities", "ServerCapabilities"} {
-		if c.covered[excluded] {
-			t.Errorf("excluded capability tree %s gained a byte walker", excluded)
+	for _, want := range []string{"ClientCapabilities", "ServerCapabilities", "SemanticTokensOptionsRange"} {
+		if !c.covered[want] {
+			t.Errorf("expected generated struct %s to be covered", want)
 		}
 	}
-	// The bench-spine slice arms must route through byte walkers, not through
-	// a per-element reflection shim.
-	for _, wrap := range []string{"WorkspaceSymbolSlice", "SymbolInformationSlice", "CompletionItemSlice"} {
+	for _, want := range []string{"DocumentSelector", "StringSlice", "WorkspaceSymbolSlice"} {
+		if _, ok := c.coveredSlice[want]; !ok {
+			t.Errorf("expected generated named slice %s to be covered", want)
+		}
+	}
+	// Struct and union slice arms route through byte walkers, not through a
+	// per-element reflection shim.
+	for _, wrap := range []string{"DocumentSelector", "WorkspaceSymbolSlice", "SymbolInformationSlice", "CompletionItemSlice"} {
 		if !c.armByteCovered(wrap) {
 			t.Errorf("union arm %s does not route through the byte walkers", wrap)
 		}
@@ -83,4 +88,78 @@ func TestRenderByteWalkerEmission(t *testing.T) {
 			t.Fatalf("renderByteWalker() missing %q:\n%s", want, got)
 		}
 	}
+}
+
+func TestRenderByteWalkerCollapsesDuplicateEmbeddedJSONNames(t *testing.T) {
+	base := &renderedStruct{
+		Name: "Base",
+		Fields: []renderedField{
+			{Name: "BaseName", Type: "string", JSONName: "baseName", Tag: "baseName"},
+			{Name: "Shadow", Type: "string", JSONName: "dup", Tag: "dup"},
+		},
+	}
+	child := &renderedStruct{
+		Name:   "Child",
+		Embeds: []string{"Base"},
+		Fields: []renderedField{
+			{Name: "ShadowLocal", Type: "string", JSONName: "dup", Tag: "dup"},
+			{Name: "ChildName", Type: "string", JSONName: "childName", Tag: "childName"},
+		},
+	}
+	c := &byteDecCtx{
+		structs: map[string]*renderedStruct{
+			"Base":  base,
+			"Child": child,
+		},
+		enumBase:     map[string]string{},
+		aliasType:    map[string]string{},
+		covered:      map[string]bool{},
+		coveredSlice: map[string]string{},
+		sliceElemSet: map[string]bool{},
+		unions:       map[string]*unionDecl{},
+		unionCanon:   map[string]string{},
+	}
+	g := &Generator{byteCtx: c}
+	var b strings.Builder
+	g.renderByteWalker(&b, c, child)
+	got := b.String()
+
+	if count := strings.Count(got, `case keyEquals(key, "dup"):`); count != 1 {
+		t.Fatalf("duplicate embedded JSON field cases = %d, want 1:\n%s", count, got)
+	}
+	if strings.Contains(got, "x.Shadow =") {
+		t.Fatalf("duplicate embedded JSON field used embedded field, want local field:\n%s", got)
+	}
+	if !strings.Contains(got, "x.ShadowLocal =") {
+		t.Fatalf("duplicate embedded JSON field did not use local field:\n%s", got)
+	}
+}
+
+func TestGeneratedByteWalkersCollapseCurrentDuplicateJSONNames(t *testing.T) {
+	files, err := NewGenerator(loadTestModel(t), "protocol").Emit()
+	if err != nil {
+		t.Fatalf("Emit: %v", err)
+	}
+	decoderFile := string(files["decoders.gen.go"])
+
+	for _, name := range []string{"CreateFile", "DeleteFile", "RenameFile"} {
+		body := extractGeneratedFunction(t, decoderFile, "func (x *"+name+") unmarshalLSP(")
+		if count := strings.Count(body, `case keyEquals(key, "kind"):`); count != 1 {
+			t.Fatalf("%s kind decode cases = %d, want 1:\n%s", name, count, body)
+		}
+	}
+}
+
+func extractGeneratedFunction(t *testing.T, src, signature string) string {
+	t.Helper()
+
+	start := strings.Index(src, signature)
+	if start < 0 {
+		t.Fatalf("generated source missing signature %q", signature)
+	}
+	rest := src[start:]
+	if end := strings.Index(rest[len(signature):], "\n}\n\nfunc "); end >= 0 {
+		return rest[:len(signature)+end+len("\n}\n")]
+	}
+	return rest
 }

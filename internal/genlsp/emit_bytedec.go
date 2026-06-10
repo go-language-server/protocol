@@ -9,36 +9,19 @@ import (
 	"strings"
 )
 
-// This file emits the byte-level decoders: for every covered struct a
-// `unmarshalLSP(raw []byte, i int) (int, error)` walker over the raw bytes,
+// This file emits the byte-level decoders: for every eligible generated struct
+// a `unmarshalLSP(raw []byte, i int) (int, error)` walker over the raw bytes,
 // plus an `unmarshalLSPValue` whole-value entry and an `UnmarshalJSONFrom`
-// shim so reflection contexts route into the same walker. Coverage is the
-// transitive closure of the bench-spine root payloads; uncovered field types
-// fall back to decodeWith on the raw sub-value, which keeps correctness
-// independent of coverage.
+// shim so reflection contexts route into the same walker. Coverage starts from
+// all generated structs and named slices; unsupported field shapes fall back to
+// decodeWith on the raw sub-value, which keeps correctness independent of
+// direct byte-walker coverage.
 
-// byteDecodeRoots seeds the coverage closure with the root payload types of
-// the bench spine (the measured hot paths).
-var byteDecodeRoots = []string{
-	"CompletionItem",
-	"CompletionList",
-	"CompletionResult",
-	"DidChangeTextDocumentParams",
-	"InitializeParams",
-	"InitializeResult",
-	"PublishDiagnosticsParams",
-	"SemanticTokens",
-	"SymbolInformation",
-	"WorkspaceSymbol",
-	"WorkspaceSymbolResult",
-}
-
-// byteDecodeExclude stops the closure from swallowing the enormous
-// capability trees; their fields decode via the reflection fallback.
-var byteDecodeExclude = map[string]bool{
-	"ClientCapabilities": true,
-	"ServerCapabilities": true,
-}
+// byteDecodeExclude is reserved for generated structs that are proven unsafe
+// for direct byte walking. It is intentionally empty: broad generated-type
+// coverage is the default and code-size tradeoffs are benchmarked instead of
+// preemptively excluding capability trees.
+var byteDecodeExclude = map[string]bool{}
 
 // byteDecCtx carries the resolved type information the byte-decoder emitters
 // need.
@@ -117,8 +100,14 @@ func newByteDecCtx(g *Generator, structs []*renderedStruct, enums []*renderedEnu
 		c.unionCanon[a.Name] = a.Target
 	}
 	for _, w := range g.arrayWrap {
-		// Element is the full slice expression (e.g. "[]WorkspaceSymbol").
-		c.wrapByName[w.Name] = strings.TrimPrefix(w.Element, "[]")
+		if elem, ok := strings.CutPrefix(w.Element, "[]"); ok {
+			c.wrapByName[w.Name] = elem
+		}
+	}
+	for _, a := range aliases {
+		if elem, ok := strings.CutPrefix(a.Type, "[]"); ok {
+			c.wrapByName[a.Name] = elem
+		}
 	}
 	return c
 }
@@ -180,16 +169,27 @@ func (c *byteDecCtx) visitType(t string, w *closureWalk) {
 	}
 }
 
-// computeClosure marks every struct transitively reachable from the byte
-// decode roots as covered, stopping at the exclusion list.
+// computeClosure marks every generated struct and named slice as covered,
+// walking referenced structs/unions so generated helpers can call each other
+// instead of falling back unnecessarily.
 func (c *byteDecCtx) computeClosure() {
 	w := &closureWalk{seenUnion: map[string]bool{}}
-	for _, r := range byteDecodeRoots {
-		if _, ok := c.structs[r]; ok {
-			w.queue = append(w.queue, r)
-			continue
-		}
-		c.visitType(r, w) // union and wrapper roots seed their arm types
+	structNames := make([]string, 0, len(c.structs))
+	for name := range c.structs {
+		structNames = append(structNames, name)
+	}
+	sort.Strings(structNames)
+	w.queue = append(w.queue, structNames...)
+
+	wrapNames := make([]string, 0, len(c.wrapByName))
+	for name := range c.wrapByName {
+		wrapNames = append(wrapNames, name)
+	}
+	sort.Strings(wrapNames)
+	for _, name := range wrapNames {
+		elem := c.wrapByName[name]
+		c.coveredSlice[name] = elem
+		c.visitType(elem, w)
 	}
 	for len(w.queue) > 0 {
 		t := w.queue[0]
@@ -274,13 +274,12 @@ func (g *Generator) renderByteDecoders(c *byteDecCtx) string {
 
 	wrapNames := make([]string, 0, len(c.coveredSlice))
 	for n := range c.coveredSlice {
-		if c.sliceElemSet[c.coveredSlice[n]] {
-			wrapNames = append(wrapNames, n)
-		}
+		wrapNames = append(wrapNames, n)
 	}
 	sort.Strings(wrapNames)
 	for _, n := range wrapNames {
-		renderByteSliceValueEntry(&b, n, c.coveredSlice[n])
+		elem := c.coveredSlice[n]
+		renderByteSliceValueEntry(&b, n, elem, c.sliceElemSet[elem])
 	}
 
 	renderUnionRootDispatch(&b, c)
@@ -303,12 +302,18 @@ func renderByteValueEntry(b *strings.Builder, name string) {
 
 // renderByteSliceValueEntry emits the whole-value entry and reflection shim
 // for a covered named slice wrapper.
-func renderByteSliceValueEntry(b *strings.Builder, name, elem string) {
+func renderByteSliceValueEntry(b *strings.Builder, name, elem string, direct bool) {
 	fmt.Fprintf(b, "func (x *%s) unmarshalLSPValue(raw jsontext.Value) error {\n", name)
-	fmt.Fprintf(b, "\tv, i, err := unmarshalSlice%s(raw, skipSpace(raw, 0), []%s(*x))\n", exportName(elem), elem)
-	b.WriteString("\tif err != nil {\n\t\treturn err\n\t}\n")
-	b.WriteString("\tif err := dvEnd(raw, i); err != nil {\n\t\treturn err\n\t}\n")
-	fmt.Fprintf(b, "\t*x = %s(v)\n\treturn nil\n}\n\n", name)
+	if direct {
+		fmt.Fprintf(b, "\tv, i, err := unmarshalSlice%s(raw, skipSpace(raw, 0), []%s(*x))\n", exportName(elem), elem)
+		b.WriteString("\tif err != nil {\n\t\treturn err\n\t}\n")
+		b.WriteString("\tif err := dvEnd(raw, i); err != nil {\n\t\treturn err\n\t}\n")
+		fmt.Fprintf(b, "\t*x = %s(v)\n\treturn nil\n}\n\n", name)
+	} else {
+		fmt.Fprintf(b, "\tvar v []%s\n", elem)
+		b.WriteString("\tif err := decodeWith(raw, &v); err != nil {\n\t\treturn err\n\t}\n")
+		fmt.Fprintf(b, "\t*x = %s(v)\n\treturn nil\n}\n\n", name)
+	}
 
 	fmt.Fprintf(b, "// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.\n")
 	fmt.Fprintf(b, "func (x *%s) UnmarshalJSONFrom(dec *jsontext.Decoder) error {\n", name)
@@ -413,24 +418,17 @@ func (g *Generator) renderByteWalkerMethod(b *strings.Builder, c *byteDecCtx, s 
 	b.WriteString("\t\tkey, n, err := dvMemberKey(raw, i)\n")
 	b.WriteString("\t\tif err != nil {\n\t\t\treturn n, err\n\t\t}\n")
 	b.WriteString("\t\ti = n\n")
+	b.WriteString("\t\t_ = key\n")
 	b.WriteString("\t\tswitch {\n")
-	var emitFields func(st *renderedStruct)
-	emitFields = func(st *renderedStruct) {
-		for _, e := range st.Embeds {
-			if es, ok := c.structs[e]; ok {
-				emitFields(es)
-			}
+	fields := flattenJSONFields(c.structs, s, map[string]bool{})
+	for fi := range fields {
+		f := &fields[fi]
+		fmt.Fprintf(b, "\t\tcase keyEquals(key, %q):\n", f.JSONName)
+		if override != nil && override(b, c, f) {
+			continue
 		}
-		for fi := range st.Fields {
-			f := &st.Fields[fi]
-			fmt.Fprintf(b, "\t\tcase keyEquals(key, %q):\n", f.JSONName)
-			if override != nil && override(b, c, f) {
-				continue
-			}
-			g.renderByteFieldCase(b, c, f)
-		}
+		g.renderByteFieldCase(b, c, f)
 	}
-	emitFields(s)
 	b.WriteString("\t\tdefault:\n\t\t\t_, n, err := dvValue(raw, i)\n")
 	b.WriteString("\t\t\tif err != nil {\n\t\t\t\treturn n, err\n\t\t\t}\n")
 	b.WriteString("\t\t\ti = n\n")

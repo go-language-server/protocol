@@ -180,9 +180,16 @@ func TestHotOptionalField(t *testing.T) {
 	}
 }
 
-func TestRenderEncodersEmitsOnlyAllowlistedHotStructs(t *testing.T) {
+func TestRenderEncodersEmitsEligibleStructsAndNamedSlices(t *testing.T) {
 	g := &Generator{}
 	got := g.renderEncoders([]*renderedStruct{
+		{
+			Name: "Base",
+			Fields: []renderedField{
+				{Name: "BaseName", Type: "string", JSONName: "baseName", Tag: "baseName"},
+				{Name: "Shadow", Type: "string", JSONName: "dup", Tag: "dup"},
+			},
+		},
 		{
 			Name: "CompletionItem",
 			Fields: []renderedField{
@@ -194,15 +201,28 @@ func TestRenderEncodersEmitsOnlyAllowlistedHotStructs(t *testing.T) {
 			},
 		},
 		{
+			Name:   "Child",
+			Embeds: []string{"Base"},
+			Fields: []renderedField{
+				{Name: "ShadowLocal", Type: "string", JSONName: "dup", Tag: "dup"},
+				{Name: "ChildName", Type: "string", JSONName: "childName", Tag: "childName"},
+			},
+		},
+		{
 			Name: "CompletionList",
 			Fields: []renderedField{
 				{Name: "Items", Type: "[]CompletionItem", JSONName: "items", Tag: "items"},
 			},
 		},
+	}, []*renderedAlias{
+		{Name: "DocumentSelector", Type: "[]DocumentFilter"},
 	})
 
 	for _, want := range []string{
 		"func (x CompletionItem) MarshalJSONTo(enc *jsontext.Encoder) error",
+		"func (x CompletionList) MarshalJSONTo(enc *jsontext.Encoder) error",
+		"func (x Child) MarshalJSONTo(enc *jsontext.Encoder) error",
+		"func (x DocumentSelector) MarshalJSONTo(enc *jsontext.Encoder) error",
 		"enc.WriteToken(jsontext.BeginObject)",
 		"enc.WriteToken(jsontext.String(\"label\"))",
 		"enc.WriteToken(jsontext.String(x.Label))",
@@ -211,14 +231,29 @@ func TestRenderEncodersEmitsOnlyAllowlistedHotStructs(t *testing.T) {
 		"enc.WriteToken(jsontext.String(v))",
 		"if v, ok := x.Documentation.(String); ok",
 		"!isZeroCommand(x.Command)",
+		"json.MarshalEncode(enc, x.Items)",
+		"json.MarshalEncode(enc, v)",
 		"enc.WriteToken(jsontext.EndObject)",
 	} {
 		if !strings.Contains(got, want) {
 			t.Fatalf("renderEncoders() missing %q:\n%s", want, got)
 		}
 	}
-	if strings.Contains(got, "CompletionList") {
-		t.Fatalf("renderEncoders() emitted non-allowlisted struct:\n%s", got)
+	childStart := strings.Index(got, "func (x Child) MarshalJSONTo")
+	if childStart < 0 {
+		t.Fatalf("renderEncoders() missing Child encoder:\n%s", got)
+	}
+	childBody := got[childStart:]
+	baseIdx := strings.Index(childBody, `enc.WriteToken(jsontext.String("baseName"))`)
+	childIdx := strings.Index(childBody, `enc.WriteToken(jsontext.String("childName"))`)
+	if baseIdx < 0 || childIdx < 0 || baseIdx > childIdx {
+		t.Fatalf("embedded fields not emitted before local fields:\n%s", childBody)
+	}
+	if strings.Count(childBody, `enc.WriteToken(jsontext.String("dup"))`) != 1 {
+		t.Fatalf("duplicate embedded JSON field was not collapsed:\n%s", childBody)
+	}
+	if !strings.Contains(childBody, "enc.WriteToken(jsontext.String(x.ShadowLocal))") {
+		t.Fatalf("duplicate embedded JSON field did not use local field:\n%s", childBody)
 	}
 }
 
@@ -282,6 +317,9 @@ func TestEmitIncludesGeneratedMarkerAndExpectedFiles(t *testing.T) {
 		"func (x *CompletionItem) unmarshalLSP(raw []byte, i int) (int, error)",
 		"func (x *CompletionItem) UnmarshalJSONFrom",
 		"func (x *CompletionList) unmarshalLSP(raw []byte, i int) (int, error)",
+		"func (x *ClientCapabilities) unmarshalLSP(raw []byte, i int) (int, error)",
+		"func (x *DocumentSelector) UnmarshalJSONFrom",
+		"func (x *SemanticTokensOptionsRange) UnmarshalJSONFrom",
 		"func unmarshalUnionRoot(data []byte, v any) (bool, error)",
 		"func unmarshalSliceCompletionItem(",
 	} {
@@ -289,15 +327,18 @@ func TestEmitIncludesGeneratedMarkerAndExpectedFiles(t *testing.T) {
 			t.Fatalf("decoders.gen.go missing byte decoder piece %q", want)
 		}
 	}
-	if strings.Contains(decoderFile, "func (x *ClientCapabilities) unmarshalLSP") {
-		t.Fatal("decoders.gen.go covers the excluded capability tree")
-	}
 	encoderFile := string(files["encoders.gen.go"])
-	if !strings.Contains(encoderFile, "func (x CompletionItem) MarshalJSONTo") {
-		t.Fatalf("encoders.gen.go missing CompletionItem encoder:\n%s", encoderFile)
-	}
-	if strings.Contains(encoderFile, "func (x CompletionList) MarshalJSONTo") {
-		t.Fatalf("encoders.gen.go unexpectedly contains CompletionList encoder:\n%s", encoderFile)
+	for _, want := range []string{
+		"func (x CompletionItem) MarshalJSONTo",
+		"func (x CompletionList) MarshalJSONTo",
+		"func (x ClientCapabilities) MarshalJSONTo",
+		"func (x DocumentSelector) MarshalJSONTo",
+		"func (x SemanticTokensOptionsRange) MarshalJSONTo",
+		"func (x WorkspaceSymbolSlice) MarshalJSONTo",
+	} {
+		if !strings.Contains(encoderFile, want) {
+			t.Fatalf("encoders.gen.go missing encoder piece %q:\n%s", want, encoderFile)
+		}
 	}
 }
 

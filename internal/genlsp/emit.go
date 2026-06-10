@@ -37,6 +37,20 @@ type renderedStruct struct {
 	Fields []renderedField
 }
 
+// renderedSlice is a generated named slice type that can carry streaming JSON
+// methods.
+type renderedSlice struct {
+	Name string
+	Elem string
+}
+
+type encoderCtx struct {
+	g            *Generator
+	structByName map[string]*renderedStruct
+	zeroHelpers  map[string]bool
+	collecting   map[string]bool
+}
+
 // Emit analyses the model and returns generated files keyed by output name.
 func (g *Generator) Emit() (map[string][]byte, error) {
 	// Pre-pass: assign role/context names to anonymous unions before any use
@@ -62,9 +76,11 @@ func (g *Generator) Emit() (map[string][]byte, error) {
 	// registered before rendering.
 	messages := g.analyzeMessages()
 
+	generatedStructs := g.generatedStructs(structs)
+
 	// Resolve byte-decoder coverage before rendering unions so arm decodes
 	// route through the byte walkers where they exist.
-	g.byteCtx = g.buildByteDecCtx(structs, enums, aliases)
+	g.byteCtx = g.buildByteDecCtx(generatedStructs, enums, aliases)
 
 	files := map[string][]byte{}
 	var firstErr error
@@ -122,7 +138,7 @@ func (g *Generator) Emit() (map[string][]byte, error) {
 	add("metamodel_messages.go", messages)
 	add("marshalers.go", g.renderMarshalers())
 	add("decoders.go", g.renderByteDecoders(g.byteCtx))
-	add("encoders.go", g.renderEncoders(structs))
+	add("encoders.go", g.renderEncoders(generatedStructs, aliases))
 	return files, firstErr
 }
 
@@ -297,6 +313,42 @@ func (g *Generator) renderStructures(structs []*renderedStruct) string {
 		b.WriteString("}\n\n")
 	}
 	return b.String()
+}
+
+// generatedStructs returns every generated struct declaration that can carry
+// streaming JSON methods. Broad generated-type coverage is intentional: the
+// generator owns ordinary metaModel structures plus synthesized literal and
+// "and" structs rendered into types_unions.gen.go, rather than maintaining a
+// handwritten hot-type allowlist.
+func (g *Generator) generatedStructs(structs []*renderedStruct) []*renderedStruct {
+	out := make([]*renderedStruct, 0, len(structs)+len(g.literalOrder)+len(g.andOrder))
+	out = append(out, structs...)
+	for _, key := range g.literalOrder {
+		out = append(out, g.renderedLiteralStruct(g.literals[key]))
+	}
+	for _, key := range g.andOrder {
+		out = append(out, g.renderedAndStruct(g.ands[key]))
+	}
+	return out
+}
+
+func (g *Generator) renderedLiteralStruct(d *literalDecl) *renderedStruct {
+	rs := &renderedStruct{
+		Name: d.Name,
+		Doc:  fmt.Sprintf("// %s is a generated inline object literal type.\n", d.Name),
+	}
+	for _, p := range d.Lit.Properties {
+		rs.Fields = append(rs.Fields, g.renderField(d.Name, p))
+	}
+	return rs
+}
+
+func (g *Generator) renderedAndStruct(d *andDecl) *renderedStruct {
+	return &renderedStruct{
+		Name:   d.Name,
+		Doc:    fmt.Sprintf("// %s merges %s.\n", d.Name, strings.Join(d.Operands, " & ")),
+		Embeds: append([]string(nil), d.Operands...),
+	}
 }
 
 // ---- enumerations ----
@@ -798,15 +850,6 @@ func (g *Generator) renderMarshalers() string {
 	return b.String()
 }
 
-// hotDecodeTypes enumerates struct decoders that are intentionally emitted as
-// performance probes. Keep this allowlist small: each entry becomes part of the
-// public JSON behavior surface and must be guarded by differential tests.
-var hotDecodeTypes = map[string]bool{
-	"CompletionItem":           true,
-	"Diagnostic":               true,
-	"PublishDiagnosticsParams": true,
-}
-
 var hotOptionalFields = map[string]map[string]bool{
 	"CompletionItem": {
 		"Detail":       true,
@@ -843,31 +886,71 @@ func hotFieldType(owner, fieldName, base string, optional, nullable bool) (strin
 	return "", false
 }
 
-func (g *Generator) renderEncoders(structs []*renderedStruct) string {
-	selected := make([]*renderedStruct, 0, len(hotDecodeTypes))
+func (g *Generator) renderEncoders(structs []*renderedStruct, aliases []*renderedAlias) string {
+	selected := make([]*renderedStruct, 0, len(structs))
+	ctx := &encoderCtx{
+		g:            g,
+		structByName: make(map[string]*renderedStruct, len(structs)),
+		zeroHelpers:  map[string]bool{},
+		collecting:   map[string]bool{},
+	}
 	for _, s := range structs {
-		if !hotDecodeTypes[s.Name] || len(s.Embeds) > 0 {
-			continue
-		}
+		ctx.structByName[s.Name] = s
 		selected = append(selected, s)
 	}
 	sort.Slice(selected, func(i, j int) bool { return selected[i].Name < selected[j].Name })
+	for _, s := range selected {
+		ctx.collectZeroHelpersForStruct(s)
+	}
 
 	var b strings.Builder
 	for _, s := range selected {
-		g.renderStructEncoder(&b, s)
+		g.renderStructEncoder(ctx, &b, s)
 	}
-	g.renderWorkspaceSymbolResultEncoders(&b)
+	for _, s := range g.generatedSliceTypes(aliases) {
+		g.renderNamedSliceEncoder(&b, s)
+	}
+	ctx.renderZeroHelpers(&b)
 	return b.String()
 }
 
-func (g *Generator) renderWorkspaceSymbolResultEncoders(b *strings.Builder) {
-	b.WriteString("func (x WorkspaceSymbolSlice) MarshalJSONTo(enc *jsontext.Encoder) error {\n")
+func (g *Generator) generatedSliceTypes(aliases []*renderedAlias) []renderedSlice {
+	seen := map[string]bool{}
+	var out []renderedSlice
+	add := func(name, typ string) {
+		elem, ok := strings.CutPrefix(typ, "[]")
+		if !ok || seen[name] {
+			return
+		}
+		seen[name] = true
+		out = append(out, renderedSlice{Name: name, Elem: elem})
+	}
+	for _, a := range aliases {
+		add(a.Name, a.Type)
+	}
+	for _, key := range g.arrayOrder {
+		d := g.arrayWrap[key]
+		add(d.Name, d.Element)
+	}
+	sort.Slice(out, func(i, j int) bool { return out[i].Name < out[j].Name })
+	return out
+}
+
+// renderNamedSliceEncoder emits streaming encoders for generated named slice
+// types. Most element shapes delegate to json.MarshalEncode so union/scalar
+// aliases keep their existing semantics; measured special cases can be kept
+// explicit here without reintroducing a broad struct allowlist.
+func (g *Generator) renderNamedSliceEncoder(b *strings.Builder, s renderedSlice) {
+	fmt.Fprintf(b, "func (x %s) MarshalJSONTo(enc *jsontext.Encoder) error {\n", s.Name)
 	b.WriteString("\tif err := enc.WriteToken(jsontext.BeginArray); err != nil {\n")
 	b.WriteString("\t\treturn err\n")
 	b.WriteString("\t}\n")
 	b.WriteString("\tfor _, v := range x {\n")
-	b.WriteString("\t\tif err := encodeWorkspaceSymbolTo(enc, &v); err != nil {\n")
+	if s.Name == "WorkspaceSymbolSlice" {
+		b.WriteString("\t\tif err := encodeWorkspaceSymbolTo(enc, &v); err != nil {\n")
+	} else {
+		b.WriteString("\t\tif err := json.MarshalEncode(enc, v); err != nil {\n")
+	}
 	b.WriteString("\t\t\treturn err\n")
 	b.WriteString("\t\t}\n")
 	b.WriteString("\t}\n")
@@ -875,19 +958,55 @@ func (g *Generator) renderWorkspaceSymbolResultEncoders(b *strings.Builder) {
 	b.WriteString("}\n\n")
 }
 
-func (g *Generator) renderStructEncoder(b *strings.Builder, s *renderedStruct) {
+func (g *Generator) renderStructEncoder(ctx *encoderCtx, b *strings.Builder, s *renderedStruct) {
 	fmt.Fprintf(b, "func (x %s) MarshalJSONTo(enc *jsontext.Encoder) error {\n", s.Name)
 	b.WriteString("\tif err := enc.WriteToken(jsontext.BeginObject); err != nil {\n")
 	b.WriteString("\t\treturn err\n")
 	b.WriteString("\t}\n")
-	for i := range s.Fields {
-		g.renderFieldEncoder(b, &s.Fields[i])
+	for _, f := range flattenJSONFields(ctx.structByName, s, map[string]bool{}) {
+		g.renderFieldEncoder(ctx, b, &f)
 	}
 	b.WriteString("\treturn enc.WriteToken(jsontext.EndObject)\n")
 	b.WriteString("}\n\n")
 }
 
-func (g *Generator) renderFieldEncoder(b *strings.Builder, f *renderedField) {
+// flattenJSONFields returns the JSON-visible fields of s after recursively
+// promoting embedded struct fields and applying the same duplicate-name
+// dominance rule as Go's encoding/json field selection: later/local fields
+// replace earlier promoted fields with the same JSON name. Encoders and byte
+// decoders both use this helper so their embedded-field behavior stays
+// symmetric.
+func flattenJSONFields(structByName map[string]*renderedStruct, s *renderedStruct, seen map[string]bool) []renderedField {
+	if s == nil || seen[s.Name] {
+		return nil
+	}
+	seen[s.Name] = true
+	defer delete(seen, s.Name)
+
+	var out []renderedField
+	for _, e := range s.Embeds {
+		for _, f := range flattenJSONFields(structByName, structByName[e], seen) {
+			out = appendJSONField(out, f)
+		}
+	}
+	for _, f := range s.Fields {
+		out = appendJSONField(out, f)
+	}
+	return out
+}
+
+func appendJSONField(fields []renderedField, f renderedField) []renderedField {
+	for i := range fields {
+		if fields[i].JSONName == f.JSONName {
+			copy(fields[i:], fields[i+1:])
+			fields = fields[:len(fields)-1]
+			break
+		}
+	}
+	return append(fields, f)
+}
+
+func (g *Generator) renderFieldEncoder(ctx *encoderCtx, b *strings.Builder, f *renderedField) {
 	if f.Type == "Optional[string]" {
 		fmt.Fprintf(b, "\tif v, ok := x.%s.Get(); ok {\n", f.Name)
 		writeEncoderName(b, f.JSONName, "\t\t")
@@ -916,16 +1035,16 @@ func (g *Generator) renderFieldEncoder(b *strings.Builder, f *renderedField) {
 		return
 	}
 
-	cond := fieldEncodeCondition(f)
+	cond := ctx.fieldEncodeCondition(f)
 	if cond != "" {
 		fmt.Fprintf(b, "\tif %s {\n", cond)
 		writeEncoderName(b, f.JSONName, "\t\t")
-		writeEncoderValue(b, f, "\t\t")
+		writeEncoderValue(ctx, b, f, "\t\t", true)
 		b.WriteString("\t}\n")
 		return
 	}
 	writeEncoderName(b, f.JSONName, "\t")
-	writeEncoderValue(b, f, "\t")
+	writeEncoderValue(ctx, b, f, "\t", false)
 }
 
 // encodeGuardByType maps an omitzero field type to the Go expression template
@@ -935,6 +1054,7 @@ func (g *Generator) renderFieldEncoder(b *strings.Builder, f *renderedField) {
 //nolint:gosec // G101: Go expression templates for the generator, not credentials.
 var encodeGuardByType = map[string]string{
 	"LSPAny":                 "len(x.%s) > 0",
+	"LSPObject":              "len(x.%s) > 0",
 	"LSPArray":               "len(x.%s) > 0",
 	"DiagnosticTags":         "!x.%s.IsZero()",
 	"CompletionItemTextEdit": "x.%s != nil",
@@ -950,20 +1070,225 @@ var encodeGuardByType = map[string]string{
 	"Command":                "!isZeroCommand(x.%s)",
 }
 
-func fieldEncodeCondition(f *renderedField) string {
+func (c *encoderCtx) fieldEncodeCondition(f *renderedField) string {
 	if !strings.Contains(f.Tag, ",omitzero") {
 		return ""
 	}
+	expr := "x." + f.Name
 	switch {
+	case strings.HasPrefix(f.Type, "Optional["), strings.HasPrefix(f.Type, "Nullable["):
+		return "!" + expr + ".IsZero()"
 	case strings.HasPrefix(f.Type, "*"):
-		return "x." + f.Name + " != nil"
+		return expr + " != nil"
 	case strings.HasPrefix(f.Type, "[]"), strings.HasPrefix(f.Type, "map["):
-		return "len(x." + f.Name + ") > 0"
+		return "len(" + expr + ") > 0"
+	case c.g.isUnion(f.Type):
+		return expr + " != nil"
 	}
 	if tmpl, ok := encodeGuardByType[f.Type]; ok {
 		return fmt.Sprintf(tmpl, f.Name)
 	}
+	if guard, ok := c.scalarNonZeroGuard(f.Type, expr); ok {
+		return guard
+	}
+	if c.zeroHelpers[f.Type] {
+		return fmt.Sprintf("!%s(%s)", zeroHelperName(f.Type), expr)
+	}
+	return "isZeroOmitValue(" + expr + ") == false"
+}
+
+func (c *encoderCtx) collectZeroHelpersForStruct(s *renderedStruct) {
+	for _, f := range flattenJSONFields(c.structByName, s, map[string]bool{}) {
+		if !strings.Contains(f.Tag, ",omitzero") {
+			continue
+		}
+		c.collectZeroHelperType(f.Type)
+	}
+}
+
+func (c *encoderCtx) collectZeroHelperType(t string) {
+	switch {
+	case t == "",
+		strings.HasPrefix(t, "*"),
+		strings.HasPrefix(t, "[]"),
+		strings.HasPrefix(t, "map["),
+		strings.HasPrefix(t, "Optional["),
+		strings.HasPrefix(t, "Nullable["),
+		c.g.isUnion(t):
+		return
+	}
+	if _, ok := encodeGuardByType[t]; ok {
+		return
+	}
+	if _, ok := c.scalarNonZeroGuard(t, ""); ok {
+		return
+	}
+	s := c.structByName[t]
+	if s == nil || c.zeroHelpers[t] || c.collecting[t] {
+		return
+	}
+	c.collecting[t] = true
+	defer delete(c.collecting, t)
+	c.zeroHelpers[t] = true
+	for _, e := range s.Embeds {
+		c.collectZeroHelperType(e)
+	}
+	for _, f := range s.Fields {
+		c.collectZeroHelperType(f.Type)
+	}
+}
+
+func (c *encoderCtx) renderZeroHelpers(b *strings.Builder) {
+	names := make([]string, 0, len(c.zeroHelpers))
+	for name := range c.zeroHelpers {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	for _, name := range names {
+		s := c.structByName[name]
+		if s == nil {
+			continue
+		}
+		fmt.Fprintf(b, "func %s(x %s) bool {\n", zeroHelperName(name), name)
+		var checks []string
+		for _, e := range s.Embeds {
+			checks = append(checks, c.zeroExpr(e, "x."+e))
+		}
+		for _, f := range s.Fields {
+			checks = append(checks, c.zeroExpr(f.Type, "x."+f.Name))
+		}
+		if len(checks) == 0 {
+			b.WriteString("\treturn true\n")
+		} else {
+			b.WriteString("\treturn ")
+			b.WriteString(strings.Join(checks, " &&\n\t\t"))
+			b.WriteString("\n")
+		}
+		b.WriteString("}\n\n")
+	}
+}
+
+func zeroHelperName(name string) string {
+	return "isZeroGenerated" + exportName(name)
+}
+
+func (c *encoderCtx) zeroExpr(t, expr string) string {
+	switch {
+	case strings.HasPrefix(t, "Optional["), strings.HasPrefix(t, "Nullable["):
+		return expr + ".IsZero()"
+	case strings.HasPrefix(t, "*"):
+		return expr + " == nil"
+	case strings.HasPrefix(t, "[]"), strings.HasPrefix(t, "map["):
+		return "len(" + expr + ") == 0"
+	case c.g.isUnion(t):
+		return expr + " == nil"
+	}
+	switch t {
+	case "LSPAny", "LSPObject", "LSPArray":
+		return "len(" + expr + ") == 0"
+	case "DiagnosticTags":
+		return expr + ".IsZero()"
+	case "Command":
+		return "isZeroCommand(" + expr + ")"
+	case "CodeDescription":
+		return expr + " == (CodeDescription{})"
+	}
+	if guard, ok := c.scalarZeroGuard(t, expr); ok {
+		return guard
+	}
+	if c.zeroHelpers[t] {
+		return fmt.Sprintf("%s(%s)", zeroHelperName(t), expr)
+	}
+	return "isZeroOmitValue(" + expr + ")"
+}
+
+func (c *encoderCtx) scalarNonZeroGuard(t, expr string) (string, bool) {
+	switch c.scalarBase(t) {
+	case "string":
+		return expr + ` != ""`, true
+	case "bool":
+		return expr, true
+	case "int32", "uint32", "float64":
+		return expr + " != 0", true
+	default:
+		return "", false
+	}
+}
+
+func (c *encoderCtx) scalarZeroGuard(t, expr string) (string, bool) {
+	switch c.scalarBase(t) {
+	case "string":
+		return expr + ` == ""`, true
+	case "bool":
+		return "!" + expr, true
+	case "int32", "uint32", "float64":
+		return expr + " == 0", true
+	default:
+		return "", false
+	}
+}
+
+func (c *encoderCtx) scalarBase(t string) string {
+	for range 8 {
+		switch t {
+		case "string", "int32", "uint32", "float64", "bool":
+			return t
+		case "URI", "DocumentURI", "String":
+			return "string"
+		case "Integer":
+			return "int32"
+		case "Uinteger":
+			return "uint32"
+		case "Decimal":
+			return "float64"
+		case "Boolean":
+			return "bool"
+		}
+		if e, ok := c.g.enums[t]; ok {
+			return scalarBaseName(e.Type.Name)
+		}
+		if a, ok := c.g.aliases[t]; ok {
+			next := c.scalarBaseFromType(a.Type)
+			if next == "" || next == t {
+				return next
+			}
+			t = next
+			continue
+		}
+		return ""
+	}
 	return ""
+}
+
+func (c *encoderCtx) scalarBaseFromType(t *Type) string {
+	if t == nil {
+		return ""
+	}
+	switch t.Kind {
+	case KindBase:
+		return scalarBaseName(BaseTypeName(t.Name))
+	case KindReference:
+		return c.scalarBase(t.Name)
+	default:
+		return ""
+	}
+}
+
+func scalarBaseName(name BaseTypeName) string {
+	switch name {
+	case BaseString, BaseURI, BaseDocumentURI, BaseRegExp:
+		return "string"
+	case BaseInteger:
+		return "int32"
+	case BaseUinteger:
+		return "uint32"
+	case BaseDecimal:
+		return "float64"
+	case BaseBoolean:
+		return "bool"
+	default:
+		return ""
+	}
 }
 
 func writeEncoderName(b *strings.Builder, name, indent string) {
@@ -972,7 +1297,7 @@ func writeEncoderName(b *strings.Builder, name, indent string) {
 	fmt.Fprintf(b, "%s}\n", indent)
 }
 
-func writeEncoderValue(b *strings.Builder, f *renderedField, indent string) {
+func writeEncoderValue(ctx *encoderCtx, b *strings.Builder, f *renderedField, indent string, guarded bool) {
 	switch f.Type {
 	case "string":
 		fmt.Fprintf(b, "%sif err := enc.WriteToken(jsontext.String(x.%s)); err != nil {\n", indent, f.Name)
@@ -1009,10 +1334,27 @@ func writeEncoderValue(b *strings.Builder, f *renderedField, indent string) {
 	case "LSPAny":
 		fmt.Fprintf(b, "%sif err := enc.WriteValue(x.%s); err != nil {\n", indent, f.Name)
 	default:
-		fmt.Fprintf(b, "%sif err := json.MarshalEncode(enc, x.%s); err != nil {\n", indent, f.Name)
+		if !ctx.directStructEncode(b, f, indent, guarded) {
+			fmt.Fprintf(b, "%sif err := json.MarshalEncode(enc, x.%s); err != nil {\n", indent, f.Name)
+		}
 	}
 	fmt.Fprintf(b, "%s\treturn err\n", indent)
 	fmt.Fprintf(b, "%s}\n", indent)
+}
+
+func (c *encoderCtx) directStructEncode(b *strings.Builder, f *renderedField, indent string, guarded bool) bool {
+	switch {
+	case c.structByName[f.Type] != nil:
+		fmt.Fprintf(b, "%sif err := x.%s.MarshalJSONTo(enc); err != nil {\n", indent, f.Name)
+		return true
+	case strings.HasPrefix(f.Type, "*") && guarded:
+		base := strings.TrimPrefix(f.Type, "*")
+		if c.structByName[base] != nil {
+			fmt.Fprintf(b, "%sif err := x.%s.MarshalJSONTo(enc); err != nil {\n", indent, f.Name)
+			return true
+		}
+	}
+	return false
 }
 
 // ---- messages ----
