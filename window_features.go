@@ -20,15 +20,13 @@ const (
 	MessageTypeLog MessageType = 4
 	// MessageTypeDebug A debug message.
 	//
-	// @since 3.18.0
-	//
 	// Since: 3.18.0
 	MessageTypeDebug MessageType = 5
 )
 
 // ShowMessageParams The parameters of a notification message.
 type ShowMessageParams struct {
-	// Type The message type. See {@link MessageType}
+	// Type The message type. See MessageType
 	Type MessageType `json:"type"`
 
 	// Message The actual message.
@@ -37,7 +35,7 @@ type ShowMessageParams struct {
 
 // ShowMessageRequestParams is defined by the LSP specification.
 type ShowMessageRequestParams struct {
-	// Type The message type. See {@link MessageType}
+	// Type The message type. See MessageType
 	Type MessageType `json:"type"`
 
 	// Message The actual message.
@@ -59,7 +57,7 @@ type ShowMessageRequestClientCapabilities struct {
 	MessageActionItem *ClientShowMessageActionItemOptions `json:"messageActionItem,omitzero"`
 }
 
-// ClientShowMessageActionItemOptions @since 3.18.0
+// ClientShowMessageActionItemOptions is defined by the LSP specification.
 //
 // Since: 3.18.0
 type ClientShowMessageActionItemOptions struct {
@@ -71,7 +69,7 @@ type ClientShowMessageActionItemOptions struct {
 
 // LogMessageParams The log message parameters.
 type LogMessageParams struct {
-	// Type The message type. See {@link MessageType}
+	// Type The message type. See MessageType
 	Type MessageType `json:"type"`
 
 	// Message The actual message.
@@ -79,8 +77,6 @@ type LogMessageParams struct {
 }
 
 // ShowDocumentParams Params to show a resource in the UI.
-//
-// @since 3.16.0
 //
 // Since: 3.16.0
 type ShowDocumentParams struct {
@@ -107,8 +103,6 @@ type ShowDocumentParams struct {
 
 // ShowDocumentResult The result of a showDocument request.
 //
-// @since 3.16.0
-//
 // Since: 3.16.0
 type ShowDocumentResult struct {
 	// Success A boolean indicating if the show was successful.
@@ -116,8 +110,6 @@ type ShowDocumentResult struct {
 }
 
 // ShowDocumentClientCapabilities Client capabilities for the showDocument request.
-//
-// @since 3.16.0
 //
 // Since: 3.16.0
 type ShowDocumentClientCapabilities struct {

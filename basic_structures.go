@@ -37,15 +37,11 @@ const (
 	// message should contain human readable information about why
 	// the request failed.
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	LSPErrorCodesRequestFailed LSPErrorCodes = -32803
 	// LSPErrorCodesServerCancelled The server cancelled the request. This error code should
 	// only be used for requests that explicitly support being
 	// server cancellable.
-	//
-	// @since 3.17.0
 	//
 	// Since: 3.17.0
 	LSPErrorCodesServerCancelled LSPErrorCodes = -32802
@@ -124,8 +120,6 @@ const (
 
 // SymbolTag Symbol tags are extra annotations that tweak the rendering of a symbol.
 //
-// @since 3.16
-//
 // Since: 3.16
 type SymbolTag uint32
 
@@ -164,7 +158,6 @@ const (
 )
 
 // LanguageKind Predefined Language kinds
-// @since 3.18.0
 //
 // Since: 3.18.0
 type LanguageKind string
@@ -189,11 +182,11 @@ const (
 	LanguageKindCSharp LanguageKind = "csharp"
 	// LanguageKindCSS is defined by the LSP specification.
 	LanguageKindCSS LanguageKind = "css"
-	// LanguageKindD @since 3.18.0
+	// LanguageKindD is defined by the LSP specification.
 	//
 	// Since: 3.18.0
 	LanguageKindD LanguageKind = "d"
-	// LanguageKindDelphi @since 3.18.0
+	// LanguageKindDelphi is defined by the LSP specification.
 	//
 	// Since: 3.18.0
 	LanguageKindDelphi LanguageKind = "pascal"
@@ -247,7 +240,7 @@ const (
 	LanguageKindObjectiveC LanguageKind = "objective-c"
 	// LanguageKindObjectiveCPP is defined by the LSP specification.
 	LanguageKindObjectiveCPP LanguageKind = "objective-cpp"
-	// LanguageKindPascal @since 3.18.0
+	// LanguageKindPascal is defined by the LSP specification.
 	//
 	// Since: 3.18.0
 	LanguageKindPascal LanguageKind = "pascal"
@@ -304,8 +297,6 @@ const (
 )
 
 // PositionEncodingKind A set of predefined position encoding kinds.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type PositionEncodingKind string
@@ -370,8 +361,6 @@ const (
 
 // DiagnosticTag The diagnostic tags.
 //
-// @since 3.15.0
-//
 // Since: 3.15.0
 type DiagnosticTag uint32
 
@@ -390,8 +379,6 @@ const (
 
 // ApplyKind Defines how values from a set of defaults and an individual item will be
 // merged.
-//
-// @since 3.18.0
 //
 // Since: 3.18.0
 type ApplyKind uint32
@@ -454,7 +441,7 @@ const (
 //
 // @sample `let sel:DocumentSelector = [{ language: 'typescript' }, { language: 'json', pattern: '**∕tsconfig.json' }]`;
 //
-// The use of a string as a document filter is deprecated @since 3.16.0.
+// The use of a string as a document filter is deprecated.
 //
 // Since: 3.16.0.
 type DocumentSelector []DocumentFilter
@@ -469,8 +456,6 @@ type ChangeAnnotationIdentifier string
 // - `{}` to group conditions (e.g. `**​/*.{ts,js}` matches all TypeScript and JavaScript files)
 // - `[]` to declare a range of characters to match in a path segment (e.g., `example.[0-9]` to match on `example.0`, `example.1`, …)
 // - `[!...]` to negate a range of characters to match in a path segment (e.g., `example.[!0-9]` to match on `example.a`, `example.b`, but not `example.0`)
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type Pattern string
@@ -534,8 +519,6 @@ type WorkspaceEdit struct {
 	//
 	// Whether clients honor this property depends on the client capability `workspace.changeAnnotationSupport`.
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	ChangeAnnotations map[ChangeAnnotationIdentifier]ChangeAnnotation `json:"changeAnnotations,omitzero"`
 }
@@ -557,8 +540,6 @@ type SymbolInformation struct {
 	BaseSymbolInformation
 
 	// Deprecated Indicates if this symbol is deprecated.
-	//
-	// @deprecated Use tags instead
 	//
 	// Deprecated: Use tags instead
 	Deprecated *bool `json:"deprecated,omitzero"`
@@ -584,8 +565,6 @@ type Command struct {
 	Title string `json:"title"`
 
 	// Tooltip An optional tooltip.
-	//
-	// @since 3.18.0
 	//
 	// Since: 3.18.0
 	Tooltip *string `json:"tooltip,omitzero"`
@@ -696,7 +675,7 @@ type PartialResultParams struct {
 	PartialResultToken ProgressToken `json:"partialResultToken,omitzero"`
 }
 
-// LocationLink Represents the connection of two locations. Provides additional metadata over normal {@link Location locations},
+// LocationLink Represents the connection of two locations. Provides additional metadata over normal locations,
 // including an origin range.
 type LocationLink struct {
 	// OriginSelectionRange Span of the origin of this link.
@@ -779,7 +758,7 @@ type TextDocumentIdentifier struct {
 // Positions are line end character agnostic. So you can not specify a position
 // that denotes `\r|\n` or `\n|` where `|` represents the character offset.
 //
-// @since 3.17.0 - support for negotiated position encoding.
+// support for negotiated position encoding.
 //
 // Since: 3.17.0 - support for negotiated position encoding.
 type Position struct {
@@ -803,10 +782,10 @@ type TextDocumentEdit struct {
 
 	// Edits The edits to be applied.
 	//
-	// @since 3.16.0 - support for AnnotatedTextEdit. This is guarded using a
+	// support for AnnotatedTextEdit. This is guarded using a
 	// client capability.
 	//
-	// @since 3.18.0 - support for SnippetTextEdit. This is guarded using a
+	// support for SnippetTextEdit. This is guarded using a
 	// client capability.
 	//
 	// Since: 3.18.0 - support for SnippetTextEdit. This is guarded using a
@@ -843,8 +822,6 @@ type DeleteFile struct {
 }
 
 // ChangeAnnotation Additional information that describes document changes.
-//
-// @since 3.16.0
 //
 // Since: 3.16.0
 type ChangeAnnotation struct {
@@ -918,8 +895,6 @@ type TextDocumentItem struct {
 // the end of the snippet. Variables are defined with `$name` and
 // `${name:default value}`.
 //
-// @since 3.18.0
-//
 // Since: 3.18.0
 type StringValue struct {
 	// Kind The kind of string value.
@@ -954,8 +929,6 @@ type Diagnostic struct {
 	// CodeDescription An optional property to describe the error code.
 	// Requires the code field (above) to be present/not null.
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	CodeDescription CodeDescription `json:"codeDescription,omitzero"`
 
@@ -966,7 +939,7 @@ type Diagnostic struct {
 
 	// Message The diagnostic's message. It usually appears in the user interface.
 	//
-	// @since 3.18.0 - support for MarkupContent. This is guarded by the client
+	// support for MarkupContent. This is guarded by the client
 	// capability `textDocument.diagnostic.markupMessageSupport`.
 	//
 	// Since: 3.18.0 - support for MarkupContent. This is guarded by the client
@@ -974,8 +947,6 @@ type Diagnostic struct {
 	Message InlayHintTooltip `json:"message"`
 
 	// Tags Additional metadata about the diagnostic.
-	//
-	// @since 3.15.0
 	//
 	// Since: 3.15.0
 	Tags DiagnosticTags `json:"tags,omitzero"`
@@ -987,15 +958,11 @@ type Diagnostic struct {
 	// Data A data entry field that is preserved between a `textDocument/publishDiagnostics`
 	// notification and `textDocument/codeAction` request.
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	Data LSPAny `json:"data,omitzero"`
 }
 
 // InsertReplaceEdit A special text edit to provide an insert and a replace operation.
-//
-// @since 3.16.0
 //
 // Since: 3.16.0
 type InsertReplaceEdit struct {
@@ -1019,8 +986,6 @@ type BaseSymbolInformation struct {
 
 	// Tags Tags for this symbol.
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	Tags []SymbolTag `json:"tags,omitzero"`
 
@@ -1032,8 +997,6 @@ type BaseSymbolInformation struct {
 }
 
 // LocationUriOnly Location with only uri and does not include range.
-//
-// @since 3.18.0
 //
 // Since: 3.18.0
 type LocationUriOnly struct {
@@ -1055,8 +1018,6 @@ type OptionalVersionedTextDocumentIdentifier struct {
 
 // AnnotatedTextEdit A special text edit with an additional change annotation.
 //
-// @since 3.16.0.
-//
 // Since: 3.16.0.
 type AnnotatedTextEdit struct {
 	TextEdit
@@ -1066,8 +1027,6 @@ type AnnotatedTextEdit struct {
 }
 
 // SnippetTextEdit An interactive text edit.
-//
-// @since 3.18.0
 //
 // Since: 3.18.0
 type SnippetTextEdit struct {
@@ -1087,8 +1046,6 @@ type ResourceOperation struct {
 	Kind string `json:"kind"`
 
 	// AnnotationID An optional annotation identifier describing the operation.
-	//
-	// @since 3.16.0
 	//
 	// Since: 3.16.0
 	AnnotationID ChangeAnnotationIdentifier `json:"annotationId,omitzero"`
@@ -1114,8 +1071,6 @@ type DeleteFileOptions struct {
 
 // CodeDescription Structure to capture a description for an error code.
 //
-// @since 3.16.0
-//
 // Since: 3.16.0
 type CodeDescription struct {
 	// Href An URI to open with more information about the diagnostic error.
@@ -1133,8 +1088,7 @@ type DiagnosticRelatedInformation struct {
 	Message string `json:"message"`
 }
 
-// MarkedStringWithLanguage @since 3.18.0
-// @deprecated use MarkupContent instead.
+// MarkedStringWithLanguage is defined by the LSP specification.
 //
 // Since: 3.18.0
 //
@@ -1149,19 +1103,17 @@ type MarkedStringWithLanguage struct {
 
 // TextDocumentFilterLanguage A document filter where `language` is required field.
 //
-// @since 3.18.0
-//
 // Since: 3.18.0
 type TextDocumentFilterLanguage struct {
 	// Language A language id, like `typescript`.
 	Language string `json:"language"`
 
-	// Scheme A Uri {@link Uri.scheme scheme}, like `file` or `untitled`.
+	// Scheme A Uri scheme, like `file` or `untitled`.
 	Scheme *string `json:"scheme,omitzero"`
 
 	// Pattern A glob pattern, like **​/*.{ts,js}. See TextDocumentFilter for examples.
 	//
-	// @since 3.18.0 - support for relative patterns. Whether clients support
+	// support for relative patterns. Whether clients support
 	// relative patterns depends on the client capability
 	// `textDocuments.filters.relativePatternSupport`.
 	//
@@ -1173,19 +1125,17 @@ type TextDocumentFilterLanguage struct {
 
 // TextDocumentFilterScheme A document filter where `scheme` is required field.
 //
-// @since 3.18.0
-//
 // Since: 3.18.0
 type TextDocumentFilterScheme struct {
 	// Language A language id, like `typescript`.
 	Language *string `json:"language,omitzero"`
 
-	// Scheme A Uri {@link Uri.scheme scheme}, like `file` or `untitled`.
+	// Scheme A Uri scheme, like `file` or `untitled`.
 	Scheme string `json:"scheme"`
 
 	// Pattern A glob pattern, like **​/*.{ts,js}. See TextDocumentFilter for examples.
 	//
-	// @since 3.18.0 - support for relative patterns. Whether clients support
+	// support for relative patterns. Whether clients support
 	// relative patterns depends on the client capability
 	// `textDocuments.filters.relativePatternSupport`.
 	//
@@ -1197,19 +1147,17 @@ type TextDocumentFilterScheme struct {
 
 // TextDocumentFilterPattern A document filter where `pattern` is required field.
 //
-// @since 3.18.0
-//
 // Since: 3.18.0
 type TextDocumentFilterPattern struct {
 	// Language A language id, like `typescript`.
 	Language *string `json:"language,omitzero"`
 
-	// Scheme A Uri {@link Uri.scheme scheme}, like `file` or `untitled`.
+	// Scheme A Uri scheme, like `file` or `untitled`.
 	Scheme *string `json:"scheme,omitzero"`
 
 	// Pattern A glob pattern, like **​/*.{ts,js}. See TextDocumentFilter for examples.
 	//
-	// @since 3.18.0 - support for relative patterns. Whether clients support
+	// support for relative patterns. Whether clients support
 	// relative patterns depends on the client capability
 	// `textDocuments.filters.relativePatternSupport`.
 	//
@@ -1227,15 +1175,11 @@ type WorkspaceEditClientCapabilities struct {
 	// ResourceOperations The resource operations the client supports. Clients should at least
 	// support 'create', 'rename' and 'delete' files and folders.
 	//
-	// @since 3.13.0
-	//
 	// Since: 3.13.0
 	ResourceOperations []ResourceOperationKind `json:"resourceOperations,omitzero"`
 
 	// FailureHandling The failure handling strategy of a client if applying the workspace edit
 	// fails.
-	//
-	// @since 3.13.0
 	//
 	// Since: 3.13.0
 	FailureHandling FailureHandlingKind `json:"failureHandling,omitzero"`
@@ -1246,29 +1190,21 @@ type WorkspaceEditClientCapabilities struct {
 	// in a workspace edit to the client-specified new line
 	// character.
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	NormalizesLineEndings *bool `json:"normalizesLineEndings,omitzero"`
 
 	// ChangeAnnotationSupport Whether the client in general supports change annotations on text edits,
 	// create file, rename file and delete file changes.
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	ChangeAnnotationSupport *ChangeAnnotationsSupportOptions `json:"changeAnnotationSupport,omitzero"`
 
 	// MetadataSupport Whether the client supports `WorkspaceEditMetadata` in `WorkspaceEdit`s.
 	//
-	// @since 3.18.0
-	//
 	// Since: 3.18.0
 	MetadataSupport *bool `json:"metadataSupport,omitzero"`
 
 	// SnippetEditSupport Whether the client supports snippets as text edits.
-	//
-	// @since 3.18.0
 	//
 	// Since: 3.18.0
 	SnippetEditSupport *bool `json:"snippetEditSupport,omitzero"`
@@ -1278,15 +1214,11 @@ type WorkspaceEditClientCapabilities struct {
 type TextDocumentFilterClientCapabilities struct {
 	// RelativePatternSupport The client supports Relative Patterns.
 	//
-	// @since 3.18.0
-	//
 	// Since: 3.18.0
 	RelativePatternSupport *bool `json:"relativePatternSupport,omitzero"`
 }
 
 // RegularExpressionsClientCapabilities Client capabilities specific to regular expressions.
-//
-// @since 3.16.0
 //
 // Since: 3.16.0
 type RegularExpressionsClientCapabilities struct {
@@ -1299,8 +1231,6 @@ type RegularExpressionsClientCapabilities struct {
 
 // MarkdownClientCapabilities Client capabilities specific to the used markdown parser.
 //
-// @since 3.16.0
-//
 // Since: 3.16.0
 type MarkdownClientCapabilities struct {
 	// Parser The name of the parser.
@@ -1312,13 +1242,11 @@ type MarkdownClientCapabilities struct {
 	// AllowedTags A list of HTML tags that the client allows / supports in
 	// Markdown.
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	AllowedTags []string `json:"allowedTags,omitzero"`
 }
 
-// ChangeAnnotationsSupportOptions @since 3.18.0
+// ChangeAnnotationsSupportOptions is defined by the LSP specification.
 //
 // Since: 3.18.0
 type ChangeAnnotationsSupportOptions struct {

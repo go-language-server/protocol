@@ -7,8 +7,6 @@ package protocol
 
 // InlineValueParams A parameter literal used in inline value requests.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type InlineValueParams struct {
 	WorkDoneProgressParams
@@ -26,8 +24,6 @@ type InlineValueParams struct {
 
 // InlineValueRegistrationOptions Inline value options used during static or dynamic registration.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type InlineValueRegistrationOptions struct {
 	InlineValueOptions
@@ -35,7 +31,7 @@ type InlineValueRegistrationOptions struct {
 	StaticRegistrationOptions
 }
 
-// InlineValueContext @since 3.17.0
+// InlineValueContext is defined by the LSP specification.
 //
 // Since: 3.17.0
 type InlineValueContext struct {
@@ -48,8 +44,6 @@ type InlineValueContext struct {
 }
 
 // InlineValueText Returns inline value information as the complete text to be shown.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type InlineValueText struct {
@@ -67,8 +61,6 @@ type InlineValueText struct {
 //
 // An optional variable name could be used to lookup instead
 // of the extracted name.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type InlineValueVariableLookup struct {
@@ -93,8 +85,6 @@ type InlineValueVariableLookup struct {
 // An optional expression could be evaluated instead of
 // the extracted expression.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type InlineValueEvaluatableExpression struct {
 	// Range The document range for which the inline value applies.
@@ -109,16 +99,12 @@ type InlineValueEvaluatableExpression struct {
 
 // InlineValueOptions Inline value options used during static registration.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type InlineValueOptions struct {
 	WorkDoneProgressOptions
 }
 
 // InlineValueWorkspaceClientCapabilities Client workspace capabilities specific to inline values.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type InlineValueWorkspaceClientCapabilities struct {
@@ -133,8 +119,6 @@ type InlineValueWorkspaceClientCapabilities struct {
 }
 
 // InlineValueClientCapabilities Client capabilities specific to inline values.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type InlineValueClientCapabilities struct {

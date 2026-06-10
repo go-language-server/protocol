@@ -7,15 +7,13 @@ package protocol
 
 // TypeHierarchyPrepareParams The parameter of a `textDocument/prepareTypeHierarchy` request.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type TypeHierarchyPrepareParams struct {
 	TextDocumentPositionParams
 	WorkDoneProgressParams
 }
 
-// TypeHierarchyItem @since 3.17.0
+// TypeHierarchyItem is defined by the LSP specification.
 //
 // Since: 3.17.0
 type TypeHierarchyItem struct {
@@ -40,7 +38,7 @@ type TypeHierarchyItem struct {
 
 	// SelectionRange The range that should be selected and revealed when this symbol is being
 	// picked, e.g. the name of a function. Must be contained by the
-	// {@link TypeHierarchyItem.range `range`}.
+	// `range`.
 	SelectionRange Range `json:"selectionRange"`
 
 	// Data A data entry field that is preserved between a type hierarchy prepare and
@@ -52,8 +50,6 @@ type TypeHierarchyItem struct {
 
 // TypeHierarchyRegistrationOptions Type hierarchy options used during static or dynamic registration.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type TypeHierarchyRegistrationOptions struct {
 	TextDocumentRegistrationOptions
@@ -62,8 +58,6 @@ type TypeHierarchyRegistrationOptions struct {
 }
 
 // TypeHierarchySupertypesParams The parameter of a `typeHierarchy/supertypes` request.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type TypeHierarchySupertypesParams struct {
@@ -76,8 +70,6 @@ type TypeHierarchySupertypesParams struct {
 
 // TypeHierarchySubtypesParams The parameter of a `typeHierarchy/subtypes` request.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type TypeHierarchySubtypesParams struct {
 	WorkDoneProgressParams
@@ -89,14 +81,12 @@ type TypeHierarchySubtypesParams struct {
 
 // TypeHierarchyOptions Type hierarchy options used during static registration.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type TypeHierarchyOptions struct {
 	WorkDoneProgressOptions
 }
 
-// TypeHierarchyClientCapabilities @since 3.17.0
+// TypeHierarchyClientCapabilities is defined by the LSP specification.
 //
 // Since: 3.17.0
 type TypeHierarchyClientCapabilities struct {

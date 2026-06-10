@@ -5,7 +5,7 @@
 
 package protocol
 
-// DocumentColorParams Parameters for a {@link DocumentColorRequest}.
+// DocumentColorParams Parameters for a DocumentColorRequest.
 type DocumentColorParams struct {
 	WorkDoneProgressParams
 	PartialResultParams

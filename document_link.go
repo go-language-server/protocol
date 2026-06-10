@@ -5,7 +5,7 @@
 
 package protocol
 
-// DocumentLinkParams The parameters of a {@link DocumentLinkRequest}.
+// DocumentLinkParams The parameters of a DocumentLinkRequest.
 type DocumentLinkParams struct {
 	WorkDoneProgressParams
 	PartialResultParams
@@ -29,8 +29,6 @@ type DocumentLink struct {
 	// trigger the link, such as `{0} (ctrl + click)`. The specific instructions vary depending on OS,
 	// user settings, and localization.
 	//
-	// @since 3.15.0
-	//
 	// Since: 3.15.0
 	Tooltip *string `json:"tooltip,omitzero"`
 
@@ -39,13 +37,13 @@ type DocumentLink struct {
 	Data LSPAny `json:"data,omitzero"`
 }
 
-// DocumentLinkRegistrationOptions Registration options for a {@link DocumentLinkRequest}.
+// DocumentLinkRegistrationOptions Registration options for a DocumentLinkRequest.
 type DocumentLinkRegistrationOptions struct {
 	TextDocumentRegistrationOptions
 	DocumentLinkOptions
 }
 
-// DocumentLinkOptions Provider options for a {@link DocumentLinkRequest}.
+// DocumentLinkOptions Provider options for a DocumentLinkRequest.
 type DocumentLinkOptions struct {
 	WorkDoneProgressOptions
 
@@ -53,14 +51,12 @@ type DocumentLinkOptions struct {
 	ResolveProvider *bool `json:"resolveProvider,omitzero"`
 }
 
-// DocumentLinkClientCapabilities The client capabilities of a {@link DocumentLinkRequest}.
+// DocumentLinkClientCapabilities The client capabilities of a DocumentLinkRequest.
 type DocumentLinkClientCapabilities struct {
 	// DynamicRegistration Whether document link supports dynamic registration.
 	DynamicRegistration *bool `json:"dynamicRegistration,omitzero"`
 
 	// TooltipSupport Whether the client supports the `tooltip` property on `DocumentLink`.
-	//
-	// @since 3.15.0
 	//
 	// Since: 3.15.0
 	TooltipSupport *bool `json:"tooltipSupport,omitzero"`

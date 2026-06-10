@@ -18,7 +18,7 @@ const (
 	DocumentHighlightKindWrite DocumentHighlightKind = 3
 )
 
-// DocumentHighlightParams Parameters for a {@link DocumentHighlightRequest}.
+// DocumentHighlightParams Parameters for a DocumentHighlightRequest.
 type DocumentHighlightParams struct {
 	TextDocumentPositionParams
 	WorkDoneProgressParams
@@ -32,22 +32,22 @@ type DocumentHighlight struct {
 	// Range The range this highlight applies to.
 	Range Range `json:"range"`
 
-	// Kind The highlight kind, default is {@link DocumentHighlightKind.Text text}.
+	// Kind The highlight kind, default is text.
 	Kind DocumentHighlightKind `json:"kind,omitzero"`
 }
 
-// DocumentHighlightRegistrationOptions Registration options for a {@link DocumentHighlightRequest}.
+// DocumentHighlightRegistrationOptions Registration options for a DocumentHighlightRequest.
 type DocumentHighlightRegistrationOptions struct {
 	TextDocumentRegistrationOptions
 	DocumentHighlightOptions
 }
 
-// DocumentHighlightOptions Provider options for a {@link DocumentHighlightRequest}.
+// DocumentHighlightOptions Provider options for a DocumentHighlightRequest.
 type DocumentHighlightOptions struct {
 	WorkDoneProgressOptions
 }
 
-// DocumentHighlightClientCapabilities Client Capabilities for a {@link DocumentHighlightRequest}.
+// DocumentHighlightClientCapabilities Client Capabilities for a DocumentHighlightRequest.
 type DocumentHighlightClientCapabilities struct {
 	// DynamicRegistration Whether document highlight supports dynamic registration.
 	DynamicRegistration *bool `json:"dynamicRegistration,omitzero"`

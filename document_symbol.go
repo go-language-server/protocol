@@ -5,7 +5,7 @@
 
 package protocol
 
-// DocumentSymbolParams Parameters for a {@link DocumentSymbolRequest}.
+// DocumentSymbolParams Parameters for a DocumentSymbolRequest.
 type DocumentSymbolParams struct {
 	WorkDoneProgressParams
 	PartialResultParams
@@ -31,14 +31,10 @@ type DocumentSymbol struct {
 
 	// Tags Tags for this document symbol.
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	Tags []SymbolTag `json:"tags,omitzero"`
 
 	// Deprecated Indicates if this symbol is deprecated.
-	//
-	// @deprecated Use tags instead
 	//
 	// Deprecated: Use tags instead
 	Deprecated *bool `json:"deprecated,omitzero"`
@@ -56,26 +52,24 @@ type DocumentSymbol struct {
 	Children []DocumentSymbol `json:"children,omitzero"`
 }
 
-// DocumentSymbolRegistrationOptions Registration options for a {@link DocumentSymbolRequest}.
+// DocumentSymbolRegistrationOptions Registration options for a DocumentSymbolRequest.
 type DocumentSymbolRegistrationOptions struct {
 	TextDocumentRegistrationOptions
 	DocumentSymbolOptions
 }
 
-// DocumentSymbolOptions Provider options for a {@link DocumentSymbolRequest}.
+// DocumentSymbolOptions Provider options for a DocumentSymbolRequest.
 type DocumentSymbolOptions struct {
 	WorkDoneProgressOptions
 
 	// Label A human-readable string that is shown when multiple outlines trees
 	// are shown for the same document.
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	Label *string `json:"label,omitzero"`
 }
 
-// DocumentSymbolClientCapabilities Client Capabilities for a {@link DocumentSymbolRequest}.
+// DocumentSymbolClientCapabilities Client Capabilities for a DocumentSymbolRequest.
 type DocumentSymbolClientCapabilities struct {
 	// DynamicRegistration Whether document symbol supports dynamic registration.
 	DynamicRegistration *bool `json:"dynamicRegistration,omitzero"`
@@ -91,15 +85,11 @@ type DocumentSymbolClientCapabilities struct {
 	// `DocumentSymbol` if `hierarchicalDocumentSymbolSupport` is set to true.
 	// Clients supporting tags have to handle unknown tags gracefully.
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	TagSupport ClientSymbolTagOptions `json:"tagSupport,omitzero"`
 
 	// LabelSupport The client supports an additional label presented in the UI when
 	// registering a document symbol provider.
-	//
-	// @since 3.16.0
 	//
 	// Since: 3.16.0
 	LabelSupport *bool `json:"labelSupport,omitzero"`

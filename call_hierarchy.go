@@ -7,8 +7,6 @@ package protocol
 
 // CallHierarchyPrepareParams The parameter of a `textDocument/prepareCallHierarchy` request.
 //
-// @since 3.16.0
-//
 // Since: 3.16.0
 type CallHierarchyPrepareParams struct {
 	TextDocumentPositionParams
@@ -17,8 +15,6 @@ type CallHierarchyPrepareParams struct {
 
 // CallHierarchyItem Represents programming constructs like functions or constructors in the context
 // of call hierarchy.
-//
-// @since 3.16.0
 //
 // Since: 3.16.0
 type CallHierarchyItem struct {
@@ -41,7 +37,7 @@ type CallHierarchyItem struct {
 	Range Range `json:"range"`
 
 	// SelectionRange The range that should be selected and revealed when this symbol is being picked, e.g. the name of a function.
-	// Must be contained by the {@link CallHierarchyItem.range `range`}.
+	// Must be contained by the `range`.
 	SelectionRange Range `json:"selectionRange"`
 
 	// Data A data entry field that is preserved between a call hierarchy prepare and
@@ -51,8 +47,6 @@ type CallHierarchyItem struct {
 
 // CallHierarchyRegistrationOptions Call hierarchy options used during static or dynamic registration.
 //
-// @since 3.16.0
-//
 // Since: 3.16.0
 type CallHierarchyRegistrationOptions struct {
 	TextDocumentRegistrationOptions
@@ -61,8 +55,6 @@ type CallHierarchyRegistrationOptions struct {
 }
 
 // CallHierarchyIncomingCallsParams The parameter of a `callHierarchy/incomingCalls` request.
-//
-// @since 3.16.0
 //
 // Since: 3.16.0
 type CallHierarchyIncomingCallsParams struct {
@@ -75,21 +67,17 @@ type CallHierarchyIncomingCallsParams struct {
 
 // CallHierarchyIncomingCall Represents an incoming call, e.g. a caller of a method or constructor.
 //
-// @since 3.16.0
-//
 // Since: 3.16.0
 type CallHierarchyIncomingCall struct {
 	// From The item that makes the call.
 	From CallHierarchyItem `json:"from"`
 
 	// FromRanges The ranges at which the calls appear. This is relative to the caller
-	// denoted by {@link CallHierarchyIncomingCall.from `this.from`}.
+	// denoted by `this.from`.
 	FromRanges []Range `json:"fromRanges"`
 }
 
 // CallHierarchyOutgoingCallsParams The parameter of a `callHierarchy/outgoingCalls` request.
-//
-// @since 3.16.0
 //
 // Since: 3.16.0
 type CallHierarchyOutgoingCallsParams struct {
@@ -102,29 +90,25 @@ type CallHierarchyOutgoingCallsParams struct {
 
 // CallHierarchyOutgoingCall Represents an outgoing call, e.g. calling a getter from a method or a method from a constructor etc.
 //
-// @since 3.16.0
-//
 // Since: 3.16.0
 type CallHierarchyOutgoingCall struct {
 	// To The item that is called.
 	To CallHierarchyItem `json:"to"`
 
 	// FromRanges The range at which this item is called. This is the range relative to the caller, e.g the item
-	// passed to {@link CallHierarchyItemProvider.provideCallHierarchyOutgoingCalls `provideCallHierarchyOutgoingCalls`}
-	// and not {@link CallHierarchyOutgoingCall.to `this.to`}.
+	// passed to `provideCallHierarchyOutgoingCalls`
+	// and not `this.to`.
 	FromRanges []Range `json:"fromRanges"`
 }
 
 // CallHierarchyOptions Call hierarchy options used during static registration.
-//
-// @since 3.16.0
 //
 // Since: 3.16.0
 type CallHierarchyOptions struct {
 	WorkDoneProgressOptions
 }
 
-// CallHierarchyClientCapabilities @since 3.16.0
+// CallHierarchyClientCapabilities is defined by the LSP specification.
 //
 // Since: 3.16.0
 type CallHierarchyClientCapabilities struct {

@@ -18,8 +18,6 @@ type InitializeResult struct {
 
 	// ServerInfo Information about the server.
 	//
-	// @since 3.15.0
-	//
 	// Since: 3.15.0
 	ServerInfo ServerInfo `json:"serverInfo,omitzero"`
 }
@@ -51,8 +49,6 @@ type _InitializeParams struct {
 
 	// ClientInfo Information about the client
 	//
-	// @since 3.15.0
-	//
 	// Since: 3.15.0
 	ClientInfo ClientInfo `json:"clientInfo,omitzero"`
 
@@ -63,15 +59,11 @@ type _InitializeParams struct {
 	// Uses IETF language tags as the value's syntax
 	// (See https://en.wikipedia.org/wiki/IETF_language_tag)
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	Locale *string `json:"locale,omitzero"`
 
 	// RootPath The rootPath of the workspace. Is null
 	// if no folder is open.
-	//
-	// @deprecated in favour of rootUri.
 	//
 	// Deprecated: in favour of rootUri.
 	RootPath Nullable[string] `json:"rootPath,omitzero"`
@@ -79,8 +71,6 @@ type _InitializeParams struct {
 	// RootURI The rootUri of the workspace. Is null if no
 	// folder is open. If both `rootPath` and `rootUri` are set
 	// `rootUri` wins.
-	//
-	// @deprecated in favour of workspaceFolders.
 	//
 	// Deprecated: in favour of workspaceFolders.
 	RootURI *DocumentURI `json:"rootUri"`
@@ -106,8 +96,6 @@ type ServerCapabilities struct {
 	//
 	// If omitted it defaults to 'utf-16'.
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	PositionEncoding PositionEncodingKind `json:"positionEncoding,omitzero"`
 
@@ -117,8 +105,6 @@ type ServerCapabilities struct {
 	TextDocumentSync TextDocumentSync `json:"textDocumentSync,omitzero"`
 
 	// NotebookDocumentSync Defines how notebook documents are synced.
-	//
-	// @since 3.17.0
 	//
 	// Since: 3.17.0
 	NotebookDocumentSync NotebookDocumentSync `json:"notebookDocumentSync,omitzero"`
@@ -195,63 +181,45 @@ type ServerCapabilities struct {
 
 	// CallHierarchyProvider The server provides call hierarchy support.
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	CallHierarchyProvider CallHierarchyProvider `json:"callHierarchyProvider,omitzero"`
 
 	// LinkedEditingRangeProvider The server provides linked editing range support.
-	//
-	// @since 3.16.0
 	//
 	// Since: 3.16.0
 	LinkedEditingRangeProvider LinkedEditingRangeProvider `json:"linkedEditingRangeProvider,omitzero"`
 
 	// SemanticTokensProvider The server provides semantic tokens support.
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	SemanticTokensProvider SemanticTokensProvider `json:"semanticTokensProvider,omitzero"`
 
 	// MonikerProvider The server provides moniker support.
-	//
-	// @since 3.16.0
 	//
 	// Since: 3.16.0
 	MonikerProvider MonikerProvider `json:"monikerProvider,omitzero"`
 
 	// TypeHierarchyProvider The server provides type hierarchy support.
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	TypeHierarchyProvider TypeHierarchyProvider `json:"typeHierarchyProvider,omitzero"`
 
 	// InlineValueProvider The server provides inline values.
-	//
-	// @since 3.17.0
 	//
 	// Since: 3.17.0
 	InlineValueProvider InlineValueProvider `json:"inlineValueProvider,omitzero"`
 
 	// InlayHintProvider The server provides inlay hints.
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	InlayHintProvider InlayHintProvider `json:"inlayHintProvider,omitzero"`
 
 	// DiagnosticProvider The server has support for pull model diagnostics.
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	DiagnosticProvider DiagnosticProvider `json:"diagnosticProvider,omitzero"`
 
 	// InlineCompletionProvider Inline completion options used during static registration.
-	//
-	// @since 3.18.0
 	//
 	// Since: 3.18.0
 	InlineCompletionProvider InlineCompletionProvider `json:"inlineCompletionProvider,omitzero"`
@@ -265,8 +233,7 @@ type ServerCapabilities struct {
 
 // ServerInfo Information about the server
 //
-// @since 3.15.0
-// @since 3.18.0 ServerInfo type name added.
+// ServerInfo type name added.
 //
 // Since: 3.18.0 ServerInfo type name added.
 type ServerInfo struct {
@@ -279,8 +246,7 @@ type ServerInfo struct {
 
 // ClientInfo Information about the client
 //
-// @since 3.15.0
-// @since 3.18.0 ClientInfo type name added.
+// ClientInfo type name added.
 //
 // Since: 3.18.0 ClientInfo type name added.
 type ClientInfo struct {
@@ -301,8 +267,6 @@ type ClientCapabilities struct {
 
 	// NotebookDocument Capabilities specific to the notebook document support.
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	NotebookDocument *NotebookDocumentClientCapabilities `json:"notebookDocument,omitzero"`
 
@@ -310,8 +274,6 @@ type ClientCapabilities struct {
 	Window *WindowClientCapabilities `json:"window,omitzero"`
 
 	// General General client capabilities.
-	//
-	// @since 3.16.0
 	//
 	// Since: 3.16.0
 	General *GeneralClientCapabilities `json:"general,omitzero"`
@@ -322,27 +284,19 @@ type ClientCapabilities struct {
 
 // WorkspaceOptions Defines workspace specific capabilities of the server.
 //
-// @since 3.18.0
-//
 // Since: 3.18.0
 type WorkspaceOptions struct {
 	// WorkspaceFolders The server supports workspace folder.
-	//
-	// @since 3.6.0
 	//
 	// Since: 3.6.0
 	WorkspaceFolders *WorkspaceFoldersServerCapabilities `json:"workspaceFolders,omitzero"`
 
 	// FileOperations The server is interested in notifications/requests for operations on files.
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	FileOperations *FileOperationOptions `json:"fileOperations,omitzero"`
 
 	// TextDocumentContent The server supports the `workspace/textDocumentContent` request.
-	//
-	// @since 3.18.0
 	//
 	// Since: 3.18.0
 	TextDocumentContent WorkspaceOptionsTextDocumentContent `json:"textDocumentContent,omitzero"`
@@ -372,14 +326,10 @@ type WorkspaceClientCapabilities struct {
 
 	// WorkspaceFolders The client has support for workspace folders.
 	//
-	// @since 3.6.0
-	//
 	// Since: 3.6.0
 	WorkspaceFolders *bool `json:"workspaceFolders,omitzero"`
 
 	// Configuration The client supports `workspace/configuration` requests.
-	//
-	// @since 3.6.0
 	//
 	// Since: 3.6.0
 	Configuration *bool `json:"configuration,omitzero"`
@@ -387,15 +337,11 @@ type WorkspaceClientCapabilities struct {
 	// SemanticTokens Capabilities specific to the semantic token requests scoped to the
 	// workspace.
 	//
-	// @since 3.16.0.
-	//
 	// Since: 3.16.0.
 	SemanticTokens *SemanticTokensWorkspaceClientCapabilities `json:"semanticTokens,omitzero"`
 
 	// CodeLens Capabilities specific to the code lens requests scoped to the
 	// workspace.
-	//
-	// @since 3.16.0.
 	//
 	// Since: 3.16.0.
 	CodeLens *CodeLensWorkspaceClientCapabilities `json:"codeLens,omitzero"`
@@ -408,15 +354,11 @@ type WorkspaceClientCapabilities struct {
 	// InlineValue Capabilities specific to the inline values requests scoped to the
 	// workspace.
 	//
-	// @since 3.17.0.
-	//
 	// Since: 3.17.0.
 	InlineValue *InlineValueWorkspaceClientCapabilities `json:"inlineValue,omitzero"`
 
 	// InlayHint Capabilities specific to the inlay hint requests scoped to the
 	// workspace.
-	//
-	// @since 3.17.0.
 	//
 	// Since: 3.17.0.
 	InlayHint *InlayHintWorkspaceClientCapabilities `json:"inlayHint,omitzero"`
@@ -424,21 +366,15 @@ type WorkspaceClientCapabilities struct {
 	// Diagnostics Capabilities specific to the diagnostic requests scoped to the
 	// workspace.
 	//
-	// @since 3.17.0.
-	//
 	// Since: 3.17.0.
 	Diagnostics *DiagnosticWorkspaceClientCapabilities `json:"diagnostics,omitzero"`
 
 	// FoldingRange Capabilities specific to the folding range requests scoped to the workspace.
 	//
-	// @since 3.18.0
-	//
 	// Since: 3.18.0
 	FoldingRange *FoldingRangeWorkspaceClientCapabilities `json:"foldingRange,omitzero"`
 
 	// TextDocumentContent Capabilities specific to the `workspace/textDocumentContent` request.
-	//
-	// @since 3.18.0
 	//
 	// Since: 3.18.0
 	TextDocumentContent *TextDocumentContentClientCapabilities `json:"textDocumentContent,omitzero"`
@@ -450,8 +386,6 @@ type TextDocumentClientCapabilities struct {
 	Synchronization *TextDocumentSyncClientCapabilities `json:"synchronization,omitzero"`
 
 	// Filters Defines which filters the client supports.
-	//
-	// @since 3.18.0
 	//
 	// Since: 3.18.0
 	Filters *TextDocumentFilterClientCapabilities `json:"filters,omitzero"`
@@ -467,8 +401,6 @@ type TextDocumentClientCapabilities struct {
 
 	// Declaration Capabilities specific to the `textDocument/declaration` request.
 	//
-	// @since 3.14.0
-	//
 	// Since: 3.14.0
 	Declaration *DeclarationClientCapabilities `json:"declaration,omitzero"`
 
@@ -477,14 +409,10 @@ type TextDocumentClientCapabilities struct {
 
 	// TypeDefinition Capabilities specific to the `textDocument/typeDefinition` request.
 	//
-	// @since 3.6.0
-	//
 	// Since: 3.6.0
 	TypeDefinition *TypeDefinitionClientCapabilities `json:"typeDefinition,omitzero"`
 
 	// Implementation Capabilities specific to the `textDocument/implementation` request.
-	//
-	// @since 3.6.0
 	//
 	// Since: 3.6.0
 	Implementation *ImplementationClientCapabilities `json:"implementation,omitzero"`
@@ -510,8 +438,6 @@ type TextDocumentClientCapabilities struct {
 	// ColorProvider Capabilities specific to the `textDocument/documentColor` and the
 	// `textDocument/colorPresentation` request.
 	//
-	// @since 3.6.0
-	//
 	// Since: 3.6.0
 	ColorProvider *DocumentColorClientCapabilities `json:"colorProvider,omitzero"`
 
@@ -529,14 +455,10 @@ type TextDocumentClientCapabilities struct {
 
 	// FoldingRange Capabilities specific to the `textDocument/foldingRange` request.
 	//
-	// @since 3.10.0
-	//
 	// Since: 3.10.0
 	FoldingRange *FoldingRangeClientCapabilities `json:"foldingRange,omitzero"`
 
 	// SelectionRange Capabilities specific to the `textDocument/selectionRange` request.
-	//
-	// @since 3.15.0
 	//
 	// Since: 3.15.0
 	SelectionRange *SelectionRangeClientCapabilities `json:"selectionRange,omitzero"`
@@ -546,63 +468,45 @@ type TextDocumentClientCapabilities struct {
 
 	// CallHierarchy Capabilities specific to the various call hierarchy requests.
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	CallHierarchy *CallHierarchyClientCapabilities `json:"callHierarchy,omitzero"`
 
 	// SemanticTokens Capabilities specific to the various semantic token request.
-	//
-	// @since 3.16.0
 	//
 	// Since: 3.16.0
 	SemanticTokens SemanticTokensClientCapabilities `json:"semanticTokens,omitzero"`
 
 	// LinkedEditingRange Capabilities specific to the `textDocument/linkedEditingRange` request.
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	LinkedEditingRange *LinkedEditingRangeClientCapabilities `json:"linkedEditingRange,omitzero"`
 
 	// Moniker Client capabilities specific to the `textDocument/moniker` request.
-	//
-	// @since 3.16.0
 	//
 	// Since: 3.16.0
 	Moniker *MonikerClientCapabilities `json:"moniker,omitzero"`
 
 	// TypeHierarchy Capabilities specific to the various type hierarchy requests.
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	TypeHierarchy *TypeHierarchyClientCapabilities `json:"typeHierarchy,omitzero"`
 
 	// InlineValue Capabilities specific to the `textDocument/inlineValue` request.
-	//
-	// @since 3.17.0
 	//
 	// Since: 3.17.0
 	InlineValue *InlineValueClientCapabilities `json:"inlineValue,omitzero"`
 
 	// InlayHint Capabilities specific to the `textDocument/inlayHint` request.
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	InlayHint *InlayHintClientCapabilities `json:"inlayHint,omitzero"`
 
 	// Diagnostic Capabilities specific to the diagnostic pull model.
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	Diagnostic *DiagnosticClientCapabilities `json:"diagnostic,omitzero"`
 
 	// InlineCompletion Client capabilities specific to inline completions.
-	//
-	// @since 3.18.0
 	//
 	// Since: 3.18.0
 	InlineCompletion *InlineCompletionClientCapabilities `json:"inlineCompletion,omitzero"`
@@ -610,13 +514,9 @@ type TextDocumentClientCapabilities struct {
 
 // NotebookDocumentClientCapabilities Capabilities specific to the notebook document support.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type NotebookDocumentClientCapabilities struct {
 	// Synchronization Capabilities specific to notebook document synchronization
-	//
-	// @since 3.17.0
 	//
 	// Since: 3.17.0
 	Synchronization NotebookDocumentSyncClientCapabilities `json:"synchronization"`
@@ -632,29 +532,21 @@ type WindowClientCapabilities struct {
 	// `workDoneProgress` property in the request specific server
 	// capabilities.
 	//
-	// @since 3.15.0
-	//
 	// Since: 3.15.0
 	WorkDoneProgress *bool `json:"workDoneProgress,omitzero"`
 
 	// ShowMessage Capabilities specific to the showMessage request.
-	//
-	// @since 3.16.0
 	//
 	// Since: 3.16.0
 	ShowMessage *ShowMessageRequestClientCapabilities `json:"showMessage,omitzero"`
 
 	// ShowDocument Capabilities specific to the showDocument request.
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	ShowDocument *ShowDocumentClientCapabilities `json:"showDocument,omitzero"`
 }
 
 // GeneralClientCapabilities General client capabilities.
-//
-// @since 3.16.0
 //
 // Since: 3.16.0
 type GeneralClientCapabilities struct {
@@ -663,21 +555,15 @@ type GeneralClientCapabilities struct {
 	// for which the client will not process the response
 	// anymore since the information is outdated).
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	StaleRequestSupport StaleRequestSupportOptions `json:"staleRequestSupport,omitzero"`
 
 	// RegularExpressions Client capabilities specific to regular expressions.
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	RegularExpressions RegularExpressionsClientCapabilities `json:"regularExpressions,omitzero"`
 
 	// Markdown Client capabilities specific to the client's markdown parser.
-	//
-	// @since 3.16.0
 	//
 	// Since: 3.16.0
 	Markdown MarkdownClientCapabilities `json:"markdown,omitzero"`
@@ -699,8 +585,6 @@ type GeneralClientCapabilities struct {
 	// is best done where the file is read which is usually on the server
 	// side.
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	PositionEncodings []PositionEncodingKind `json:"positionEncodings,omitzero"`
 }
@@ -720,7 +604,7 @@ type WorkspaceFoldersServerCapabilities struct {
 	ChangeNotifications ChangeNotifications `json:"changeNotifications,omitzero"`
 }
 
-// StaleRequestSupportOptions @since 3.18.0
+// StaleRequestSupportOptions is defined by the LSP specification.
 //
 // Since: 3.18.0
 type StaleRequestSupportOptions struct {

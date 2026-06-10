@@ -8,8 +8,6 @@ package protocol
 // FileOperationPatternKind A pattern kind describing if a glob pattern matches a file a folder or
 // both.
 //
-// @since 3.16.0
-//
 // Since: 3.16.0
 type FileOperationPatternKind string
 
@@ -21,7 +19,7 @@ const (
 	FileOperationPatternKindFolder FileOperationPatternKind = "folder"
 )
 
-// WorkspaceSymbolParams The parameters of a {@link WorkspaceSymbolRequest}.
+// WorkspaceSymbolParams The parameters of a WorkspaceSymbolRequest.
 type WorkspaceSymbolParams struct {
 	WorkDoneProgressParams
 	PartialResultParams
@@ -41,8 +39,6 @@ type WorkspaceSymbolParams struct {
 //
 // See also SymbolInformation.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type WorkspaceSymbol struct {
 	BaseSymbolInformation
@@ -59,25 +55,23 @@ type WorkspaceSymbol struct {
 	Data LSPAny `json:"data,omitzero"`
 }
 
-// WorkspaceSymbolRegistrationOptions Registration options for a {@link WorkspaceSymbolRequest}.
+// WorkspaceSymbolRegistrationOptions Registration options for a WorkspaceSymbolRequest.
 type WorkspaceSymbolRegistrationOptions struct {
 	WorkspaceSymbolOptions
 }
 
-// WorkspaceSymbolOptions Server capabilities for a {@link WorkspaceSymbolRequest}.
+// WorkspaceSymbolOptions Server capabilities for a WorkspaceSymbolRequest.
 type WorkspaceSymbolOptions struct {
 	WorkDoneProgressOptions
 
 	// ResolveProvider The server provides support to resolve additional
 	// information for a workspace symbol.
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	ResolveProvider *bool `json:"resolveProvider,omitzero"`
 }
 
-// WorkspaceSymbolClientCapabilities Client capabilities for a {@link WorkspaceSymbolRequest}.
+// WorkspaceSymbolClientCapabilities Client capabilities for a WorkspaceSymbolRequest.
 type WorkspaceSymbolClientCapabilities struct {
 	// DynamicRegistration Symbol request supports dynamic registration.
 	DynamicRegistration *bool `json:"dynamicRegistration,omitzero"`
@@ -88,8 +82,6 @@ type WorkspaceSymbolClientCapabilities struct {
 	// TagSupport The client supports tags on `SymbolInformation`.
 	// Clients supporting tags have to handle unknown tags gracefully.
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	TagSupport ClientSymbolTagOptions `json:"tagSupport,omitzero"`
 
@@ -97,13 +89,11 @@ type WorkspaceSymbolClientCapabilities struct {
 	// request `workspaceSymbol/resolve` to the server to resolve additional
 	// properties.
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	ResolveSupport ClientSymbolResolveOptions `json:"resolveSupport,omitzero"`
 }
 
-// ClientSymbolKindOptions @since 3.18.0
+// ClientSymbolKindOptions is defined by the LSP specification.
 //
 // Since: 3.18.0
 type ClientSymbolKindOptions struct {
@@ -118,7 +108,7 @@ type ClientSymbolKindOptions struct {
 	ValueSet []SymbolKind `json:"valueSet,omitzero"`
 }
 
-// ClientSymbolTagOptions @since 3.18.0
+// ClientSymbolTagOptions is defined by the LSP specification.
 //
 // Since: 3.18.0
 type ClientSymbolTagOptions struct {
@@ -126,7 +116,7 @@ type ClientSymbolTagOptions struct {
 	ValueSet []SymbolTag `json:"valueSet"`
 }
 
-// ClientSymbolResolveOptions @since 3.18.0
+// ClientSymbolResolveOptions is defined by the LSP specification.
 //
 // Since: 3.18.0
 type ClientSymbolResolveOptions struct {
@@ -195,8 +185,6 @@ type WorkspaceFoldersInitializeParams struct {
 	// It can be `null` if the client supports workspace folders but none are
 	// configured.
 	//
-	// @since 3.6.0
-	//
 	// Since: 3.6.0
 	WorkspaceFolders Nullable[[]WorkspaceFolder] `json:"workspaceFolders,omitzero"`
 }
@@ -210,8 +198,6 @@ type DidChangeWorkspaceFoldersParams struct {
 // CreateFilesParams The parameters sent in notifications/requests for user-initiated creation of
 // files.
 //
-// @since 3.16.0
-//
 // Since: 3.16.0
 type CreateFilesParams struct {
 	// Files An array of all files/folders created in this operation.
@@ -219,8 +205,6 @@ type CreateFilesParams struct {
 }
 
 // FileOperationRegistrationOptions The options to register for file operations.
-//
-// @since 3.16.0
 //
 // Since: 3.16.0
 type FileOperationRegistrationOptions struct {
@@ -230,8 +214,6 @@ type FileOperationRegistrationOptions struct {
 
 // RenameFilesParams The parameters sent in notifications/requests for user-initiated renames of
 // files.
-//
-// @since 3.16.0
 //
 // Since: 3.16.0
 type RenameFilesParams struct {
@@ -243,8 +225,6 @@ type RenameFilesParams struct {
 // DeleteFilesParams The parameters sent in notifications/requests for user-initiated deletes of
 // files.
 //
-// @since 3.16.0
-//
 // Since: 3.16.0
 type DeleteFilesParams struct {
 	// Files An array of all files/folders deleted in this operation.
@@ -252,8 +232,6 @@ type DeleteFilesParams struct {
 }
 
 // FileCreate Represents information on a file/folder create.
-//
-// @since 3.16.0
 //
 // Since: 3.16.0
 type FileCreate struct {
@@ -263,8 +241,6 @@ type FileCreate struct {
 
 // FileOperationFilter A filter to describe in which file operation requests or notifications
 // the server is interested in receiving.
-//
-// @since 3.16.0
 //
 // Since: 3.16.0
 type FileOperationFilter struct {
@@ -277,8 +253,6 @@ type FileOperationFilter struct {
 
 // FileRename Represents information on a file/folder rename.
 //
-// @since 3.16.0
-//
 // Since: 3.16.0
 type FileRename struct {
 	// OldURI A file:// URI for the original location of the file/folder being renamed.
@@ -290,8 +264,6 @@ type FileRename struct {
 
 // FileDelete Represents information on a file/folder delete.
 //
-// @since 3.16.0
-//
 // Since: 3.16.0
 type FileDelete struct {
 	// URI A file:// URI for the location of the file/folder being deleted.
@@ -300,8 +272,6 @@ type FileDelete struct {
 
 // FileOperationPattern A pattern to describe in which file operation requests or notifications
 // the server is interested in receiving.
-//
-// @since 3.16.0
 //
 // Since: 3.16.0
 type FileOperationPattern struct {
@@ -325,8 +295,6 @@ type FileOperationPattern struct {
 
 // FileOperationPatternOptions Matching options for the file operation pattern.
 //
-// @since 3.16.0
-//
 // Since: 3.16.0
 type FileOperationPatternOptions struct {
 	// IgnoreCase The pattern should be matched ignoring casing.
@@ -334,8 +302,6 @@ type FileOperationPatternOptions struct {
 }
 
 // FileOperationOptions Options for notifications/requests for user operations on files.
-//
-// @since 3.16.0
 //
 // Since: 3.16.0
 type FileOperationOptions struct {
@@ -362,8 +328,6 @@ type FileOperationOptions struct {
 //
 // These events do not come from the file system, they come from user operations
 // like renaming a file in the UI.
-//
-// @since 3.16.0
 //
 // Since: 3.16.0
 type FileOperationClientCapabilities struct {
@@ -412,9 +376,9 @@ type FileEvent struct {
 
 // FileSystemWatcher is defined by the LSP specification.
 type FileSystemWatcher struct {
-	// GlobPattern The glob pattern to watch. See {@link GlobPattern glob pattern} for more detail.
+	// GlobPattern The glob pattern to watch. See glob pattern for more detail.
 	//
-	// @since 3.17.0 support for relative patterns.
+	// support for relative patterns.
 	//
 	// Since: 3.17.0 support for relative patterns.
 	GlobPattern GlobPattern `json:"globPattern"`
@@ -428,8 +392,6 @@ type FileSystemWatcher struct {
 // RelativePattern A relative pattern is a helper to construct glob patterns that are matched
 // relatively to a base URI. The common value for a `baseUri` is a workspace
 // folder root, but it can be another absolute URI as well.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type RelativePattern struct {
@@ -448,16 +410,14 @@ type DidChangeWatchedFilesClientCapabilities struct {
 	// from the server side.
 	DynamicRegistration *bool `json:"dynamicRegistration,omitzero"`
 
-	// RelativePatternSupport Whether the client has support for {@link  RelativePattern relative pattern}
+	// RelativePatternSupport Whether the client has support for relative pattern
 	// or not.
-	//
-	// @since 3.17.0
 	//
 	// Since: 3.17.0
 	RelativePatternSupport *bool `json:"relativePatternSupport,omitzero"`
 }
 
-// ExecuteCommandParams The parameters of a {@link ExecuteCommandRequest}.
+// ExecuteCommandParams The parameters of a ExecuteCommandRequest.
 type ExecuteCommandParams struct {
 	WorkDoneProgressParams
 
@@ -468,12 +428,12 @@ type ExecuteCommandParams struct {
 	Arguments []LSPAny `json:"arguments,omitzero"`
 }
 
-// ExecuteCommandRegistrationOptions Registration options for a {@link ExecuteCommandRequest}.
+// ExecuteCommandRegistrationOptions Registration options for a ExecuteCommandRequest.
 type ExecuteCommandRegistrationOptions struct {
 	ExecuteCommandOptions
 }
 
-// ExecuteCommandOptions The server capabilities of a {@link ExecuteCommandRequest}.
+// ExecuteCommandOptions The server capabilities of a ExecuteCommandRequest.
 type ExecuteCommandOptions struct {
 	WorkDoneProgressOptions
 
@@ -481,7 +441,7 @@ type ExecuteCommandOptions struct {
 	Commands []string `json:"commands"`
 }
 
-// ExecuteCommandClientCapabilities The client capabilities of a {@link ExecuteCommandRequest}.
+// ExecuteCommandClientCapabilities The client capabilities of a ExecuteCommandRequest.
 type ExecuteCommandClientCapabilities struct {
 	// DynamicRegistration Execute command supports dynamic registration.
 	DynamicRegistration *bool `json:"dynamicRegistration,omitzero"`
@@ -499,15 +459,13 @@ type ApplyWorkspaceEditParams struct {
 
 	// Metadata Additional data about the edit.
 	//
-	// @since 3.18.0
-	//
 	// Since: 3.18.0
 	Metadata *WorkspaceEditMetadata `json:"metadata,omitzero"`
 }
 
 // ApplyWorkspaceEditResult The result returned from the apply workspace edit request.
 //
-// @since 3.17 renamed from ApplyWorkspaceEditResponse
+// renamed from ApplyWorkspaceEditResponse
 //
 // Since: 3.17 renamed from ApplyWorkspaceEditResponse
 type ApplyWorkspaceEditResult struct {
@@ -527,8 +485,6 @@ type ApplyWorkspaceEditResult struct {
 
 // WorkspaceEditMetadata Additional data about a workspace edit.
 //
-// @since 3.18.0
-//
 // Since: 3.18.0
 type WorkspaceEditMetadata struct {
 	// IsRefactoring Signal to the editor that this edit is a refactoring.
@@ -537,8 +493,6 @@ type WorkspaceEditMetadata struct {
 
 // TextDocumentContentParams Parameters for the `workspace/textDocumentContent` request.
 //
-// @since 3.18.0
-//
 // Since: 3.18.0
 type TextDocumentContentParams struct {
 	// URI The uri of the text document.
@@ -546,8 +500,6 @@ type TextDocumentContentParams struct {
 }
 
 // TextDocumentContentResult Result of the `workspace/textDocumentContent` request.
-//
-// @since 3.18.0
 //
 // Since: 3.18.0
 type TextDocumentContentResult struct {
@@ -560,8 +512,6 @@ type TextDocumentContentResult struct {
 
 // TextDocumentContentRegistrationOptions Text document content provider registration options.
 //
-// @since 3.18.0
-//
 // Since: 3.18.0
 type TextDocumentContentRegistrationOptions struct {
 	TextDocumentContentOptions
@@ -569,8 +519,6 @@ type TextDocumentContentRegistrationOptions struct {
 }
 
 // TextDocumentContentRefreshParams Parameters for the `workspace/textDocumentContent/refresh` request.
-//
-// @since 3.18.0
 //
 // Since: 3.18.0
 type TextDocumentContentRefreshParams struct {
@@ -580,15 +528,13 @@ type TextDocumentContentRefreshParams struct {
 
 // TextDocumentContentOptions Text document content provider options.
 //
-// @since 3.18.0
-//
 // Since: 3.18.0
 type TextDocumentContentOptions struct {
 	// Schemes The schemes for which the server provides content.
 	Schemes []string `json:"schemes"`
 }
 
-// TextDocumentContentChangePartial @since 3.18.0
+// TextDocumentContentChangePartial is defined by the LSP specification.
 //
 // Since: 3.18.0
 type TextDocumentContentChangePartial struct {
@@ -597,8 +543,6 @@ type TextDocumentContentChangePartial struct {
 
 	// RangeLength The optional length of the range that got replaced.
 	//
-	// @deprecated use range instead.
-	//
 	// Deprecated: use range instead.
 	RangeLength *uint32 `json:"rangeLength,omitzero"`
 
@@ -606,7 +550,7 @@ type TextDocumentContentChangePartial struct {
 	Text string `json:"text"`
 }
 
-// TextDocumentContentChangeWholeDocument @since 3.18.0
+// TextDocumentContentChangeWholeDocument is defined by the LSP specification.
 //
 // Since: 3.18.0
 type TextDocumentContentChangeWholeDocument struct {
@@ -615,8 +559,6 @@ type TextDocumentContentChangeWholeDocument struct {
 }
 
 // TextDocumentContentClientCapabilities Client capabilities for a text document content provider.
-//
-// @since 3.18.0
 //
 // Since: 3.18.0
 type TextDocumentContentClientCapabilities struct {

@@ -7,8 +7,6 @@ package protocol
 
 // SignatureHelpTriggerKind How a signature help was triggered.
 //
-// @since 3.15.0
-//
 // Since: 3.15.0
 type SignatureHelpTriggerKind uint32
 
@@ -22,15 +20,13 @@ const (
 	SignatureHelpTriggerKindContentChange SignatureHelpTriggerKind = 3
 )
 
-// SignatureHelpParams Parameters for a {@link SignatureHelpRequest}.
+// SignatureHelpParams Parameters for a SignatureHelpRequest.
 type SignatureHelpParams struct {
 	TextDocumentPositionParams
 	WorkDoneProgressParams
 
 	// Context The signature help context. This is only available if the client specifies
 	// to send this using the client capability `textDocument.signatureHelp.contextSupport === true`
-	//
-	// @since 3.15.0
 	//
 	// Since: 3.15.0
 	Context SignatureHelpContext `json:"context,omitzero"`
@@ -76,15 +72,13 @@ type SignatureHelp struct {
 	ActiveParameter Nullable[uint32] `json:"activeParameter,omitzero"`
 }
 
-// SignatureHelpRegistrationOptions Registration options for a {@link SignatureHelpRequest}.
+// SignatureHelpRegistrationOptions Registration options for a SignatureHelpRequest.
 type SignatureHelpRegistrationOptions struct {
 	TextDocumentRegistrationOptions
 	SignatureHelpOptions
 }
 
 // SignatureHelpContext Additional information about the context in which a signature help request was triggered.
-//
-// @since 3.15.0
 //
 // Since: 3.15.0
 type SignatureHelpContext struct {
@@ -134,13 +128,11 @@ type SignatureInformation struct {
 	// If provided (or `null`), this is used in place of
 	// `SignatureHelp.activeParameter`.
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	ActiveParameter Nullable[uint32] `json:"activeParameter,omitzero"`
 }
 
-// SignatureHelpOptions Server Capabilities for a {@link SignatureHelpRequest}.
+// SignatureHelpOptions Server Capabilities for a SignatureHelpRequest.
 type SignatureHelpOptions struct {
 	WorkDoneProgressOptions
 
@@ -151,8 +143,6 @@ type SignatureHelpOptions struct {
 	//
 	// These trigger characters are only active when signature help is already showing. All trigger characters
 	// are also counted as re-trigger characters.
-	//
-	// @since 3.15.0
 	//
 	// Since: 3.15.0
 	RetriggerCharacters []string `json:"retriggerCharacters,omitzero"`
@@ -180,7 +170,7 @@ type ParameterInformation struct {
 	Documentation InlayHintTooltip `json:"documentation,omitzero"`
 }
 
-// SignatureHelpClientCapabilities Client Capabilities for a {@link SignatureHelpRequest}.
+// SignatureHelpClientCapabilities Client Capabilities for a SignatureHelpRequest.
 type SignatureHelpClientCapabilities struct {
 	// DynamicRegistration Whether signature help supports dynamic registration.
 	DynamicRegistration *bool `json:"dynamicRegistration,omitzero"`
@@ -194,13 +184,11 @@ type SignatureHelpClientCapabilities struct {
 	// contextSupport will also support the `retriggerCharacters` on
 	// `SignatureHelpOptions`.
 	//
-	// @since 3.15.0
-	//
 	// Since: 3.15.0
 	ContextSupport *bool `json:"contextSupport,omitzero"`
 }
 
-// ClientSignatureInformationOptions @since 3.18.0
+// ClientSignatureInformationOptions is defined by the LSP specification.
 //
 // Since: 3.18.0
 type ClientSignatureInformationOptions struct {
@@ -214,8 +202,6 @@ type ClientSignatureInformationOptions struct {
 	// ActiveParameterSupport The client supports the `activeParameter` property on `SignatureInformation`
 	// literal.
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	ActiveParameterSupport *bool `json:"activeParameterSupport,omitzero"`
 
@@ -223,20 +209,16 @@ type ClientSignatureInformationOptions struct {
 	// `SignatureHelp`/`SignatureInformation` being set to `null` to
 	// indicate that no parameter should be active.
 	//
-	// @since 3.18.0
-	//
 	// Since: 3.18.0
 	NoActiveParameterSupport *bool `json:"noActiveParameterSupport,omitzero"`
 }
 
-// ClientSignatureParameterInformationOptions @since 3.18.0
+// ClientSignatureParameterInformationOptions is defined by the LSP specification.
 //
 // Since: 3.18.0
 type ClientSignatureParameterInformationOptions struct {
 	// LabelOffsetSupport The client supports processing label offsets instead of a
 	// simple label string.
-	//
-	// @since 3.14.0
 	//
 	// Since: 3.14.0
 	LabelOffsetSupport *bool `json:"labelOffsetSupport,omitzero"`

@@ -7,8 +7,6 @@ package protocol
 
 // UniquenessLevel Moniker uniqueness level to define scope of the moniker.
 //
-// @since 3.16.0
-//
 // Since: 3.16.0
 type UniquenessLevel string
 
@@ -27,8 +25,6 @@ const (
 )
 
 // MonikerKind The moniker kind.
-//
-// @since 3.16.0
 //
 // Since: 3.16.0
 type MonikerKind string
@@ -52,8 +48,6 @@ type MonikerParams struct {
 }
 
 // Moniker Moniker definition to match LSIF 0.5 moniker definition.
-//
-// @since 3.16.0
 //
 // Since: 3.16.0
 type Moniker struct {
@@ -83,8 +77,6 @@ type MonikerOptions struct {
 }
 
 // MonikerClientCapabilities Client capabilities specific to the moniker request.
-//
-// @since 3.16.0
 //
 // Since: 3.16.0
 type MonikerClientCapabilities struct {

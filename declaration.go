@@ -7,7 +7,7 @@ package protocol
 
 // DeclarationLink Information about where a symbol is declared.
 //
-// Provides additional metadata over normal {@link Location location} declarations, including the range of
+// Provides additional metadata over normal location declarations, including the range of
 // the declaring symbol.
 //
 // Servers should prefer returning `DeclarationLink` over `Declaration` if supported
@@ -33,7 +33,7 @@ type DeclarationOptions struct {
 	WorkDoneProgressOptions
 }
 
-// DeclarationClientCapabilities @since 3.14.0
+// DeclarationClientCapabilities is defined by the LSP specification.
 //
 // Since: 3.14.0
 type DeclarationClientCapabilities struct {

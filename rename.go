@@ -15,18 +15,18 @@ const (
 	PrepareSupportDefaultBehaviorIdentifier PrepareSupportDefaultBehavior = 1
 )
 
-// RenameParams The parameters of a {@link RenameRequest}.
+// RenameParams The parameters of a RenameRequest.
 type RenameParams struct {
 	TextDocumentPositionParams
 	WorkDoneProgressParams
 
 	// NewName The new name of the symbol. If the given name is not valid the
-	// request must return a {@link ResponseError} with an
+	// request must return a ResponseError with an
 	// appropriate message set.
 	NewName string `json:"newName"`
 }
 
-// RenameRegistrationOptions Registration options for a {@link RenameRequest}.
+// RenameRegistrationOptions Registration options for a RenameRequest.
 type RenameRegistrationOptions struct {
 	TextDocumentRegistrationOptions
 	RenameOptions
@@ -55,19 +55,17 @@ type RenameFile struct {
 	Options *RenameFileOptions `json:"options,omitzero"`
 }
 
-// RenameOptions Provider options for a {@link RenameRequest}.
+// RenameOptions Provider options for a RenameRequest.
 type RenameOptions struct {
 	WorkDoneProgressOptions
 
 	// PrepareProvider Renames should be checked and tested before being executed.
 	//
-	// @since version 3.12.0
-	//
 	// Since: version 3.12.0
 	PrepareProvider *bool `json:"prepareProvider,omitzero"`
 }
 
-// PrepareRenamePlaceholder @since 3.18.0
+// PrepareRenamePlaceholder is defined by the LSP specification.
 //
 // Since: 3.18.0
 type PrepareRenamePlaceholder struct {
@@ -78,7 +76,7 @@ type PrepareRenamePlaceholder struct {
 	Placeholder string `json:"placeholder"`
 }
 
-// PrepareRenameDefaultBehavior @since 3.18.0
+// PrepareRenameDefaultBehavior is defined by the LSP specification.
 //
 // Since: 3.18.0
 type PrepareRenameDefaultBehavior struct {
@@ -103,8 +101,6 @@ type RenameClientCapabilities struct {
 	// PrepareSupport Client supports testing for validity of rename operations
 	// before execution.
 	//
-	// @since 3.12.0
-	//
 	// Since: 3.12.0
 	PrepareSupport *bool `json:"prepareSupport,omitzero"`
 
@@ -112,8 +108,6 @@ type RenameClientCapabilities struct {
 	//
 	// The value indicates the default behavior used by the
 	// client.
-	//
-	// @since 3.16.0
 	//
 	// Since: 3.16.0
 	PrepareSupportDefaultBehavior PrepareSupportDefaultBehavior `json:"prepareSupportDefaultBehavior,omitzero"`
@@ -123,8 +117,6 @@ type RenameClientCapabilities struct {
 	// rename request's workspace edit by for example presenting
 	// the workspace edit in the user interface and asking
 	// for confirmation.
-	//
-	// @since 3.16.0
 	//
 	// Since: 3.16.0
 	HonorsChangeAnnotations *bool `json:"honorsChangeAnnotations,omitzero"`

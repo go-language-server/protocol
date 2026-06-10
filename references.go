@@ -5,7 +5,7 @@
 
 package protocol
 
-// ReferenceParams Parameters for a {@link ReferencesRequest}.
+// ReferenceParams Parameters for a ReferencesRequest.
 type ReferenceParams struct {
 	TextDocumentPositionParams
 	WorkDoneProgressParams
@@ -15,7 +15,7 @@ type ReferenceParams struct {
 	Context ReferenceContext `json:"context"`
 }
 
-// ReferenceRegistrationOptions Registration options for a {@link ReferencesRequest}.
+// ReferenceRegistrationOptions Registration options for a ReferencesRequest.
 type ReferenceRegistrationOptions struct {
 	TextDocumentRegistrationOptions
 	ReferenceOptions
@@ -33,7 +33,7 @@ type ReferenceOptions struct {
 	WorkDoneProgressOptions
 }
 
-// ReferenceClientCapabilities Client Capabilities for a {@link ReferencesRequest}.
+// ReferenceClientCapabilities Client Capabilities for a ReferencesRequest.
 type ReferenceClientCapabilities struct {
 	// DynamicRegistration Whether references supports dynamic registration.
 	DynamicRegistration *bool `json:"dynamicRegistration,omitzero"`

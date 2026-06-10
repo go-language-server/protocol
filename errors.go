@@ -9,8 +9,6 @@ const (
 	// LSPReservedErrorRangeStart is the start range of LSP reserved error codes.
 	//
 	// It doesn't denote a real error code.
-	//
-	// @since 3.16.0.
 	LSPReservedErrorRangeStart jsonrpc2.Code = -32899
 
 	// CodeContentModified is the state change that invalidates the result of a request in execution.
@@ -26,8 +24,6 @@ const (
 	// LSPReservedErrorRangeEnd is the end range of LSP reserved error codes.
 	//
 	// It doesn't denote a real error code.
-	//
-	// @since 3.16.0.
 	LSPReservedErrorRangeEnd jsonrpc2.Code = -32800
 )
 

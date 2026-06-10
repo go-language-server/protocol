@@ -6,6 +6,7 @@ package genlsp
 import (
 	"fmt"
 	"go/format"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -1149,7 +1150,7 @@ func (g *Generator) fieldDoc(name string, p *Property) string {
 func (g *Generator) fieldDocText(name, doc, since, deprecated string, proposed bool) string {
 	clean := func(s string) string { return strings.ReplaceAll(s, "\r\n", "\n") }
 	var lines []string
-	doc = strings.TrimSpace(clean(doc))
+	doc = sanitizeDoc(strings.TrimSpace(clean(doc)))
 	if doc == "" {
 		lines = append(lines, name+" is defined by the LSP specification.")
 	} else {
@@ -1180,6 +1181,67 @@ func (g *Generator) fieldDocText(name, doc, since, deprecated string, proposed b
 		}
 	}
 	return b.String()
+}
+
+// JSDoc-style annotation patterns the LSP meta-model embeds in documentation
+// prose. They are stripped at emit time so the godoc reads as plain Go prose;
+// the structured since/deprecated/proposed fields still drive the dedicated
+// Since:/Deprecated:/Proposed. lines.
+var (
+	// linkRe matches a {@link target display text} or {@linkcode ...} reference.
+	linkRe = regexp.MustCompile(`\{@link(?:code)?\s+([^}]*)\}`)
+	// sinceRe matches a leading "@since <version>" tag, optionally followed by a
+	// "- proposed" status marker or a "- " separator before changelog prose.
+	sinceRe = regexp.MustCompile(`(?im)^[ \t]*@since\b[ \t]*(?:version[ \t]+)?[0-9][0-9.]*[ \t]*(?:-[ \t]*proposed\b[ \t]*)?(?:-[ \t]*)?`)
+	// inlineSinceRe matches a mid-sentence "@since <version>" tag, e.g. "... is
+	// deprecated @since 3.16.0." The version match stops at the digits so a
+	// sentence-terminating period stays attached to the surrounding prose.
+	inlineSinceRe = regexp.MustCompile(`[ \t]*@since\b[ \t]*(?:version[ \t]+)?[0-9]+(?:\.[0-9]+)*`)
+	// deprRe matches a leading "@deprecated" tag; the prose duplicates the
+	// structured Deprecated: directive, so the whole line is dropped.
+	deprRe = regexp.MustCompile(`(?im)^[ \t]*@deprecated\b[ \t]*`)
+	// blankRunRe collapses paragraph gaps left behind by removed lines.
+	blankRunRe = regexp.MustCompile(`\n{3,}`)
+)
+
+// unwrapLink resolves the body of a {@link} reference to its display text, or
+// to the bare target when no display text is present.
+func unwrapLink(body string) string {
+	body = strings.TrimSpace(body)
+	if body == "" {
+		return ""
+	}
+	fields := strings.Fields(body)
+	if len(fields) == 1 {
+		return fields[0]
+	}
+	return strings.Join(fields[1:], " ")
+}
+
+// sanitizeDoc removes JSDoc-style @since and @deprecated tags and unwraps
+// {@link}/{@linkcode} references from a documentation block. Standalone @since
+// lines are dropped entirely while trailing changelog prose is preserved; the
+// duplicated @deprecated prose is dropped in favour of the structured directive.
+func sanitizeDoc(doc string) string {
+	doc = linkRe.ReplaceAllStringFunc(doc, func(m string) string {
+		return unwrapLink(linkRe.FindStringSubmatch(m)[1])
+	})
+	out := make([]string, 0, strings.Count(doc, "\n")+1)
+	for _, ln := range strings.Split(doc, "\n") {
+		if sinceRe.MatchString(ln) {
+			if rest := strings.TrimSpace(sinceRe.ReplaceAllString(ln, "")); rest != "" {
+				out = append(out, rest)
+			}
+			continue
+		}
+		if deprRe.MatchString(ln) {
+			continue
+		}
+		out = append(out, ln)
+	}
+	res := inlineSinceRe.ReplaceAllString(strings.Join(out, "\n"), "")
+	res = blankRunRe.ReplaceAllString(res, "\n\n")
+	return strings.TrimSpace(res)
 }
 
 // ---- small string helpers ----

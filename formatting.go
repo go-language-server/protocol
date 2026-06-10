@@ -5,7 +5,7 @@
 
 package protocol
 
-// DocumentFormattingParams The parameters of a {@link DocumentFormattingRequest}.
+// DocumentFormattingParams The parameters of a DocumentFormattingRequest.
 type DocumentFormattingParams struct {
 	WorkDoneProgressParams
 
@@ -16,7 +16,7 @@ type DocumentFormattingParams struct {
 	Options FormattingOptions `json:"options"`
 }
 
-// DocumentFormattingRegistrationOptions Registration options for a {@link DocumentFormattingRequest}.
+// DocumentFormattingRegistrationOptions Registration options for a DocumentFormattingRequest.
 type DocumentFormattingRegistrationOptions struct {
 	TextDocumentRegistrationOptions
 	DocumentFormattingOptions
@@ -32,32 +32,26 @@ type FormattingOptions struct {
 
 	// TrimTrailingWhitespace Trim trailing whitespace on a line.
 	//
-	// @since 3.15.0
-	//
 	// Since: 3.15.0
 	TrimTrailingWhitespace *bool `json:"trimTrailingWhitespace,omitzero"`
 
 	// InsertFinalNewline Insert a newline character at the end of the file if one does not exist.
-	//
-	// @since 3.15.0
 	//
 	// Since: 3.15.0
 	InsertFinalNewline *bool `json:"insertFinalNewline,omitzero"`
 
 	// TrimFinalNewlines Trim all newlines after the final newline at the end of the file.
 	//
-	// @since 3.15.0
-	//
 	// Since: 3.15.0
 	TrimFinalNewlines *bool `json:"trimFinalNewlines,omitzero"`
 }
 
-// DocumentFormattingOptions Provider options for a {@link DocumentFormattingRequest}.
+// DocumentFormattingOptions Provider options for a DocumentFormattingRequest.
 type DocumentFormattingOptions struct {
 	WorkDoneProgressOptions
 }
 
-// DocumentFormattingClientCapabilities Client capabilities of a {@link DocumentFormattingRequest}.
+// DocumentFormattingClientCapabilities Client capabilities of a DocumentFormattingRequest.
 type DocumentFormattingClientCapabilities struct {
 	// DynamicRegistration Whether formatting supports dynamic registration.
 	DynamicRegistration *bool `json:"dynamicRegistration,omitzero"`

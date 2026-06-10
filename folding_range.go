@@ -18,7 +18,7 @@ const (
 	FoldingRangeKindRegion FoldingRangeKind = "region"
 )
 
-// FoldingRangeParams Parameters for a {@link FoldingRangeRequest}.
+// FoldingRangeParams Parameters for a FoldingRangeRequest.
 type FoldingRangeParams struct {
 	WorkDoneProgressParams
 	PartialResultParams
@@ -46,14 +46,12 @@ type FoldingRange struct {
 
 	// Kind Describes the kind of the folding range such as 'comment' or 'region'. The kind
 	// is used to categorize folding ranges and used by commands like 'Fold all comments'.
-	// See {@link FoldingRangeKind} for an enumeration of standardized kinds.
+	// See FoldingRangeKind for an enumeration of standardized kinds.
 	Kind FoldingRangeKind `json:"kind,omitzero"`
 
 	// CollapsedText The text that the client should show when the specified range is
 	// collapsed. If not defined or not supported by the client, a default
 	// will be chosen by the client.
-	//
-	// @since 3.17.0
 	//
 	// Since: 3.17.0
 	CollapsedText *string `json:"collapsedText,omitzero"`
@@ -73,8 +71,6 @@ type FoldingRangeOptions struct {
 
 // FoldingRangeWorkspaceClientCapabilities Client workspace capabilities specific to folding ranges
 //
-// @since 3.18.0
-//
 // Since: 3.18.0
 type FoldingRangeWorkspaceClientCapabilities struct {
 	// RefreshSupport Whether the client implementation supports a refresh request sent from the
@@ -84,8 +80,6 @@ type FoldingRangeWorkspaceClientCapabilities struct {
 	// folding ranges currently shown. It should be used with absolute care and is
 	// useful for situation where a server for example detects a project wide
 	// change that requires such a calculation.
-	//
-	// @since 3.18.0
 	//
 	// Since: 3.18.0
 	RefreshSupport *bool `json:"refreshSupport,omitzero"`
@@ -111,20 +105,16 @@ type FoldingRangeClientCapabilities struct {
 
 	// FoldingRangeKind Specific options for the folding range kind.
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	FoldingRangeKind *ClientFoldingRangeKindOptions `json:"foldingRangeKind,omitzero"`
 
 	// FoldingRange Specific options for the folding range.
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	FoldingRange *ClientFoldingRangeOptions `json:"foldingRange,omitzero"`
 }
 
-// ClientFoldingRangeKindOptions @since 3.18.0
+// ClientFoldingRangeKindOptions is defined by the LSP specification.
 //
 // Since: 3.18.0
 type ClientFoldingRangeKindOptions struct {
@@ -135,14 +125,12 @@ type ClientFoldingRangeKindOptions struct {
 	ValueSet []FoldingRangeKind `json:"valueSet,omitzero"`
 }
 
-// ClientFoldingRangeOptions @since 3.18.0
+// ClientFoldingRangeOptions is defined by the LSP specification.
 //
 // Since: 3.18.0
 type ClientFoldingRangeOptions struct {
 	// CollapsedText If set, the client signals that it supports setting collapsedText on
 	// folding ranges to display custom labels instead of the default text.
-	//
-	// @since 3.17.0
 	//
 	// Since: 3.17.0
 	CollapsedText *bool `json:"collapsedText,omitzero"`

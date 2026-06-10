@@ -13,8 +13,6 @@ type LinkedEditingRangeParams struct {
 
 // LinkedEditingRanges The result of a linked editing range request.
 //
-// @since 3.16.0
-//
 // Since: 3.16.0
 type LinkedEditingRanges struct {
 	// Ranges A list of ranges that can be edited together. The ranges must have
@@ -40,8 +38,6 @@ type LinkedEditingRangeOptions struct {
 }
 
 // LinkedEditingRangeClientCapabilities Client capabilities for the linked editing range request.
-//
-// @since 3.16.0
 //
 // Since: 3.16.0
 type LinkedEditingRangeClientCapabilities struct {

@@ -7,8 +7,6 @@ package protocol
 
 // InlayHintKind Inlay hint kinds.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type InlayHintKind uint32
 
@@ -22,8 +20,6 @@ const (
 
 // InlayHintParams A parameter literal used in inlay hint requests.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type InlayHintParams struct {
 	WorkDoneProgressParams
@@ -36,8 +32,6 @@ type InlayHintParams struct {
 }
 
 // InlayHint Inlay hint information.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type InlayHint struct {
@@ -88,8 +82,6 @@ type InlayHint struct {
 
 // InlayHintRegistrationOptions Inlay hint options used during static or dynamic registration.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type InlayHintRegistrationOptions struct {
 	InlayHintOptions
@@ -99,8 +91,6 @@ type InlayHintRegistrationOptions struct {
 
 // InlayHintLabelPart An inlay hint label part allows for interactive and composite labels
 // of inlay hints.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type InlayHintLabelPart struct {
@@ -134,8 +124,6 @@ type InlayHintLabelPart struct {
 
 // InlayHintOptions Inlay hint options used during static registration.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type InlayHintOptions struct {
 	WorkDoneProgressOptions
@@ -146,8 +134,6 @@ type InlayHintOptions struct {
 }
 
 // InlayHintWorkspaceClientCapabilities Client workspace capabilities specific to inlay hints.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type InlayHintWorkspaceClientCapabilities struct {
@@ -163,8 +149,6 @@ type InlayHintWorkspaceClientCapabilities struct {
 
 // InlayHintClientCapabilities Inlay hint client capabilities.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type InlayHintClientCapabilities struct {
 	// DynamicRegistration Whether inlay hints support dynamic registration.
@@ -175,7 +159,7 @@ type InlayHintClientCapabilities struct {
 	ResolveSupport ClientInlayHintResolveOptions `json:"resolveSupport,omitzero"`
 }
 
-// ClientInlayHintResolveOptions @since 3.18.0
+// ClientInlayHintResolveOptions is defined by the LSP specification.
 //
 // Since: 3.18.0
 type ClientInlayHintResolveOptions struct {

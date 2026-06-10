@@ -9,8 +9,6 @@ package protocol
 // an clients can specify additional token types via the
 // corresponding client capabilities.
 //
-// @since 3.16.0
-//
 // Since: 3.16.0
 type SemanticTokenTypes string
 
@@ -61,11 +59,11 @@ const (
 	SemanticTokenTypesRegexp SemanticTokenTypes = "regexp"
 	// SemanticTokenTypesOperator is defined by the LSP specification.
 	SemanticTokenTypesOperator SemanticTokenTypes = "operator"
-	// SemanticTokenTypesDecorator @since 3.17.0
+	// SemanticTokenTypesDecorator is defined by the LSP specification.
 	//
 	// Since: 3.17.0
 	SemanticTokenTypesDecorator SemanticTokenTypes = "decorator"
-	// SemanticTokenTypesLabel @since 3.18.0
+	// SemanticTokenTypesLabel is defined by the LSP specification.
 	//
 	// Since: 3.18.0
 	SemanticTokenTypesLabel SemanticTokenTypes = "label"
@@ -74,8 +72,6 @@ const (
 // SemanticTokenModifiers A set of predefined token modifiers. This set is not fixed
 // an clients can specify additional token types via the
 // corresponding client capabilities.
-//
-// @since 3.16.0
 //
 // Since: 3.16.0
 type SemanticTokenModifiers string
@@ -104,7 +100,7 @@ const (
 	SemanticTokenModifiersDefaultLibrary SemanticTokenModifiers = "defaultLibrary"
 )
 
-// SemanticTokensParams @since 3.16.0
+// SemanticTokensParams is defined by the LSP specification.
 //
 // Since: 3.16.0
 type SemanticTokensParams struct {
@@ -115,7 +111,7 @@ type SemanticTokensParams struct {
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
 }
 
-// SemanticTokens @since 3.16.0
+// SemanticTokens is defined by the LSP specification.
 //
 // Since: 3.16.0
 type SemanticTokens struct {
@@ -129,7 +125,7 @@ type SemanticTokens struct {
 	Data []uint32 `json:"data"`
 }
 
-// SemanticTokensPartialResult @since 3.16.0
+// SemanticTokensPartialResult is defined by the LSP specification.
 //
 // Since: 3.16.0
 type SemanticTokensPartialResult struct {
@@ -137,7 +133,7 @@ type SemanticTokensPartialResult struct {
 	Data []uint32 `json:"data"`
 }
 
-// SemanticTokensRegistrationOptions @since 3.16.0
+// SemanticTokensRegistrationOptions is defined by the LSP specification.
 //
 // Since: 3.16.0
 type SemanticTokensRegistrationOptions struct {
@@ -146,7 +142,7 @@ type SemanticTokensRegistrationOptions struct {
 	StaticRegistrationOptions
 }
 
-// SemanticTokensDeltaParams @since 3.16.0
+// SemanticTokensDeltaParams is defined by the LSP specification.
 //
 // Since: 3.16.0
 type SemanticTokensDeltaParams struct {
@@ -161,7 +157,7 @@ type SemanticTokensDeltaParams struct {
 	PreviousResultID string `json:"previousResultId"`
 }
 
-// SemanticTokensDelta @since 3.16.0
+// SemanticTokensDelta is defined by the LSP specification.
 //
 // Since: 3.16.0
 type SemanticTokensDelta struct {
@@ -172,7 +168,7 @@ type SemanticTokensDelta struct {
 	Edits []SemanticTokensEdit `json:"edits"`
 }
 
-// SemanticTokensDeltaPartialResult @since 3.16.0
+// SemanticTokensDeltaPartialResult is defined by the LSP specification.
 //
 // Since: 3.16.0
 type SemanticTokensDeltaPartialResult struct {
@@ -180,7 +176,7 @@ type SemanticTokensDeltaPartialResult struct {
 	Edits []SemanticTokensEdit `json:"edits"`
 }
 
-// SemanticTokensRangeParams @since 3.16.0
+// SemanticTokensRangeParams is defined by the LSP specification.
 //
 // Since: 3.16.0
 type SemanticTokensRangeParams struct {
@@ -194,7 +190,7 @@ type SemanticTokensRangeParams struct {
 	Range Range `json:"range"`
 }
 
-// SemanticTokensOptions @since 3.16.0
+// SemanticTokensOptions is defined by the LSP specification.
 //
 // Since: 3.16.0
 type SemanticTokensOptions struct {
@@ -211,7 +207,7 @@ type SemanticTokensOptions struct {
 	Full SemanticTokensOptionsFull `json:"full,omitzero"`
 }
 
-// SemanticTokensEdit @since 3.16.0
+// SemanticTokensEdit is defined by the LSP specification.
 //
 // Since: 3.16.0
 type SemanticTokensEdit struct {
@@ -225,7 +221,7 @@ type SemanticTokensEdit struct {
 	Data []uint32 `json:"data,omitzero"`
 }
 
-// SemanticTokensLegend @since 3.16.0
+// SemanticTokensLegend is defined by the LSP specification.
 //
 // Since: 3.16.0
 type SemanticTokensLegend struct {
@@ -238,15 +234,13 @@ type SemanticTokensLegend struct {
 
 // SemanticTokensFullDelta Semantic tokens options to support deltas for full documents
 //
-// @since 3.18.0
-//
 // Since: 3.18.0
 type SemanticTokensFullDelta struct {
 	// Delta The server supports deltas for full documents.
 	Delta *bool `json:"delta,omitzero"`
 }
 
-// SemanticTokensWorkspaceClientCapabilities @since 3.16.0
+// SemanticTokensWorkspaceClientCapabilities is defined by the LSP specification.
 //
 // Since: 3.16.0
 type SemanticTokensWorkspaceClientCapabilities struct {
@@ -260,7 +254,7 @@ type SemanticTokensWorkspaceClientCapabilities struct {
 	RefreshSupport *bool `json:"refreshSupport,omitzero"`
 }
 
-// SemanticTokensClientCapabilities @since 3.16.0
+// SemanticTokensClientCapabilities is defined by the LSP specification.
 //
 // Since: 3.16.0
 type SemanticTokensClientCapabilities struct {
@@ -299,8 +293,6 @@ type SemanticTokensClientCapabilities struct {
 	// LSPErrorCodes.ServerCancelled. If a server does the client
 	// needs to retrigger the request.
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	ServerCancelSupport *bool `json:"serverCancelSupport,omitzero"`
 
@@ -313,13 +305,11 @@ type SemanticTokensClientCapabilities struct {
 	// If the value is `undefined` then the client behavior is not
 	// specified.
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	AugmentsSyntaxTokens *bool `json:"augmentsSyntaxTokens,omitzero"`
 }
 
-// ClientSemanticTokensRequestOptions @since 3.18.0
+// ClientSemanticTokensRequestOptions is defined by the LSP specification.
 //
 // Since: 3.18.0
 type ClientSemanticTokensRequestOptions struct {
@@ -332,7 +322,7 @@ type ClientSemanticTokensRequestOptions struct {
 	Full ClientSemanticTokensRequestOptionsFull `json:"full,omitzero"`
 }
 
-// ClientSemanticTokensRequestFullDelta @since 3.18.0
+// ClientSemanticTokensRequestFullDelta is defined by the LSP specification.
 //
 // Since: 3.18.0
 type ClientSemanticTokensRequestFullDelta struct {

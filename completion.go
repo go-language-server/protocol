@@ -65,8 +65,6 @@ const (
 // CompletionItemTag Completion item tags are extra annotations that tweak the rendering of a completion
 // item.
 //
-// @since 3.15.0
-//
 // Since: 3.15.0
 type CompletionItemTag uint32
 
@@ -97,8 +95,6 @@ const (
 
 // InsertTextMode How whitespace and indentation is handled during completion
 // item insertion.
-//
-// @since 3.16.0
 //
 // Since: 3.16.0
 type InsertTextMode uint32
@@ -161,8 +157,6 @@ type CompletionItem struct {
 
 	// LabelDetails Additional details for the label
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	LabelDetails *CompletionItemLabelDetails `json:"labelDetails,omitzero"`
 
@@ -171,8 +165,6 @@ type CompletionItem struct {
 	Kind CompletionItemKind `json:"kind,omitzero"`
 
 	// Tags Tags for this completion item.
-	//
-	// @since 3.15.0
 	//
 	// Since: 3.15.0
 	Tags []CompletionItemTag `json:"tags,omitzero"`
@@ -185,7 +177,6 @@ type CompletionItem struct {
 	Documentation InlayHintTooltip `json:"documentation,omitzero"`
 
 	// Deprecated Indicates if this item is deprecated.
-	// @deprecated Use `tags` instead.
 	//
 	// Deprecated: Use `tags` instead.
 	Deprecated Optional[bool] `json:"deprecated,omitzero"`
@@ -198,17 +189,17 @@ type CompletionItem struct {
 	Preselect Optional[bool] `json:"preselect,omitzero"`
 
 	// SortText A string that should be used when comparing this item
-	// with other items. When `falsy` the {@link CompletionItem.label label}
+	// with other items. When `falsy` the label
 	// is used.
 	SortText Optional[string] `json:"sortText,omitzero"`
 
 	// FilterText A string that should be used when filtering a set of
-	// completion items. When `falsy` the {@link CompletionItem.label label}
+	// completion items. When `falsy` the label
 	// is used.
 	FilterText Optional[string] `json:"filterText,omitzero"`
 
 	// InsertText A string that should be inserted into a document when selecting
-	// this completion. When `falsy` the {@link CompletionItem.label label}
+	// this completion. When `falsy` the label
 	// is used.
 	//
 	// The `insertText` is subject to interpretation by the client side.
@@ -232,14 +223,12 @@ type CompletionItem struct {
 	// item insertion. If not provided the clients default value depends on
 	// the `textDocument.completion.insertTextMode` client capability.
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	InsertTextMode InsertTextMode `json:"insertTextMode,omitzero"`
 
-	// TextEdit An {@link TextEdit edit} which is applied to a document when selecting
+	// TextEdit An edit which is applied to a document when selecting
 	// this completion. When an edit is provided the value of
-	// {@link CompletionItem.insertText insertText} is ignored.
+	// insertText is ignored.
 	//
 	// Most editors support two different operations when accepting a completion
 	// item. One is to insert a completion text and the other is to replace an
@@ -256,7 +245,7 @@ type CompletionItem struct {
 	// must be a prefix of the edit's replace range, that means it must be
 	// contained and starting at the same position.
 	//
-	// @since 3.16.0 additional type `InsertReplaceEdit`
+	// additional type `InsertReplaceEdit`
 	//
 	// Since: 3.16.0 additional type `InsertReplaceEdit`
 	TextEdit CompletionItemTextEdit `json:"textEdit,omitzero"`
@@ -270,14 +259,12 @@ type CompletionItem struct {
 	// If not provided and a list's default range is provided the label
 	// property is used as a text.
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	TextEditText Optional[string] `json:"textEditText,omitzero"`
 
-	// AdditionalTextEdits An optional array of additional {@link TextEdit text edits} that are applied when
+	// AdditionalTextEdits An optional array of additional text edits that are applied when
 	// selecting this completion. Edits must not overlap (including the same insert position)
-	// with the main {@link CompletionItem.textEdit edit} nor with themselves.
+	// with the main edit nor with themselves.
 	//
 	// Additional text edits should be used to change text unrelated to the current cursor position
 	// (for example adding an import statement at the top of the file if the completion item will
@@ -289,17 +276,17 @@ type CompletionItem struct {
 	// characters will be ignored.
 	CommitCharacters []string `json:"commitCharacters,omitzero"`
 
-	// Command An optional {@link Command command} that is executed *after* inserting this completion. *Note* that
+	// Command An optional command that is executed *after* inserting this completion. *Note* that
 	// additional modifications to the current document should be described with the
-	// {@link CompletionItem.additionalTextEdits additionalTextEdits}-property.
+	// additionalTextEdits-property.
 	Command Command `json:"command,omitzero"`
 
 	// Data A data entry field that is preserved on a completion item between a
-	// {@link CompletionRequest} and a {@link CompletionResolveRequest}.
+	// CompletionRequest and a CompletionResolveRequest.
 	Data LSPAny `json:"data,omitzero"`
 }
 
-// CompletionList Represents a collection of {@link CompletionItem completion items} to be presented
+// CompletionList Represents a collection of completion items to be presented
 // in the editor.
 type CompletionList struct {
 	// IsIncomplete This list it not complete. Further typing results in recomputing this list.
@@ -322,8 +309,6 @@ type CompletionList struct {
 	// signals support for this via the `completionList.itemDefaults`
 	// capability.
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	ItemDefaults *CompletionItemDefaults `json:"itemDefaults,omitzero"`
 
@@ -343,8 +328,6 @@ type CompletionList struct {
 	// signals support for this via the `completionList.applyKindSupport`
 	// capability.
 	//
-	// @since 3.18.0
-	//
 	// Since: 3.18.0
 	ApplyKind *CompletionItemApplyKinds `json:"applyKind,omitzero"`
 
@@ -352,7 +335,7 @@ type CompletionList struct {
 	Items []CompletionItem `json:"items"`
 }
 
-// CompletionRegistrationOptions Registration options for a {@link CompletionRequest}.
+// CompletionRegistrationOptions Registration options for a CompletionRequest.
 type CompletionRegistrationOptions struct {
 	TextDocumentRegistrationOptions
 	CompletionOptions
@@ -370,15 +353,13 @@ type CompletionContext struct {
 
 // CompletionItemLabelDetails Additional details for a completion item label.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type CompletionItemLabelDetails struct {
-	// Detail An optional string which is rendered less prominently directly after {@link CompletionItem.label label},
+	// Detail An optional string which is rendered less prominently directly after label,
 	// without any spacing. Should be used for function signatures and type annotations.
 	Detail *string `json:"detail,omitzero"`
 
-	// Description An optional string which is rendered less prominently after {@link CompletionItem.detail}. Should be used
+	// Description An optional string which is rendered less prominently after CompletionItem.detail. Should be used
 	// for fully qualified names and file paths.
 	Description *string `json:"description,omitzero"`
 }
@@ -397,41 +378,29 @@ type CompletionItemLabelDetails struct {
 // signals support for this via the `completionList.itemDefaults`
 // capability.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type CompletionItemDefaults struct {
 	// CommitCharacters A default commit character set.
-	//
-	// @since 3.17.0
 	//
 	// Since: 3.17.0
 	CommitCharacters []string `json:"commitCharacters,omitzero"`
 
 	// EditRange A default edit range.
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	EditRange CompletionItemDefaultsEditRange `json:"editRange,omitzero"`
 
 	// InsertTextFormat A default insert text format.
-	//
-	// @since 3.17.0
 	//
 	// Since: 3.17.0
 	InsertTextFormat InsertTextFormat `json:"insertTextFormat,omitzero"`
 
 	// InsertTextMode A default insert text mode.
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	InsertTextMode InsertTextMode `json:"insertTextMode,omitzero"`
 
 	// Data A default data value.
-	//
-	// @since 3.17.0
 	//
 	// Since: 3.17.0
 	Data LSPAny `json:"data,omitzero"`
@@ -453,8 +422,6 @@ type CompletionItemDefaults struct {
 // signals support for this via the `completionList.applyKindSupport`
 // capability.
 //
-// @since 3.18.0
-//
 // Since: 3.18.0
 type CompletionItemApplyKinds struct {
 	// CommitCharacters Specifies whether commitCharacters on a completion will replace or be
@@ -470,8 +437,6 @@ type CompletionItemApplyKinds struct {
 	// If ApplyKind.Merge the commitCharacters for the completion will be the
 	// union of all values in both `completionList.itemDefaults.commitCharacters`
 	// and the completion's own `commitCharacters`.
-	//
-	// @since 3.18.0
 	//
 	// Since: 3.18.0
 	CommitCharacters ApplyKind `json:"commitCharacters,omitzero"`
@@ -496,8 +461,6 @@ type CompletionItemApplyKinds struct {
 	//   overwrite the field of the same name in
 	//   `completionList.itemDefaults.data` but no merging of nested fields
 	//   within that value will occur.
-	//
-	// @since 3.18.0
 	//
 	// Since: 3.18.0
 	Data ApplyKind `json:"data,omitzero"`
@@ -524,8 +487,6 @@ type CompletionOptions struct {
 	// If a server provides both `allCommitCharacters` and commit characters on an individual
 	// completion item the ones on the completion item win.
 	//
-	// @since 3.2.0
-	//
 	// Since: 3.2.0
 	AllCommitCharacters []string `json:"allCommitCharacters,omitzero"`
 
@@ -536,15 +497,11 @@ type CompletionOptions struct {
 	// CompletionItem The server supports the following `CompletionItem` specific
 	// capabilities.
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	CompletionItem *ServerCompletionItemOptions `json:"completionItem,omitzero"`
 }
 
 // SelectedCompletionInfo Describes the currently selected completion item.
-//
-// @since 3.18.0
 //
 // Since: 3.18.0
 type SelectedCompletionInfo struct {
@@ -557,8 +514,6 @@ type SelectedCompletionInfo struct {
 
 // EditRangeWithInsertReplace Edit range variant that includes ranges for insert and replace operations.
 //
-// @since 3.18.0
-//
 // Since: 3.18.0
 type EditRangeWithInsertReplace struct {
 	// Insert is defined by the LSP specification.
@@ -568,15 +523,13 @@ type EditRangeWithInsertReplace struct {
 	Replace Range `json:"replace"`
 }
 
-// ServerCompletionItemOptions @since 3.18.0
+// ServerCompletionItemOptions is defined by the LSP specification.
 //
 // Since: 3.18.0
 type ServerCompletionItemOptions struct {
 	// LabelDetailsSupport The server has support for completion item label
 	// details (see also `CompletionItemLabelDetails`) when
 	// receiving a completion item in a resolve call.
-	//
-	// @since 3.17.0
 	//
 	// Since: 3.17.0
 	LabelDetailsSupport *bool `json:"labelDetailsSupport,omitzero"`
@@ -598,8 +551,6 @@ type CompletionClientCapabilities struct {
 	// when accepting a completion item that uses multi line
 	// text in either `insertText` or `textEdit`.
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	InsertTextMode InsertTextMode `json:"insertTextMode,omitzero"`
 
@@ -610,13 +561,11 @@ type CompletionClientCapabilities struct {
 	// CompletionList The client supports the following `CompletionList` specific
 	// capabilities.
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	CompletionList *CompletionListCapabilities `json:"completionList,omitzero"`
 }
 
-// ClientCompletionItemOptions @since 3.18.0
+// ClientCompletionItemOptions is defined by the LSP specification.
 //
 // Since: 3.18.0
 type ClientCompletionItemOptions struct {
@@ -646,15 +595,11 @@ type ClientCompletionItemOptions struct {
 	// preserve unknown tags when sending a completion item back to the server in
 	// a resolve call.
 	//
-	// @since 3.15.0
-	//
 	// Since: 3.15.0
 	TagSupport CompletionItemTagOptions `json:"tagSupport,omitzero"`
 
 	// InsertReplaceSupport Client support insert replace edit to control different behavior if a
 	// completion item is inserted in the text or should replace text.
-	//
-	// @since 3.16.0
 	//
 	// Since: 3.16.0
 	InsertReplaceSupport *bool `json:"insertReplaceSupport,omitzero"`
@@ -663,8 +608,6 @@ type ClientCompletionItemOptions struct {
 	// item. Before version 3.16.0 only the predefined properties `documentation`
 	// and `details` could be resolved lazily.
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	ResolveSupport ClientCompletionItemResolveOptions `json:"resolveSupport,omitzero"`
 
@@ -672,21 +615,17 @@ type ClientCompletionItemOptions struct {
 	// a completion item to override the whitespace handling mode
 	// as defined by the client (see `insertTextMode`).
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	InsertTextModeSupport ClientCompletionItemInsertTextModeOptions `json:"insertTextModeSupport,omitzero"`
 
 	// LabelDetailsSupport The client has support for completion item label
 	// details (see also `CompletionItemLabelDetails`).
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	LabelDetailsSupport *bool `json:"labelDetailsSupport,omitzero"`
 }
 
-// ClientCompletionItemOptionsKind @since 3.18.0
+// ClientCompletionItemOptionsKind is defined by the LSP specification.
 //
 // Since: 3.18.0
 type ClientCompletionItemOptionsKind struct {
@@ -704,8 +643,6 @@ type ClientCompletionItemOptionsKind struct {
 // CompletionListCapabilities The client supports the following `CompletionList` specific
 // capabilities.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type CompletionListCapabilities struct {
 	// ItemDefaults The client supports the following itemDefaults on
@@ -714,8 +651,6 @@ type CompletionListCapabilities struct {
 	// The value lists the supported property names of the
 	// `CompletionList.itemDefaults` object. If omitted
 	// no properties are supported.
-	//
-	// @since 3.17.0
 	//
 	// Since: 3.17.0
 	ItemDefaults []string `json:"itemDefaults,omitzero"`
@@ -730,13 +665,11 @@ type CompletionListCapabilities struct {
 	// items the MUST also support merge for them if those fields are
 	// defined in `CompletionList.applyKind`.
 	//
-	// @since 3.18.0
-	//
 	// Since: 3.18.0
 	ApplyKindSupport *bool `json:"applyKindSupport,omitzero"`
 }
 
-// CompletionItemTagOptions @since 3.18.0
+// CompletionItemTagOptions is defined by the LSP specification.
 //
 // Since: 3.18.0
 type CompletionItemTagOptions struct {
@@ -744,7 +677,7 @@ type CompletionItemTagOptions struct {
 	ValueSet []CompletionItemTag `json:"valueSet"`
 }
 
-// ClientCompletionItemResolveOptions @since 3.18.0
+// ClientCompletionItemResolveOptions is defined by the LSP specification.
 //
 // Since: 3.18.0
 type ClientCompletionItemResolveOptions struct {
@@ -752,7 +685,7 @@ type ClientCompletionItemResolveOptions struct {
 	Properties []string `json:"properties"`
 }
 
-// ClientCompletionItemInsertTextModeOptions @since 3.18.0
+// ClientCompletionItemInsertTextModeOptions is defined by the LSP specification.
 //
 // Since: 3.18.0
 type ClientCompletionItemInsertTextModeOptions struct {

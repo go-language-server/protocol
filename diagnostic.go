@@ -7,8 +7,6 @@ package protocol
 
 // DocumentDiagnosticReportKind The document diagnostic report kinds.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type DocumentDiagnosticReportKind string
 
@@ -23,8 +21,6 @@ const (
 )
 
 // DocumentDiagnosticParams Parameters of the document diagnostic request.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type DocumentDiagnosticParams struct {
@@ -43,8 +39,6 @@ type DocumentDiagnosticParams struct {
 
 // DocumentDiagnosticReportPartialResult A partial result for a document diagnostic report.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type DocumentDiagnosticReportPartialResult struct {
 	// RelatedDocuments is defined by the LSP specification.
@@ -52,8 +46,6 @@ type DocumentDiagnosticReportPartialResult struct {
 }
 
 // DiagnosticServerCancellationData Cancellation data returned from a diagnostic request.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type DiagnosticServerCancellationData struct {
@@ -63,8 +55,6 @@ type DiagnosticServerCancellationData struct {
 
 // DiagnosticRegistrationOptions Diagnostic registration options.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type DiagnosticRegistrationOptions struct {
 	TextDocumentRegistrationOptions
@@ -73,8 +63,6 @@ type DiagnosticRegistrationOptions struct {
 }
 
 // WorkspaceDiagnosticParams Parameters of the workspace diagnostic request.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type WorkspaceDiagnosticParams struct {
@@ -91,8 +79,6 @@ type WorkspaceDiagnosticParams struct {
 
 // WorkspaceDiagnosticReport A workspace diagnostic report.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type WorkspaceDiagnosticReport struct {
 	// Items is defined by the LSP specification.
@@ -101,8 +87,6 @@ type WorkspaceDiagnosticReport struct {
 
 // WorkspaceDiagnosticReportPartialResult A partial result for a workspace diagnostic report.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type WorkspaceDiagnosticReportPartialResult struct {
 	// Items is defined by the LSP specification.
@@ -110,8 +94,6 @@ type WorkspaceDiagnosticReportPartialResult struct {
 }
 
 // RelatedFullDocumentDiagnosticReport A full diagnostic report with a set of related documents.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type RelatedFullDocumentDiagnosticReport struct {
@@ -123,15 +105,11 @@ type RelatedFullDocumentDiagnosticReport struct {
 	// such a language is C/C++ where marco definitions in a file
 	// a.cpp and result in errors in a header file b.hpp.
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	RelatedDocuments map[DocumentURI]FullDocumentDiagnosticReportOrUnchangedDocumentDiagnosticReport `json:"relatedDocuments,omitzero"`
 }
 
 // RelatedUnchangedDocumentDiagnosticReport An unchanged diagnostic report with a set of related documents.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type RelatedUnchangedDocumentDiagnosticReport struct {
@@ -143,15 +121,11 @@ type RelatedUnchangedDocumentDiagnosticReport struct {
 	// such a language is C/C++ where marco definitions in a file
 	// a.cpp and result in errors in a header file b.hpp.
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	RelatedDocuments map[DocumentURI]FullDocumentDiagnosticReportOrUnchangedDocumentDiagnosticReport `json:"relatedDocuments,omitzero"`
 }
 
 // FullDocumentDiagnosticReport A diagnostic report with a full set of problems.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type FullDocumentDiagnosticReport struct {
@@ -170,8 +144,6 @@ type FullDocumentDiagnosticReport struct {
 // UnchangedDocumentDiagnosticReport A diagnostic report indicating that the last returned
 // report is still accurate.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type UnchangedDocumentDiagnosticReport struct {
 	// Kind A document diagnostic report indicating
@@ -186,8 +158,6 @@ type UnchangedDocumentDiagnosticReport struct {
 }
 
 // DiagnosticOptions Diagnostic options.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type DiagnosticOptions struct {
@@ -209,8 +179,6 @@ type DiagnosticOptions struct {
 
 // PreviousResultId A previous result id in a workspace pull request.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type PreviousResultId struct {
 	// URI The URI for which the client knowns a
@@ -222,8 +190,6 @@ type PreviousResultId struct {
 }
 
 // WorkspaceFullDocumentDiagnosticReport A full document diagnostic report for a workspace diagnostic result.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type WorkspaceFullDocumentDiagnosticReport struct {
@@ -239,8 +205,6 @@ type WorkspaceFullDocumentDiagnosticReport struct {
 
 // WorkspaceUnchangedDocumentDiagnosticReport An unchanged document diagnostic report for a workspace diagnostic result.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type WorkspaceUnchangedDocumentDiagnosticReport struct {
 	UnchangedDocumentDiagnosticReport
@@ -254,8 +218,6 @@ type WorkspaceUnchangedDocumentDiagnosticReport struct {
 }
 
 // DiagnosticWorkspaceClientCapabilities Workspace client capabilities specific to diagnostic pull requests.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type DiagnosticWorkspaceClientCapabilities struct {
@@ -271,8 +233,6 @@ type DiagnosticWorkspaceClientCapabilities struct {
 
 // DiagnosticClientCapabilities Client capabilities specific to diagnostic pull requests.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type DiagnosticClientCapabilities struct {
 	DiagnosticsCapabilities
@@ -287,8 +247,6 @@ type DiagnosticClientCapabilities struct {
 
 	// MarkupMessageSupport Whether the client supports `MarkupContent` in diagnostic messages.
 	//
-	// @since 3.18.0
-	//
 	// Since: 3.18.0
 	MarkupMessageSupport *bool `json:"markupMessageSupport,omitzero"`
 }
@@ -301,14 +259,10 @@ type DiagnosticsCapabilities struct {
 	// TagSupport Client supports the tag property to provide meta data about a diagnostic.
 	// Clients supporting tags have to handle unknown tags gracefully.
 	//
-	// @since 3.15.0
-	//
 	// Since: 3.15.0
 	TagSupport ClientDiagnosticsTagOptions `json:"tagSupport,omitzero"`
 
 	// CodeDescriptionSupport Client supports a codeDescription property
-	//
-	// @since 3.16.0
 	//
 	// Since: 3.16.0
 	CodeDescriptionSupport *bool `json:"codeDescriptionSupport,omitzero"`
@@ -317,13 +271,11 @@ type DiagnosticsCapabilities struct {
 	// preserved between a `textDocument/publishDiagnostics` and
 	// `textDocument/codeAction` request.
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	DataSupport *bool `json:"dataSupport,omitzero"`
 }
 
-// ClientDiagnosticsTagOptions @since 3.18.0
+// ClientDiagnosticsTagOptions is defined by the LSP specification.
 //
 // Since: 3.18.0
 type ClientDiagnosticsTagOptions struct {

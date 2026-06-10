@@ -356,3 +356,90 @@ const staleGeneratedShouldBeRemoved = true
 		}
 	}
 }
+
+func TestSanitizeDoc(t *testing.T) {
+	const dashProseIn = `@since 3.18.0 - support for relative patterns. Whether clients support
+relative patterns depends on the client capability.`
+	const dashProseWant = `support for relative patterns. Whether clients support
+relative patterns depends on the client capability.`
+	const blankRunIn = "Some text.\n\n@since 3.18.0\n\nMore text."
+	const blankRunWant = "Some text.\n\nMore text."
+	const deprLineIn = "Leading.\n@deprecated use range instead.\nTrailing."
+	const deprLineWant = "Leading.\nTrailing."
+	tests := map[string]struct {
+		input string
+		want  string
+	}{
+		"success: standalone since dropped": {
+			input: "@since 3.17.0",
+			want:  "",
+		},
+		"success: since with version word dropped": {
+			input: "@since version 3.12.0",
+			want:  "",
+		},
+		"success: since proposed marker dropped": {
+			input: "@since 3.18.0 - proposed",
+			want:  "",
+		},
+		"success: trailing period dropped": {
+			input: "@since 3.16.0.",
+			want:  "",
+		},
+		"success: since changelog prose preserved": {
+			input: "@since 3.17 renamed from ApplyWorkspaceEditResponse",
+			want:  "renamed from ApplyWorkspaceEditResponse",
+		},
+		"success: since additional type prose preserved": {
+			input: "@since 3.16.0 additional type InsertReplaceEdit",
+			want:  "additional type InsertReplaceEdit",
+		},
+		"success: since dash prose preserved across lines": {
+			input: dashProseIn,
+			want:  dashProseWant,
+		},
+		"success: bare link unwrapped to target": {
+			input: "The result of a {@link CodeLensRequest}.",
+			want:  "The result of a CodeLensRequest.",
+		},
+		"success: member link unwrapped to display text": {
+			input: "A Uri {@link Uri.scheme scheme}, like file.",
+			want:  "A Uri scheme, like file.",
+		},
+		"success: member link without display unwrapped to target": {
+			input: "See {@link CompletionItem.detail}.",
+			want:  "See CompletionItem.detail.",
+		},
+		"success: linkcode unwrapped to target": {
+			input: "taken from {@linkcode Command.title}",
+			want:  "taken from Command.title",
+		},
+		"success: deprecated prose dropped": {
+			input: "@deprecated Use tags instead.",
+			want:  "",
+		},
+		"success: embedded since collapses blank run": {
+			input: blankRunIn,
+			want:  blankRunWant,
+		},
+		"success: embedded deprecated line removed": {
+			input: deprLineIn,
+			want:  deprLineWant,
+		},
+		"success: inline since keeps terminating period": {
+			input: "The use of a string as a document filter is deprecated @since 3.16.0.",
+			want:  "The use of a string as a document filter is deprecated.",
+		},
+		"success: inline since mid-sentence collapses spacing": {
+			input: "Foo bar @since 3.17.0 baz.",
+			want:  "Foo bar baz.",
+		},
+	}
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			if got := sanitizeDoc(tt.input); got != tt.want {
+				t.Errorf("sanitizeDoc(%q) = %q, want %q", tt.input, got, tt.want)
+			}
+		})
+	}
+}

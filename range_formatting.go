@@ -5,7 +5,7 @@
 
 package protocol
 
-// DocumentRangeFormattingParams The parameters of a {@link DocumentRangeFormattingRequest}.
+// DocumentRangeFormattingParams The parameters of a DocumentRangeFormattingRequest.
 type DocumentRangeFormattingParams struct {
 	WorkDoneProgressParams
 
@@ -19,15 +19,13 @@ type DocumentRangeFormattingParams struct {
 	Options FormattingOptions `json:"options"`
 }
 
-// DocumentRangeFormattingRegistrationOptions Registration options for a {@link DocumentRangeFormattingRequest}.
+// DocumentRangeFormattingRegistrationOptions Registration options for a DocumentRangeFormattingRequest.
 type DocumentRangeFormattingRegistrationOptions struct {
 	TextDocumentRegistrationOptions
 	DocumentRangeFormattingOptions
 }
 
-// DocumentRangesFormattingParams The parameters of a {@link DocumentRangesFormattingRequest}.
-//
-// @since 3.18.0
+// DocumentRangesFormattingParams The parameters of a DocumentRangesFormattingRequest.
 //
 // Since: 3.18.0
 type DocumentRangesFormattingParams struct {
@@ -43,26 +41,22 @@ type DocumentRangesFormattingParams struct {
 	Options FormattingOptions `json:"options"`
 }
 
-// DocumentRangeFormattingOptions Provider options for a {@link DocumentRangeFormattingRequest}.
+// DocumentRangeFormattingOptions Provider options for a DocumentRangeFormattingRequest.
 type DocumentRangeFormattingOptions struct {
 	WorkDoneProgressOptions
 
 	// RangesSupport Whether the server supports formatting multiple ranges at once.
 	//
-	// @since 3.18.0
-	//
 	// Since: 3.18.0
 	RangesSupport *bool `json:"rangesSupport,omitzero"`
 }
 
-// DocumentRangeFormattingClientCapabilities Client capabilities of a {@link DocumentRangeFormattingRequest}.
+// DocumentRangeFormattingClientCapabilities Client capabilities of a DocumentRangeFormattingRequest.
 type DocumentRangeFormattingClientCapabilities struct {
 	// DynamicRegistration Whether range formatting supports dynamic registration.
 	DynamicRegistration *bool `json:"dynamicRegistration,omitzero"`
 
 	// RangesSupport Whether the client supports formatting multiple ranges at once.
-	//
-	// @since 3.18.0
 	//
 	// Since: 3.18.0
 	RangesSupport *bool `json:"rangesSupport,omitzero"`

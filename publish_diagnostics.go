@@ -12,8 +12,6 @@ type PublishDiagnosticsParams struct {
 
 	// Version Optional the version number of the document the diagnostics are published for.
 	//
-	// @since 3.15.0
-	//
 	// Since: 3.15.0
 	Version Optional[int32] `json:"version,omitzero"`
 
@@ -27,8 +25,6 @@ type PublishDiagnosticsClientCapabilities struct {
 
 	// VersionSupport Whether the client interprets the version property of the
 	// `textDocument/publishDiagnostics` notification's parameter.
-	//
-	// @since 3.15.0
 	//
 	// Since: 3.15.0
 	VersionSupport *bool `json:"versionSupport,omitzero"`

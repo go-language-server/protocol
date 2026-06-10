@@ -24,7 +24,7 @@ type ImplementationOptions struct {
 	WorkDoneProgressOptions
 }
 
-// ImplementationClientCapabilities @since 3.6.0
+// ImplementationClientCapabilities is defined by the LSP specification.
 //
 // Since: 3.6.0
 type ImplementationClientCapabilities struct {
@@ -34,8 +34,6 @@ type ImplementationClientCapabilities struct {
 	DynamicRegistration *bool `json:"dynamicRegistration,omitzero"`
 
 	// LinkSupport The client supports additional metadata in the form of definition links.
-	//
-	// @since 3.14.0
 	//
 	// Since: 3.14.0
 	LinkSupport *bool `json:"linkSupport,omitzero"`

@@ -38,8 +38,6 @@ const (
 
 // NotebookCellKind A notebook cell kind.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type NotebookCellKind uint32
 
@@ -165,8 +163,6 @@ type TextDocumentSyncClientCapabilities struct {
 
 // DidOpenNotebookDocumentParams The params sent in an open notebook document notification.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type DidOpenNotebookDocumentParams struct {
 	// NotebookDocument The notebook document that got opened.
@@ -179,8 +175,6 @@ type DidOpenNotebookDocumentParams struct {
 
 // NotebookDocumentSyncRegistrationOptions Registration options specific to a notebook.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type NotebookDocumentSyncRegistrationOptions struct {
 	NotebookDocumentSyncOptions
@@ -188,8 +182,6 @@ type NotebookDocumentSyncRegistrationOptions struct {
 }
 
 // DidChangeNotebookDocumentParams The params sent in a change notebook document notification.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type DidChangeNotebookDocumentParams struct {
@@ -217,8 +209,6 @@ type DidChangeNotebookDocumentParams struct {
 
 // DidSaveNotebookDocumentParams The params sent in a save notebook document notification.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type DidSaveNotebookDocumentParams struct {
 	// NotebookDocument The notebook document that got saved.
@@ -226,8 +216,6 @@ type DidSaveNotebookDocumentParams struct {
 }
 
 // DidCloseNotebookDocumentParams The params sent in a close notebook document notification.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type DidCloseNotebookDocumentParams struct {
@@ -240,8 +228,6 @@ type DidCloseNotebookDocumentParams struct {
 }
 
 // NotebookDocument A notebook document.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type NotebookDocument struct {
@@ -277,8 +263,6 @@ type NotebookDocument struct {
 // document that contain at least one matching
 // cell will be synced.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type NotebookDocumentSyncOptions struct {
 	// NotebookSelector The notebooks to be synced
@@ -291,8 +275,6 @@ type NotebookDocumentSyncOptions struct {
 
 // VersionedNotebookDocumentIdentifier A versioned notebook document identifier.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type VersionedNotebookDocumentIdentifier struct {
 	// Version The version number of this notebook document.
@@ -303,8 +285,6 @@ type VersionedNotebookDocumentIdentifier struct {
 }
 
 // NotebookDocumentChangeEvent A change event for a notebook document.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type NotebookDocumentChangeEvent struct {
@@ -319,8 +299,6 @@ type NotebookDocumentChangeEvent struct {
 
 // NotebookDocumentIdentifier A literal to identify a notebook document in the client.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type NotebookDocumentIdentifier struct {
 	// URI The notebook document's uri.
@@ -332,8 +310,6 @@ type NotebookDocumentIdentifier struct {
 // A cell's document URI must be unique across ALL notebook
 // cells and can therefore be used to uniquely identify a
 // notebook cell or the cell's text document.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type NotebookCell struct {
@@ -354,7 +330,7 @@ type NotebookCell struct {
 	ExecutionSummary *ExecutionSummary `json:"executionSummary,omitzero"`
 }
 
-// NotebookDocumentFilterWithNotebook @since 3.18.0
+// NotebookDocumentFilterWithNotebook is defined by the LSP specification.
 //
 // Since: 3.18.0
 type NotebookDocumentFilterWithNotebook struct {
@@ -367,7 +343,7 @@ type NotebookDocumentFilterWithNotebook struct {
 	Cells []NotebookCellLanguage `json:"cells,omitzero"`
 }
 
-// NotebookDocumentFilterWithCells @since 3.18.0
+// NotebookDocumentFilterWithCells is defined by the LSP specification.
 //
 // Since: 3.18.0
 type NotebookDocumentFilterWithCells struct {
@@ -381,8 +357,6 @@ type NotebookDocumentFilterWithCells struct {
 }
 
 // NotebookDocumentCellChanges Cell changes to a notebook document.
-//
-// @since 3.18.0
 //
 // Since: 3.18.0
 type NotebookDocumentCellChanges struct {
@@ -400,8 +374,6 @@ type NotebookDocumentCellChanges struct {
 
 // NotebookCellTextDocumentFilter A notebook cell text document filter denotes a cell text
 // document by different properties.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type NotebookCellTextDocumentFilter struct {
@@ -430,7 +402,7 @@ type ExecutionSummary struct {
 	Success *bool `json:"success,omitzero"`
 }
 
-// NotebookCellLanguage @since 3.18.0
+// NotebookCellLanguage is defined by the LSP specification.
 //
 // Since: 3.18.0
 type NotebookCellLanguage struct {
@@ -439,8 +411,6 @@ type NotebookCellLanguage struct {
 }
 
 // NotebookDocumentCellChangeStructure Structural changes to cells in a notebook document.
-//
-// @since 3.18.0
 //
 // Since: 3.18.0
 type NotebookDocumentCellChangeStructure struct {
@@ -456,8 +426,6 @@ type NotebookDocumentCellChangeStructure struct {
 
 // NotebookDocumentCellContentChanges Content changes to a cell in a notebook document.
 //
-// @since 3.18.0
-//
 // Since: 3.18.0
 type NotebookDocumentCellContentChanges struct {
 	// Document is defined by the LSP specification.
@@ -469,14 +437,12 @@ type NotebookDocumentCellContentChanges struct {
 
 // NotebookDocumentFilterNotebookType A notebook document filter where `notebookType` is required field.
 //
-// @since 3.18.0
-//
 // Since: 3.18.0
 type NotebookDocumentFilterNotebookType struct {
 	// NotebookType The type of the enclosing notebook.
 	NotebookType string `json:"notebookType"`
 
-	// Scheme A Uri {@link Uri.scheme scheme}, like `file` or `untitled`.
+	// Scheme A Uri scheme, like `file` or `untitled`.
 	Scheme *string `json:"scheme,omitzero"`
 
 	// Pattern A glob pattern.
@@ -485,14 +451,12 @@ type NotebookDocumentFilterNotebookType struct {
 
 // NotebookDocumentFilterScheme A notebook document filter where `scheme` is required field.
 //
-// @since 3.18.0
-//
 // Since: 3.18.0
 type NotebookDocumentFilterScheme struct {
 	// NotebookType The type of the enclosing notebook.
 	NotebookType *string `json:"notebookType,omitzero"`
 
-	// Scheme A Uri {@link Uri.scheme scheme}, like `file` or `untitled`.
+	// Scheme A Uri scheme, like `file` or `untitled`.
 	Scheme string `json:"scheme"`
 
 	// Pattern A glob pattern.
@@ -501,14 +465,12 @@ type NotebookDocumentFilterScheme struct {
 
 // NotebookDocumentFilterPattern A notebook document filter where `pattern` is required field.
 //
-// @since 3.18.0
-//
 // Since: 3.18.0
 type NotebookDocumentFilterPattern struct {
 	// NotebookType The type of the enclosing notebook.
 	NotebookType *string `json:"notebookType,omitzero"`
 
-	// Scheme A Uri {@link Uri.scheme scheme}, like `file` or `untitled`.
+	// Scheme A Uri scheme, like `file` or `untitled`.
 	Scheme *string `json:"scheme,omitzero"`
 
 	// Pattern A glob pattern.
@@ -517,8 +479,6 @@ type NotebookDocumentFilterPattern struct {
 
 // NotebookCellArrayChange A change describing how to move a `NotebookCell`
 // array from state S to S'.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type NotebookCellArrayChange struct {
@@ -533,8 +493,6 @@ type NotebookCellArrayChange struct {
 }
 
 // NotebookDocumentSyncClientCapabilities Notebook specific client capabilities.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type NotebookDocumentSyncClientCapabilities struct {

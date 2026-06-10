@@ -5,9 +5,7 @@
 
 package protocol
 
-// InlineCompletionTriggerKind Describes how an {@link InlineCompletionItemProvider inline completion provider} was triggered.
-//
-// @since 3.18.0
+// InlineCompletionTriggerKind Describes how an inline completion provider was triggered.
 //
 // Since: 3.18.0
 type InlineCompletionTriggerKind uint32
@@ -22,8 +20,6 @@ const (
 
 // InlineCompletionParams A parameter literal used in inline completion requests.
 //
-// @since 3.18.0
-//
 // Since: 3.18.0
 type InlineCompletionParams struct {
 	TextDocumentPositionParams
@@ -34,9 +30,7 @@ type InlineCompletionParams struct {
 	Context InlineCompletionContext `json:"context"`
 }
 
-// InlineCompletionList Represents a collection of {@link InlineCompletionItem inline completion items} to be presented in the editor.
-//
-// @since 3.18.0
+// InlineCompletionList Represents a collection of inline completion items to be presented in the editor.
 //
 // Since: 3.18.0
 type InlineCompletionList struct {
@@ -46,26 +40,22 @@ type InlineCompletionList struct {
 
 // InlineCompletionItem An inline completion item represents a text snippet that is proposed inline to complete text that is being typed.
 //
-// @since 3.18.0
-//
 // Since: 3.18.0
 type InlineCompletionItem struct {
 	// InsertText The text to replace the range with. Must be set.
 	InsertText InlineCompletionItemInsertText `json:"insertText"`
 
-	// FilterText A text that is used to decide if this inline completion should be shown. When `falsy` the {@link InlineCompletionItem.insertText} is used.
+	// FilterText A text that is used to decide if this inline completion should be shown. When `falsy` the InlineCompletionItem.insertText is used.
 	FilterText *string `json:"filterText,omitzero"`
 
 	// Range The range to replace. Must begin and end on the same line.
 	Range *Range `json:"range,omitzero"`
 
-	// Command An optional {@link Command} that is executed *after* inserting this completion.
+	// Command An optional Command that is executed *after* inserting this completion.
 	Command Command `json:"command,omitzero"`
 }
 
 // InlineCompletionRegistrationOptions Inline completion options used during static or dynamic registration.
-//
-// @since 3.18.0
 //
 // Since: 3.18.0
 type InlineCompletionRegistrationOptions struct {
@@ -75,8 +65,6 @@ type InlineCompletionRegistrationOptions struct {
 }
 
 // InlineCompletionContext Provides information about the context in which an inline completion was requested.
-//
-// @since 3.18.0
 //
 // Since: 3.18.0
 type InlineCompletionContext struct {
@@ -89,16 +77,12 @@ type InlineCompletionContext struct {
 
 // InlineCompletionOptions Inline completion options used during static registration.
 //
-// @since 3.18.0
-//
 // Since: 3.18.0
 type InlineCompletionOptions struct {
 	WorkDoneProgressOptions
 }
 
 // InlineCompletionClientCapabilities Client capabilities specific to inline completions.
-//
-// @since 3.18.0
 //
 // Since: 3.18.0
 type InlineCompletionClientCapabilities struct {

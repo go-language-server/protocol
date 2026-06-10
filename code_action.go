@@ -44,8 +44,6 @@ const (
 	// - Move method to base class
 	// - ...
 	//
-	// @since 3.18.0
-	//
 	// Since: 3.18.0
 	CodeActionKindRefactorMove CodeActionKind = "refactor.move"
 	// CodeActionKindRefactorRewrite Base kind for refactoring rewrite actions: 'refactor.rewrite'
@@ -70,22 +68,16 @@ const (
 	// Fix all actions automatically fix errors that have a clear fix that do not require user input.
 	// They should not suppress errors or perform unsafe fixes such as generating new types or classes.
 	//
-	// @since 3.15.0
-	//
 	// Since: 3.15.0
 	CodeActionKindSourceFixAll CodeActionKind = "source.fixAll"
 	// CodeActionKindNotebook Base kind for all code actions applying to the entire notebook's scope. CodeActionKinds using
 	// this should always begin with `notebook.`
-	//
-	// @since 3.18.0
 	//
 	// Since: 3.18.0
 	CodeActionKindNotebook CodeActionKind = "notebook"
 )
 
 // CodeActionTag Code action tags are extra annotations that tweak the behavior of a code action.
-//
-// @since 3.18.0 - proposed
 //
 // Since: 3.18.0 - proposed
 type CodeActionTag uint32
@@ -97,8 +89,6 @@ const (
 )
 
 // CodeActionTriggerKind The reason why code actions were requested.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type CodeActionTriggerKind uint32
@@ -114,7 +104,7 @@ const (
 	CodeActionTriggerKindAutomatic CodeActionTriggerKind = 2
 )
 
-// CodeActionParams The parameters of a {@link CodeActionRequest}.
+// CodeActionParams The parameters of a CodeActionRequest.
 type CodeActionParams struct {
 	WorkDoneProgressParams
 	PartialResultParams
@@ -151,8 +141,6 @@ type CodeAction struct {
 	// A quick fix should be marked preferred if it properly addresses the underlying error.
 	// A refactoring should be marked preferred if it is the most reasonable choice of actions to take.
 	//
-	// @since 3.15.0
-	//
 	// Since: 3.15.0
 	IsPreferred *bool `json:"isPreferred,omitzero"`
 
@@ -170,8 +158,6 @@ type CodeAction struct {
 	//     that auto applies a code action and only disabled code actions are returned, the client should show the user an
 	//     error message with `reason` in the editor.
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	Disabled CodeActionDisabled `json:"disabled,omitzero"`
 
@@ -186,27 +172,23 @@ type CodeAction struct {
 	// Data A data entry field that is preserved on a code action between
 	// a `textDocument/codeAction` and a `codeAction/resolve` request.
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	Data LSPAny `json:"data,omitzero"`
 
 	// Tags Tags for this code action.
 	//
-	// @since 3.18.0 - proposed
-	//
 	// Since: 3.18.0 - proposed
 	Tags []CodeActionTag `json:"tags,omitzero"`
 }
 
-// CodeActionRegistrationOptions Registration options for a {@link CodeActionRequest}.
+// CodeActionRegistrationOptions Registration options for a CodeActionRequest.
 type CodeActionRegistrationOptions struct {
 	TextDocumentRegistrationOptions
 	CodeActionOptions
 }
 
 // CodeActionContext Contains additional diagnostic information about the context in which
-// a {@link CodeActionProvider.provideCodeActions code action} is run.
+// a code action is run.
 type CodeActionContext struct {
 	// Diagnostics An array of diagnostics known on the client side overlapping the range provided to the
 	// `textDocument/codeAction` request. They are provided so that the server knows which
@@ -223,15 +205,11 @@ type CodeActionContext struct {
 
 	// TriggerKind The reason why code actions were requested.
 	//
-	// @since 3.17.0
-	//
 	// Since: 3.17.0
 	TriggerKind CodeActionTriggerKind `json:"triggerKind,omitzero"`
 }
 
 // CodeActionDisabled Captures why the code action is currently disabled.
-//
-// @since 3.18.0
 //
 // Since: 3.18.0
 type CodeActionDisabled struct {
@@ -241,7 +219,7 @@ type CodeActionDisabled struct {
 	Reason string `json:"reason"`
 }
 
-// CodeActionOptions Provider options for a {@link CodeActionRequest}.
+// CodeActionOptions Provider options for a CodeActionRequest.
 type CodeActionOptions struct {
 	WorkDoneProgressOptions
 
@@ -264,23 +242,17 @@ type CodeActionOptions struct {
 	//
 	// At most one documentation entry should be shown per provider.
 	//
-	// @since 3.18.0
-	//
 	// Since: 3.18.0
 	Documentation []CodeActionKindDocumentation `json:"documentation,omitzero"`
 
 	// ResolveProvider The server provides support to resolve additional
 	// information for a code action.
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	ResolveProvider *bool `json:"resolveProvider,omitzero"`
 }
 
 // CodeActionKindDocumentation Documentation for a class of code actions.
-//
-// @since 3.18.0
 //
 // Since: 3.18.0
 type CodeActionKindDocumentation struct {
@@ -293,11 +265,11 @@ type CodeActionKindDocumentation struct {
 
 	// Command Command that is ued to display the documentation to the user.
 	//
-	// The title of this documentation code action is taken from {@linkcode Command.title}
+	// The title of this documentation code action is taken from Command.title
 	Command Command `json:"command"`
 }
 
-// CodeActionClientCapabilities The Client Capabilities of a {@link CodeActionRequest}.
+// CodeActionClientCapabilities The Client Capabilities of a CodeActionRequest.
 type CodeActionClientCapabilities struct {
 	// DynamicRegistration Whether code action supports dynamic registration.
 	DynamicRegistration *bool `json:"dynamicRegistration,omitzero"`
@@ -306,21 +278,15 @@ type CodeActionClientCapabilities struct {
 	// response of the `textDocument/codeAction` request. If the property is not
 	// set the request can only return `Command` literals.
 	//
-	// @since 3.8.0
-	//
 	// Since: 3.8.0
 	CodeActionLiteralSupport ClientCodeActionLiteralOptions `json:"codeActionLiteralSupport,omitzero"`
 
 	// IsPreferredSupport Whether code action supports the `isPreferred` property.
 	//
-	// @since 3.15.0
-	//
 	// Since: 3.15.0
 	IsPreferredSupport *bool `json:"isPreferredSupport,omitzero"`
 
 	// DisabledSupport Whether code action supports the `disabled` property.
-	//
-	// @since 3.16.0
 	//
 	// Since: 3.16.0
 	DisabledSupport *bool `json:"disabledSupport,omitzero"`
@@ -329,15 +295,11 @@ type CodeActionClientCapabilities struct {
 	// preserved between a `textDocument/codeAction` and a
 	// `codeAction/resolve` request.
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	DataSupport *bool `json:"dataSupport,omitzero"`
 
 	// ResolveSupport Whether the client supports resolving additional code action
 	// properties via a separate `codeAction/resolve` request.
-	//
-	// @since 3.16.0
 	//
 	// Since: 3.16.0
 	ResolveSupport ClientCodeActionResolveOptions `json:"resolveSupport,omitzero"`
@@ -348,15 +310,11 @@ type CodeActionClientCapabilities struct {
 	// the workspace edit in the user interface and asking
 	// for confirmation.
 	//
-	// @since 3.16.0
-	//
 	// Since: 3.16.0
 	HonorsChangeAnnotations *bool `json:"honorsChangeAnnotations,omitzero"`
 
 	// DocumentationSupport Whether the client supports documentation for a class of
 	// code actions.
-	//
-	// @since 3.18.0
 	//
 	// Since: 3.18.0
 	DocumentationSupport *bool `json:"documentationSupport,omitzero"`
@@ -364,13 +322,11 @@ type CodeActionClientCapabilities struct {
 	// TagSupport Client supports the tag property on a code action. Clients
 	// supporting tags have to handle unknown tags gracefully.
 	//
-	// @since 3.18.0 - proposed
-	//
 	// Since: 3.18.0 - proposed
 	TagSupport CodeActionTagOptions `json:"tagSupport,omitzero"`
 }
 
-// ClientCodeActionLiteralOptions @since 3.18.0
+// ClientCodeActionLiteralOptions is defined by the LSP specification.
 //
 // Since: 3.18.0
 type ClientCodeActionLiteralOptions struct {
@@ -379,7 +335,7 @@ type ClientCodeActionLiteralOptions struct {
 	CodeActionKind ClientCodeActionKindOptions `json:"codeActionKind"`
 }
 
-// ClientCodeActionResolveOptions @since 3.18.0
+// ClientCodeActionResolveOptions is defined by the LSP specification.
 //
 // Since: 3.18.0
 type ClientCodeActionResolveOptions struct {
@@ -387,7 +343,7 @@ type ClientCodeActionResolveOptions struct {
 	Properties []string `json:"properties"`
 }
 
-// CodeActionTagOptions @since 3.18.0 - proposed
+// CodeActionTagOptions is defined by the LSP specification.
 //
 // Since: 3.18.0 - proposed
 type CodeActionTagOptions struct {
@@ -395,7 +351,7 @@ type CodeActionTagOptions struct {
 	ValueSet []CodeActionTag `json:"valueSet"`
 }
 
-// ClientCodeActionKindOptions @since 3.18.0
+// ClientCodeActionKindOptions is defined by the LSP specification.
 //
 // Since: 3.18.0
 type ClientCodeActionKindOptions struct {

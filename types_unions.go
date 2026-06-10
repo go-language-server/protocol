@@ -59,7 +59,7 @@ type ParameterInformationLabelTuple [2]uint32
 type SemanticTokensOptionsRange struct {
 }
 
-// Definition The definition of a symbol represented as one or many {@link Location locations}.
+// Definition The definition of a symbol represented as one or many locations.
 // For most programming languages there is only one location at which a symbol is
 // defined.
 //
@@ -117,8 +117,6 @@ func unmarshalDeclaration(dec *jsontext.Decoder, val *Declaration) error {
 // - as a name to use for a variable lookup (class InlineValueVariableLookup)
 // - as an evaluatable expression (class InlineValueEvaluatableExpression)
 // The InlineValue types combines all inline value types into one type.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type InlineValue interface{ isInlineValue() }
@@ -209,8 +207,6 @@ func unmarshalInlineValue(dec *jsontext.Decoder, val *InlineValue) error {
 // requested document or an unchanged report indicating that nothing
 // has changed in terms of diagnostics in comparison to the last
 // pull request.
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type DocumentDiagnosticReport interface{ isDocumentDiagnosticReport() }
@@ -369,8 +365,6 @@ func unmarshalProgressToken(dec *jsontext.Decoder, val *ProgressToken) error {
 
 // WorkspaceDocumentDiagnosticReport A workspace diagnostic document report.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type WorkspaceDocumentDiagnosticReport interface{ isWorkspaceDocumentDiagnosticReport() }
 
@@ -483,7 +477,6 @@ func unmarshalTextDocumentContentChangeEvent(dec *jsontext.Decoder, val *TextDoc
 // ```
 //
 // Note that markdown strings will be sanitized - that means html will be escaped.
-// @deprecated use MarkupContent instead.
 //
 // Deprecated: use MarkupContent instead.
 type MarkedString interface{ isMarkedString() }
@@ -536,7 +529,7 @@ func unmarshalMarkedString(dec *jsontext.Decoder, val *MarkedString) error {
 // DocumentFilter A document filter describes a top level text document or
 // a notebook cell document.
 //
-// @since 3.17.0 - support for NotebookCellTextDocumentFilter.
+// support for NotebookCellTextDocumentFilter.
 //
 // Since: 3.17.0 - support for NotebookCellTextDocumentFilter.
 type DocumentFilter interface{ isDocumentFilter() }
@@ -646,8 +639,6 @@ func unmarshalDocumentFilter(dec *jsontext.Decoder, val *DocumentFilter) error {
 
 // GlobPattern The glob pattern. Either a string pattern or a relative pattern.
 //
-// @since 3.17.0
-//
 // Since: 3.17.0
 type GlobPattern interface{ isGlobPattern() }
 
@@ -697,8 +688,8 @@ func unmarshalGlobPattern(dec *jsontext.Decoder, val *GlobPattern) error {
 }
 
 // TextDocumentFilter A document filter denotes a document by different properties like
-// the {@link TextDocument.languageId language}, the {@link Uri.scheme scheme} of
-// its resource, or a glob-pattern that is applied to the {@link TextDocument.fileName path}.
+// the language, the scheme of
+// its resource, or a glob-pattern that is applied to the path.
 //
 // Glob patterns can have the following syntax:
 // - `*` to match zero or more characters in a path segment
@@ -710,8 +701,6 @@ func unmarshalGlobPattern(dec *jsontext.Decoder, val *GlobPattern) error {
 //
 // @sample A language filter that applies to typescript files on disk: `{ language: 'typescript', scheme: 'file' }`
 // @sample A language filter that applies to all package.json paths: `{ language: 'json', pattern: '**package.json' }`
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type TextDocumentFilter interface{ isTextDocumentFilter() }
@@ -800,8 +789,6 @@ func unmarshalTextDocumentFilter(dec *jsontext.Decoder, val *TextDocumentFilter)
 // NotebookDocumentFilter A notebook document filter denotes a notebook document by
 // different properties. The properties will be match
 // against the notebook's URI (same as with documents)
-//
-// @since 3.17.0
 //
 // Since: 3.17.0
 type NotebookDocumentFilter interface{ isNotebookDocumentFilter() }

@@ -5,7 +5,7 @@
 
 package protocol
 
-// CodeLensParams The parameters of a {@link CodeLensRequest}.
+// CodeLensParams The parameters of a CodeLensRequest.
 type CodeLensParams struct {
 	WorkDoneProgressParams
 	PartialResultParams
@@ -14,7 +14,7 @@ type CodeLensParams struct {
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
 }
 
-// CodeLens A code lens represents a {@link Command command} that should be shown along with
+// CodeLens A code lens represents a command that should be shown along with
 // source text, like the number of references, a way to run tests, etc.
 //
 // A code lens is _unresolved_ when no command is associated to it. For performance
@@ -27,17 +27,17 @@ type CodeLens struct {
 	Command Command `json:"command,omitzero"`
 
 	// Data A data entry field that is preserved on a code lens item between
-	// a {@link CodeLensRequest} and a {@link CodeLensResolveRequest}
+	// a CodeLensRequest and a CodeLensResolveRequest
 	Data LSPAny `json:"data,omitzero"`
 }
 
-// CodeLensRegistrationOptions Registration options for a {@link CodeLensRequest}.
+// CodeLensRegistrationOptions Registration options for a CodeLensRequest.
 type CodeLensRegistrationOptions struct {
 	TextDocumentRegistrationOptions
 	CodeLensOptions
 }
 
-// CodeLensOptions Code Lens provider options of a {@link CodeLensRequest}.
+// CodeLensOptions Code Lens provider options of a CodeLensRequest.
 type CodeLensOptions struct {
 	WorkDoneProgressOptions
 
@@ -45,7 +45,7 @@ type CodeLensOptions struct {
 	ResolveProvider *bool `json:"resolveProvider,omitzero"`
 }
 
-// CodeLensWorkspaceClientCapabilities @since 3.16.0
+// CodeLensWorkspaceClientCapabilities is defined by the LSP specification.
 //
 // Since: 3.16.0
 type CodeLensWorkspaceClientCapabilities struct {
@@ -59,7 +59,7 @@ type CodeLensWorkspaceClientCapabilities struct {
 	RefreshSupport *bool `json:"refreshSupport,omitzero"`
 }
 
-// CodeLensClientCapabilities The client capabilities  of a {@link CodeLensRequest}.
+// CodeLensClientCapabilities The client capabilities  of a CodeLensRequest.
 type CodeLensClientCapabilities struct {
 	// DynamicRegistration Whether code lens supports dynamic registration.
 	DynamicRegistration *bool `json:"dynamicRegistration,omitzero"`
@@ -67,13 +67,11 @@ type CodeLensClientCapabilities struct {
 	// ResolveSupport Whether the client supports resolving additional code lens
 	// properties via a separate `codeLens/resolve` request.
 	//
-	// @since 3.18.0
-	//
 	// Since: 3.18.0
 	ResolveSupport ClientCodeLensResolveOptions `json:"resolveSupport,omitzero"`
 }
 
-// ClientCodeLensResolveOptions @since 3.18.0
+// ClientCodeLensResolveOptions is defined by the LSP specification.
 //
 // Since: 3.18.0
 type ClientCodeLensResolveOptions struct {
