@@ -282,7 +282,7 @@ func (x WorkspaceSymbolSlice) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	for _, v := range x {
-		if err := encodeWorkspaceSymbolTo(enc, v); err != nil {
+		if err := encodeWorkspaceSymbolTo(enc, &v); err != nil {
 			return err
 		}
 	}

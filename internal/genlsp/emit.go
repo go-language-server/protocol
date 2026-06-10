@@ -834,7 +834,8 @@ func (g *Generator) renderStructDecoder(b *strings.Builder, s *renderedStruct) {
 	b.WriteString("\t\t\treturn err\n")
 	b.WriteString("\t\t}\n")
 	b.WriteString("\t\tswitch key.String() {\n")
-	for _, f := range s.Fields {
+	for i := range s.Fields {
+		f := &s.Fields[i]
 		fmt.Fprintf(b, "\t\tcase %q:\n", f.JSONName)
 		fmt.Fprintf(b, "\t\t\tif err := %s; err != nil {\n", fieldDecodeExpr(f))
 		b.WriteString("\t\t\t\treturn err\n")
@@ -851,7 +852,7 @@ func (g *Generator) renderStructDecoder(b *strings.Builder, s *renderedStruct) {
 	b.WriteString("}\n\n")
 }
 
-func fieldDecodeExpr(f renderedField) string {
+func fieldDecodeExpr(f *renderedField) string {
 	switch f.Type {
 	case "string", "URI", "DocumentURI":
 		return fmt.Sprintf("decodeStringLikeFrom(dec, &x.%s)", f.Name)
@@ -904,7 +905,7 @@ func (g *Generator) renderWorkspaceSymbolResultEncoders(b *strings.Builder) {
 	b.WriteString("\t\treturn err\n")
 	b.WriteString("\t}\n")
 	b.WriteString("\tfor _, v := range x {\n")
-	b.WriteString("\t\tif err := encodeWorkspaceSymbolTo(enc, v); err != nil {\n")
+	b.WriteString("\t\tif err := encodeWorkspaceSymbolTo(enc, &v); err != nil {\n")
 	b.WriteString("\t\t\treturn err\n")
 	b.WriteString("\t\t}\n")
 	b.WriteString("\t}\n")
@@ -917,14 +918,14 @@ func (g *Generator) renderStructEncoder(b *strings.Builder, s *renderedStruct) {
 	b.WriteString("\tif err := enc.WriteToken(jsontext.BeginObject); err != nil {\n")
 	b.WriteString("\t\treturn err\n")
 	b.WriteString("\t}\n")
-	for _, f := range s.Fields {
-		g.renderFieldEncoder(b, f)
+	for i := range s.Fields {
+		g.renderFieldEncoder(b, &s.Fields[i])
 	}
 	b.WriteString("\treturn enc.WriteToken(jsontext.EndObject)\n")
 	b.WriteString("}\n\n")
 }
 
-func (g *Generator) renderFieldEncoder(b *strings.Builder, f renderedField) {
+func (g *Generator) renderFieldEncoder(b *strings.Builder, f *renderedField) {
 	if f.Type == "Optional[string]" {
 		fmt.Fprintf(b, "\tif v, ok := x.%s.Get(); ok {\n", f.Name)
 		writeEncoderName(b, f.JSONName, "\t\t")
@@ -965,7 +966,29 @@ func (g *Generator) renderFieldEncoder(b *strings.Builder, f renderedField) {
 	writeEncoderValue(b, f, "\t")
 }
 
-func fieldEncodeCondition(f renderedField) string {
+// encodeGuardByType maps an omitzero field type to the Go expression template
+// guarding its emission, keyed exactly; prefix-shaped types (pointers, slices,
+// maps) are handled structurally in fieldEncodeCondition.
+//
+//nolint:gosec // G101: Go expression templates for the generator, not credentials.
+var encodeGuardByType = map[string]string{
+	"LSPAny":                 "len(x.%s) > 0",
+	"LSPArray":               "len(x.%s) > 0",
+	"DiagnosticTags":         "!x.%s.IsZero()",
+	"CompletionItemTextEdit": "x.%s != nil",
+	"InlayHintTooltip":       "x.%s != nil",
+	"ProgressToken":          "x.%s != nil",
+	"CompletionItemKind":     "x.%s != 0",
+	"DiagnosticSeverity":     "x.%s != 0",
+	"InsertTextFormat":       "x.%s != 0",
+	"InsertTextMode":         "x.%s != 0",
+	"uint32":                 "x.%s != 0",
+	"int32":                  "x.%s != 0",
+	"CodeDescription":        "x.%s != (CodeDescription{})",
+	"Command":                "!isZeroCommand(x.%s)",
+}
+
+func fieldEncodeCondition(f *renderedField) string {
 	if !strings.Contains(f.Tag, ",omitzero") {
 		return ""
 	}
@@ -974,23 +997,11 @@ func fieldEncodeCondition(f renderedField) string {
 		return "x." + f.Name + " != nil"
 	case strings.HasPrefix(f.Type, "[]"), strings.HasPrefix(f.Type, "map["):
 		return "len(x." + f.Name + ") > 0"
-	case f.Type == "LSPAny" || f.Type == "LSPArray":
-		return "len(x." + f.Name + ") > 0"
-	case f.Type == "DiagnosticTags":
-		return "!x." + f.Name + ".IsZero()"
-	case f.Type == "CompletionItemTextEdit" || f.Type == "InlayHintTooltip":
-		return "x." + f.Name + " != nil"
-	case f.Type == "CompletionItemKind" || f.Type == "DiagnosticSeverity" || f.Type == "InsertTextFormat" || f.Type == "InsertTextMode" || f.Type == "uint32" || f.Type == "int32":
-		return "x." + f.Name + " != 0"
-	case f.Type == "CodeDescription":
-		return "x." + f.Name + " != (CodeDescription{})"
-	case f.Type == "ProgressToken":
-		return "x." + f.Name + " != nil"
-	case f.Type == "Command":
-		return "!isZeroCommand(x." + f.Name + ")"
-	default:
-		return ""
 	}
+	if tmpl, ok := encodeGuardByType[f.Type]; ok {
+		return fmt.Sprintf(tmpl, f.Name)
+	}
+	return ""
 }
 
 func writeEncoderName(b *strings.Builder, name, indent string) {
@@ -999,7 +1010,7 @@ func writeEncoderName(b *strings.Builder, name, indent string) {
 	fmt.Fprintf(b, "%s}\n", indent)
 }
 
-func writeEncoderValue(b *strings.Builder, f renderedField, indent string) {
+func writeEncoderValue(b *strings.Builder, f *renderedField, indent string) {
 	switch f.Type {
 	case "string":
 		fmt.Fprintf(b, "%sif err := enc.WriteToken(jsontext.String(x.%s)); err != nil {\n", indent, f.Name)

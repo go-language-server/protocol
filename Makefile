@@ -69,7 +69,7 @@ fmt:  ## Run goimports-rereviser and gofumpt.
 lint: lint/golangci-lint  ## Run all linters.
 
 .PHONY: lint/golangci-lint
-lint/golangci-lint: .golangci.yml  ## Run golangci-lint.
+lint/golangci-lint: .golangci.yaml  ## Run golangci-lint.
 	$(call target)
 	go tool golangci-lint run $(strip ${GO_LINT_FLAGS}) ./...
 

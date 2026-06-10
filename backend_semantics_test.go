@@ -10,24 +10,9 @@ import (
 	"go.lsp.dev/jsonrpc2"
 )
 
-func TestBackendRejectsInvalidUTF8(t *testing.T) {
-	t.Parallel()
-
-	data := []byte{'{', '"', 'k', 'i', 'n', 'd', '"', ':', '"', 'p', 'l', 'a', 'i', 'n', 't', 'e', 'x', 't', '"', ',', '"', 'v', 'a', 'l', 'u', 'e', '"', ':', '"', 0xff, '"', '}'}
-	var v MarkupContent
-	if err := Unmarshal(data, &v); err == nil {
-		t.Fatalf("Unmarshal invalid UTF-8 succeeded with value %#v; backend must reject invalid JSON strings", v)
-	}
-}
-
-func TestBackendRejectsDuplicateObjectMembers(t *testing.T) {
-	t.Parallel()
-
-	var v Position
-	if err := Unmarshal([]byte(`{"line":1,"line":2,"character":3}`), &v); err == nil {
-		t.Fatalf("Unmarshal duplicate object member succeeded with value %#v; backend must reject duplicate names", v)
-	}
-}
+// Invalid-UTF-8 and duplicate-member behavior is pinned by the wireOptions
+// tests (wire_options_test.go): both are deliberately relaxed — U+FFFD
+// mangling and last-wins respectively — instead of rejecting the message.
 
 func TestBackendMemberNamesAreCaseSensitive(t *testing.T) {
 	t.Parallel()

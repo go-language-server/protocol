@@ -3,7 +3,10 @@
 
 package protocol
 
-import "github.com/go-json-experiment/json"
+import (
+	"github.com/go-json-experiment/json"
+	"github.com/go-json-experiment/json/jsontext"
+)
 
 // Optional wraps a non-nullable optional LSP property, preserving whether a
 // zero value such as "" or false was present on the wire. A JSON null clears the
@@ -37,21 +40,29 @@ func (o *Optional[T]) Clear() {
 	o.value = zero
 }
 
-// MarshalJSON implements json.Marshaler.
-func (o Optional[T]) MarshalJSON() ([]byte, error) {
+// MarshalJSONTo implements json.MarshalerTo, streaming the wrapped value (or
+// null when absent) through enc so encoder options propagate without
+// materializing intermediate bytes per field.
+func (o Optional[T]) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if !o.set {
-		return []byte("null"), nil
+		return enc.WriteToken(jsontext.Null)
 	}
-	return json.Marshal(o.value)
+	return json.MarshalEncode(enc, &o.value)
 }
 
-// UnmarshalJSON implements json.Unmarshaler. It decodes via decodeWith so that
-// nested union values continue to use their generated discriminating decoders.
-func (o *Optional[T]) UnmarshalJSON(b []byte) error {
-	if string(b) == "null" {
+// UnmarshalJSONFrom implements json.UnmarshalerFrom. It decodes the value in
+// place on the caller's decoder — re-applying the union unmarshalers so nested
+// union values dispatch even when the decoder was not built by [Unmarshal] —
+// instead of materializing the value bytes and re-parsing them with a fresh
+// decoder per field.
+func (o *Optional[T]) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	if dec.PeekKind() == 'n' {
+		if _, err := dec.ReadToken(); err != nil {
+			return err
+		}
 		o.Clear()
 		return nil
 	}
 	o.set = true
-	return decodeWith(b, &o.value)
+	return json.UnmarshalDecode(dec, &o.value, json.WithUnmarshalers(unionUnmarshalers))
 }

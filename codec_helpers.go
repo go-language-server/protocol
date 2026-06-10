@@ -4,7 +4,6 @@
 package protocol
 
 import (
-	"bytes"
 	"strconv"
 
 	"github.com/go-json-experiment/json"
@@ -66,14 +65,15 @@ func (t *DiagnosticTags) Clear() {
 	t.n = 0
 }
 
-// MarshalJSON implements json.Marshaler.
-func (t DiagnosticTags) MarshalJSON() ([]byte, error) {
-	return json.Marshal(t.Slice())
+// MarshalJSONTo implements json.MarshalerTo.
+func (t DiagnosticTags) MarshalJSONTo(enc *jsontext.Encoder) error {
+	return json.MarshalEncode(enc, t.Slice())
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
-func (t *DiagnosticTags) UnmarshalJSON(b []byte) error {
-	return decodeDiagnosticTagsFrom(jsontext.NewDecoder(bytes.NewReader(b)), t)
+// UnmarshalJSONFrom implements json.UnmarshalerFrom, decoding in place on the
+// caller's decoder instead of constructing a fresh one per field.
+func (t *DiagnosticTags) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	return decodeDiagnosticTagsFrom(dec, t)
 }
 
 func (t *DiagnosticTags) append(tag DiagnosticTag) {
@@ -224,6 +224,7 @@ func decodeUint32From[T ~uint32](dec *jsontext.Decoder, out *T) error {
 	}
 }
 
+//nolint:gocritic // ptrToRefParam: out is an out-parameter; the interface slot is assigned in place.
 func decodeInlayHintTooltipFrom(dec *jsontext.Decoder, out *InlayHintTooltip) error {
 	switch dec.PeekKind() {
 	case 'n':
@@ -245,6 +246,7 @@ func decodeInlayHintTooltipFrom(dec *jsontext.Decoder, out *InlayHintTooltip) er
 	}
 }
 
+//nolint:gocritic // ptrToRefParam: out is an out-parameter; the interface slot is assigned in place.
 func decodeProgressTokenFrom(dec *jsontext.Decoder, out *ProgressToken) error {
 	switch dec.PeekKind() {
 	case 'n':
@@ -479,7 +481,7 @@ func encodeLocationTo(enc *jsontext.Encoder, x Location) error {
 	return enc.WriteToken(jsontext.EndObject)
 }
 
-func encodeLocationUriOnlyTo(enc *jsontext.Encoder, x LocationUriOnly) error {
+func encodeLocationURIOnlyTo(enc *jsontext.Encoder, x LocationUriOnly) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
@@ -499,7 +501,7 @@ func encodeWorkspaceSymbolLocationTo(enc *jsontext.Encoder, x WorkspaceSymbolLoc
 	case *Location:
 		return encodeLocationTo(enc, *v)
 	case *LocationUriOnly:
-		return encodeLocationUriOnlyTo(enc, *v)
+		return encodeLocationURIOnlyTo(enc, *v)
 	default:
 		return json.MarshalEncode(enc, x)
 	}
@@ -537,7 +539,7 @@ func encodeBaseSymbolInformationFieldsTo(enc *jsontext.Encoder, x BaseSymbolInfo
 	return nil
 }
 
-func encodeWorkspaceSymbolTo(enc *jsontext.Encoder, x WorkspaceSymbol) error {
+func encodeWorkspaceSymbolTo(enc *jsontext.Encoder, x *WorkspaceSymbol) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}

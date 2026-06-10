@@ -3,7 +3,10 @@
 
 package protocol
 
-import "github.com/go-json-experiment/json"
+import (
+	"github.com/go-json-experiment/json"
+	"github.com/go-json-experiment/json/jsontext"
+)
 
 // Nullable wraps a value that is BOTH optional and JSON-nullable, distinguishing
 // the three wire states the LSP specification assigns distinct meaning to:
@@ -32,24 +35,32 @@ func (n Nullable[T]) IsNull() bool { return n.set && n.null }
 // Get returns the wrapped value and whether a non-null value is present.
 func (n Nullable[T]) Get() (T, bool) { return n.value, n.set && !n.null }
 
-// MarshalJSON implements json.Marshaler.
-func (n Nullable[T]) MarshalJSON() ([]byte, error) {
+// MarshalJSONTo implements json.MarshalerTo, streaming the wrapped value (or
+// null) through enc so encoder options propagate without materializing
+// intermediate bytes per field.
+func (n Nullable[T]) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if n.null {
-		return []byte("null"), nil
+		return enc.WriteToken(jsontext.Null)
 	}
-	return json.Marshal(n.value)
+	return json.MarshalEncode(enc, &n.value)
 }
 
-// UnmarshalJSON implements json.Unmarshaler. It decodes via decodeWith so that a
-// nested union value dispatches to its discriminating decoder.
-func (n *Nullable[T]) UnmarshalJSON(b []byte) error {
+// UnmarshalJSONFrom implements json.UnmarshalerFrom. It decodes the value in
+// place on the caller's decoder — re-applying the union unmarshalers so a
+// nested union value dispatches even when the decoder was not built by
+// [Unmarshal] — instead of materializing the value bytes and re-parsing them
+// with a fresh decoder per field.
+func (n *Nullable[T]) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	n.set = true
-	if string(b) == "null" {
+	if dec.PeekKind() == 'n' {
+		if _, err := dec.ReadToken(); err != nil {
+			return err
+		}
 		n.null = true
 		var zero T
 		n.value = zero
 		return nil
 	}
 	n.null = false
-	return decodeWith(b, &n.value)
+	return json.UnmarshalDecode(dec, &n.value, json.WithUnmarshalers(unionUnmarshalers))
 }

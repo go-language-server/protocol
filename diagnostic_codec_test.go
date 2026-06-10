@@ -4,6 +4,7 @@
 package protocol
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/go-json-experiment/json"
@@ -105,7 +106,7 @@ func assertPublishDiagnosticsMatchesLegacyWire(t *testing.T, data []byte) {
 	if err != nil {
 		t.Fatalf("marshal legacy: %v", err)
 	}
-	if string(gotJSON) != string(wantJSON) {
+	if !bytes.Equal(gotJSON, wantJSON) {
 		t.Fatalf("wire mismatch\ngot:  %s\nwant: %s\ngot value:  %#v\nwant value: %#v", gotJSON, wantJSON, got, want)
 	}
 }

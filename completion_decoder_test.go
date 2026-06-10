@@ -4,8 +4,8 @@
 package protocol
 
 import (
+	"bytes"
 	"reflect"
-	"strings"
 	"testing"
 
 	"github.com/go-json-experiment/json"
@@ -91,7 +91,7 @@ func TestCompletionItemGeneratedDecoderMatchesCorpusArray(t *testing.T) {
 		t.Fatalf("decoded item count = %d, want %d", len(got), len(want))
 	}
 	for i := range got {
-		assertCompletionItemWireEqual(t, got[i], want[i])
+		assertCompletionItemWireEqual(t, &got[i], &want[i])
 	}
 }
 
@@ -110,13 +110,13 @@ func TestCompletionItemOptionalFieldsPreservePresentZeroOnWire(t *testing.T) {
 	if err := Unmarshal(data, &got); err != nil {
 		t.Fatalf("decode present zero optionals: %v", err)
 	}
-	assertOptionalString(t, got.Detail, "")
+	assertOptionalPresentEmpty(t, got.Detail)
 	assertOptionalBool(t, got.Deprecated, false)
 	assertOptionalBool(t, got.Preselect, false)
-	assertOptionalString(t, got.SortText, "")
-	assertOptionalString(t, got.FilterText, "")
-	assertOptionalString(t, got.InsertText, "")
-	assertOptionalString(t, got.TextEditText, "")
+	assertOptionalPresentEmpty(t, got.SortText)
+	assertOptionalPresentEmpty(t, got.FilterText)
+	assertOptionalPresentEmpty(t, got.InsertText)
+	assertOptionalPresentEmpty(t, got.TextEditText)
 
 	empty := ""
 	falseValue := false
@@ -130,7 +130,7 @@ func TestCompletionItemOptionalFieldsPreservePresentZeroOnWire(t *testing.T) {
 		InsertText:   &empty,
 		TextEditText: &empty,
 	}
-	assertCompletionItemWireEqual(t, got, want)
+	assertCompletionItemWireEqual(t, &got, &want)
 }
 
 func TestCompletionItemGeneratedDecoderNullZerosExistingValue(t *testing.T) {
@@ -157,14 +157,13 @@ func TestCompletionItemGeneratedDecoderMergesObjectIntoExistingValue(t *testing.
 	}
 }
 
-func TestCompletionItemGeneratedDecoderRejectsDuplicateMembers(t *testing.T) {
+func TestCompletionItemGeneratedDecoderDuplicateMembersLastWins(t *testing.T) {
 	var got CompletionItem
-	err := Unmarshal([]byte(`{"label":"a","label":"b"}`), &got)
-	if err == nil {
-		t.Fatal("duplicate label decoded successfully")
+	if err := Unmarshal([]byte(`{"label":"a","label":"b"}`), &got); err != nil {
+		t.Fatalf("duplicate label decode: %v", err)
 	}
-	if !strings.Contains(err.Error(), "duplicate object member") {
-		t.Fatalf("duplicate label error = %v, want duplicate object member", err)
+	if got.Label != "b" {
+		t.Fatalf("duplicate label = %q, want last-wins %q", got.Label, "b")
 	}
 }
 
@@ -179,10 +178,10 @@ func assertCompletionItemMatchesLegacyWire(t *testing.T, data []byte) {
 	if err := json.Unmarshal(data, &want, json.WithUnmarshalers(unionUnmarshalers)); err != nil {
 		t.Fatalf("legacy decode: %v", err)
 	}
-	assertCompletionItemWireEqual(t, got, want)
+	assertCompletionItemWireEqual(t, &got, &want)
 }
 
-func assertCompletionItemWireEqual(t *testing.T, got CompletionItem, want completionItemPointerShape) {
+func assertCompletionItemWireEqual(t *testing.T, got *CompletionItem, want *completionItemPointerShape) {
 	t.Helper()
 
 	gotJSON, err := Marshal(got)
@@ -193,16 +192,16 @@ func assertCompletionItemWireEqual(t *testing.T, got CompletionItem, want comple
 	if err != nil {
 		t.Fatalf("marshal legacy completion item: %v", err)
 	}
-	if string(gotJSON) != string(wantJSON) {
+	if !bytes.Equal(gotJSON, wantJSON) {
 		t.Fatalf("wire mismatch\ngot:  %s\nwant: %s\ngot value:  %#v\nwant value: %#v", gotJSON, wantJSON, got, want)
 	}
 }
 
-func assertOptionalString(t *testing.T, got Optional[string], want string) {
+func assertOptionalPresentEmpty(t *testing.T, got Optional[string]) {
 	t.Helper()
 	v, ok := got.Get()
-	if !ok || v != want {
-		t.Fatalf("optional string = %q, %v; want %q, true", v, ok, want)
+	if !ok || v != "" {
+		t.Fatalf("optional string = %q, %v; want empty string present", v, ok)
 	}
 }
 
