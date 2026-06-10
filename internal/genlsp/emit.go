@@ -986,16 +986,16 @@ func flattenJSONFields(structByName map[string]*renderedStruct, s *renderedStruc
 	var out []renderedField
 	for _, e := range s.Embeds {
 		for _, f := range flattenJSONFields(structByName, structByName[e], seen) {
-			out = appendJSONField(out, f)
+			out = appendJSONField(out, &f)
 		}
 	}
 	for _, f := range s.Fields {
-		out = appendJSONField(out, f)
+		out = appendJSONField(out, &f)
 	}
 	return out
 }
 
-func appendJSONField(fields []renderedField, f renderedField) []renderedField {
+func appendJSONField(fields []renderedField, f *renderedField) []renderedField {
 	for i := range fields {
 		if fields[i].JSONName == f.JSONName {
 			copy(fields[i:], fields[i+1:])
@@ -1003,7 +1003,7 @@ func appendJSONField(fields []renderedField, f renderedField) []renderedField {
 			break
 		}
 	}
-	return append(fields, f)
+	return append(fields, *f)
 }
 
 func (g *Generator) renderFieldEncoder(ctx *encoderCtx, b *strings.Builder, f *renderedField) {
@@ -1150,7 +1150,7 @@ func (c *encoderCtx) renderZeroHelpers(b *strings.Builder) {
 			continue
 		}
 		fmt.Fprintf(b, "func %s(x %s) bool {\n", zeroHelperName(name), name)
-		var checks []string
+		checks := make([]string, 0, len(s.Embeds)+len(s.Fields))
 		for _, e := range s.Embeds {
 			checks = append(checks, c.zeroExpr(e, "x."+e))
 		}
