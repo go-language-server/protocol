@@ -37,7 +37,7 @@ type renderedStruct struct {
 	Fields []renderedField
 }
 
-// Emit analyses the model and returns generated files keyed by base name.
+// Emit analyses the model and returns generated files keyed by output name.
 func (g *Generator) Emit() (map[string][]byte, error) {
 	// Pre-pass: assign role/context names to anonymous unions before any use
 	// site mints a structural AOrB fallback. Priority is alias > result >
@@ -69,6 +69,7 @@ func (g *Generator) Emit() (map[string][]byte, error) {
 	files := map[string][]byte{}
 	var firstErr error
 	add := func(name, body string) {
+		name = generatedFileName(name)
 		out, ferr := formatFile(g.pkg, body)
 		files[name] = out // raw bytes on error, formatted otherwise
 		if ferr != nil && firstErr == nil {
@@ -119,10 +120,26 @@ func (g *Generator) Emit() (map[string][]byte, error) {
 
 	add("types_unions.go", g.renderUnions())
 	add("metamodel_messages.go", messages)
-	add("marshalers_generated.go", g.renderMarshalers())
-	add("decoders_generated.go", g.renderByteDecoders(g.byteCtx))
-	add("encoders_generated.go", g.renderEncoders(structs))
+	add("marshalers.go", g.renderMarshalers())
+	add("decoders.go", g.renderByteDecoders(g.byteCtx))
+	add("encoders.go", g.renderEncoders(structs))
 	return files, firstErr
+}
+
+// generatedFileName returns the checked-in file name for generated source.
+func generatedFileName(name string) string {
+	const suffix = ".gen.go"
+
+	if strings.HasSuffix(name, suffix) {
+		return name
+	}
+	if stem, ok := strings.CutSuffix(name, "_generated.go"); ok {
+		return stem + suffix
+	}
+	if stem, ok := strings.CutSuffix(name, ".go"); ok {
+		return stem + suffix
+	}
+	return name + ".gen"
 }
 
 // formatFile assembles a header, auto-detected imports and body, then

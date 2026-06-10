@@ -11,7 +11,7 @@ import (
 )
 
 // TestEveryMethodRouted asserts that every LSP method constant declared in the
-// generated registry (metamodel_messages.go) is handled by a dispatch case in
+// generated registry (metamodel_messages.gen.go) is handled by a dispatch case in
 // the hand-written transport (server.go or client.go), except $/cancelRequest
 // which is special-cased in CancelHandler.
 //
@@ -21,7 +21,7 @@ import (
 func TestEveryMethodRouted(t *testing.T) {
 	t.Parallel()
 
-	registry, err := os.ReadFile("metamodel_messages.go")
+	registry, err := os.ReadFile("metamodel_messages.gen.go")
 	if err != nil {
 		t.Fatalf("read registry: %v", err)
 	}
@@ -30,7 +30,7 @@ func TestEveryMethodRouted(t *testing.T) {
 	constRe := regexp.MustCompile(`(?m)^\s*(Method[A-Za-z]+)\s*=\s*"`)
 	matches := constRe.FindAllStringSubmatch(string(registry), -1)
 	if len(matches) == 0 {
-		t.Fatal("parsed zero method constants from metamodel_messages.go")
+		t.Fatal("parsed zero method constants from metamodel_messages.gen.go")
 	}
 
 	var dispatch strings.Builder
