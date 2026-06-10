@@ -8,6 +8,8 @@ import (
 	stdjson "encoding/json"
 	"fmt"
 	"testing"
+
+	"go.lsp.dev/uri"
 )
 
 func TestWorkspaceSymbolResultGeneratedEncodersMatchCorpus(t *testing.T) {
@@ -34,7 +36,7 @@ func TestWorkspaceSymbolGeneratedEncodersPreserveOptionalFields(t *testing.T) {
 	workspaceSymbols := WorkspaceSymbolSlice{
 		{
 			BaseSymbolInformation: BaseSymbolInformation{Name: "WS", Kind: SymbolKindClass},
-			Location:              &LocationUriOnly{URI: DocumentURI("file:///ws.go")},
+			Location:              &LocationUriOnly{URI: uri.URI("file:///ws.go")},
 			Data:                  LSPAny(`{"index":1}`),
 		},
 		{
@@ -45,7 +47,7 @@ func TestWorkspaceSymbolGeneratedEncodersPreserveOptionalFields(t *testing.T) {
 				ContainerName: &container,
 			},
 			Location: &Location{
-				URI: DocumentURI("file:///x.go"),
+				URI: uri.URI("file:///x.go"),
 				Range: Range{
 					Start: Position{Line: 1, Character: 2},
 					End:   Position{Line: 3, Character: 4},

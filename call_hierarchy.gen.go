@@ -5,6 +5,10 @@
 
 package protocol
 
+import (
+	"go.lsp.dev/uri"
+)
+
 // CallHierarchyPrepareParams The parameter of a `textDocument/prepareCallHierarchy` request.
 //
 // Since: 3.16.0
@@ -31,7 +35,7 @@ type CallHierarchyItem struct {
 	Detail *string `json:"detail,omitzero"`
 
 	// URI The resource identifier of this item.
-	URI DocumentURI `json:"uri"`
+	URI uri.URI `json:"uri"`
 
 	// Range The range enclosing this symbol not including leading/trailing whitespace but everything else, e.g. comments and code.
 	Range Range `json:"range"`

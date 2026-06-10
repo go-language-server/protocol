@@ -90,3 +90,18 @@ func TestDecodeTypeKinds(t *testing.T) {
 		t.Fatalf("documentChanges element = %+v, want or of 4", docChanges.Type.Element)
 	}
 }
+
+func TestURIBaseTypeLoweringUsesExternalFieldAndLocalUnionWrapper(t *testing.T) {
+	if got := baseGoType(BaseURI); got != generatedURIType {
+		t.Fatalf("baseGoType(BaseURI) = %q, want %s", got, generatedURIType)
+	}
+	if got := baseGoType(BaseDocumentURI); got != generatedURIType {
+		t.Fatalf("baseGoType(BaseDocumentURI) = %q, want %s", got, generatedURIType)
+	}
+	if got, token := scalarWrapper(BaseURI); got != unionURIWrapperType || token != '"' {
+		t.Fatalf("scalarWrapper(BaseURI) = %q, %q, want URI, quote", got, token)
+	}
+	if got, token := scalarWrapper(BaseDocumentURI); got != unionURIWrapperType || token != '"' {
+		t.Fatalf("scalarWrapper(BaseDocumentURI) = %q, %q, want URI, quote", got, token)
+	}
+}

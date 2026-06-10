@@ -7,6 +7,17 @@
 
 Package protocol implements Language Server Protocol specification in Go.
 
+## URI types
+
+Generated URI and URI fields use `go.lsp.dev/uri.URI` directly. The
+package-level helpers `protocol.New`, `protocol.File`, `protocol.Parse`, and
+`protocol.From` also return `uri.URI`.
+
+`protocol.URI` remains as a package-local named type for compatibility and for
+sealed union arms that require a local marker-method receiver. In ordinary code,
+prefer `go.lsp.dev/uri.URI`; when assigning a URI string arm to
+`RelativePatternBaseURI`, convert explicitly with `protocol.URI(u)`.
+
 ## Decode ownership and zero-copy strings
 
 Generated decoders copy typed JSON input once before walking it. The caller may

@@ -5,6 +5,10 @@
 
 package protocol
 
+import (
+	"go.lsp.dev/uri"
+)
+
 // DocumentLinkParams The parameters of a [DocumentLinkRequest].
 type DocumentLinkParams struct {
 	WorkDoneProgressParams
@@ -21,7 +25,7 @@ type DocumentLink struct {
 	Range Range `json:"range"`
 
 	// Target The uri this link points to. If missing a resolve request is sent later.
-	Target *URI `json:"target,omitzero"`
+	Target *uri.URI `json:"target,omitzero"`
 
 	// Tooltip The tooltip text when you hover over this link.
 	//

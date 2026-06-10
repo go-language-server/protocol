@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"slices"
 	"sort"
 	"strings"
 	"testing"
@@ -491,5 +492,31 @@ relative patterns depends on the client capability.`
 				t.Errorf("sanitizeDoc(%q) = %q, want %q", tt.input, got, tt.want)
 			}
 		})
+	}
+}
+
+func TestDetectImportsIncludesURI(t *testing.T) {
+	got := detectImports("type X struct { URI uri.URI }\n")
+	if !slices.Contains(got, uriImportPath) {
+		t.Fatalf("detectImports(uri.URI) = %v, want %s", got, uriImportPath)
+	}
+}
+
+func TestEncoderScalarBaseTreatsURIAsString(t *testing.T) {
+	ctx := &encoderCtx{}
+	for _, typ := range []string{unionURIWrapperType, legacyURIRef, generatedURIType} {
+		if got := ctx.scalarBase(typ); got != "string" {
+			t.Fatalf("scalarBase(%q) = %q, want string", typ, got)
+		}
+	}
+}
+
+func TestWriteEncoderValueEmitsURIAsString(t *testing.T) {
+	ctx := &encoderCtx{}
+	var b strings.Builder
+	writeEncoderValue(ctx, &b, &renderedField{Name: "URI", Type: generatedURIType}, "\t", false)
+	got := b.String()
+	if !strings.Contains(got, "jsontext.String(string(x.URI))") {
+		t.Fatalf("writeEncoderValue(uri.URI) =\n%s\nwant string conversion", got)
 	}
 }

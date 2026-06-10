@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/go-json-experiment/json"
+	"go.lsp.dev/uri"
 )
 
 func TestAppendEncodeBenchmarkRootsMatchCanonicalJSON(t *testing.T) {
@@ -95,13 +96,13 @@ func TestAppendEncodeRejectsInvalidRawData(t *testing.T) {
 		"workspace symbol result": func() *WorkspaceSymbolResult {
 			var result WorkspaceSymbolResult = WorkspaceSymbolSlice{{
 				BaseSymbolInformation: BaseSymbolInformation{Name: "s", Kind: SymbolKindClass},
-				Location:              &LocationUriOnly{URI: DocumentURI("file:///x.go")},
+				Location:              &LocationUriOnly{URI: uri.URI("file:///x.go")},
 				Data:                  invalid,
 			}}
 			return &result
 		}(),
 		"publish diagnostics params": &PublishDiagnosticsParams{
-			URI: DocumentURI("file:///x.go"),
+			URI: uri.URI("file:///x.go"),
 			Diagnostics: []Diagnostic{{
 				Range: Range{
 					Start: Position{Line: 1, Character: 2},

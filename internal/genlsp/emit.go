@@ -203,6 +203,9 @@ func detectImports(body string) []string {
 	if strings.Contains(body, "jsontext.") {
 		imports = append(imports, "github.com/go-json-experiment/json/jsontext")
 	}
+	if strings.Contains(body, uriPackageQualifier+".") {
+		imports = append(imports, uriImportPath)
+	}
 	sort.Strings(imports)
 	return imports
 }
@@ -1230,10 +1233,13 @@ func (c *encoderCtx) scalarZeroGuard(t, expr string) (string, bool) {
 
 func (c *encoderCtx) scalarBase(t string) string {
 	for range 8 {
+		if isURIStringType(t) {
+			return "string"
+		}
 		switch t {
 		case "string", "int32", "uint32", "float64", "bool":
 			return t
-		case "URI", "DocumentURI", "String":
+		case "String":
 			return "string"
 		case "Integer":
 			return "int32"
@@ -1276,7 +1282,7 @@ func (c *encoderCtx) scalarBaseFromType(t *Type) string {
 
 func scalarBaseName(name BaseTypeName) string {
 	switch name {
-	case BaseString, BaseURI, BaseDocumentURI, BaseRegExp:
+	case BaseString, BaseDocumentURI, BaseURI, BaseRegExp:
 		return "string"
 	case BaseInteger:
 		return "int32"
@@ -1298,11 +1304,15 @@ func writeEncoderName(b *strings.Builder, name, indent string) {
 }
 
 func writeEncoderValue(ctx *encoderCtx, b *strings.Builder, f *renderedField, indent string, guarded bool) {
+	if isURIStringType(f.Type) {
+		fmt.Fprintf(b, "%sif err := enc.WriteToken(jsontext.String(string(x.%s))); err != nil {\n", indent, f.Name)
+		fmt.Fprintf(b, "%s\treturn err\n", indent)
+		fmt.Fprintf(b, "%s}\n", indent)
+		return
+	}
 	switch f.Type {
 	case "string":
 		fmt.Fprintf(b, "%sif err := enc.WriteToken(jsontext.String(x.%s)); err != nil {\n", indent, f.Name)
-	case "URI", "DocumentURI":
-		fmt.Fprintf(b, "%sif err := enc.WriteToken(jsontext.String(string(x.%s))); err != nil {\n", indent, f.Name)
 	case "Position":
 		fmt.Fprintf(b, "%sif err := encodePositionTo(enc, x.%s); err != nil {\n", indent, f.Name)
 	case "Range":

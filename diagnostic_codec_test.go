@@ -23,7 +23,7 @@ type diagnosticPointerShape struct {
 }
 
 type publishDiagnosticsPointerShape struct {
-	URI         DocumentURI              `json:"uri"`
+	URI         URI                      `json:"uri"`
 	Version     *int32                   `json:"version,omitzero"`
 	Diagnostics []diagnosticPointerShape `json:"diagnostics"`
 }

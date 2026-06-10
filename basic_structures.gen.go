@@ -5,6 +5,10 @@
 
 package protocol
 
+import (
+	"go.lsp.dev/uri"
+)
+
 // ErrorCodes Predefined error codes.
 type ErrorCodes int32
 
@@ -467,7 +471,7 @@ type RegularExpressionEngineKind string
 // inside a text file.
 type Location struct {
 	// URI is defined by the LSP specification.
-	URI DocumentURI `json:"uri"`
+	URI uri.URI `json:"uri"`
 
 	// Range is defined by the LSP specification.
 	Range Range `json:"range"`
@@ -500,7 +504,7 @@ type TextDocumentRegistrationOptions struct {
 // the client capability: `workspace.workspaceEdit.failureHandling`
 type WorkspaceEdit struct {
 	// Changes Holds changes to existing resources.
-	Changes map[DocumentURI][]TextEdit `json:"changes,omitzero"`
+	Changes map[uri.URI][]TextEdit `json:"changes,omitzero"`
 
 	// DocumentChanges Depending on the client capability `workspace.workspaceEdit.resourceOperations` document changes
 	// are either an array of `TextDocumentEdit`s to express changes to n different text documents
@@ -685,7 +689,7 @@ type LocationLink struct {
 	OriginSelectionRange *Range `json:"originSelectionRange,omitzero"`
 
 	// TargetURI The target resource identifier of this link.
-	TargetURI DocumentURI `json:"targetUri"`
+	TargetURI uri.URI `json:"targetUri"`
 
 	// TargetRange The full target range of this link. If the target for example is a symbol then target range is the
 	// range enclosing this symbol not including leading/trailing whitespace but everything else
@@ -729,7 +733,7 @@ type StaticRegistrationOptions struct {
 // TextDocumentIdentifier A literal to identify a text document in the client.
 type TextDocumentIdentifier struct {
 	// URI The text document's uri.
-	URI DocumentURI `json:"uri"`
+	URI uri.URI `json:"uri"`
 }
 
 // Position Position in a text document expressed as zero-based line and character
@@ -801,7 +805,7 @@ type CreateFile struct {
 	Kind string `json:"kind"`
 
 	// URI The resource to create.
-	URI DocumentURI `json:"uri"`
+	URI uri.URI `json:"uri"`
 
 	// Options Additional options
 	Options *CreateFileOptions `json:"options,omitzero"`
@@ -815,7 +819,7 @@ type DeleteFile struct {
 	Kind string `json:"kind"`
 
 	// URI The file to delete.
-	URI DocumentURI `json:"uri"`
+	URI uri.URI `json:"uri"`
 
 	// Options Delete options.
 	Options *DeleteFileOptions `json:"options,omitzero"`
@@ -874,7 +878,7 @@ type MarkupContent struct {
 // server.
 type TextDocumentItem struct {
 	// URI The text document's uri.
-	URI DocumentURI `json:"uri"`
+	URI uri.URI `json:"uri"`
 
 	// LanguageID The text document's language identifier.
 	LanguageID LanguageKind `json:"languageId"`
@@ -1001,7 +1005,7 @@ type BaseSymbolInformation struct {
 // Since: 3.18.0
 type LocationUriOnly struct {
 	// URI is defined by the LSP specification.
-	URI DocumentURI `json:"uri"`
+	URI uri.URI `json:"uri"`
 }
 
 // OptionalVersionedTextDocumentIdentifier A text document identifier to optionally denote a specific version of a text document.
@@ -1074,7 +1078,7 @@ type DeleteFileOptions struct {
 // Since: 3.16.0
 type CodeDescription struct {
 	// Href An URI to open with more information about the diagnostic error.
-	Href URI `json:"href"`
+	Href uri.URI `json:"href"`
 }
 
 // DiagnosticRelatedInformation Represents a related message and source code location for a diagnostic. This should be

@@ -5,6 +5,10 @@
 
 package protocol
 
+import (
+	"go.lsp.dev/uri"
+)
+
 // FileOperationPatternKind A pattern kind describing if a glob pattern matches a file a folder or
 // both.
 //
@@ -134,7 +138,7 @@ type ConfigurationParams struct {
 // ConfigurationItem is defined by the LSP specification.
 type ConfigurationItem struct {
 	// ScopeURI The scope to get the configuration section for.
-	ScopeURI *URI `json:"scopeUri,omitzero"`
+	ScopeURI *uri.URI `json:"scopeUri,omitzero"`
 
 	// Section The configuration section asked for.
 	Section *string `json:"section,omitzero"`
@@ -161,7 +165,7 @@ type DidChangeConfigurationClientCapabilities struct {
 // WorkspaceFolder A workspace folder inside a client.
 type WorkspaceFolder struct {
 	// URI The associated URI for this workspace folder.
-	URI URI `json:"uri"`
+	URI uri.URI `json:"uri"`
 
 	// Name The name of the workspace folder. Used to refer to this
 	// workspace folder in the user interface.
@@ -368,7 +372,7 @@ type DidChangeWatchedFilesRegistrationOptions struct {
 // FileEvent An event describing a file change.
 type FileEvent struct {
 	// URI The file's uri.
-	URI DocumentURI `json:"uri"`
+	URI uri.URI `json:"uri"`
 
 	// Type The change type.
 	Type FileChangeType `json:"type"`
@@ -496,7 +500,7 @@ type WorkspaceEditMetadata struct {
 // Since: 3.18.0
 type TextDocumentContentParams struct {
 	// URI The uri of the text document.
-	URI DocumentURI `json:"uri"`
+	URI uri.URI `json:"uri"`
 }
 
 // TextDocumentContentResult Result of the `workspace/textDocumentContent` request.
@@ -523,7 +527,7 @@ type TextDocumentContentRegistrationOptions struct {
 // Since: 3.18.0
 type TextDocumentContentRefreshParams struct {
 	// URI The uri of the text document to refresh.
-	URI DocumentURI `json:"uri"`
+	URI uri.URI `json:"uri"`
 }
 
 // TextDocumentContentOptions Text document content provider options.

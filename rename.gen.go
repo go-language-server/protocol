@@ -5,6 +5,10 @@
 
 package protocol
 
+import (
+	"go.lsp.dev/uri"
+)
+
 // PrepareSupportDefaultBehavior is defined by the LSP specification.
 type PrepareSupportDefaultBehavior uint32
 
@@ -46,10 +50,10 @@ type RenameFile struct {
 	Kind string `json:"kind"`
 
 	// OldURI The old (existing) location.
-	OldURI DocumentURI `json:"oldUri"`
+	OldURI uri.URI `json:"oldUri"`
 
 	// NewURI The new location.
-	NewURI DocumentURI `json:"newUri"`
+	NewURI uri.URI `json:"newUri"`
 
 	// Options Rename options.
 	Options *RenameFileOptions `json:"options,omitzero"`

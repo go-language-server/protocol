@@ -5,10 +5,14 @@
 
 package protocol
 
+import (
+	"go.lsp.dev/uri"
+)
+
 // PublishDiagnosticsParams The publish diagnostic notification's parameters.
 type PublishDiagnosticsParams struct {
 	// URI The URI for which diagnostic information is reported.
-	URI DocumentURI `json:"uri"`
+	URI uri.URI `json:"uri"`
 
 	// Version Optional the version number of the document the diagnostics are published for.
 	//

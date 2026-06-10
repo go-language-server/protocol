@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"go.lsp.dev/jsonrpc2"
+	"go.lsp.dev/uri"
 )
 
 // testServer is a partial [Server] that exercises the production dispatch path.
@@ -22,9 +23,9 @@ type testServer struct {
 	UnimplementedServer
 
 	mu         sync.Mutex
-	client     Client      // dispatcher used for the server->client applyEdit.
-	didOpenURI DocumentURI // recorded by DidOpen.
-	applied    bool        // recorded from the s2c ApplyEdit response.
+	client     Client  // dispatcher used for the server->client applyEdit.
+	didOpenURI uri.URI // recorded by DidOpen.
+	applied    bool    // recorded from the s2c ApplyEdit response.
 }
 
 // compile-time assertion that *testServer satisfies Server.
@@ -115,7 +116,7 @@ func TestIntegrationRoundTrip(t *testing.T) {
 	defer func() { _ = connB.Close() }()
 
 	// (2) notification reaches the server.
-	const wantURI DocumentURI = "file:///integration.go"
+	const wantURI uri.URI = "file:///integration.go"
 	if err := serverDispatcher.DidOpen(ctx, &DidOpenTextDocumentParams{
 		TextDocument: TextDocumentItem{
 			URI:        wantURI,

@@ -5,6 +5,10 @@
 
 package protocol
 
+import (
+	"go.lsp.dev/uri"
+)
+
 // MessageType The message type
 type MessageType uint32
 
@@ -81,7 +85,7 @@ type LogMessageParams struct {
 // Since: 3.16.0
 type ShowDocumentParams struct {
 	// URI The uri to show.
-	URI URI `json:"uri"`
+	URI uri.URI `json:"uri"`
 
 	// External Indicates to show the resource in an external program.
 	// To show, for example, `https://code.visualstudio.com/`

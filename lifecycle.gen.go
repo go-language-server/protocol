@@ -5,6 +5,10 @@
 
 package protocol
 
+import (
+	"go.lsp.dev/uri"
+)
+
 // InitializeParams is defined by the LSP specification.
 type InitializeParams struct {
 	_InitializeParams
@@ -73,7 +77,7 @@ type _InitializeParams struct {
 	// `rootUri` wins.
 	//
 	// Deprecated: in favour of workspaceFolders.
-	RootURI *DocumentURI `json:"rootUri"`
+	RootURI *uri.URI `json:"rootUri"`
 
 	// Capabilities The capabilities provided by the client (editor or tool)
 	Capabilities ClientCapabilities `json:"capabilities"`

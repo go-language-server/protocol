@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"go.lsp.dev/jsonrpc2"
+	"go.lsp.dev/uri"
 )
 
 // spikeCodec is the spike's union-aware [jsonrpc2.Codec]: it routes message
@@ -67,7 +68,7 @@ func TestSpikeTransportRoundTrip(t *testing.T) {
 
 	var (
 		mu         sync.Mutex
-		gotDidOpen DocumentURI
+		gotDidOpen uri.URI
 		gotApplied bool
 	)
 

@@ -5,6 +5,10 @@
 
 package protocol
 
+import (
+	"go.lsp.dev/uri"
+)
+
 // DocumentDiagnosticReportKind The document diagnostic report kinds.
 //
 // Since: 3.17.0
@@ -42,7 +46,7 @@ type DocumentDiagnosticParams struct {
 // Since: 3.17.0
 type DocumentDiagnosticReportPartialResult struct {
 	// RelatedDocuments is defined by the LSP specification.
-	RelatedDocuments map[DocumentURI]FullDocumentDiagnosticReportOrUnchangedDocumentDiagnosticReport `json:"relatedDocuments"`
+	RelatedDocuments map[uri.URI]FullDocumentDiagnosticReportOrUnchangedDocumentDiagnosticReport `json:"relatedDocuments"`
 }
 
 // DiagnosticServerCancellationData Cancellation data returned from a diagnostic request.
@@ -106,7 +110,7 @@ type RelatedFullDocumentDiagnosticReport struct {
 	// a.cpp and result in errors in a header file b.hpp.
 	//
 	// Since: 3.17.0
-	RelatedDocuments map[DocumentURI]FullDocumentDiagnosticReportOrUnchangedDocumentDiagnosticReport `json:"relatedDocuments,omitzero"`
+	RelatedDocuments map[uri.URI]FullDocumentDiagnosticReportOrUnchangedDocumentDiagnosticReport `json:"relatedDocuments,omitzero"`
 }
 
 // RelatedUnchangedDocumentDiagnosticReport An unchanged diagnostic report with a set of related documents.
@@ -122,7 +126,7 @@ type RelatedUnchangedDocumentDiagnosticReport struct {
 	// a.cpp and result in errors in a header file b.hpp.
 	//
 	// Since: 3.17.0
-	RelatedDocuments map[DocumentURI]FullDocumentDiagnosticReportOrUnchangedDocumentDiagnosticReport `json:"relatedDocuments,omitzero"`
+	RelatedDocuments map[uri.URI]FullDocumentDiagnosticReportOrUnchangedDocumentDiagnosticReport `json:"relatedDocuments,omitzero"`
 }
 
 // FullDocumentDiagnosticReport A diagnostic report with a full set of problems.
@@ -183,7 +187,7 @@ type DiagnosticOptions struct {
 type PreviousResultId struct {
 	// URI The URI for which the client knowns a
 	// result id.
-	URI DocumentURI `json:"uri"`
+	URI uri.URI `json:"uri"`
 
 	// Value The value of the previous result id.
 	Value string `json:"value"`
@@ -196,7 +200,7 @@ type WorkspaceFullDocumentDiagnosticReport struct {
 	FullDocumentDiagnosticReport
 
 	// URI The URI for which diagnostic information is reported.
-	URI DocumentURI `json:"uri"`
+	URI uri.URI `json:"uri"`
 
 	// Version The version number for which the diagnostics are reported.
 	// If the document is not marked as open `null` can be provided.
@@ -210,7 +214,7 @@ type WorkspaceUnchangedDocumentDiagnosticReport struct {
 	UnchangedDocumentDiagnosticReport
 
 	// URI The URI for which diagnostic information is reported.
-	URI DocumentURI `json:"uri"`
+	URI uri.URI `json:"uri"`
 
 	// Version The version number for which the diagnostics are reported.
 	// If the document is not marked as open `null` can be provided.

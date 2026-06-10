@@ -89,8 +89,9 @@ func newByteDecCtx(g *Generator, structs []*renderedStruct, enums []*renderedEnu
 		c.aliasType[a.Name] = a.Type
 	}
 	// URI types are hand-written string types.
-	c.aliasType["URI"] = "string"
-	c.aliasType["DocumentURI"] = "string"
+	c.aliasType[unionURIWrapperType] = "string"
+	c.aliasType[legacyURIRef] = "string"
+	c.aliasType[generatedURIType] = "string"
 	for _, sig := range g.unionOrder {
 		n := g.unions[sig].Name
 		c.unionCanon[n] = n

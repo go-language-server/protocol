@@ -9,6 +9,18 @@ import (
 	"strings"
 )
 
+const (
+	generatedURIType    = "uri.URI"
+	uriImportPath       = "go.lsp.dev/uri"
+	uriPackageQualifier = "uri"
+	unionURIWrapperType = "URI"
+	legacyURIRef        = "URI"
+)
+
+func isURIStringType(t string) bool {
+	return t == generatedURIType || t == unionURIWrapperType || t == legacyURIRef
+}
+
 // Generator lowers a [MetaModel] into Go declarations for the lsp package.
 //
 // Synthesized declarations (sealed-interface unions, scalar wrappers, inline
@@ -148,10 +160,8 @@ func baseGoType(name BaseTypeName) string {
 		return "uint32"
 	case BaseDecimal:
 		return "float64"
-	case BaseURI:
-		return "URI"
-	case BaseDocumentURI:
-		return "DocumentURI"
+	case BaseURI, BaseDocumentURI:
+		return generatedURIType
 	case BaseNull:
 		// A standalone null (e.g. a void result type) is a raw JSON value that
 		// is always null; LSPAny round-trips it without an "any" field.
@@ -547,10 +557,8 @@ func scalarWrapper(name BaseTypeName) (wrap string, token byte) {
 		return "Uinteger", '0'
 	case BaseDecimal:
 		return "Decimal", '0'
-	case BaseURI:
-		return "URI", '"'
-	case BaseDocumentURI:
-		return "DocumentURI", '"'
+	case BaseURI, BaseDocumentURI:
+		return unionURIWrapperType, '"'
 	default:
 		return "String", '"'
 	}

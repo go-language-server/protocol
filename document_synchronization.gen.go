@@ -5,6 +5,10 @@
 
 package protocol
 
+import (
+	"go.lsp.dev/uri"
+)
+
 // TextDocumentSaveReason Represents reasons why a text document is saved.
 type TextDocumentSaveReason uint32
 
@@ -232,7 +236,7 @@ type DidCloseNotebookDocumentParams struct {
 // Since: 3.17.0
 type NotebookDocument struct {
 	// URI The notebook document's uri.
-	URI URI `json:"uri"`
+	URI uri.URI `json:"uri"`
 
 	// NotebookType The type of the notebook.
 	NotebookType string `json:"notebookType"`
@@ -281,7 +285,7 @@ type VersionedNotebookDocumentIdentifier struct {
 	Version int32 `json:"version"`
 
 	// URI The notebook document's uri.
-	URI URI `json:"uri"`
+	URI uri.URI `json:"uri"`
 }
 
 // NotebookDocumentChangeEvent A change event for a notebook document.
@@ -302,7 +306,7 @@ type NotebookDocumentChangeEvent struct {
 // Since: 3.17.0
 type NotebookDocumentIdentifier struct {
 	// URI The notebook document's uri.
-	URI URI `json:"uri"`
+	URI uri.URI `json:"uri"`
 }
 
 // NotebookCell A notebook cell.
@@ -318,7 +322,7 @@ type NotebookCell struct {
 
 	// Document The URI of the cell's text document
 	// content.
-	Document DocumentURI `json:"document"`
+	Document uri.URI `json:"document"`
 
 	// Metadata Additional metadata stored with the cell.
 	//
