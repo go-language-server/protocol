@@ -18,9 +18,12 @@ import (
 type detachedContext struct{ parent context.Context } //nolint:containedctx // intentional: detaches cancellation/deadline while preserving values, mirroring x/tools xcontext.Detach
 
 func (detachedContext) Deadline() (time.Time, bool) { return time.Time{}, false }
-func (detachedContext) Done() <-chan struct{}       { return nil }
-func (detachedContext) Err() error                  { return nil }
-func (c detachedContext) Value(k any) any           { return c.parent.Value(k) }
+
+func (detachedContext) Done() <-chan struct{} { return nil }
+
+func (detachedContext) Err() error { return nil }
+
+func (c detachedContext) Value(k any) any { return c.parent.Value(k) }
 
 // detach returns a context that keeps ctx's values but drops its cancellation
 // and deadline.
