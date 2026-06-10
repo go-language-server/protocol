@@ -15,9 +15,9 @@ import (
 // from []DiagnosticTag on hot Diagnostic payloads; callers that need slice
 // semantics can use Slice or Set.
 type DiagnosticTags struct {
-	first DiagnosticTag
 	rest  []DiagnosticTag
 	n     int
+	first DiagnosticTag
 }
 
 // NewDiagnosticTags returns a compact DiagnosticTags value initialized from

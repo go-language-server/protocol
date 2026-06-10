@@ -20,9 +20,9 @@ import (
 // absent means "no workspace-folder support" and null means "supported, none
 // open"). A plain pointer cannot represent all three states.
 type Nullable[T any] struct {
+	value T
 	set   bool
 	null  bool
-	value T
 }
 
 // IsZero reports whether the value is absent. It drives the ",omitzero" tag so

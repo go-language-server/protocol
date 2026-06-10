@@ -13,8 +13,8 @@ import (
 // value to match the legacy pointer representation, where null and absent both
 // decoded to nil and were omitted on marshal.
 type Optional[T any] struct {
-	set   bool
 	value T
+	set   bool
 }
 
 // NewOptional returns an Optional holding v.

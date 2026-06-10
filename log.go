@@ -53,14 +53,14 @@ func (s *loggingStream) Close() error {
 }
 
 type req struct {
-	method string
 	start  time.Time
+	method string
 }
 
 type mapped struct {
-	mu          sync.Mutex
 	clientCalls map[string]req
 	serverCalls map[string]req
+	mu          sync.Mutex
 }
 
 var maps = &mapped{
