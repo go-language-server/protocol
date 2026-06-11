@@ -5,7 +5,6 @@ package protocol
 
 import (
 	"context"
-	"log/slog"
 
 	"go.lsp.dev/jsonrpc2"
 )
@@ -92,11 +91,8 @@ type Server interface {
 }
 
 // ServerDispatcher returns a [Server] that dispatches LSP requests across conn.
-func ServerDispatcher(conn jsonrpc2.Conn, logger *slog.Logger) Server {
-	return &server{
-		Conn:   conn,
-		logger: logger,
-	}
+func ServerDispatcher(conn jsonrpc2.Conn) Server {
+	return &server{Conn: conn}
 }
 
 // ServerHandler returns a [jsonrpc2.Handler] that routes incoming requests to
@@ -783,8 +779,6 @@ func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, 
 // notifications over a jsonrpc2 connection.
 type server struct {
 	jsonrpc2.Conn
-
-	logger *slog.Logger
 }
 
 // compile-time assertion that *server satisfies Server.

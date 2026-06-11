@@ -5,7 +5,6 @@ package protocol
 
 import (
 	"context"
-	"log/slog"
 	"net"
 	"sync"
 	"testing"
@@ -94,8 +93,6 @@ func TestIntegrationRoundTrip(t *testing.T) {
 	ctx, cancel := context.WithTimeout(t.Context(), 10*time.Second)
 	defer cancel()
 
-	logger := slog.New(slog.DiscardHandler)
-
 	a, b := net.Pipe()
 
 	ts := &testServer{}
@@ -103,7 +100,7 @@ func TestIntegrationRoundTrip(t *testing.T) {
 
 	// Endpoint A speaks the server role: it serves *testServer requests and
 	// returns clientDispatcher, the Client used for server->client calls.
-	_, connA, clientDispatcher := NewServer(ctx, ts, jsonrpc2.NewStream(a), logger)
+	_, connA, clientDispatcher := NewServer(ctx, ts, jsonrpc2.NewStream(a))
 	defer func() { _ = connA.Close() }()
 
 	ts.mu.Lock()
@@ -112,7 +109,7 @@ func TestIntegrationRoundTrip(t *testing.T) {
 
 	// Endpoint B speaks the client role: it serves *testClient requests and
 	// returns serverDispatcher, the Server used to drive client->server calls.
-	_, connB, serverDispatcher := NewClient(ctx, tc, jsonrpc2.NewStream(b), logger)
+	_, connB, serverDispatcher := NewClient(ctx, tc, jsonrpc2.NewStream(b))
 	defer func() { _ = connB.Close() }()
 
 	// (2) notification reaches the server.
