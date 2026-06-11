@@ -1307,8 +1307,16 @@ func scalarBaseName(name BaseTypeName) string {
 	}
 }
 
+// goJSONNameLiteral returns a Go source string literal for a static JSON member name.
+func goJSONNameLiteral(s string) string {
+	if !strconv.CanBackquote(s) {
+		return strconv.Quote(s)
+	}
+	return "`" + s + "`"
+}
+
 func writeEncoderName(b *strings.Builder, name, indent string) {
-	fmt.Fprintf(b, "%sif err := enc.WriteToken(jsontext.String(%q)); err != nil {\n", indent, name)
+	fmt.Fprintf(b, "%sif err := enc.WriteToken(jsontext.String(%s)); err != nil {\n", indent, goJSONNameLiteral(name))
 	fmt.Fprintf(b, "%s\treturn err\n", indent)
 	fmt.Fprintf(b, "%s}\n", indent)
 }

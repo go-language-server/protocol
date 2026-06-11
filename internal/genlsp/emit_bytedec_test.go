@@ -74,10 +74,10 @@ func TestRenderByteWalkerEmission(t *testing.T) {
 
 	for _, want := range []string{
 		"func (x *CompletionItem) unmarshalLSP(raw []byte, i int) (int, error)",
-		"keyEquals(key, \"label\")",
-		"keyEquals(key, \"kind\")",
-		"keyEquals(key, \"detail\")",
-		"keyEquals(key, \"documentation\")",
+		"keyEquals(key, `label`)",
+		"keyEquals(key, `kind`)",
+		"keyEquals(key, `detail`)",
+		"keyEquals(key, `documentation`)",
 		"dvString(raw, i)",
 		"dvUint32(raw, i)",
 		"x.Detail.Clear()",
@@ -124,7 +124,7 @@ func TestRenderByteWalkerCollapsesDuplicateEmbeddedJSONNames(t *testing.T) {
 	g.renderByteWalker(&b, c, child)
 	got := b.String()
 
-	if count := strings.Count(got, `case keyEquals(key, "dup"):`); count != 1 {
+	if count := strings.Count(got, "case keyEquals(key, `dup`):"); count != 1 {
 		t.Fatalf("duplicate embedded JSON field cases = %d, want 1:\n%s", count, got)
 	}
 	if strings.Contains(got, "x.Shadow =") {
@@ -144,7 +144,7 @@ func TestGeneratedByteWalkersCollapseCurrentDuplicateJSONNames(t *testing.T) {
 
 	for _, name := range []string{"CreateFile", "DeleteFile", "RenameFile"} {
 		body := extractGeneratedFunction(t, decoderFile, "func (x *"+name+") unmarshalLSP(")
-		if count := strings.Count(body, `case keyEquals(key, "kind"):`); count != 1 {
+		if count := strings.Count(body, "case keyEquals(key, `kind`):"); count != 1 {
 			t.Fatalf("%s kind decode cases = %d, want 1:\n%s", name, count, body)
 		}
 	}

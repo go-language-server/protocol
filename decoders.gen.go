@@ -31,20 +31,20 @@ func (x *AnnotatedTextEdit) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			n, err := x.Range.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "newText"):
+		case keyEquals(key, `newText`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.NewText = v
 			i = n
-		case keyEquals(key, "annotationId"):
+		case keyEquals(key, `annotationId`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -106,7 +106,7 @@ func (x *ApplyWorkspaceEditParams) unmarshalLSP(raw []byte, i int) (int, error) 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "label"):
+		case keyEquals(key, `label`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Label = nil
 				i = n
@@ -121,13 +121,13 @@ func (x *ApplyWorkspaceEditParams) unmarshalLSP(raw []byte, i int) (int, error) 
 				*x.Label = v
 				i = n
 			}
-		case keyEquals(key, "edit"):
+		case keyEquals(key, `edit`):
 			n, err := x.Edit.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "metadata"):
+		case keyEquals(key, `metadata`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Metadata = nil
 				i = n
@@ -196,14 +196,14 @@ func (x *ApplyWorkspaceEditResult) unmarshalLSP(raw []byte, i int) (int, error) 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "applied"):
+		case keyEquals(key, `applied`):
 			v, n, err := dvBool(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Applied = v
 			i = n
-		case keyEquals(key, "failureReason"):
+		case keyEquals(key, `failureReason`):
 			if n, ok := dvNull(raw, i); ok {
 				x.FailureReason = nil
 				i = n
@@ -218,7 +218,7 @@ func (x *ApplyWorkspaceEditResult) unmarshalLSP(raw []byte, i int) (int, error) 
 				*x.FailureReason = v
 				i = n
 			}
-		case keyEquals(key, "failedChange"):
+		case keyEquals(key, `failedChange`):
 			if n, ok := dvNull(raw, i); ok {
 				x.FailedChange = nil
 				i = n
@@ -288,28 +288,28 @@ func (x *BaseSymbolInformation) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "name"):
+		case keyEquals(key, `name`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Name = v
 			i = n
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Kind = SymbolKind(v)
 			i = n
-		case keyEquals(key, "tags"):
+		case keyEquals(key, `tags`):
 			v, n, err := dvUint32Slice(raw, i, x.Tags)
 			if err != nil {
 				return n, err
 			}
 			x.Tags = v
 			i = n
-		case keyEquals(key, "containerName"):
+		case keyEquals(key, `containerName`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ContainerName = nil
 				i = n
@@ -379,7 +379,7 @@ func (x *CallHierarchyClientCapabilities) unmarshalLSP(raw []byte, i int) (int, 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -449,13 +449,13 @@ func (x *CallHierarchyIncomingCall) unmarshalLSP(raw []byte, i int) (int, error)
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "from"):
+		case keyEquals(key, `from`):
 			n, err := x.From.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "fromRanges"):
+		case keyEquals(key, `fromRanges`):
 			v, n, err := unmarshalSliceRange(raw, i, x.FromRanges)
 			if err != nil {
 				return n, err
@@ -517,7 +517,7 @@ func (x *CallHierarchyIncomingCallsParams) unmarshalLSP(raw []byte, i int) (int,
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -526,7 +526,7 @@ func (x *CallHierarchyIncomingCallsParams) unmarshalLSP(raw []byte, i int) (int,
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "partialResultToken"):
+		case keyEquals(key, `partialResultToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -535,7 +535,7 @@ func (x *CallHierarchyIncomingCallsParams) unmarshalLSP(raw []byte, i int) (int,
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "item"):
+		case keyEquals(key, `item`):
 			n, err := x.Item.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -596,28 +596,28 @@ func (x *CallHierarchyItem) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "name"):
+		case keyEquals(key, `name`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Name = v
 			i = n
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Kind = SymbolKind(v)
 			i = n
-		case keyEquals(key, "tags"):
+		case keyEquals(key, `tags`):
 			v, n, err := dvUint32Slice(raw, i, x.Tags)
 			if err != nil {
 				return n, err
 			}
 			x.Tags = v
 			i = n
-		case keyEquals(key, "detail"):
+		case keyEquals(key, `detail`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Detail = nil
 				i = n
@@ -632,26 +632,26 @@ func (x *CallHierarchyItem) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.Detail = v
 				i = n
 			}
-		case keyEquals(key, "uri"):
+		case keyEquals(key, `uri`):
 			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.URI = v
 			i = n
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			n, err := x.Range.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "selectionRange"):
+		case keyEquals(key, `selectionRange`):
 			n, err := x.SelectionRange.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "data"):
+		case keyEquals(key, `data`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -713,7 +713,7 @@ func (x *CallHierarchyOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -783,13 +783,13 @@ func (x *CallHierarchyOutgoingCall) unmarshalLSP(raw []byte, i int) (int, error)
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "to"):
+		case keyEquals(key, `to`):
 			n, err := x.To.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "fromRanges"):
+		case keyEquals(key, `fromRanges`):
 			v, n, err := unmarshalSliceRange(raw, i, x.FromRanges)
 			if err != nil {
 				return n, err
@@ -851,7 +851,7 @@ func (x *CallHierarchyOutgoingCallsParams) unmarshalLSP(raw []byte, i int) (int,
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -860,7 +860,7 @@ func (x *CallHierarchyOutgoingCallsParams) unmarshalLSP(raw []byte, i int) (int,
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "partialResultToken"):
+		case keyEquals(key, `partialResultToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -869,7 +869,7 @@ func (x *CallHierarchyOutgoingCallsParams) unmarshalLSP(raw []byte, i int) (int,
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "item"):
+		case keyEquals(key, `item`):
 			n, err := x.Item.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -930,19 +930,19 @@ func (x *CallHierarchyPrepareParams) unmarshalLSP(raw []byte, i int) (int, error
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "position"):
+		case keyEquals(key, `position`):
 			n, err := x.Position.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -1006,7 +1006,7 @@ func (x *CallHierarchyRegistrationOptions) unmarshalLSP(raw []byte, i int) (int,
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -1015,7 +1015,7 @@ func (x *CallHierarchyRegistrationOptions) unmarshalLSP(raw []byte, i int) (int,
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -1030,7 +1030,7 @@ func (x *CallHierarchyRegistrationOptions) unmarshalLSP(raw []byte, i int) (int,
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "id"):
+		case keyEquals(key, `id`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ID = nil
 				i = n
@@ -1100,7 +1100,7 @@ func (x *CancelParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "id"):
+		case keyEquals(key, `id`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -1164,14 +1164,14 @@ func (x *ChangeAnnotation) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "label"):
+		case keyEquals(key, `label`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Label = v
 			i = n
-		case keyEquals(key, "needsConfirmation"):
+		case keyEquals(key, `needsConfirmation`):
 			if n, ok := dvNull(raw, i); ok {
 				x.NeedsConfirmation = nil
 				i = n
@@ -1186,7 +1186,7 @@ func (x *ChangeAnnotation) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.NeedsConfirmation = v
 				i = n
 			}
-		case keyEquals(key, "description"):
+		case keyEquals(key, `description`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Description = nil
 				i = n
@@ -1256,7 +1256,7 @@ func (x *ChangeAnnotationsSupportOptions) unmarshalLSP(raw []byte, i int) (int, 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "groupsOnLabel"):
+		case keyEquals(key, `groupsOnLabel`):
 			if n, ok := dvNull(raw, i); ok {
 				x.GroupsOnLabel = nil
 				i = n
@@ -1326,7 +1326,7 @@ func (x *ClientCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workspace"):
+		case keyEquals(key, `workspace`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Workspace = nil
 				i = n
@@ -1340,7 +1340,7 @@ func (x *ClientCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				}
 				i = n
 			}
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			if n, ok := dvNull(raw, i); ok {
 				x.TextDocument = nil
 				i = n
@@ -1354,7 +1354,7 @@ func (x *ClientCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				}
 				i = n
 			}
-		case keyEquals(key, "notebookDocument"):
+		case keyEquals(key, `notebookDocument`):
 			if n, ok := dvNull(raw, i); ok {
 				x.NotebookDocument = nil
 				i = n
@@ -1368,7 +1368,7 @@ func (x *ClientCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				}
 				i = n
 			}
-		case keyEquals(key, "window"):
+		case keyEquals(key, `window`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Window = nil
 				i = n
@@ -1382,7 +1382,7 @@ func (x *ClientCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				}
 				i = n
 			}
-		case keyEquals(key, "general"):
+		case keyEquals(key, `general`):
 			if n, ok := dvNull(raw, i); ok {
 				x.General = nil
 				i = n
@@ -1396,7 +1396,7 @@ func (x *ClientCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				}
 				i = n
 			}
-		case keyEquals(key, "experimental"):
+		case keyEquals(key, `experimental`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -1458,7 +1458,7 @@ func (x *ClientCodeActionKindOptions) unmarshalLSP(raw []byte, i int) (int, erro
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "valueSet"):
+		case keyEquals(key, `valueSet`):
 			v, n, err := dvStringSlice(raw, i, x.ValueSet)
 			if err != nil {
 				return n, err
@@ -1520,7 +1520,7 @@ func (x *ClientCodeActionLiteralOptions) unmarshalLSP(raw []byte, i int) (int, e
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "codeActionKind"):
+		case keyEquals(key, `codeActionKind`):
 			n, err := x.CodeActionKind.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -1581,7 +1581,7 @@ func (x *ClientCodeActionResolveOptions) unmarshalLSP(raw []byte, i int) (int, e
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "properties"):
+		case keyEquals(key, `properties`):
 			v, n, err := dvStringSlice(raw, i, x.Properties)
 			if err != nil {
 				return n, err
@@ -1643,7 +1643,7 @@ func (x *ClientCodeLensResolveOptions) unmarshalLSP(raw []byte, i int) (int, err
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "properties"):
+		case keyEquals(key, `properties`):
 			v, n, err := dvStringSlice(raw, i, x.Properties)
 			if err != nil {
 				return n, err
@@ -1705,7 +1705,7 @@ func (x *ClientCompletionItemInsertTextModeOptions) unmarshalLSP(raw []byte, i i
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "valueSet"):
+		case keyEquals(key, `valueSet`):
 			v, n, err := dvUint32Slice(raw, i, x.ValueSet)
 			if err != nil {
 				return n, err
@@ -1767,7 +1767,7 @@ func (x *ClientCompletionItemOptions) unmarshalLSP(raw []byte, i int) (int, erro
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "snippetSupport"):
+		case keyEquals(key, `snippetSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.SnippetSupport = nil
 				i = n
@@ -1782,7 +1782,7 @@ func (x *ClientCompletionItemOptions) unmarshalLSP(raw []byte, i int) (int, erro
 				*x.SnippetSupport = v
 				i = n
 			}
-		case keyEquals(key, "commitCharactersSupport"):
+		case keyEquals(key, `commitCharactersSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.CommitCharactersSupport = nil
 				i = n
@@ -1797,14 +1797,14 @@ func (x *ClientCompletionItemOptions) unmarshalLSP(raw []byte, i int) (int, erro
 				*x.CommitCharactersSupport = v
 				i = n
 			}
-		case keyEquals(key, "documentationFormat"):
+		case keyEquals(key, `documentationFormat`):
 			v, n, err := dvStringSlice(raw, i, x.DocumentationFormat)
 			if err != nil {
 				return n, err
 			}
 			x.DocumentationFormat = v
 			i = n
-		case keyEquals(key, "deprecatedSupport"):
+		case keyEquals(key, `deprecatedSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DeprecatedSupport = nil
 				i = n
@@ -1819,7 +1819,7 @@ func (x *ClientCompletionItemOptions) unmarshalLSP(raw []byte, i int) (int, erro
 				*x.DeprecatedSupport = v
 				i = n
 			}
-		case keyEquals(key, "preselectSupport"):
+		case keyEquals(key, `preselectSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.PreselectSupport = nil
 				i = n
@@ -1834,13 +1834,13 @@ func (x *ClientCompletionItemOptions) unmarshalLSP(raw []byte, i int) (int, erro
 				*x.PreselectSupport = v
 				i = n
 			}
-		case keyEquals(key, "tagSupport"):
+		case keyEquals(key, `tagSupport`):
 			n, err := x.TagSupport.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "insertReplaceSupport"):
+		case keyEquals(key, `insertReplaceSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.InsertReplaceSupport = nil
 				i = n
@@ -1855,19 +1855,19 @@ func (x *ClientCompletionItemOptions) unmarshalLSP(raw []byte, i int) (int, erro
 				*x.InsertReplaceSupport = v
 				i = n
 			}
-		case keyEquals(key, "resolveSupport"):
+		case keyEquals(key, `resolveSupport`):
 			n, err := x.ResolveSupport.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "insertTextModeSupport"):
+		case keyEquals(key, `insertTextModeSupport`):
 			n, err := x.InsertTextModeSupport.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "labelDetailsSupport"):
+		case keyEquals(key, `labelDetailsSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.LabelDetailsSupport = nil
 				i = n
@@ -1937,7 +1937,7 @@ func (x *ClientCompletionItemOptionsKind) unmarshalLSP(raw []byte, i int) (int, 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "valueSet"):
+		case keyEquals(key, `valueSet`):
 			v, n, err := dvUint32Slice(raw, i, x.ValueSet)
 			if err != nil {
 				return n, err
@@ -1999,7 +1999,7 @@ func (x *ClientCompletionItemResolveOptions) unmarshalLSP(raw []byte, i int) (in
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "properties"):
+		case keyEquals(key, `properties`):
 			v, n, err := dvStringSlice(raw, i, x.Properties)
 			if err != nil {
 				return n, err
@@ -2061,7 +2061,7 @@ func (x *ClientDiagnosticsTagOptions) unmarshalLSP(raw []byte, i int) (int, erro
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "valueSet"):
+		case keyEquals(key, `valueSet`):
 			v, n, err := dvUint32Slice(raw, i, x.ValueSet)
 			if err != nil {
 				return n, err
@@ -2123,7 +2123,7 @@ func (x *ClientFoldingRangeKindOptions) unmarshalLSP(raw []byte, i int) (int, er
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "valueSet"):
+		case keyEquals(key, `valueSet`):
 			v, n, err := dvStringSlice(raw, i, x.ValueSet)
 			if err != nil {
 				return n, err
@@ -2185,7 +2185,7 @@ func (x *ClientFoldingRangeOptions) unmarshalLSP(raw []byte, i int) (int, error)
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "collapsedText"):
+		case keyEquals(key, `collapsedText`):
 			if n, ok := dvNull(raw, i); ok {
 				x.CollapsedText = nil
 				i = n
@@ -2255,14 +2255,14 @@ func (x *ClientInfo) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "name"):
+		case keyEquals(key, `name`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Name = v
 			i = n
-		case keyEquals(key, "version"):
+		case keyEquals(key, `version`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Version = nil
 				i = n
@@ -2332,7 +2332,7 @@ func (x *ClientInlayHintResolveOptions) unmarshalLSP(raw []byte, i int) (int, er
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "properties"):
+		case keyEquals(key, `properties`):
 			v, n, err := dvStringSlice(raw, i, x.Properties)
 			if err != nil {
 				return n, err
@@ -2394,7 +2394,7 @@ func (x *ClientSemanticTokensRequestFullDelta) unmarshalLSP(raw []byte, i int) (
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "delta"):
+		case keyEquals(key, `delta`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Delta = nil
 				i = n
@@ -2464,7 +2464,7 @@ func (x *ClientSemanticTokensRequestOptions) unmarshalLSP(raw []byte, i int) (in
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -2473,7 +2473,7 @@ func (x *ClientSemanticTokensRequestOptions) unmarshalLSP(raw []byte, i int) (in
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "full"):
+		case keyEquals(key, `full`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -2537,7 +2537,7 @@ func (x *ClientShowMessageActionItemOptions) unmarshalLSP(raw []byte, i int) (in
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "additionalPropertiesSupport"):
+		case keyEquals(key, `additionalPropertiesSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.AdditionalPropertiesSupport = nil
 				i = n
@@ -2607,14 +2607,14 @@ func (x *ClientSignatureInformationOptions) unmarshalLSP(raw []byte, i int) (int
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentationFormat"):
+		case keyEquals(key, `documentationFormat`):
 			v, n, err := dvStringSlice(raw, i, x.DocumentationFormat)
 			if err != nil {
 				return n, err
 			}
 			x.DocumentationFormat = v
 			i = n
-		case keyEquals(key, "parameterInformation"):
+		case keyEquals(key, `parameterInformation`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ParameterInformation = nil
 				i = n
@@ -2628,7 +2628,7 @@ func (x *ClientSignatureInformationOptions) unmarshalLSP(raw []byte, i int) (int
 				}
 				i = n
 			}
-		case keyEquals(key, "activeParameterSupport"):
+		case keyEquals(key, `activeParameterSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ActiveParameterSupport = nil
 				i = n
@@ -2643,7 +2643,7 @@ func (x *ClientSignatureInformationOptions) unmarshalLSP(raw []byte, i int) (int
 				*x.ActiveParameterSupport = v
 				i = n
 			}
-		case keyEquals(key, "noActiveParameterSupport"):
+		case keyEquals(key, `noActiveParameterSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.NoActiveParameterSupport = nil
 				i = n
@@ -2713,7 +2713,7 @@ func (x *ClientSignatureParameterInformationOptions) unmarshalLSP(raw []byte, i 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "labelOffsetSupport"):
+		case keyEquals(key, `labelOffsetSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.LabelOffsetSupport = nil
 				i = n
@@ -2783,7 +2783,7 @@ func (x *ClientSymbolKindOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "valueSet"):
+		case keyEquals(key, `valueSet`):
 			v, n, err := dvUint32Slice(raw, i, x.ValueSet)
 			if err != nil {
 				return n, err
@@ -2845,7 +2845,7 @@ func (x *ClientSymbolResolveOptions) unmarshalLSP(raw []byte, i int) (int, error
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "properties"):
+		case keyEquals(key, `properties`):
 			v, n, err := dvStringSlice(raw, i, x.Properties)
 			if err != nil {
 				return n, err
@@ -2907,7 +2907,7 @@ func (x *ClientSymbolTagOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "valueSet"):
+		case keyEquals(key, `valueSet`):
 			v, n, err := dvUint32Slice(raw, i, x.ValueSet)
 			if err != nil {
 				return n, err
@@ -2969,14 +2969,14 @@ func (x *CodeAction) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "title"):
+		case keyEquals(key, `title`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Title = v
 			i = n
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Kind = nil
 				i = n
@@ -2991,14 +2991,14 @@ func (x *CodeAction) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.Kind = CodeActionKind(v)
 				i = n
 			}
-		case keyEquals(key, "diagnostics"):
+		case keyEquals(key, `diagnostics`):
 			v, n, err := unmarshalSliceDiagnostic(raw, i, x.Diagnostics)
 			if err != nil {
 				return n, err
 			}
 			x.Diagnostics = v
 			i = n
-		case keyEquals(key, "isPreferred"):
+		case keyEquals(key, `isPreferred`):
 			if n, ok := dvNull(raw, i); ok {
 				x.IsPreferred = nil
 				i = n
@@ -3013,13 +3013,13 @@ func (x *CodeAction) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.IsPreferred = v
 				i = n
 			}
-		case keyEquals(key, "disabled"):
+		case keyEquals(key, `disabled`):
 			n, err := x.Disabled.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "edit"):
+		case keyEquals(key, `edit`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Edit = nil
 				i = n
@@ -3033,20 +3033,20 @@ func (x *CodeAction) unmarshalLSP(raw []byte, i int) (int, error) {
 				}
 				i = n
 			}
-		case keyEquals(key, "command"):
+		case keyEquals(key, `command`):
 			n, err := x.Command.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "data"):
+		case keyEquals(key, `data`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Data = jsontext.Value(val)
 			i = n
-		case keyEquals(key, "tags"):
+		case keyEquals(key, `tags`):
 			v, n, err := dvUint32Slice(raw, i, x.Tags)
 			if err != nil {
 				return n, err
@@ -3108,7 +3108,7 @@ func (x *CodeActionClientCapabilities) unmarshalLSP(raw []byte, i int) (int, err
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -3123,13 +3123,13 @@ func (x *CodeActionClientCapabilities) unmarshalLSP(raw []byte, i int) (int, err
 				*x.DynamicRegistration = v
 				i = n
 			}
-		case keyEquals(key, "codeActionLiteralSupport"):
+		case keyEquals(key, `codeActionLiteralSupport`):
 			n, err := x.CodeActionLiteralSupport.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "isPreferredSupport"):
+		case keyEquals(key, `isPreferredSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.IsPreferredSupport = nil
 				i = n
@@ -3144,7 +3144,7 @@ func (x *CodeActionClientCapabilities) unmarshalLSP(raw []byte, i int) (int, err
 				*x.IsPreferredSupport = v
 				i = n
 			}
-		case keyEquals(key, "disabledSupport"):
+		case keyEquals(key, `disabledSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DisabledSupport = nil
 				i = n
@@ -3159,7 +3159,7 @@ func (x *CodeActionClientCapabilities) unmarshalLSP(raw []byte, i int) (int, err
 				*x.DisabledSupport = v
 				i = n
 			}
-		case keyEquals(key, "dataSupport"):
+		case keyEquals(key, `dataSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DataSupport = nil
 				i = n
@@ -3174,13 +3174,13 @@ func (x *CodeActionClientCapabilities) unmarshalLSP(raw []byte, i int) (int, err
 				*x.DataSupport = v
 				i = n
 			}
-		case keyEquals(key, "resolveSupport"):
+		case keyEquals(key, `resolveSupport`):
 			n, err := x.ResolveSupport.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "honorsChangeAnnotations"):
+		case keyEquals(key, `honorsChangeAnnotations`):
 			if n, ok := dvNull(raw, i); ok {
 				x.HonorsChangeAnnotations = nil
 				i = n
@@ -3195,7 +3195,7 @@ func (x *CodeActionClientCapabilities) unmarshalLSP(raw []byte, i int) (int, err
 				*x.HonorsChangeAnnotations = v
 				i = n
 			}
-		case keyEquals(key, "documentationSupport"):
+		case keyEquals(key, `documentationSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DocumentationSupport = nil
 				i = n
@@ -3210,7 +3210,7 @@ func (x *CodeActionClientCapabilities) unmarshalLSP(raw []byte, i int) (int, err
 				*x.DocumentationSupport = v
 				i = n
 			}
-		case keyEquals(key, "tagSupport"):
+		case keyEquals(key, `tagSupport`):
 			n, err := x.TagSupport.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -3271,21 +3271,21 @@ func (x *CodeActionContext) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "diagnostics"):
+		case keyEquals(key, `diagnostics`):
 			v, n, err := unmarshalSliceDiagnostic(raw, i, x.Diagnostics)
 			if err != nil {
 				return n, err
 			}
 			x.Diagnostics = v
 			i = n
-		case keyEquals(key, "only"):
+		case keyEquals(key, `only`):
 			v, n, err := dvStringSlice(raw, i, x.Only)
 			if err != nil {
 				return n, err
 			}
 			x.Only = v
 			i = n
-		case keyEquals(key, "triggerKind"):
+		case keyEquals(key, `triggerKind`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
@@ -3347,7 +3347,7 @@ func (x *CodeActionDisabled) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "reason"):
+		case keyEquals(key, `reason`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -3409,14 +3409,14 @@ func (x *CodeActionKindDocumentation) unmarshalLSP(raw []byte, i int) (int, erro
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Kind = CodeActionKind(v)
 			i = n
-		case keyEquals(key, "command"):
+		case keyEquals(key, `command`):
 			n, err := x.Command.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -3477,7 +3477,7 @@ func (x *CodeActionOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -3492,21 +3492,21 @@ func (x *CodeActionOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "codeActionKinds"):
+		case keyEquals(key, `codeActionKinds`):
 			v, n, err := dvStringSlice(raw, i, x.CodeActionKinds)
 			if err != nil {
 				return n, err
 			}
 			x.CodeActionKinds = v
 			i = n
-		case keyEquals(key, "documentation"):
+		case keyEquals(key, `documentation`):
 			v, n, err := unmarshalSliceCodeActionKindDocumentation(raw, i, x.Documentation)
 			if err != nil {
 				return n, err
 			}
 			x.Documentation = v
 			i = n
-		case keyEquals(key, "resolveProvider"):
+		case keyEquals(key, `resolveProvider`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ResolveProvider = nil
 				i = n
@@ -3576,7 +3576,7 @@ func (x *CodeActionParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -3585,7 +3585,7 @@ func (x *CodeActionParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "partialResultToken"):
+		case keyEquals(key, `partialResultToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -3594,19 +3594,19 @@ func (x *CodeActionParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			n, err := x.Range.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "context"):
+		case keyEquals(key, `context`):
 			n, err := x.Context.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -3667,7 +3667,7 @@ func (x *CodeActionRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, er
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -3676,7 +3676,7 @@ func (x *CodeActionRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, er
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -3691,21 +3691,21 @@ func (x *CodeActionRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, er
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "codeActionKinds"):
+		case keyEquals(key, `codeActionKinds`):
 			v, n, err := dvStringSlice(raw, i, x.CodeActionKinds)
 			if err != nil {
 				return n, err
 			}
 			x.CodeActionKinds = v
 			i = n
-		case keyEquals(key, "documentation"):
+		case keyEquals(key, `documentation`):
 			v, n, err := unmarshalSliceCodeActionKindDocumentation(raw, i, x.Documentation)
 			if err != nil {
 				return n, err
 			}
 			x.Documentation = v
 			i = n
-		case keyEquals(key, "resolveProvider"):
+		case keyEquals(key, `resolveProvider`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ResolveProvider = nil
 				i = n
@@ -3775,7 +3775,7 @@ func (x *CodeActionTagOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "valueSet"):
+		case keyEquals(key, `valueSet`):
 			v, n, err := dvUint32Slice(raw, i, x.ValueSet)
 			if err != nil {
 				return n, err
@@ -3837,7 +3837,7 @@ func (x *CodeDescription) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "href"):
+		case keyEquals(key, `href`):
 			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
@@ -3899,19 +3899,19 @@ func (x *CodeLens) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			n, err := x.Range.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "command"):
+		case keyEquals(key, `command`):
 			n, err := x.Command.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "data"):
+		case keyEquals(key, `data`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -3973,7 +3973,7 @@ func (x *CodeLensClientCapabilities) unmarshalLSP(raw []byte, i int) (int, error
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -3988,7 +3988,7 @@ func (x *CodeLensClientCapabilities) unmarshalLSP(raw []byte, i int) (int, error
 				*x.DynamicRegistration = v
 				i = n
 			}
-		case keyEquals(key, "resolveSupport"):
+		case keyEquals(key, `resolveSupport`):
 			n, err := x.ResolveSupport.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -4049,7 +4049,7 @@ func (x *CodeLensOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -4064,7 +4064,7 @@ func (x *CodeLensOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "resolveProvider"):
+		case keyEquals(key, `resolveProvider`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ResolveProvider = nil
 				i = n
@@ -4134,7 +4134,7 @@ func (x *CodeLensParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -4143,7 +4143,7 @@ func (x *CodeLensParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "partialResultToken"):
+		case keyEquals(key, `partialResultToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -4152,7 +4152,7 @@ func (x *CodeLensParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -4213,7 +4213,7 @@ func (x *CodeLensRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, erro
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -4222,7 +4222,7 @@ func (x *CodeLensRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, erro
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -4237,7 +4237,7 @@ func (x *CodeLensRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, erro
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "resolveProvider"):
+		case keyEquals(key, `resolveProvider`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ResolveProvider = nil
 				i = n
@@ -4307,7 +4307,7 @@ func (x *CodeLensWorkspaceClientCapabilities) unmarshalLSP(raw []byte, i int) (i
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "refreshSupport"):
+		case keyEquals(key, `refreshSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.RefreshSupport = nil
 				i = n
@@ -4377,28 +4377,28 @@ func (x *Color) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "red"):
+		case keyEquals(key, `red`):
 			v, n, err := dvFloat64(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Red = v
 			i = n
-		case keyEquals(key, "green"):
+		case keyEquals(key, `green`):
 			v, n, err := dvFloat64(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Green = v
 			i = n
-		case keyEquals(key, "blue"):
+		case keyEquals(key, `blue`):
 			v, n, err := dvFloat64(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Blue = v
 			i = n
-		case keyEquals(key, "alpha"):
+		case keyEquals(key, `alpha`):
 			v, n, err := dvFloat64(raw, i)
 			if err != nil {
 				return n, err
@@ -4460,13 +4460,13 @@ func (x *ColorInformation) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			n, err := x.Range.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "color"):
+		case keyEquals(key, `color`):
 			n, err := x.Color.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -4527,20 +4527,20 @@ func (x *ColorPresentation) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "label"):
+		case keyEquals(key, `label`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Label = v
 			i = n
-		case keyEquals(key, "textEdit"):
+		case keyEquals(key, `textEdit`):
 			n, err := x.TextEdit.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "additionalTextEdits"):
+		case keyEquals(key, `additionalTextEdits`):
 			v, n, err := unmarshalSliceTextEdit(raw, i, x.AdditionalTextEdits)
 			if err != nil {
 				return n, err
@@ -4602,7 +4602,7 @@ func (x *ColorPresentationParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -4611,7 +4611,7 @@ func (x *ColorPresentationParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "partialResultToken"):
+		case keyEquals(key, `partialResultToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -4620,19 +4620,19 @@ func (x *ColorPresentationParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "color"):
+		case keyEquals(key, `color`):
 			n, err := x.Color.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			n, err := x.Range.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -4693,14 +4693,14 @@ func (x *Command) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "title"):
+		case keyEquals(key, `title`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Title = v
 			i = n
-		case keyEquals(key, "tooltip"):
+		case keyEquals(key, `tooltip`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Tooltip = nil
 				i = n
@@ -4715,14 +4715,14 @@ func (x *Command) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.Tooltip = v
 				i = n
 			}
-		case keyEquals(key, "command"):
+		case keyEquals(key, `command`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Command = v
 			i = n
-		case keyEquals(key, "arguments"):
+		case keyEquals(key, `arguments`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -4786,7 +4786,7 @@ func (x *CompletionClientCapabilities) unmarshalLSP(raw []byte, i int) (int, err
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -4801,7 +4801,7 @@ func (x *CompletionClientCapabilities) unmarshalLSP(raw []byte, i int) (int, err
 				*x.DynamicRegistration = v
 				i = n
 			}
-		case keyEquals(key, "completionItem"):
+		case keyEquals(key, `completionItem`):
 			if n, ok := dvNull(raw, i); ok {
 				x.CompletionItem = nil
 				i = n
@@ -4815,7 +4815,7 @@ func (x *CompletionClientCapabilities) unmarshalLSP(raw []byte, i int) (int, err
 				}
 				i = n
 			}
-		case keyEquals(key, "completionItemKind"):
+		case keyEquals(key, `completionItemKind`):
 			if n, ok := dvNull(raw, i); ok {
 				x.CompletionItemKind = nil
 				i = n
@@ -4829,14 +4829,14 @@ func (x *CompletionClientCapabilities) unmarshalLSP(raw []byte, i int) (int, err
 				}
 				i = n
 			}
-		case keyEquals(key, "insertTextMode"):
+		case keyEquals(key, `insertTextMode`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.InsertTextMode = InsertTextMode(v)
 			i = n
-		case keyEquals(key, "contextSupport"):
+		case keyEquals(key, `contextSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ContextSupport = nil
 				i = n
@@ -4851,7 +4851,7 @@ func (x *CompletionClientCapabilities) unmarshalLSP(raw []byte, i int) (int, err
 				*x.ContextSupport = v
 				i = n
 			}
-		case keyEquals(key, "completionList"):
+		case keyEquals(key, `completionList`):
 			if n, ok := dvNull(raw, i); ok {
 				x.CompletionList = nil
 				i = n
@@ -4920,14 +4920,14 @@ func (x *CompletionContext) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "triggerKind"):
+		case keyEquals(key, `triggerKind`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.TriggerKind = CompletionTriggerKind(v)
 			i = n
-		case keyEquals(key, "triggerCharacter"):
+		case keyEquals(key, `triggerCharacter`):
 			if n, ok := dvNull(raw, i); ok {
 				x.TriggerCharacter = nil
 				i = n
@@ -4997,14 +4997,14 @@ func (x *CompletionItem) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "label"):
+		case keyEquals(key, `label`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Label = v
 			i = n
-		case keyEquals(key, "labelDetails"):
+		case keyEquals(key, `labelDetails`):
 			if n, ok := dvNull(raw, i); ok {
 				x.LabelDetails = nil
 				i = n
@@ -5018,21 +5018,21 @@ func (x *CompletionItem) unmarshalLSP(raw []byte, i int) (int, error) {
 				}
 				i = n
 			}
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Kind = CompletionItemKind(v)
 			i = n
-		case keyEquals(key, "tags"):
+		case keyEquals(key, `tags`):
 			v, n, err := dvUint32Slice(raw, i, x.Tags)
 			if err != nil {
 				return n, err
 			}
 			x.Tags = v
 			i = n
-		case keyEquals(key, "detail"):
+		case keyEquals(key, `detail`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Detail.Clear()
 				i = n
@@ -5044,7 +5044,7 @@ func (x *CompletionItem) unmarshalLSP(raw []byte, i int) (int, error) {
 				x.Detail.Set(v)
 				i = n
 			}
-		case keyEquals(key, "documentation"):
+		case keyEquals(key, `documentation`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -5053,7 +5053,7 @@ func (x *CompletionItem) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "deprecated"):
+		case keyEquals(key, `deprecated`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Deprecated.Clear()
 				i = n
@@ -5065,7 +5065,7 @@ func (x *CompletionItem) unmarshalLSP(raw []byte, i int) (int, error) {
 				x.Deprecated.Set(v)
 				i = n
 			}
-		case keyEquals(key, "preselect"):
+		case keyEquals(key, `preselect`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Preselect.Clear()
 				i = n
@@ -5077,7 +5077,7 @@ func (x *CompletionItem) unmarshalLSP(raw []byte, i int) (int, error) {
 				x.Preselect.Set(v)
 				i = n
 			}
-		case keyEquals(key, "sortText"):
+		case keyEquals(key, `sortText`):
 			if n, ok := dvNull(raw, i); ok {
 				x.SortText.Clear()
 				i = n
@@ -5089,7 +5089,7 @@ func (x *CompletionItem) unmarshalLSP(raw []byte, i int) (int, error) {
 				x.SortText.Set(v)
 				i = n
 			}
-		case keyEquals(key, "filterText"):
+		case keyEquals(key, `filterText`):
 			if n, ok := dvNull(raw, i); ok {
 				x.FilterText.Clear()
 				i = n
@@ -5101,7 +5101,7 @@ func (x *CompletionItem) unmarshalLSP(raw []byte, i int) (int, error) {
 				x.FilterText.Set(v)
 				i = n
 			}
-		case keyEquals(key, "insertText"):
+		case keyEquals(key, `insertText`):
 			if n, ok := dvNull(raw, i); ok {
 				x.InsertText.Clear()
 				i = n
@@ -5113,21 +5113,21 @@ func (x *CompletionItem) unmarshalLSP(raw []byte, i int) (int, error) {
 				x.InsertText.Set(v)
 				i = n
 			}
-		case keyEquals(key, "insertTextFormat"):
+		case keyEquals(key, `insertTextFormat`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.InsertTextFormat = InsertTextFormat(v)
 			i = n
-		case keyEquals(key, "insertTextMode"):
+		case keyEquals(key, `insertTextMode`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.InsertTextMode = InsertTextMode(v)
 			i = n
-		case keyEquals(key, "textEdit"):
+		case keyEquals(key, `textEdit`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -5136,7 +5136,7 @@ func (x *CompletionItem) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "textEditText"):
+		case keyEquals(key, `textEditText`):
 			if n, ok := dvNull(raw, i); ok {
 				x.TextEditText.Clear()
 				i = n
@@ -5148,27 +5148,27 @@ func (x *CompletionItem) unmarshalLSP(raw []byte, i int) (int, error) {
 				x.TextEditText.Set(v)
 				i = n
 			}
-		case keyEquals(key, "additionalTextEdits"):
+		case keyEquals(key, `additionalTextEdits`):
 			v, n, err := unmarshalSliceTextEdit(raw, i, x.AdditionalTextEdits)
 			if err != nil {
 				return n, err
 			}
 			x.AdditionalTextEdits = v
 			i = n
-		case keyEquals(key, "commitCharacters"):
+		case keyEquals(key, `commitCharacters`):
 			v, n, err := dvStringSlice(raw, i, x.CommitCharacters)
 			if err != nil {
 				return n, err
 			}
 			x.CommitCharacters = v
 			i = n
-		case keyEquals(key, "command"):
+		case keyEquals(key, `command`):
 			n, err := x.Command.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "data"):
+		case keyEquals(key, `data`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -5230,14 +5230,14 @@ func (x *CompletionItemApplyKinds) unmarshalLSP(raw []byte, i int) (int, error) 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "commitCharacters"):
+		case keyEquals(key, `commitCharacters`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.CommitCharacters = ApplyKind(v)
 			i = n
-		case keyEquals(key, "data"):
+		case keyEquals(key, `data`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
@@ -5299,14 +5299,14 @@ func (x *CompletionItemDefaults) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "commitCharacters"):
+		case keyEquals(key, `commitCharacters`):
 			v, n, err := dvStringSlice(raw, i, x.CommitCharacters)
 			if err != nil {
 				return n, err
 			}
 			x.CommitCharacters = v
 			i = n
-		case keyEquals(key, "editRange"):
+		case keyEquals(key, `editRange`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -5315,21 +5315,21 @@ func (x *CompletionItemDefaults) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "insertTextFormat"):
+		case keyEquals(key, `insertTextFormat`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.InsertTextFormat = InsertTextFormat(v)
 			i = n
-		case keyEquals(key, "insertTextMode"):
+		case keyEquals(key, `insertTextMode`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.InsertTextMode = InsertTextMode(v)
 			i = n
-		case keyEquals(key, "data"):
+		case keyEquals(key, `data`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -5391,7 +5391,7 @@ func (x *CompletionItemLabelDetails) unmarshalLSP(raw []byte, i int) (int, error
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "detail"):
+		case keyEquals(key, `detail`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Detail = nil
 				i = n
@@ -5406,7 +5406,7 @@ func (x *CompletionItemLabelDetails) unmarshalLSP(raw []byte, i int) (int, error
 				*x.Detail = v
 				i = n
 			}
-		case keyEquals(key, "description"):
+		case keyEquals(key, `description`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Description = nil
 				i = n
@@ -5476,7 +5476,7 @@ func (x *CompletionItemTagOptions) unmarshalLSP(raw []byte, i int) (int, error) 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "valueSet"):
+		case keyEquals(key, `valueSet`):
 			v, n, err := dvUint32Slice(raw, i, x.ValueSet)
 			if err != nil {
 				return n, err
@@ -5538,14 +5538,14 @@ func (x *CompletionList) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "isIncomplete"):
+		case keyEquals(key, `isIncomplete`):
 			v, n, err := dvBool(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.IsIncomplete = v
 			i = n
-		case keyEquals(key, "itemDefaults"):
+		case keyEquals(key, `itemDefaults`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ItemDefaults = nil
 				i = n
@@ -5559,7 +5559,7 @@ func (x *CompletionList) unmarshalLSP(raw []byte, i int) (int, error) {
 				}
 				i = n
 			}
-		case keyEquals(key, "applyKind"):
+		case keyEquals(key, `applyKind`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ApplyKind = nil
 				i = n
@@ -5573,7 +5573,7 @@ func (x *CompletionList) unmarshalLSP(raw []byte, i int) (int, error) {
 				}
 				i = n
 			}
-		case keyEquals(key, "items"):
+		case keyEquals(key, `items`):
 			v, n, err := unmarshalSliceCompletionItem(raw, i, x.Items)
 			if err != nil {
 				return n, err
@@ -5635,14 +5635,14 @@ func (x *CompletionListCapabilities) unmarshalLSP(raw []byte, i int) (int, error
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "itemDefaults"):
+		case keyEquals(key, `itemDefaults`):
 			v, n, err := dvStringSlice(raw, i, x.ItemDefaults)
 			if err != nil {
 				return n, err
 			}
 			x.ItemDefaults = v
 			i = n
-		case keyEquals(key, "applyKindSupport"):
+		case keyEquals(key, `applyKindSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ApplyKindSupport = nil
 				i = n
@@ -5712,7 +5712,7 @@ func (x *CompletionOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -5727,21 +5727,21 @@ func (x *CompletionOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "triggerCharacters"):
+		case keyEquals(key, `triggerCharacters`):
 			v, n, err := dvStringSlice(raw, i, x.TriggerCharacters)
 			if err != nil {
 				return n, err
 			}
 			x.TriggerCharacters = v
 			i = n
-		case keyEquals(key, "allCommitCharacters"):
+		case keyEquals(key, `allCommitCharacters`):
 			v, n, err := dvStringSlice(raw, i, x.AllCommitCharacters)
 			if err != nil {
 				return n, err
 			}
 			x.AllCommitCharacters = v
 			i = n
-		case keyEquals(key, "resolveProvider"):
+		case keyEquals(key, `resolveProvider`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ResolveProvider = nil
 				i = n
@@ -5756,7 +5756,7 @@ func (x *CompletionOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.ResolveProvider = v
 				i = n
 			}
-		case keyEquals(key, "completionItem"):
+		case keyEquals(key, `completionItem`):
 			if n, ok := dvNull(raw, i); ok {
 				x.CompletionItem = nil
 				i = n
@@ -5825,19 +5825,19 @@ func (x *CompletionParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "position"):
+		case keyEquals(key, `position`):
 			n, err := x.Position.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -5846,7 +5846,7 @@ func (x *CompletionParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "partialResultToken"):
+		case keyEquals(key, `partialResultToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -5855,7 +5855,7 @@ func (x *CompletionParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "context"):
+		case keyEquals(key, `context`):
 			n, err := x.Context.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -5916,7 +5916,7 @@ func (x *CompletionRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, er
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -5925,7 +5925,7 @@ func (x *CompletionRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, er
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -5940,21 +5940,21 @@ func (x *CompletionRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, er
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "triggerCharacters"):
+		case keyEquals(key, `triggerCharacters`):
 			v, n, err := dvStringSlice(raw, i, x.TriggerCharacters)
 			if err != nil {
 				return n, err
 			}
 			x.TriggerCharacters = v
 			i = n
-		case keyEquals(key, "allCommitCharacters"):
+		case keyEquals(key, `allCommitCharacters`):
 			v, n, err := dvStringSlice(raw, i, x.AllCommitCharacters)
 			if err != nil {
 				return n, err
 			}
 			x.AllCommitCharacters = v
 			i = n
-		case keyEquals(key, "resolveProvider"):
+		case keyEquals(key, `resolveProvider`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ResolveProvider = nil
 				i = n
@@ -5969,7 +5969,7 @@ func (x *CompletionRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, er
 				*x.ResolveProvider = v
 				i = n
 			}
-		case keyEquals(key, "completionItem"):
+		case keyEquals(key, `completionItem`):
 			if n, ok := dvNull(raw, i); ok {
 				x.CompletionItem = nil
 				i = n
@@ -6038,7 +6038,7 @@ func (x *ConfigurationItem) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "scopeUri"):
+		case keyEquals(key, `scopeUri`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ScopeURI = nil
 				i = n
@@ -6053,7 +6053,7 @@ func (x *ConfigurationItem) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.ScopeURI = v
 				i = n
 			}
-		case keyEquals(key, "section"):
+		case keyEquals(key, `section`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Section = nil
 				i = n
@@ -6123,7 +6123,7 @@ func (x *ConfigurationParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "items"):
+		case keyEquals(key, `items`):
 			v, n, err := unmarshalSliceConfigurationItem(raw, i, x.Items)
 			if err != nil {
 				return n, err
@@ -6185,28 +6185,28 @@ func (x *CreateFile) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "annotationId"):
+		case keyEquals(key, `annotationId`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.AnnotationID = ChangeAnnotationIdentifier(v)
 			i = n
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Kind = v
 			i = n
-		case keyEquals(key, "uri"):
+		case keyEquals(key, `uri`):
 			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.URI = v
 			i = n
-		case keyEquals(key, "options"):
+		case keyEquals(key, `options`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Options = nil
 				i = n
@@ -6275,7 +6275,7 @@ func (x *CreateFileOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "overwrite"):
+		case keyEquals(key, `overwrite`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Overwrite = nil
 				i = n
@@ -6290,7 +6290,7 @@ func (x *CreateFileOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.Overwrite = v
 				i = n
 			}
-		case keyEquals(key, "ignoreIfExists"):
+		case keyEquals(key, `ignoreIfExists`):
 			if n, ok := dvNull(raw, i); ok {
 				x.IgnoreIfExists = nil
 				i = n
@@ -6360,7 +6360,7 @@ func (x *CreateFilesParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "files"):
+		case keyEquals(key, `files`):
 			v, n, err := unmarshalSliceFileCreate(raw, i, x.Files)
 			if err != nil {
 				return n, err
@@ -6422,7 +6422,7 @@ func (x *DeclarationClientCapabilities) unmarshalLSP(raw []byte, i int) (int, er
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -6437,7 +6437,7 @@ func (x *DeclarationClientCapabilities) unmarshalLSP(raw []byte, i int) (int, er
 				*x.DynamicRegistration = v
 				i = n
 			}
-		case keyEquals(key, "linkSupport"):
+		case keyEquals(key, `linkSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.LinkSupport = nil
 				i = n
@@ -6507,7 +6507,7 @@ func (x *DeclarationOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -6577,19 +6577,19 @@ func (x *DeclarationParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "position"):
+		case keyEquals(key, `position`):
 			n, err := x.Position.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -6598,7 +6598,7 @@ func (x *DeclarationParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "partialResultToken"):
+		case keyEquals(key, `partialResultToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -6662,7 +6662,7 @@ func (x *DeclarationRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, e
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -6677,7 +6677,7 @@ func (x *DeclarationRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, e
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -6686,7 +6686,7 @@ func (x *DeclarationRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, e
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "id"):
+		case keyEquals(key, `id`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ID = nil
 				i = n
@@ -6756,7 +6756,7 @@ func (x *DefinitionClientCapabilities) unmarshalLSP(raw []byte, i int) (int, err
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -6771,7 +6771,7 @@ func (x *DefinitionClientCapabilities) unmarshalLSP(raw []byte, i int) (int, err
 				*x.DynamicRegistration = v
 				i = n
 			}
-		case keyEquals(key, "linkSupport"):
+		case keyEquals(key, `linkSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.LinkSupport = nil
 				i = n
@@ -6841,7 +6841,7 @@ func (x *DefinitionOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -6911,19 +6911,19 @@ func (x *DefinitionParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "position"):
+		case keyEquals(key, `position`):
 			n, err := x.Position.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -6932,7 +6932,7 @@ func (x *DefinitionParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "partialResultToken"):
+		case keyEquals(key, `partialResultToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -6996,7 +6996,7 @@ func (x *DefinitionRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, er
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -7005,7 +7005,7 @@ func (x *DefinitionRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, er
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -7075,28 +7075,28 @@ func (x *DeleteFile) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "annotationId"):
+		case keyEquals(key, `annotationId`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.AnnotationID = ChangeAnnotationIdentifier(v)
 			i = n
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Kind = v
 			i = n
-		case keyEquals(key, "uri"):
+		case keyEquals(key, `uri`):
 			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.URI = v
 			i = n
-		case keyEquals(key, "options"):
+		case keyEquals(key, `options`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Options = nil
 				i = n
@@ -7165,7 +7165,7 @@ func (x *DeleteFileOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "recursive"):
+		case keyEquals(key, `recursive`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Recursive = nil
 				i = n
@@ -7180,7 +7180,7 @@ func (x *DeleteFileOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.Recursive = v
 				i = n
 			}
-		case keyEquals(key, "ignoreIfNotExists"):
+		case keyEquals(key, `ignoreIfNotExists`):
 			if n, ok := dvNull(raw, i); ok {
 				x.IgnoreIfNotExists = nil
 				i = n
@@ -7250,7 +7250,7 @@ func (x *DeleteFilesParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "files"):
+		case keyEquals(key, `files`):
 			v, n, err := unmarshalSliceFileDelete(raw, i, x.Files)
 			if err != nil {
 				return n, err
@@ -7312,20 +7312,20 @@ func (x *Diagnostic) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			n, err := x.Range.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "severity"):
+		case keyEquals(key, `severity`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Severity = DiagnosticSeverity(v)
 			i = n
-		case keyEquals(key, "code"):
+		case keyEquals(key, `code`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -7334,13 +7334,13 @@ func (x *Diagnostic) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "codeDescription"):
+		case keyEquals(key, `codeDescription`):
 			n, err := x.CodeDescription.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "source"):
+		case keyEquals(key, `source`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Source.Clear()
 				i = n
@@ -7352,7 +7352,7 @@ func (x *Diagnostic) unmarshalLSP(raw []byte, i int) (int, error) {
 				x.Source.Set(v)
 				i = n
 			}
-		case keyEquals(key, "message"):
+		case keyEquals(key, `message`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -7361,20 +7361,20 @@ func (x *Diagnostic) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "tags"):
+		case keyEquals(key, `tags`):
 			n, err := dvDiagnosticTags(raw, i, &x.Tags)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "relatedInformation"):
+		case keyEquals(key, `relatedInformation`):
 			v, n, err := unmarshalSliceDiagnosticRelatedInformation(raw, i, x.RelatedInformation)
 			if err != nil {
 				return n, err
 			}
 			x.RelatedInformation = v
 			i = n
-		case keyEquals(key, "data"):
+		case keyEquals(key, `data`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -7436,7 +7436,7 @@ func (x *DiagnosticClientCapabilities) unmarshalLSP(raw []byte, i int) (int, err
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "relatedInformation"):
+		case keyEquals(key, `relatedInformation`):
 			if n, ok := dvNull(raw, i); ok {
 				x.RelatedInformation = nil
 				i = n
@@ -7451,13 +7451,13 @@ func (x *DiagnosticClientCapabilities) unmarshalLSP(raw []byte, i int) (int, err
 				*x.RelatedInformation = v
 				i = n
 			}
-		case keyEquals(key, "tagSupport"):
+		case keyEquals(key, `tagSupport`):
 			n, err := x.TagSupport.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "codeDescriptionSupport"):
+		case keyEquals(key, `codeDescriptionSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.CodeDescriptionSupport = nil
 				i = n
@@ -7472,7 +7472,7 @@ func (x *DiagnosticClientCapabilities) unmarshalLSP(raw []byte, i int) (int, err
 				*x.CodeDescriptionSupport = v
 				i = n
 			}
-		case keyEquals(key, "dataSupport"):
+		case keyEquals(key, `dataSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DataSupport = nil
 				i = n
@@ -7487,7 +7487,7 @@ func (x *DiagnosticClientCapabilities) unmarshalLSP(raw []byte, i int) (int, err
 				*x.DataSupport = v
 				i = n
 			}
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -7502,7 +7502,7 @@ func (x *DiagnosticClientCapabilities) unmarshalLSP(raw []byte, i int) (int, err
 				*x.DynamicRegistration = v
 				i = n
 			}
-		case keyEquals(key, "relatedDocumentSupport"):
+		case keyEquals(key, `relatedDocumentSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.RelatedDocumentSupport = nil
 				i = n
@@ -7517,7 +7517,7 @@ func (x *DiagnosticClientCapabilities) unmarshalLSP(raw []byte, i int) (int, err
 				*x.RelatedDocumentSupport = v
 				i = n
 			}
-		case keyEquals(key, "markupMessageSupport"):
+		case keyEquals(key, `markupMessageSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.MarkupMessageSupport = nil
 				i = n
@@ -7587,7 +7587,7 @@ func (x *DiagnosticOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -7602,7 +7602,7 @@ func (x *DiagnosticOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "identifier"):
+		case keyEquals(key, `identifier`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Identifier = nil
 				i = n
@@ -7617,14 +7617,14 @@ func (x *DiagnosticOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.Identifier = v
 				i = n
 			}
-		case keyEquals(key, "interFileDependencies"):
+		case keyEquals(key, `interFileDependencies`):
 			v, n, err := dvBool(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.InterFileDependencies = v
 			i = n
-		case keyEquals(key, "workspaceDiagnostics"):
+		case keyEquals(key, `workspaceDiagnostics`):
 			v, n, err := dvBool(raw, i)
 			if err != nil {
 				return n, err
@@ -7686,7 +7686,7 @@ func (x *DiagnosticRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, er
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -7695,7 +7695,7 @@ func (x *DiagnosticRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, er
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -7710,7 +7710,7 @@ func (x *DiagnosticRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, er
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "identifier"):
+		case keyEquals(key, `identifier`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Identifier = nil
 				i = n
@@ -7725,21 +7725,21 @@ func (x *DiagnosticRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, er
 				*x.Identifier = v
 				i = n
 			}
-		case keyEquals(key, "interFileDependencies"):
+		case keyEquals(key, `interFileDependencies`):
 			v, n, err := dvBool(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.InterFileDependencies = v
 			i = n
-		case keyEquals(key, "workspaceDiagnostics"):
+		case keyEquals(key, `workspaceDiagnostics`):
 			v, n, err := dvBool(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.WorkspaceDiagnostics = v
 			i = n
-		case keyEquals(key, "id"):
+		case keyEquals(key, `id`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ID = nil
 				i = n
@@ -7809,13 +7809,13 @@ func (x *DiagnosticRelatedInformation) unmarshalLSP(raw []byte, i int) (int, err
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "location"):
+		case keyEquals(key, `location`):
 			n, err := x.Location.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "message"):
+		case keyEquals(key, `message`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -7877,7 +7877,7 @@ func (x *DiagnosticServerCancellationData) unmarshalLSP(raw []byte, i int) (int,
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "retriggerRequest"):
+		case keyEquals(key, `retriggerRequest`):
 			v, n, err := dvBool(raw, i)
 			if err != nil {
 				return n, err
@@ -7939,7 +7939,7 @@ func (x *DiagnosticWorkspaceClientCapabilities) unmarshalLSP(raw []byte, i int) 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "refreshSupport"):
+		case keyEquals(key, `refreshSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.RefreshSupport = nil
 				i = n
@@ -8009,7 +8009,7 @@ func (x *DiagnosticsCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "relatedInformation"):
+		case keyEquals(key, `relatedInformation`):
 			if n, ok := dvNull(raw, i); ok {
 				x.RelatedInformation = nil
 				i = n
@@ -8024,13 +8024,13 @@ func (x *DiagnosticsCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.RelatedInformation = v
 				i = n
 			}
-		case keyEquals(key, "tagSupport"):
+		case keyEquals(key, `tagSupport`):
 			n, err := x.TagSupport.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "codeDescriptionSupport"):
+		case keyEquals(key, `codeDescriptionSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.CodeDescriptionSupport = nil
 				i = n
@@ -8045,7 +8045,7 @@ func (x *DiagnosticsCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.CodeDescriptionSupport = v
 				i = n
 			}
-		case keyEquals(key, "dataSupport"):
+		case keyEquals(key, `dataSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DataSupport = nil
 				i = n
@@ -8115,7 +8115,7 @@ func (x *DidChangeConfigurationClientCapabilities) unmarshalLSP(raw []byte, i in
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -8185,7 +8185,7 @@ func (x *DidChangeConfigurationParams) unmarshalLSP(raw []byte, i int) (int, err
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "settings"):
+		case keyEquals(key, `settings`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -8247,7 +8247,7 @@ func (x *DidChangeConfigurationRegistrationOptions) unmarshalLSP(raw []byte, i i
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "section"):
+		case keyEquals(key, `section`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -8311,13 +8311,13 @@ func (x *DidChangeNotebookDocumentParams) unmarshalLSP(raw []byte, i int) (int, 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "notebookDocument"):
+		case keyEquals(key, `notebookDocument`):
 			n, err := x.NotebookDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "change"):
+		case keyEquals(key, `change`):
 			n, err := x.Change.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -8378,13 +8378,13 @@ func (x *DidChangeTextDocumentParams) unmarshalLSP(raw []byte, i int) (int, erro
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "contentChanges"):
+		case keyEquals(key, `contentChanges`):
 			v, n, err := unmarshalSliceTextDocumentContentChangeEvent(raw, i, x.ContentChanges)
 			if err != nil {
 				return n, err
@@ -8446,7 +8446,7 @@ func (x *DidChangeWatchedFilesClientCapabilities) unmarshalLSP(raw []byte, i int
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -8461,7 +8461,7 @@ func (x *DidChangeWatchedFilesClientCapabilities) unmarshalLSP(raw []byte, i int
 				*x.DynamicRegistration = v
 				i = n
 			}
-		case keyEquals(key, "relativePatternSupport"):
+		case keyEquals(key, `relativePatternSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.RelativePatternSupport = nil
 				i = n
@@ -8531,7 +8531,7 @@ func (x *DidChangeWatchedFilesParams) unmarshalLSP(raw []byte, i int) (int, erro
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "changes"):
+		case keyEquals(key, `changes`):
 			v, n, err := unmarshalSliceFileEvent(raw, i, x.Changes)
 			if err != nil {
 				return n, err
@@ -8593,7 +8593,7 @@ func (x *DidChangeWatchedFilesRegistrationOptions) unmarshalLSP(raw []byte, i in
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "watchers"):
+		case keyEquals(key, `watchers`):
 			v, n, err := unmarshalSliceFileSystemWatcher(raw, i, x.Watchers)
 			if err != nil {
 				return n, err
@@ -8655,7 +8655,7 @@ func (x *DidChangeWorkspaceFoldersParams) unmarshalLSP(raw []byte, i int) (int, 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "event"):
+		case keyEquals(key, `event`):
 			n, err := x.Event.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -8716,13 +8716,13 @@ func (x *DidCloseNotebookDocumentParams) unmarshalLSP(raw []byte, i int) (int, e
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "notebookDocument"):
+		case keyEquals(key, `notebookDocument`):
 			n, err := x.NotebookDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "cellTextDocuments"):
+		case keyEquals(key, `cellTextDocuments`):
 			v, n, err := unmarshalSliceTextDocumentIdentifier(raw, i, x.CellTextDocuments)
 			if err != nil {
 				return n, err
@@ -8784,7 +8784,7 @@ func (x *DidCloseTextDocumentParams) unmarshalLSP(raw []byte, i int) (int, error
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -8845,13 +8845,13 @@ func (x *DidOpenNotebookDocumentParams) unmarshalLSP(raw []byte, i int) (int, er
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "notebookDocument"):
+		case keyEquals(key, `notebookDocument`):
 			n, err := x.NotebookDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "cellTextDocuments"):
+		case keyEquals(key, `cellTextDocuments`):
 			v, n, err := unmarshalSliceTextDocumentItem(raw, i, x.CellTextDocuments)
 			if err != nil {
 				return n, err
@@ -8913,7 +8913,7 @@ func (x *DidOpenTextDocumentParams) unmarshalLSP(raw []byte, i int) (int, error)
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -8974,7 +8974,7 @@ func (x *DidSaveNotebookDocumentParams) unmarshalLSP(raw []byte, i int) (int, er
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "notebookDocument"):
+		case keyEquals(key, `notebookDocument`):
 			n, err := x.NotebookDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -9035,13 +9035,13 @@ func (x *DidSaveTextDocumentParams) unmarshalLSP(raw []byte, i int) (int, error)
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "text"):
+		case keyEquals(key, `text`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Text = nil
 				i = n
@@ -9111,7 +9111,7 @@ func (x *DocumentColorClientCapabilities) unmarshalLSP(raw []byte, i int) (int, 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -9181,7 +9181,7 @@ func (x *DocumentColorOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -9251,7 +9251,7 @@ func (x *DocumentColorParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -9260,7 +9260,7 @@ func (x *DocumentColorParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "partialResultToken"):
+		case keyEquals(key, `partialResultToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -9269,7 +9269,7 @@ func (x *DocumentColorParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -9330,7 +9330,7 @@ func (x *DocumentColorRegistrationOptions) unmarshalLSP(raw []byte, i int) (int,
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -9339,7 +9339,7 @@ func (x *DocumentColorRegistrationOptions) unmarshalLSP(raw []byte, i int) (int,
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -9354,7 +9354,7 @@ func (x *DocumentColorRegistrationOptions) unmarshalLSP(raw []byte, i int) (int,
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "id"):
+		case keyEquals(key, `id`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ID = nil
 				i = n
@@ -9424,7 +9424,7 @@ func (x *DocumentDiagnosticParams) unmarshalLSP(raw []byte, i int) (int, error) 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -9433,7 +9433,7 @@ func (x *DocumentDiagnosticParams) unmarshalLSP(raw []byte, i int) (int, error) 
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "partialResultToken"):
+		case keyEquals(key, `partialResultToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -9442,13 +9442,13 @@ func (x *DocumentDiagnosticParams) unmarshalLSP(raw []byte, i int) (int, error) 
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "identifier"):
+		case keyEquals(key, `identifier`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Identifier = nil
 				i = n
@@ -9463,7 +9463,7 @@ func (x *DocumentDiagnosticParams) unmarshalLSP(raw []byte, i int) (int, error) 
 				*x.Identifier = v
 				i = n
 			}
-		case keyEquals(key, "previousResultId"):
+		case keyEquals(key, `previousResultId`):
 			if n, ok := dvNull(raw, i); ok {
 				x.PreviousResultID = nil
 				i = n
@@ -9533,7 +9533,7 @@ func (x *DocumentDiagnosticReportPartialResult) unmarshalLSP(raw []byte, i int) 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "relatedDocuments"):
+		case keyEquals(key, `relatedDocuments`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -9597,7 +9597,7 @@ func (x *DocumentFormattingClientCapabilities) unmarshalLSP(raw []byte, i int) (
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -9667,7 +9667,7 @@ func (x *DocumentFormattingOptions) unmarshalLSP(raw []byte, i int) (int, error)
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -9737,7 +9737,7 @@ func (x *DocumentFormattingParams) unmarshalLSP(raw []byte, i int) (int, error) 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -9746,13 +9746,13 @@ func (x *DocumentFormattingParams) unmarshalLSP(raw []byte, i int) (int, error) 
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "options"):
+		case keyEquals(key, `options`):
 			n, err := x.Options.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -9813,7 +9813,7 @@ func (x *DocumentFormattingRegistrationOptions) unmarshalLSP(raw []byte, i int) 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -9822,7 +9822,7 @@ func (x *DocumentFormattingRegistrationOptions) unmarshalLSP(raw []byte, i int) 
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -9892,13 +9892,13 @@ func (x *DocumentHighlight) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			n, err := x.Range.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
@@ -9960,7 +9960,7 @@ func (x *DocumentHighlightClientCapabilities) unmarshalLSP(raw []byte, i int) (i
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -10030,7 +10030,7 @@ func (x *DocumentHighlightOptions) unmarshalLSP(raw []byte, i int) (int, error) 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -10100,19 +10100,19 @@ func (x *DocumentHighlightParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "position"):
+		case keyEquals(key, `position`):
 			n, err := x.Position.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -10121,7 +10121,7 @@ func (x *DocumentHighlightParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "partialResultToken"):
+		case keyEquals(key, `partialResultToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -10185,7 +10185,7 @@ func (x *DocumentHighlightRegistrationOptions) unmarshalLSP(raw []byte, i int) (
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -10194,7 +10194,7 @@ func (x *DocumentHighlightRegistrationOptions) unmarshalLSP(raw []byte, i int) (
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -10264,13 +10264,13 @@ func (x *DocumentLink) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			n, err := x.Range.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "target"):
+		case keyEquals(key, `target`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Target = nil
 				i = n
@@ -10285,7 +10285,7 @@ func (x *DocumentLink) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.Target = v
 				i = n
 			}
-		case keyEquals(key, "tooltip"):
+		case keyEquals(key, `tooltip`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Tooltip = nil
 				i = n
@@ -10300,7 +10300,7 @@ func (x *DocumentLink) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.Tooltip = v
 				i = n
 			}
-		case keyEquals(key, "data"):
+		case keyEquals(key, `data`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -10362,7 +10362,7 @@ func (x *DocumentLinkClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -10377,7 +10377,7 @@ func (x *DocumentLinkClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				*x.DynamicRegistration = v
 				i = n
 			}
-		case keyEquals(key, "tooltipSupport"):
+		case keyEquals(key, `tooltipSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.TooltipSupport = nil
 				i = n
@@ -10447,7 +10447,7 @@ func (x *DocumentLinkOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -10462,7 +10462,7 @@ func (x *DocumentLinkOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "resolveProvider"):
+		case keyEquals(key, `resolveProvider`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ResolveProvider = nil
 				i = n
@@ -10532,7 +10532,7 @@ func (x *DocumentLinkParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -10541,7 +10541,7 @@ func (x *DocumentLinkParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "partialResultToken"):
+		case keyEquals(key, `partialResultToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -10550,7 +10550,7 @@ func (x *DocumentLinkParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -10611,7 +10611,7 @@ func (x *DocumentLinkRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -10620,7 +10620,7 @@ func (x *DocumentLinkRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, 
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -10635,7 +10635,7 @@ func (x *DocumentLinkRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, 
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "resolveProvider"):
+		case keyEquals(key, `resolveProvider`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ResolveProvider = nil
 				i = n
@@ -10705,7 +10705,7 @@ func (x *DocumentOnTypeFormattingClientCapabilities) unmarshalLSP(raw []byte, i 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -10775,14 +10775,14 @@ func (x *DocumentOnTypeFormattingOptions) unmarshalLSP(raw []byte, i int) (int, 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "firstTriggerCharacter"):
+		case keyEquals(key, `firstTriggerCharacter`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.FirstTriggerCharacter = v
 			i = n
-		case keyEquals(key, "moreTriggerCharacter"):
+		case keyEquals(key, `moreTriggerCharacter`):
 			v, n, err := dvStringSlice(raw, i, x.MoreTriggerCharacter)
 			if err != nil {
 				return n, err
@@ -10844,26 +10844,26 @@ func (x *DocumentOnTypeFormattingParams) unmarshalLSP(raw []byte, i int) (int, e
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "position"):
+		case keyEquals(key, `position`):
 			n, err := x.Position.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "ch"):
+		case keyEquals(key, `ch`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Ch = v
 			i = n
-		case keyEquals(key, "options"):
+		case keyEquals(key, `options`):
 			n, err := x.Options.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -10924,7 +10924,7 @@ func (x *DocumentOnTypeFormattingRegistrationOptions) unmarshalLSP(raw []byte, i
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -10933,14 +10933,14 @@ func (x *DocumentOnTypeFormattingRegistrationOptions) unmarshalLSP(raw []byte, i
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "firstTriggerCharacter"):
+		case keyEquals(key, `firstTriggerCharacter`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.FirstTriggerCharacter = v
 			i = n
-		case keyEquals(key, "moreTriggerCharacter"):
+		case keyEquals(key, `moreTriggerCharacter`):
 			v, n, err := dvStringSlice(raw, i, x.MoreTriggerCharacter)
 			if err != nil {
 				return n, err
@@ -11002,7 +11002,7 @@ func (x *DocumentRangeFormattingClientCapabilities) unmarshalLSP(raw []byte, i i
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -11017,7 +11017,7 @@ func (x *DocumentRangeFormattingClientCapabilities) unmarshalLSP(raw []byte, i i
 				*x.DynamicRegistration = v
 				i = n
 			}
-		case keyEquals(key, "rangesSupport"):
+		case keyEquals(key, `rangesSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.RangesSupport = nil
 				i = n
@@ -11087,7 +11087,7 @@ func (x *DocumentRangeFormattingOptions) unmarshalLSP(raw []byte, i int) (int, e
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -11102,7 +11102,7 @@ func (x *DocumentRangeFormattingOptions) unmarshalLSP(raw []byte, i int) (int, e
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "rangesSupport"):
+		case keyEquals(key, `rangesSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.RangesSupport = nil
 				i = n
@@ -11172,7 +11172,7 @@ func (x *DocumentRangeFormattingParams) unmarshalLSP(raw []byte, i int) (int, er
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -11181,19 +11181,19 @@ func (x *DocumentRangeFormattingParams) unmarshalLSP(raw []byte, i int) (int, er
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			n, err := x.Range.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "options"):
+		case keyEquals(key, `options`):
 			n, err := x.Options.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -11254,7 +11254,7 @@ func (x *DocumentRangeFormattingRegistrationOptions) unmarshalLSP(raw []byte, i 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -11263,7 +11263,7 @@ func (x *DocumentRangeFormattingRegistrationOptions) unmarshalLSP(raw []byte, i 
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -11278,7 +11278,7 @@ func (x *DocumentRangeFormattingRegistrationOptions) unmarshalLSP(raw []byte, i 
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "rangesSupport"):
+		case keyEquals(key, `rangesSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.RangesSupport = nil
 				i = n
@@ -11348,7 +11348,7 @@ func (x *DocumentRangesFormattingParams) unmarshalLSP(raw []byte, i int) (int, e
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -11357,20 +11357,20 @@ func (x *DocumentRangesFormattingParams) unmarshalLSP(raw []byte, i int) (int, e
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "ranges"):
+		case keyEquals(key, `ranges`):
 			v, n, err := unmarshalSliceRange(raw, i, x.Ranges)
 			if err != nil {
 				return n, err
 			}
 			x.Ranges = v
 			i = n
-		case keyEquals(key, "options"):
+		case keyEquals(key, `options`):
 			n, err := x.Options.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -11431,14 +11431,14 @@ func (x *DocumentSymbol) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "name"):
+		case keyEquals(key, `name`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Name = v
 			i = n
-		case keyEquals(key, "detail"):
+		case keyEquals(key, `detail`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Detail = nil
 				i = n
@@ -11453,21 +11453,21 @@ func (x *DocumentSymbol) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.Detail = v
 				i = n
 			}
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Kind = SymbolKind(v)
 			i = n
-		case keyEquals(key, "tags"):
+		case keyEquals(key, `tags`):
 			v, n, err := dvUint32Slice(raw, i, x.Tags)
 			if err != nil {
 				return n, err
 			}
 			x.Tags = v
 			i = n
-		case keyEquals(key, "deprecated"):
+		case keyEquals(key, `deprecated`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Deprecated = nil
 				i = n
@@ -11482,19 +11482,19 @@ func (x *DocumentSymbol) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.Deprecated = v
 				i = n
 			}
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			n, err := x.Range.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "selectionRange"):
+		case keyEquals(key, `selectionRange`):
 			n, err := x.SelectionRange.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "children"):
+		case keyEquals(key, `children`):
 			v, n, err := unmarshalSliceDocumentSymbol(raw, i, x.Children)
 			if err != nil {
 				return n, err
@@ -11556,7 +11556,7 @@ func (x *DocumentSymbolClientCapabilities) unmarshalLSP(raw []byte, i int) (int,
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -11571,7 +11571,7 @@ func (x *DocumentSymbolClientCapabilities) unmarshalLSP(raw []byte, i int) (int,
 				*x.DynamicRegistration = v
 				i = n
 			}
-		case keyEquals(key, "symbolKind"):
+		case keyEquals(key, `symbolKind`):
 			if n, ok := dvNull(raw, i); ok {
 				x.SymbolKind = nil
 				i = n
@@ -11585,7 +11585,7 @@ func (x *DocumentSymbolClientCapabilities) unmarshalLSP(raw []byte, i int) (int,
 				}
 				i = n
 			}
-		case keyEquals(key, "hierarchicalDocumentSymbolSupport"):
+		case keyEquals(key, `hierarchicalDocumentSymbolSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.HierarchicalDocumentSymbolSupport = nil
 				i = n
@@ -11600,13 +11600,13 @@ func (x *DocumentSymbolClientCapabilities) unmarshalLSP(raw []byte, i int) (int,
 				*x.HierarchicalDocumentSymbolSupport = v
 				i = n
 			}
-		case keyEquals(key, "tagSupport"):
+		case keyEquals(key, `tagSupport`):
 			n, err := x.TagSupport.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "labelSupport"):
+		case keyEquals(key, `labelSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.LabelSupport = nil
 				i = n
@@ -11676,7 +11676,7 @@ func (x *DocumentSymbolOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -11691,7 +11691,7 @@ func (x *DocumentSymbolOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "label"):
+		case keyEquals(key, `label`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Label = nil
 				i = n
@@ -11761,7 +11761,7 @@ func (x *DocumentSymbolParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -11770,7 +11770,7 @@ func (x *DocumentSymbolParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "partialResultToken"):
+		case keyEquals(key, `partialResultToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -11779,7 +11779,7 @@ func (x *DocumentSymbolParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -11840,7 +11840,7 @@ func (x *DocumentSymbolRegistrationOptions) unmarshalLSP(raw []byte, i int) (int
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -11849,7 +11849,7 @@ func (x *DocumentSymbolRegistrationOptions) unmarshalLSP(raw []byte, i int) (int
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -11864,7 +11864,7 @@ func (x *DocumentSymbolRegistrationOptions) unmarshalLSP(raw []byte, i int) (int
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "label"):
+		case keyEquals(key, `label`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Label = nil
 				i = n
@@ -11934,13 +11934,13 @@ func (x *EditRangeWithInsertReplace) unmarshalLSP(raw []byte, i int) (int, error
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "insert"):
+		case keyEquals(key, `insert`):
 			n, err := x.Insert.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "replace"):
+		case keyEquals(key, `replace`):
 			n, err := x.Replace.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -12001,7 +12001,7 @@ func (x *ExecuteCommandClientCapabilities) unmarshalLSP(raw []byte, i int) (int,
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -12071,7 +12071,7 @@ func (x *ExecuteCommandOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -12086,7 +12086,7 @@ func (x *ExecuteCommandOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "commands"):
+		case keyEquals(key, `commands`):
 			v, n, err := dvStringSlice(raw, i, x.Commands)
 			if err != nil {
 				return n, err
@@ -12148,7 +12148,7 @@ func (x *ExecuteCommandParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -12157,14 +12157,14 @@ func (x *ExecuteCommandParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "command"):
+		case keyEquals(key, `command`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Command = v
 			i = n
-		case keyEquals(key, "arguments"):
+		case keyEquals(key, `arguments`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -12228,7 +12228,7 @@ func (x *ExecuteCommandRegistrationOptions) unmarshalLSP(raw []byte, i int) (int
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -12243,7 +12243,7 @@ func (x *ExecuteCommandRegistrationOptions) unmarshalLSP(raw []byte, i int) (int
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "commands"):
+		case keyEquals(key, `commands`):
 			v, n, err := dvStringSlice(raw, i, x.Commands)
 			if err != nil {
 				return n, err
@@ -12305,14 +12305,14 @@ func (x *ExecutionSummary) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "executionOrder"):
+		case keyEquals(key, `executionOrder`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.ExecutionOrder = v
 			i = n
-		case keyEquals(key, "success"):
+		case keyEquals(key, `success`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Success = nil
 				i = n
@@ -12382,7 +12382,7 @@ func (x *FileCreate) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "uri"):
+		case keyEquals(key, `uri`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -12444,7 +12444,7 @@ func (x *FileDelete) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "uri"):
+		case keyEquals(key, `uri`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -12506,14 +12506,14 @@ func (x *FileEvent) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "uri"):
+		case keyEquals(key, `uri`):
 			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.URI = v
 			i = n
-		case keyEquals(key, "type"):
+		case keyEquals(key, `type`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
@@ -12575,7 +12575,7 @@ func (x *FileOperationClientCapabilities) unmarshalLSP(raw []byte, i int) (int, 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -12590,7 +12590,7 @@ func (x *FileOperationClientCapabilities) unmarshalLSP(raw []byte, i int) (int, 
 				*x.DynamicRegistration = v
 				i = n
 			}
-		case keyEquals(key, "didCreate"):
+		case keyEquals(key, `didCreate`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DidCreate = nil
 				i = n
@@ -12605,7 +12605,7 @@ func (x *FileOperationClientCapabilities) unmarshalLSP(raw []byte, i int) (int, 
 				*x.DidCreate = v
 				i = n
 			}
-		case keyEquals(key, "willCreate"):
+		case keyEquals(key, `willCreate`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WillCreate = nil
 				i = n
@@ -12620,7 +12620,7 @@ func (x *FileOperationClientCapabilities) unmarshalLSP(raw []byte, i int) (int, 
 				*x.WillCreate = v
 				i = n
 			}
-		case keyEquals(key, "didRename"):
+		case keyEquals(key, `didRename`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DidRename = nil
 				i = n
@@ -12635,7 +12635,7 @@ func (x *FileOperationClientCapabilities) unmarshalLSP(raw []byte, i int) (int, 
 				*x.DidRename = v
 				i = n
 			}
-		case keyEquals(key, "willRename"):
+		case keyEquals(key, `willRename`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WillRename = nil
 				i = n
@@ -12650,7 +12650,7 @@ func (x *FileOperationClientCapabilities) unmarshalLSP(raw []byte, i int) (int, 
 				*x.WillRename = v
 				i = n
 			}
-		case keyEquals(key, "didDelete"):
+		case keyEquals(key, `didDelete`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DidDelete = nil
 				i = n
@@ -12665,7 +12665,7 @@ func (x *FileOperationClientCapabilities) unmarshalLSP(raw []byte, i int) (int, 
 				*x.DidDelete = v
 				i = n
 			}
-		case keyEquals(key, "willDelete"):
+		case keyEquals(key, `willDelete`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WillDelete = nil
 				i = n
@@ -12735,7 +12735,7 @@ func (x *FileOperationFilter) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "scheme"):
+		case keyEquals(key, `scheme`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Scheme = nil
 				i = n
@@ -12750,7 +12750,7 @@ func (x *FileOperationFilter) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.Scheme = v
 				i = n
 			}
-		case keyEquals(key, "pattern"):
+		case keyEquals(key, `pattern`):
 			n, err := x.Pattern.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -12811,37 +12811,37 @@ func (x *FileOperationOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "didCreate"):
+		case keyEquals(key, `didCreate`):
 			n, err := x.DidCreate.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "willCreate"):
+		case keyEquals(key, `willCreate`):
 			n, err := x.WillCreate.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "didRename"):
+		case keyEquals(key, `didRename`):
 			n, err := x.DidRename.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "willRename"):
+		case keyEquals(key, `willRename`):
 			n, err := x.WillRename.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "didDelete"):
+		case keyEquals(key, `didDelete`):
 			n, err := x.DidDelete.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "willDelete"):
+		case keyEquals(key, `willDelete`):
 			n, err := x.WillDelete.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -12902,21 +12902,21 @@ func (x *FileOperationPattern) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "glob"):
+		case keyEquals(key, `glob`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Glob = v
 			i = n
-		case keyEquals(key, "matches"):
+		case keyEquals(key, `matches`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Matches = FileOperationPatternKind(v)
 			i = n
-		case keyEquals(key, "options"):
+		case keyEquals(key, `options`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Options = nil
 				i = n
@@ -12985,7 +12985,7 @@ func (x *FileOperationPatternOptions) unmarshalLSP(raw []byte, i int) (int, erro
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "ignoreCase"):
+		case keyEquals(key, `ignoreCase`):
 			if n, ok := dvNull(raw, i); ok {
 				x.IgnoreCase = nil
 				i = n
@@ -13055,7 +13055,7 @@ func (x *FileOperationRegistrationOptions) unmarshalLSP(raw []byte, i int) (int,
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "filters"):
+		case keyEquals(key, `filters`):
 			v, n, err := unmarshalSliceFileOperationFilter(raw, i, x.Filters)
 			if err != nil {
 				return n, err
@@ -13117,14 +13117,14 @@ func (x *FileRename) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "oldUri"):
+		case keyEquals(key, `oldUri`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.OldURI = v
 			i = n
-		case keyEquals(key, "newUri"):
+		case keyEquals(key, `newUri`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -13186,7 +13186,7 @@ func (x *FileSystemWatcher) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "globPattern"):
+		case keyEquals(key, `globPattern`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -13195,7 +13195,7 @@ func (x *FileSystemWatcher) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
@@ -13257,14 +13257,14 @@ func (x *FoldingRange) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "startLine"):
+		case keyEquals(key, `startLine`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.StartLine = v
 			i = n
-		case keyEquals(key, "startCharacter"):
+		case keyEquals(key, `startCharacter`):
 			if n, ok := dvNull(raw, i); ok {
 				x.StartCharacter = nil
 				i = n
@@ -13279,14 +13279,14 @@ func (x *FoldingRange) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.StartCharacter = v
 				i = n
 			}
-		case keyEquals(key, "endLine"):
+		case keyEquals(key, `endLine`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.EndLine = v
 			i = n
-		case keyEquals(key, "endCharacter"):
+		case keyEquals(key, `endCharacter`):
 			if n, ok := dvNull(raw, i); ok {
 				x.EndCharacter = nil
 				i = n
@@ -13301,14 +13301,14 @@ func (x *FoldingRange) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.EndCharacter = v
 				i = n
 			}
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Kind = FoldingRangeKind(v)
 			i = n
-		case keyEquals(key, "collapsedText"):
+		case keyEquals(key, `collapsedText`):
 			if n, ok := dvNull(raw, i); ok {
 				x.CollapsedText = nil
 				i = n
@@ -13378,7 +13378,7 @@ func (x *FoldingRangeClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -13393,7 +13393,7 @@ func (x *FoldingRangeClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				*x.DynamicRegistration = v
 				i = n
 			}
-		case keyEquals(key, "rangeLimit"):
+		case keyEquals(key, `rangeLimit`):
 			if n, ok := dvNull(raw, i); ok {
 				x.RangeLimit = nil
 				i = n
@@ -13408,7 +13408,7 @@ func (x *FoldingRangeClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				*x.RangeLimit = v
 				i = n
 			}
-		case keyEquals(key, "lineFoldingOnly"):
+		case keyEquals(key, `lineFoldingOnly`):
 			if n, ok := dvNull(raw, i); ok {
 				x.LineFoldingOnly = nil
 				i = n
@@ -13423,7 +13423,7 @@ func (x *FoldingRangeClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				*x.LineFoldingOnly = v
 				i = n
 			}
-		case keyEquals(key, "foldingRangeKind"):
+		case keyEquals(key, `foldingRangeKind`):
 			if n, ok := dvNull(raw, i); ok {
 				x.FoldingRangeKind = nil
 				i = n
@@ -13437,7 +13437,7 @@ func (x *FoldingRangeClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "foldingRange"):
+		case keyEquals(key, `foldingRange`):
 			if n, ok := dvNull(raw, i); ok {
 				x.FoldingRange = nil
 				i = n
@@ -13506,7 +13506,7 @@ func (x *FoldingRangeOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -13576,7 +13576,7 @@ func (x *FoldingRangeParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -13585,7 +13585,7 @@ func (x *FoldingRangeParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "partialResultToken"):
+		case keyEquals(key, `partialResultToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -13594,7 +13594,7 @@ func (x *FoldingRangeParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -13655,7 +13655,7 @@ func (x *FoldingRangeRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -13664,7 +13664,7 @@ func (x *FoldingRangeRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, 
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -13679,7 +13679,7 @@ func (x *FoldingRangeRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, 
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "id"):
+		case keyEquals(key, `id`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ID = nil
 				i = n
@@ -13749,7 +13749,7 @@ func (x *FoldingRangeWorkspaceClientCapabilities) unmarshalLSP(raw []byte, i int
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "refreshSupport"):
+		case keyEquals(key, `refreshSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.RefreshSupport = nil
 				i = n
@@ -13819,21 +13819,21 @@ func (x *FormattingOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "tabSize"):
+		case keyEquals(key, `tabSize`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.TabSize = v
 			i = n
-		case keyEquals(key, "insertSpaces"):
+		case keyEquals(key, `insertSpaces`):
 			v, n, err := dvBool(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.InsertSpaces = v
 			i = n
-		case keyEquals(key, "trimTrailingWhitespace"):
+		case keyEquals(key, `trimTrailingWhitespace`):
 			if n, ok := dvNull(raw, i); ok {
 				x.TrimTrailingWhitespace = nil
 				i = n
@@ -13848,7 +13848,7 @@ func (x *FormattingOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.TrimTrailingWhitespace = v
 				i = n
 			}
-		case keyEquals(key, "insertFinalNewline"):
+		case keyEquals(key, `insertFinalNewline`):
 			if n, ok := dvNull(raw, i); ok {
 				x.InsertFinalNewline = nil
 				i = n
@@ -13863,7 +13863,7 @@ func (x *FormattingOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.InsertFinalNewline = v
 				i = n
 			}
-		case keyEquals(key, "trimFinalNewlines"):
+		case keyEquals(key, `trimFinalNewlines`):
 			if n, ok := dvNull(raw, i); ok {
 				x.TrimFinalNewlines = nil
 				i = n
@@ -13933,14 +13933,14 @@ func (x *FullDocumentDiagnosticReport) unmarshalLSP(raw []byte, i int) (int, err
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Kind = v
 			i = n
-		case keyEquals(key, "resultId"):
+		case keyEquals(key, `resultId`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ResultID = nil
 				i = n
@@ -13955,7 +13955,7 @@ func (x *FullDocumentDiagnosticReport) unmarshalLSP(raw []byte, i int) (int, err
 				*x.ResultID = v
 				i = n
 			}
-		case keyEquals(key, "items"):
+		case keyEquals(key, `items`):
 			v, n, err := unmarshalSliceDiagnostic(raw, i, x.Items)
 			if err != nil {
 				return n, err
@@ -14017,25 +14017,25 @@ func (x *GeneralClientCapabilities) unmarshalLSP(raw []byte, i int) (int, error)
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "staleRequestSupport"):
+		case keyEquals(key, `staleRequestSupport`):
 			n, err := x.StaleRequestSupport.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "regularExpressions"):
+		case keyEquals(key, `regularExpressions`):
 			n, err := x.RegularExpressions.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "markdown"):
+		case keyEquals(key, `markdown`):
 			n, err := x.Markdown.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "positionEncodings"):
+		case keyEquals(key, `positionEncodings`):
 			v, n, err := dvStringSlice(raw, i, x.PositionEncodings)
 			if err != nil {
 				return n, err
@@ -14097,7 +14097,7 @@ func (x *Hover) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "contents"):
+		case keyEquals(key, `contents`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -14106,7 +14106,7 @@ func (x *Hover) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Range = nil
 				i = n
@@ -14175,7 +14175,7 @@ func (x *HoverClientCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -14190,7 +14190,7 @@ func (x *HoverClientCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.DynamicRegistration = v
 				i = n
 			}
-		case keyEquals(key, "contentFormat"):
+		case keyEquals(key, `contentFormat`):
 			v, n, err := dvStringSlice(raw, i, x.ContentFormat)
 			if err != nil {
 				return n, err
@@ -14252,7 +14252,7 @@ func (x *HoverOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -14322,19 +14322,19 @@ func (x *HoverParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "position"):
+		case keyEquals(key, `position`):
 			n, err := x.Position.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -14398,7 +14398,7 @@ func (x *HoverRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, error) 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -14407,7 +14407,7 @@ func (x *HoverRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, error) 
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -14477,7 +14477,7 @@ func (x *ImplementationClientCapabilities) unmarshalLSP(raw []byte, i int) (int,
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -14492,7 +14492,7 @@ func (x *ImplementationClientCapabilities) unmarshalLSP(raw []byte, i int) (int,
 				*x.DynamicRegistration = v
 				i = n
 			}
-		case keyEquals(key, "linkSupport"):
+		case keyEquals(key, `linkSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.LinkSupport = nil
 				i = n
@@ -14562,7 +14562,7 @@ func (x *ImplementationOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -14632,19 +14632,19 @@ func (x *ImplementationParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "position"):
+		case keyEquals(key, `position`):
 			n, err := x.Position.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -14653,7 +14653,7 @@ func (x *ImplementationParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "partialResultToken"):
+		case keyEquals(key, `partialResultToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -14717,7 +14717,7 @@ func (x *ImplementationRegistrationOptions) unmarshalLSP(raw []byte, i int) (int
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -14726,7 +14726,7 @@ func (x *ImplementationRegistrationOptions) unmarshalLSP(raw []byte, i int) (int
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -14741,7 +14741,7 @@ func (x *ImplementationRegistrationOptions) unmarshalLSP(raw []byte, i int) (int
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "id"):
+		case keyEquals(key, `id`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ID = nil
 				i = n
@@ -14811,7 +14811,7 @@ func (x *InitializeError) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "retry"):
+		case keyEquals(key, `retry`):
 			v, n, err := dvBool(raw, i)
 			if err != nil {
 				return n, err
@@ -14873,7 +14873,7 @@ func (x *InitializeParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -14882,7 +14882,7 @@ func (x *InitializeParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "processId"):
+		case keyEquals(key, `processId`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ProcessID = nil
 				i = n
@@ -14897,13 +14897,13 @@ func (x *InitializeParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.ProcessID = v
 				i = n
 			}
-		case keyEquals(key, "clientInfo"):
+		case keyEquals(key, `clientInfo`):
 			n, err := x.ClientInfo.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "locale"):
+		case keyEquals(key, `locale`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Locale = nil
 				i = n
@@ -14918,7 +14918,7 @@ func (x *InitializeParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.Locale = v
 				i = n
 			}
-		case keyEquals(key, "rootPath"):
+		case keyEquals(key, `rootPath`):
 			if n, ok := dvNull(raw, i); ok {
 				x.RootPath = Nullable[string]{set: true, null: true}
 				i = n
@@ -14930,7 +14930,7 @@ func (x *InitializeParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				x.RootPath = Nullable[string]{set: true, value: v}
 				i = n
 			}
-		case keyEquals(key, "rootUri"):
+		case keyEquals(key, `rootUri`):
 			if n, ok := dvNull(raw, i); ok {
 				x.RootURI = nil
 				i = n
@@ -14945,27 +14945,27 @@ func (x *InitializeParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.RootURI = v
 				i = n
 			}
-		case keyEquals(key, "capabilities"):
+		case keyEquals(key, `capabilities`):
 			n, err := x.Capabilities.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "initializationOptions"):
+		case keyEquals(key, `initializationOptions`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.InitializationOptions = jsontext.Value(val)
 			i = n
-		case keyEquals(key, "trace"):
+		case keyEquals(key, `trace`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Trace = TraceValue(v)
 			i = n
-		case keyEquals(key, "workspaceFolders"):
+		case keyEquals(key, `workspaceFolders`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkspaceFolders = Nullable[[]WorkspaceFolder]{set: true, null: true}
 				i = n
@@ -15036,13 +15036,13 @@ func (x *InitializeResult) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "capabilities"):
+		case keyEquals(key, `capabilities`):
 			n, err := x.Capabilities.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "serverInfo"):
+		case keyEquals(key, `serverInfo`):
 			n, err := x.ServerInfo.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -15158,13 +15158,13 @@ func (x *InlayHint) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "position"):
+		case keyEquals(key, `position`):
 			n, err := x.Position.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "label"):
+		case keyEquals(key, `label`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -15173,21 +15173,21 @@ func (x *InlayHint) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Kind = InlayHintKind(v)
 			i = n
-		case keyEquals(key, "textEdits"):
+		case keyEquals(key, `textEdits`):
 			v, n, err := unmarshalSliceTextEdit(raw, i, x.TextEdits)
 			if err != nil {
 				return n, err
 			}
 			x.TextEdits = v
 			i = n
-		case keyEquals(key, "tooltip"):
+		case keyEquals(key, `tooltip`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -15196,7 +15196,7 @@ func (x *InlayHint) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "paddingLeft"):
+		case keyEquals(key, `paddingLeft`):
 			if n, ok := dvNull(raw, i); ok {
 				x.PaddingLeft = nil
 				i = n
@@ -15211,7 +15211,7 @@ func (x *InlayHint) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.PaddingLeft = v
 				i = n
 			}
-		case keyEquals(key, "paddingRight"):
+		case keyEquals(key, `paddingRight`):
 			if n, ok := dvNull(raw, i); ok {
 				x.PaddingRight = nil
 				i = n
@@ -15226,7 +15226,7 @@ func (x *InlayHint) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.PaddingRight = v
 				i = n
 			}
-		case keyEquals(key, "data"):
+		case keyEquals(key, `data`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -15288,7 +15288,7 @@ func (x *InlayHintClientCapabilities) unmarshalLSP(raw []byte, i int) (int, erro
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -15303,7 +15303,7 @@ func (x *InlayHintClientCapabilities) unmarshalLSP(raw []byte, i int) (int, erro
 				*x.DynamicRegistration = v
 				i = n
 			}
-		case keyEquals(key, "resolveSupport"):
+		case keyEquals(key, `resolveSupport`):
 			n, err := x.ResolveSupport.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -15364,14 +15364,14 @@ func (x *InlayHintLabelPart) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "value"):
+		case keyEquals(key, `value`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Value = v
 			i = n
-		case keyEquals(key, "tooltip"):
+		case keyEquals(key, `tooltip`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -15380,13 +15380,13 @@ func (x *InlayHintLabelPart) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "location"):
+		case keyEquals(key, `location`):
 			n, err := x.Location.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "command"):
+		case keyEquals(key, `command`):
 			n, err := x.Command.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -15447,7 +15447,7 @@ func (x *InlayHintOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -15462,7 +15462,7 @@ func (x *InlayHintOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "resolveProvider"):
+		case keyEquals(key, `resolveProvider`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ResolveProvider = nil
 				i = n
@@ -15532,7 +15532,7 @@ func (x *InlayHintParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -15541,13 +15541,13 @@ func (x *InlayHintParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			n, err := x.Range.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -15608,7 +15608,7 @@ func (x *InlayHintRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, err
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -15623,7 +15623,7 @@ func (x *InlayHintRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, err
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "resolveProvider"):
+		case keyEquals(key, `resolveProvider`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ResolveProvider = nil
 				i = n
@@ -15638,7 +15638,7 @@ func (x *InlayHintRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, err
 				*x.ResolveProvider = v
 				i = n
 			}
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -15647,7 +15647,7 @@ func (x *InlayHintRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, err
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "id"):
+		case keyEquals(key, `id`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ID = nil
 				i = n
@@ -15717,7 +15717,7 @@ func (x *InlayHintWorkspaceClientCapabilities) unmarshalLSP(raw []byte, i int) (
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "refreshSupport"):
+		case keyEquals(key, `refreshSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.RefreshSupport = nil
 				i = n
@@ -15787,7 +15787,7 @@ func (x *InlineCompletionClientCapabilities) unmarshalLSP(raw []byte, i int) (in
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -15857,14 +15857,14 @@ func (x *InlineCompletionContext) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "triggerKind"):
+		case keyEquals(key, `triggerKind`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.TriggerKind = InlineCompletionTriggerKind(v)
 			i = n
-		case keyEquals(key, "selectedCompletionInfo"):
+		case keyEquals(key, `selectedCompletionInfo`):
 			n, err := x.SelectedCompletionInfo.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -15925,7 +15925,7 @@ func (x *InlineCompletionItem) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "insertText"):
+		case keyEquals(key, `insertText`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -15934,7 +15934,7 @@ func (x *InlineCompletionItem) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "filterText"):
+		case keyEquals(key, `filterText`):
 			if n, ok := dvNull(raw, i); ok {
 				x.FilterText = nil
 				i = n
@@ -15949,7 +15949,7 @@ func (x *InlineCompletionItem) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.FilterText = v
 				i = n
 			}
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Range = nil
 				i = n
@@ -15963,7 +15963,7 @@ func (x *InlineCompletionItem) unmarshalLSP(raw []byte, i int) (int, error) {
 				}
 				i = n
 			}
-		case keyEquals(key, "command"):
+		case keyEquals(key, `command`):
 			n, err := x.Command.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -16024,7 +16024,7 @@ func (x *InlineCompletionList) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "items"):
+		case keyEquals(key, `items`):
 			v, n, err := unmarshalSliceInlineCompletionItem(raw, i, x.Items)
 			if err != nil {
 				return n, err
@@ -16086,7 +16086,7 @@ func (x *InlineCompletionOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -16156,19 +16156,19 @@ func (x *InlineCompletionParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "position"):
+		case keyEquals(key, `position`):
 			n, err := x.Position.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -16177,7 +16177,7 @@ func (x *InlineCompletionParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "context"):
+		case keyEquals(key, `context`):
 			n, err := x.Context.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -16238,7 +16238,7 @@ func (x *InlineCompletionRegistrationOptions) unmarshalLSP(raw []byte, i int) (i
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -16253,7 +16253,7 @@ func (x *InlineCompletionRegistrationOptions) unmarshalLSP(raw []byte, i int) (i
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -16262,7 +16262,7 @@ func (x *InlineCompletionRegistrationOptions) unmarshalLSP(raw []byte, i int) (i
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "id"):
+		case keyEquals(key, `id`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ID = nil
 				i = n
@@ -16332,7 +16332,7 @@ func (x *InlineValueClientCapabilities) unmarshalLSP(raw []byte, i int) (int, er
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -16402,14 +16402,14 @@ func (x *InlineValueContext) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "frameId"):
+		case keyEquals(key, `frameId`):
 			v, n, err := dvInt32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.FrameID = v
 			i = n
-		case keyEquals(key, "stoppedLocation"):
+		case keyEquals(key, `stoppedLocation`):
 			n, err := x.StoppedLocation.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -16470,13 +16470,13 @@ func (x *InlineValueEvaluatableExpression) unmarshalLSP(raw []byte, i int) (int,
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			n, err := x.Range.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "expression"):
+		case keyEquals(key, `expression`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Expression = nil
 				i = n
@@ -16546,7 +16546,7 @@ func (x *InlineValueOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -16616,7 +16616,7 @@ func (x *InlineValueParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -16625,19 +16625,19 @@ func (x *InlineValueParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			n, err := x.Range.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "context"):
+		case keyEquals(key, `context`):
 			n, err := x.Context.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -16698,7 +16698,7 @@ func (x *InlineValueRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, e
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -16713,7 +16713,7 @@ func (x *InlineValueRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, e
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -16722,7 +16722,7 @@ func (x *InlineValueRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, e
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "id"):
+		case keyEquals(key, `id`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ID = nil
 				i = n
@@ -16792,13 +16792,13 @@ func (x *InlineValueText) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			n, err := x.Range.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "text"):
+		case keyEquals(key, `text`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -16860,13 +16860,13 @@ func (x *InlineValueVariableLookup) unmarshalLSP(raw []byte, i int) (int, error)
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			n, err := x.Range.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "variableName"):
+		case keyEquals(key, `variableName`):
 			if n, ok := dvNull(raw, i); ok {
 				x.VariableName = nil
 				i = n
@@ -16881,7 +16881,7 @@ func (x *InlineValueVariableLookup) unmarshalLSP(raw []byte, i int) (int, error)
 				*x.VariableName = v
 				i = n
 			}
-		case keyEquals(key, "caseSensitiveLookup"):
+		case keyEquals(key, `caseSensitiveLookup`):
 			v, n, err := dvBool(raw, i)
 			if err != nil {
 				return n, err
@@ -16943,7 +16943,7 @@ func (x *InlineValueWorkspaceClientCapabilities) unmarshalLSP(raw []byte, i int)
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "refreshSupport"):
+		case keyEquals(key, `refreshSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.RefreshSupport = nil
 				i = n
@@ -17013,20 +17013,20 @@ func (x *InsertReplaceEdit) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "newText"):
+		case keyEquals(key, `newText`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.NewText = v
 			i = n
-		case keyEquals(key, "insert"):
+		case keyEquals(key, `insert`):
 			n, err := x.Insert.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "replace"):
+		case keyEquals(key, `replace`):
 			n, err := x.Replace.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -17087,7 +17087,7 @@ func (x *LinkedEditingRangeClientCapabilities) unmarshalLSP(raw []byte, i int) (
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -17157,7 +17157,7 @@ func (x *LinkedEditingRangeOptions) unmarshalLSP(raw []byte, i int) (int, error)
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -17227,19 +17227,19 @@ func (x *LinkedEditingRangeParams) unmarshalLSP(raw []byte, i int) (int, error) 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "position"):
+		case keyEquals(key, `position`):
 			n, err := x.Position.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -17303,7 +17303,7 @@ func (x *LinkedEditingRangeRegistrationOptions) unmarshalLSP(raw []byte, i int) 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -17312,7 +17312,7 @@ func (x *LinkedEditingRangeRegistrationOptions) unmarshalLSP(raw []byte, i int) 
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -17327,7 +17327,7 @@ func (x *LinkedEditingRangeRegistrationOptions) unmarshalLSP(raw []byte, i int) 
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "id"):
+		case keyEquals(key, `id`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ID = nil
 				i = n
@@ -17397,14 +17397,14 @@ func (x *LinkedEditingRanges) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "ranges"):
+		case keyEquals(key, `ranges`):
 			v, n, err := unmarshalSliceRange(raw, i, x.Ranges)
 			if err != nil {
 				return n, err
 			}
 			x.Ranges = v
 			i = n
-		case keyEquals(key, "wordPattern"):
+		case keyEquals(key, `wordPattern`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WordPattern = nil
 				i = n
@@ -17474,14 +17474,14 @@ func (x *Location) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "uri"):
+		case keyEquals(key, `uri`):
 			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.URI = v
 			i = n
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			n, err := x.Range.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -17542,7 +17542,7 @@ func (x *LocationLink) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "originSelectionRange"):
+		case keyEquals(key, `originSelectionRange`):
 			if n, ok := dvNull(raw, i); ok {
 				x.OriginSelectionRange = nil
 				i = n
@@ -17556,20 +17556,20 @@ func (x *LocationLink) unmarshalLSP(raw []byte, i int) (int, error) {
 				}
 				i = n
 			}
-		case keyEquals(key, "targetUri"):
+		case keyEquals(key, `targetUri`):
 			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.TargetURI = v
 			i = n
-		case keyEquals(key, "targetRange"):
+		case keyEquals(key, `targetRange`):
 			n, err := x.TargetRange.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "targetSelectionRange"):
+		case keyEquals(key, `targetSelectionRange`):
 			n, err := x.TargetSelectionRange.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -17630,7 +17630,7 @@ func (x *LocationUriOnly) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "uri"):
+		case keyEquals(key, `uri`):
 			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
@@ -17692,14 +17692,14 @@ func (x *LogMessageParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "type"):
+		case keyEquals(key, `type`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Type = MessageType(v)
 			i = n
-		case keyEquals(key, "message"):
+		case keyEquals(key, `message`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -17761,14 +17761,14 @@ func (x *LogTraceParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "message"):
+		case keyEquals(key, `message`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Message = v
 			i = n
-		case keyEquals(key, "verbose"):
+		case keyEquals(key, `verbose`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Verbose = nil
 				i = n
@@ -17838,14 +17838,14 @@ func (x *MarkdownClientCapabilities) unmarshalLSP(raw []byte, i int) (int, error
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "parser"):
+		case keyEquals(key, `parser`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Parser = v
 			i = n
-		case keyEquals(key, "version"):
+		case keyEquals(key, `version`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Version = nil
 				i = n
@@ -17860,7 +17860,7 @@ func (x *MarkdownClientCapabilities) unmarshalLSP(raw []byte, i int) (int, error
 				*x.Version = v
 				i = n
 			}
-		case keyEquals(key, "allowedTags"):
+		case keyEquals(key, `allowedTags`):
 			v, n, err := dvStringSlice(raw, i, x.AllowedTags)
 			if err != nil {
 				return n, err
@@ -17922,14 +17922,14 @@ func (x *MarkedStringWithLanguage) unmarshalLSP(raw []byte, i int) (int, error) 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "language"):
+		case keyEquals(key, `language`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Language = v
 			i = n
-		case keyEquals(key, "value"):
+		case keyEquals(key, `value`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -17991,14 +17991,14 @@ func (x *MarkupContent) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Kind = MarkupKind(v)
 			i = n
-		case keyEquals(key, "value"):
+		case keyEquals(key, `value`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -18060,7 +18060,7 @@ func (x *MessageActionItem) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "title"):
+		case keyEquals(key, `title`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -18122,28 +18122,28 @@ func (x *Moniker) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "scheme"):
+		case keyEquals(key, `scheme`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Scheme = v
 			i = n
-		case keyEquals(key, "identifier"):
+		case keyEquals(key, `identifier`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Identifier = v
 			i = n
-		case keyEquals(key, "unique"):
+		case keyEquals(key, `unique`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Unique = UniquenessLevel(v)
 			i = n
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -18205,7 +18205,7 @@ func (x *MonikerClientCapabilities) unmarshalLSP(raw []byte, i int) (int, error)
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -18275,7 +18275,7 @@ func (x *MonikerOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -18345,19 +18345,19 @@ func (x *MonikerParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "position"):
+		case keyEquals(key, `position`):
 			n, err := x.Position.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -18366,7 +18366,7 @@ func (x *MonikerParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "partialResultToken"):
+		case keyEquals(key, `partialResultToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -18430,7 +18430,7 @@ func (x *MonikerRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, error
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -18439,7 +18439,7 @@ func (x *MonikerRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, error
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -18509,21 +18509,21 @@ func (x *NotebookCell) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Kind = NotebookCellKind(v)
 			i = n
-		case keyEquals(key, "document"):
+		case keyEquals(key, `document`):
 			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Document = v
 			i = n
-		case keyEquals(key, "metadata"):
+		case keyEquals(key, `metadata`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -18532,7 +18532,7 @@ func (x *NotebookCell) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "executionSummary"):
+		case keyEquals(key, `executionSummary`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ExecutionSummary = nil
 				i = n
@@ -18601,21 +18601,21 @@ func (x *NotebookCellArrayChange) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "start"):
+		case keyEquals(key, `start`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Start = v
 			i = n
-		case keyEquals(key, "deleteCount"):
+		case keyEquals(key, `deleteCount`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.DeleteCount = v
 			i = n
-		case keyEquals(key, "cells"):
+		case keyEquals(key, `cells`):
 			v, n, err := unmarshalSliceNotebookCell(raw, i, x.Cells)
 			if err != nil {
 				return n, err
@@ -18677,7 +18677,7 @@ func (x *NotebookCellLanguage) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "language"):
+		case keyEquals(key, `language`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -18739,7 +18739,7 @@ func (x *NotebookCellTextDocumentFilter) unmarshalLSP(raw []byte, i int) (int, e
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "notebook"):
+		case keyEquals(key, `notebook`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -18748,7 +18748,7 @@ func (x *NotebookCellTextDocumentFilter) unmarshalLSP(raw []byte, i int) (int, e
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "language"):
+		case keyEquals(key, `language`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Language = nil
 				i = n
@@ -18818,28 +18818,28 @@ func (x *NotebookDocument) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "uri"):
+		case keyEquals(key, `uri`):
 			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.URI = v
 			i = n
-		case keyEquals(key, "notebookType"):
+		case keyEquals(key, `notebookType`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.NotebookType = v
 			i = n
-		case keyEquals(key, "version"):
+		case keyEquals(key, `version`):
 			v, n, err := dvInt32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Version = v
 			i = n
-		case keyEquals(key, "metadata"):
+		case keyEquals(key, `metadata`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -18848,7 +18848,7 @@ func (x *NotebookDocument) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "cells"):
+		case keyEquals(key, `cells`):
 			v, n, err := unmarshalSliceNotebookCell(raw, i, x.Cells)
 			if err != nil {
 				return n, err
@@ -18910,20 +18910,20 @@ func (x *NotebookDocumentCellChangeStructure) unmarshalLSP(raw []byte, i int) (i
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "array"):
+		case keyEquals(key, `array`):
 			n, err := x.Array.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "didOpen"):
+		case keyEquals(key, `didOpen`):
 			v, n, err := unmarshalSliceTextDocumentItem(raw, i, x.DidOpen)
 			if err != nil {
 				return n, err
 			}
 			x.DidOpen = v
 			i = n
-		case keyEquals(key, "didClose"):
+		case keyEquals(key, `didClose`):
 			v, n, err := unmarshalSliceTextDocumentIdentifier(raw, i, x.DidClose)
 			if err != nil {
 				return n, err
@@ -18985,7 +18985,7 @@ func (x *NotebookDocumentCellChanges) unmarshalLSP(raw []byte, i int) (int, erro
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "structure"):
+		case keyEquals(key, `structure`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Structure = nil
 				i = n
@@ -18999,14 +18999,14 @@ func (x *NotebookDocumentCellChanges) unmarshalLSP(raw []byte, i int) (int, erro
 				}
 				i = n
 			}
-		case keyEquals(key, "data"):
+		case keyEquals(key, `data`):
 			v, n, err := unmarshalSliceNotebookCell(raw, i, x.Data)
 			if err != nil {
 				return n, err
 			}
 			x.Data = v
 			i = n
-		case keyEquals(key, "textContent"):
+		case keyEquals(key, `textContent`):
 			v, n, err := unmarshalSliceNotebookDocumentCellContentChanges(raw, i, x.TextContent)
 			if err != nil {
 				return n, err
@@ -19068,13 +19068,13 @@ func (x *NotebookDocumentCellContentChanges) unmarshalLSP(raw []byte, i int) (in
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "document"):
+		case keyEquals(key, `document`):
 			n, err := x.Document.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "changes"):
+		case keyEquals(key, `changes`):
 			v, n, err := unmarshalSliceTextDocumentContentChangeEvent(raw, i, x.Changes)
 			if err != nil {
 				return n, err
@@ -19136,7 +19136,7 @@ func (x *NotebookDocumentChangeEvent) unmarshalLSP(raw []byte, i int) (int, erro
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "metadata"):
+		case keyEquals(key, `metadata`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -19145,7 +19145,7 @@ func (x *NotebookDocumentChangeEvent) unmarshalLSP(raw []byte, i int) (int, erro
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "cells"):
+		case keyEquals(key, `cells`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Cells = nil
 				i = n
@@ -19214,7 +19214,7 @@ func (x *NotebookDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (in
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "synchronization"):
+		case keyEquals(key, `synchronization`):
 			n, err := x.Synchronization.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -19275,14 +19275,14 @@ func (x *NotebookDocumentFilterNotebookType) unmarshalLSP(raw []byte, i int) (in
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "notebookType"):
+		case keyEquals(key, `notebookType`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.NotebookType = v
 			i = n
-		case keyEquals(key, "scheme"):
+		case keyEquals(key, `scheme`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Scheme = nil
 				i = n
@@ -19297,7 +19297,7 @@ func (x *NotebookDocumentFilterNotebookType) unmarshalLSP(raw []byte, i int) (in
 				*x.Scheme = v
 				i = n
 			}
-		case keyEquals(key, "pattern"):
+		case keyEquals(key, `pattern`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -19361,7 +19361,7 @@ func (x *NotebookDocumentFilterPattern) unmarshalLSP(raw []byte, i int) (int, er
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "notebookType"):
+		case keyEquals(key, `notebookType`):
 			if n, ok := dvNull(raw, i); ok {
 				x.NotebookType = nil
 				i = n
@@ -19376,7 +19376,7 @@ func (x *NotebookDocumentFilterPattern) unmarshalLSP(raw []byte, i int) (int, er
 				*x.NotebookType = v
 				i = n
 			}
-		case keyEquals(key, "scheme"):
+		case keyEquals(key, `scheme`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Scheme = nil
 				i = n
@@ -19391,7 +19391,7 @@ func (x *NotebookDocumentFilterPattern) unmarshalLSP(raw []byte, i int) (int, er
 				*x.Scheme = v
 				i = n
 			}
-		case keyEquals(key, "pattern"):
+		case keyEquals(key, `pattern`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -19455,7 +19455,7 @@ func (x *NotebookDocumentFilterScheme) unmarshalLSP(raw []byte, i int) (int, err
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "notebookType"):
+		case keyEquals(key, `notebookType`):
 			if n, ok := dvNull(raw, i); ok {
 				x.NotebookType = nil
 				i = n
@@ -19470,14 +19470,14 @@ func (x *NotebookDocumentFilterScheme) unmarshalLSP(raw []byte, i int) (int, err
 				*x.NotebookType = v
 				i = n
 			}
-		case keyEquals(key, "scheme"):
+		case keyEquals(key, `scheme`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Scheme = v
 			i = n
-		case keyEquals(key, "pattern"):
+		case keyEquals(key, `pattern`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -19541,7 +19541,7 @@ func (x *NotebookDocumentFilterWithCells) unmarshalLSP(raw []byte, i int) (int, 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "notebook"):
+		case keyEquals(key, `notebook`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -19550,7 +19550,7 @@ func (x *NotebookDocumentFilterWithCells) unmarshalLSP(raw []byte, i int) (int, 
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "cells"):
+		case keyEquals(key, `cells`):
 			v, n, err := unmarshalSliceNotebookCellLanguage(raw, i, x.Cells)
 			if err != nil {
 				return n, err
@@ -19612,7 +19612,7 @@ func (x *NotebookDocumentFilterWithNotebook) unmarshalLSP(raw []byte, i int) (in
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "notebook"):
+		case keyEquals(key, `notebook`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -19621,7 +19621,7 @@ func (x *NotebookDocumentFilterWithNotebook) unmarshalLSP(raw []byte, i int) (in
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "cells"):
+		case keyEquals(key, `cells`):
 			v, n, err := unmarshalSliceNotebookCellLanguage(raw, i, x.Cells)
 			if err != nil {
 				return n, err
@@ -19683,7 +19683,7 @@ func (x *NotebookDocumentIdentifier) unmarshalLSP(raw []byte, i int) (int, error
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "uri"):
+		case keyEquals(key, `uri`):
 			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
@@ -19745,7 +19745,7 @@ func (x *NotebookDocumentSyncClientCapabilities) unmarshalLSP(raw []byte, i int)
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -19760,7 +19760,7 @@ func (x *NotebookDocumentSyncClientCapabilities) unmarshalLSP(raw []byte, i int)
 				*x.DynamicRegistration = v
 				i = n
 			}
-		case keyEquals(key, "executionSummarySupport"):
+		case keyEquals(key, `executionSummarySupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ExecutionSummarySupport = nil
 				i = n
@@ -19830,14 +19830,14 @@ func (x *NotebookDocumentSyncOptions) unmarshalLSP(raw []byte, i int) (int, erro
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "notebookSelector"):
+		case keyEquals(key, `notebookSelector`):
 			v, n, err := unmarshalSliceNotebookSelector(raw, i, x.NotebookSelector)
 			if err != nil {
 				return n, err
 			}
 			x.NotebookSelector = v
 			i = n
-		case keyEquals(key, "save"):
+		case keyEquals(key, `save`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Save = nil
 				i = n
@@ -19907,14 +19907,14 @@ func (x *NotebookDocumentSyncRegistrationOptions) unmarshalLSP(raw []byte, i int
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "notebookSelector"):
+		case keyEquals(key, `notebookSelector`):
 			v, n, err := unmarshalSliceNotebookSelector(raw, i, x.NotebookSelector)
 			if err != nil {
 				return n, err
 			}
 			x.NotebookSelector = v
 			i = n
-		case keyEquals(key, "save"):
+		case keyEquals(key, `save`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Save = nil
 				i = n
@@ -19929,7 +19929,7 @@ func (x *NotebookDocumentSyncRegistrationOptions) unmarshalLSP(raw []byte, i int
 				*x.Save = v
 				i = n
 			}
-		case keyEquals(key, "id"):
+		case keyEquals(key, `id`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ID = nil
 				i = n
@@ -19999,14 +19999,14 @@ func (x *OptionalVersionedTextDocumentIdentifier) unmarshalLSP(raw []byte, i int
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "uri"):
+		case keyEquals(key, `uri`):
 			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.URI = v
 			i = n
-		case keyEquals(key, "version"):
+		case keyEquals(key, `version`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Version = nil
 				i = n
@@ -20076,7 +20076,7 @@ func (x *ParameterInformation) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "label"):
+		case keyEquals(key, `label`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -20085,7 +20085,7 @@ func (x *ParameterInformation) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "documentation"):
+		case keyEquals(key, `documentation`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -20149,7 +20149,7 @@ func (x *PartialResultParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "partialResultToken"):
+		case keyEquals(key, `partialResultToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -20213,14 +20213,14 @@ func (x *Position) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "line"):
+		case keyEquals(key, `line`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Line = v
 			i = n
-		case keyEquals(key, "character"):
+		case keyEquals(key, `character`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
@@ -20282,7 +20282,7 @@ func (x *PrepareRenameDefaultBehavior) unmarshalLSP(raw []byte, i int) (int, err
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "defaultBehavior"):
+		case keyEquals(key, `defaultBehavior`):
 			v, n, err := dvBool(raw, i)
 			if err != nil {
 				return n, err
@@ -20344,19 +20344,19 @@ func (x *PrepareRenameParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "position"):
+		case keyEquals(key, `position`):
 			n, err := x.Position.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -20420,13 +20420,13 @@ func (x *PrepareRenamePlaceholder) unmarshalLSP(raw []byte, i int) (int, error) 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			n, err := x.Range.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "placeholder"):
+		case keyEquals(key, `placeholder`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -20488,14 +20488,14 @@ func (x *PreviousResultId) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "uri"):
+		case keyEquals(key, `uri`):
 			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.URI = v
 			i = n
-		case keyEquals(key, "value"):
+		case keyEquals(key, `value`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -20557,7 +20557,7 @@ func (x *ProgressParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "token"):
+		case keyEquals(key, `token`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -20566,7 +20566,7 @@ func (x *ProgressParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "value"):
+		case keyEquals(key, `value`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -20628,7 +20628,7 @@ func (x *PublishDiagnosticsClientCapabilities) unmarshalLSP(raw []byte, i int) (
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "relatedInformation"):
+		case keyEquals(key, `relatedInformation`):
 			if n, ok := dvNull(raw, i); ok {
 				x.RelatedInformation = nil
 				i = n
@@ -20643,13 +20643,13 @@ func (x *PublishDiagnosticsClientCapabilities) unmarshalLSP(raw []byte, i int) (
 				*x.RelatedInformation = v
 				i = n
 			}
-		case keyEquals(key, "tagSupport"):
+		case keyEquals(key, `tagSupport`):
 			n, err := x.TagSupport.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "codeDescriptionSupport"):
+		case keyEquals(key, `codeDescriptionSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.CodeDescriptionSupport = nil
 				i = n
@@ -20664,7 +20664,7 @@ func (x *PublishDiagnosticsClientCapabilities) unmarshalLSP(raw []byte, i int) (
 				*x.CodeDescriptionSupport = v
 				i = n
 			}
-		case keyEquals(key, "dataSupport"):
+		case keyEquals(key, `dataSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DataSupport = nil
 				i = n
@@ -20679,7 +20679,7 @@ func (x *PublishDiagnosticsClientCapabilities) unmarshalLSP(raw []byte, i int) (
 				*x.DataSupport = v
 				i = n
 			}
-		case keyEquals(key, "versionSupport"):
+		case keyEquals(key, `versionSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.VersionSupport = nil
 				i = n
@@ -20749,14 +20749,14 @@ func (x *PublishDiagnosticsParams) unmarshalLSP(raw []byte, i int) (int, error) 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "uri"):
+		case keyEquals(key, `uri`):
 			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.URI = v
 			i = n
-		case keyEquals(key, "version"):
+		case keyEquals(key, `version`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Version.Clear()
 				i = n
@@ -20768,7 +20768,7 @@ func (x *PublishDiagnosticsParams) unmarshalLSP(raw []byte, i int) (int, error) 
 				x.Version.Set(v)
 				i = n
 			}
-		case keyEquals(key, "diagnostics"):
+		case keyEquals(key, `diagnostics`):
 			v, n, err := unmarshalSliceDiagnostic(raw, i, x.Diagnostics)
 			if err != nil {
 				return n, err
@@ -20830,13 +20830,13 @@ func (x *Range) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "start"):
+		case keyEquals(key, `start`):
 			n, err := x.Start.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "end"):
+		case keyEquals(key, `end`):
 			n, err := x.End.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -20897,7 +20897,7 @@ func (x *ReferenceClientCapabilities) unmarshalLSP(raw []byte, i int) (int, erro
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -20967,7 +20967,7 @@ func (x *ReferenceContext) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "includeDeclaration"):
+		case keyEquals(key, `includeDeclaration`):
 			v, n, err := dvBool(raw, i)
 			if err != nil {
 				return n, err
@@ -21029,7 +21029,7 @@ func (x *ReferenceOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -21099,19 +21099,19 @@ func (x *ReferenceParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "position"):
+		case keyEquals(key, `position`):
 			n, err := x.Position.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -21120,7 +21120,7 @@ func (x *ReferenceParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "partialResultToken"):
+		case keyEquals(key, `partialResultToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -21129,7 +21129,7 @@ func (x *ReferenceParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "context"):
+		case keyEquals(key, `context`):
 			n, err := x.Context.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -21190,7 +21190,7 @@ func (x *ReferenceRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, err
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -21199,7 +21199,7 @@ func (x *ReferenceRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, err
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -21269,21 +21269,21 @@ func (x *Registration) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "id"):
+		case keyEquals(key, `id`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.ID = v
 			i = n
-		case keyEquals(key, "method"):
+		case keyEquals(key, `method`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Method = v
 			i = n
-		case keyEquals(key, "registerOptions"):
+		case keyEquals(key, `registerOptions`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -21345,7 +21345,7 @@ func (x *RegistrationParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "registrations"):
+		case keyEquals(key, `registrations`):
 			v, n, err := unmarshalSliceRegistration(raw, i, x.Registrations)
 			if err != nil {
 				return n, err
@@ -21407,14 +21407,14 @@ func (x *RegularExpressionsClientCapabilities) unmarshalLSP(raw []byte, i int) (
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "engine"):
+		case keyEquals(key, `engine`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Engine = RegularExpressionEngineKind(v)
 			i = n
-		case keyEquals(key, "version"):
+		case keyEquals(key, `version`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Version = nil
 				i = n
@@ -21484,14 +21484,14 @@ func (x *RelatedFullDocumentDiagnosticReport) unmarshalLSP(raw []byte, i int) (i
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Kind = v
 			i = n
-		case keyEquals(key, "resultId"):
+		case keyEquals(key, `resultId`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ResultID = nil
 				i = n
@@ -21506,14 +21506,14 @@ func (x *RelatedFullDocumentDiagnosticReport) unmarshalLSP(raw []byte, i int) (i
 				*x.ResultID = v
 				i = n
 			}
-		case keyEquals(key, "items"):
+		case keyEquals(key, `items`):
 			v, n, err := unmarshalSliceDiagnostic(raw, i, x.Items)
 			if err != nil {
 				return n, err
 			}
 			x.Items = v
 			i = n
-		case keyEquals(key, "relatedDocuments"):
+		case keyEquals(key, `relatedDocuments`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -21577,21 +21577,21 @@ func (x *RelatedUnchangedDocumentDiagnosticReport) unmarshalLSP(raw []byte, i in
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Kind = v
 			i = n
-		case keyEquals(key, "resultId"):
+		case keyEquals(key, `resultId`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.ResultID = v
 			i = n
-		case keyEquals(key, "relatedDocuments"):
+		case keyEquals(key, `relatedDocuments`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -21655,7 +21655,7 @@ func (x *RelativePattern) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "baseUri"):
+		case keyEquals(key, `baseUri`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -21664,7 +21664,7 @@ func (x *RelativePattern) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "pattern"):
+		case keyEquals(key, `pattern`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -21726,7 +21726,7 @@ func (x *RenameClientCapabilities) unmarshalLSP(raw []byte, i int) (int, error) 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -21741,7 +21741,7 @@ func (x *RenameClientCapabilities) unmarshalLSP(raw []byte, i int) (int, error) 
 				*x.DynamicRegistration = v
 				i = n
 			}
-		case keyEquals(key, "prepareSupport"):
+		case keyEquals(key, `prepareSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.PrepareSupport = nil
 				i = n
@@ -21756,14 +21756,14 @@ func (x *RenameClientCapabilities) unmarshalLSP(raw []byte, i int) (int, error) 
 				*x.PrepareSupport = v
 				i = n
 			}
-		case keyEquals(key, "prepareSupportDefaultBehavior"):
+		case keyEquals(key, `prepareSupportDefaultBehavior`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.PrepareSupportDefaultBehavior = PrepareSupportDefaultBehavior(v)
 			i = n
-		case keyEquals(key, "honorsChangeAnnotations"):
+		case keyEquals(key, `honorsChangeAnnotations`):
 			if n, ok := dvNull(raw, i); ok {
 				x.HonorsChangeAnnotations = nil
 				i = n
@@ -21833,35 +21833,35 @@ func (x *RenameFile) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "annotationId"):
+		case keyEquals(key, `annotationId`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.AnnotationID = ChangeAnnotationIdentifier(v)
 			i = n
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Kind = v
 			i = n
-		case keyEquals(key, "oldUri"):
+		case keyEquals(key, `oldUri`):
 			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.OldURI = v
 			i = n
-		case keyEquals(key, "newUri"):
+		case keyEquals(key, `newUri`):
 			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.NewURI = v
 			i = n
-		case keyEquals(key, "options"):
+		case keyEquals(key, `options`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Options = nil
 				i = n
@@ -21930,7 +21930,7 @@ func (x *RenameFileOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "overwrite"):
+		case keyEquals(key, `overwrite`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Overwrite = nil
 				i = n
@@ -21945,7 +21945,7 @@ func (x *RenameFileOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.Overwrite = v
 				i = n
 			}
-		case keyEquals(key, "ignoreIfExists"):
+		case keyEquals(key, `ignoreIfExists`):
 			if n, ok := dvNull(raw, i); ok {
 				x.IgnoreIfExists = nil
 				i = n
@@ -22015,7 +22015,7 @@ func (x *RenameFilesParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "files"):
+		case keyEquals(key, `files`):
 			v, n, err := unmarshalSliceFileRename(raw, i, x.Files)
 			if err != nil {
 				return n, err
@@ -22077,7 +22077,7 @@ func (x *RenameOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -22092,7 +22092,7 @@ func (x *RenameOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "prepareProvider"):
+		case keyEquals(key, `prepareProvider`):
 			if n, ok := dvNull(raw, i); ok {
 				x.PrepareProvider = nil
 				i = n
@@ -22162,19 +22162,19 @@ func (x *RenameParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "position"):
+		case keyEquals(key, `position`):
 			n, err := x.Position.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -22183,7 +22183,7 @@ func (x *RenameParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "newName"):
+		case keyEquals(key, `newName`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -22245,7 +22245,7 @@ func (x *RenameRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, error)
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -22254,7 +22254,7 @@ func (x *RenameRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, error)
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -22269,7 +22269,7 @@ func (x *RenameRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, error)
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "prepareProvider"):
+		case keyEquals(key, `prepareProvider`):
 			if n, ok := dvNull(raw, i); ok {
 				x.PrepareProvider = nil
 				i = n
@@ -22339,14 +22339,14 @@ func (x *ResourceOperation) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Kind = v
 			i = n
-		case keyEquals(key, "annotationId"):
+		case keyEquals(key, `annotationId`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -22408,7 +22408,7 @@ func (x *SaveOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "includeText"):
+		case keyEquals(key, `includeText`):
 			if n, ok := dvNull(raw, i); ok {
 				x.IncludeText = nil
 				i = n
@@ -22478,13 +22478,13 @@ func (x *SelectedCompletionInfo) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			n, err := x.Range.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "text"):
+		case keyEquals(key, `text`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -22546,13 +22546,13 @@ func (x *SelectionRange) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			n, err := x.Range.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "parent"):
+		case keyEquals(key, `parent`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Parent = nil
 				i = n
@@ -22621,7 +22621,7 @@ func (x *SelectionRangeClientCapabilities) unmarshalLSP(raw []byte, i int) (int,
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -22691,7 +22691,7 @@ func (x *SelectionRangeOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -22761,7 +22761,7 @@ func (x *SelectionRangeParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -22770,7 +22770,7 @@ func (x *SelectionRangeParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "partialResultToken"):
+		case keyEquals(key, `partialResultToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -22779,13 +22779,13 @@ func (x *SelectionRangeParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "positions"):
+		case keyEquals(key, `positions`):
 			v, n, err := unmarshalSlicePosition(raw, i, x.Positions)
 			if err != nil {
 				return n, err
@@ -22847,7 +22847,7 @@ func (x *SelectionRangeRegistrationOptions) unmarshalLSP(raw []byte, i int) (int
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -22862,7 +22862,7 @@ func (x *SelectionRangeRegistrationOptions) unmarshalLSP(raw []byte, i int) (int
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -22871,7 +22871,7 @@ func (x *SelectionRangeRegistrationOptions) unmarshalLSP(raw []byte, i int) (int
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "id"):
+		case keyEquals(key, `id`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ID = nil
 				i = n
@@ -22941,7 +22941,7 @@ func (x *SemanticTokens) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "resultId"):
+		case keyEquals(key, `resultId`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ResultID = nil
 				i = n
@@ -22956,7 +22956,7 @@ func (x *SemanticTokens) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.ResultID = v
 				i = n
 			}
-		case keyEquals(key, "data"):
+		case keyEquals(key, `data`):
 			v, n, err := dvUint32Slice(raw, i, x.Data)
 			if err != nil {
 				return n, err
@@ -23018,7 +23018,7 @@ func (x *SemanticTokensClientCapabilities) unmarshalLSP(raw []byte, i int) (int,
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -23033,34 +23033,34 @@ func (x *SemanticTokensClientCapabilities) unmarshalLSP(raw []byte, i int) (int,
 				*x.DynamicRegistration = v
 				i = n
 			}
-		case keyEquals(key, "requests"):
+		case keyEquals(key, `requests`):
 			n, err := x.Requests.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "tokenTypes"):
+		case keyEquals(key, `tokenTypes`):
 			v, n, err := dvStringSlice(raw, i, x.TokenTypes)
 			if err != nil {
 				return n, err
 			}
 			x.TokenTypes = v
 			i = n
-		case keyEquals(key, "tokenModifiers"):
+		case keyEquals(key, `tokenModifiers`):
 			v, n, err := dvStringSlice(raw, i, x.TokenModifiers)
 			if err != nil {
 				return n, err
 			}
 			x.TokenModifiers = v
 			i = n
-		case keyEquals(key, "formats"):
+		case keyEquals(key, `formats`):
 			v, n, err := dvStringSlice(raw, i, x.Formats)
 			if err != nil {
 				return n, err
 			}
 			x.Formats = v
 			i = n
-		case keyEquals(key, "overlappingTokenSupport"):
+		case keyEquals(key, `overlappingTokenSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.OverlappingTokenSupport = nil
 				i = n
@@ -23075,7 +23075,7 @@ func (x *SemanticTokensClientCapabilities) unmarshalLSP(raw []byte, i int) (int,
 				*x.OverlappingTokenSupport = v
 				i = n
 			}
-		case keyEquals(key, "multilineTokenSupport"):
+		case keyEquals(key, `multilineTokenSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.MultilineTokenSupport = nil
 				i = n
@@ -23090,7 +23090,7 @@ func (x *SemanticTokensClientCapabilities) unmarshalLSP(raw []byte, i int) (int,
 				*x.MultilineTokenSupport = v
 				i = n
 			}
-		case keyEquals(key, "serverCancelSupport"):
+		case keyEquals(key, `serverCancelSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ServerCancelSupport = nil
 				i = n
@@ -23105,7 +23105,7 @@ func (x *SemanticTokensClientCapabilities) unmarshalLSP(raw []byte, i int) (int,
 				*x.ServerCancelSupport = v
 				i = n
 			}
-		case keyEquals(key, "augmentsSyntaxTokens"):
+		case keyEquals(key, `augmentsSyntaxTokens`):
 			if n, ok := dvNull(raw, i); ok {
 				x.AugmentsSyntaxTokens = nil
 				i = n
@@ -23175,7 +23175,7 @@ func (x *SemanticTokensDelta) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "resultId"):
+		case keyEquals(key, `resultId`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ResultID = nil
 				i = n
@@ -23190,7 +23190,7 @@ func (x *SemanticTokensDelta) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.ResultID = v
 				i = n
 			}
-		case keyEquals(key, "edits"):
+		case keyEquals(key, `edits`):
 			v, n, err := unmarshalSliceSemanticTokensEdit(raw, i, x.Edits)
 			if err != nil {
 				return n, err
@@ -23252,7 +23252,7 @@ func (x *SemanticTokensDeltaParams) unmarshalLSP(raw []byte, i int) (int, error)
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -23261,7 +23261,7 @@ func (x *SemanticTokensDeltaParams) unmarshalLSP(raw []byte, i int) (int, error)
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "partialResultToken"):
+		case keyEquals(key, `partialResultToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -23270,13 +23270,13 @@ func (x *SemanticTokensDeltaParams) unmarshalLSP(raw []byte, i int) (int, error)
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "previousResultId"):
+		case keyEquals(key, `previousResultId`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -23338,7 +23338,7 @@ func (x *SemanticTokensDeltaPartialResult) unmarshalLSP(raw []byte, i int) (int,
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "edits"):
+		case keyEquals(key, `edits`):
 			v, n, err := unmarshalSliceSemanticTokensEdit(raw, i, x.Edits)
 			if err != nil {
 				return n, err
@@ -23400,21 +23400,21 @@ func (x *SemanticTokensEdit) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "start"):
+		case keyEquals(key, `start`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Start = v
 			i = n
-		case keyEquals(key, "deleteCount"):
+		case keyEquals(key, `deleteCount`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.DeleteCount = v
 			i = n
-		case keyEquals(key, "data"):
+		case keyEquals(key, `data`):
 			v, n, err := dvUint32Slice(raw, i, x.Data)
 			if err != nil {
 				return n, err
@@ -23476,7 +23476,7 @@ func (x *SemanticTokensFullDelta) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "delta"):
+		case keyEquals(key, `delta`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Delta = nil
 				i = n
@@ -23546,14 +23546,14 @@ func (x *SemanticTokensLegend) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "tokenTypes"):
+		case keyEquals(key, `tokenTypes`):
 			v, n, err := dvStringSlice(raw, i, x.TokenTypes)
 			if err != nil {
 				return n, err
 			}
 			x.TokenTypes = v
 			i = n
-		case keyEquals(key, "tokenModifiers"):
+		case keyEquals(key, `tokenModifiers`):
 			v, n, err := dvStringSlice(raw, i, x.TokenModifiers)
 			if err != nil {
 				return n, err
@@ -23615,7 +23615,7 @@ func (x *SemanticTokensOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -23630,13 +23630,13 @@ func (x *SemanticTokensOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "legend"):
+		case keyEquals(key, `legend`):
 			n, err := x.Legend.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -23645,7 +23645,7 @@ func (x *SemanticTokensOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "full"):
+		case keyEquals(key, `full`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -23764,7 +23764,7 @@ func (x *SemanticTokensParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -23773,7 +23773,7 @@ func (x *SemanticTokensParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "partialResultToken"):
+		case keyEquals(key, `partialResultToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -23782,7 +23782,7 @@ func (x *SemanticTokensParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -23843,7 +23843,7 @@ func (x *SemanticTokensPartialResult) unmarshalLSP(raw []byte, i int) (int, erro
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "data"):
+		case keyEquals(key, `data`):
 			v, n, err := dvUint32Slice(raw, i, x.Data)
 			if err != nil {
 				return n, err
@@ -23905,7 +23905,7 @@ func (x *SemanticTokensRangeParams) unmarshalLSP(raw []byte, i int) (int, error)
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -23914,7 +23914,7 @@ func (x *SemanticTokensRangeParams) unmarshalLSP(raw []byte, i int) (int, error)
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "partialResultToken"):
+		case keyEquals(key, `partialResultToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -23923,13 +23923,13 @@ func (x *SemanticTokensRangeParams) unmarshalLSP(raw []byte, i int) (int, error)
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			n, err := x.Range.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -23990,7 +23990,7 @@ func (x *SemanticTokensRegistrationOptions) unmarshalLSP(raw []byte, i int) (int
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -23999,7 +23999,7 @@ func (x *SemanticTokensRegistrationOptions) unmarshalLSP(raw []byte, i int) (int
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -24014,13 +24014,13 @@ func (x *SemanticTokensRegistrationOptions) unmarshalLSP(raw []byte, i int) (int
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "legend"):
+		case keyEquals(key, `legend`):
 			n, err := x.Legend.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24029,7 +24029,7 @@ func (x *SemanticTokensRegistrationOptions) unmarshalLSP(raw []byte, i int) (int
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "full"):
+		case keyEquals(key, `full`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24038,7 +24038,7 @@ func (x *SemanticTokensRegistrationOptions) unmarshalLSP(raw []byte, i int) (int
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "id"):
+		case keyEquals(key, `id`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ID = nil
 				i = n
@@ -24108,7 +24108,7 @@ func (x *SemanticTokensWorkspaceClientCapabilities) unmarshalLSP(raw []byte, i i
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "refreshSupport"):
+		case keyEquals(key, `refreshSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.RefreshSupport = nil
 				i = n
@@ -24178,14 +24178,14 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "positionEncoding"):
+		case keyEquals(key, `positionEncoding`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.PositionEncoding = PositionEncodingKind(v)
 			i = n
-		case keyEquals(key, "textDocumentSync"):
+		case keyEquals(key, `textDocumentSync`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24194,7 +24194,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "notebookDocumentSync"):
+		case keyEquals(key, `notebookDocumentSync`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24203,7 +24203,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "completionProvider"):
+		case keyEquals(key, `completionProvider`):
 			if n, ok := dvNull(raw, i); ok {
 				x.CompletionProvider = nil
 				i = n
@@ -24217,7 +24217,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				}
 				i = n
 			}
-		case keyEquals(key, "hoverProvider"):
+		case keyEquals(key, `hoverProvider`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24226,7 +24226,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "signatureHelpProvider"):
+		case keyEquals(key, `signatureHelpProvider`):
 			if n, ok := dvNull(raw, i); ok {
 				x.SignatureHelpProvider = nil
 				i = n
@@ -24240,7 +24240,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				}
 				i = n
 			}
-		case keyEquals(key, "declarationProvider"):
+		case keyEquals(key, `declarationProvider`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24249,7 +24249,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "definitionProvider"):
+		case keyEquals(key, `definitionProvider`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24258,7 +24258,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "typeDefinitionProvider"):
+		case keyEquals(key, `typeDefinitionProvider`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24267,7 +24267,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "implementationProvider"):
+		case keyEquals(key, `implementationProvider`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24276,7 +24276,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "referencesProvider"):
+		case keyEquals(key, `referencesProvider`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24285,7 +24285,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "documentHighlightProvider"):
+		case keyEquals(key, `documentHighlightProvider`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24294,7 +24294,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "documentSymbolProvider"):
+		case keyEquals(key, `documentSymbolProvider`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24303,7 +24303,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "codeActionProvider"):
+		case keyEquals(key, `codeActionProvider`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24312,7 +24312,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "codeLensProvider"):
+		case keyEquals(key, `codeLensProvider`):
 			if n, ok := dvNull(raw, i); ok {
 				x.CodeLensProvider = nil
 				i = n
@@ -24326,7 +24326,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				}
 				i = n
 			}
-		case keyEquals(key, "documentLinkProvider"):
+		case keyEquals(key, `documentLinkProvider`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DocumentLinkProvider = nil
 				i = n
@@ -24340,7 +24340,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				}
 				i = n
 			}
-		case keyEquals(key, "colorProvider"):
+		case keyEquals(key, `colorProvider`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24349,7 +24349,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "workspaceSymbolProvider"):
+		case keyEquals(key, `workspaceSymbolProvider`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24358,7 +24358,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "documentFormattingProvider"):
+		case keyEquals(key, `documentFormattingProvider`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24367,7 +24367,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "documentRangeFormattingProvider"):
+		case keyEquals(key, `documentRangeFormattingProvider`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24376,13 +24376,13 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "documentOnTypeFormattingProvider"):
+		case keyEquals(key, `documentOnTypeFormattingProvider`):
 			n, err := x.DocumentOnTypeFormattingProvider.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "renameProvider"):
+		case keyEquals(key, `renameProvider`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24391,7 +24391,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "foldingRangeProvider"):
+		case keyEquals(key, `foldingRangeProvider`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24400,7 +24400,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "selectionRangeProvider"):
+		case keyEquals(key, `selectionRangeProvider`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24409,13 +24409,13 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "executeCommandProvider"):
+		case keyEquals(key, `executeCommandProvider`):
 			n, err := x.ExecuteCommandProvider.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "callHierarchyProvider"):
+		case keyEquals(key, `callHierarchyProvider`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24424,7 +24424,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "linkedEditingRangeProvider"):
+		case keyEquals(key, `linkedEditingRangeProvider`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24433,7 +24433,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "semanticTokensProvider"):
+		case keyEquals(key, `semanticTokensProvider`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24442,7 +24442,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "monikerProvider"):
+		case keyEquals(key, `monikerProvider`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24451,7 +24451,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "typeHierarchyProvider"):
+		case keyEquals(key, `typeHierarchyProvider`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24460,7 +24460,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "inlineValueProvider"):
+		case keyEquals(key, `inlineValueProvider`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24469,7 +24469,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "inlayHintProvider"):
+		case keyEquals(key, `inlayHintProvider`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24478,7 +24478,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "diagnosticProvider"):
+		case keyEquals(key, `diagnosticProvider`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24487,7 +24487,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "inlineCompletionProvider"):
+		case keyEquals(key, `inlineCompletionProvider`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24496,7 +24496,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "workspace"):
+		case keyEquals(key, `workspace`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Workspace = nil
 				i = n
@@ -24510,7 +24510,7 @@ func (x *ServerCapabilities) unmarshalLSP(raw []byte, i int) (int, error) {
 				}
 				i = n
 			}
-		case keyEquals(key, "experimental"):
+		case keyEquals(key, `experimental`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -24572,7 +24572,7 @@ func (x *ServerCompletionItemOptions) unmarshalLSP(raw []byte, i int) (int, erro
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "labelDetailsSupport"):
+		case keyEquals(key, `labelDetailsSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.LabelDetailsSupport = nil
 				i = n
@@ -24642,14 +24642,14 @@ func (x *ServerInfo) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "name"):
+		case keyEquals(key, `name`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Name = v
 			i = n
-		case keyEquals(key, "version"):
+		case keyEquals(key, `version`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Version = nil
 				i = n
@@ -24719,7 +24719,7 @@ func (x *SetTraceParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "value"):
+		case keyEquals(key, `value`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -24781,7 +24781,7 @@ func (x *ShowDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "support"):
+		case keyEquals(key, `support`):
 			v, n, err := dvBool(raw, i)
 			if err != nil {
 				return n, err
@@ -24843,14 +24843,14 @@ func (x *ShowDocumentParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "uri"):
+		case keyEquals(key, `uri`):
 			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.URI = v
 			i = n
-		case keyEquals(key, "external"):
+		case keyEquals(key, `external`):
 			if n, ok := dvNull(raw, i); ok {
 				x.External = nil
 				i = n
@@ -24865,7 +24865,7 @@ func (x *ShowDocumentParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.External = v
 				i = n
 			}
-		case keyEquals(key, "takeFocus"):
+		case keyEquals(key, `takeFocus`):
 			if n, ok := dvNull(raw, i); ok {
 				x.TakeFocus = nil
 				i = n
@@ -24880,7 +24880,7 @@ func (x *ShowDocumentParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.TakeFocus = v
 				i = n
 			}
-		case keyEquals(key, "selection"):
+		case keyEquals(key, `selection`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Selection = nil
 				i = n
@@ -24949,7 +24949,7 @@ func (x *ShowDocumentResult) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "success"):
+		case keyEquals(key, `success`):
 			v, n, err := dvBool(raw, i)
 			if err != nil {
 				return n, err
@@ -25011,14 +25011,14 @@ func (x *ShowMessageParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "type"):
+		case keyEquals(key, `type`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Type = MessageType(v)
 			i = n
-		case keyEquals(key, "message"):
+		case keyEquals(key, `message`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -25080,7 +25080,7 @@ func (x *ShowMessageRequestClientCapabilities) unmarshalLSP(raw []byte, i int) (
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "messageActionItem"):
+		case keyEquals(key, `messageActionItem`):
 			if n, ok := dvNull(raw, i); ok {
 				x.MessageActionItem = nil
 				i = n
@@ -25149,21 +25149,21 @@ func (x *ShowMessageRequestParams) unmarshalLSP(raw []byte, i int) (int, error) 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "type"):
+		case keyEquals(key, `type`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Type = MessageType(v)
 			i = n
-		case keyEquals(key, "message"):
+		case keyEquals(key, `message`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Message = v
 			i = n
-		case keyEquals(key, "actions"):
+		case keyEquals(key, `actions`):
 			v, n, err := unmarshalSliceMessageActionItem(raw, i, x.Actions)
 			if err != nil {
 				return n, err
@@ -25225,14 +25225,14 @@ func (x *SignatureHelp) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "signatures"):
+		case keyEquals(key, `signatures`):
 			v, n, err := unmarshalSliceSignatureInformation(raw, i, x.Signatures)
 			if err != nil {
 				return n, err
 			}
 			x.Signatures = v
 			i = n
-		case keyEquals(key, "activeSignature"):
+		case keyEquals(key, `activeSignature`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ActiveSignature = nil
 				i = n
@@ -25247,7 +25247,7 @@ func (x *SignatureHelp) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.ActiveSignature = v
 				i = n
 			}
-		case keyEquals(key, "activeParameter"):
+		case keyEquals(key, `activeParameter`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ActiveParameter = Nullable[uint32]{set: true, null: true}
 				i = n
@@ -25314,7 +25314,7 @@ func (x *SignatureHelpClientCapabilities) unmarshalLSP(raw []byte, i int) (int, 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -25329,7 +25329,7 @@ func (x *SignatureHelpClientCapabilities) unmarshalLSP(raw []byte, i int) (int, 
 				*x.DynamicRegistration = v
 				i = n
 			}
-		case keyEquals(key, "signatureInformation"):
+		case keyEquals(key, `signatureInformation`):
 			if n, ok := dvNull(raw, i); ok {
 				x.SignatureInformation = nil
 				i = n
@@ -25343,7 +25343,7 @@ func (x *SignatureHelpClientCapabilities) unmarshalLSP(raw []byte, i int) (int, 
 				}
 				i = n
 			}
-		case keyEquals(key, "contextSupport"):
+		case keyEquals(key, `contextSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ContextSupport = nil
 				i = n
@@ -25413,14 +25413,14 @@ func (x *SignatureHelpContext) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "triggerKind"):
+		case keyEquals(key, `triggerKind`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.TriggerKind = SignatureHelpTriggerKind(v)
 			i = n
-		case keyEquals(key, "triggerCharacter"):
+		case keyEquals(key, `triggerCharacter`):
 			if n, ok := dvNull(raw, i); ok {
 				x.TriggerCharacter = nil
 				i = n
@@ -25435,14 +25435,14 @@ func (x *SignatureHelpContext) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.TriggerCharacter = v
 				i = n
 			}
-		case keyEquals(key, "isRetrigger"):
+		case keyEquals(key, `isRetrigger`):
 			v, n, err := dvBool(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.IsRetrigger = v
 			i = n
-		case keyEquals(key, "activeSignatureHelp"):
+		case keyEquals(key, `activeSignatureHelp`):
 			n, err := x.ActiveSignatureHelp.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -25503,7 +25503,7 @@ func (x *SignatureHelpOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -25518,14 +25518,14 @@ func (x *SignatureHelpOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "triggerCharacters"):
+		case keyEquals(key, `triggerCharacters`):
 			v, n, err := dvStringSlice(raw, i, x.TriggerCharacters)
 			if err != nil {
 				return n, err
 			}
 			x.TriggerCharacters = v
 			i = n
-		case keyEquals(key, "retriggerCharacters"):
+		case keyEquals(key, `retriggerCharacters`):
 			v, n, err := dvStringSlice(raw, i, x.RetriggerCharacters)
 			if err != nil {
 				return n, err
@@ -25587,19 +25587,19 @@ func (x *SignatureHelpParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "position"):
+		case keyEquals(key, `position`):
 			n, err := x.Position.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -25608,7 +25608,7 @@ func (x *SignatureHelpParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "context"):
+		case keyEquals(key, `context`):
 			n, err := x.Context.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -25669,7 +25669,7 @@ func (x *SignatureHelpRegistrationOptions) unmarshalLSP(raw []byte, i int) (int,
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -25678,7 +25678,7 @@ func (x *SignatureHelpRegistrationOptions) unmarshalLSP(raw []byte, i int) (int,
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -25693,14 +25693,14 @@ func (x *SignatureHelpRegistrationOptions) unmarshalLSP(raw []byte, i int) (int,
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "triggerCharacters"):
+		case keyEquals(key, `triggerCharacters`):
 			v, n, err := dvStringSlice(raw, i, x.TriggerCharacters)
 			if err != nil {
 				return n, err
 			}
 			x.TriggerCharacters = v
 			i = n
-		case keyEquals(key, "retriggerCharacters"):
+		case keyEquals(key, `retriggerCharacters`):
 			v, n, err := dvStringSlice(raw, i, x.RetriggerCharacters)
 			if err != nil {
 				return n, err
@@ -25762,14 +25762,14 @@ func (x *SignatureInformation) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "label"):
+		case keyEquals(key, `label`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Label = v
 			i = n
-		case keyEquals(key, "documentation"):
+		case keyEquals(key, `documentation`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -25778,14 +25778,14 @@ func (x *SignatureInformation) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "parameters"):
+		case keyEquals(key, `parameters`):
 			v, n, err := unmarshalSliceParameterInformation(raw, i, x.Parameters)
 			if err != nil {
 				return n, err
 			}
 			x.Parameters = v
 			i = n
-		case keyEquals(key, "activeParameter"):
+		case keyEquals(key, `activeParameter`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ActiveParameter = Nullable[uint32]{set: true, null: true}
 				i = n
@@ -25852,19 +25852,19 @@ func (x *SnippetTextEdit) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			n, err := x.Range.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "snippet"):
+		case keyEquals(key, `snippet`):
 			n, err := x.Snippet.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "annotationId"):
+		case keyEquals(key, `annotationId`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -25926,14 +25926,14 @@ func (x *StaleRequestSupportOptions) unmarshalLSP(raw []byte, i int) (int, error
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "cancel"):
+		case keyEquals(key, `cancel`):
 			v, n, err := dvBool(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Cancel = v
 			i = n
-		case keyEquals(key, "retryOnContentModified"):
+		case keyEquals(key, `retryOnContentModified`):
 			v, n, err := dvStringSlice(raw, i, x.RetryOnContentModified)
 			if err != nil {
 				return n, err
@@ -25995,7 +25995,7 @@ func (x *StaticRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, error)
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "id"):
+		case keyEquals(key, `id`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ID = nil
 				i = n
@@ -26065,14 +26065,14 @@ func (x *StringValue) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Kind = v
 			i = n
-		case keyEquals(key, "value"):
+		case keyEquals(key, `value`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -26134,28 +26134,28 @@ func (x *SymbolInformation) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "name"):
+		case keyEquals(key, `name`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Name = v
 			i = n
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Kind = SymbolKind(v)
 			i = n
-		case keyEquals(key, "tags"):
+		case keyEquals(key, `tags`):
 			v, n, err := dvUint32Slice(raw, i, x.Tags)
 			if err != nil {
 				return n, err
 			}
 			x.Tags = v
 			i = n
-		case keyEquals(key, "containerName"):
+		case keyEquals(key, `containerName`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ContainerName = nil
 				i = n
@@ -26170,7 +26170,7 @@ func (x *SymbolInformation) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.ContainerName = v
 				i = n
 			}
-		case keyEquals(key, "deprecated"):
+		case keyEquals(key, `deprecated`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Deprecated = nil
 				i = n
@@ -26185,7 +26185,7 @@ func (x *SymbolInformation) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.Deprecated = v
 				i = n
 			}
-		case keyEquals(key, "location"):
+		case keyEquals(key, `location`):
 			n, err := x.Location.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -26246,7 +26246,7 @@ func (x *TextDocumentChangeRegistrationOptions) unmarshalLSP(raw []byte, i int) 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -26255,7 +26255,7 @@ func (x *TextDocumentChangeRegistrationOptions) unmarshalLSP(raw []byte, i int) 
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "syncKind"):
+		case keyEquals(key, `syncKind`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
@@ -26317,7 +26317,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "synchronization"):
+		case keyEquals(key, `synchronization`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Synchronization = nil
 				i = n
@@ -26331,7 +26331,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "filters"):
+		case keyEquals(key, `filters`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Filters = nil
 				i = n
@@ -26345,7 +26345,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "completion"):
+		case keyEquals(key, `completion`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Completion = nil
 				i = n
@@ -26359,7 +26359,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "hover"):
+		case keyEquals(key, `hover`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Hover = nil
 				i = n
@@ -26373,7 +26373,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "signatureHelp"):
+		case keyEquals(key, `signatureHelp`):
 			if n, ok := dvNull(raw, i); ok {
 				x.SignatureHelp = nil
 				i = n
@@ -26387,7 +26387,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "declaration"):
+		case keyEquals(key, `declaration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Declaration = nil
 				i = n
@@ -26401,7 +26401,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "definition"):
+		case keyEquals(key, `definition`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Definition = nil
 				i = n
@@ -26415,7 +26415,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "typeDefinition"):
+		case keyEquals(key, `typeDefinition`):
 			if n, ok := dvNull(raw, i); ok {
 				x.TypeDefinition = nil
 				i = n
@@ -26429,7 +26429,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "implementation"):
+		case keyEquals(key, `implementation`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Implementation = nil
 				i = n
@@ -26443,7 +26443,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "references"):
+		case keyEquals(key, `references`):
 			if n, ok := dvNull(raw, i); ok {
 				x.References = nil
 				i = n
@@ -26457,7 +26457,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "documentHighlight"):
+		case keyEquals(key, `documentHighlight`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DocumentHighlight = nil
 				i = n
@@ -26471,7 +26471,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "documentSymbol"):
+		case keyEquals(key, `documentSymbol`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DocumentSymbol = nil
 				i = n
@@ -26485,7 +26485,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "codeAction"):
+		case keyEquals(key, `codeAction`):
 			if n, ok := dvNull(raw, i); ok {
 				x.CodeAction = nil
 				i = n
@@ -26499,7 +26499,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "codeLens"):
+		case keyEquals(key, `codeLens`):
 			if n, ok := dvNull(raw, i); ok {
 				x.CodeLens = nil
 				i = n
@@ -26513,7 +26513,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "documentLink"):
+		case keyEquals(key, `documentLink`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DocumentLink = nil
 				i = n
@@ -26527,7 +26527,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "colorProvider"):
+		case keyEquals(key, `colorProvider`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ColorProvider = nil
 				i = n
@@ -26541,7 +26541,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "formatting"):
+		case keyEquals(key, `formatting`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Formatting = nil
 				i = n
@@ -26555,7 +26555,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "rangeFormatting"):
+		case keyEquals(key, `rangeFormatting`):
 			if n, ok := dvNull(raw, i); ok {
 				x.RangeFormatting = nil
 				i = n
@@ -26569,7 +26569,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "onTypeFormatting"):
+		case keyEquals(key, `onTypeFormatting`):
 			if n, ok := dvNull(raw, i); ok {
 				x.OnTypeFormatting = nil
 				i = n
@@ -26583,7 +26583,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "rename"):
+		case keyEquals(key, `rename`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Rename = nil
 				i = n
@@ -26597,7 +26597,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "foldingRange"):
+		case keyEquals(key, `foldingRange`):
 			if n, ok := dvNull(raw, i); ok {
 				x.FoldingRange = nil
 				i = n
@@ -26611,7 +26611,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "selectionRange"):
+		case keyEquals(key, `selectionRange`):
 			if n, ok := dvNull(raw, i); ok {
 				x.SelectionRange = nil
 				i = n
@@ -26625,7 +26625,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "publishDiagnostics"):
+		case keyEquals(key, `publishDiagnostics`):
 			if n, ok := dvNull(raw, i); ok {
 				x.PublishDiagnostics = nil
 				i = n
@@ -26639,7 +26639,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "callHierarchy"):
+		case keyEquals(key, `callHierarchy`):
 			if n, ok := dvNull(raw, i); ok {
 				x.CallHierarchy = nil
 				i = n
@@ -26653,13 +26653,13 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "semanticTokens"):
+		case keyEquals(key, `semanticTokens`):
 			n, err := x.SemanticTokens.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "linkedEditingRange"):
+		case keyEquals(key, `linkedEditingRange`):
 			if n, ok := dvNull(raw, i); ok {
 				x.LinkedEditingRange = nil
 				i = n
@@ -26673,7 +26673,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "moniker"):
+		case keyEquals(key, `moniker`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Moniker = nil
 				i = n
@@ -26687,7 +26687,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "typeHierarchy"):
+		case keyEquals(key, `typeHierarchy`):
 			if n, ok := dvNull(raw, i); ok {
 				x.TypeHierarchy = nil
 				i = n
@@ -26701,7 +26701,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "inlineValue"):
+		case keyEquals(key, `inlineValue`):
 			if n, ok := dvNull(raw, i); ok {
 				x.InlineValue = nil
 				i = n
@@ -26715,7 +26715,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "inlayHint"):
+		case keyEquals(key, `inlayHint`):
 			if n, ok := dvNull(raw, i); ok {
 				x.InlayHint = nil
 				i = n
@@ -26729,7 +26729,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "diagnostic"):
+		case keyEquals(key, `diagnostic`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Diagnostic = nil
 				i = n
@@ -26743,7 +26743,7 @@ func (x *TextDocumentClientCapabilities) unmarshalLSP(raw []byte, i int) (int, e
 				}
 				i = n
 			}
-		case keyEquals(key, "inlineCompletion"):
+		case keyEquals(key, `inlineCompletion`):
 			if n, ok := dvNull(raw, i); ok {
 				x.InlineCompletion = nil
 				i = n
@@ -26812,13 +26812,13 @@ func (x *TextDocumentContentChangePartial) unmarshalLSP(raw []byte, i int) (int,
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			n, err := x.Range.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "rangeLength"):
+		case keyEquals(key, `rangeLength`):
 			if n, ok := dvNull(raw, i); ok {
 				x.RangeLength = nil
 				i = n
@@ -26833,7 +26833,7 @@ func (x *TextDocumentContentChangePartial) unmarshalLSP(raw []byte, i int) (int,
 				*x.RangeLength = v
 				i = n
 			}
-		case keyEquals(key, "text"):
+		case keyEquals(key, `text`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -26895,7 +26895,7 @@ func (x *TextDocumentContentChangeWholeDocument) unmarshalLSP(raw []byte, i int)
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "text"):
+		case keyEquals(key, `text`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -26957,7 +26957,7 @@ func (x *TextDocumentContentClientCapabilities) unmarshalLSP(raw []byte, i int) 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -27027,7 +27027,7 @@ func (x *TextDocumentContentOptions) unmarshalLSP(raw []byte, i int) (int, error
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "schemes"):
+		case keyEquals(key, `schemes`):
 			v, n, err := dvStringSlice(raw, i, x.Schemes)
 			if err != nil {
 				return n, err
@@ -27089,7 +27089,7 @@ func (x *TextDocumentContentParams) unmarshalLSP(raw []byte, i int) (int, error)
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "uri"):
+		case keyEquals(key, `uri`):
 			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
@@ -27151,7 +27151,7 @@ func (x *TextDocumentContentRefreshParams) unmarshalLSP(raw []byte, i int) (int,
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "uri"):
+		case keyEquals(key, `uri`):
 			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
@@ -27213,14 +27213,14 @@ func (x *TextDocumentContentRegistrationOptions) unmarshalLSP(raw []byte, i int)
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "schemes"):
+		case keyEquals(key, `schemes`):
 			v, n, err := dvStringSlice(raw, i, x.Schemes)
 			if err != nil {
 				return n, err
 			}
 			x.Schemes = v
 			i = n
-		case keyEquals(key, "id"):
+		case keyEquals(key, `id`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ID = nil
 				i = n
@@ -27290,7 +27290,7 @@ func (x *TextDocumentContentResult) unmarshalLSP(raw []byte, i int) (int, error)
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "text"):
+		case keyEquals(key, `text`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -27352,13 +27352,13 @@ func (x *TextDocumentEdit) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "edits"):
+		case keyEquals(key, `edits`):
 			v, n, err := unmarshalSliceTextDocumentEditElement(raw, i, x.Edits)
 			if err != nil {
 				return n, err
@@ -27420,7 +27420,7 @@ func (x *TextDocumentFilterClientCapabilities) unmarshalLSP(raw []byte, i int) (
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "relativePatternSupport"):
+		case keyEquals(key, `relativePatternSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.RelativePatternSupport = nil
 				i = n
@@ -27490,14 +27490,14 @@ func (x *TextDocumentFilterLanguage) unmarshalLSP(raw []byte, i int) (int, error
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "language"):
+		case keyEquals(key, `language`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Language = v
 			i = n
-		case keyEquals(key, "scheme"):
+		case keyEquals(key, `scheme`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Scheme = nil
 				i = n
@@ -27512,7 +27512,7 @@ func (x *TextDocumentFilterLanguage) unmarshalLSP(raw []byte, i int) (int, error
 				*x.Scheme = v
 				i = n
 			}
-		case keyEquals(key, "pattern"):
+		case keyEquals(key, `pattern`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -27576,7 +27576,7 @@ func (x *TextDocumentFilterPattern) unmarshalLSP(raw []byte, i int) (int, error)
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "language"):
+		case keyEquals(key, `language`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Language = nil
 				i = n
@@ -27591,7 +27591,7 @@ func (x *TextDocumentFilterPattern) unmarshalLSP(raw []byte, i int) (int, error)
 				*x.Language = v
 				i = n
 			}
-		case keyEquals(key, "scheme"):
+		case keyEquals(key, `scheme`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Scheme = nil
 				i = n
@@ -27606,7 +27606,7 @@ func (x *TextDocumentFilterPattern) unmarshalLSP(raw []byte, i int) (int, error)
 				*x.Scheme = v
 				i = n
 			}
-		case keyEquals(key, "pattern"):
+		case keyEquals(key, `pattern`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -27670,7 +27670,7 @@ func (x *TextDocumentFilterScheme) unmarshalLSP(raw []byte, i int) (int, error) 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "language"):
+		case keyEquals(key, `language`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Language = nil
 				i = n
@@ -27685,14 +27685,14 @@ func (x *TextDocumentFilterScheme) unmarshalLSP(raw []byte, i int) (int, error) 
 				*x.Language = v
 				i = n
 			}
-		case keyEquals(key, "scheme"):
+		case keyEquals(key, `scheme`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Scheme = v
 			i = n
-		case keyEquals(key, "pattern"):
+		case keyEquals(key, `pattern`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -27756,7 +27756,7 @@ func (x *TextDocumentIdentifier) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "uri"):
+		case keyEquals(key, `uri`):
 			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
@@ -27818,28 +27818,28 @@ func (x *TextDocumentItem) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "uri"):
+		case keyEquals(key, `uri`):
 			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.URI = v
 			i = n
-		case keyEquals(key, "languageId"):
+		case keyEquals(key, `languageId`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.LanguageID = LanguageKind(v)
 			i = n
-		case keyEquals(key, "version"):
+		case keyEquals(key, `version`):
 			v, n, err := dvInt32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Version = v
 			i = n
-		case keyEquals(key, "text"):
+		case keyEquals(key, `text`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -27901,13 +27901,13 @@ func (x *TextDocumentPositionParams) unmarshalLSP(raw []byte, i int) (int, error
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "position"):
+		case keyEquals(key, `position`):
 			n, err := x.Position.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -27968,7 +27968,7 @@ func (x *TextDocumentRegistrationOptions) unmarshalLSP(raw []byte, i int) (int, 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -28032,7 +28032,7 @@ func (x *TextDocumentSaveRegistrationOptions) unmarshalLSP(raw []byte, i int) (i
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -28041,7 +28041,7 @@ func (x *TextDocumentSaveRegistrationOptions) unmarshalLSP(raw []byte, i int) (i
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "includeText"):
+		case keyEquals(key, `includeText`):
 			if n, ok := dvNull(raw, i); ok {
 				x.IncludeText = nil
 				i = n
@@ -28111,7 +28111,7 @@ func (x *TextDocumentSyncClientCapabilities) unmarshalLSP(raw []byte, i int) (in
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -28126,7 +28126,7 @@ func (x *TextDocumentSyncClientCapabilities) unmarshalLSP(raw []byte, i int) (in
 				*x.DynamicRegistration = v
 				i = n
 			}
-		case keyEquals(key, "willSave"):
+		case keyEquals(key, `willSave`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WillSave = nil
 				i = n
@@ -28141,7 +28141,7 @@ func (x *TextDocumentSyncClientCapabilities) unmarshalLSP(raw []byte, i int) (in
 				*x.WillSave = v
 				i = n
 			}
-		case keyEquals(key, "willSaveWaitUntil"):
+		case keyEquals(key, `willSaveWaitUntil`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WillSaveWaitUntil = nil
 				i = n
@@ -28156,7 +28156,7 @@ func (x *TextDocumentSyncClientCapabilities) unmarshalLSP(raw []byte, i int) (in
 				*x.WillSaveWaitUntil = v
 				i = n
 			}
-		case keyEquals(key, "didSave"):
+		case keyEquals(key, `didSave`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DidSave = nil
 				i = n
@@ -28226,7 +28226,7 @@ func (x *TextDocumentSyncOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "openClose"):
+		case keyEquals(key, `openClose`):
 			if n, ok := dvNull(raw, i); ok {
 				x.OpenClose = nil
 				i = n
@@ -28241,7 +28241,7 @@ func (x *TextDocumentSyncOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.OpenClose = v
 				i = n
 			}
-		case keyEquals(key, "change"):
+		case keyEquals(key, `change`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Change = nil
 				i = n
@@ -28256,7 +28256,7 @@ func (x *TextDocumentSyncOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.Change = TextDocumentSyncKind(v)
 				i = n
 			}
-		case keyEquals(key, "willSave"):
+		case keyEquals(key, `willSave`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WillSave = nil
 				i = n
@@ -28271,7 +28271,7 @@ func (x *TextDocumentSyncOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.WillSave = v
 				i = n
 			}
-		case keyEquals(key, "willSaveWaitUntil"):
+		case keyEquals(key, `willSaveWaitUntil`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WillSaveWaitUntil = nil
 				i = n
@@ -28286,7 +28286,7 @@ func (x *TextDocumentSyncOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.WillSaveWaitUntil = v
 				i = n
 			}
-		case keyEquals(key, "save"):
+		case keyEquals(key, `save`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -28350,13 +28350,13 @@ func (x *TextEdit) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			n, err := x.Range.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "newText"):
+		case keyEquals(key, `newText`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -28418,7 +28418,7 @@ func (x *TypeDefinitionClientCapabilities) unmarshalLSP(raw []byte, i int) (int,
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -28433,7 +28433,7 @@ func (x *TypeDefinitionClientCapabilities) unmarshalLSP(raw []byte, i int) (int,
 				*x.DynamicRegistration = v
 				i = n
 			}
-		case keyEquals(key, "linkSupport"):
+		case keyEquals(key, `linkSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.LinkSupport = nil
 				i = n
@@ -28503,7 +28503,7 @@ func (x *TypeDefinitionOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -28573,19 +28573,19 @@ func (x *TypeDefinitionParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "position"):
+		case keyEquals(key, `position`):
 			n, err := x.Position.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -28594,7 +28594,7 @@ func (x *TypeDefinitionParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "partialResultToken"):
+		case keyEquals(key, `partialResultToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -28658,7 +28658,7 @@ func (x *TypeDefinitionRegistrationOptions) unmarshalLSP(raw []byte, i int) (int
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -28667,7 +28667,7 @@ func (x *TypeDefinitionRegistrationOptions) unmarshalLSP(raw []byte, i int) (int
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -28682,7 +28682,7 @@ func (x *TypeDefinitionRegistrationOptions) unmarshalLSP(raw []byte, i int) (int
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "id"):
+		case keyEquals(key, `id`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ID = nil
 				i = n
@@ -28752,7 +28752,7 @@ func (x *TypeHierarchyClientCapabilities) unmarshalLSP(raw []byte, i int) (int, 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -28822,28 +28822,28 @@ func (x *TypeHierarchyItem) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "name"):
+		case keyEquals(key, `name`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Name = v
 			i = n
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Kind = SymbolKind(v)
 			i = n
-		case keyEquals(key, "tags"):
+		case keyEquals(key, `tags`):
 			v, n, err := dvUint32Slice(raw, i, x.Tags)
 			if err != nil {
 				return n, err
 			}
 			x.Tags = v
 			i = n
-		case keyEquals(key, "detail"):
+		case keyEquals(key, `detail`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Detail = nil
 				i = n
@@ -28858,26 +28858,26 @@ func (x *TypeHierarchyItem) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.Detail = v
 				i = n
 			}
-		case keyEquals(key, "uri"):
+		case keyEquals(key, `uri`):
 			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.URI = v
 			i = n
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			n, err := x.Range.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "selectionRange"):
+		case keyEquals(key, `selectionRange`):
 			n, err := x.SelectionRange.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "data"):
+		case keyEquals(key, `data`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -28939,7 +28939,7 @@ func (x *TypeHierarchyOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -29009,19 +29009,19 @@ func (x *TypeHierarchyPrepareParams) unmarshalLSP(raw []byte, i int) (int, error
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "position"):
+		case keyEquals(key, `position`):
 			n, err := x.Position.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -29085,7 +29085,7 @@ func (x *TypeHierarchyRegistrationOptions) unmarshalLSP(raw []byte, i int) (int,
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentSelector"):
+		case keyEquals(key, `documentSelector`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -29094,7 +29094,7 @@ func (x *TypeHierarchyRegistrationOptions) unmarshalLSP(raw []byte, i int) (int,
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -29109,7 +29109,7 @@ func (x *TypeHierarchyRegistrationOptions) unmarshalLSP(raw []byte, i int) (int,
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "id"):
+		case keyEquals(key, `id`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ID = nil
 				i = n
@@ -29179,7 +29179,7 @@ func (x *TypeHierarchySubtypesParams) unmarshalLSP(raw []byte, i int) (int, erro
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -29188,7 +29188,7 @@ func (x *TypeHierarchySubtypesParams) unmarshalLSP(raw []byte, i int) (int, erro
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "partialResultToken"):
+		case keyEquals(key, `partialResultToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -29197,7 +29197,7 @@ func (x *TypeHierarchySubtypesParams) unmarshalLSP(raw []byte, i int) (int, erro
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "item"):
+		case keyEquals(key, `item`):
 			n, err := x.Item.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -29258,7 +29258,7 @@ func (x *TypeHierarchySupertypesParams) unmarshalLSP(raw []byte, i int) (int, er
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -29267,7 +29267,7 @@ func (x *TypeHierarchySupertypesParams) unmarshalLSP(raw []byte, i int) (int, er
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "partialResultToken"):
+		case keyEquals(key, `partialResultToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -29276,7 +29276,7 @@ func (x *TypeHierarchySupertypesParams) unmarshalLSP(raw []byte, i int) (int, er
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "item"):
+		case keyEquals(key, `item`):
 			n, err := x.Item.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -29337,14 +29337,14 @@ func (x *UnchangedDocumentDiagnosticReport) unmarshalLSP(raw []byte, i int) (int
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Kind = v
 			i = n
-		case keyEquals(key, "resultId"):
+		case keyEquals(key, `resultId`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -29406,14 +29406,14 @@ func (x *Unregistration) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "id"):
+		case keyEquals(key, `id`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.ID = v
 			i = n
-		case keyEquals(key, "method"):
+		case keyEquals(key, `method`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -29475,7 +29475,7 @@ func (x *UnregistrationParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "unregisterations"):
+		case keyEquals(key, `unregisterations`):
 			v, n, err := unmarshalSliceUnregistration(raw, i, x.Unregisterations)
 			if err != nil {
 				return n, err
@@ -29537,14 +29537,14 @@ func (x *VersionedNotebookDocumentIdentifier) unmarshalLSP(raw []byte, i int) (i
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "version"):
+		case keyEquals(key, `version`):
 			v, n, err := dvInt32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Version = v
 			i = n
-		case keyEquals(key, "uri"):
+		case keyEquals(key, `uri`):
 			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
@@ -29606,14 +29606,14 @@ func (x *VersionedTextDocumentIdentifier) unmarshalLSP(raw []byte, i int) (int, 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "uri"):
+		case keyEquals(key, `uri`):
 			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.URI = v
 			i = n
-		case keyEquals(key, "version"):
+		case keyEquals(key, `version`):
 			v, n, err := dvInt32(raw, i)
 			if err != nil {
 				return n, err
@@ -29675,13 +29675,13 @@ func (x *WillSaveTextDocumentParams) unmarshalLSP(raw []byte, i int) (int, error
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "textDocument"):
+		case keyEquals(key, `textDocument`):
 			n, err := x.TextDocument.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "reason"):
+		case keyEquals(key, `reason`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
@@ -29743,7 +29743,7 @@ func (x *WindowClientCapabilities) unmarshalLSP(raw []byte, i int) (int, error) 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -29758,7 +29758,7 @@ func (x *WindowClientCapabilities) unmarshalLSP(raw []byte, i int) (int, error) 
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "showMessage"):
+		case keyEquals(key, `showMessage`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ShowMessage = nil
 				i = n
@@ -29772,7 +29772,7 @@ func (x *WindowClientCapabilities) unmarshalLSP(raw []byte, i int) (int, error) 
 				}
 				i = n
 			}
-		case keyEquals(key, "showDocument"):
+		case keyEquals(key, `showDocument`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ShowDocument = nil
 				i = n
@@ -29841,21 +29841,21 @@ func (x *WorkDoneProgressBegin) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Kind = v
 			i = n
-		case keyEquals(key, "title"):
+		case keyEquals(key, `title`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Title = v
 			i = n
-		case keyEquals(key, "cancellable"):
+		case keyEquals(key, `cancellable`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Cancellable = nil
 				i = n
@@ -29870,7 +29870,7 @@ func (x *WorkDoneProgressBegin) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.Cancellable = v
 				i = n
 			}
-		case keyEquals(key, "message"):
+		case keyEquals(key, `message`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Message = nil
 				i = n
@@ -29885,7 +29885,7 @@ func (x *WorkDoneProgressBegin) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.Message = v
 				i = n
 			}
-		case keyEquals(key, "percentage"):
+		case keyEquals(key, `percentage`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Percentage = nil
 				i = n
@@ -29955,7 +29955,7 @@ func (x *WorkDoneProgressCancelParams) unmarshalLSP(raw []byte, i int) (int, err
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "token"):
+		case keyEquals(key, `token`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -30019,7 +30019,7 @@ func (x *WorkDoneProgressCreateParams) unmarshalLSP(raw []byte, i int) (int, err
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "token"):
+		case keyEquals(key, `token`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -30083,14 +30083,14 @@ func (x *WorkDoneProgressEnd) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Kind = v
 			i = n
-		case keyEquals(key, "message"):
+		case keyEquals(key, `message`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Message = nil
 				i = n
@@ -30160,7 +30160,7 @@ func (x *WorkDoneProgressOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -30230,7 +30230,7 @@ func (x *WorkDoneProgressParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -30294,14 +30294,14 @@ func (x *WorkDoneProgressReport) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Kind = v
 			i = n
-		case keyEquals(key, "cancellable"):
+		case keyEquals(key, `cancellable`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Cancellable = nil
 				i = n
@@ -30316,7 +30316,7 @@ func (x *WorkDoneProgressReport) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.Cancellable = v
 				i = n
 			}
-		case keyEquals(key, "message"):
+		case keyEquals(key, `message`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Message = nil
 				i = n
@@ -30331,7 +30331,7 @@ func (x *WorkDoneProgressReport) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.Message = v
 				i = n
 			}
-		case keyEquals(key, "percentage"):
+		case keyEquals(key, `percentage`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Percentage = nil
 				i = n
@@ -30401,7 +30401,7 @@ func (x *WorkspaceClientCapabilities) unmarshalLSP(raw []byte, i int) (int, erro
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "applyEdit"):
+		case keyEquals(key, `applyEdit`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ApplyEdit = nil
 				i = n
@@ -30416,7 +30416,7 @@ func (x *WorkspaceClientCapabilities) unmarshalLSP(raw []byte, i int) (int, erro
 				*x.ApplyEdit = v
 				i = n
 			}
-		case keyEquals(key, "workspaceEdit"):
+		case keyEquals(key, `workspaceEdit`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkspaceEdit = nil
 				i = n
@@ -30430,7 +30430,7 @@ func (x *WorkspaceClientCapabilities) unmarshalLSP(raw []byte, i int) (int, erro
 				}
 				i = n
 			}
-		case keyEquals(key, "didChangeConfiguration"):
+		case keyEquals(key, `didChangeConfiguration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DidChangeConfiguration = nil
 				i = n
@@ -30444,7 +30444,7 @@ func (x *WorkspaceClientCapabilities) unmarshalLSP(raw []byte, i int) (int, erro
 				}
 				i = n
 			}
-		case keyEquals(key, "didChangeWatchedFiles"):
+		case keyEquals(key, `didChangeWatchedFiles`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DidChangeWatchedFiles = nil
 				i = n
@@ -30458,7 +30458,7 @@ func (x *WorkspaceClientCapabilities) unmarshalLSP(raw []byte, i int) (int, erro
 				}
 				i = n
 			}
-		case keyEquals(key, "symbol"):
+		case keyEquals(key, `symbol`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Symbol = nil
 				i = n
@@ -30472,7 +30472,7 @@ func (x *WorkspaceClientCapabilities) unmarshalLSP(raw []byte, i int) (int, erro
 				}
 				i = n
 			}
-		case keyEquals(key, "executeCommand"):
+		case keyEquals(key, `executeCommand`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ExecuteCommand = nil
 				i = n
@@ -30486,7 +30486,7 @@ func (x *WorkspaceClientCapabilities) unmarshalLSP(raw []byte, i int) (int, erro
 				}
 				i = n
 			}
-		case keyEquals(key, "workspaceFolders"):
+		case keyEquals(key, `workspaceFolders`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkspaceFolders = nil
 				i = n
@@ -30501,7 +30501,7 @@ func (x *WorkspaceClientCapabilities) unmarshalLSP(raw []byte, i int) (int, erro
 				*x.WorkspaceFolders = v
 				i = n
 			}
-		case keyEquals(key, "configuration"):
+		case keyEquals(key, `configuration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Configuration = nil
 				i = n
@@ -30516,7 +30516,7 @@ func (x *WorkspaceClientCapabilities) unmarshalLSP(raw []byte, i int) (int, erro
 				*x.Configuration = v
 				i = n
 			}
-		case keyEquals(key, "semanticTokens"):
+		case keyEquals(key, `semanticTokens`):
 			if n, ok := dvNull(raw, i); ok {
 				x.SemanticTokens = nil
 				i = n
@@ -30530,7 +30530,7 @@ func (x *WorkspaceClientCapabilities) unmarshalLSP(raw []byte, i int) (int, erro
 				}
 				i = n
 			}
-		case keyEquals(key, "codeLens"):
+		case keyEquals(key, `codeLens`):
 			if n, ok := dvNull(raw, i); ok {
 				x.CodeLens = nil
 				i = n
@@ -30544,7 +30544,7 @@ func (x *WorkspaceClientCapabilities) unmarshalLSP(raw []byte, i int) (int, erro
 				}
 				i = n
 			}
-		case keyEquals(key, "fileOperations"):
+		case keyEquals(key, `fileOperations`):
 			if n, ok := dvNull(raw, i); ok {
 				x.FileOperations = nil
 				i = n
@@ -30558,7 +30558,7 @@ func (x *WorkspaceClientCapabilities) unmarshalLSP(raw []byte, i int) (int, erro
 				}
 				i = n
 			}
-		case keyEquals(key, "inlineValue"):
+		case keyEquals(key, `inlineValue`):
 			if n, ok := dvNull(raw, i); ok {
 				x.InlineValue = nil
 				i = n
@@ -30572,7 +30572,7 @@ func (x *WorkspaceClientCapabilities) unmarshalLSP(raw []byte, i int) (int, erro
 				}
 				i = n
 			}
-		case keyEquals(key, "inlayHint"):
+		case keyEquals(key, `inlayHint`):
 			if n, ok := dvNull(raw, i); ok {
 				x.InlayHint = nil
 				i = n
@@ -30586,7 +30586,7 @@ func (x *WorkspaceClientCapabilities) unmarshalLSP(raw []byte, i int) (int, erro
 				}
 				i = n
 			}
-		case keyEquals(key, "diagnostics"):
+		case keyEquals(key, `diagnostics`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Diagnostics = nil
 				i = n
@@ -30600,7 +30600,7 @@ func (x *WorkspaceClientCapabilities) unmarshalLSP(raw []byte, i int) (int, erro
 				}
 				i = n
 			}
-		case keyEquals(key, "foldingRange"):
+		case keyEquals(key, `foldingRange`):
 			if n, ok := dvNull(raw, i); ok {
 				x.FoldingRange = nil
 				i = n
@@ -30614,7 +30614,7 @@ func (x *WorkspaceClientCapabilities) unmarshalLSP(raw []byte, i int) (int, erro
 				}
 				i = n
 			}
-		case keyEquals(key, "textDocumentContent"):
+		case keyEquals(key, `textDocumentContent`):
 			if n, ok := dvNull(raw, i); ok {
 				x.TextDocumentContent = nil
 				i = n
@@ -30683,7 +30683,7 @@ func (x *WorkspaceDiagnosticParams) unmarshalLSP(raw []byte, i int) (int, error)
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -30692,7 +30692,7 @@ func (x *WorkspaceDiagnosticParams) unmarshalLSP(raw []byte, i int) (int, error)
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "partialResultToken"):
+		case keyEquals(key, `partialResultToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -30701,7 +30701,7 @@ func (x *WorkspaceDiagnosticParams) unmarshalLSP(raw []byte, i int) (int, error)
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "identifier"):
+		case keyEquals(key, `identifier`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Identifier = nil
 				i = n
@@ -30716,7 +30716,7 @@ func (x *WorkspaceDiagnosticParams) unmarshalLSP(raw []byte, i int) (int, error)
 				*x.Identifier = v
 				i = n
 			}
-		case keyEquals(key, "previousResultIds"):
+		case keyEquals(key, `previousResultIds`):
 			v, n, err := unmarshalSlicePreviousResultID(raw, i, x.PreviousResultIds)
 			if err != nil {
 				return n, err
@@ -30778,7 +30778,7 @@ func (x *WorkspaceDiagnosticReport) unmarshalLSP(raw []byte, i int) (int, error)
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "items"):
+		case keyEquals(key, `items`):
 			v, n, err := unmarshalSliceWorkspaceDocumentDiagnosticReport(raw, i, x.Items)
 			if err != nil {
 				return n, err
@@ -30840,7 +30840,7 @@ func (x *WorkspaceDiagnosticReportPartialResult) unmarshalLSP(raw []byte, i int)
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "items"):
+		case keyEquals(key, `items`):
 			v, n, err := unmarshalSliceWorkspaceDocumentDiagnosticReport(raw, i, x.Items)
 			if err != nil {
 				return n, err
@@ -30902,7 +30902,7 @@ func (x *WorkspaceEdit) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "changes"):
+		case keyEquals(key, `changes`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -30911,14 +30911,14 @@ func (x *WorkspaceEdit) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "documentChanges"):
+		case keyEquals(key, `documentChanges`):
 			v, n, err := unmarshalSliceDocumentChange(raw, i, x.DocumentChanges)
 			if err != nil {
 				return n, err
 			}
 			x.DocumentChanges = v
 			i = n
-		case keyEquals(key, "changeAnnotations"):
+		case keyEquals(key, `changeAnnotations`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -30982,7 +30982,7 @@ func (x *WorkspaceEditClientCapabilities) unmarshalLSP(raw []byte, i int) (int, 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "documentChanges"):
+		case keyEquals(key, `documentChanges`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DocumentChanges = nil
 				i = n
@@ -30997,21 +30997,21 @@ func (x *WorkspaceEditClientCapabilities) unmarshalLSP(raw []byte, i int) (int, 
 				*x.DocumentChanges = v
 				i = n
 			}
-		case keyEquals(key, "resourceOperations"):
+		case keyEquals(key, `resourceOperations`):
 			v, n, err := dvStringSlice(raw, i, x.ResourceOperations)
 			if err != nil {
 				return n, err
 			}
 			x.ResourceOperations = v
 			i = n
-		case keyEquals(key, "failureHandling"):
+		case keyEquals(key, `failureHandling`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.FailureHandling = FailureHandlingKind(v)
 			i = n
-		case keyEquals(key, "normalizesLineEndings"):
+		case keyEquals(key, `normalizesLineEndings`):
 			if n, ok := dvNull(raw, i); ok {
 				x.NormalizesLineEndings = nil
 				i = n
@@ -31026,7 +31026,7 @@ func (x *WorkspaceEditClientCapabilities) unmarshalLSP(raw []byte, i int) (int, 
 				*x.NormalizesLineEndings = v
 				i = n
 			}
-		case keyEquals(key, "changeAnnotationSupport"):
+		case keyEquals(key, `changeAnnotationSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ChangeAnnotationSupport = nil
 				i = n
@@ -31040,7 +31040,7 @@ func (x *WorkspaceEditClientCapabilities) unmarshalLSP(raw []byte, i int) (int, 
 				}
 				i = n
 			}
-		case keyEquals(key, "metadataSupport"):
+		case keyEquals(key, `metadataSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.MetadataSupport = nil
 				i = n
@@ -31055,7 +31055,7 @@ func (x *WorkspaceEditClientCapabilities) unmarshalLSP(raw []byte, i int) (int, 
 				*x.MetadataSupport = v
 				i = n
 			}
-		case keyEquals(key, "snippetEditSupport"):
+		case keyEquals(key, `snippetEditSupport`):
 			if n, ok := dvNull(raw, i); ok {
 				x.SnippetEditSupport = nil
 				i = n
@@ -31125,7 +31125,7 @@ func (x *WorkspaceEditMetadata) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "isRefactoring"):
+		case keyEquals(key, `isRefactoring`):
 			if n, ok := dvNull(raw, i); ok {
 				x.IsRefactoring = nil
 				i = n
@@ -31195,14 +31195,14 @@ func (x *WorkspaceFolder) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "uri"):
+		case keyEquals(key, `uri`):
 			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.URI = v
 			i = n
-		case keyEquals(key, "name"):
+		case keyEquals(key, `name`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -31264,14 +31264,14 @@ func (x *WorkspaceFoldersChangeEvent) unmarshalLSP(raw []byte, i int) (int, erro
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "added"):
+		case keyEquals(key, `added`):
 			v, n, err := unmarshalSliceWorkspaceFolder(raw, i, x.Added)
 			if err != nil {
 				return n, err
 			}
 			x.Added = v
 			i = n
-		case keyEquals(key, "removed"):
+		case keyEquals(key, `removed`):
 			v, n, err := unmarshalSliceWorkspaceFolder(raw, i, x.Removed)
 			if err != nil {
 				return n, err
@@ -31333,7 +31333,7 @@ func (x *WorkspaceFoldersInitializeParams) unmarshalLSP(raw []byte, i int) (int,
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workspaceFolders"):
+		case keyEquals(key, `workspaceFolders`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkspaceFolders = Nullable[[]WorkspaceFolder]{set: true, null: true}
 				i = n
@@ -31404,7 +31404,7 @@ func (x *WorkspaceFoldersServerCapabilities) unmarshalLSP(raw []byte, i int) (in
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "supported"):
+		case keyEquals(key, `supported`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Supported = nil
 				i = n
@@ -31419,7 +31419,7 @@ func (x *WorkspaceFoldersServerCapabilities) unmarshalLSP(raw []byte, i int) (in
 				*x.Supported = v
 				i = n
 			}
-		case keyEquals(key, "changeNotifications"):
+		case keyEquals(key, `changeNotifications`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -31483,14 +31483,14 @@ func (x *WorkspaceFullDocumentDiagnosticReport) unmarshalLSP(raw []byte, i int) 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Kind = v
 			i = n
-		case keyEquals(key, "resultId"):
+		case keyEquals(key, `resultId`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ResultID = nil
 				i = n
@@ -31505,21 +31505,21 @@ func (x *WorkspaceFullDocumentDiagnosticReport) unmarshalLSP(raw []byte, i int) 
 				*x.ResultID = v
 				i = n
 			}
-		case keyEquals(key, "items"):
+		case keyEquals(key, `items`):
 			v, n, err := unmarshalSliceDiagnostic(raw, i, x.Items)
 			if err != nil {
 				return n, err
 			}
 			x.Items = v
 			i = n
-		case keyEquals(key, "uri"):
+		case keyEquals(key, `uri`):
 			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.URI = v
 			i = n
-		case keyEquals(key, "version"):
+		case keyEquals(key, `version`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Version = nil
 				i = n
@@ -31589,7 +31589,7 @@ func (x *WorkspaceOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workspaceFolders"):
+		case keyEquals(key, `workspaceFolders`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkspaceFolders = nil
 				i = n
@@ -31603,7 +31603,7 @@ func (x *WorkspaceOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 				}
 				i = n
 			}
-		case keyEquals(key, "fileOperations"):
+		case keyEquals(key, `fileOperations`):
 			if n, ok := dvNull(raw, i); ok {
 				x.FileOperations = nil
 				i = n
@@ -31617,7 +31617,7 @@ func (x *WorkspaceOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 				}
 				i = n
 			}
-		case keyEquals(key, "textDocumentContent"):
+		case keyEquals(key, `textDocumentContent`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -31681,28 +31681,28 @@ func (x *WorkspaceSymbol) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "name"):
+		case keyEquals(key, `name`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Name = v
 			i = n
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Kind = SymbolKind(v)
 			i = n
-		case keyEquals(key, "tags"):
+		case keyEquals(key, `tags`):
 			v, n, err := dvUint32Slice(raw, i, x.Tags)
 			if err != nil {
 				return n, err
 			}
 			x.Tags = v
 			i = n
-		case keyEquals(key, "containerName"):
+		case keyEquals(key, `containerName`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ContainerName = nil
 				i = n
@@ -31717,7 +31717,7 @@ func (x *WorkspaceSymbol) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.ContainerName = v
 				i = n
 			}
-		case keyEquals(key, "location"):
+		case keyEquals(key, `location`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -31726,7 +31726,7 @@ func (x *WorkspaceSymbol) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "data"):
+		case keyEquals(key, `data`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -31788,7 +31788,7 @@ func (x *WorkspaceSymbolClientCapabilities) unmarshalLSP(raw []byte, i int) (int
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "dynamicRegistration"):
+		case keyEquals(key, `dynamicRegistration`):
 			if n, ok := dvNull(raw, i); ok {
 				x.DynamicRegistration = nil
 				i = n
@@ -31803,7 +31803,7 @@ func (x *WorkspaceSymbolClientCapabilities) unmarshalLSP(raw []byte, i int) (int
 				*x.DynamicRegistration = v
 				i = n
 			}
-		case keyEquals(key, "symbolKind"):
+		case keyEquals(key, `symbolKind`):
 			if n, ok := dvNull(raw, i); ok {
 				x.SymbolKind = nil
 				i = n
@@ -31817,13 +31817,13 @@ func (x *WorkspaceSymbolClientCapabilities) unmarshalLSP(raw []byte, i int) (int
 				}
 				i = n
 			}
-		case keyEquals(key, "tagSupport"):
+		case keyEquals(key, `tagSupport`):
 			n, err := x.TagSupport.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "resolveSupport"):
+		case keyEquals(key, `resolveSupport`):
 			n, err := x.ResolveSupport.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
@@ -31884,7 +31884,7 @@ func (x *WorkspaceSymbolOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -31899,7 +31899,7 @@ func (x *WorkspaceSymbolOptions) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "resolveProvider"):
+		case keyEquals(key, `resolveProvider`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ResolveProvider = nil
 				i = n
@@ -31969,7 +31969,7 @@ func (x *WorkspaceSymbolParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -31978,7 +31978,7 @@ func (x *WorkspaceSymbolParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "partialResultToken"):
+		case keyEquals(key, `partialResultToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -31987,7 +31987,7 @@ func (x *WorkspaceSymbolParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "query"):
+		case keyEquals(key, `query`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -32049,7 +32049,7 @@ func (x *WorkspaceSymbolRegistrationOptions) unmarshalLSP(raw []byte, i int) (in
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneProgress"):
+		case keyEquals(key, `workDoneProgress`):
 			if n, ok := dvNull(raw, i); ok {
 				x.WorkDoneProgress = nil
 				i = n
@@ -32064,7 +32064,7 @@ func (x *WorkspaceSymbolRegistrationOptions) unmarshalLSP(raw []byte, i int) (in
 				*x.WorkDoneProgress = v
 				i = n
 			}
-		case keyEquals(key, "resolveProvider"):
+		case keyEquals(key, `resolveProvider`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ResolveProvider = nil
 				i = n
@@ -32134,28 +32134,28 @@ func (x *WorkspaceUnchangedDocumentDiagnosticReport) unmarshalLSP(raw []byte, i 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Kind = v
 			i = n
-		case keyEquals(key, "resultId"):
+		case keyEquals(key, `resultId`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.ResultID = v
 			i = n
-		case keyEquals(key, "uri"):
+		case keyEquals(key, `uri`):
 			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.URI = v
 			i = n
-		case keyEquals(key, "version"):
+		case keyEquals(key, `version`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Version = nil
 				i = n
@@ -32225,7 +32225,7 @@ func (x *_InitializeParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "workDoneToken"):
+		case keyEquals(key, `workDoneToken`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -32234,7 +32234,7 @@ func (x *_InitializeParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "processId"):
+		case keyEquals(key, `processId`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ProcessID = nil
 				i = n
@@ -32249,13 +32249,13 @@ func (x *_InitializeParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.ProcessID = v
 				i = n
 			}
-		case keyEquals(key, "clientInfo"):
+		case keyEquals(key, `clientInfo`):
 			n, err := x.ClientInfo.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "locale"):
+		case keyEquals(key, `locale`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Locale = nil
 				i = n
@@ -32270,7 +32270,7 @@ func (x *_InitializeParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.Locale = v
 				i = n
 			}
-		case keyEquals(key, "rootPath"):
+		case keyEquals(key, `rootPath`):
 			if n, ok := dvNull(raw, i); ok {
 				x.RootPath = Nullable[string]{set: true, null: true}
 				i = n
@@ -32282,7 +32282,7 @@ func (x *_InitializeParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				x.RootPath = Nullable[string]{set: true, value: v}
 				i = n
 			}
-		case keyEquals(key, "rootUri"):
+		case keyEquals(key, `rootUri`):
 			if n, ok := dvNull(raw, i); ok {
 				x.RootURI = nil
 				i = n
@@ -32297,20 +32297,20 @@ func (x *_InitializeParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				*x.RootURI = v
 				i = n
 			}
-		case keyEquals(key, "capabilities"):
+		case keyEquals(key, `capabilities`):
 			n, err := x.Capabilities.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "initializationOptions"):
+		case keyEquals(key, `initializationOptions`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.InitializationOptions = jsontext.Value(val)
 			i = n
-		case keyEquals(key, "trace"):
+		case keyEquals(key, `trace`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
@@ -32372,20 +32372,20 @@ func (x *Diagnostic) unmarshalLSPWithScalarBoxes(raw []byte, i int, scalarBoxes 
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "range"):
+		case keyEquals(key, `range`):
 			n, err := x.Range.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "severity"):
+		case keyEquals(key, `severity`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Severity = DiagnosticSeverity(v)
 			i = n
-		case keyEquals(key, "code"):
+		case keyEquals(key, `code`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -32394,13 +32394,13 @@ func (x *Diagnostic) unmarshalLSPWithScalarBoxes(raw []byte, i int, scalarBoxes 
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "codeDescription"):
+		case keyEquals(key, `codeDescription`):
 			n, err := x.CodeDescription.unmarshalLSP(raw, i)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "source"):
+		case keyEquals(key, `source`):
 			if n, ok := dvNull(raw, i); ok {
 				x.Source.Clear()
 				i = n
@@ -32412,7 +32412,7 @@ func (x *Diagnostic) unmarshalLSPWithScalarBoxes(raw []byte, i int, scalarBoxes 
 				x.Source.Set(v)
 				i = n
 			}
-		case keyEquals(key, "message"):
+		case keyEquals(key, `message`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -32421,20 +32421,20 @@ func (x *Diagnostic) unmarshalLSPWithScalarBoxes(raw []byte, i int, scalarBoxes 
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "tags"):
+		case keyEquals(key, `tags`):
 			n, err := dvDiagnosticTags(raw, i, &x.Tags)
 			if err != nil {
 				return n, err
 			}
 			i = n
-		case keyEquals(key, "relatedInformation"):
+		case keyEquals(key, `relatedInformation`):
 			v, n, err := unmarshalSliceDiagnosticRelatedInformation(raw, i, x.RelatedInformation)
 			if err != nil {
 				return n, err
 			}
 			x.RelatedInformation = v
 			i = n
-		case keyEquals(key, "data"):
+		case keyEquals(key, `data`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -32479,28 +32479,28 @@ func (x *WorkspaceSymbol) unmarshalLSPWithLocationBoxes(raw []byte, i int, locat
 		i = n
 		_ = key
 		switch {
-		case keyEquals(key, "name"):
+		case keyEquals(key, `name`):
 			v, n, err := dvString(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Name = v
 			i = n
-		case keyEquals(key, "kind"):
+		case keyEquals(key, `kind`):
 			v, n, err := dvUint32(raw, i)
 			if err != nil {
 				return n, err
 			}
 			x.Kind = SymbolKind(v)
 			i = n
-		case keyEquals(key, "tags"):
+		case keyEquals(key, `tags`):
 			v, n, err := dvUint32Slice(raw, i, x.Tags)
 			if err != nil {
 				return n, err
 			}
 			x.Tags = v
 			i = n
-		case keyEquals(key, "containerName"):
+		case keyEquals(key, `containerName`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ContainerName = nil
 				i = n
@@ -32515,7 +32515,7 @@ func (x *WorkspaceSymbol) unmarshalLSPWithLocationBoxes(raw []byte, i int, locat
 				*x.ContainerName = v
 				i = n
 			}
-		case keyEquals(key, "location"):
+		case keyEquals(key, `location`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err
@@ -32524,7 +32524,7 @@ func (x *WorkspaceSymbol) unmarshalLSPWithLocationBoxes(raw []byte, i int, locat
 				return i, err
 			}
 			i = n
-		case keyEquals(key, "data"):
+		case keyEquals(key, `data`):
 			val, n, err := dvValue(raw, i)
 			if err != nil {
 				return n, err

@@ -225,7 +225,7 @@ func TestRenderEncodersEmitsEligibleStructsAndNamedSlices(t *testing.T) {
 		"func (x Child) MarshalJSONTo(enc *jsontext.Encoder) error",
 		"func (x DocumentSelector) MarshalJSONTo(enc *jsontext.Encoder) error",
 		"enc.WriteToken(jsontext.BeginObject)",
-		"enc.WriteToken(jsontext.String(\"label\"))",
+		"enc.WriteToken(jsontext.String(`label`))",
 		"enc.WriteToken(jsontext.String(x.Label))",
 		"enc.WriteToken(jsontext.Uint(uint64(x.Kind)))",
 		"if v, ok := x.Detail.Get(); ok",
@@ -245,16 +245,60 @@ func TestRenderEncodersEmitsEligibleStructsAndNamedSlices(t *testing.T) {
 		t.Fatalf("renderEncoders() missing Child encoder:\n%s", got)
 	}
 	childBody := got[childStart:]
-	baseIdx := strings.Index(childBody, `enc.WriteToken(jsontext.String("baseName"))`)
-	childIdx := strings.Index(childBody, `enc.WriteToken(jsontext.String("childName"))`)
+	baseIdx := strings.Index(childBody, "enc.WriteToken(jsontext.String(`baseName`))")
+	childIdx := strings.Index(childBody, "enc.WriteToken(jsontext.String(`childName`))")
 	if baseIdx < 0 || childIdx < 0 || baseIdx > childIdx {
 		t.Fatalf("embedded fields not emitted before local fields:\n%s", childBody)
 	}
-	if strings.Count(childBody, `enc.WriteToken(jsontext.String("dup"))`) != 1 {
+	if strings.Count(childBody, "enc.WriteToken(jsontext.String(`dup`))") != 1 {
 		t.Fatalf("duplicate embedded JSON field was not collapsed:\n%s", childBody)
 	}
 	if !strings.Contains(childBody, "enc.WriteToken(jsontext.String(x.ShadowLocal))") {
 		t.Fatalf("duplicate embedded JSON field did not use local field:\n%s", childBody)
+	}
+}
+
+func TestGoJSONNameLiteral(t *testing.T) {
+	tests := map[string]struct {
+		input string
+		want  string
+	}{
+		"success: raw identifier": {
+			input: "label",
+			want:  "`label`",
+		},
+		"success: raw camel case": {
+			input: "selectionRange",
+			want:  "`selectionRange`",
+		},
+		"success: raw tab": {
+			input: "tab\tname",
+			want:  "`tab\tname`",
+		},
+		"success: fallback for backtick": {
+			input: "bad`name",
+			want:  "\"bad`name\"",
+		},
+		"success: fallback for carriage return": {
+			input: "bad\rname",
+			want:  "\"bad\\rname\"",
+		},
+		"success: fallback for newline": {
+			input: "bad\nname",
+			want:  "\"bad\\nname\"",
+		},
+		"success: fallback for nul": {
+			input: "bad\x00name",
+			want:  "\"bad\\x00name\"",
+		},
+	}
+
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			if got := goJSONNameLiteral(tt.input); got != tt.want {
+				t.Fatalf("goJSONNameLiteral(%q) = %q, want %q", tt.input, got, tt.want)
+			}
+		})
 	}
 }
 

@@ -14,19 +14,19 @@ func (x AnnotatedTextEdit) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("range")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Range); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("newText")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`newText`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.NewText)); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("annotationId")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`annotationId`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.AnnotationID); err != nil {
@@ -40,21 +40,21 @@ func (x ApplyWorkspaceEditParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.Label != nil {
-		if err := enc.WriteToken(jsontext.String("label")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`label`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Label); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("edit")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`edit`)); err != nil {
 		return err
 	}
 	if err := x.Edit.MarshalJSONTo(enc); err != nil {
 		return err
 	}
 	if x.Metadata != nil {
-		if err := enc.WriteToken(jsontext.String("metadata")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`metadata`)); err != nil {
 			return err
 		}
 		if err := x.Metadata.MarshalJSONTo(enc); err != nil {
@@ -68,14 +68,14 @@ func (x ApplyWorkspaceEditResult) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("applied")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`applied`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Applied); err != nil {
 		return err
 	}
 	if x.FailureReason != nil {
-		if err := enc.WriteToken(jsontext.String("failureReason")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`failureReason`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.FailureReason); err != nil {
@@ -83,7 +83,7 @@ func (x ApplyWorkspaceEditResult) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.FailedChange != nil {
-		if err := enc.WriteToken(jsontext.String("failedChange")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`failedChange`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.FailedChange); err != nil {
@@ -97,20 +97,20 @@ func (x BaseSymbolInformation) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("name")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`name`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Name)); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Kind); err != nil {
 		return err
 	}
 	if len(x.Tags) > 0 {
-		if err := enc.WriteToken(jsontext.String("tags")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`tags`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Tags); err != nil {
@@ -118,7 +118,7 @@ func (x BaseSymbolInformation) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.ContainerName != nil {
-		if err := enc.WriteToken(jsontext.String("containerName")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`containerName`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ContainerName); err != nil {
@@ -133,7 +133,7 @@ func (x CallHierarchyClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) er
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -147,13 +147,13 @@ func (x CallHierarchyIncomingCall) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("from")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`from`)); err != nil {
 		return err
 	}
 	if err := x.From.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("fromRanges")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`fromRanges`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.FromRanges); err != nil {
@@ -167,7 +167,7 @@ func (x CallHierarchyIncomingCallsParams) MarshalJSONTo(enc *jsontext.Encoder) e
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -175,14 +175,14 @@ func (x CallHierarchyIncomingCallsParams) MarshalJSONTo(enc *jsontext.Encoder) e
 		}
 	}
 	if x.PartialResultToken != nil {
-		if err := enc.WriteToken(jsontext.String("partialResultToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`partialResultToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.PartialResultToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("item")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`item`)); err != nil {
 		return err
 	}
 	if err := x.Item.MarshalJSONTo(enc); err != nil {
@@ -195,20 +195,20 @@ func (x CallHierarchyItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("name")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`name`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Name)); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Kind); err != nil {
 		return err
 	}
 	if len(x.Tags) > 0 {
-		if err := enc.WriteToken(jsontext.String("tags")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`tags`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Tags); err != nil {
@@ -216,33 +216,33 @@ func (x CallHierarchyItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Detail != nil {
-		if err := enc.WriteToken(jsontext.String("detail")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`detail`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Detail); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("uri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`uri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(string(x.URI))); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("range")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Range); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("selectionRange")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`selectionRange`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.SelectionRange); err != nil {
 		return err
 	}
 	if len(x.Data) > 0 {
-		if err := enc.WriteToken(jsontext.String("data")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`data`)); err != nil {
 			return err
 		}
 		if err := enc.WriteValue(x.Data); err != nil {
@@ -257,7 +257,7 @@ func (x CallHierarchyOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -271,13 +271,13 @@ func (x CallHierarchyOutgoingCall) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("to")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`to`)); err != nil {
 		return err
 	}
 	if err := x.To.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("fromRanges")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`fromRanges`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.FromRanges); err != nil {
@@ -291,7 +291,7 @@ func (x CallHierarchyOutgoingCallsParams) MarshalJSONTo(enc *jsontext.Encoder) e
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -299,14 +299,14 @@ func (x CallHierarchyOutgoingCallsParams) MarshalJSONTo(enc *jsontext.Encoder) e
 		}
 	}
 	if x.PartialResultToken != nil {
-		if err := enc.WriteToken(jsontext.String("partialResultToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`partialResultToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.PartialResultToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("item")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`item`)); err != nil {
 		return err
 	}
 	if err := x.Item.MarshalJSONTo(enc); err != nil {
@@ -319,20 +319,20 @@ func (x CallHierarchyPrepareParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("position")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`position`)); err != nil {
 		return err
 	}
 	if err := encodePositionTo(enc, x.Position); err != nil {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -346,14 +346,14 @@ func (x CallHierarchyRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) e
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -361,7 +361,7 @@ func (x CallHierarchyRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) e
 		}
 	}
 	if x.ID != nil {
-		if err := enc.WriteToken(jsontext.String("id")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`id`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ID); err != nil {
@@ -375,7 +375,7 @@ func (x CancelParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("id")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`id`)); err != nil {
 		return err
 	}
 	if err := encodeProgressTokenTo(enc, x.ID); err != nil {
@@ -388,14 +388,14 @@ func (x ChangeAnnotation) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("label")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`label`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Label)); err != nil {
 		return err
 	}
 	if x.NeedsConfirmation != nil {
-		if err := enc.WriteToken(jsontext.String("needsConfirmation")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`needsConfirmation`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.NeedsConfirmation); err != nil {
@@ -403,7 +403,7 @@ func (x ChangeAnnotation) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Description != nil {
-		if err := enc.WriteToken(jsontext.String("description")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`description`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Description); err != nil {
@@ -418,7 +418,7 @@ func (x ChangeAnnotationsSupportOptions) MarshalJSONTo(enc *jsontext.Encoder) er
 		return err
 	}
 	if x.GroupsOnLabel != nil {
-		if err := enc.WriteToken(jsontext.String("groupsOnLabel")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`groupsOnLabel`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.GroupsOnLabel); err != nil {
@@ -433,7 +433,7 @@ func (x ClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.Workspace != nil {
-		if err := enc.WriteToken(jsontext.String("workspace")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workspace`)); err != nil {
 			return err
 		}
 		if err := x.Workspace.MarshalJSONTo(enc); err != nil {
@@ -441,7 +441,7 @@ func (x ClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.TextDocument != nil {
-		if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 			return err
 		}
 		if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
@@ -449,7 +449,7 @@ func (x ClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.NotebookDocument != nil {
-		if err := enc.WriteToken(jsontext.String("notebookDocument")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`notebookDocument`)); err != nil {
 			return err
 		}
 		if err := x.NotebookDocument.MarshalJSONTo(enc); err != nil {
@@ -457,7 +457,7 @@ func (x ClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Window != nil {
-		if err := enc.WriteToken(jsontext.String("window")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`window`)); err != nil {
 			return err
 		}
 		if err := x.Window.MarshalJSONTo(enc); err != nil {
@@ -465,7 +465,7 @@ func (x ClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.General != nil {
-		if err := enc.WriteToken(jsontext.String("general")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`general`)); err != nil {
 			return err
 		}
 		if err := x.General.MarshalJSONTo(enc); err != nil {
@@ -473,7 +473,7 @@ func (x ClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.Experimental) > 0 {
-		if err := enc.WriteToken(jsontext.String("experimental")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`experimental`)); err != nil {
 			return err
 		}
 		if err := enc.WriteValue(x.Experimental); err != nil {
@@ -487,7 +487,7 @@ func (x ClientCodeActionKindOptions) MarshalJSONTo(enc *jsontext.Encoder) error 
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("valueSet")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`valueSet`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.ValueSet); err != nil {
@@ -500,7 +500,7 @@ func (x ClientCodeActionLiteralOptions) MarshalJSONTo(enc *jsontext.Encoder) err
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("codeActionKind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`codeActionKind`)); err != nil {
 		return err
 	}
 	if err := x.CodeActionKind.MarshalJSONTo(enc); err != nil {
@@ -513,7 +513,7 @@ func (x ClientCodeActionResolveOptions) MarshalJSONTo(enc *jsontext.Encoder) err
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("properties")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`properties`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Properties); err != nil {
@@ -526,7 +526,7 @@ func (x ClientCodeLensResolveOptions) MarshalJSONTo(enc *jsontext.Encoder) error
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("properties")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`properties`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Properties); err != nil {
@@ -539,7 +539,7 @@ func (x ClientCompletionItemInsertTextModeOptions) MarshalJSONTo(enc *jsontext.E
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("valueSet")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`valueSet`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.ValueSet); err != nil {
@@ -553,7 +553,7 @@ func (x ClientCompletionItemOptions) MarshalJSONTo(enc *jsontext.Encoder) error 
 		return err
 	}
 	if x.SnippetSupport != nil {
-		if err := enc.WriteToken(jsontext.String("snippetSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`snippetSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.SnippetSupport); err != nil {
@@ -561,7 +561,7 @@ func (x ClientCompletionItemOptions) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if x.CommitCharactersSupport != nil {
-		if err := enc.WriteToken(jsontext.String("commitCharactersSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`commitCharactersSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.CommitCharactersSupport); err != nil {
@@ -569,7 +569,7 @@ func (x ClientCompletionItemOptions) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if len(x.DocumentationFormat) > 0 {
-		if err := enc.WriteToken(jsontext.String("documentationFormat")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`documentationFormat`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DocumentationFormat); err != nil {
@@ -577,7 +577,7 @@ func (x ClientCompletionItemOptions) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if x.DeprecatedSupport != nil {
-		if err := enc.WriteToken(jsontext.String("deprecatedSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`deprecatedSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DeprecatedSupport); err != nil {
@@ -585,7 +585,7 @@ func (x ClientCompletionItemOptions) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if x.PreselectSupport != nil {
-		if err := enc.WriteToken(jsontext.String("preselectSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`preselectSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.PreselectSupport); err != nil {
@@ -593,7 +593,7 @@ func (x ClientCompletionItemOptions) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if !isZeroGeneratedCompletionItemTagOptions(x.TagSupport) {
-		if err := enc.WriteToken(jsontext.String("tagSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`tagSupport`)); err != nil {
 			return err
 		}
 		if err := x.TagSupport.MarshalJSONTo(enc); err != nil {
@@ -601,7 +601,7 @@ func (x ClientCompletionItemOptions) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if x.InsertReplaceSupport != nil {
-		if err := enc.WriteToken(jsontext.String("insertReplaceSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`insertReplaceSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.InsertReplaceSupport); err != nil {
@@ -609,7 +609,7 @@ func (x ClientCompletionItemOptions) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if !isZeroGeneratedClientCompletionItemResolveOptions(x.ResolveSupport) {
-		if err := enc.WriteToken(jsontext.String("resolveSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`resolveSupport`)); err != nil {
 			return err
 		}
 		if err := x.ResolveSupport.MarshalJSONTo(enc); err != nil {
@@ -617,7 +617,7 @@ func (x ClientCompletionItemOptions) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if !isZeroGeneratedClientCompletionItemInsertTextModeOptions(x.InsertTextModeSupport) {
-		if err := enc.WriteToken(jsontext.String("insertTextModeSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`insertTextModeSupport`)); err != nil {
 			return err
 		}
 		if err := x.InsertTextModeSupport.MarshalJSONTo(enc); err != nil {
@@ -625,7 +625,7 @@ func (x ClientCompletionItemOptions) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if x.LabelDetailsSupport != nil {
-		if err := enc.WriteToken(jsontext.String("labelDetailsSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`labelDetailsSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.LabelDetailsSupport); err != nil {
@@ -640,7 +640,7 @@ func (x ClientCompletionItemOptionsKind) MarshalJSONTo(enc *jsontext.Encoder) er
 		return err
 	}
 	if len(x.ValueSet) > 0 {
-		if err := enc.WriteToken(jsontext.String("valueSet")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`valueSet`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ValueSet); err != nil {
@@ -654,7 +654,7 @@ func (x ClientCompletionItemResolveOptions) MarshalJSONTo(enc *jsontext.Encoder)
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("properties")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`properties`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Properties); err != nil {
@@ -667,7 +667,7 @@ func (x ClientDiagnosticsTagOptions) MarshalJSONTo(enc *jsontext.Encoder) error 
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("valueSet")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`valueSet`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.ValueSet); err != nil {
@@ -681,7 +681,7 @@ func (x ClientFoldingRangeKindOptions) MarshalJSONTo(enc *jsontext.Encoder) erro
 		return err
 	}
 	if len(x.ValueSet) > 0 {
-		if err := enc.WriteToken(jsontext.String("valueSet")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`valueSet`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ValueSet); err != nil {
@@ -696,7 +696,7 @@ func (x ClientFoldingRangeOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.CollapsedText != nil {
-		if err := enc.WriteToken(jsontext.String("collapsedText")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`collapsedText`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.CollapsedText); err != nil {
@@ -710,14 +710,14 @@ func (x ClientInfo) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("name")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`name`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Name)); err != nil {
 		return err
 	}
 	if x.Version != nil {
-		if err := enc.WriteToken(jsontext.String("version")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`version`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Version); err != nil {
@@ -731,7 +731,7 @@ func (x ClientInlayHintResolveOptions) MarshalJSONTo(enc *jsontext.Encoder) erro
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("properties")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`properties`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Properties); err != nil {
@@ -745,7 +745,7 @@ func (x ClientSemanticTokensRequestFullDelta) MarshalJSONTo(enc *jsontext.Encode
 		return err
 	}
 	if x.Delta != nil {
-		if err := enc.WriteToken(jsontext.String("delta")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`delta`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Delta); err != nil {
@@ -760,7 +760,7 @@ func (x ClientSemanticTokensRequestOptions) MarshalJSONTo(enc *jsontext.Encoder)
 		return err
 	}
 	if x.Range != nil {
-		if err := enc.WriteToken(jsontext.String("range")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Range); err != nil {
@@ -768,7 +768,7 @@ func (x ClientSemanticTokensRequestOptions) MarshalJSONTo(enc *jsontext.Encoder)
 		}
 	}
 	if x.Full != nil {
-		if err := enc.WriteToken(jsontext.String("full")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`full`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Full); err != nil {
@@ -783,7 +783,7 @@ func (x ClientShowMessageActionItemOptions) MarshalJSONTo(enc *jsontext.Encoder)
 		return err
 	}
 	if x.AdditionalPropertiesSupport != nil {
-		if err := enc.WriteToken(jsontext.String("additionalPropertiesSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`additionalPropertiesSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.AdditionalPropertiesSupport); err != nil {
@@ -798,7 +798,7 @@ func (x ClientSignatureInformationOptions) MarshalJSONTo(enc *jsontext.Encoder) 
 		return err
 	}
 	if len(x.DocumentationFormat) > 0 {
-		if err := enc.WriteToken(jsontext.String("documentationFormat")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`documentationFormat`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DocumentationFormat); err != nil {
@@ -806,7 +806,7 @@ func (x ClientSignatureInformationOptions) MarshalJSONTo(enc *jsontext.Encoder) 
 		}
 	}
 	if x.ParameterInformation != nil {
-		if err := enc.WriteToken(jsontext.String("parameterInformation")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`parameterInformation`)); err != nil {
 			return err
 		}
 		if err := x.ParameterInformation.MarshalJSONTo(enc); err != nil {
@@ -814,7 +814,7 @@ func (x ClientSignatureInformationOptions) MarshalJSONTo(enc *jsontext.Encoder) 
 		}
 	}
 	if x.ActiveParameterSupport != nil {
-		if err := enc.WriteToken(jsontext.String("activeParameterSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`activeParameterSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ActiveParameterSupport); err != nil {
@@ -822,7 +822,7 @@ func (x ClientSignatureInformationOptions) MarshalJSONTo(enc *jsontext.Encoder) 
 		}
 	}
 	if x.NoActiveParameterSupport != nil {
-		if err := enc.WriteToken(jsontext.String("noActiveParameterSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`noActiveParameterSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.NoActiveParameterSupport); err != nil {
@@ -837,7 +837,7 @@ func (x ClientSignatureParameterInformationOptions) MarshalJSONTo(enc *jsontext.
 		return err
 	}
 	if x.LabelOffsetSupport != nil {
-		if err := enc.WriteToken(jsontext.String("labelOffsetSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`labelOffsetSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.LabelOffsetSupport); err != nil {
@@ -852,7 +852,7 @@ func (x ClientSymbolKindOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if len(x.ValueSet) > 0 {
-		if err := enc.WriteToken(jsontext.String("valueSet")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`valueSet`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ValueSet); err != nil {
@@ -866,7 +866,7 @@ func (x ClientSymbolResolveOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("properties")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`properties`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Properties); err != nil {
@@ -879,7 +879,7 @@ func (x ClientSymbolTagOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("valueSet")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`valueSet`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.ValueSet); err != nil {
@@ -892,14 +892,14 @@ func (x CodeAction) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("title")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`title`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Title)); err != nil {
 		return err
 	}
 	if x.Kind != nil {
-		if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Kind); err != nil {
@@ -907,7 +907,7 @@ func (x CodeAction) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.Diagnostics) > 0 {
-		if err := enc.WriteToken(jsontext.String("diagnostics")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`diagnostics`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Diagnostics); err != nil {
@@ -915,7 +915,7 @@ func (x CodeAction) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.IsPreferred != nil {
-		if err := enc.WriteToken(jsontext.String("isPreferred")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`isPreferred`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.IsPreferred); err != nil {
@@ -923,7 +923,7 @@ func (x CodeAction) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if !isZeroGeneratedCodeActionDisabled(x.Disabled) {
-		if err := enc.WriteToken(jsontext.String("disabled")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`disabled`)); err != nil {
 			return err
 		}
 		if err := x.Disabled.MarshalJSONTo(enc); err != nil {
@@ -931,7 +931,7 @@ func (x CodeAction) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Edit != nil {
-		if err := enc.WriteToken(jsontext.String("edit")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`edit`)); err != nil {
 			return err
 		}
 		if err := x.Edit.MarshalJSONTo(enc); err != nil {
@@ -939,7 +939,7 @@ func (x CodeAction) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if !isZeroCommand(x.Command) {
-		if err := enc.WriteToken(jsontext.String("command")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`command`)); err != nil {
 			return err
 		}
 		if err := x.Command.MarshalJSONTo(enc); err != nil {
@@ -947,7 +947,7 @@ func (x CodeAction) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.Data) > 0 {
-		if err := enc.WriteToken(jsontext.String("data")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`data`)); err != nil {
 			return err
 		}
 		if err := enc.WriteValue(x.Data); err != nil {
@@ -955,7 +955,7 @@ func (x CodeAction) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.Tags) > 0 {
-		if err := enc.WriteToken(jsontext.String("tags")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`tags`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Tags); err != nil {
@@ -970,7 +970,7 @@ func (x CodeActionClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -978,7 +978,7 @@ func (x CodeActionClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error
 		}
 	}
 	if !isZeroGeneratedClientCodeActionLiteralOptions(x.CodeActionLiteralSupport) {
-		if err := enc.WriteToken(jsontext.String("codeActionLiteralSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`codeActionLiteralSupport`)); err != nil {
 			return err
 		}
 		if err := x.CodeActionLiteralSupport.MarshalJSONTo(enc); err != nil {
@@ -986,7 +986,7 @@ func (x CodeActionClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error
 		}
 	}
 	if x.IsPreferredSupport != nil {
-		if err := enc.WriteToken(jsontext.String("isPreferredSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`isPreferredSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.IsPreferredSupport); err != nil {
@@ -994,7 +994,7 @@ func (x CodeActionClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error
 		}
 	}
 	if x.DisabledSupport != nil {
-		if err := enc.WriteToken(jsontext.String("disabledSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`disabledSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DisabledSupport); err != nil {
@@ -1002,7 +1002,7 @@ func (x CodeActionClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error
 		}
 	}
 	if x.DataSupport != nil {
-		if err := enc.WriteToken(jsontext.String("dataSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dataSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DataSupport); err != nil {
@@ -1010,7 +1010,7 @@ func (x CodeActionClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error
 		}
 	}
 	if !isZeroGeneratedClientCodeActionResolveOptions(x.ResolveSupport) {
-		if err := enc.WriteToken(jsontext.String("resolveSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`resolveSupport`)); err != nil {
 			return err
 		}
 		if err := x.ResolveSupport.MarshalJSONTo(enc); err != nil {
@@ -1018,7 +1018,7 @@ func (x CodeActionClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error
 		}
 	}
 	if x.HonorsChangeAnnotations != nil {
-		if err := enc.WriteToken(jsontext.String("honorsChangeAnnotations")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`honorsChangeAnnotations`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.HonorsChangeAnnotations); err != nil {
@@ -1026,7 +1026,7 @@ func (x CodeActionClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error
 		}
 	}
 	if x.DocumentationSupport != nil {
-		if err := enc.WriteToken(jsontext.String("documentationSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`documentationSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DocumentationSupport); err != nil {
@@ -1034,7 +1034,7 @@ func (x CodeActionClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error
 		}
 	}
 	if !isZeroGeneratedCodeActionTagOptions(x.TagSupport) {
-		if err := enc.WriteToken(jsontext.String("tagSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`tagSupport`)); err != nil {
 			return err
 		}
 		if err := x.TagSupport.MarshalJSONTo(enc); err != nil {
@@ -1048,14 +1048,14 @@ func (x CodeActionContext) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("diagnostics")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`diagnostics`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Diagnostics); err != nil {
 		return err
 	}
 	if len(x.Only) > 0 {
-		if err := enc.WriteToken(jsontext.String("only")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`only`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Only); err != nil {
@@ -1063,7 +1063,7 @@ func (x CodeActionContext) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.TriggerKind != 0 {
-		if err := enc.WriteToken(jsontext.String("triggerKind")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`triggerKind`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.TriggerKind); err != nil {
@@ -1077,7 +1077,7 @@ func (x CodeActionDisabled) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("reason")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`reason`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Reason)); err != nil {
@@ -1090,13 +1090,13 @@ func (x CodeActionKindDocumentation) MarshalJSONTo(enc *jsontext.Encoder) error 
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Kind); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("command")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`command`)); err != nil {
 		return err
 	}
 	if err := x.Command.MarshalJSONTo(enc); err != nil {
@@ -1110,7 +1110,7 @@ func (x CodeActionOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -1118,7 +1118,7 @@ func (x CodeActionOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.CodeActionKinds) > 0 {
-		if err := enc.WriteToken(jsontext.String("codeActionKinds")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`codeActionKinds`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.CodeActionKinds); err != nil {
@@ -1126,7 +1126,7 @@ func (x CodeActionOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.Documentation) > 0 {
-		if err := enc.WriteToken(jsontext.String("documentation")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`documentation`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Documentation); err != nil {
@@ -1134,7 +1134,7 @@ func (x CodeActionOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.ResolveProvider != nil {
-		if err := enc.WriteToken(jsontext.String("resolveProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`resolveProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ResolveProvider); err != nil {
@@ -1149,7 +1149,7 @@ func (x CodeActionParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -1157,26 +1157,26 @@ func (x CodeActionParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PartialResultToken != nil {
-		if err := enc.WriteToken(jsontext.String("partialResultToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`partialResultToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.PartialResultToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("range")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Range); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("context")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`context`)); err != nil {
 		return err
 	}
 	if err := x.Context.MarshalJSONTo(enc); err != nil {
@@ -1189,14 +1189,14 @@ func (x CodeActionRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) erro
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -1204,7 +1204,7 @@ func (x CodeActionRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) erro
 		}
 	}
 	if len(x.CodeActionKinds) > 0 {
-		if err := enc.WriteToken(jsontext.String("codeActionKinds")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`codeActionKinds`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.CodeActionKinds); err != nil {
@@ -1212,7 +1212,7 @@ func (x CodeActionRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) erro
 		}
 	}
 	if len(x.Documentation) > 0 {
-		if err := enc.WriteToken(jsontext.String("documentation")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`documentation`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Documentation); err != nil {
@@ -1220,7 +1220,7 @@ func (x CodeActionRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) erro
 		}
 	}
 	if x.ResolveProvider != nil {
-		if err := enc.WriteToken(jsontext.String("resolveProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`resolveProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ResolveProvider); err != nil {
@@ -1234,7 +1234,7 @@ func (x CodeActionTagOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("valueSet")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`valueSet`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.ValueSet); err != nil {
@@ -1247,7 +1247,7 @@ func (x CodeDescription) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("href")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`href`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(string(x.Href))); err != nil {
@@ -1260,14 +1260,14 @@ func (x CodeLens) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("range")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Range); err != nil {
 		return err
 	}
 	if !isZeroCommand(x.Command) {
-		if err := enc.WriteToken(jsontext.String("command")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`command`)); err != nil {
 			return err
 		}
 		if err := x.Command.MarshalJSONTo(enc); err != nil {
@@ -1275,7 +1275,7 @@ func (x CodeLens) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.Data) > 0 {
-		if err := enc.WriteToken(jsontext.String("data")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`data`)); err != nil {
 			return err
 		}
 		if err := enc.WriteValue(x.Data); err != nil {
@@ -1290,7 +1290,7 @@ func (x CodeLensClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -1298,7 +1298,7 @@ func (x CodeLensClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if !isZeroGeneratedClientCodeLensResolveOptions(x.ResolveSupport) {
-		if err := enc.WriteToken(jsontext.String("resolveSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`resolveSupport`)); err != nil {
 			return err
 		}
 		if err := x.ResolveSupport.MarshalJSONTo(enc); err != nil {
@@ -1313,7 +1313,7 @@ func (x CodeLensOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -1321,7 +1321,7 @@ func (x CodeLensOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.ResolveProvider != nil {
-		if err := enc.WriteToken(jsontext.String("resolveProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`resolveProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ResolveProvider); err != nil {
@@ -1336,7 +1336,7 @@ func (x CodeLensParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -1344,14 +1344,14 @@ func (x CodeLensParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PartialResultToken != nil {
-		if err := enc.WriteToken(jsontext.String("partialResultToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`partialResultToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.PartialResultToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
@@ -1364,14 +1364,14 @@ func (x CodeLensRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) error 
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -1379,7 +1379,7 @@ func (x CodeLensRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if x.ResolveProvider != nil {
-		if err := enc.WriteToken(jsontext.String("resolveProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`resolveProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ResolveProvider); err != nil {
@@ -1394,7 +1394,7 @@ func (x CodeLensWorkspaceClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder
 		return err
 	}
 	if x.RefreshSupport != nil {
-		if err := enc.WriteToken(jsontext.String("refreshSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`refreshSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.RefreshSupport); err != nil {
@@ -1408,25 +1408,25 @@ func (x Color) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("red")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`red`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Red); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("green")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`green`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Green); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("blue")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`blue`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Blue); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("alpha")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`alpha`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Alpha); err != nil {
@@ -1439,13 +1439,13 @@ func (x ColorInformation) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("range")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Range); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("color")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`color`)); err != nil {
 		return err
 	}
 	if err := x.Color.MarshalJSONTo(enc); err != nil {
@@ -1458,14 +1458,14 @@ func (x ColorPresentation) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("label")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`label`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Label)); err != nil {
 		return err
 	}
 	if !isZeroGeneratedTextEdit(x.TextEdit) {
-		if err := enc.WriteToken(jsontext.String("textEdit")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`textEdit`)); err != nil {
 			return err
 		}
 		if err := x.TextEdit.MarshalJSONTo(enc); err != nil {
@@ -1473,7 +1473,7 @@ func (x ColorPresentation) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.AdditionalTextEdits) > 0 {
-		if err := enc.WriteToken(jsontext.String("additionalTextEdits")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`additionalTextEdits`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.AdditionalTextEdits); err != nil {
@@ -1488,7 +1488,7 @@ func (x ColorPresentationParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -1496,26 +1496,26 @@ func (x ColorPresentationParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PartialResultToken != nil {
-		if err := enc.WriteToken(jsontext.String("partialResultToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`partialResultToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.PartialResultToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("color")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`color`)); err != nil {
 		return err
 	}
 	if err := x.Color.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("range")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Range); err != nil {
@@ -1528,28 +1528,28 @@ func (x Command) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("title")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`title`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Title)); err != nil {
 		return err
 	}
 	if x.Tooltip != nil {
-		if err := enc.WriteToken(jsontext.String("tooltip")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`tooltip`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Tooltip); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("command")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`command`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Command)); err != nil {
 		return err
 	}
 	if len(x.Arguments) > 0 {
-		if err := enc.WriteToken(jsontext.String("arguments")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`arguments`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Arguments); err != nil {
@@ -1564,7 +1564,7 @@ func (x CompletionClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -1572,7 +1572,7 @@ func (x CompletionClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error
 		}
 	}
 	if x.CompletionItem != nil {
-		if err := enc.WriteToken(jsontext.String("completionItem")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`completionItem`)); err != nil {
 			return err
 		}
 		if err := x.CompletionItem.MarshalJSONTo(enc); err != nil {
@@ -1580,7 +1580,7 @@ func (x CompletionClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error
 		}
 	}
 	if x.CompletionItemKind != nil {
-		if err := enc.WriteToken(jsontext.String("completionItemKind")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`completionItemKind`)); err != nil {
 			return err
 		}
 		if err := x.CompletionItemKind.MarshalJSONTo(enc); err != nil {
@@ -1588,7 +1588,7 @@ func (x CompletionClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error
 		}
 	}
 	if x.InsertTextMode != 0 {
-		if err := enc.WriteToken(jsontext.String("insertTextMode")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`insertTextMode`)); err != nil {
 			return err
 		}
 		if err := enc.WriteToken(jsontext.Uint(uint64(x.InsertTextMode))); err != nil {
@@ -1596,7 +1596,7 @@ func (x CompletionClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error
 		}
 	}
 	if x.ContextSupport != nil {
-		if err := enc.WriteToken(jsontext.String("contextSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`contextSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ContextSupport); err != nil {
@@ -1604,7 +1604,7 @@ func (x CompletionClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error
 		}
 	}
 	if x.CompletionList != nil {
-		if err := enc.WriteToken(jsontext.String("completionList")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`completionList`)); err != nil {
 			return err
 		}
 		if err := x.CompletionList.MarshalJSONTo(enc); err != nil {
@@ -1618,14 +1618,14 @@ func (x CompletionContext) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("triggerKind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`triggerKind`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.TriggerKind); err != nil {
 		return err
 	}
 	if x.TriggerCharacter != nil {
-		if err := enc.WriteToken(jsontext.String("triggerCharacter")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`triggerCharacter`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.TriggerCharacter); err != nil {
@@ -1639,14 +1639,14 @@ func (x CompletionItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("label")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`label`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Label)); err != nil {
 		return err
 	}
 	if x.LabelDetails != nil {
-		if err := enc.WriteToken(jsontext.String("labelDetails")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`labelDetails`)); err != nil {
 			return err
 		}
 		if err := x.LabelDetails.MarshalJSONTo(enc); err != nil {
@@ -1654,7 +1654,7 @@ func (x CompletionItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Kind != 0 {
-		if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 			return err
 		}
 		if err := enc.WriteToken(jsontext.Uint(uint64(x.Kind))); err != nil {
@@ -1662,7 +1662,7 @@ func (x CompletionItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.Tags) > 0 {
-		if err := enc.WriteToken(jsontext.String("tags")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`tags`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Tags); err != nil {
@@ -1670,7 +1670,7 @@ func (x CompletionItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if v, ok := x.Detail.Get(); ok {
-		if err := enc.WriteToken(jsontext.String("detail")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`detail`)); err != nil {
 			return err
 		}
 		if err := enc.WriteToken(jsontext.String(v)); err != nil {
@@ -1678,7 +1678,7 @@ func (x CompletionItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Documentation != nil {
-		if err := enc.WriteToken(jsontext.String("documentation")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`documentation`)); err != nil {
 			return err
 		}
 		if v, ok := x.Documentation.(String); ok {
@@ -1697,7 +1697,7 @@ func (x CompletionItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if v, ok := x.Deprecated.Get(); ok {
-		if err := enc.WriteToken(jsontext.String("deprecated")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`deprecated`)); err != nil {
 			return err
 		}
 		if err := enc.WriteToken(jsontext.Bool(v)); err != nil {
@@ -1705,7 +1705,7 @@ func (x CompletionItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if v, ok := x.Preselect.Get(); ok {
-		if err := enc.WriteToken(jsontext.String("preselect")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`preselect`)); err != nil {
 			return err
 		}
 		if err := enc.WriteToken(jsontext.Bool(v)); err != nil {
@@ -1713,7 +1713,7 @@ func (x CompletionItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if v, ok := x.SortText.Get(); ok {
-		if err := enc.WriteToken(jsontext.String("sortText")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`sortText`)); err != nil {
 			return err
 		}
 		if err := enc.WriteToken(jsontext.String(v)); err != nil {
@@ -1721,7 +1721,7 @@ func (x CompletionItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if v, ok := x.FilterText.Get(); ok {
-		if err := enc.WriteToken(jsontext.String("filterText")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`filterText`)); err != nil {
 			return err
 		}
 		if err := enc.WriteToken(jsontext.String(v)); err != nil {
@@ -1729,7 +1729,7 @@ func (x CompletionItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if v, ok := x.InsertText.Get(); ok {
-		if err := enc.WriteToken(jsontext.String("insertText")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`insertText`)); err != nil {
 			return err
 		}
 		if err := enc.WriteToken(jsontext.String(v)); err != nil {
@@ -1737,7 +1737,7 @@ func (x CompletionItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.InsertTextFormat != 0 {
-		if err := enc.WriteToken(jsontext.String("insertTextFormat")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`insertTextFormat`)); err != nil {
 			return err
 		}
 		if err := enc.WriteToken(jsontext.Uint(uint64(x.InsertTextFormat))); err != nil {
@@ -1745,7 +1745,7 @@ func (x CompletionItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.InsertTextMode != 0 {
-		if err := enc.WriteToken(jsontext.String("insertTextMode")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`insertTextMode`)); err != nil {
 			return err
 		}
 		if err := enc.WriteToken(jsontext.Uint(uint64(x.InsertTextMode))); err != nil {
@@ -1753,7 +1753,7 @@ func (x CompletionItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.TextEdit != nil {
-		if err := enc.WriteToken(jsontext.String("textEdit")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`textEdit`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.TextEdit); err != nil {
@@ -1761,7 +1761,7 @@ func (x CompletionItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if v, ok := x.TextEditText.Get(); ok {
-		if err := enc.WriteToken(jsontext.String("textEditText")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`textEditText`)); err != nil {
 			return err
 		}
 		if err := enc.WriteToken(jsontext.String(v)); err != nil {
@@ -1769,7 +1769,7 @@ func (x CompletionItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.AdditionalTextEdits) > 0 {
-		if err := enc.WriteToken(jsontext.String("additionalTextEdits")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`additionalTextEdits`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.AdditionalTextEdits); err != nil {
@@ -1777,7 +1777,7 @@ func (x CompletionItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.CommitCharacters) > 0 {
-		if err := enc.WriteToken(jsontext.String("commitCharacters")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`commitCharacters`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.CommitCharacters); err != nil {
@@ -1785,7 +1785,7 @@ func (x CompletionItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if !isZeroCommand(x.Command) {
-		if err := enc.WriteToken(jsontext.String("command")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`command`)); err != nil {
 			return err
 		}
 		if err := x.Command.MarshalJSONTo(enc); err != nil {
@@ -1793,7 +1793,7 @@ func (x CompletionItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.Data) > 0 {
-		if err := enc.WriteToken(jsontext.String("data")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`data`)); err != nil {
 			return err
 		}
 		if err := enc.WriteValue(x.Data); err != nil {
@@ -1808,7 +1808,7 @@ func (x CompletionItemApplyKinds) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.CommitCharacters != 0 {
-		if err := enc.WriteToken(jsontext.String("commitCharacters")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`commitCharacters`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.CommitCharacters); err != nil {
@@ -1816,7 +1816,7 @@ func (x CompletionItemApplyKinds) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Data != 0 {
-		if err := enc.WriteToken(jsontext.String("data")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`data`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Data); err != nil {
@@ -1831,7 +1831,7 @@ func (x CompletionItemDefaults) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if len(x.CommitCharacters) > 0 {
-		if err := enc.WriteToken(jsontext.String("commitCharacters")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`commitCharacters`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.CommitCharacters); err != nil {
@@ -1839,7 +1839,7 @@ func (x CompletionItemDefaults) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.EditRange != nil {
-		if err := enc.WriteToken(jsontext.String("editRange")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`editRange`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.EditRange); err != nil {
@@ -1847,7 +1847,7 @@ func (x CompletionItemDefaults) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.InsertTextFormat != 0 {
-		if err := enc.WriteToken(jsontext.String("insertTextFormat")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`insertTextFormat`)); err != nil {
 			return err
 		}
 		if err := enc.WriteToken(jsontext.Uint(uint64(x.InsertTextFormat))); err != nil {
@@ -1855,7 +1855,7 @@ func (x CompletionItemDefaults) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.InsertTextMode != 0 {
-		if err := enc.WriteToken(jsontext.String("insertTextMode")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`insertTextMode`)); err != nil {
 			return err
 		}
 		if err := enc.WriteToken(jsontext.Uint(uint64(x.InsertTextMode))); err != nil {
@@ -1863,7 +1863,7 @@ func (x CompletionItemDefaults) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.Data) > 0 {
-		if err := enc.WriteToken(jsontext.String("data")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`data`)); err != nil {
 			return err
 		}
 		if err := enc.WriteValue(x.Data); err != nil {
@@ -1878,7 +1878,7 @@ func (x CompletionItemLabelDetails) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.Detail != nil {
-		if err := enc.WriteToken(jsontext.String("detail")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`detail`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Detail); err != nil {
@@ -1886,7 +1886,7 @@ func (x CompletionItemLabelDetails) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Description != nil {
-		if err := enc.WriteToken(jsontext.String("description")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`description`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Description); err != nil {
@@ -1900,7 +1900,7 @@ func (x CompletionItemTagOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("valueSet")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`valueSet`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.ValueSet); err != nil {
@@ -1913,14 +1913,14 @@ func (x CompletionList) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("isIncomplete")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`isIncomplete`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.IsIncomplete); err != nil {
 		return err
 	}
 	if x.ItemDefaults != nil {
-		if err := enc.WriteToken(jsontext.String("itemDefaults")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`itemDefaults`)); err != nil {
 			return err
 		}
 		if err := x.ItemDefaults.MarshalJSONTo(enc); err != nil {
@@ -1928,14 +1928,14 @@ func (x CompletionList) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.ApplyKind != nil {
-		if err := enc.WriteToken(jsontext.String("applyKind")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`applyKind`)); err != nil {
 			return err
 		}
 		if err := x.ApplyKind.MarshalJSONTo(enc); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("items")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`items`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Items); err != nil {
@@ -1949,7 +1949,7 @@ func (x CompletionListCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if len(x.ItemDefaults) > 0 {
-		if err := enc.WriteToken(jsontext.String("itemDefaults")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`itemDefaults`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ItemDefaults); err != nil {
@@ -1957,7 +1957,7 @@ func (x CompletionListCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.ApplyKindSupport != nil {
-		if err := enc.WriteToken(jsontext.String("applyKindSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`applyKindSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ApplyKindSupport); err != nil {
@@ -1972,7 +1972,7 @@ func (x CompletionOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -1980,7 +1980,7 @@ func (x CompletionOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.TriggerCharacters) > 0 {
-		if err := enc.WriteToken(jsontext.String("triggerCharacters")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`triggerCharacters`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.TriggerCharacters); err != nil {
@@ -1988,7 +1988,7 @@ func (x CompletionOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.AllCommitCharacters) > 0 {
-		if err := enc.WriteToken(jsontext.String("allCommitCharacters")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`allCommitCharacters`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.AllCommitCharacters); err != nil {
@@ -1996,7 +1996,7 @@ func (x CompletionOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.ResolveProvider != nil {
-		if err := enc.WriteToken(jsontext.String("resolveProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`resolveProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ResolveProvider); err != nil {
@@ -2004,7 +2004,7 @@ func (x CompletionOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.CompletionItem != nil {
-		if err := enc.WriteToken(jsontext.String("completionItem")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`completionItem`)); err != nil {
 			return err
 		}
 		if err := x.CompletionItem.MarshalJSONTo(enc); err != nil {
@@ -2018,20 +2018,20 @@ func (x CompletionParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("position")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`position`)); err != nil {
 		return err
 	}
 	if err := encodePositionTo(enc, x.Position); err != nil {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -2039,7 +2039,7 @@ func (x CompletionParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PartialResultToken != nil {
-		if err := enc.WriteToken(jsontext.String("partialResultToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`partialResultToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.PartialResultToken); err != nil {
@@ -2047,7 +2047,7 @@ func (x CompletionParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if !isZeroGeneratedCompletionContext(x.Context) {
-		if err := enc.WriteToken(jsontext.String("context")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`context`)); err != nil {
 			return err
 		}
 		if err := x.Context.MarshalJSONTo(enc); err != nil {
@@ -2061,14 +2061,14 @@ func (x CompletionRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) erro
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -2076,7 +2076,7 @@ func (x CompletionRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) erro
 		}
 	}
 	if len(x.TriggerCharacters) > 0 {
-		if err := enc.WriteToken(jsontext.String("triggerCharacters")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`triggerCharacters`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.TriggerCharacters); err != nil {
@@ -2084,7 +2084,7 @@ func (x CompletionRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) erro
 		}
 	}
 	if len(x.AllCommitCharacters) > 0 {
-		if err := enc.WriteToken(jsontext.String("allCommitCharacters")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`allCommitCharacters`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.AllCommitCharacters); err != nil {
@@ -2092,7 +2092,7 @@ func (x CompletionRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) erro
 		}
 	}
 	if x.ResolveProvider != nil {
-		if err := enc.WriteToken(jsontext.String("resolveProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`resolveProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ResolveProvider); err != nil {
@@ -2100,7 +2100,7 @@ func (x CompletionRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) erro
 		}
 	}
 	if x.CompletionItem != nil {
-		if err := enc.WriteToken(jsontext.String("completionItem")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`completionItem`)); err != nil {
 			return err
 		}
 		if err := x.CompletionItem.MarshalJSONTo(enc); err != nil {
@@ -2115,7 +2115,7 @@ func (x ConfigurationItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.ScopeURI != nil {
-		if err := enc.WriteToken(jsontext.String("scopeUri")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`scopeUri`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ScopeURI); err != nil {
@@ -2123,7 +2123,7 @@ func (x ConfigurationItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Section != nil {
-		if err := enc.WriteToken(jsontext.String("section")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`section`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Section); err != nil {
@@ -2137,7 +2137,7 @@ func (x ConfigurationParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("items")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`items`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Items); err != nil {
@@ -2151,27 +2151,27 @@ func (x CreateFile) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.AnnotationID != "" {
-		if err := enc.WriteToken(jsontext.String("annotationId")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`annotationId`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.AnnotationID); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Kind)); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("uri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`uri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(string(x.URI))); err != nil {
 		return err
 	}
 	if x.Options != nil {
-		if err := enc.WriteToken(jsontext.String("options")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`options`)); err != nil {
 			return err
 		}
 		if err := x.Options.MarshalJSONTo(enc); err != nil {
@@ -2186,7 +2186,7 @@ func (x CreateFileOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.Overwrite != nil {
-		if err := enc.WriteToken(jsontext.String("overwrite")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`overwrite`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Overwrite); err != nil {
@@ -2194,7 +2194,7 @@ func (x CreateFileOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.IgnoreIfExists != nil {
-		if err := enc.WriteToken(jsontext.String("ignoreIfExists")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`ignoreIfExists`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.IgnoreIfExists); err != nil {
@@ -2208,7 +2208,7 @@ func (x CreateFilesParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("files")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`files`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Files); err != nil {
@@ -2222,7 +2222,7 @@ func (x DeclarationClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) erro
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -2230,7 +2230,7 @@ func (x DeclarationClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) erro
 		}
 	}
 	if x.LinkSupport != nil {
-		if err := enc.WriteToken(jsontext.String("linkSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`linkSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.LinkSupport); err != nil {
@@ -2245,7 +2245,7 @@ func (x DeclarationOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -2259,20 +2259,20 @@ func (x DeclarationParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("position")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`position`)); err != nil {
 		return err
 	}
 	if err := encodePositionTo(enc, x.Position); err != nil {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -2280,7 +2280,7 @@ func (x DeclarationParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PartialResultToken != nil {
-		if err := enc.WriteToken(jsontext.String("partialResultToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`partialResultToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.PartialResultToken); err != nil {
@@ -2295,21 +2295,21 @@ func (x DeclarationRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) err
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.ID != nil {
-		if err := enc.WriteToken(jsontext.String("id")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`id`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ID); err != nil {
@@ -2324,7 +2324,7 @@ func (x DefinitionClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -2332,7 +2332,7 @@ func (x DefinitionClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error
 		}
 	}
 	if x.LinkSupport != nil {
-		if err := enc.WriteToken(jsontext.String("linkSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`linkSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.LinkSupport); err != nil {
@@ -2347,7 +2347,7 @@ func (x DefinitionOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -2361,20 +2361,20 @@ func (x DefinitionParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("position")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`position`)); err != nil {
 		return err
 	}
 	if err := encodePositionTo(enc, x.Position); err != nil {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -2382,7 +2382,7 @@ func (x DefinitionParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PartialResultToken != nil {
-		if err := enc.WriteToken(jsontext.String("partialResultToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`partialResultToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.PartialResultToken); err != nil {
@@ -2396,14 +2396,14 @@ func (x DefinitionRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) erro
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -2418,27 +2418,27 @@ func (x DeleteFile) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.AnnotationID != "" {
-		if err := enc.WriteToken(jsontext.String("annotationId")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`annotationId`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.AnnotationID); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Kind)); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("uri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`uri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(string(x.URI))); err != nil {
 		return err
 	}
 	if x.Options != nil {
-		if err := enc.WriteToken(jsontext.String("options")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`options`)); err != nil {
 			return err
 		}
 		if err := x.Options.MarshalJSONTo(enc); err != nil {
@@ -2453,7 +2453,7 @@ func (x DeleteFileOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.Recursive != nil {
-		if err := enc.WriteToken(jsontext.String("recursive")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`recursive`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Recursive); err != nil {
@@ -2461,7 +2461,7 @@ func (x DeleteFileOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.IgnoreIfNotExists != nil {
-		if err := enc.WriteToken(jsontext.String("ignoreIfNotExists")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`ignoreIfNotExists`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.IgnoreIfNotExists); err != nil {
@@ -2475,7 +2475,7 @@ func (x DeleteFilesParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("files")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`files`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Files); err != nil {
@@ -2488,14 +2488,14 @@ func (x Diagnostic) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("range")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Range); err != nil {
 		return err
 	}
 	if x.Severity != 0 {
-		if err := enc.WriteToken(jsontext.String("severity")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`severity`)); err != nil {
 			return err
 		}
 		if err := enc.WriteToken(jsontext.Uint(uint64(x.Severity))); err != nil {
@@ -2503,7 +2503,7 @@ func (x Diagnostic) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Code != nil {
-		if err := enc.WriteToken(jsontext.String("code")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`code`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.Code); err != nil {
@@ -2511,7 +2511,7 @@ func (x Diagnostic) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.CodeDescription != (CodeDescription{}) {
-		if err := enc.WriteToken(jsontext.String("codeDescription")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`codeDescription`)); err != nil {
 			return err
 		}
 		if err := x.CodeDescription.MarshalJSONTo(enc); err != nil {
@@ -2519,14 +2519,14 @@ func (x Diagnostic) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if v, ok := x.Source.Get(); ok {
-		if err := enc.WriteToken(jsontext.String("source")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`source`)); err != nil {
 			return err
 		}
 		if err := enc.WriteToken(jsontext.String(v)); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("message")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`message`)); err != nil {
 		return err
 	}
 	if v, ok := x.Message.(String); ok {
@@ -2544,7 +2544,7 @@ func (x Diagnostic) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if !x.Tags.IsZero() {
-		if err := enc.WriteToken(jsontext.String("tags")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`tags`)); err != nil {
 			return err
 		}
 		if err := encodeDiagnosticTagsTo(enc, x.Tags); err != nil {
@@ -2552,7 +2552,7 @@ func (x Diagnostic) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.RelatedInformation) > 0 {
-		if err := enc.WriteToken(jsontext.String("relatedInformation")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`relatedInformation`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.RelatedInformation); err != nil {
@@ -2560,7 +2560,7 @@ func (x Diagnostic) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.Data) > 0 {
-		if err := enc.WriteToken(jsontext.String("data")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`data`)); err != nil {
 			return err
 		}
 		if err := enc.WriteValue(x.Data); err != nil {
@@ -2575,7 +2575,7 @@ func (x DiagnosticClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error
 		return err
 	}
 	if x.RelatedInformation != nil {
-		if err := enc.WriteToken(jsontext.String("relatedInformation")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`relatedInformation`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.RelatedInformation); err != nil {
@@ -2583,7 +2583,7 @@ func (x DiagnosticClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error
 		}
 	}
 	if !isZeroGeneratedClientDiagnosticsTagOptions(x.TagSupport) {
-		if err := enc.WriteToken(jsontext.String("tagSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`tagSupport`)); err != nil {
 			return err
 		}
 		if err := x.TagSupport.MarshalJSONTo(enc); err != nil {
@@ -2591,7 +2591,7 @@ func (x DiagnosticClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error
 		}
 	}
 	if x.CodeDescriptionSupport != nil {
-		if err := enc.WriteToken(jsontext.String("codeDescriptionSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`codeDescriptionSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.CodeDescriptionSupport); err != nil {
@@ -2599,7 +2599,7 @@ func (x DiagnosticClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error
 		}
 	}
 	if x.DataSupport != nil {
-		if err := enc.WriteToken(jsontext.String("dataSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dataSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DataSupport); err != nil {
@@ -2607,7 +2607,7 @@ func (x DiagnosticClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error
 		}
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -2615,7 +2615,7 @@ func (x DiagnosticClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error
 		}
 	}
 	if x.RelatedDocumentSupport != nil {
-		if err := enc.WriteToken(jsontext.String("relatedDocumentSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`relatedDocumentSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.RelatedDocumentSupport); err != nil {
@@ -2623,7 +2623,7 @@ func (x DiagnosticClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error
 		}
 	}
 	if x.MarkupMessageSupport != nil {
-		if err := enc.WriteToken(jsontext.String("markupMessageSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`markupMessageSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.MarkupMessageSupport); err != nil {
@@ -2638,7 +2638,7 @@ func (x DiagnosticOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -2646,20 +2646,20 @@ func (x DiagnosticOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Identifier != nil {
-		if err := enc.WriteToken(jsontext.String("identifier")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`identifier`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Identifier); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("interFileDependencies")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`interFileDependencies`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.InterFileDependencies); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("workspaceDiagnostics")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`workspaceDiagnostics`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.WorkspaceDiagnostics); err != nil {
@@ -2672,14 +2672,14 @@ func (x DiagnosticRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) erro
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -2687,27 +2687,27 @@ func (x DiagnosticRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) erro
 		}
 	}
 	if x.Identifier != nil {
-		if err := enc.WriteToken(jsontext.String("identifier")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`identifier`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Identifier); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("interFileDependencies")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`interFileDependencies`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.InterFileDependencies); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("workspaceDiagnostics")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`workspaceDiagnostics`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.WorkspaceDiagnostics); err != nil {
 		return err
 	}
 	if x.ID != nil {
-		if err := enc.WriteToken(jsontext.String("id")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`id`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ID); err != nil {
@@ -2721,13 +2721,13 @@ func (x DiagnosticRelatedInformation) MarshalJSONTo(enc *jsontext.Encoder) error
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("location")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`location`)); err != nil {
 		return err
 	}
 	if err := x.Location.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("message")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`message`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Message)); err != nil {
@@ -2740,7 +2740,7 @@ func (x DiagnosticServerCancellationData) MarshalJSONTo(enc *jsontext.Encoder) e
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("retriggerRequest")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`retriggerRequest`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.RetriggerRequest); err != nil {
@@ -2754,7 +2754,7 @@ func (x DiagnosticWorkspaceClientCapabilities) MarshalJSONTo(enc *jsontext.Encod
 		return err
 	}
 	if x.RefreshSupport != nil {
-		if err := enc.WriteToken(jsontext.String("refreshSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`refreshSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.RefreshSupport); err != nil {
@@ -2769,7 +2769,7 @@ func (x DiagnosticsCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.RelatedInformation != nil {
-		if err := enc.WriteToken(jsontext.String("relatedInformation")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`relatedInformation`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.RelatedInformation); err != nil {
@@ -2777,7 +2777,7 @@ func (x DiagnosticsCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if !isZeroGeneratedClientDiagnosticsTagOptions(x.TagSupport) {
-		if err := enc.WriteToken(jsontext.String("tagSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`tagSupport`)); err != nil {
 			return err
 		}
 		if err := x.TagSupport.MarshalJSONTo(enc); err != nil {
@@ -2785,7 +2785,7 @@ func (x DiagnosticsCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.CodeDescriptionSupport != nil {
-		if err := enc.WriteToken(jsontext.String("codeDescriptionSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`codeDescriptionSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.CodeDescriptionSupport); err != nil {
@@ -2793,7 +2793,7 @@ func (x DiagnosticsCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.DataSupport != nil {
-		if err := enc.WriteToken(jsontext.String("dataSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dataSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DataSupport); err != nil {
@@ -2808,7 +2808,7 @@ func (x DidChangeConfigurationClientCapabilities) MarshalJSONTo(enc *jsontext.En
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -2822,7 +2822,7 @@ func (x DidChangeConfigurationParams) MarshalJSONTo(enc *jsontext.Encoder) error
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("settings")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`settings`)); err != nil {
 		return err
 	}
 	if err := enc.WriteValue(x.Settings); err != nil {
@@ -2836,7 +2836,7 @@ func (x DidChangeConfigurationRegistrationOptions) MarshalJSONTo(enc *jsontext.E
 		return err
 	}
 	if x.Section != nil {
-		if err := enc.WriteToken(jsontext.String("section")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`section`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Section); err != nil {
@@ -2850,13 +2850,13 @@ func (x DidChangeNotebookDocumentParams) MarshalJSONTo(enc *jsontext.Encoder) er
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("notebookDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`notebookDocument`)); err != nil {
 		return err
 	}
 	if err := x.NotebookDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("change")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`change`)); err != nil {
 		return err
 	}
 	if err := x.Change.MarshalJSONTo(enc); err != nil {
@@ -2869,13 +2869,13 @@ func (x DidChangeTextDocumentParams) MarshalJSONTo(enc *jsontext.Encoder) error 
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("contentChanges")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`contentChanges`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.ContentChanges); err != nil {
@@ -2889,7 +2889,7 @@ func (x DidChangeWatchedFilesClientCapabilities) MarshalJSONTo(enc *jsontext.Enc
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -2897,7 +2897,7 @@ func (x DidChangeWatchedFilesClientCapabilities) MarshalJSONTo(enc *jsontext.Enc
 		}
 	}
 	if x.RelativePatternSupport != nil {
-		if err := enc.WriteToken(jsontext.String("relativePatternSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`relativePatternSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.RelativePatternSupport); err != nil {
@@ -2911,7 +2911,7 @@ func (x DidChangeWatchedFilesParams) MarshalJSONTo(enc *jsontext.Encoder) error 
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("changes")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`changes`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Changes); err != nil {
@@ -2924,7 +2924,7 @@ func (x DidChangeWatchedFilesRegistrationOptions) MarshalJSONTo(enc *jsontext.En
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("watchers")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`watchers`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Watchers); err != nil {
@@ -2937,7 +2937,7 @@ func (x DidChangeWorkspaceFoldersParams) MarshalJSONTo(enc *jsontext.Encoder) er
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("event")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`event`)); err != nil {
 		return err
 	}
 	if err := x.Event.MarshalJSONTo(enc); err != nil {
@@ -2950,13 +2950,13 @@ func (x DidCloseNotebookDocumentParams) MarshalJSONTo(enc *jsontext.Encoder) err
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("notebookDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`notebookDocument`)); err != nil {
 		return err
 	}
 	if err := x.NotebookDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("cellTextDocuments")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`cellTextDocuments`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.CellTextDocuments); err != nil {
@@ -2969,7 +2969,7 @@ func (x DidCloseTextDocumentParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
@@ -2982,13 +2982,13 @@ func (x DidOpenNotebookDocumentParams) MarshalJSONTo(enc *jsontext.Encoder) erro
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("notebookDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`notebookDocument`)); err != nil {
 		return err
 	}
 	if err := x.NotebookDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("cellTextDocuments")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`cellTextDocuments`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.CellTextDocuments); err != nil {
@@ -3001,7 +3001,7 @@ func (x DidOpenTextDocumentParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
@@ -3014,7 +3014,7 @@ func (x DidSaveNotebookDocumentParams) MarshalJSONTo(enc *jsontext.Encoder) erro
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("notebookDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`notebookDocument`)); err != nil {
 		return err
 	}
 	if err := x.NotebookDocument.MarshalJSONTo(enc); err != nil {
@@ -3027,14 +3027,14 @@ func (x DidSaveTextDocumentParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
 	if x.Text != nil {
-		if err := enc.WriteToken(jsontext.String("text")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`text`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Text); err != nil {
@@ -3049,7 +3049,7 @@ func (x DocumentColorClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) er
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -3064,7 +3064,7 @@ func (x DocumentColorOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -3079,7 +3079,7 @@ func (x DocumentColorParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -3087,14 +3087,14 @@ func (x DocumentColorParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PartialResultToken != nil {
-		if err := enc.WriteToken(jsontext.String("partialResultToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`partialResultToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.PartialResultToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
@@ -3107,14 +3107,14 @@ func (x DocumentColorRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) e
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -3122,7 +3122,7 @@ func (x DocumentColorRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) e
 		}
 	}
 	if x.ID != nil {
-		if err := enc.WriteToken(jsontext.String("id")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`id`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ID); err != nil {
@@ -3137,7 +3137,7 @@ func (x DocumentDiagnosticParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -3145,21 +3145,21 @@ func (x DocumentDiagnosticParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PartialResultToken != nil {
-		if err := enc.WriteToken(jsontext.String("partialResultToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`partialResultToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.PartialResultToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
 	if x.Identifier != nil {
-		if err := enc.WriteToken(jsontext.String("identifier")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`identifier`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Identifier); err != nil {
@@ -3167,7 +3167,7 @@ func (x DocumentDiagnosticParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PreviousResultID != nil {
-		if err := enc.WriteToken(jsontext.String("previousResultId")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`previousResultId`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.PreviousResultID); err != nil {
@@ -3181,7 +3181,7 @@ func (x DocumentDiagnosticReportPartialResult) MarshalJSONTo(enc *jsontext.Encod
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("relatedDocuments")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`relatedDocuments`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.RelatedDocuments); err != nil {
@@ -3195,7 +3195,7 @@ func (x DocumentFormattingClientCapabilities) MarshalJSONTo(enc *jsontext.Encode
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -3210,7 +3210,7 @@ func (x DocumentFormattingOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -3225,20 +3225,20 @@ func (x DocumentFormattingParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("options")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`options`)); err != nil {
 		return err
 	}
 	if err := x.Options.MarshalJSONTo(enc); err != nil {
@@ -3251,14 +3251,14 @@ func (x DocumentFormattingRegistrationOptions) MarshalJSONTo(enc *jsontext.Encod
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -3272,14 +3272,14 @@ func (x DocumentHighlight) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("range")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Range); err != nil {
 		return err
 	}
 	if x.Kind != 0 {
-		if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Kind); err != nil {
@@ -3294,7 +3294,7 @@ func (x DocumentHighlightClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -3309,7 +3309,7 @@ func (x DocumentHighlightOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -3323,20 +3323,20 @@ func (x DocumentHighlightParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("position")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`position`)); err != nil {
 		return err
 	}
 	if err := encodePositionTo(enc, x.Position); err != nil {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -3344,7 +3344,7 @@ func (x DocumentHighlightParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PartialResultToken != nil {
-		if err := enc.WriteToken(jsontext.String("partialResultToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`partialResultToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.PartialResultToken); err != nil {
@@ -3358,14 +3358,14 @@ func (x DocumentHighlightRegistrationOptions) MarshalJSONTo(enc *jsontext.Encode
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -3379,14 +3379,14 @@ func (x DocumentLink) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("range")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Range); err != nil {
 		return err
 	}
 	if x.Target != nil {
-		if err := enc.WriteToken(jsontext.String("target")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`target`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Target); err != nil {
@@ -3394,7 +3394,7 @@ func (x DocumentLink) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Tooltip != nil {
-		if err := enc.WriteToken(jsontext.String("tooltip")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`tooltip`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Tooltip); err != nil {
@@ -3402,7 +3402,7 @@ func (x DocumentLink) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.Data) > 0 {
-		if err := enc.WriteToken(jsontext.String("data")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`data`)); err != nil {
 			return err
 		}
 		if err := enc.WriteValue(x.Data); err != nil {
@@ -3417,7 +3417,7 @@ func (x DocumentLinkClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -3425,7 +3425,7 @@ func (x DocumentLinkClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.TooltipSupport != nil {
-		if err := enc.WriteToken(jsontext.String("tooltipSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`tooltipSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.TooltipSupport); err != nil {
@@ -3440,7 +3440,7 @@ func (x DocumentLinkOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -3448,7 +3448,7 @@ func (x DocumentLinkOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.ResolveProvider != nil {
-		if err := enc.WriteToken(jsontext.String("resolveProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`resolveProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ResolveProvider); err != nil {
@@ -3463,7 +3463,7 @@ func (x DocumentLinkParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -3471,14 +3471,14 @@ func (x DocumentLinkParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PartialResultToken != nil {
-		if err := enc.WriteToken(jsontext.String("partialResultToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`partialResultToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.PartialResultToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
@@ -3491,14 +3491,14 @@ func (x DocumentLinkRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) er
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -3506,7 +3506,7 @@ func (x DocumentLinkRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) er
 		}
 	}
 	if x.ResolveProvider != nil {
-		if err := enc.WriteToken(jsontext.String("resolveProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`resolveProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ResolveProvider); err != nil {
@@ -3521,7 +3521,7 @@ func (x DocumentOnTypeFormattingClientCapabilities) MarshalJSONTo(enc *jsontext.
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -3535,14 +3535,14 @@ func (x DocumentOnTypeFormattingOptions) MarshalJSONTo(enc *jsontext.Encoder) er
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("firstTriggerCharacter")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`firstTriggerCharacter`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.FirstTriggerCharacter)); err != nil {
 		return err
 	}
 	if len(x.MoreTriggerCharacter) > 0 {
-		if err := enc.WriteToken(jsontext.String("moreTriggerCharacter")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`moreTriggerCharacter`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.MoreTriggerCharacter); err != nil {
@@ -3556,25 +3556,25 @@ func (x DocumentOnTypeFormattingParams) MarshalJSONTo(enc *jsontext.Encoder) err
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("position")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`position`)); err != nil {
 		return err
 	}
 	if err := encodePositionTo(enc, x.Position); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("ch")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`ch`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Ch)); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("options")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`options`)); err != nil {
 		return err
 	}
 	if err := x.Options.MarshalJSONTo(enc); err != nil {
@@ -3587,20 +3587,20 @@ func (x DocumentOnTypeFormattingRegistrationOptions) MarshalJSONTo(enc *jsontext
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("firstTriggerCharacter")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`firstTriggerCharacter`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.FirstTriggerCharacter)); err != nil {
 		return err
 	}
 	if len(x.MoreTriggerCharacter) > 0 {
-		if err := enc.WriteToken(jsontext.String("moreTriggerCharacter")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`moreTriggerCharacter`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.MoreTriggerCharacter); err != nil {
@@ -3615,7 +3615,7 @@ func (x DocumentRangeFormattingClientCapabilities) MarshalJSONTo(enc *jsontext.E
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -3623,7 +3623,7 @@ func (x DocumentRangeFormattingClientCapabilities) MarshalJSONTo(enc *jsontext.E
 		}
 	}
 	if x.RangesSupport != nil {
-		if err := enc.WriteToken(jsontext.String("rangesSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`rangesSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.RangesSupport); err != nil {
@@ -3638,7 +3638,7 @@ func (x DocumentRangeFormattingOptions) MarshalJSONTo(enc *jsontext.Encoder) err
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -3646,7 +3646,7 @@ func (x DocumentRangeFormattingOptions) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.RangesSupport != nil {
-		if err := enc.WriteToken(jsontext.String("rangesSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`rangesSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.RangesSupport); err != nil {
@@ -3661,26 +3661,26 @@ func (x DocumentRangeFormattingParams) MarshalJSONTo(enc *jsontext.Encoder) erro
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("range")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Range); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("options")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`options`)); err != nil {
 		return err
 	}
 	if err := x.Options.MarshalJSONTo(enc); err != nil {
@@ -3693,14 +3693,14 @@ func (x DocumentRangeFormattingRegistrationOptions) MarshalJSONTo(enc *jsontext.
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -3708,7 +3708,7 @@ func (x DocumentRangeFormattingRegistrationOptions) MarshalJSONTo(enc *jsontext.
 		}
 	}
 	if x.RangesSupport != nil {
-		if err := enc.WriteToken(jsontext.String("rangesSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`rangesSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.RangesSupport); err != nil {
@@ -3723,26 +3723,26 @@ func (x DocumentRangesFormattingParams) MarshalJSONTo(enc *jsontext.Encoder) err
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("ranges")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`ranges`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Ranges); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("options")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`options`)); err != nil {
 		return err
 	}
 	if err := x.Options.MarshalJSONTo(enc); err != nil {
@@ -3755,28 +3755,28 @@ func (x DocumentSymbol) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("name")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`name`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Name)); err != nil {
 		return err
 	}
 	if x.Detail != nil {
-		if err := enc.WriteToken(jsontext.String("detail")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`detail`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Detail); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Kind); err != nil {
 		return err
 	}
 	if len(x.Tags) > 0 {
-		if err := enc.WriteToken(jsontext.String("tags")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`tags`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Tags); err != nil {
@@ -3784,27 +3784,27 @@ func (x DocumentSymbol) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Deprecated != nil {
-		if err := enc.WriteToken(jsontext.String("deprecated")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`deprecated`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Deprecated); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("range")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Range); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("selectionRange")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`selectionRange`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.SelectionRange); err != nil {
 		return err
 	}
 	if len(x.Children) > 0 {
-		if err := enc.WriteToken(jsontext.String("children")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`children`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Children); err != nil {
@@ -3819,7 +3819,7 @@ func (x DocumentSymbolClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) e
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -3827,7 +3827,7 @@ func (x DocumentSymbolClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) e
 		}
 	}
 	if x.SymbolKind != nil {
-		if err := enc.WriteToken(jsontext.String("symbolKind")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`symbolKind`)); err != nil {
 			return err
 		}
 		if err := x.SymbolKind.MarshalJSONTo(enc); err != nil {
@@ -3835,7 +3835,7 @@ func (x DocumentSymbolClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) e
 		}
 	}
 	if x.HierarchicalDocumentSymbolSupport != nil {
-		if err := enc.WriteToken(jsontext.String("hierarchicalDocumentSymbolSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`hierarchicalDocumentSymbolSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.HierarchicalDocumentSymbolSupport); err != nil {
@@ -3843,7 +3843,7 @@ func (x DocumentSymbolClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) e
 		}
 	}
 	if !isZeroGeneratedClientSymbolTagOptions(x.TagSupport) {
-		if err := enc.WriteToken(jsontext.String("tagSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`tagSupport`)); err != nil {
 			return err
 		}
 		if err := x.TagSupport.MarshalJSONTo(enc); err != nil {
@@ -3851,7 +3851,7 @@ func (x DocumentSymbolClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) e
 		}
 	}
 	if x.LabelSupport != nil {
-		if err := enc.WriteToken(jsontext.String("labelSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`labelSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.LabelSupport); err != nil {
@@ -3866,7 +3866,7 @@ func (x DocumentSymbolOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -3874,7 +3874,7 @@ func (x DocumentSymbolOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Label != nil {
-		if err := enc.WriteToken(jsontext.String("label")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`label`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Label); err != nil {
@@ -3889,7 +3889,7 @@ func (x DocumentSymbolParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -3897,14 +3897,14 @@ func (x DocumentSymbolParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PartialResultToken != nil {
-		if err := enc.WriteToken(jsontext.String("partialResultToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`partialResultToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.PartialResultToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
@@ -3917,14 +3917,14 @@ func (x DocumentSymbolRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) 
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -3932,7 +3932,7 @@ func (x DocumentSymbolRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) 
 		}
 	}
 	if x.Label != nil {
-		if err := enc.WriteToken(jsontext.String("label")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`label`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Label); err != nil {
@@ -3946,13 +3946,13 @@ func (x EditRangeWithInsertReplace) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("insert")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`insert`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Insert); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("replace")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`replace`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Replace); err != nil {
@@ -3966,7 +3966,7 @@ func (x ExecuteCommandClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) e
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -3981,14 +3981,14 @@ func (x ExecuteCommandOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("commands")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`commands`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Commands); err != nil {
@@ -4002,21 +4002,21 @@ func (x ExecuteCommandParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("command")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`command`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Command)); err != nil {
 		return err
 	}
 	if len(x.Arguments) > 0 {
-		if err := enc.WriteToken(jsontext.String("arguments")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`arguments`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Arguments); err != nil {
@@ -4031,14 +4031,14 @@ func (x ExecuteCommandRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) 
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("commands")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`commands`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Commands); err != nil {
@@ -4051,14 +4051,14 @@ func (x ExecutionSummary) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("executionOrder")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`executionOrder`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.Uint(uint64(x.ExecutionOrder))); err != nil {
 		return err
 	}
 	if x.Success != nil {
-		if err := enc.WriteToken(jsontext.String("success")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`success`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Success); err != nil {
@@ -4072,7 +4072,7 @@ func (x FileCreate) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("uri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`uri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.URI)); err != nil {
@@ -4085,7 +4085,7 @@ func (x FileDelete) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("uri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`uri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.URI)); err != nil {
@@ -4098,13 +4098,13 @@ func (x FileEvent) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("uri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`uri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(string(x.URI))); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("type")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`type`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Type); err != nil {
@@ -4118,7 +4118,7 @@ func (x FileOperationClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) er
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -4126,7 +4126,7 @@ func (x FileOperationClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) er
 		}
 	}
 	if x.DidCreate != nil {
-		if err := enc.WriteToken(jsontext.String("didCreate")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`didCreate`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DidCreate); err != nil {
@@ -4134,7 +4134,7 @@ func (x FileOperationClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) er
 		}
 	}
 	if x.WillCreate != nil {
-		if err := enc.WriteToken(jsontext.String("willCreate")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`willCreate`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WillCreate); err != nil {
@@ -4142,7 +4142,7 @@ func (x FileOperationClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) er
 		}
 	}
 	if x.DidRename != nil {
-		if err := enc.WriteToken(jsontext.String("didRename")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`didRename`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DidRename); err != nil {
@@ -4150,7 +4150,7 @@ func (x FileOperationClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) er
 		}
 	}
 	if x.WillRename != nil {
-		if err := enc.WriteToken(jsontext.String("willRename")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`willRename`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WillRename); err != nil {
@@ -4158,7 +4158,7 @@ func (x FileOperationClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) er
 		}
 	}
 	if x.DidDelete != nil {
-		if err := enc.WriteToken(jsontext.String("didDelete")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`didDelete`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DidDelete); err != nil {
@@ -4166,7 +4166,7 @@ func (x FileOperationClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) er
 		}
 	}
 	if x.WillDelete != nil {
-		if err := enc.WriteToken(jsontext.String("willDelete")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`willDelete`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WillDelete); err != nil {
@@ -4181,14 +4181,14 @@ func (x FileOperationFilter) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.Scheme != nil {
-		if err := enc.WriteToken(jsontext.String("scheme")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`scheme`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Scheme); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("pattern")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`pattern`)); err != nil {
 		return err
 	}
 	if err := x.Pattern.MarshalJSONTo(enc); err != nil {
@@ -4202,7 +4202,7 @@ func (x FileOperationOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if !isZeroGeneratedFileOperationRegistrationOptions(x.DidCreate) {
-		if err := enc.WriteToken(jsontext.String("didCreate")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`didCreate`)); err != nil {
 			return err
 		}
 		if err := x.DidCreate.MarshalJSONTo(enc); err != nil {
@@ -4210,7 +4210,7 @@ func (x FileOperationOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if !isZeroGeneratedFileOperationRegistrationOptions(x.WillCreate) {
-		if err := enc.WriteToken(jsontext.String("willCreate")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`willCreate`)); err != nil {
 			return err
 		}
 		if err := x.WillCreate.MarshalJSONTo(enc); err != nil {
@@ -4218,7 +4218,7 @@ func (x FileOperationOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if !isZeroGeneratedFileOperationRegistrationOptions(x.DidRename) {
-		if err := enc.WriteToken(jsontext.String("didRename")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`didRename`)); err != nil {
 			return err
 		}
 		if err := x.DidRename.MarshalJSONTo(enc); err != nil {
@@ -4226,7 +4226,7 @@ func (x FileOperationOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if !isZeroGeneratedFileOperationRegistrationOptions(x.WillRename) {
-		if err := enc.WriteToken(jsontext.String("willRename")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`willRename`)); err != nil {
 			return err
 		}
 		if err := x.WillRename.MarshalJSONTo(enc); err != nil {
@@ -4234,7 +4234,7 @@ func (x FileOperationOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if !isZeroGeneratedFileOperationRegistrationOptions(x.DidDelete) {
-		if err := enc.WriteToken(jsontext.String("didDelete")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`didDelete`)); err != nil {
 			return err
 		}
 		if err := x.DidDelete.MarshalJSONTo(enc); err != nil {
@@ -4242,7 +4242,7 @@ func (x FileOperationOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if !isZeroGeneratedFileOperationRegistrationOptions(x.WillDelete) {
-		if err := enc.WriteToken(jsontext.String("willDelete")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`willDelete`)); err != nil {
 			return err
 		}
 		if err := x.WillDelete.MarshalJSONTo(enc); err != nil {
@@ -4256,14 +4256,14 @@ func (x FileOperationPattern) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("glob")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`glob`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Glob)); err != nil {
 		return err
 	}
 	if x.Matches != "" {
-		if err := enc.WriteToken(jsontext.String("matches")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`matches`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Matches); err != nil {
@@ -4271,7 +4271,7 @@ func (x FileOperationPattern) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Options != nil {
-		if err := enc.WriteToken(jsontext.String("options")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`options`)); err != nil {
 			return err
 		}
 		if err := x.Options.MarshalJSONTo(enc); err != nil {
@@ -4286,7 +4286,7 @@ func (x FileOperationPatternOptions) MarshalJSONTo(enc *jsontext.Encoder) error 
 		return err
 	}
 	if x.IgnoreCase != nil {
-		if err := enc.WriteToken(jsontext.String("ignoreCase")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`ignoreCase`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.IgnoreCase); err != nil {
@@ -4300,7 +4300,7 @@ func (x FileOperationRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) e
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("filters")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`filters`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Filters); err != nil {
@@ -4313,13 +4313,13 @@ func (x FileRename) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("oldUri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`oldUri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.OldURI)); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("newUri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`newUri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.NewURI)); err != nil {
@@ -4332,14 +4332,14 @@ func (x FileSystemWatcher) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("globPattern")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`globPattern`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.GlobPattern); err != nil {
 		return err
 	}
 	if x.Kind != 0 {
-		if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Kind); err != nil {
@@ -4353,28 +4353,28 @@ func (x FoldingRange) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("startLine")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`startLine`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.Uint(uint64(x.StartLine))); err != nil {
 		return err
 	}
 	if x.StartCharacter != nil {
-		if err := enc.WriteToken(jsontext.String("startCharacter")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`startCharacter`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.StartCharacter); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("endLine")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`endLine`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.Uint(uint64(x.EndLine))); err != nil {
 		return err
 	}
 	if x.EndCharacter != nil {
-		if err := enc.WriteToken(jsontext.String("endCharacter")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`endCharacter`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.EndCharacter); err != nil {
@@ -4382,7 +4382,7 @@ func (x FoldingRange) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Kind != "" {
-		if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Kind); err != nil {
@@ -4390,7 +4390,7 @@ func (x FoldingRange) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.CollapsedText != nil {
-		if err := enc.WriteToken(jsontext.String("collapsedText")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`collapsedText`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.CollapsedText); err != nil {
@@ -4405,7 +4405,7 @@ func (x FoldingRangeClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -4413,7 +4413,7 @@ func (x FoldingRangeClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.RangeLimit != nil {
-		if err := enc.WriteToken(jsontext.String("rangeLimit")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`rangeLimit`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.RangeLimit); err != nil {
@@ -4421,7 +4421,7 @@ func (x FoldingRangeClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.LineFoldingOnly != nil {
-		if err := enc.WriteToken(jsontext.String("lineFoldingOnly")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`lineFoldingOnly`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.LineFoldingOnly); err != nil {
@@ -4429,7 +4429,7 @@ func (x FoldingRangeClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.FoldingRangeKind != nil {
-		if err := enc.WriteToken(jsontext.String("foldingRangeKind")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`foldingRangeKind`)); err != nil {
 			return err
 		}
 		if err := x.FoldingRangeKind.MarshalJSONTo(enc); err != nil {
@@ -4437,7 +4437,7 @@ func (x FoldingRangeClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.FoldingRange != nil {
-		if err := enc.WriteToken(jsontext.String("foldingRange")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`foldingRange`)); err != nil {
 			return err
 		}
 		if err := x.FoldingRange.MarshalJSONTo(enc); err != nil {
@@ -4452,7 +4452,7 @@ func (x FoldingRangeOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -4467,7 +4467,7 @@ func (x FoldingRangeParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -4475,14 +4475,14 @@ func (x FoldingRangeParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PartialResultToken != nil {
-		if err := enc.WriteToken(jsontext.String("partialResultToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`partialResultToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.PartialResultToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
@@ -4495,14 +4495,14 @@ func (x FoldingRangeRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) er
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -4510,7 +4510,7 @@ func (x FoldingRangeRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) er
 		}
 	}
 	if x.ID != nil {
-		if err := enc.WriteToken(jsontext.String("id")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`id`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ID); err != nil {
@@ -4525,7 +4525,7 @@ func (x FoldingRangeWorkspaceClientCapabilities) MarshalJSONTo(enc *jsontext.Enc
 		return err
 	}
 	if x.RefreshSupport != nil {
-		if err := enc.WriteToken(jsontext.String("refreshSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`refreshSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.RefreshSupport); err != nil {
@@ -4539,20 +4539,20 @@ func (x FormattingOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("tabSize")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`tabSize`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.Uint(uint64(x.TabSize))); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("insertSpaces")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`insertSpaces`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.InsertSpaces); err != nil {
 		return err
 	}
 	if x.TrimTrailingWhitespace != nil {
-		if err := enc.WriteToken(jsontext.String("trimTrailingWhitespace")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`trimTrailingWhitespace`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.TrimTrailingWhitespace); err != nil {
@@ -4560,7 +4560,7 @@ func (x FormattingOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.InsertFinalNewline != nil {
-		if err := enc.WriteToken(jsontext.String("insertFinalNewline")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`insertFinalNewline`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.InsertFinalNewline); err != nil {
@@ -4568,7 +4568,7 @@ func (x FormattingOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.TrimFinalNewlines != nil {
-		if err := enc.WriteToken(jsontext.String("trimFinalNewlines")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`trimFinalNewlines`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.TrimFinalNewlines); err != nil {
@@ -4582,21 +4582,21 @@ func (x FullDocumentDiagnosticReport) MarshalJSONTo(enc *jsontext.Encoder) error
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Kind)); err != nil {
 		return err
 	}
 	if x.ResultID != nil {
-		if err := enc.WriteToken(jsontext.String("resultId")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`resultId`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ResultID); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("items")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`items`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Items); err != nil {
@@ -4610,7 +4610,7 @@ func (x GeneralClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if !isZeroGeneratedStaleRequestSupportOptions(x.StaleRequestSupport) {
-		if err := enc.WriteToken(jsontext.String("staleRequestSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`staleRequestSupport`)); err != nil {
 			return err
 		}
 		if err := x.StaleRequestSupport.MarshalJSONTo(enc); err != nil {
@@ -4618,7 +4618,7 @@ func (x GeneralClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if !isZeroGeneratedRegularExpressionsClientCapabilities(x.RegularExpressions) {
-		if err := enc.WriteToken(jsontext.String("regularExpressions")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`regularExpressions`)); err != nil {
 			return err
 		}
 		if err := x.RegularExpressions.MarshalJSONTo(enc); err != nil {
@@ -4626,7 +4626,7 @@ func (x GeneralClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if !isZeroGeneratedMarkdownClientCapabilities(x.Markdown) {
-		if err := enc.WriteToken(jsontext.String("markdown")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`markdown`)); err != nil {
 			return err
 		}
 		if err := x.Markdown.MarshalJSONTo(enc); err != nil {
@@ -4634,7 +4634,7 @@ func (x GeneralClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.PositionEncodings) > 0 {
-		if err := enc.WriteToken(jsontext.String("positionEncodings")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`positionEncodings`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.PositionEncodings); err != nil {
@@ -4648,14 +4648,14 @@ func (x Hover) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("contents")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`contents`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Contents); err != nil {
 		return err
 	}
 	if x.Range != nil {
-		if err := enc.WriteToken(jsontext.String("range")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 			return err
 		}
 		if err := x.Range.MarshalJSONTo(enc); err != nil {
@@ -4670,7 +4670,7 @@ func (x HoverClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -4678,7 +4678,7 @@ func (x HoverClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.ContentFormat) > 0 {
-		if err := enc.WriteToken(jsontext.String("contentFormat")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`contentFormat`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ContentFormat); err != nil {
@@ -4693,7 +4693,7 @@ func (x HoverOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -4707,20 +4707,20 @@ func (x HoverParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("position")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`position`)); err != nil {
 		return err
 	}
 	if err := encodePositionTo(enc, x.Position); err != nil {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -4734,14 +4734,14 @@ func (x HoverRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -4756,7 +4756,7 @@ func (x ImplementationClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) e
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -4764,7 +4764,7 @@ func (x ImplementationClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) e
 		}
 	}
 	if x.LinkSupport != nil {
-		if err := enc.WriteToken(jsontext.String("linkSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`linkSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.LinkSupport); err != nil {
@@ -4779,7 +4779,7 @@ func (x ImplementationOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -4793,20 +4793,20 @@ func (x ImplementationParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("position")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`position`)); err != nil {
 		return err
 	}
 	if err := encodePositionTo(enc, x.Position); err != nil {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -4814,7 +4814,7 @@ func (x ImplementationParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PartialResultToken != nil {
-		if err := enc.WriteToken(jsontext.String("partialResultToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`partialResultToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.PartialResultToken); err != nil {
@@ -4828,14 +4828,14 @@ func (x ImplementationRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) 
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -4843,7 +4843,7 @@ func (x ImplementationRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) 
 		}
 	}
 	if x.ID != nil {
-		if err := enc.WriteToken(jsontext.String("id")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`id`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ID); err != nil {
@@ -4857,7 +4857,7 @@ func (x InitializeError) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("retry")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`retry`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Retry); err != nil {
@@ -4871,21 +4871,21 @@ func (x InitializeParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("processId")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`processId`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.ProcessID); err != nil {
 		return err
 	}
 	if !isZeroGeneratedClientInfo(x.ClientInfo) {
-		if err := enc.WriteToken(jsontext.String("clientInfo")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`clientInfo`)); err != nil {
 			return err
 		}
 		if err := x.ClientInfo.MarshalJSONTo(enc); err != nil {
@@ -4893,7 +4893,7 @@ func (x InitializeParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Locale != nil {
-		if err := enc.WriteToken(jsontext.String("locale")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`locale`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Locale); err != nil {
@@ -4901,27 +4901,27 @@ func (x InitializeParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if !x.RootPath.IsZero() {
-		if err := enc.WriteToken(jsontext.String("rootPath")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`rootPath`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.RootPath); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("rootUri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`rootUri`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.RootURI); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("capabilities")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`capabilities`)); err != nil {
 		return err
 	}
 	if err := x.Capabilities.MarshalJSONTo(enc); err != nil {
 		return err
 	}
 	if len(x.InitializationOptions) > 0 {
-		if err := enc.WriteToken(jsontext.String("initializationOptions")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`initializationOptions`)); err != nil {
 			return err
 		}
 		if err := enc.WriteValue(x.InitializationOptions); err != nil {
@@ -4929,7 +4929,7 @@ func (x InitializeParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Trace != "" {
-		if err := enc.WriteToken(jsontext.String("trace")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`trace`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Trace); err != nil {
@@ -4937,7 +4937,7 @@ func (x InitializeParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if !x.WorkspaceFolders.IsZero() {
-		if err := enc.WriteToken(jsontext.String("workspaceFolders")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workspaceFolders`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkspaceFolders); err != nil {
@@ -4951,14 +4951,14 @@ func (x InitializeResult) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("capabilities")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`capabilities`)); err != nil {
 		return err
 	}
 	if err := x.Capabilities.MarshalJSONTo(enc); err != nil {
 		return err
 	}
 	if !isZeroGeneratedServerInfo(x.ServerInfo) {
-		if err := enc.WriteToken(jsontext.String("serverInfo")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`serverInfo`)); err != nil {
 			return err
 		}
 		if err := x.ServerInfo.MarshalJSONTo(enc); err != nil {
@@ -4979,20 +4979,20 @@ func (x InlayHint) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("position")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`position`)); err != nil {
 		return err
 	}
 	if err := encodePositionTo(enc, x.Position); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("label")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`label`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Label); err != nil {
 		return err
 	}
 	if x.Kind != 0 {
-		if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Kind); err != nil {
@@ -5000,7 +5000,7 @@ func (x InlayHint) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.TextEdits) > 0 {
-		if err := enc.WriteToken(jsontext.String("textEdits")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`textEdits`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.TextEdits); err != nil {
@@ -5008,7 +5008,7 @@ func (x InlayHint) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Tooltip != nil {
-		if err := enc.WriteToken(jsontext.String("tooltip")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`tooltip`)); err != nil {
 			return err
 		}
 		if v, ok := x.Tooltip.(String); ok {
@@ -5027,7 +5027,7 @@ func (x InlayHint) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PaddingLeft != nil {
-		if err := enc.WriteToken(jsontext.String("paddingLeft")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`paddingLeft`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.PaddingLeft); err != nil {
@@ -5035,7 +5035,7 @@ func (x InlayHint) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PaddingRight != nil {
-		if err := enc.WriteToken(jsontext.String("paddingRight")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`paddingRight`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.PaddingRight); err != nil {
@@ -5043,7 +5043,7 @@ func (x InlayHint) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.Data) > 0 {
-		if err := enc.WriteToken(jsontext.String("data")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`data`)); err != nil {
 			return err
 		}
 		if err := enc.WriteValue(x.Data); err != nil {
@@ -5058,7 +5058,7 @@ func (x InlayHintClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error 
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -5066,7 +5066,7 @@ func (x InlayHintClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if !isZeroGeneratedClientInlayHintResolveOptions(x.ResolveSupport) {
-		if err := enc.WriteToken(jsontext.String("resolveSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`resolveSupport`)); err != nil {
 			return err
 		}
 		if err := x.ResolveSupport.MarshalJSONTo(enc); err != nil {
@@ -5080,14 +5080,14 @@ func (x InlayHintLabelPart) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("value")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`value`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Value)); err != nil {
 		return err
 	}
 	if x.Tooltip != nil {
-		if err := enc.WriteToken(jsontext.String("tooltip")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`tooltip`)); err != nil {
 			return err
 		}
 		if v, ok := x.Tooltip.(String); ok {
@@ -5106,7 +5106,7 @@ func (x InlayHintLabelPart) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if !isZeroGeneratedLocation(x.Location) {
-		if err := enc.WriteToken(jsontext.String("location")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`location`)); err != nil {
 			return err
 		}
 		if err := x.Location.MarshalJSONTo(enc); err != nil {
@@ -5114,7 +5114,7 @@ func (x InlayHintLabelPart) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if !isZeroCommand(x.Command) {
-		if err := enc.WriteToken(jsontext.String("command")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`command`)); err != nil {
 			return err
 		}
 		if err := x.Command.MarshalJSONTo(enc); err != nil {
@@ -5129,7 +5129,7 @@ func (x InlayHintOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -5137,7 +5137,7 @@ func (x InlayHintOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.ResolveProvider != nil {
-		if err := enc.WriteToken(jsontext.String("resolveProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`resolveProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ResolveProvider); err != nil {
@@ -5152,20 +5152,20 @@ func (x InlayHintParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("range")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Range); err != nil {
@@ -5179,7 +5179,7 @@ func (x InlayHintRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) error
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -5187,21 +5187,21 @@ func (x InlayHintRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) error
 		}
 	}
 	if x.ResolveProvider != nil {
-		if err := enc.WriteToken(jsontext.String("resolveProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`resolveProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ResolveProvider); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.ID != nil {
-		if err := enc.WriteToken(jsontext.String("id")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`id`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ID); err != nil {
@@ -5216,7 +5216,7 @@ func (x InlayHintWorkspaceClientCapabilities) MarshalJSONTo(enc *jsontext.Encode
 		return err
 	}
 	if x.RefreshSupport != nil {
-		if err := enc.WriteToken(jsontext.String("refreshSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`refreshSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.RefreshSupport); err != nil {
@@ -5231,7 +5231,7 @@ func (x InlineCompletionClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder)
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -5245,14 +5245,14 @@ func (x InlineCompletionContext) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("triggerKind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`triggerKind`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.TriggerKind); err != nil {
 		return err
 	}
 	if !isZeroGeneratedSelectedCompletionInfo(x.SelectedCompletionInfo) {
-		if err := enc.WriteToken(jsontext.String("selectedCompletionInfo")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`selectedCompletionInfo`)); err != nil {
 			return err
 		}
 		if err := x.SelectedCompletionInfo.MarshalJSONTo(enc); err != nil {
@@ -5266,14 +5266,14 @@ func (x InlineCompletionItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("insertText")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`insertText`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.InsertText); err != nil {
 		return err
 	}
 	if x.FilterText != nil {
-		if err := enc.WriteToken(jsontext.String("filterText")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`filterText`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.FilterText); err != nil {
@@ -5281,7 +5281,7 @@ func (x InlineCompletionItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Range != nil {
-		if err := enc.WriteToken(jsontext.String("range")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 			return err
 		}
 		if err := x.Range.MarshalJSONTo(enc); err != nil {
@@ -5289,7 +5289,7 @@ func (x InlineCompletionItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if !isZeroCommand(x.Command) {
-		if err := enc.WriteToken(jsontext.String("command")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`command`)); err != nil {
 			return err
 		}
 		if err := x.Command.MarshalJSONTo(enc); err != nil {
@@ -5303,7 +5303,7 @@ func (x InlineCompletionList) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("items")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`items`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Items); err != nil {
@@ -5317,7 +5317,7 @@ func (x InlineCompletionOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -5331,27 +5331,27 @@ func (x InlineCompletionParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("position")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`position`)); err != nil {
 		return err
 	}
 	if err := encodePositionTo(enc, x.Position); err != nil {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("context")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`context`)); err != nil {
 		return err
 	}
 	if err := x.Context.MarshalJSONTo(enc); err != nil {
@@ -5365,21 +5365,21 @@ func (x InlineCompletionRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.ID != nil {
-		if err := enc.WriteToken(jsontext.String("id")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`id`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ID); err != nil {
@@ -5394,7 +5394,7 @@ func (x InlineValueClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) erro
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -5408,13 +5408,13 @@ func (x InlineValueContext) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("frameId")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`frameId`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.Int(int64(x.FrameID))); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("stoppedLocation")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`stoppedLocation`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.StoppedLocation); err != nil {
@@ -5427,14 +5427,14 @@ func (x InlineValueEvaluatableExpression) MarshalJSONTo(enc *jsontext.Encoder) e
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("range")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Range); err != nil {
 		return err
 	}
 	if x.Expression != nil {
-		if err := enc.WriteToken(jsontext.String("expression")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`expression`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Expression); err != nil {
@@ -5449,7 +5449,7 @@ func (x InlineValueOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -5464,26 +5464,26 @@ func (x InlineValueParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("range")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Range); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("context")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`context`)); err != nil {
 		return err
 	}
 	if err := x.Context.MarshalJSONTo(enc); err != nil {
@@ -5497,21 +5497,21 @@ func (x InlineValueRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) err
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.ID != nil {
-		if err := enc.WriteToken(jsontext.String("id")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`id`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ID); err != nil {
@@ -5525,13 +5525,13 @@ func (x InlineValueText) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("range")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Range); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("text")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`text`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Text)); err != nil {
@@ -5544,21 +5544,21 @@ func (x InlineValueVariableLookup) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("range")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Range); err != nil {
 		return err
 	}
 	if x.VariableName != nil {
-		if err := enc.WriteToken(jsontext.String("variableName")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`variableName`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.VariableName); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("caseSensitiveLookup")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`caseSensitiveLookup`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.CaseSensitiveLookup); err != nil {
@@ -5572,7 +5572,7 @@ func (x InlineValueWorkspaceClientCapabilities) MarshalJSONTo(enc *jsontext.Enco
 		return err
 	}
 	if x.RefreshSupport != nil {
-		if err := enc.WriteToken(jsontext.String("refreshSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`refreshSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.RefreshSupport); err != nil {
@@ -5586,19 +5586,19 @@ func (x InsertReplaceEdit) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("newText")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`newText`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.NewText)); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("insert")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`insert`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Insert); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("replace")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`replace`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Replace); err != nil {
@@ -5612,7 +5612,7 @@ func (x LinkedEditingRangeClientCapabilities) MarshalJSONTo(enc *jsontext.Encode
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -5627,7 +5627,7 @@ func (x LinkedEditingRangeOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -5641,20 +5641,20 @@ func (x LinkedEditingRangeParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("position")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`position`)); err != nil {
 		return err
 	}
 	if err := encodePositionTo(enc, x.Position); err != nil {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -5668,14 +5668,14 @@ func (x LinkedEditingRangeRegistrationOptions) MarshalJSONTo(enc *jsontext.Encod
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -5683,7 +5683,7 @@ func (x LinkedEditingRangeRegistrationOptions) MarshalJSONTo(enc *jsontext.Encod
 		}
 	}
 	if x.ID != nil {
-		if err := enc.WriteToken(jsontext.String("id")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`id`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ID); err != nil {
@@ -5697,14 +5697,14 @@ func (x LinkedEditingRanges) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("ranges")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`ranges`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Ranges); err != nil {
 		return err
 	}
 	if x.WordPattern != nil {
-		if err := enc.WriteToken(jsontext.String("wordPattern")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`wordPattern`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WordPattern); err != nil {
@@ -5718,13 +5718,13 @@ func (x Location) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("uri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`uri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(string(x.URI))); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("range")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Range); err != nil {
@@ -5738,26 +5738,26 @@ func (x LocationLink) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.OriginSelectionRange != nil {
-		if err := enc.WriteToken(jsontext.String("originSelectionRange")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`originSelectionRange`)); err != nil {
 			return err
 		}
 		if err := x.OriginSelectionRange.MarshalJSONTo(enc); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("targetUri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`targetUri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(string(x.TargetURI))); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("targetRange")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`targetRange`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.TargetRange); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("targetSelectionRange")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`targetSelectionRange`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.TargetSelectionRange); err != nil {
@@ -5770,7 +5770,7 @@ func (x LocationUriOnly) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("uri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`uri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(string(x.URI))); err != nil {
@@ -5783,13 +5783,13 @@ func (x LogMessageParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("type")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`type`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Type); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("message")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`message`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Message)); err != nil {
@@ -5802,14 +5802,14 @@ func (x LogTraceParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("message")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`message`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Message)); err != nil {
 		return err
 	}
 	if x.Verbose != nil {
-		if err := enc.WriteToken(jsontext.String("verbose")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`verbose`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Verbose); err != nil {
@@ -5823,14 +5823,14 @@ func (x MarkdownClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("parser")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`parser`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Parser)); err != nil {
 		return err
 	}
 	if x.Version != nil {
-		if err := enc.WriteToken(jsontext.String("version")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`version`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Version); err != nil {
@@ -5838,7 +5838,7 @@ func (x MarkdownClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.AllowedTags) > 0 {
-		if err := enc.WriteToken(jsontext.String("allowedTags")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`allowedTags`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.AllowedTags); err != nil {
@@ -5852,13 +5852,13 @@ func (x MarkedStringWithLanguage) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("language")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`language`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Language)); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("value")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`value`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Value)); err != nil {
@@ -5871,13 +5871,13 @@ func (x MarkupContent) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Kind); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("value")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`value`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Value)); err != nil {
@@ -5890,7 +5890,7 @@ func (x MessageActionItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("title")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`title`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Title)); err != nil {
@@ -5903,26 +5903,26 @@ func (x Moniker) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("scheme")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`scheme`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Scheme)); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("identifier")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`identifier`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Identifier)); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("unique")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`unique`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Unique); err != nil {
 		return err
 	}
 	if x.Kind != "" {
-		if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Kind); err != nil {
@@ -5937,7 +5937,7 @@ func (x MonikerClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -5952,7 +5952,7 @@ func (x MonikerOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -5966,20 +5966,20 @@ func (x MonikerParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("position")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`position`)); err != nil {
 		return err
 	}
 	if err := encodePositionTo(enc, x.Position); err != nil {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -5987,7 +5987,7 @@ func (x MonikerParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PartialResultToken != nil {
-		if err := enc.WriteToken(jsontext.String("partialResultToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`partialResultToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.PartialResultToken); err != nil {
@@ -6001,14 +6001,14 @@ func (x MonikerRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -6022,20 +6022,20 @@ func (x NotebookCell) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Kind); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("document")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`document`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(string(x.Document))); err != nil {
 		return err
 	}
 	if len(x.Metadata) > 0 {
-		if err := enc.WriteToken(jsontext.String("metadata")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`metadata`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Metadata); err != nil {
@@ -6043,7 +6043,7 @@ func (x NotebookCell) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.ExecutionSummary != nil {
-		if err := enc.WriteToken(jsontext.String("executionSummary")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`executionSummary`)); err != nil {
 			return err
 		}
 		if err := x.ExecutionSummary.MarshalJSONTo(enc); err != nil {
@@ -6057,20 +6057,20 @@ func (x NotebookCellArrayChange) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("start")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`start`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.Uint(uint64(x.Start))); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("deleteCount")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`deleteCount`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.Uint(uint64(x.DeleteCount))); err != nil {
 		return err
 	}
 	if len(x.Cells) > 0 {
-		if err := enc.WriteToken(jsontext.String("cells")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`cells`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Cells); err != nil {
@@ -6084,7 +6084,7 @@ func (x NotebookCellLanguage) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("language")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`language`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Language)); err != nil {
@@ -6097,14 +6097,14 @@ func (x NotebookCellTextDocumentFilter) MarshalJSONTo(enc *jsontext.Encoder) err
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("notebook")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`notebook`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Notebook); err != nil {
 		return err
 	}
 	if x.Language != nil {
-		if err := enc.WriteToken(jsontext.String("language")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`language`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Language); err != nil {
@@ -6118,33 +6118,33 @@ func (x NotebookDocument) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("uri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`uri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(string(x.URI))); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("notebookType")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`notebookType`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.NotebookType)); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("version")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`version`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.Int(int64(x.Version))); err != nil {
 		return err
 	}
 	if len(x.Metadata) > 0 {
-		if err := enc.WriteToken(jsontext.String("metadata")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`metadata`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Metadata); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("cells")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`cells`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Cells); err != nil {
@@ -6157,14 +6157,14 @@ func (x NotebookDocumentCellChangeStructure) MarshalJSONTo(enc *jsontext.Encoder
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("array")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`array`)); err != nil {
 		return err
 	}
 	if err := x.Array.MarshalJSONTo(enc); err != nil {
 		return err
 	}
 	if len(x.DidOpen) > 0 {
-		if err := enc.WriteToken(jsontext.String("didOpen")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`didOpen`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DidOpen); err != nil {
@@ -6172,7 +6172,7 @@ func (x NotebookDocumentCellChangeStructure) MarshalJSONTo(enc *jsontext.Encoder
 		}
 	}
 	if len(x.DidClose) > 0 {
-		if err := enc.WriteToken(jsontext.String("didClose")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`didClose`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DidClose); err != nil {
@@ -6187,7 +6187,7 @@ func (x NotebookDocumentCellChanges) MarshalJSONTo(enc *jsontext.Encoder) error 
 		return err
 	}
 	if x.Structure != nil {
-		if err := enc.WriteToken(jsontext.String("structure")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`structure`)); err != nil {
 			return err
 		}
 		if err := x.Structure.MarshalJSONTo(enc); err != nil {
@@ -6195,7 +6195,7 @@ func (x NotebookDocumentCellChanges) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if len(x.Data) > 0 {
-		if err := enc.WriteToken(jsontext.String("data")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`data`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Data); err != nil {
@@ -6203,7 +6203,7 @@ func (x NotebookDocumentCellChanges) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if len(x.TextContent) > 0 {
-		if err := enc.WriteToken(jsontext.String("textContent")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`textContent`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.TextContent); err != nil {
@@ -6217,13 +6217,13 @@ func (x NotebookDocumentCellContentChanges) MarshalJSONTo(enc *jsontext.Encoder)
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("document")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`document`)); err != nil {
 		return err
 	}
 	if err := x.Document.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("changes")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`changes`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Changes); err != nil {
@@ -6237,7 +6237,7 @@ func (x NotebookDocumentChangeEvent) MarshalJSONTo(enc *jsontext.Encoder) error 
 		return err
 	}
 	if len(x.Metadata) > 0 {
-		if err := enc.WriteToken(jsontext.String("metadata")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`metadata`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Metadata); err != nil {
@@ -6245,7 +6245,7 @@ func (x NotebookDocumentChangeEvent) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if x.Cells != nil {
-		if err := enc.WriteToken(jsontext.String("cells")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`cells`)); err != nil {
 			return err
 		}
 		if err := x.Cells.MarshalJSONTo(enc); err != nil {
@@ -6259,7 +6259,7 @@ func (x NotebookDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder)
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("synchronization")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`synchronization`)); err != nil {
 		return err
 	}
 	if err := x.Synchronization.MarshalJSONTo(enc); err != nil {
@@ -6272,14 +6272,14 @@ func (x NotebookDocumentFilterNotebookType) MarshalJSONTo(enc *jsontext.Encoder)
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("notebookType")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`notebookType`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.NotebookType)); err != nil {
 		return err
 	}
 	if x.Scheme != nil {
-		if err := enc.WriteToken(jsontext.String("scheme")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`scheme`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Scheme); err != nil {
@@ -6287,7 +6287,7 @@ func (x NotebookDocumentFilterNotebookType) MarshalJSONTo(enc *jsontext.Encoder)
 		}
 	}
 	if x.Pattern != nil {
-		if err := enc.WriteToken(jsontext.String("pattern")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`pattern`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Pattern); err != nil {
@@ -6302,7 +6302,7 @@ func (x NotebookDocumentFilterPattern) MarshalJSONTo(enc *jsontext.Encoder) erro
 		return err
 	}
 	if x.NotebookType != nil {
-		if err := enc.WriteToken(jsontext.String("notebookType")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`notebookType`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.NotebookType); err != nil {
@@ -6310,14 +6310,14 @@ func (x NotebookDocumentFilterPattern) MarshalJSONTo(enc *jsontext.Encoder) erro
 		}
 	}
 	if x.Scheme != nil {
-		if err := enc.WriteToken(jsontext.String("scheme")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`scheme`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Scheme); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("pattern")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`pattern`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Pattern); err != nil {
@@ -6331,21 +6331,21 @@ func (x NotebookDocumentFilterScheme) MarshalJSONTo(enc *jsontext.Encoder) error
 		return err
 	}
 	if x.NotebookType != nil {
-		if err := enc.WriteToken(jsontext.String("notebookType")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`notebookType`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.NotebookType); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("scheme")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`scheme`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Scheme)); err != nil {
 		return err
 	}
 	if x.Pattern != nil {
-		if err := enc.WriteToken(jsontext.String("pattern")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`pattern`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Pattern); err != nil {
@@ -6360,14 +6360,14 @@ func (x NotebookDocumentFilterWithCells) MarshalJSONTo(enc *jsontext.Encoder) er
 		return err
 	}
 	if x.Notebook != nil {
-		if err := enc.WriteToken(jsontext.String("notebook")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`notebook`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Notebook); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("cells")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`cells`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Cells); err != nil {
@@ -6380,14 +6380,14 @@ func (x NotebookDocumentFilterWithNotebook) MarshalJSONTo(enc *jsontext.Encoder)
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("notebook")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`notebook`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Notebook); err != nil {
 		return err
 	}
 	if len(x.Cells) > 0 {
-		if err := enc.WriteToken(jsontext.String("cells")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`cells`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Cells); err != nil {
@@ -6401,7 +6401,7 @@ func (x NotebookDocumentIdentifier) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("uri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`uri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(string(x.URI))); err != nil {
@@ -6415,7 +6415,7 @@ func (x NotebookDocumentSyncClientCapabilities) MarshalJSONTo(enc *jsontext.Enco
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -6423,7 +6423,7 @@ func (x NotebookDocumentSyncClientCapabilities) MarshalJSONTo(enc *jsontext.Enco
 		}
 	}
 	if x.ExecutionSummarySupport != nil {
-		if err := enc.WriteToken(jsontext.String("executionSummarySupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`executionSummarySupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ExecutionSummarySupport); err != nil {
@@ -6437,14 +6437,14 @@ func (x NotebookDocumentSyncOptions) MarshalJSONTo(enc *jsontext.Encoder) error 
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("notebookSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`notebookSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.NotebookSelector); err != nil {
 		return err
 	}
 	if x.Save != nil {
-		if err := enc.WriteToken(jsontext.String("save")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`save`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Save); err != nil {
@@ -6458,14 +6458,14 @@ func (x NotebookDocumentSyncRegistrationOptions) MarshalJSONTo(enc *jsontext.Enc
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("notebookSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`notebookSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.NotebookSelector); err != nil {
 		return err
 	}
 	if x.Save != nil {
-		if err := enc.WriteToken(jsontext.String("save")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`save`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Save); err != nil {
@@ -6473,7 +6473,7 @@ func (x NotebookDocumentSyncRegistrationOptions) MarshalJSONTo(enc *jsontext.Enc
 		}
 	}
 	if x.ID != nil {
-		if err := enc.WriteToken(jsontext.String("id")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`id`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ID); err != nil {
@@ -6487,13 +6487,13 @@ func (x OptionalVersionedTextDocumentIdentifier) MarshalJSONTo(enc *jsontext.Enc
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("uri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`uri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(string(x.URI))); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("version")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`version`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Version); err != nil {
@@ -6506,14 +6506,14 @@ func (x ParameterInformation) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("label")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`label`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Label); err != nil {
 		return err
 	}
 	if x.Documentation != nil {
-		if err := enc.WriteToken(jsontext.String("documentation")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`documentation`)); err != nil {
 			return err
 		}
 		if v, ok := x.Documentation.(String); ok {
@@ -6539,7 +6539,7 @@ func (x PartialResultParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.PartialResultToken != nil {
-		if err := enc.WriteToken(jsontext.String("partialResultToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`partialResultToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.PartialResultToken); err != nil {
@@ -6553,13 +6553,13 @@ func (x Position) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("line")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`line`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.Uint(uint64(x.Line))); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("character")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`character`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.Uint(uint64(x.Character))); err != nil {
@@ -6572,7 +6572,7 @@ func (x PrepareRenameDefaultBehavior) MarshalJSONTo(enc *jsontext.Encoder) error
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("defaultBehavior")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`defaultBehavior`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DefaultBehavior); err != nil {
@@ -6585,20 +6585,20 @@ func (x PrepareRenameParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("position")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`position`)); err != nil {
 		return err
 	}
 	if err := encodePositionTo(enc, x.Position); err != nil {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -6612,13 +6612,13 @@ func (x PrepareRenamePlaceholder) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("range")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Range); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("placeholder")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`placeholder`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Placeholder)); err != nil {
@@ -6631,13 +6631,13 @@ func (x PreviousResultId) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("uri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`uri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(string(x.URI))); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("value")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`value`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Value)); err != nil {
@@ -6650,13 +6650,13 @@ func (x ProgressParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("token")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`token`)); err != nil {
 		return err
 	}
 	if err := encodeProgressTokenTo(enc, x.Token); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("value")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`value`)); err != nil {
 		return err
 	}
 	if err := enc.WriteValue(x.Value); err != nil {
@@ -6670,7 +6670,7 @@ func (x PublishDiagnosticsClientCapabilities) MarshalJSONTo(enc *jsontext.Encode
 		return err
 	}
 	if x.RelatedInformation != nil {
-		if err := enc.WriteToken(jsontext.String("relatedInformation")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`relatedInformation`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.RelatedInformation); err != nil {
@@ -6678,7 +6678,7 @@ func (x PublishDiagnosticsClientCapabilities) MarshalJSONTo(enc *jsontext.Encode
 		}
 	}
 	if !isZeroGeneratedClientDiagnosticsTagOptions(x.TagSupport) {
-		if err := enc.WriteToken(jsontext.String("tagSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`tagSupport`)); err != nil {
 			return err
 		}
 		if err := x.TagSupport.MarshalJSONTo(enc); err != nil {
@@ -6686,7 +6686,7 @@ func (x PublishDiagnosticsClientCapabilities) MarshalJSONTo(enc *jsontext.Encode
 		}
 	}
 	if x.CodeDescriptionSupport != nil {
-		if err := enc.WriteToken(jsontext.String("codeDescriptionSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`codeDescriptionSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.CodeDescriptionSupport); err != nil {
@@ -6694,7 +6694,7 @@ func (x PublishDiagnosticsClientCapabilities) MarshalJSONTo(enc *jsontext.Encode
 		}
 	}
 	if x.DataSupport != nil {
-		if err := enc.WriteToken(jsontext.String("dataSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dataSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DataSupport); err != nil {
@@ -6702,7 +6702,7 @@ func (x PublishDiagnosticsClientCapabilities) MarshalJSONTo(enc *jsontext.Encode
 		}
 	}
 	if x.VersionSupport != nil {
-		if err := enc.WriteToken(jsontext.String("versionSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`versionSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.VersionSupport); err != nil {
@@ -6716,21 +6716,21 @@ func (x PublishDiagnosticsParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("uri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`uri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(string(x.URI))); err != nil {
 		return err
 	}
 	if v, ok := x.Version.Get(); ok {
-		if err := enc.WriteToken(jsontext.String("version")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`version`)); err != nil {
 			return err
 		}
 		if err := enc.WriteToken(jsontext.Int(int64(v))); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("diagnostics")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`diagnostics`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Diagnostics); err != nil {
@@ -6743,13 +6743,13 @@ func (x Range) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("start")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`start`)); err != nil {
 		return err
 	}
 	if err := encodePositionTo(enc, x.Start); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("end")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`end`)); err != nil {
 		return err
 	}
 	if err := encodePositionTo(enc, x.End); err != nil {
@@ -6763,7 +6763,7 @@ func (x ReferenceClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error 
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -6777,7 +6777,7 @@ func (x ReferenceContext) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("includeDeclaration")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`includeDeclaration`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.IncludeDeclaration); err != nil {
@@ -6791,7 +6791,7 @@ func (x ReferenceOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -6805,20 +6805,20 @@ func (x ReferenceParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("position")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`position`)); err != nil {
 		return err
 	}
 	if err := encodePositionTo(enc, x.Position); err != nil {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -6826,14 +6826,14 @@ func (x ReferenceParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PartialResultToken != nil {
-		if err := enc.WriteToken(jsontext.String("partialResultToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`partialResultToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.PartialResultToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("context")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`context`)); err != nil {
 		return err
 	}
 	if err := x.Context.MarshalJSONTo(enc); err != nil {
@@ -6846,14 +6846,14 @@ func (x ReferenceRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) error
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -6867,20 +6867,20 @@ func (x Registration) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("id")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`id`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.ID)); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("method")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`method`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Method)); err != nil {
 		return err
 	}
 	if len(x.RegisterOptions) > 0 {
-		if err := enc.WriteToken(jsontext.String("registerOptions")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`registerOptions`)); err != nil {
 			return err
 		}
 		if err := enc.WriteValue(x.RegisterOptions); err != nil {
@@ -6894,7 +6894,7 @@ func (x RegistrationParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("registrations")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`registrations`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Registrations); err != nil {
@@ -6907,14 +6907,14 @@ func (x RegularExpressionsClientCapabilities) MarshalJSONTo(enc *jsontext.Encode
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("engine")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`engine`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Engine); err != nil {
 		return err
 	}
 	if x.Version != nil {
-		if err := enc.WriteToken(jsontext.String("version")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`version`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Version); err != nil {
@@ -6928,28 +6928,28 @@ func (x RelatedFullDocumentDiagnosticReport) MarshalJSONTo(enc *jsontext.Encoder
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Kind)); err != nil {
 		return err
 	}
 	if x.ResultID != nil {
-		if err := enc.WriteToken(jsontext.String("resultId")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`resultId`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ResultID); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("items")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`items`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Items); err != nil {
 		return err
 	}
 	if len(x.RelatedDocuments) > 0 {
-		if err := enc.WriteToken(jsontext.String("relatedDocuments")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`relatedDocuments`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.RelatedDocuments); err != nil {
@@ -6963,20 +6963,20 @@ func (x RelatedUnchangedDocumentDiagnosticReport) MarshalJSONTo(enc *jsontext.En
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Kind)); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("resultId")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`resultId`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.ResultID)); err != nil {
 		return err
 	}
 	if len(x.RelatedDocuments) > 0 {
-		if err := enc.WriteToken(jsontext.String("relatedDocuments")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`relatedDocuments`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.RelatedDocuments); err != nil {
@@ -6990,13 +6990,13 @@ func (x RelativePattern) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("baseUri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`baseUri`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.BaseURI); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("pattern")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`pattern`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Pattern); err != nil {
@@ -7010,7 +7010,7 @@ func (x RenameClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -7018,7 +7018,7 @@ func (x RenameClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PrepareSupport != nil {
-		if err := enc.WriteToken(jsontext.String("prepareSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`prepareSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.PrepareSupport); err != nil {
@@ -7026,7 +7026,7 @@ func (x RenameClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PrepareSupportDefaultBehavior != 0 {
-		if err := enc.WriteToken(jsontext.String("prepareSupportDefaultBehavior")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`prepareSupportDefaultBehavior`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.PrepareSupportDefaultBehavior); err != nil {
@@ -7034,7 +7034,7 @@ func (x RenameClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.HonorsChangeAnnotations != nil {
-		if err := enc.WriteToken(jsontext.String("honorsChangeAnnotations")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`honorsChangeAnnotations`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.HonorsChangeAnnotations); err != nil {
@@ -7049,33 +7049,33 @@ func (x RenameFile) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.AnnotationID != "" {
-		if err := enc.WriteToken(jsontext.String("annotationId")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`annotationId`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.AnnotationID); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Kind)); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("oldUri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`oldUri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(string(x.OldURI))); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("newUri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`newUri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(string(x.NewURI))); err != nil {
 		return err
 	}
 	if x.Options != nil {
-		if err := enc.WriteToken(jsontext.String("options")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`options`)); err != nil {
 			return err
 		}
 		if err := x.Options.MarshalJSONTo(enc); err != nil {
@@ -7090,7 +7090,7 @@ func (x RenameFileOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.Overwrite != nil {
-		if err := enc.WriteToken(jsontext.String("overwrite")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`overwrite`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Overwrite); err != nil {
@@ -7098,7 +7098,7 @@ func (x RenameFileOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.IgnoreIfExists != nil {
-		if err := enc.WriteToken(jsontext.String("ignoreIfExists")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`ignoreIfExists`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.IgnoreIfExists); err != nil {
@@ -7112,7 +7112,7 @@ func (x RenameFilesParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("files")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`files`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Files); err != nil {
@@ -7126,7 +7126,7 @@ func (x RenameOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -7134,7 +7134,7 @@ func (x RenameOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PrepareProvider != nil {
-		if err := enc.WriteToken(jsontext.String("prepareProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`prepareProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.PrepareProvider); err != nil {
@@ -7148,27 +7148,27 @@ func (x RenameParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("position")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`position`)); err != nil {
 		return err
 	}
 	if err := encodePositionTo(enc, x.Position); err != nil {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("newName")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`newName`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.NewName)); err != nil {
@@ -7181,14 +7181,14 @@ func (x RenameRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -7196,7 +7196,7 @@ func (x RenameRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PrepareProvider != nil {
-		if err := enc.WriteToken(jsontext.String("prepareProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`prepareProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.PrepareProvider); err != nil {
@@ -7210,14 +7210,14 @@ func (x ResourceOperation) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Kind)); err != nil {
 		return err
 	}
 	if x.AnnotationID != "" {
-		if err := enc.WriteToken(jsontext.String("annotationId")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`annotationId`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.AnnotationID); err != nil {
@@ -7232,7 +7232,7 @@ func (x SaveOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.IncludeText != nil {
-		if err := enc.WriteToken(jsontext.String("includeText")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`includeText`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.IncludeText); err != nil {
@@ -7246,13 +7246,13 @@ func (x SelectedCompletionInfo) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("range")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Range); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("text")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`text`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Text)); err != nil {
@@ -7265,14 +7265,14 @@ func (x SelectionRange) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("range")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Range); err != nil {
 		return err
 	}
 	if x.Parent != nil {
-		if err := enc.WriteToken(jsontext.String("parent")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`parent`)); err != nil {
 			return err
 		}
 		if err := x.Parent.MarshalJSONTo(enc); err != nil {
@@ -7287,7 +7287,7 @@ func (x SelectionRangeClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) e
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -7302,7 +7302,7 @@ func (x SelectionRangeOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -7317,7 +7317,7 @@ func (x SelectionRangeParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -7325,20 +7325,20 @@ func (x SelectionRangeParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PartialResultToken != nil {
-		if err := enc.WriteToken(jsontext.String("partialResultToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`partialResultToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.PartialResultToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("positions")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`positions`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Positions); err != nil {
@@ -7352,21 +7352,21 @@ func (x SelectionRangeRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) 
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.ID != nil {
-		if err := enc.WriteToken(jsontext.String("id")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`id`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ID); err != nil {
@@ -7381,14 +7381,14 @@ func (x SemanticTokens) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.ResultID != nil {
-		if err := enc.WriteToken(jsontext.String("resultId")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`resultId`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ResultID); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("data")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`data`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Data); err != nil {
@@ -7402,39 +7402,39 @@ func (x SemanticTokensClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) e
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("requests")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`requests`)); err != nil {
 		return err
 	}
 	if err := x.Requests.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("tokenTypes")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`tokenTypes`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.TokenTypes); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("tokenModifiers")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`tokenModifiers`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.TokenModifiers); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("formats")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`formats`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Formats); err != nil {
 		return err
 	}
 	if x.OverlappingTokenSupport != nil {
-		if err := enc.WriteToken(jsontext.String("overlappingTokenSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`overlappingTokenSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.OverlappingTokenSupport); err != nil {
@@ -7442,7 +7442,7 @@ func (x SemanticTokensClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) e
 		}
 	}
 	if x.MultilineTokenSupport != nil {
-		if err := enc.WriteToken(jsontext.String("multilineTokenSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`multilineTokenSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.MultilineTokenSupport); err != nil {
@@ -7450,7 +7450,7 @@ func (x SemanticTokensClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) e
 		}
 	}
 	if x.ServerCancelSupport != nil {
-		if err := enc.WriteToken(jsontext.String("serverCancelSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`serverCancelSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ServerCancelSupport); err != nil {
@@ -7458,7 +7458,7 @@ func (x SemanticTokensClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) e
 		}
 	}
 	if x.AugmentsSyntaxTokens != nil {
-		if err := enc.WriteToken(jsontext.String("augmentsSyntaxTokens")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`augmentsSyntaxTokens`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.AugmentsSyntaxTokens); err != nil {
@@ -7473,14 +7473,14 @@ func (x SemanticTokensDelta) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.ResultID != nil {
-		if err := enc.WriteToken(jsontext.String("resultId")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`resultId`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ResultID); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("edits")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`edits`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Edits); err != nil {
@@ -7494,7 +7494,7 @@ func (x SemanticTokensDeltaParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -7502,20 +7502,20 @@ func (x SemanticTokensDeltaParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PartialResultToken != nil {
-		if err := enc.WriteToken(jsontext.String("partialResultToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`partialResultToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.PartialResultToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("previousResultId")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`previousResultId`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.PreviousResultID)); err != nil {
@@ -7528,7 +7528,7 @@ func (x SemanticTokensDeltaPartialResult) MarshalJSONTo(enc *jsontext.Encoder) e
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("edits")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`edits`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Edits); err != nil {
@@ -7541,20 +7541,20 @@ func (x SemanticTokensEdit) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("start")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`start`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.Uint(uint64(x.Start))); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("deleteCount")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`deleteCount`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.Uint(uint64(x.DeleteCount))); err != nil {
 		return err
 	}
 	if len(x.Data) > 0 {
-		if err := enc.WriteToken(jsontext.String("data")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`data`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Data); err != nil {
@@ -7569,7 +7569,7 @@ func (x SemanticTokensFullDelta) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.Delta != nil {
-		if err := enc.WriteToken(jsontext.String("delta")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`delta`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Delta); err != nil {
@@ -7583,13 +7583,13 @@ func (x SemanticTokensLegend) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("tokenTypes")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`tokenTypes`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.TokenTypes); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("tokenModifiers")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`tokenModifiers`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.TokenModifiers); err != nil {
@@ -7603,21 +7603,21 @@ func (x SemanticTokensOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("legend")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`legend`)); err != nil {
 		return err
 	}
 	if err := x.Legend.MarshalJSONTo(enc); err != nil {
 		return err
 	}
 	if x.Range != nil {
-		if err := enc.WriteToken(jsontext.String("range")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Range); err != nil {
@@ -7625,7 +7625,7 @@ func (x SemanticTokensOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Full != nil {
-		if err := enc.WriteToken(jsontext.String("full")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`full`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Full); err != nil {
@@ -7647,7 +7647,7 @@ func (x SemanticTokensParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -7655,14 +7655,14 @@ func (x SemanticTokensParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PartialResultToken != nil {
-		if err := enc.WriteToken(jsontext.String("partialResultToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`partialResultToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.PartialResultToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
@@ -7675,7 +7675,7 @@ func (x SemanticTokensPartialResult) MarshalJSONTo(enc *jsontext.Encoder) error 
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("data")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`data`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Data); err != nil {
@@ -7689,7 +7689,7 @@ func (x SemanticTokensRangeParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -7697,20 +7697,20 @@ func (x SemanticTokensRangeParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PartialResultToken != nil {
-		if err := enc.WriteToken(jsontext.String("partialResultToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`partialResultToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.PartialResultToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("range")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Range); err != nil {
@@ -7723,28 +7723,28 @@ func (x SemanticTokensRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) 
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("legend")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`legend`)); err != nil {
 		return err
 	}
 	if err := x.Legend.MarshalJSONTo(enc); err != nil {
 		return err
 	}
 	if x.Range != nil {
-		if err := enc.WriteToken(jsontext.String("range")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Range); err != nil {
@@ -7752,7 +7752,7 @@ func (x SemanticTokensRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) 
 		}
 	}
 	if x.Full != nil {
-		if err := enc.WriteToken(jsontext.String("full")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`full`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Full); err != nil {
@@ -7760,7 +7760,7 @@ func (x SemanticTokensRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) 
 		}
 	}
 	if x.ID != nil {
-		if err := enc.WriteToken(jsontext.String("id")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`id`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ID); err != nil {
@@ -7775,7 +7775,7 @@ func (x SemanticTokensWorkspaceClientCapabilities) MarshalJSONTo(enc *jsontext.E
 		return err
 	}
 	if x.RefreshSupport != nil {
-		if err := enc.WriteToken(jsontext.String("refreshSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`refreshSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.RefreshSupport); err != nil {
@@ -7790,7 +7790,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.PositionEncoding != "" {
-		if err := enc.WriteToken(jsontext.String("positionEncoding")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`positionEncoding`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.PositionEncoding); err != nil {
@@ -7798,7 +7798,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.TextDocumentSync != nil {
-		if err := enc.WriteToken(jsontext.String("textDocumentSync")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`textDocumentSync`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.TextDocumentSync); err != nil {
@@ -7806,7 +7806,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.NotebookDocumentSync != nil {
-		if err := enc.WriteToken(jsontext.String("notebookDocumentSync")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`notebookDocumentSync`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.NotebookDocumentSync); err != nil {
@@ -7814,7 +7814,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.CompletionProvider != nil {
-		if err := enc.WriteToken(jsontext.String("completionProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`completionProvider`)); err != nil {
 			return err
 		}
 		if err := x.CompletionProvider.MarshalJSONTo(enc); err != nil {
@@ -7822,7 +7822,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.HoverProvider != nil {
-		if err := enc.WriteToken(jsontext.String("hoverProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`hoverProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.HoverProvider); err != nil {
@@ -7830,7 +7830,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.SignatureHelpProvider != nil {
-		if err := enc.WriteToken(jsontext.String("signatureHelpProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`signatureHelpProvider`)); err != nil {
 			return err
 		}
 		if err := x.SignatureHelpProvider.MarshalJSONTo(enc); err != nil {
@@ -7838,7 +7838,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.DeclarationProvider != nil {
-		if err := enc.WriteToken(jsontext.String("declarationProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`declarationProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DeclarationProvider); err != nil {
@@ -7846,7 +7846,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.DefinitionProvider != nil {
-		if err := enc.WriteToken(jsontext.String("definitionProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`definitionProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DefinitionProvider); err != nil {
@@ -7854,7 +7854,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.TypeDefinitionProvider != nil {
-		if err := enc.WriteToken(jsontext.String("typeDefinitionProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`typeDefinitionProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.TypeDefinitionProvider); err != nil {
@@ -7862,7 +7862,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.ImplementationProvider != nil {
-		if err := enc.WriteToken(jsontext.String("implementationProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`implementationProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ImplementationProvider); err != nil {
@@ -7870,7 +7870,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.ReferencesProvider != nil {
-		if err := enc.WriteToken(jsontext.String("referencesProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`referencesProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ReferencesProvider); err != nil {
@@ -7878,7 +7878,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.DocumentHighlightProvider != nil {
-		if err := enc.WriteToken(jsontext.String("documentHighlightProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`documentHighlightProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DocumentHighlightProvider); err != nil {
@@ -7886,7 +7886,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.DocumentSymbolProvider != nil {
-		if err := enc.WriteToken(jsontext.String("documentSymbolProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`documentSymbolProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DocumentSymbolProvider); err != nil {
@@ -7894,7 +7894,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.CodeActionProvider != nil {
-		if err := enc.WriteToken(jsontext.String("codeActionProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`codeActionProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.CodeActionProvider); err != nil {
@@ -7902,7 +7902,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.CodeLensProvider != nil {
-		if err := enc.WriteToken(jsontext.String("codeLensProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`codeLensProvider`)); err != nil {
 			return err
 		}
 		if err := x.CodeLensProvider.MarshalJSONTo(enc); err != nil {
@@ -7910,7 +7910,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.DocumentLinkProvider != nil {
-		if err := enc.WriteToken(jsontext.String("documentLinkProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`documentLinkProvider`)); err != nil {
 			return err
 		}
 		if err := x.DocumentLinkProvider.MarshalJSONTo(enc); err != nil {
@@ -7918,7 +7918,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.ColorProvider != nil {
-		if err := enc.WriteToken(jsontext.String("colorProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`colorProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ColorProvider); err != nil {
@@ -7926,7 +7926,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.WorkspaceSymbolProvider != nil {
-		if err := enc.WriteToken(jsontext.String("workspaceSymbolProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workspaceSymbolProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkspaceSymbolProvider); err != nil {
@@ -7934,7 +7934,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.DocumentFormattingProvider != nil {
-		if err := enc.WriteToken(jsontext.String("documentFormattingProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`documentFormattingProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DocumentFormattingProvider); err != nil {
@@ -7942,7 +7942,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.DocumentRangeFormattingProvider != nil {
-		if err := enc.WriteToken(jsontext.String("documentRangeFormattingProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`documentRangeFormattingProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DocumentRangeFormattingProvider); err != nil {
@@ -7950,7 +7950,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if !isZeroGeneratedDocumentOnTypeFormattingOptions(x.DocumentOnTypeFormattingProvider) {
-		if err := enc.WriteToken(jsontext.String("documentOnTypeFormattingProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`documentOnTypeFormattingProvider`)); err != nil {
 			return err
 		}
 		if err := x.DocumentOnTypeFormattingProvider.MarshalJSONTo(enc); err != nil {
@@ -7958,7 +7958,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.RenameProvider != nil {
-		if err := enc.WriteToken(jsontext.String("renameProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`renameProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.RenameProvider); err != nil {
@@ -7966,7 +7966,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.FoldingRangeProvider != nil {
-		if err := enc.WriteToken(jsontext.String("foldingRangeProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`foldingRangeProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.FoldingRangeProvider); err != nil {
@@ -7974,7 +7974,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.SelectionRangeProvider != nil {
-		if err := enc.WriteToken(jsontext.String("selectionRangeProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`selectionRangeProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.SelectionRangeProvider); err != nil {
@@ -7982,7 +7982,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if !isZeroGeneratedExecuteCommandOptions(x.ExecuteCommandProvider) {
-		if err := enc.WriteToken(jsontext.String("executeCommandProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`executeCommandProvider`)); err != nil {
 			return err
 		}
 		if err := x.ExecuteCommandProvider.MarshalJSONTo(enc); err != nil {
@@ -7990,7 +7990,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.CallHierarchyProvider != nil {
-		if err := enc.WriteToken(jsontext.String("callHierarchyProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`callHierarchyProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.CallHierarchyProvider); err != nil {
@@ -7998,7 +7998,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.LinkedEditingRangeProvider != nil {
-		if err := enc.WriteToken(jsontext.String("linkedEditingRangeProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`linkedEditingRangeProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.LinkedEditingRangeProvider); err != nil {
@@ -8006,7 +8006,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.SemanticTokensProvider != nil {
-		if err := enc.WriteToken(jsontext.String("semanticTokensProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`semanticTokensProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.SemanticTokensProvider); err != nil {
@@ -8014,7 +8014,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.MonikerProvider != nil {
-		if err := enc.WriteToken(jsontext.String("monikerProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`monikerProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.MonikerProvider); err != nil {
@@ -8022,7 +8022,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.TypeHierarchyProvider != nil {
-		if err := enc.WriteToken(jsontext.String("typeHierarchyProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`typeHierarchyProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.TypeHierarchyProvider); err != nil {
@@ -8030,7 +8030,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.InlineValueProvider != nil {
-		if err := enc.WriteToken(jsontext.String("inlineValueProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`inlineValueProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.InlineValueProvider); err != nil {
@@ -8038,7 +8038,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.InlayHintProvider != nil {
-		if err := enc.WriteToken(jsontext.String("inlayHintProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`inlayHintProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.InlayHintProvider); err != nil {
@@ -8046,7 +8046,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.DiagnosticProvider != nil {
-		if err := enc.WriteToken(jsontext.String("diagnosticProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`diagnosticProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DiagnosticProvider); err != nil {
@@ -8054,7 +8054,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.InlineCompletionProvider != nil {
-		if err := enc.WriteToken(jsontext.String("inlineCompletionProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`inlineCompletionProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.InlineCompletionProvider); err != nil {
@@ -8062,7 +8062,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Workspace != nil {
-		if err := enc.WriteToken(jsontext.String("workspace")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workspace`)); err != nil {
 			return err
 		}
 		if err := x.Workspace.MarshalJSONTo(enc); err != nil {
@@ -8070,7 +8070,7 @@ func (x ServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.Experimental) > 0 {
-		if err := enc.WriteToken(jsontext.String("experimental")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`experimental`)); err != nil {
 			return err
 		}
 		if err := enc.WriteValue(x.Experimental); err != nil {
@@ -8085,7 +8085,7 @@ func (x ServerCompletionItemOptions) MarshalJSONTo(enc *jsontext.Encoder) error 
 		return err
 	}
 	if x.LabelDetailsSupport != nil {
-		if err := enc.WriteToken(jsontext.String("labelDetailsSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`labelDetailsSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.LabelDetailsSupport); err != nil {
@@ -8099,14 +8099,14 @@ func (x ServerInfo) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("name")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`name`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Name)); err != nil {
 		return err
 	}
 	if x.Version != nil {
-		if err := enc.WriteToken(jsontext.String("version")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`version`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Version); err != nil {
@@ -8120,7 +8120,7 @@ func (x SetTraceParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("value")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`value`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Value); err != nil {
@@ -8133,7 +8133,7 @@ func (x ShowDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("support")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`support`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Support); err != nil {
@@ -8146,14 +8146,14 @@ func (x ShowDocumentParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("uri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`uri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(string(x.URI))); err != nil {
 		return err
 	}
 	if x.External != nil {
-		if err := enc.WriteToken(jsontext.String("external")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`external`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.External); err != nil {
@@ -8161,7 +8161,7 @@ func (x ShowDocumentParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.TakeFocus != nil {
-		if err := enc.WriteToken(jsontext.String("takeFocus")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`takeFocus`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.TakeFocus); err != nil {
@@ -8169,7 +8169,7 @@ func (x ShowDocumentParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Selection != nil {
-		if err := enc.WriteToken(jsontext.String("selection")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`selection`)); err != nil {
 			return err
 		}
 		if err := x.Selection.MarshalJSONTo(enc); err != nil {
@@ -8183,7 +8183,7 @@ func (x ShowDocumentResult) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("success")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`success`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Success); err != nil {
@@ -8196,13 +8196,13 @@ func (x ShowMessageParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("type")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`type`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Type); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("message")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`message`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Message)); err != nil {
@@ -8216,7 +8216,7 @@ func (x ShowMessageRequestClientCapabilities) MarshalJSONTo(enc *jsontext.Encode
 		return err
 	}
 	if x.MessageActionItem != nil {
-		if err := enc.WriteToken(jsontext.String("messageActionItem")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`messageActionItem`)); err != nil {
 			return err
 		}
 		if err := x.MessageActionItem.MarshalJSONTo(enc); err != nil {
@@ -8230,20 +8230,20 @@ func (x ShowMessageRequestParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("type")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`type`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Type); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("message")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`message`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Message)); err != nil {
 		return err
 	}
 	if len(x.Actions) > 0 {
-		if err := enc.WriteToken(jsontext.String("actions")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`actions`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Actions); err != nil {
@@ -8257,14 +8257,14 @@ func (x SignatureHelp) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("signatures")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`signatures`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Signatures); err != nil {
 		return err
 	}
 	if x.ActiveSignature != nil {
-		if err := enc.WriteToken(jsontext.String("activeSignature")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`activeSignature`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ActiveSignature); err != nil {
@@ -8272,7 +8272,7 @@ func (x SignatureHelp) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if !x.ActiveParameter.IsZero() {
-		if err := enc.WriteToken(jsontext.String("activeParameter")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`activeParameter`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ActiveParameter); err != nil {
@@ -8287,7 +8287,7 @@ func (x SignatureHelpClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) er
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -8295,7 +8295,7 @@ func (x SignatureHelpClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) er
 		}
 	}
 	if x.SignatureInformation != nil {
-		if err := enc.WriteToken(jsontext.String("signatureInformation")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`signatureInformation`)); err != nil {
 			return err
 		}
 		if err := x.SignatureInformation.MarshalJSONTo(enc); err != nil {
@@ -8303,7 +8303,7 @@ func (x SignatureHelpClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) er
 		}
 	}
 	if x.ContextSupport != nil {
-		if err := enc.WriteToken(jsontext.String("contextSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`contextSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ContextSupport); err != nil {
@@ -8317,28 +8317,28 @@ func (x SignatureHelpContext) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("triggerKind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`triggerKind`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.TriggerKind); err != nil {
 		return err
 	}
 	if x.TriggerCharacter != nil {
-		if err := enc.WriteToken(jsontext.String("triggerCharacter")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`triggerCharacter`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.TriggerCharacter); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("isRetrigger")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`isRetrigger`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.IsRetrigger); err != nil {
 		return err
 	}
 	if !isZeroGeneratedSignatureHelp(x.ActiveSignatureHelp) {
-		if err := enc.WriteToken(jsontext.String("activeSignatureHelp")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`activeSignatureHelp`)); err != nil {
 			return err
 		}
 		if err := x.ActiveSignatureHelp.MarshalJSONTo(enc); err != nil {
@@ -8353,7 +8353,7 @@ func (x SignatureHelpOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -8361,7 +8361,7 @@ func (x SignatureHelpOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.TriggerCharacters) > 0 {
-		if err := enc.WriteToken(jsontext.String("triggerCharacters")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`triggerCharacters`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.TriggerCharacters); err != nil {
@@ -8369,7 +8369,7 @@ func (x SignatureHelpOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.RetriggerCharacters) > 0 {
-		if err := enc.WriteToken(jsontext.String("retriggerCharacters")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`retriggerCharacters`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.RetriggerCharacters); err != nil {
@@ -8383,20 +8383,20 @@ func (x SignatureHelpParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("position")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`position`)); err != nil {
 		return err
 	}
 	if err := encodePositionTo(enc, x.Position); err != nil {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -8404,7 +8404,7 @@ func (x SignatureHelpParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if !isZeroGeneratedSignatureHelpContext(x.Context) {
-		if err := enc.WriteToken(jsontext.String("context")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`context`)); err != nil {
 			return err
 		}
 		if err := x.Context.MarshalJSONTo(enc); err != nil {
@@ -8418,14 +8418,14 @@ func (x SignatureHelpRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) e
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -8433,7 +8433,7 @@ func (x SignatureHelpRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) e
 		}
 	}
 	if len(x.TriggerCharacters) > 0 {
-		if err := enc.WriteToken(jsontext.String("triggerCharacters")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`triggerCharacters`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.TriggerCharacters); err != nil {
@@ -8441,7 +8441,7 @@ func (x SignatureHelpRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) e
 		}
 	}
 	if len(x.RetriggerCharacters) > 0 {
-		if err := enc.WriteToken(jsontext.String("retriggerCharacters")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`retriggerCharacters`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.RetriggerCharacters); err != nil {
@@ -8455,14 +8455,14 @@ func (x SignatureInformation) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("label")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`label`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Label)); err != nil {
 		return err
 	}
 	if x.Documentation != nil {
-		if err := enc.WriteToken(jsontext.String("documentation")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`documentation`)); err != nil {
 			return err
 		}
 		if v, ok := x.Documentation.(String); ok {
@@ -8481,7 +8481,7 @@ func (x SignatureInformation) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.Parameters) > 0 {
-		if err := enc.WriteToken(jsontext.String("parameters")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`parameters`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Parameters); err != nil {
@@ -8489,7 +8489,7 @@ func (x SignatureInformation) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if !x.ActiveParameter.IsZero() {
-		if err := enc.WriteToken(jsontext.String("activeParameter")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`activeParameter`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ActiveParameter); err != nil {
@@ -8503,20 +8503,20 @@ func (x SnippetTextEdit) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("range")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Range); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("snippet")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`snippet`)); err != nil {
 		return err
 	}
 	if err := x.Snippet.MarshalJSONTo(enc); err != nil {
 		return err
 	}
 	if x.AnnotationID != "" {
-		if err := enc.WriteToken(jsontext.String("annotationId")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`annotationId`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.AnnotationID); err != nil {
@@ -8530,13 +8530,13 @@ func (x StaleRequestSupportOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("cancel")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`cancel`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Cancel); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("retryOnContentModified")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`retryOnContentModified`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.RetryOnContentModified); err != nil {
@@ -8550,7 +8550,7 @@ func (x StaticRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.ID != nil {
-		if err := enc.WriteToken(jsontext.String("id")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`id`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ID); err != nil {
@@ -8564,13 +8564,13 @@ func (x StringValue) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Kind)); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("value")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`value`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Value)); err != nil {
@@ -8583,20 +8583,20 @@ func (x SymbolInformation) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("name")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`name`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Name)); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Kind); err != nil {
 		return err
 	}
 	if len(x.Tags) > 0 {
-		if err := enc.WriteToken(jsontext.String("tags")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`tags`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Tags); err != nil {
@@ -8604,7 +8604,7 @@ func (x SymbolInformation) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.ContainerName != nil {
-		if err := enc.WriteToken(jsontext.String("containerName")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`containerName`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ContainerName); err != nil {
@@ -8612,14 +8612,14 @@ func (x SymbolInformation) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Deprecated != nil {
-		if err := enc.WriteToken(jsontext.String("deprecated")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`deprecated`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Deprecated); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("location")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`location`)); err != nil {
 		return err
 	}
 	if err := x.Location.MarshalJSONTo(enc); err != nil {
@@ -8632,13 +8632,13 @@ func (x TextDocumentChangeRegistrationOptions) MarshalJSONTo(enc *jsontext.Encod
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("syncKind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`syncKind`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.SyncKind); err != nil {
@@ -8652,7 +8652,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		return err
 	}
 	if x.Synchronization != nil {
-		if err := enc.WriteToken(jsontext.String("synchronization")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`synchronization`)); err != nil {
 			return err
 		}
 		if err := x.Synchronization.MarshalJSONTo(enc); err != nil {
@@ -8660,7 +8660,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.Filters != nil {
-		if err := enc.WriteToken(jsontext.String("filters")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`filters`)); err != nil {
 			return err
 		}
 		if err := x.Filters.MarshalJSONTo(enc); err != nil {
@@ -8668,7 +8668,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.Completion != nil {
-		if err := enc.WriteToken(jsontext.String("completion")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`completion`)); err != nil {
 			return err
 		}
 		if err := x.Completion.MarshalJSONTo(enc); err != nil {
@@ -8676,7 +8676,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.Hover != nil {
-		if err := enc.WriteToken(jsontext.String("hover")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`hover`)); err != nil {
 			return err
 		}
 		if err := x.Hover.MarshalJSONTo(enc); err != nil {
@@ -8684,7 +8684,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.SignatureHelp != nil {
-		if err := enc.WriteToken(jsontext.String("signatureHelp")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`signatureHelp`)); err != nil {
 			return err
 		}
 		if err := x.SignatureHelp.MarshalJSONTo(enc); err != nil {
@@ -8692,7 +8692,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.Declaration != nil {
-		if err := enc.WriteToken(jsontext.String("declaration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`declaration`)); err != nil {
 			return err
 		}
 		if err := x.Declaration.MarshalJSONTo(enc); err != nil {
@@ -8700,7 +8700,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.Definition != nil {
-		if err := enc.WriteToken(jsontext.String("definition")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`definition`)); err != nil {
 			return err
 		}
 		if err := x.Definition.MarshalJSONTo(enc); err != nil {
@@ -8708,7 +8708,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.TypeDefinition != nil {
-		if err := enc.WriteToken(jsontext.String("typeDefinition")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`typeDefinition`)); err != nil {
 			return err
 		}
 		if err := x.TypeDefinition.MarshalJSONTo(enc); err != nil {
@@ -8716,7 +8716,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.Implementation != nil {
-		if err := enc.WriteToken(jsontext.String("implementation")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`implementation`)); err != nil {
 			return err
 		}
 		if err := x.Implementation.MarshalJSONTo(enc); err != nil {
@@ -8724,7 +8724,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.References != nil {
-		if err := enc.WriteToken(jsontext.String("references")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`references`)); err != nil {
 			return err
 		}
 		if err := x.References.MarshalJSONTo(enc); err != nil {
@@ -8732,7 +8732,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.DocumentHighlight != nil {
-		if err := enc.WriteToken(jsontext.String("documentHighlight")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`documentHighlight`)); err != nil {
 			return err
 		}
 		if err := x.DocumentHighlight.MarshalJSONTo(enc); err != nil {
@@ -8740,7 +8740,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.DocumentSymbol != nil {
-		if err := enc.WriteToken(jsontext.String("documentSymbol")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`documentSymbol`)); err != nil {
 			return err
 		}
 		if err := x.DocumentSymbol.MarshalJSONTo(enc); err != nil {
@@ -8748,7 +8748,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.CodeAction != nil {
-		if err := enc.WriteToken(jsontext.String("codeAction")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`codeAction`)); err != nil {
 			return err
 		}
 		if err := x.CodeAction.MarshalJSONTo(enc); err != nil {
@@ -8756,7 +8756,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.CodeLens != nil {
-		if err := enc.WriteToken(jsontext.String("codeLens")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`codeLens`)); err != nil {
 			return err
 		}
 		if err := x.CodeLens.MarshalJSONTo(enc); err != nil {
@@ -8764,7 +8764,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.DocumentLink != nil {
-		if err := enc.WriteToken(jsontext.String("documentLink")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`documentLink`)); err != nil {
 			return err
 		}
 		if err := x.DocumentLink.MarshalJSONTo(enc); err != nil {
@@ -8772,7 +8772,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.ColorProvider != nil {
-		if err := enc.WriteToken(jsontext.String("colorProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`colorProvider`)); err != nil {
 			return err
 		}
 		if err := x.ColorProvider.MarshalJSONTo(enc); err != nil {
@@ -8780,7 +8780,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.Formatting != nil {
-		if err := enc.WriteToken(jsontext.String("formatting")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`formatting`)); err != nil {
 			return err
 		}
 		if err := x.Formatting.MarshalJSONTo(enc); err != nil {
@@ -8788,7 +8788,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.RangeFormatting != nil {
-		if err := enc.WriteToken(jsontext.String("rangeFormatting")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`rangeFormatting`)); err != nil {
 			return err
 		}
 		if err := x.RangeFormatting.MarshalJSONTo(enc); err != nil {
@@ -8796,7 +8796,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.OnTypeFormatting != nil {
-		if err := enc.WriteToken(jsontext.String("onTypeFormatting")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`onTypeFormatting`)); err != nil {
 			return err
 		}
 		if err := x.OnTypeFormatting.MarshalJSONTo(enc); err != nil {
@@ -8804,7 +8804,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.Rename != nil {
-		if err := enc.WriteToken(jsontext.String("rename")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`rename`)); err != nil {
 			return err
 		}
 		if err := x.Rename.MarshalJSONTo(enc); err != nil {
@@ -8812,7 +8812,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.FoldingRange != nil {
-		if err := enc.WriteToken(jsontext.String("foldingRange")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`foldingRange`)); err != nil {
 			return err
 		}
 		if err := x.FoldingRange.MarshalJSONTo(enc); err != nil {
@@ -8820,7 +8820,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.SelectionRange != nil {
-		if err := enc.WriteToken(jsontext.String("selectionRange")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`selectionRange`)); err != nil {
 			return err
 		}
 		if err := x.SelectionRange.MarshalJSONTo(enc); err != nil {
@@ -8828,7 +8828,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.PublishDiagnostics != nil {
-		if err := enc.WriteToken(jsontext.String("publishDiagnostics")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`publishDiagnostics`)); err != nil {
 			return err
 		}
 		if err := x.PublishDiagnostics.MarshalJSONTo(enc); err != nil {
@@ -8836,7 +8836,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.CallHierarchy != nil {
-		if err := enc.WriteToken(jsontext.String("callHierarchy")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`callHierarchy`)); err != nil {
 			return err
 		}
 		if err := x.CallHierarchy.MarshalJSONTo(enc); err != nil {
@@ -8844,7 +8844,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if !isZeroGeneratedSemanticTokensClientCapabilities(x.SemanticTokens) {
-		if err := enc.WriteToken(jsontext.String("semanticTokens")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`semanticTokens`)); err != nil {
 			return err
 		}
 		if err := x.SemanticTokens.MarshalJSONTo(enc); err != nil {
@@ -8852,7 +8852,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.LinkedEditingRange != nil {
-		if err := enc.WriteToken(jsontext.String("linkedEditingRange")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`linkedEditingRange`)); err != nil {
 			return err
 		}
 		if err := x.LinkedEditingRange.MarshalJSONTo(enc); err != nil {
@@ -8860,7 +8860,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.Moniker != nil {
-		if err := enc.WriteToken(jsontext.String("moniker")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`moniker`)); err != nil {
 			return err
 		}
 		if err := x.Moniker.MarshalJSONTo(enc); err != nil {
@@ -8868,7 +8868,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.TypeHierarchy != nil {
-		if err := enc.WriteToken(jsontext.String("typeHierarchy")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`typeHierarchy`)); err != nil {
 			return err
 		}
 		if err := x.TypeHierarchy.MarshalJSONTo(enc); err != nil {
@@ -8876,7 +8876,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.InlineValue != nil {
-		if err := enc.WriteToken(jsontext.String("inlineValue")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`inlineValue`)); err != nil {
 			return err
 		}
 		if err := x.InlineValue.MarshalJSONTo(enc); err != nil {
@@ -8884,7 +8884,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.InlayHint != nil {
-		if err := enc.WriteToken(jsontext.String("inlayHint")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`inlayHint`)); err != nil {
 			return err
 		}
 		if err := x.InlayHint.MarshalJSONTo(enc); err != nil {
@@ -8892,7 +8892,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.Diagnostic != nil {
-		if err := enc.WriteToken(jsontext.String("diagnostic")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`diagnostic`)); err != nil {
 			return err
 		}
 		if err := x.Diagnostic.MarshalJSONTo(enc); err != nil {
@@ -8900,7 +8900,7 @@ func (x TextDocumentClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) err
 		}
 	}
 	if x.InlineCompletion != nil {
-		if err := enc.WriteToken(jsontext.String("inlineCompletion")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`inlineCompletion`)); err != nil {
 			return err
 		}
 		if err := x.InlineCompletion.MarshalJSONTo(enc); err != nil {
@@ -8914,21 +8914,21 @@ func (x TextDocumentContentChangePartial) MarshalJSONTo(enc *jsontext.Encoder) e
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("range")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Range); err != nil {
 		return err
 	}
 	if x.RangeLength != nil {
-		if err := enc.WriteToken(jsontext.String("rangeLength")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`rangeLength`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.RangeLength); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("text")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`text`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Text)); err != nil {
@@ -8941,7 +8941,7 @@ func (x TextDocumentContentChangeWholeDocument) MarshalJSONTo(enc *jsontext.Enco
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("text")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`text`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Text)); err != nil {
@@ -8955,7 +8955,7 @@ func (x TextDocumentContentClientCapabilities) MarshalJSONTo(enc *jsontext.Encod
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -8969,7 +8969,7 @@ func (x TextDocumentContentOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("schemes")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`schemes`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Schemes); err != nil {
@@ -8982,7 +8982,7 @@ func (x TextDocumentContentParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("uri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`uri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(string(x.URI))); err != nil {
@@ -8995,7 +8995,7 @@ func (x TextDocumentContentRefreshParams) MarshalJSONTo(enc *jsontext.Encoder) e
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("uri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`uri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(string(x.URI))); err != nil {
@@ -9008,14 +9008,14 @@ func (x TextDocumentContentRegistrationOptions) MarshalJSONTo(enc *jsontext.Enco
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("schemes")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`schemes`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Schemes); err != nil {
 		return err
 	}
 	if x.ID != nil {
-		if err := enc.WriteToken(jsontext.String("id")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`id`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ID); err != nil {
@@ -9029,7 +9029,7 @@ func (x TextDocumentContentResult) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("text")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`text`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Text)); err != nil {
@@ -9042,13 +9042,13 @@ func (x TextDocumentEdit) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("edits")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`edits`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Edits); err != nil {
@@ -9062,7 +9062,7 @@ func (x TextDocumentFilterClientCapabilities) MarshalJSONTo(enc *jsontext.Encode
 		return err
 	}
 	if x.RelativePatternSupport != nil {
-		if err := enc.WriteToken(jsontext.String("relativePatternSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`relativePatternSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.RelativePatternSupport); err != nil {
@@ -9076,14 +9076,14 @@ func (x TextDocumentFilterLanguage) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("language")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`language`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Language)); err != nil {
 		return err
 	}
 	if x.Scheme != nil {
-		if err := enc.WriteToken(jsontext.String("scheme")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`scheme`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Scheme); err != nil {
@@ -9091,7 +9091,7 @@ func (x TextDocumentFilterLanguage) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Pattern != nil {
-		if err := enc.WriteToken(jsontext.String("pattern")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`pattern`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Pattern); err != nil {
@@ -9106,7 +9106,7 @@ func (x TextDocumentFilterPattern) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.Language != nil {
-		if err := enc.WriteToken(jsontext.String("language")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`language`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Language); err != nil {
@@ -9114,14 +9114,14 @@ func (x TextDocumentFilterPattern) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Scheme != nil {
-		if err := enc.WriteToken(jsontext.String("scheme")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`scheme`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Scheme); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("pattern")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`pattern`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Pattern); err != nil {
@@ -9135,21 +9135,21 @@ func (x TextDocumentFilterScheme) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.Language != nil {
-		if err := enc.WriteToken(jsontext.String("language")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`language`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Language); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("scheme")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`scheme`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Scheme)); err != nil {
 		return err
 	}
 	if x.Pattern != nil {
-		if err := enc.WriteToken(jsontext.String("pattern")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`pattern`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Pattern); err != nil {
@@ -9163,7 +9163,7 @@ func (x TextDocumentIdentifier) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("uri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`uri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(string(x.URI))); err != nil {
@@ -9176,25 +9176,25 @@ func (x TextDocumentItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("uri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`uri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(string(x.URI))); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("languageId")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`languageId`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.LanguageID); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("version")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`version`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.Int(int64(x.Version))); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("text")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`text`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Text)); err != nil {
@@ -9207,13 +9207,13 @@ func (x TextDocumentPositionParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("position")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`position`)); err != nil {
 		return err
 	}
 	if err := encodePositionTo(enc, x.Position); err != nil {
@@ -9226,7 +9226,7 @@ func (x TextDocumentRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) er
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
@@ -9239,14 +9239,14 @@ func (x TextDocumentSaveRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.IncludeText != nil {
-		if err := enc.WriteToken(jsontext.String("includeText")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`includeText`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.IncludeText); err != nil {
@@ -9261,7 +9261,7 @@ func (x TextDocumentSyncClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder)
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -9269,7 +9269,7 @@ func (x TextDocumentSyncClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder)
 		}
 	}
 	if x.WillSave != nil {
-		if err := enc.WriteToken(jsontext.String("willSave")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`willSave`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WillSave); err != nil {
@@ -9277,7 +9277,7 @@ func (x TextDocumentSyncClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder)
 		}
 	}
 	if x.WillSaveWaitUntil != nil {
-		if err := enc.WriteToken(jsontext.String("willSaveWaitUntil")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`willSaveWaitUntil`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WillSaveWaitUntil); err != nil {
@@ -9285,7 +9285,7 @@ func (x TextDocumentSyncClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder)
 		}
 	}
 	if x.DidSave != nil {
-		if err := enc.WriteToken(jsontext.String("didSave")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`didSave`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DidSave); err != nil {
@@ -9300,7 +9300,7 @@ func (x TextDocumentSyncOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.OpenClose != nil {
-		if err := enc.WriteToken(jsontext.String("openClose")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`openClose`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.OpenClose); err != nil {
@@ -9308,7 +9308,7 @@ func (x TextDocumentSyncOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Change != nil {
-		if err := enc.WriteToken(jsontext.String("change")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`change`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Change); err != nil {
@@ -9316,7 +9316,7 @@ func (x TextDocumentSyncOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.WillSave != nil {
-		if err := enc.WriteToken(jsontext.String("willSave")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`willSave`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WillSave); err != nil {
@@ -9324,7 +9324,7 @@ func (x TextDocumentSyncOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.WillSaveWaitUntil != nil {
-		if err := enc.WriteToken(jsontext.String("willSaveWaitUntil")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`willSaveWaitUntil`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WillSaveWaitUntil); err != nil {
@@ -9332,7 +9332,7 @@ func (x TextDocumentSyncOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Save != nil {
-		if err := enc.WriteToken(jsontext.String("save")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`save`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Save); err != nil {
@@ -9346,13 +9346,13 @@ func (x TextEdit) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("range")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Range); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("newText")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`newText`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.NewText)); err != nil {
@@ -9366,7 +9366,7 @@ func (x TypeDefinitionClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) e
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -9374,7 +9374,7 @@ func (x TypeDefinitionClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) e
 		}
 	}
 	if x.LinkSupport != nil {
-		if err := enc.WriteToken(jsontext.String("linkSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`linkSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.LinkSupport); err != nil {
@@ -9389,7 +9389,7 @@ func (x TypeDefinitionOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -9403,20 +9403,20 @@ func (x TypeDefinitionParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("position")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`position`)); err != nil {
 		return err
 	}
 	if err := encodePositionTo(enc, x.Position); err != nil {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -9424,7 +9424,7 @@ func (x TypeDefinitionParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PartialResultToken != nil {
-		if err := enc.WriteToken(jsontext.String("partialResultToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`partialResultToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.PartialResultToken); err != nil {
@@ -9438,14 +9438,14 @@ func (x TypeDefinitionRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) 
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -9453,7 +9453,7 @@ func (x TypeDefinitionRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) 
 		}
 	}
 	if x.ID != nil {
-		if err := enc.WriteToken(jsontext.String("id")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`id`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ID); err != nil {
@@ -9468,7 +9468,7 @@ func (x TypeHierarchyClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) er
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -9482,20 +9482,20 @@ func (x TypeHierarchyItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("name")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`name`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Name)); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Kind); err != nil {
 		return err
 	}
 	if len(x.Tags) > 0 {
-		if err := enc.WriteToken(jsontext.String("tags")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`tags`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Tags); err != nil {
@@ -9503,33 +9503,33 @@ func (x TypeHierarchyItem) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Detail != nil {
-		if err := enc.WriteToken(jsontext.String("detail")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`detail`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Detail); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("uri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`uri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(string(x.URI))); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("range")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`range`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.Range); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("selectionRange")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`selectionRange`)); err != nil {
 		return err
 	}
 	if err := encodeRangeTo(enc, x.SelectionRange); err != nil {
 		return err
 	}
 	if len(x.Data) > 0 {
-		if err := enc.WriteToken(jsontext.String("data")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`data`)); err != nil {
 			return err
 		}
 		if err := enc.WriteValue(x.Data); err != nil {
@@ -9544,7 +9544,7 @@ func (x TypeHierarchyOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -9558,20 +9558,20 @@ func (x TypeHierarchyPrepareParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("position")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`position`)); err != nil {
 		return err
 	}
 	if err := encodePositionTo(enc, x.Position); err != nil {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -9585,14 +9585,14 @@ func (x TypeHierarchyRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) e
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("documentSelector")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`documentSelector`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.DocumentSelector); err != nil {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -9600,7 +9600,7 @@ func (x TypeHierarchyRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder) e
 		}
 	}
 	if x.ID != nil {
-		if err := enc.WriteToken(jsontext.String("id")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`id`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ID); err != nil {
@@ -9615,7 +9615,7 @@ func (x TypeHierarchySubtypesParams) MarshalJSONTo(enc *jsontext.Encoder) error 
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -9623,14 +9623,14 @@ func (x TypeHierarchySubtypesParams) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if x.PartialResultToken != nil {
-		if err := enc.WriteToken(jsontext.String("partialResultToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`partialResultToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.PartialResultToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("item")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`item`)); err != nil {
 		return err
 	}
 	if err := x.Item.MarshalJSONTo(enc); err != nil {
@@ -9644,7 +9644,7 @@ func (x TypeHierarchySupertypesParams) MarshalJSONTo(enc *jsontext.Encoder) erro
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -9652,14 +9652,14 @@ func (x TypeHierarchySupertypesParams) MarshalJSONTo(enc *jsontext.Encoder) erro
 		}
 	}
 	if x.PartialResultToken != nil {
-		if err := enc.WriteToken(jsontext.String("partialResultToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`partialResultToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.PartialResultToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("item")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`item`)); err != nil {
 		return err
 	}
 	if err := x.Item.MarshalJSONTo(enc); err != nil {
@@ -9672,13 +9672,13 @@ func (x UnchangedDocumentDiagnosticReport) MarshalJSONTo(enc *jsontext.Encoder) 
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Kind)); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("resultId")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`resultId`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.ResultID)); err != nil {
@@ -9691,13 +9691,13 @@ func (x Unregistration) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("id")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`id`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.ID)); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("method")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`method`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Method)); err != nil {
@@ -9710,7 +9710,7 @@ func (x UnregistrationParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("unregisterations")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`unregisterations`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Unregisterations); err != nil {
@@ -9723,13 +9723,13 @@ func (x VersionedNotebookDocumentIdentifier) MarshalJSONTo(enc *jsontext.Encoder
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("version")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`version`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.Int(int64(x.Version))); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("uri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`uri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(string(x.URI))); err != nil {
@@ -9742,13 +9742,13 @@ func (x VersionedTextDocumentIdentifier) MarshalJSONTo(enc *jsontext.Encoder) er
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("uri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`uri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(string(x.URI))); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("version")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`version`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.Int(int64(x.Version))); err != nil {
@@ -9761,13 +9761,13 @@ func (x WillSaveTextDocumentParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("textDocument")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`textDocument`)); err != nil {
 		return err
 	}
 	if err := x.TextDocument.MarshalJSONTo(enc); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("reason")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`reason`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Reason); err != nil {
@@ -9781,7 +9781,7 @@ func (x WindowClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -9789,7 +9789,7 @@ func (x WindowClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.ShowMessage != nil {
-		if err := enc.WriteToken(jsontext.String("showMessage")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`showMessage`)); err != nil {
 			return err
 		}
 		if err := x.ShowMessage.MarshalJSONTo(enc); err != nil {
@@ -9797,7 +9797,7 @@ func (x WindowClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.ShowDocument != nil {
-		if err := enc.WriteToken(jsontext.String("showDocument")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`showDocument`)); err != nil {
 			return err
 		}
 		if err := x.ShowDocument.MarshalJSONTo(enc); err != nil {
@@ -9811,20 +9811,20 @@ func (x WorkDoneProgressBegin) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Kind)); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("title")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`title`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Title)); err != nil {
 		return err
 	}
 	if x.Cancellable != nil {
-		if err := enc.WriteToken(jsontext.String("cancellable")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`cancellable`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Cancellable); err != nil {
@@ -9832,7 +9832,7 @@ func (x WorkDoneProgressBegin) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Message != nil {
-		if err := enc.WriteToken(jsontext.String("message")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`message`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Message); err != nil {
@@ -9840,7 +9840,7 @@ func (x WorkDoneProgressBegin) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Percentage != nil {
-		if err := enc.WriteToken(jsontext.String("percentage")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`percentage`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Percentage); err != nil {
@@ -9854,7 +9854,7 @@ func (x WorkDoneProgressCancelParams) MarshalJSONTo(enc *jsontext.Encoder) error
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("token")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`token`)); err != nil {
 		return err
 	}
 	if err := encodeProgressTokenTo(enc, x.Token); err != nil {
@@ -9867,7 +9867,7 @@ func (x WorkDoneProgressCreateParams) MarshalJSONTo(enc *jsontext.Encoder) error
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("token")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`token`)); err != nil {
 		return err
 	}
 	if err := encodeProgressTokenTo(enc, x.Token); err != nil {
@@ -9880,14 +9880,14 @@ func (x WorkDoneProgressEnd) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Kind)); err != nil {
 		return err
 	}
 	if x.Message != nil {
-		if err := enc.WriteToken(jsontext.String("message")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`message`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Message); err != nil {
@@ -9902,7 +9902,7 @@ func (x WorkDoneProgressOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -9917,7 +9917,7 @@ func (x WorkDoneProgressParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -9931,14 +9931,14 @@ func (x WorkDoneProgressReport) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Kind)); err != nil {
 		return err
 	}
 	if x.Cancellable != nil {
-		if err := enc.WriteToken(jsontext.String("cancellable")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`cancellable`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Cancellable); err != nil {
@@ -9946,7 +9946,7 @@ func (x WorkDoneProgressReport) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Message != nil {
-		if err := enc.WriteToken(jsontext.String("message")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`message`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Message); err != nil {
@@ -9954,7 +9954,7 @@ func (x WorkDoneProgressReport) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Percentage != nil {
-		if err := enc.WriteToken(jsontext.String("percentage")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`percentage`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Percentage); err != nil {
@@ -9969,7 +9969,7 @@ func (x WorkspaceClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error 
 		return err
 	}
 	if x.ApplyEdit != nil {
-		if err := enc.WriteToken(jsontext.String("applyEdit")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`applyEdit`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ApplyEdit); err != nil {
@@ -9977,7 +9977,7 @@ func (x WorkspaceClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if x.WorkspaceEdit != nil {
-		if err := enc.WriteToken(jsontext.String("workspaceEdit")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workspaceEdit`)); err != nil {
 			return err
 		}
 		if err := x.WorkspaceEdit.MarshalJSONTo(enc); err != nil {
@@ -9985,7 +9985,7 @@ func (x WorkspaceClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if x.DidChangeConfiguration != nil {
-		if err := enc.WriteToken(jsontext.String("didChangeConfiguration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`didChangeConfiguration`)); err != nil {
 			return err
 		}
 		if err := x.DidChangeConfiguration.MarshalJSONTo(enc); err != nil {
@@ -9993,7 +9993,7 @@ func (x WorkspaceClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if x.DidChangeWatchedFiles != nil {
-		if err := enc.WriteToken(jsontext.String("didChangeWatchedFiles")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`didChangeWatchedFiles`)); err != nil {
 			return err
 		}
 		if err := x.DidChangeWatchedFiles.MarshalJSONTo(enc); err != nil {
@@ -10001,7 +10001,7 @@ func (x WorkspaceClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if x.Symbol != nil {
-		if err := enc.WriteToken(jsontext.String("symbol")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`symbol`)); err != nil {
 			return err
 		}
 		if err := x.Symbol.MarshalJSONTo(enc); err != nil {
@@ -10009,7 +10009,7 @@ func (x WorkspaceClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if x.ExecuteCommand != nil {
-		if err := enc.WriteToken(jsontext.String("executeCommand")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`executeCommand`)); err != nil {
 			return err
 		}
 		if err := x.ExecuteCommand.MarshalJSONTo(enc); err != nil {
@@ -10017,7 +10017,7 @@ func (x WorkspaceClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if x.WorkspaceFolders != nil {
-		if err := enc.WriteToken(jsontext.String("workspaceFolders")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workspaceFolders`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkspaceFolders); err != nil {
@@ -10025,7 +10025,7 @@ func (x WorkspaceClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if x.Configuration != nil {
-		if err := enc.WriteToken(jsontext.String("configuration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`configuration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Configuration); err != nil {
@@ -10033,7 +10033,7 @@ func (x WorkspaceClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if x.SemanticTokens != nil {
-		if err := enc.WriteToken(jsontext.String("semanticTokens")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`semanticTokens`)); err != nil {
 			return err
 		}
 		if err := x.SemanticTokens.MarshalJSONTo(enc); err != nil {
@@ -10041,7 +10041,7 @@ func (x WorkspaceClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if x.CodeLens != nil {
-		if err := enc.WriteToken(jsontext.String("codeLens")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`codeLens`)); err != nil {
 			return err
 		}
 		if err := x.CodeLens.MarshalJSONTo(enc); err != nil {
@@ -10049,7 +10049,7 @@ func (x WorkspaceClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if x.FileOperations != nil {
-		if err := enc.WriteToken(jsontext.String("fileOperations")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`fileOperations`)); err != nil {
 			return err
 		}
 		if err := x.FileOperations.MarshalJSONTo(enc); err != nil {
@@ -10057,7 +10057,7 @@ func (x WorkspaceClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if x.InlineValue != nil {
-		if err := enc.WriteToken(jsontext.String("inlineValue")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`inlineValue`)); err != nil {
 			return err
 		}
 		if err := x.InlineValue.MarshalJSONTo(enc); err != nil {
@@ -10065,7 +10065,7 @@ func (x WorkspaceClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if x.InlayHint != nil {
-		if err := enc.WriteToken(jsontext.String("inlayHint")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`inlayHint`)); err != nil {
 			return err
 		}
 		if err := x.InlayHint.MarshalJSONTo(enc); err != nil {
@@ -10073,7 +10073,7 @@ func (x WorkspaceClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if x.Diagnostics != nil {
-		if err := enc.WriteToken(jsontext.String("diagnostics")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`diagnostics`)); err != nil {
 			return err
 		}
 		if err := x.Diagnostics.MarshalJSONTo(enc); err != nil {
@@ -10081,7 +10081,7 @@ func (x WorkspaceClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if x.FoldingRange != nil {
-		if err := enc.WriteToken(jsontext.String("foldingRange")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`foldingRange`)); err != nil {
 			return err
 		}
 		if err := x.FoldingRange.MarshalJSONTo(enc); err != nil {
@@ -10089,7 +10089,7 @@ func (x WorkspaceClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) error 
 		}
 	}
 	if x.TextDocumentContent != nil {
-		if err := enc.WriteToken(jsontext.String("textDocumentContent")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`textDocumentContent`)); err != nil {
 			return err
 		}
 		if err := x.TextDocumentContent.MarshalJSONTo(enc); err != nil {
@@ -10104,7 +10104,7 @@ func (x WorkspaceDiagnosticParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -10112,7 +10112,7 @@ func (x WorkspaceDiagnosticParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PartialResultToken != nil {
-		if err := enc.WriteToken(jsontext.String("partialResultToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`partialResultToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.PartialResultToken); err != nil {
@@ -10120,14 +10120,14 @@ func (x WorkspaceDiagnosticParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Identifier != nil {
-		if err := enc.WriteToken(jsontext.String("identifier")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`identifier`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Identifier); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("previousResultIds")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`previousResultIds`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.PreviousResultIds); err != nil {
@@ -10140,7 +10140,7 @@ func (x WorkspaceDiagnosticReport) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("items")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`items`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Items); err != nil {
@@ -10153,7 +10153,7 @@ func (x WorkspaceDiagnosticReportPartialResult) MarshalJSONTo(enc *jsontext.Enco
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("items")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`items`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Items); err != nil {
@@ -10167,7 +10167,7 @@ func (x WorkspaceEdit) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if len(x.Changes) > 0 {
-		if err := enc.WriteToken(jsontext.String("changes")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`changes`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Changes); err != nil {
@@ -10175,7 +10175,7 @@ func (x WorkspaceEdit) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.DocumentChanges) > 0 {
-		if err := enc.WriteToken(jsontext.String("documentChanges")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`documentChanges`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DocumentChanges); err != nil {
@@ -10183,7 +10183,7 @@ func (x WorkspaceEdit) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if len(x.ChangeAnnotations) > 0 {
-		if err := enc.WriteToken(jsontext.String("changeAnnotations")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`changeAnnotations`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ChangeAnnotations); err != nil {
@@ -10198,7 +10198,7 @@ func (x WorkspaceEditClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) er
 		return err
 	}
 	if x.DocumentChanges != nil {
-		if err := enc.WriteToken(jsontext.String("documentChanges")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`documentChanges`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DocumentChanges); err != nil {
@@ -10206,7 +10206,7 @@ func (x WorkspaceEditClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) er
 		}
 	}
 	if len(x.ResourceOperations) > 0 {
-		if err := enc.WriteToken(jsontext.String("resourceOperations")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`resourceOperations`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ResourceOperations); err != nil {
@@ -10214,7 +10214,7 @@ func (x WorkspaceEditClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) er
 		}
 	}
 	if x.FailureHandling != "" {
-		if err := enc.WriteToken(jsontext.String("failureHandling")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`failureHandling`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.FailureHandling); err != nil {
@@ -10222,7 +10222,7 @@ func (x WorkspaceEditClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) er
 		}
 	}
 	if x.NormalizesLineEndings != nil {
-		if err := enc.WriteToken(jsontext.String("normalizesLineEndings")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`normalizesLineEndings`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.NormalizesLineEndings); err != nil {
@@ -10230,7 +10230,7 @@ func (x WorkspaceEditClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) er
 		}
 	}
 	if x.ChangeAnnotationSupport != nil {
-		if err := enc.WriteToken(jsontext.String("changeAnnotationSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`changeAnnotationSupport`)); err != nil {
 			return err
 		}
 		if err := x.ChangeAnnotationSupport.MarshalJSONTo(enc); err != nil {
@@ -10238,7 +10238,7 @@ func (x WorkspaceEditClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) er
 		}
 	}
 	if x.MetadataSupport != nil {
-		if err := enc.WriteToken(jsontext.String("metadataSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`metadataSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.MetadataSupport); err != nil {
@@ -10246,7 +10246,7 @@ func (x WorkspaceEditClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) er
 		}
 	}
 	if x.SnippetEditSupport != nil {
-		if err := enc.WriteToken(jsontext.String("snippetEditSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`snippetEditSupport`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.SnippetEditSupport); err != nil {
@@ -10261,7 +10261,7 @@ func (x WorkspaceEditMetadata) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.IsRefactoring != nil {
-		if err := enc.WriteToken(jsontext.String("isRefactoring")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`isRefactoring`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.IsRefactoring); err != nil {
@@ -10275,13 +10275,13 @@ func (x WorkspaceFolder) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("uri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`uri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(string(x.URI))); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("name")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`name`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Name)); err != nil {
@@ -10294,13 +10294,13 @@ func (x WorkspaceFoldersChangeEvent) MarshalJSONTo(enc *jsontext.Encoder) error 
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("added")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`added`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Added); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("removed")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`removed`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Removed); err != nil {
@@ -10314,7 +10314,7 @@ func (x WorkspaceFoldersInitializeParams) MarshalJSONTo(enc *jsontext.Encoder) e
 		return err
 	}
 	if !x.WorkspaceFolders.IsZero() {
-		if err := enc.WriteToken(jsontext.String("workspaceFolders")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workspaceFolders`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkspaceFolders); err != nil {
@@ -10329,7 +10329,7 @@ func (x WorkspaceFoldersServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder)
 		return err
 	}
 	if x.Supported != nil {
-		if err := enc.WriteToken(jsontext.String("supported")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`supported`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Supported); err != nil {
@@ -10337,7 +10337,7 @@ func (x WorkspaceFoldersServerCapabilities) MarshalJSONTo(enc *jsontext.Encoder)
 		}
 	}
 	if x.ChangeNotifications != nil {
-		if err := enc.WriteToken(jsontext.String("changeNotifications")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`changeNotifications`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ChangeNotifications); err != nil {
@@ -10351,33 +10351,33 @@ func (x WorkspaceFullDocumentDiagnosticReport) MarshalJSONTo(enc *jsontext.Encod
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Kind)); err != nil {
 		return err
 	}
 	if x.ResultID != nil {
-		if err := enc.WriteToken(jsontext.String("resultId")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`resultId`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ResultID); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("items")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`items`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Items); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("uri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`uri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(string(x.URI))); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("version")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`version`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Version); err != nil {
@@ -10391,7 +10391,7 @@ func (x WorkspaceOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkspaceFolders != nil {
-		if err := enc.WriteToken(jsontext.String("workspaceFolders")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workspaceFolders`)); err != nil {
 			return err
 		}
 		if err := x.WorkspaceFolders.MarshalJSONTo(enc); err != nil {
@@ -10399,7 +10399,7 @@ func (x WorkspaceOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.FileOperations != nil {
-		if err := enc.WriteToken(jsontext.String("fileOperations")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`fileOperations`)); err != nil {
 			return err
 		}
 		if err := x.FileOperations.MarshalJSONTo(enc); err != nil {
@@ -10407,7 +10407,7 @@ func (x WorkspaceOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.TextDocumentContent != nil {
-		if err := enc.WriteToken(jsontext.String("textDocumentContent")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`textDocumentContent`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.TextDocumentContent); err != nil {
@@ -10421,20 +10421,20 @@ func (x WorkspaceSymbol) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("name")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`name`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Name)); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Kind); err != nil {
 		return err
 	}
 	if len(x.Tags) > 0 {
-		if err := enc.WriteToken(jsontext.String("tags")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`tags`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Tags); err != nil {
@@ -10442,21 +10442,21 @@ func (x WorkspaceSymbol) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.ContainerName != nil {
-		if err := enc.WriteToken(jsontext.String("containerName")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`containerName`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ContainerName); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("location")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`location`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Location); err != nil {
 		return err
 	}
 	if len(x.Data) > 0 {
-		if err := enc.WriteToken(jsontext.String("data")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`data`)); err != nil {
 			return err
 		}
 		if err := enc.WriteValue(x.Data); err != nil {
@@ -10471,7 +10471,7 @@ func (x WorkspaceSymbolClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) 
 		return err
 	}
 	if x.DynamicRegistration != nil {
-		if err := enc.WriteToken(jsontext.String("dynamicRegistration")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`dynamicRegistration`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.DynamicRegistration); err != nil {
@@ -10479,7 +10479,7 @@ func (x WorkspaceSymbolClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) 
 		}
 	}
 	if x.SymbolKind != nil {
-		if err := enc.WriteToken(jsontext.String("symbolKind")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`symbolKind`)); err != nil {
 			return err
 		}
 		if err := x.SymbolKind.MarshalJSONTo(enc); err != nil {
@@ -10487,7 +10487,7 @@ func (x WorkspaceSymbolClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) 
 		}
 	}
 	if !isZeroGeneratedClientSymbolTagOptions(x.TagSupport) {
-		if err := enc.WriteToken(jsontext.String("tagSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`tagSupport`)); err != nil {
 			return err
 		}
 		if err := x.TagSupport.MarshalJSONTo(enc); err != nil {
@@ -10495,7 +10495,7 @@ func (x WorkspaceSymbolClientCapabilities) MarshalJSONTo(enc *jsontext.Encoder) 
 		}
 	}
 	if !isZeroGeneratedClientSymbolResolveOptions(x.ResolveSupport) {
-		if err := enc.WriteToken(jsontext.String("resolveSupport")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`resolveSupport`)); err != nil {
 			return err
 		}
 		if err := x.ResolveSupport.MarshalJSONTo(enc); err != nil {
@@ -10510,7 +10510,7 @@ func (x WorkspaceSymbolOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -10518,7 +10518,7 @@ func (x WorkspaceSymbolOptions) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.ResolveProvider != nil {
-		if err := enc.WriteToken(jsontext.String("resolveProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`resolveProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ResolveProvider); err != nil {
@@ -10533,7 +10533,7 @@ func (x WorkspaceSymbolParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
@@ -10541,14 +10541,14 @@ func (x WorkspaceSymbolParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.PartialResultToken != nil {
-		if err := enc.WriteToken(jsontext.String("partialResultToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`partialResultToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.PartialResultToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("query")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`query`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Query)); err != nil {
@@ -10562,7 +10562,7 @@ func (x WorkspaceSymbolRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder)
 		return err
 	}
 	if x.WorkDoneProgress != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneProgress")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneProgress`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.WorkDoneProgress); err != nil {
@@ -10570,7 +10570,7 @@ func (x WorkspaceSymbolRegistrationOptions) MarshalJSONTo(enc *jsontext.Encoder)
 		}
 	}
 	if x.ResolveProvider != nil {
-		if err := enc.WriteToken(jsontext.String("resolveProvider")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`resolveProvider`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.ResolveProvider); err != nil {
@@ -10584,25 +10584,25 @@ func (x WorkspaceUnchangedDocumentDiagnosticReport) MarshalJSONTo(enc *jsontext.
 	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("kind")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`kind`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.Kind)); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("resultId")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`resultId`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(x.ResultID)); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("uri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`uri`)); err != nil {
 		return err
 	}
 	if err := enc.WriteToken(jsontext.String(string(x.URI))); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("version")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`version`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.Version); err != nil {
@@ -10616,21 +10616,21 @@ func (x _InitializeParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		return err
 	}
 	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String("workDoneToken")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
 			return err
 		}
 		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("processId")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`processId`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.ProcessID); err != nil {
 		return err
 	}
 	if !isZeroGeneratedClientInfo(x.ClientInfo) {
-		if err := enc.WriteToken(jsontext.String("clientInfo")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`clientInfo`)); err != nil {
 			return err
 		}
 		if err := x.ClientInfo.MarshalJSONTo(enc); err != nil {
@@ -10638,7 +10638,7 @@ func (x _InitializeParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Locale != nil {
-		if err := enc.WriteToken(jsontext.String("locale")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`locale`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Locale); err != nil {
@@ -10646,27 +10646,27 @@ func (x _InitializeParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if !x.RootPath.IsZero() {
-		if err := enc.WriteToken(jsontext.String("rootPath")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`rootPath`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.RootPath); err != nil {
 			return err
 		}
 	}
-	if err := enc.WriteToken(jsontext.String("rootUri")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`rootUri`)); err != nil {
 		return err
 	}
 	if err := json.MarshalEncode(enc, x.RootURI); err != nil {
 		return err
 	}
-	if err := enc.WriteToken(jsontext.String("capabilities")); err != nil {
+	if err := enc.WriteToken(jsontext.String(`capabilities`)); err != nil {
 		return err
 	}
 	if err := x.Capabilities.MarshalJSONTo(enc); err != nil {
 		return err
 	}
 	if len(x.InitializationOptions) > 0 {
-		if err := enc.WriteToken(jsontext.String("initializationOptions")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`initializationOptions`)); err != nil {
 			return err
 		}
 		if err := enc.WriteValue(x.InitializationOptions); err != nil {
@@ -10674,7 +10674,7 @@ func (x _InitializeParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 		}
 	}
 	if x.Trace != "" {
-		if err := enc.WriteToken(jsontext.String("trace")); err != nil {
+		if err := enc.WriteToken(jsontext.String(`trace`)); err != nil {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Trace); err != nil {

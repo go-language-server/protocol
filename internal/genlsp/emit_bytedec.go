@@ -424,7 +424,7 @@ func (g *Generator) renderByteWalkerMethod(b *strings.Builder, c *byteDecCtx, s 
 	fields := flattenJSONFields(c.structs, s, map[string]bool{})
 	for fi := range fields {
 		f := &fields[fi]
-		fmt.Fprintf(b, "\t\tcase keyEquals(key, %q):\n", f.JSONName)
+		fmt.Fprintf(b, "\t\tcase keyEquals(key, %s):\n", goJSONNameLiteral(f.JSONName))
 		if override != nil && override(b, c, f) {
 			continue
 		}
