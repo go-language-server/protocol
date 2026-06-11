@@ -86,10 +86,6 @@ func (t *DiagnosticTags) append(tag DiagnosticTag) {
 	t.n++
 }
 
-func decodeStringFrom(dec *jsontext.Decoder, out *string) error {
-	return decodeStringLikeFrom(dec, out)
-}
-
 func decodeStringLikeFrom[T ~string](dec *jsontext.Decoder, out *T) error {
 	switch dec.PeekKind() {
 	case 'n':

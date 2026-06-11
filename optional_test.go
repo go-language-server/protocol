@@ -90,21 +90,21 @@ func TestOptionalJSON(t *testing.T) {
 	})
 }
 
-func TestDecodeStringFrom(t *testing.T) {
+func TestDecodeStringLikeFrom(t *testing.T) {
 	var got string
-	if err := decodeStringFrom(jsontext.NewDecoder(strings.NewReader(`"hello"`)), &got); err != nil {
+	if err := decodeStringLikeFrom(jsontext.NewDecoder(strings.NewReader(`"hello"`)), &got); err != nil {
 		t.Fatalf("decode string: %v", err)
 	}
 	if got != "hello" {
 		t.Fatalf("decoded string = %q, want hello", got)
 	}
-	if err := decodeStringFrom(jsontext.NewDecoder(strings.NewReader(`null`)), &got); err != nil {
+	if err := decodeStringLikeFrom(jsontext.NewDecoder(strings.NewReader(`null`)), &got); err != nil {
 		t.Fatalf("decode null string: %v", err)
 	}
 	if got != "" {
 		t.Fatalf("decoded null string = %q, want empty", got)
 	}
-	if err := decodeStringFrom(jsontext.NewDecoder(strings.NewReader(`123`)), &got); err == nil {
+	if err := decodeStringLikeFrom(jsontext.NewDecoder(strings.NewReader(`123`)), &got); err == nil {
 		t.Fatal("decode numeric string succeeded")
 	}
 }
