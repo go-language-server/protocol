@@ -20,7 +20,7 @@ func TestByteDecodeCoverageFromModel(t *testing.T) {
 	c := g.byteCtx
 
 	for name := range c.structs {
-		if !byteDecodeExclude[name] && !c.covered[name] {
+		if !c.covered[name] {
 			t.Errorf("generated struct %s not covered by byte decoders", name)
 		}
 	}

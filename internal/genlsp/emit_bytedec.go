@@ -17,12 +17,6 @@ import (
 // decodeWith on the raw sub-value, which keeps correctness independent of
 // direct byte-walker coverage.
 
-// byteDecodeExclude is reserved for generated structs that are proven unsafe
-// for direct byte walking. It is intentionally empty: broad generated-type
-// coverage is the default and code-size tradeoffs are benchmarked instead of
-// preemptively excluding capability trees.
-var byteDecodeExclude = map[string]bool{}
-
 // byteDecCtx carries the resolved type information the byte-decoder emitters
 // need.
 type byteDecCtx struct {
@@ -195,7 +189,7 @@ func (c *byteDecCtx) computeClosure() {
 	for len(w.queue) > 0 {
 		t := w.queue[0]
 		w.queue = w.queue[1:]
-		if c.covered[t] || byteDecodeExclude[t] {
+		if c.covered[t] {
 			continue
 		}
 		s, ok := c.structs[t]
