@@ -633,11 +633,11 @@ func (x *CallHierarchyItem) unmarshalLSP(raw []byte, i int) (int, error) {
 				i = n
 			}
 		case keyEquals(key, "uri"):
-			v, n, err := dvString(raw, i)
+			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
-			x.URI = uri.URI(v)
+			x.URI = v
 			i = n
 		case keyEquals(key, "range"):
 			n, err := x.Range.unmarshalLSP(raw, i)
@@ -3838,11 +3838,11 @@ func (x *CodeDescription) unmarshalLSP(raw []byte, i int) (int, error) {
 		_ = key
 		switch {
 		case keyEquals(key, "href"):
-			v, n, err := dvString(raw, i)
+			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
-			x.Href = uri.URI(v)
+			x.Href = v
 			i = n
 		default:
 			_, n, err := dvValue(raw, i)
@@ -6043,14 +6043,14 @@ func (x *ConfigurationItem) unmarshalLSP(raw []byte, i int) (int, error) {
 				x.ScopeURI = nil
 				i = n
 			} else {
-				v, n, err := dvString(raw, i)
+				v, n, err := dvURI(raw, i)
 				if err != nil {
 					return n, err
 				}
 				if x.ScopeURI == nil {
 					x.ScopeURI = new(uri.URI)
 				}
-				*x.ScopeURI = uri.URI(v)
+				*x.ScopeURI = v
 				i = n
 			}
 		case keyEquals(key, "section"):
@@ -6200,11 +6200,11 @@ func (x *CreateFile) unmarshalLSP(raw []byte, i int) (int, error) {
 			x.Kind = v
 			i = n
 		case keyEquals(key, "uri"):
-			v, n, err := dvString(raw, i)
+			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
-			x.URI = uri.URI(v)
+			x.URI = v
 			i = n
 		case keyEquals(key, "options"):
 			if n, ok := dvNull(raw, i); ok {
@@ -7090,11 +7090,11 @@ func (x *DeleteFile) unmarshalLSP(raw []byte, i int) (int, error) {
 			x.Kind = v
 			i = n
 		case keyEquals(key, "uri"):
-			v, n, err := dvString(raw, i)
+			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
-			x.URI = uri.URI(v)
+			x.URI = v
 			i = n
 		case keyEquals(key, "options"):
 			if n, ok := dvNull(raw, i); ok {
@@ -10275,14 +10275,14 @@ func (x *DocumentLink) unmarshalLSP(raw []byte, i int) (int, error) {
 				x.Target = nil
 				i = n
 			} else {
-				v, n, err := dvString(raw, i)
+				v, n, err := dvURI(raw, i)
 				if err != nil {
 					return n, err
 				}
 				if x.Target == nil {
 					x.Target = new(uri.URI)
 				}
-				*x.Target = uri.URI(v)
+				*x.Target = v
 				i = n
 			}
 		case keyEquals(key, "tooltip"):
@@ -12507,11 +12507,11 @@ func (x *FileEvent) unmarshalLSP(raw []byte, i int) (int, error) {
 		_ = key
 		switch {
 		case keyEquals(key, "uri"):
-			v, n, err := dvString(raw, i)
+			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
-			x.URI = uri.URI(v)
+			x.URI = v
 			i = n
 		case keyEquals(key, "type"):
 			v, n, err := dvUint32(raw, i)
@@ -14935,14 +14935,14 @@ func (x *InitializeParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				x.RootURI = nil
 				i = n
 			} else {
-				v, n, err := dvString(raw, i)
+				v, n, err := dvURI(raw, i)
 				if err != nil {
 					return n, err
 				}
 				if x.RootURI == nil {
 					x.RootURI = new(uri.URI)
 				}
-				*x.RootURI = uri.URI(v)
+				*x.RootURI = v
 				i = n
 			}
 		case keyEquals(key, "capabilities"):
@@ -17475,11 +17475,11 @@ func (x *Location) unmarshalLSP(raw []byte, i int) (int, error) {
 		_ = key
 		switch {
 		case keyEquals(key, "uri"):
-			v, n, err := dvString(raw, i)
+			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
-			x.URI = uri.URI(v)
+			x.URI = v
 			i = n
 		case keyEquals(key, "range"):
 			n, err := x.Range.unmarshalLSP(raw, i)
@@ -17557,11 +17557,11 @@ func (x *LocationLink) unmarshalLSP(raw []byte, i int) (int, error) {
 				i = n
 			}
 		case keyEquals(key, "targetUri"):
-			v, n, err := dvString(raw, i)
+			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
-			x.TargetURI = uri.URI(v)
+			x.TargetURI = v
 			i = n
 		case keyEquals(key, "targetRange"):
 			n, err := x.TargetRange.unmarshalLSP(raw, i)
@@ -17631,11 +17631,11 @@ func (x *LocationUriOnly) unmarshalLSP(raw []byte, i int) (int, error) {
 		_ = key
 		switch {
 		case keyEquals(key, "uri"):
-			v, n, err := dvString(raw, i)
+			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
-			x.URI = uri.URI(v)
+			x.URI = v
 			i = n
 		default:
 			_, n, err := dvValue(raw, i)
@@ -18517,11 +18517,11 @@ func (x *NotebookCell) unmarshalLSP(raw []byte, i int) (int, error) {
 			x.Kind = NotebookCellKind(v)
 			i = n
 		case keyEquals(key, "document"):
-			v, n, err := dvString(raw, i)
+			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
-			x.Document = uri.URI(v)
+			x.Document = v
 			i = n
 		case keyEquals(key, "metadata"):
 			val, n, err := dvValue(raw, i)
@@ -18819,11 +18819,11 @@ func (x *NotebookDocument) unmarshalLSP(raw []byte, i int) (int, error) {
 		_ = key
 		switch {
 		case keyEquals(key, "uri"):
-			v, n, err := dvString(raw, i)
+			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
-			x.URI = uri.URI(v)
+			x.URI = v
 			i = n
 		case keyEquals(key, "notebookType"):
 			v, n, err := dvString(raw, i)
@@ -19684,11 +19684,11 @@ func (x *NotebookDocumentIdentifier) unmarshalLSP(raw []byte, i int) (int, error
 		_ = key
 		switch {
 		case keyEquals(key, "uri"):
-			v, n, err := dvString(raw, i)
+			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
-			x.URI = uri.URI(v)
+			x.URI = v
 			i = n
 		default:
 			_, n, err := dvValue(raw, i)
@@ -20000,11 +20000,11 @@ func (x *OptionalVersionedTextDocumentIdentifier) unmarshalLSP(raw []byte, i int
 		_ = key
 		switch {
 		case keyEquals(key, "uri"):
-			v, n, err := dvString(raw, i)
+			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
-			x.URI = uri.URI(v)
+			x.URI = v
 			i = n
 		case keyEquals(key, "version"):
 			if n, ok := dvNull(raw, i); ok {
@@ -20489,11 +20489,11 @@ func (x *PreviousResultId) unmarshalLSP(raw []byte, i int) (int, error) {
 		_ = key
 		switch {
 		case keyEquals(key, "uri"):
-			v, n, err := dvString(raw, i)
+			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
-			x.URI = uri.URI(v)
+			x.URI = v
 			i = n
 		case keyEquals(key, "value"):
 			v, n, err := dvString(raw, i)
@@ -20750,11 +20750,11 @@ func (x *PublishDiagnosticsParams) unmarshalLSP(raw []byte, i int) (int, error) 
 		_ = key
 		switch {
 		case keyEquals(key, "uri"):
-			v, n, err := dvString(raw, i)
+			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
-			x.URI = uri.URI(v)
+			x.URI = v
 			i = n
 		case keyEquals(key, "version"):
 			if n, ok := dvNull(raw, i); ok {
@@ -21848,18 +21848,18 @@ func (x *RenameFile) unmarshalLSP(raw []byte, i int) (int, error) {
 			x.Kind = v
 			i = n
 		case keyEquals(key, "oldUri"):
-			v, n, err := dvString(raw, i)
+			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
-			x.OldURI = uri.URI(v)
+			x.OldURI = v
 			i = n
 		case keyEquals(key, "newUri"):
-			v, n, err := dvString(raw, i)
+			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
-			x.NewURI = uri.URI(v)
+			x.NewURI = v
 			i = n
 		case keyEquals(key, "options"):
 			if n, ok := dvNull(raw, i); ok {
@@ -24844,11 +24844,11 @@ func (x *ShowDocumentParams) unmarshalLSP(raw []byte, i int) (int, error) {
 		_ = key
 		switch {
 		case keyEquals(key, "uri"):
-			v, n, err := dvString(raw, i)
+			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
-			x.URI = uri.URI(v)
+			x.URI = v
 			i = n
 		case keyEquals(key, "external"):
 			if n, ok := dvNull(raw, i); ok {
@@ -27090,11 +27090,11 @@ func (x *TextDocumentContentParams) unmarshalLSP(raw []byte, i int) (int, error)
 		_ = key
 		switch {
 		case keyEquals(key, "uri"):
-			v, n, err := dvString(raw, i)
+			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
-			x.URI = uri.URI(v)
+			x.URI = v
 			i = n
 		default:
 			_, n, err := dvValue(raw, i)
@@ -27152,11 +27152,11 @@ func (x *TextDocumentContentRefreshParams) unmarshalLSP(raw []byte, i int) (int,
 		_ = key
 		switch {
 		case keyEquals(key, "uri"):
-			v, n, err := dvString(raw, i)
+			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
-			x.URI = uri.URI(v)
+			x.URI = v
 			i = n
 		default:
 			_, n, err := dvValue(raw, i)
@@ -27757,11 +27757,11 @@ func (x *TextDocumentIdentifier) unmarshalLSP(raw []byte, i int) (int, error) {
 		_ = key
 		switch {
 		case keyEquals(key, "uri"):
-			v, n, err := dvString(raw, i)
+			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
-			x.URI = uri.URI(v)
+			x.URI = v
 			i = n
 		default:
 			_, n, err := dvValue(raw, i)
@@ -27819,11 +27819,11 @@ func (x *TextDocumentItem) unmarshalLSP(raw []byte, i int) (int, error) {
 		_ = key
 		switch {
 		case keyEquals(key, "uri"):
-			v, n, err := dvString(raw, i)
+			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
-			x.URI = uri.URI(v)
+			x.URI = v
 			i = n
 		case keyEquals(key, "languageId"):
 			v, n, err := dvString(raw, i)
@@ -28859,11 +28859,11 @@ func (x *TypeHierarchyItem) unmarshalLSP(raw []byte, i int) (int, error) {
 				i = n
 			}
 		case keyEquals(key, "uri"):
-			v, n, err := dvString(raw, i)
+			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
-			x.URI = uri.URI(v)
+			x.URI = v
 			i = n
 		case keyEquals(key, "range"):
 			n, err := x.Range.unmarshalLSP(raw, i)
@@ -29545,11 +29545,11 @@ func (x *VersionedNotebookDocumentIdentifier) unmarshalLSP(raw []byte, i int) (i
 			x.Version = v
 			i = n
 		case keyEquals(key, "uri"):
-			v, n, err := dvString(raw, i)
+			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
-			x.URI = uri.URI(v)
+			x.URI = v
 			i = n
 		default:
 			_, n, err := dvValue(raw, i)
@@ -29607,11 +29607,11 @@ func (x *VersionedTextDocumentIdentifier) unmarshalLSP(raw []byte, i int) (int, 
 		_ = key
 		switch {
 		case keyEquals(key, "uri"):
-			v, n, err := dvString(raw, i)
+			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
-			x.URI = uri.URI(v)
+			x.URI = v
 			i = n
 		case keyEquals(key, "version"):
 			v, n, err := dvInt32(raw, i)
@@ -31196,11 +31196,11 @@ func (x *WorkspaceFolder) unmarshalLSP(raw []byte, i int) (int, error) {
 		_ = key
 		switch {
 		case keyEquals(key, "uri"):
-			v, n, err := dvString(raw, i)
+			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
-			x.URI = uri.URI(v)
+			x.URI = v
 			i = n
 		case keyEquals(key, "name"):
 			v, n, err := dvString(raw, i)
@@ -31513,11 +31513,11 @@ func (x *WorkspaceFullDocumentDiagnosticReport) unmarshalLSP(raw []byte, i int) 
 			x.Items = v
 			i = n
 		case keyEquals(key, "uri"):
-			v, n, err := dvString(raw, i)
+			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
-			x.URI = uri.URI(v)
+			x.URI = v
 			i = n
 		case keyEquals(key, "version"):
 			if n, ok := dvNull(raw, i); ok {
@@ -32149,11 +32149,11 @@ func (x *WorkspaceUnchangedDocumentDiagnosticReport) unmarshalLSP(raw []byte, i 
 			x.ResultID = v
 			i = n
 		case keyEquals(key, "uri"):
-			v, n, err := dvString(raw, i)
+			v, n, err := dvURI(raw, i)
 			if err != nil {
 				return n, err
 			}
-			x.URI = uri.URI(v)
+			x.URI = v
 			i = n
 		case keyEquals(key, "version"):
 			if n, ok := dvNull(raw, i); ok {
@@ -32287,14 +32287,14 @@ func (x *_InitializeParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				x.RootURI = nil
 				i = n
 			} else {
-				v, n, err := dvString(raw, i)
+				v, n, err := dvURI(raw, i)
 				if err != nil {
 					return n, err
 				}
 				if x.RootURI == nil {
 					x.RootURI = new(uri.URI)
 				}
-				*x.RootURI = uri.URI(v)
+				*x.RootURI = v
 				i = n
 			}
 		case keyEquals(key, "capabilities"):

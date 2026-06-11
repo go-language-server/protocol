@@ -587,6 +587,9 @@ func (g *Generator) renderFallbackField(b *strings.Builder, dst string) {
 // byteInlineDecode returns the scalar decode call expression `v, n, err := …`
 // for type t, when t lowers to a scalar.
 func (g *Generator) byteInlineDecode(c *byteDecCtx, t string) (string, bool) {
+	if t == generatedURIType {
+		return "dvURI(raw, i)", true
+	}
 	switch resolveScalar(c, t) {
 	case "string":
 		return "dvString(raw, i)", true
@@ -630,6 +633,9 @@ func resolveScalar(c *byteDecCtx, t string) string {
 // castV wraps the scalar decode result variable v in a conversion when the
 // field type is not the base scalar itself.
 func castV(c *byteDecCtx, t string) string {
+	if t == generatedURIType {
+		return "v"
+	}
 	if base := resolveScalar(c, t); base != "" && base != t {
 		return t + "(v)"
 	}

@@ -657,6 +657,16 @@ func (g *Generator) renderScalarDecode(b *strings.Builder, m *unionMember) {
 	if strings.HasPrefix(m.Receiver, "*") {
 		assign = "&v"
 	}
+	if base == unionURIWrapperType || base == legacyURIRef {
+		fmt.Fprintf(b, "\t\tv, err := dvScalarURI(raw)\n")
+		b.WriteString("\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n")
+		if strings.HasPrefix(m.Receiver, "*") {
+			fmt.Fprintf(b, "\t\tu := %s(v)\n\t\t*val = &u\n\t\treturn nil\n", base)
+		} else {
+			fmt.Fprintf(b, "\t\t*val = %s(v)\n\t\treturn nil\n", base)
+		}
+		return
+	}
 	if under, ok := scalarWrapperBase[base]; ok {
 		fmt.Fprintf(b, "\t\tv, err := dvScalar%s(raw)\n", exportName(under))
 		b.WriteString("\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n")

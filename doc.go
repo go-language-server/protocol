@@ -15,12 +15,11 @@
 // and their dispatchers) runs over go.lsp.dev/jsonrpc2, with union-aware payload
 // marshaling supplied through a jsonrpc2.Codec.
 //
-// Generated URI and URI fields use go.lsp.dev/uri.URI directly, and the
-// package-level URI constructors return that external type. The local [URI] type
-// remains as a package-local compatibility and sealed-union bridge for arms such
-// as [RelativePatternBaseURI], where Go requires a local receiver type for the
-// generated marker method. Prefer go.lsp.dev/uri.URI for ordinary fields; convert
-// explicitly to protocol.URI only at those union boundaries.
+// Generated URI and URI fields use go.lsp.dev/uri.URI directly. The local
+// [URI] type remains as a package-local compatibility and sealed-union bridge
+// for arms such as [RelativePatternBaseURI], where Go requires a local receiver
+// type for the generated marker method. Prefer go.lsp.dev/uri.URI for ordinary
+// fields; convert explicitly to protocol.URI only at those union boundaries.
 //
 // The generator lives in go.lsp.dev/protocol/internal/genlsp.
 package protocol

@@ -3986,11 +3986,11 @@ func unmarshalRelativePatternBaseURIValue(raw jsontext.Value, val *RelativePatte
 			}
 		}
 	case '"':
-		var v URI
-		if err := decodeWith(raw, &v); err != nil {
+		v, err := dvScalarURI(raw)
+		if err != nil {
 			return err
 		}
-		*val = v
+		*val = URI(v)
 		return nil
 	}
 	return fmt.Errorf("cannot unmarshal %s into RelativePatternBaseURI", raw)

@@ -169,8 +169,8 @@ func TestByteDecodeScalarRecognizesURIType(t *testing.T) {
 	if got := resolveScalar(c, generatedURIType); got != "string" {
 		t.Fatalf("resolveScalar(uri.URI) = %q, want string", got)
 	}
-	if got := castV(c, generatedURIType); got != "uri.URI(v)" {
-		t.Fatalf("castV(uri.URI) = %q, want uri.URI(v)", got)
+	if got := castV(c, generatedURIType); got != "v" {
+		t.Fatalf("castV(uri.URI) = %q, want v", got)
 	}
 }
 
@@ -185,7 +185,7 @@ func TestRenderPlainFieldDecodesURIInline(t *testing.T) {
 	var b strings.Builder
 	g.renderPlainField(&b, c, generatedURIType, "x.URI")
 	got := b.String()
-	for _, want := range []string{"dvString(raw, i)", "x.URI = uri.URI(v)"} {
+	for _, want := range []string{"dvURI(raw, i)", "x.URI = v"} {
 		if !strings.Contains(got, want) {
 			t.Fatalf("renderPlainField(uri.URI) missing %q:\n%s", want, got)
 		}
