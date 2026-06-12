@@ -5,6 +5,7 @@ package protocol
 
 import (
 	"math"
+	"strings"
 	"testing"
 
 	gocmp "github.com/google/go-cmp/cmp"
@@ -266,23 +267,24 @@ func TestDVSlices(t *testing.T) {
 		}
 	})
 
-	t.Run("uint32 slice length hint is capacity only", func(t *testing.T) {
+	t.Run("slice capacity hint is bounded and positive", func(t *testing.T) {
 		t.Parallel()
 
 		tests := map[string]struct {
-			input string
-			want  int
+			input   string
+			perElem int
+			want    int
 		}{
-			"success: single value":           {input: `1]`, want: 1},
-			"success: three values":           {input: `1,2,3]`, want: 3},
-			"success: malformed stops at end": {input: `1,2`, want: 2},
+			"success: short run":      {input: `1,2,3]`, perElem: 3, want: 3},
+			"success: at end":         {input: ``, perElem: 3, want: 1},
+			"success: bounded at cap": {input: strings.Repeat("1,", 4096), perElem: 1, want: 4096},
 		}
 		for name, tt := range tests {
 			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 
-				if got := dvUint32SliceLenHint([]byte(tt.input), 0); got != tt.want {
-					t.Errorf("dvUint32SliceLenHint(%q) = %d, want %d", tt.input, got, tt.want)
+				if got := dvSliceCapHint([]byte(tt.input), 0, tt.perElem); got != tt.want {
+					t.Errorf("dvSliceCapHint(%q, %d) = %d, want %d", tt.input, tt.perElem, got, tt.want)
 				}
 			})
 		}

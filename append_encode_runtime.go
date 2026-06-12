@@ -8,6 +8,7 @@ import (
 	"math"
 	"slices"
 	"strconv"
+	"unicode/utf8"
 	"unsafe"
 
 	"github.com/go-json-experiment/json"
@@ -64,7 +65,44 @@ func appendRawJSONValue(dst []byte, v LSPAny) ([]byte, error) {
 	if err := dvEnd(v, n); err != nil {
 		return nil, err
 	}
+	if rawValueNeedsReencode(v) {
+		// The streaming oracle normalizes raw values on re-encode: it strips
+		// insignificant whitespace, resolves string escapes, and mangles
+		// invalid UTF-8 to U+FFFD under AllowInvalidUTF8. Verbatim append is
+		// only byte-identical when none of those apply; this cold path keeps
+		// parity for the rest. Real LSP data payloads are compact, unescaped,
+		// valid UTF-8 and stay on the verbatim path.
+		return appendJSONMarshal(dst, v)
+	}
 	return append(dst, v...), nil
+}
+
+// rawValueNeedsReencode reports whether a structurally valid raw JSON value
+// would be rewritten by the streaming encoder: insignificant whitespace
+// outside strings, any escape sequence inside strings, or invalid UTF-8.
+func rawValueNeedsReencode(v []byte) bool {
+	inStr := false
+	sawHigh := false
+	for _, c := range v {
+		if inStr {
+			switch {
+			case c == '\\':
+				return true
+			case c == '"':
+				inStr = false
+			case c >= 0x80:
+				sawHigh = true
+			}
+			continue
+		}
+		switch c {
+		case '"':
+			inStr = true
+		case ' ', '\t', '\n', '\r':
+			return true
+		}
+	}
+	return sawHigh && !utf8.Valid(v)
 }
 
 func appendJSONMarshal(dst []byte, v any) ([]byte, error) {
@@ -80,7 +118,7 @@ func appendInt32JSON(dst []byte, v int32) []byte {
 }
 
 func appendUint32JSON(dst []byte, v uint32) []byte {
-	return strconv.AppendUint(dst, uint64(v), 10)
+	return appendUint32Decimal(dst, v)
 }
 
 func appendBoolJSON(dst []byte, v bool) []byte {
