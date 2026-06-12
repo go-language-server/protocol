@@ -136,28 +136,24 @@ func unmarshalInlayHintTooltipValueBoxed(raw jsontext.Value, val *InlayHintToolt
 }
 
 // unmarshalCompletionItemTextEditValueBoxed decodes the TextEdit |
-// InsertReplaceEdit union into per-message slabs. The arms' required key sets
-// ({range,newText} vs {newText,insert,replace}) are disjoint, so the guard
-// ladder mirrors the generated dispatcher: exact-shape matches first, then
-// required-key matches, then bare attempts, then the canonical fallback.
+// InsertReplaceEdit union into per-message slabs, probing arms in the exact
+// order of the generated dispatcher (InsertReplaceEdit before TextEdit at
+// every tier) so a slice element and a lone field always select the same arm,
+// even for spec-violating objects carrying both shapes' keys. The bare-attempt
+// tier and every non-object kind delegate to the canonical decoder, which is a
+// behavioral superset of this fast path.
 //
 //nolint:gocritic // ptrToRefParam: val is an out-parameter; the boxed union slot is assigned in place.
 func unmarshalCompletionItemTextEditValueBoxed(raw jsontext.Value, val *CompletionItemTextEdit, textEditBoxes *[]TextEdit, insertReplaceBoxes *[]InsertReplaceEdit, capN int) error {
 	switch raw.Kind() {
 	case '{':
 		switch {
-		case objectHasAndKnownGuard(raw, []string{"range", "newText"}, []string{"range", "newText"}):
-			if v, ok := tryBoxArm[TextEdit](raw, textEditBoxes, capN); ok {
-				*val = v
-				return nil
-			}
 		case objectHasAndKnownGuard(raw, []string{"newText", "insert", "replace"}, []string{"newText", "insert", "replace"}):
 			if v, ok := tryBoxArm[InsertReplaceEdit](raw, insertReplaceBoxes, capN); ok {
 				*val = v
 				return nil
 			}
-		}
-		if objectHasKeys(raw, "range", "newText") {
+		case objectHasAndKnownGuard(raw, []string{"range", "newText"}, []string{"range", "newText"}):
 			if v, ok := tryBoxArm[TextEdit](raw, textEditBoxes, capN); ok {
 				*val = v
 				return nil
@@ -165,6 +161,12 @@ func unmarshalCompletionItemTextEditValueBoxed(raw jsontext.Value, val *Completi
 		}
 		if objectHasKeys(raw, "newText", "insert", "replace") {
 			if v, ok := tryBoxArm[InsertReplaceEdit](raw, insertReplaceBoxes, capN); ok {
+				*val = v
+				return nil
+			}
+		}
+		if objectHasKeys(raw, "range", "newText") {
+			if v, ok := tryBoxArm[TextEdit](raw, textEditBoxes, capN); ok {
 				*val = v
 				return nil
 			}

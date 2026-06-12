@@ -1,0 +1,66 @@
+name: Bench
+
+# Relative benchmark regression gate (Phase-3 M7 acceptance criterion 10):
+# the base ref and the PR head are both benchmarked on the SAME runner in the
+# same job, so the comparison is hardware-independent even though CI runners
+# are slower and noisier than the authoritative GCE host. Authoritative
+# re-baselining stays manual on the GCE host (.bench/ methodology); this gate
+# only catches relative regressions a change introduces.
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  benchstat:
+    name: benchstat-gate
+    runs-on: ubuntu-slim
+    timeout-minutes: 45
+
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          check-latest: true
+
+      - name: Install benchstat
+        run: go install golang.org/x/perf/cmd/benchstat@latest
+
+      - name: Bench base ref
+        env:
+          GOFLAGS: -mod=vendor
+        run: |
+          git checkout --detach "${{ github.event.pull_request.base.sha || github.sha }}"
+          go test -run='^$' -bench='^(BenchmarkDecode|BenchmarkEncode)$' -benchmem -count=6 -timeout=30m . | tee /tmp/bench-base.txt
+
+      - name: Bench head ref
+        env:
+          GOFLAGS: -mod=vendor
+        run: |
+          git checkout --detach "${{ github.event.pull_request.head.sha || github.sha }}"
+          go test -run='^$' -bench='^(BenchmarkDecode|BenchmarkEncode)$' -benchmem -count=6 -timeout=30m . | tee /tmp/bench-head.txt
+
+      - name: Compare (fail on >5% sec/op geomean regression)
+        run: |
+          benchstat /tmp/bench-base.txt /tmp/bench-head.txt | tee /tmp/benchstat.txt
+          GEO=$(awk '/sec\/op/{insec=1} insec && /^geomean/ {print $NF; exit}' /tmp/benchstat.txt)
+          echo "sec/op geomean delta: ${GEO}"
+          case "$GEO" in
+            +*)
+              PCT=${GEO#+}; PCT=${PCT%\%}
+              awk -v p="$PCT" 'BEGIN { exit (p > 5.0) ? 1 : 0 }' || {
+                echo "::error::sec/op geomean regressed by ${GEO} (gate: 5%)"; exit 1; }
+              ;;
+          esac

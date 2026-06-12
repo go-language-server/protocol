@@ -61,6 +61,61 @@ func FuzzAppendEncodeParity(f *testing.F) {
 	})
 }
 
+// TestBoxedUnionArmMatchesSinglePath pins the cross-path consistency the
+// boxed slab deciders must preserve: a union payload decoded as a lone field
+// and as a one-element slice element must select the same dynamic arm, even
+// for spec-violating objects carrying both shapes' keys (the case that caught
+// a tier-order divergence in review).
+func TestBoxedUnionArmMatchesSinglePath(t *testing.T) {
+	t.Parallel()
+
+	tests := map[string]struct {
+		textEdit string
+	}{
+		"success: plain text edit":          {textEdit: `{"range":{"start":{"line":1,"character":2},"end":{"line":1,"character":3}},"newText":"x"}`},
+		"success: insert replace edit":      {textEdit: `{"newText":"x","insert":{"start":{"line":0,"character":0},"end":{"line":0,"character":0}},"replace":{"start":{"line":0,"character":0},"end":{"line":0,"character":1}}}`},
+		"success: dual-shape both arm keys": {textEdit: `{"range":{"start":{"line":0,"character":0},"end":{"line":0,"character":0}},"newText":"x","insert":{"start":{"line":0,"character":0},"end":{"line":0,"character":0}},"replace":{"start":{"line":0,"character":0},"end":{"line":0,"character":1}}}`},
+	}
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			single := []byte(`{"label":"a","textEdit":` + tt.textEdit + `}`)
+			slice := []byte(`[{"label":"a","textEdit":` + tt.textEdit + `}]`)
+
+			var one CompletionItem
+			if err := Unmarshal(single, &one); err != nil {
+				t.Fatalf("single decode: %v", err)
+			}
+			var many CompletionItemSlice
+			if err := Unmarshal(slice, &many); err != nil {
+				t.Fatalf("slice decode: %v", err)
+			}
+			if len(many) != 1 {
+				t.Fatalf("slice decode produced %d items", len(many))
+			}
+			gotSingle := dynamicTypeName(one.TextEdit)
+			gotSlice := dynamicTypeName(many[0].TextEdit)
+			if gotSingle != gotSlice {
+				t.Fatalf("arm divergence: single=%s slice=%s", gotSingle, gotSlice)
+			}
+		})
+	}
+}
+
+func dynamicTypeName(v any) string {
+	switch v.(type) {
+	case nil:
+		return "nil"
+	case *TextEdit:
+		return "*TextEdit"
+	case *InsertReplaceEdit:
+		return "*InsertReplaceEdit"
+	default:
+		return "other"
+	}
+}
+
 // FuzzAppendFloat64Parity proves appendFloat64JSON matches the jsontext
 // number formatting for every float64 bit pattern, including the non-finite
 // error contract.

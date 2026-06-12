@@ -316,6 +316,15 @@ func renderByteSliceValueEntry(b *strings.Builder, name, elem string, direct boo
 	b.WriteString("\treturn x.unmarshalLSPValue(slices.Clone(raw))\n}\n\n")
 }
 
+// sliceWireHint estimates wire bytes per element for the decode-side capacity
+// heuristic, sharing the encode calibration table in emit_byteenc.go.
+func sliceWireHint(elem string) int {
+	if v, ok := encSliceGrowHint[elem]; ok {
+		return v
+	}
+	return 64
+}
+
 // renderByteSliceHelper emits the []T decode loop for a covered element type.
 func renderByteSliceHelper(b *strings.Builder, c *byteDecCtx, elem string) {
 	fn := "unmarshalSlice" + exportName(elem)

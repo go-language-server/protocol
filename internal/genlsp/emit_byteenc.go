@@ -317,9 +317,7 @@ func (g *Generator) renderByteEncSliceValue(b *strings.Builder, e *byteEncCtx, e
 		fmt.Fprintf(b, "%sdst = appendUint32JSONArray(dst, %s)\n", ind, src)
 	case resolveScalar(c, elem) == "uint32":
 		fmt.Fprintf(b, "%sdst = appendUint32SliceJSON(dst, %s)\n", ind, src)
-	case resolveScalar(c, elem) == "string" && !isURIStringType(elem):
-		fmt.Fprintf(b, "%sdst = appendStringSliceJSON(dst, %s)\n", ind, src)
-	case isURIStringType(elem):
+	case resolveScalar(c, elem) == "string" || isURIStringType(elem):
 		fmt.Fprintf(b, "%sdst = appendStringSliceJSON(dst, %s)\n", ind, src)
 	case c.sliceElemSet[elem]:
 		fmt.Fprintf(b, "%sif dst, err = appendSlice%sJSON(dst, %s); err != nil {\n%s\treturn nil, err\n%s}\n", ind, exportName(elem), src, ind, ind)
@@ -449,15 +447,6 @@ func (e *byteEncCtx) sliceGrowHint(elem string) int {
 		return v
 	}
 	return min(e.encEstimateType(elem, 1), 96)
-}
-
-// sliceWireHint estimates wire bytes per element for the decode-side capacity
-// heuristic, sharing the encode calibration table.
-func sliceWireHint(elem string) int {
-	if v, ok := encSliceGrowHint[elem]; ok {
-		return v
-	}
-	return 64
 }
 
 func renderByteEncSliceHelper(b *strings.Builder, e *byteEncCtx, elem string) {
