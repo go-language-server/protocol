@@ -2264,17 +2264,14 @@ func (x *ClientInfo) unmarshalLSP(raw []byte, i int) (int, error) {
 			i = n
 		case keyEquals(key, `version`):
 			if n, ok := dvNull(raw, i); ok {
-				x.Version = nil
+				x.Version.Clear()
 				i = n
 			} else {
 				v, n, err := dvString(raw, i)
 				if err != nil {
 					return n, err
 				}
-				if x.Version == nil {
-					x.Version = new(string)
-				}
-				*x.Version = v
+				x.Version.Set(v)
 				i = n
 			}
 		default:
@@ -24651,17 +24648,14 @@ func (x *ServerInfo) unmarshalLSP(raw []byte, i int) (int, error) {
 			i = n
 		case keyEquals(key, `version`):
 			if n, ok := dvNull(raw, i); ok {
-				x.Version = nil
+				x.Version.Clear()
 				i = n
 			} else {
 				v, n, err := dvString(raw, i)
 				if err != nil {
 					return n, err
 				}
-				if x.Version == nil {
-					x.Version = new(string)
-				}
-				*x.Version = v
+				x.Version.Set(v)
 				i = n
 			}
 		default:
@@ -26820,17 +26814,14 @@ func (x *TextDocumentContentChangePartial) unmarshalLSP(raw []byte, i int) (int,
 			i = n
 		case keyEquals(key, `rangeLength`):
 			if n, ok := dvNull(raw, i); ok {
-				x.RangeLength = nil
+				x.RangeLength.Clear()
 				i = n
 			} else {
 				v, n, err := dvUint32(raw, i)
 				if err != nil {
 					return n, err
 				}
-				if x.RangeLength == nil {
-					x.RangeLength = new(uint32)
-				}
-				*x.RangeLength = v
+				x.RangeLength.Set(v)
 				i = n
 			}
 		case keyEquals(key, `text`):
@@ -32352,7 +32343,7 @@ func (x *_InitializeParams) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	return x.unmarshalLSPValue(slices.Clone(raw))
 }
 
-func (x *Diagnostic) unmarshalLSPWithScalarBoxes(raw []byte, i int, scalarBoxes *[]String) (int, error) {
+func (x *Diagnostic) unmarshalLSPWithScalarBoxes(raw []byte, i int, capN int, scalarBoxes *[]String, markupBoxes *[]MarkupContent) (int, error) {
 	if n, ok := dvNull(raw, i); ok {
 		*x = Diagnostic{}
 		return n, nil
@@ -32390,7 +32381,7 @@ func (x *Diagnostic) unmarshalLSPWithScalarBoxes(raw []byte, i int, scalarBoxes 
 			if err != nil {
 				return n, err
 			}
-			if err := unmarshalProgressTokenValueBoxed(val, &x.Code, scalarBoxes); err != nil {
+			if err := unmarshalProgressTokenValueBoxed(val, &x.Code, scalarBoxes, capN); err != nil {
 				return i, err
 			}
 			i = n
@@ -32417,7 +32408,7 @@ func (x *Diagnostic) unmarshalLSPWithScalarBoxes(raw []byte, i int, scalarBoxes 
 			if err != nil {
 				return n, err
 			}
-			if err := unmarshalInlayHintTooltipValueBoxed(val, &x.Message, scalarBoxes); err != nil {
+			if err := unmarshalInlayHintTooltipValueBoxed(val, &x.Message, scalarBoxes, markupBoxes, capN); err != nil {
 				return i, err
 			}
 			i = n
@@ -32459,7 +32450,7 @@ func (x *Diagnostic) unmarshalLSPWithScalarBoxes(raw []byte, i int, scalarBoxes 
 	}
 }
 
-func (x *WorkspaceSymbol) unmarshalLSPWithLocationBoxes(raw []byte, i int, locationBoxes *[]Location, locationURIOnlyBoxes *[]LocationUriOnly) (int, error) {
+func (x *WorkspaceSymbol) unmarshalLSPWithLocationBoxes(raw []byte, i int, capN int, locationBoxes *[]Location, locationURIOnlyBoxes *[]LocationUriOnly) (int, error) {
 	if n, ok := dvNull(raw, i); ok {
 		*x = WorkspaceSymbol{}
 		return n, nil
@@ -32520,8 +32511,224 @@ func (x *WorkspaceSymbol) unmarshalLSPWithLocationBoxes(raw []byte, i int, locat
 			if err != nil {
 				return n, err
 			}
-			if err := unmarshalWorkspaceSymbolLocationValueBoxed(val, &x.Location, locationBoxes, locationURIOnlyBoxes); err != nil {
+			if err := unmarshalWorkspaceSymbolLocationValueBoxed(val, &x.Location, locationBoxes, locationURIOnlyBoxes, capN); err != nil {
 				return i, err
+			}
+			i = n
+		case keyEquals(key, `data`):
+			val, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Data = jsontext.Value(val)
+			i = n
+		default:
+			_, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			i = n
+		}
+		var done bool
+		i, done, err = dvObjectNext(raw, i)
+		if err != nil {
+			return i, err
+		}
+		if done {
+			return i, nil
+		}
+	}
+}
+
+func (x *CompletionItem) unmarshalLSPWithCompletionBoxes(raw []byte, i int, capN int, scalarBoxes *[]String, markupBoxes *[]MarkupContent, textEditBoxes *[]TextEdit, insertReplaceBoxes *[]InsertReplaceEdit) (int, error) {
+	if n, ok := dvNull(raw, i); ok {
+		*x = CompletionItem{}
+		return n, nil
+	}
+	if i >= len(raw) || raw[i] != '{' {
+		return i, dvSyntaxError(i, "object")
+	}
+	i = skipSpace(raw, i+1)
+	if i < len(raw) && raw[i] == '}' {
+		return i + 1, nil
+	}
+	for {
+		key, n, err := dvMemberKey(raw, i)
+		if err != nil {
+			return n, err
+		}
+		i = n
+		_ = key
+		switch {
+		case keyEquals(key, `label`):
+			v, n, err := dvString(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Label = v
+			i = n
+		case keyEquals(key, `labelDetails`):
+			if n, ok := dvNull(raw, i); ok {
+				x.LabelDetails = nil
+				i = n
+			} else {
+				if x.LabelDetails == nil {
+					x.LabelDetails = new(CompletionItemLabelDetails)
+				}
+				n, err := x.LabelDetails.unmarshalLSP(raw, i)
+				if err != nil {
+					return n, err
+				}
+				i = n
+			}
+		case keyEquals(key, `kind`):
+			v, n, err := dvUint32(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.Kind = CompletionItemKind(v)
+			i = n
+		case keyEquals(key, `tags`):
+			v, n, err := dvUint32Slice(raw, i, x.Tags)
+			if err != nil {
+				return n, err
+			}
+			x.Tags = v
+			i = n
+		case keyEquals(key, `detail`):
+			if n, ok := dvNull(raw, i); ok {
+				x.Detail.Clear()
+				i = n
+			} else {
+				v, n, err := dvString(raw, i)
+				if err != nil {
+					return n, err
+				}
+				x.Detail.Set(v)
+				i = n
+			}
+		case keyEquals(key, `documentation`):
+			val, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			if err := unmarshalInlayHintTooltipValueBoxed(val, &x.Documentation, scalarBoxes, markupBoxes, capN); err != nil {
+				return i, err
+			}
+			i = n
+		case keyEquals(key, `deprecated`):
+			if n, ok := dvNull(raw, i); ok {
+				x.Deprecated.Clear()
+				i = n
+			} else {
+				v, n, err := dvBool(raw, i)
+				if err != nil {
+					return n, err
+				}
+				x.Deprecated.Set(v)
+				i = n
+			}
+		case keyEquals(key, `preselect`):
+			if n, ok := dvNull(raw, i); ok {
+				x.Preselect.Clear()
+				i = n
+			} else {
+				v, n, err := dvBool(raw, i)
+				if err != nil {
+					return n, err
+				}
+				x.Preselect.Set(v)
+				i = n
+			}
+		case keyEquals(key, `sortText`):
+			if n, ok := dvNull(raw, i); ok {
+				x.SortText.Clear()
+				i = n
+			} else {
+				v, n, err := dvString(raw, i)
+				if err != nil {
+					return n, err
+				}
+				x.SortText.Set(v)
+				i = n
+			}
+		case keyEquals(key, `filterText`):
+			if n, ok := dvNull(raw, i); ok {
+				x.FilterText.Clear()
+				i = n
+			} else {
+				v, n, err := dvString(raw, i)
+				if err != nil {
+					return n, err
+				}
+				x.FilterText.Set(v)
+				i = n
+			}
+		case keyEquals(key, `insertText`):
+			if n, ok := dvNull(raw, i); ok {
+				x.InsertText.Clear()
+				i = n
+			} else {
+				v, n, err := dvString(raw, i)
+				if err != nil {
+					return n, err
+				}
+				x.InsertText.Set(v)
+				i = n
+			}
+		case keyEquals(key, `insertTextFormat`):
+			v, n, err := dvUint32(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.InsertTextFormat = InsertTextFormat(v)
+			i = n
+		case keyEquals(key, `insertTextMode`):
+			v, n, err := dvUint32(raw, i)
+			if err != nil {
+				return n, err
+			}
+			x.InsertTextMode = InsertTextMode(v)
+			i = n
+		case keyEquals(key, `textEdit`):
+			val, n, err := dvValue(raw, i)
+			if err != nil {
+				return n, err
+			}
+			if err := unmarshalCompletionItemTextEditValueBoxed(val, &x.TextEdit, textEditBoxes, insertReplaceBoxes, capN); err != nil {
+				return i, err
+			}
+			i = n
+		case keyEquals(key, `textEditText`):
+			if n, ok := dvNull(raw, i); ok {
+				x.TextEditText.Clear()
+				i = n
+			} else {
+				v, n, err := dvString(raw, i)
+				if err != nil {
+					return n, err
+				}
+				x.TextEditText.Set(v)
+				i = n
+			}
+		case keyEquals(key, `additionalTextEdits`):
+			v, n, err := unmarshalSliceTextEdit(raw, i, x.AdditionalTextEdits)
+			if err != nil {
+				return n, err
+			}
+			x.AdditionalTextEdits = v
+			i = n
+		case keyEquals(key, `commitCharacters`):
+			v, n, err := dvStringSlice(raw, i, x.CommitCharacters)
+			if err != nil {
+				return n, err
+			}
+			x.CommitCharacters = v
+			i = n
+		case keyEquals(key, `command`):
+			n, err := x.Command.unmarshalLSP(raw, i)
+			if err != nil {
+				return n, err
 			}
 			i = n
 		case keyEquals(key, `data`):
@@ -32564,6 +32771,9 @@ func unmarshalSliceCodeActionKindDocumentation(raw []byte, i int, dst []CodeActi
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -32602,6 +32812,12 @@ func unmarshalSliceCompletionItem(raw []byte, i int, dst []CompletionItem) ([]Co
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 160)
+	out = slices.Grow(out, capN)
+	var scalarBoxes []String
+	var markupBoxes []MarkupContent
+	var textEditBoxes []TextEdit
+	var insertReplaceBoxes []InsertReplaceEdit
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -32609,7 +32825,7 @@ func unmarshalSliceCompletionItem(raw []byte, i int, dst []CompletionItem) ([]Co
 		} else {
 			out = append(out, CompletionItem{})
 		}
-		n, err := out[len(out)-1].unmarshalLSP(raw, i)
+		n, err := out[len(out)-1].unmarshalLSPWithCompletionBoxes(raw, i, capN, &scalarBoxes, &markupBoxes, &textEditBoxes, &insertReplaceBoxes)
 		if err != nil {
 			return dst, n, err
 		}
@@ -32640,6 +32856,9 @@ func unmarshalSliceConfigurationItem(raw []byte, i int, dst []ConfigurationItem)
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -32678,7 +32897,10 @@ func unmarshalSliceDiagnostic(raw []byte, i int, dst []Diagnostic) ([]Diagnostic
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 200)
+	out = slices.Grow(out, capN)
 	var scalarBoxes []String
+	var markupBoxes []MarkupContent
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -32686,7 +32908,7 @@ func unmarshalSliceDiagnostic(raw []byte, i int, dst []Diagnostic) ([]Diagnostic
 		} else {
 			out = append(out, Diagnostic{})
 		}
-		n, err := out[len(out)-1].unmarshalLSPWithScalarBoxes(raw, i, &scalarBoxes)
+		n, err := out[len(out)-1].unmarshalLSPWithScalarBoxes(raw, i, capN, &scalarBoxes, &markupBoxes)
 		if err != nil {
 			return dst, n, err
 		}
@@ -32717,6 +32939,9 @@ func unmarshalSliceDiagnosticRelatedInformation(raw []byte, i int, dst []Diagnos
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -32755,6 +32980,9 @@ func unmarshalSliceDocumentChange(raw []byte, i int, dst []DocumentChange) ([]Do
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -32796,6 +33024,9 @@ func unmarshalSliceDocumentFilter(raw []byte, i int, dst []DocumentFilter) ([]Do
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -32837,6 +33068,9 @@ func unmarshalSliceDocumentSymbol(raw []byte, i int, dst []DocumentSymbol) ([]Do
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -32875,6 +33109,9 @@ func unmarshalSliceFileCreate(raw []byte, i int, dst []FileCreate) ([]FileCreate
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -32913,6 +33150,9 @@ func unmarshalSliceFileDelete(raw []byte, i int, dst []FileDelete) ([]FileDelete
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -32951,6 +33191,9 @@ func unmarshalSliceFileEvent(raw []byte, i int, dst []FileEvent) ([]FileEvent, i
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -32989,6 +33232,9 @@ func unmarshalSliceFileOperationFilter(raw []byte, i int, dst []FileOperationFil
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -33027,6 +33273,9 @@ func unmarshalSliceFileRename(raw []byte, i int, dst []FileRename) ([]FileRename
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -33065,6 +33314,9 @@ func unmarshalSliceFileSystemWatcher(raw []byte, i int, dst []FileSystemWatcher)
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -33103,6 +33355,9 @@ func unmarshalSliceInlayHintLabelPart(raw []byte, i int, dst []InlayHintLabelPar
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -33141,6 +33396,9 @@ func unmarshalSliceInlineCompletionItem(raw []byte, i int, dst []InlineCompletio
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -33179,6 +33437,9 @@ func unmarshalSliceLocation(raw []byte, i int, dst []Location) ([]Location, int,
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -33217,6 +33478,9 @@ func unmarshalSliceMarkedString(raw []byte, i int, dst []MarkedString) ([]Marked
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -33258,6 +33522,9 @@ func unmarshalSliceMessageActionItem(raw []byte, i int, dst []MessageActionItem)
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -33296,6 +33563,9 @@ func unmarshalSliceNotebookCell(raw []byte, i int, dst []NotebookCell) ([]Notebo
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -33334,6 +33604,9 @@ func unmarshalSliceNotebookCellLanguage(raw []byte, i int, dst []NotebookCellLan
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -33372,6 +33645,9 @@ func unmarshalSliceNotebookDocumentCellContentChanges(raw []byte, i int, dst []N
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -33410,6 +33686,9 @@ func unmarshalSliceNotebookSelector(raw []byte, i int, dst []NotebookSelector) (
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -33451,6 +33730,9 @@ func unmarshalSliceParameterInformation(raw []byte, i int, dst []ParameterInform
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -33489,6 +33771,9 @@ func unmarshalSlicePosition(raw []byte, i int, dst []Position) ([]Position, int,
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -33527,6 +33812,9 @@ func unmarshalSlicePreviousResultID(raw []byte, i int, dst []PreviousResultId) (
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -33565,6 +33853,9 @@ func unmarshalSliceRange(raw []byte, i int, dst []Range) ([]Range, int, error) {
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -33603,6 +33894,9 @@ func unmarshalSliceRegistration(raw []byte, i int, dst []Registration) ([]Regist
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -33641,6 +33935,9 @@ func unmarshalSliceSemanticTokensEdit(raw []byte, i int, dst []SemanticTokensEdi
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -33679,6 +33976,9 @@ func unmarshalSliceSignatureInformation(raw []byte, i int, dst []SignatureInform
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -33717,6 +34017,9 @@ func unmarshalSliceSymbolInformation(raw []byte, i int, dst []SymbolInformation)
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 176)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -33755,6 +34058,10 @@ func unmarshalSliceTextDocumentContentChangeEvent(raw []byte, i int, dst []TextD
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 128)
+	out = slices.Grow(out, capN)
+	var partialBoxes []TextDocumentContentChangePartial
+	var wholeBoxes []TextDocumentContentChangeWholeDocument
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -33766,7 +34073,7 @@ func unmarshalSliceTextDocumentContentChangeEvent(raw []byte, i int, dst []TextD
 		if err != nil {
 			return dst, n, err
 		}
-		if err := unmarshalTextDocumentContentChangeEventValue(val, &out[len(out)-1]); err != nil {
+		if err := unmarshalTextDocumentContentChangeEventValueBoxed(val, &out[len(out)-1], &partialBoxes, &wholeBoxes, capN); err != nil {
 			return dst, i, err
 		}
 		var done bool
@@ -33796,6 +34103,9 @@ func unmarshalSliceTextDocumentEditElement(raw []byte, i int, dst []TextDocument
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -33837,6 +34147,9 @@ func unmarshalSliceTextDocumentIdentifier(raw []byte, i int, dst []TextDocumentI
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -33875,6 +34188,9 @@ func unmarshalSliceTextDocumentItem(raw []byte, i int, dst []TextDocumentItem) (
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -33913,6 +34229,9 @@ func unmarshalSliceTextEdit(raw []byte, i int, dst []TextEdit) ([]TextEdit, int,
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -33951,6 +34270,9 @@ func unmarshalSliceUnregistration(raw []byte, i int, dst []Unregistration) ([]Un
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -33989,6 +34311,9 @@ func unmarshalSliceWorkspaceDocumentDiagnosticReport(raw []byte, i int, dst []Wo
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -34030,6 +34355,9 @@ func unmarshalSliceWorkspaceFolder(raw []byte, i int, dst []WorkspaceFolder) ([]
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 64)
+	out = slices.Grow(out, capN)
+	_ = capN
 	for {
 		if len(out) < cap(out) {
 			out = out[:len(out)+1]
@@ -34068,6 +34396,8 @@ func unmarshalSliceWorkspaceSymbol(raw []byte, i int, dst []WorkspaceSymbol) ([]
 		}
 		return out, i + 1, nil
 	}
+	capN := dvSliceCapHint(raw, i, 112)
+	out = slices.Grow(out, capN)
 	var locationBoxes []Location
 	var locationURIOnlyBoxes []LocationUriOnly
 	for {
@@ -34077,7 +34407,7 @@ func unmarshalSliceWorkspaceSymbol(raw []byte, i int, dst []WorkspaceSymbol) ([]
 		} else {
 			out = append(out, WorkspaceSymbol{})
 		}
-		n, err := out[len(out)-1].unmarshalLSPWithLocationBoxes(raw, i, &locationBoxes, &locationURIOnlyBoxes)
+		n, err := out[len(out)-1].unmarshalLSPWithLocationBoxes(raw, i, capN, &locationBoxes, &locationURIOnlyBoxes)
 		if err != nil {
 			return dst, n, err
 		}

@@ -326,6 +326,8 @@ func renderByteSliceHelper(b *strings.Builder, c *byteDecCtx, elem string) {
 	b.WriteString("\tif i < len(raw) && raw[i] == ']' {\n")
 	fmt.Fprintf(b, "\t\tif out == nil {\n\t\t\tout = []%s{}\n\t\t}\n", elem)
 	b.WriteString("\t\treturn out, i + 1, nil\n\t}\n")
+	fmt.Fprintf(b, "\tcapN := dvSliceCapHint(raw, i, %d)\n", sliceWireHint(elem))
+	b.WriteString("\tout = slices.Grow(out, capN)\n")
 	zero := elem + "{}"
 	if _, isUnion := c.unions[elem]; isUnion {
 		zero = "nil" // union elements are interfaces
@@ -333,9 +335,20 @@ func renderByteSliceHelper(b *strings.Builder, c *byteDecCtx, elem string) {
 	switch elem {
 	case "Diagnostic":
 		b.WriteString("\tvar scalarBoxes []String\n")
+		b.WriteString("\tvar markupBoxes []MarkupContent\n")
 	case "WorkspaceSymbol":
 		b.WriteString("\tvar locationBoxes []Location\n")
 		b.WriteString("\tvar locationURIOnlyBoxes []LocationUriOnly\n")
+	case "CompletionItem":
+		b.WriteString("\tvar scalarBoxes []String\n")
+		b.WriteString("\tvar markupBoxes []MarkupContent\n")
+		b.WriteString("\tvar textEditBoxes []TextEdit\n")
+		b.WriteString("\tvar insertReplaceBoxes []InsertReplaceEdit\n")
+	case "TextDocumentContentChangeEvent":
+		b.WriteString("\tvar partialBoxes []TextDocumentContentChangePartial\n")
+		b.WriteString("\tvar wholeBoxes []TextDocumentContentChangeWholeDocument\n")
+	default:
+		b.WriteString("\t_ = capN\n")
 	}
 	b.WriteString("\tfor {\n")
 	b.WriteString("\t\tif len(out) < cap(out) {\n\t\t\tout = out[:len(out)+1]\n")
@@ -345,11 +358,18 @@ func renderByteSliceHelper(b *strings.Builder, c *byteDecCtx, elem string) {
 	b.WriteString("\t\t}\n")
 	switch {
 	case elem == "Diagnostic":
-		b.WriteString("\t\tn, err := out[len(out)-1].unmarshalLSPWithScalarBoxes(raw, i, &scalarBoxes)\n")
+		b.WriteString("\t\tn, err := out[len(out)-1].unmarshalLSPWithScalarBoxes(raw, i, capN, &scalarBoxes, &markupBoxes)\n")
 		b.WriteString("\t\tif err != nil {\n\t\t\treturn dst, n, err\n\t\t}\n")
 	case elem == "WorkspaceSymbol":
-		b.WriteString("\t\tn, err := out[len(out)-1].unmarshalLSPWithLocationBoxes(raw, i, &locationBoxes, &locationURIOnlyBoxes)\n")
+		b.WriteString("\t\tn, err := out[len(out)-1].unmarshalLSPWithLocationBoxes(raw, i, capN, &locationBoxes, &locationURIOnlyBoxes)\n")
 		b.WriteString("\t\tif err != nil {\n\t\t\treturn dst, n, err\n\t\t}\n")
+	case elem == "CompletionItem":
+		b.WriteString("\t\tn, err := out[len(out)-1].unmarshalLSPWithCompletionBoxes(raw, i, capN, &scalarBoxes, &markupBoxes, &textEditBoxes, &insertReplaceBoxes)\n")
+		b.WriteString("\t\tif err != nil {\n\t\t\treturn dst, n, err\n\t\t}\n")
+	case elem == "TextDocumentContentChangeEvent":
+		b.WriteString("\t\tval, n, err := dvValue(raw, i)\n")
+		b.WriteString("\t\tif err != nil {\n\t\t\treturn dst, n, err\n\t\t}\n")
+		b.WriteString("\t\tif err := unmarshalTextDocumentContentChangeEventValueBoxed(val, &out[len(out)-1], &partialBoxes, &wholeBoxes, capN); err != nil {\n\t\t\treturn dst, i, err\n\t\t}\n")
 	case c.unions[elem] != nil:
 		b.WriteString("\t\tval, n, err := dvValue(raw, i)\n")
 		b.WriteString("\t\tif err != nil {\n\t\t\treturn dst, n, err\n\t\t}\n")
@@ -395,10 +415,13 @@ type byteFieldOverride func(b *strings.Builder, c *byteDecCtx, f *renderedField)
 
 func (g *Generator) renderBoxedByteWalkerVariants(b *strings.Builder, c *byteDecCtx) {
 	if s := c.structs["Diagnostic"]; s != nil && c.covered["Diagnostic"] {
-		g.renderByteWalkerMethod(b, c, s, "unmarshalLSPWithScalarBoxes", ", scalarBoxes *[]String", renderDiagnosticBoxedFieldCase)
+		g.renderByteWalkerMethod(b, c, s, "unmarshalLSPWithScalarBoxes", ", capN int, scalarBoxes *[]String, markupBoxes *[]MarkupContent", renderDiagnosticBoxedFieldCase)
 	}
 	if s := c.structs["WorkspaceSymbol"]; s != nil && c.covered["WorkspaceSymbol"] {
-		g.renderByteWalkerMethod(b, c, s, "unmarshalLSPWithLocationBoxes", ", locationBoxes *[]Location, locationURIOnlyBoxes *[]LocationUriOnly", renderWorkspaceSymbolBoxedFieldCase)
+		g.renderByteWalkerMethod(b, c, s, "unmarshalLSPWithLocationBoxes", ", capN int, locationBoxes *[]Location, locationURIOnlyBoxes *[]LocationUriOnly", renderWorkspaceSymbolBoxedFieldCase)
+	}
+	if s := c.structs["CompletionItem"]; s != nil && c.covered["CompletionItem"] {
+		g.renderByteWalkerMethod(b, c, s, "unmarshalLSPWithCompletionBoxes", ", capN int, scalarBoxes *[]String, markupBoxes *[]MarkupContent, textEditBoxes *[]TextEdit, insertReplaceBoxes *[]InsertReplaceEdit", renderCompletionItemBoxedFieldCase)
 	}
 }
 
@@ -438,10 +461,10 @@ func renderDiagnosticBoxedFieldCase(b *strings.Builder, _ *byteDecCtx, f *render
 	const ind = "\t\t\t"
 	switch f.Name {
 	case "Code":
-		emitBoxedUnionField(b, ind, "unmarshalProgressTokenValueBoxed", "x.Code", "scalarBoxes")
+		emitBoxedUnionField(b, ind, "unmarshalProgressTokenValueBoxed", "x.Code", "scalarBoxes, capN")
 		return true
 	case "Message":
-		emitBoxedUnionField(b, ind, "unmarshalInlayHintTooltipValueBoxed", "x.Message", "scalarBoxes")
+		emitBoxedUnionField(b, ind, "unmarshalInlayHintTooltipValueBoxed", "x.Message", "scalarBoxes, markupBoxes, capN")
 		return true
 	default:
 		return false
@@ -453,10 +476,22 @@ func renderWorkspaceSymbolBoxedFieldCase(b *strings.Builder, _ *byteDecCtx, f *r
 	if f.Name != "Location" {
 		return false
 	}
-	fmt.Fprintf(b, "%sval, n, err := dvValue(raw, i)\n", ind)
-	fmt.Fprintf(b, "%sif err != nil {\n%s\treturn n, err\n%s}\n", ind, ind, ind)
-	fmt.Fprintf(b, "%sif err := unmarshalWorkspaceSymbolLocationValueBoxed(val, &x.Location, locationBoxes, locationURIOnlyBoxes); err != nil {\n%s\treturn i, err\n%s}\n%si = n\n", ind, ind, ind, ind)
+	emitBoxedUnionField(b, ind, "unmarshalWorkspaceSymbolLocationValueBoxed", "x.Location", "locationBoxes, locationURIOnlyBoxes, capN")
 	return true
+}
+
+func renderCompletionItemBoxedFieldCase(b *strings.Builder, _ *byteDecCtx, f *renderedField) bool {
+	const ind = "\t\t\t"
+	switch f.Name {
+	case "Documentation":
+		emitBoxedUnionField(b, ind, "unmarshalInlayHintTooltipValueBoxed", "x.Documentation", "scalarBoxes, markupBoxes, capN")
+		return true
+	case "TextEdit":
+		emitBoxedUnionField(b, ind, "unmarshalCompletionItemTextEditValueBoxed", "x.TextEdit", "textEditBoxes, insertReplaceBoxes, capN")
+		return true
+	default:
+		return false
+	}
 }
 
 func emitBoxedUnionField(b *strings.Builder, ind, fn, dst, boxes string) {

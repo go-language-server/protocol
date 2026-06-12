@@ -25,19 +25,37 @@ var (
 	}()
 )
 
-func appendStringBox(boxes *[]String, v string) *String {
-	*boxes = append(*boxes, String(v))
+// appendBox appends a zero T to a lazily allocated slab and returns the slot
+// address. The slab is sized to capN on first use so per-element union arms
+// cost one slab allocation per message instead of one heap object per value,
+// and an unused arm costs nothing.
+func appendBox[T any](boxes *[]T, capN int) *T {
+	if *boxes == nil {
+		*boxes = make([]T, 0, max(capN, 1))
+	}
+	var zero T
+	*boxes = append(*boxes, zero)
 	return &(*boxes)[len(*boxes)-1]
 }
 
-func appendLocationBox(boxes *[]Location) *Location {
-	*boxes = append(*boxes, Location{})
-	return &(*boxes)[len(*boxes)-1]
+// boxedArm constrains tryBoxArm to slab element types whose pointer form
+// carries a byte-walker whole-value decoder.
+type boxedArm[T any] interface {
+	*T
+	unmarshalLSPValue(raw jsontext.Value) error
 }
 
-func appendLocationURIOnlyBox(boxes *[]LocationUriOnly) *LocationUriOnly {
-	*boxes = append(*boxes, LocationUriOnly{})
-	return &(*boxes)[len(*boxes)-1]
+// tryBoxArm decodes raw into a fresh slab slot for one object union arm,
+// truncating the slab again when the arm does not accept the value so a
+// failed probe leaves no trace.
+func tryBoxArm[T any, PT boxedArm[T]](raw jsontext.Value, boxes *[]T, capN int) (PT, bool) {
+	n := len(*boxes)
+	v := PT(appendBox(boxes, capN))
+	if v.unmarshalLSPValue(raw) == nil {
+		return v, true
+	}
+	*boxes = (*boxes)[:n]
+	return nil, false
 }
 
 func boxedStringProgressToken(p *String) ProgressToken {
@@ -63,7 +81,7 @@ func boxedStringInlayHintTooltip(p *String) InlayHintTooltip {
 }
 
 //nolint:gocritic // ptrToRefParam: val is an out-parameter; the boxed union slot is assigned in place.
-func unmarshalProgressTokenValueBoxed(raw jsontext.Value, val *ProgressToken, scalarBoxes *[]String) error {
+func unmarshalProgressTokenValueBoxed(raw jsontext.Value, val *ProgressToken, scalarBoxes *[]String, capN int) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
@@ -80,14 +98,16 @@ func unmarshalProgressTokenValueBoxed(raw jsontext.Value, val *ProgressToken, sc
 		if err != nil {
 			return err
 		}
-		*val = boxedStringProgressToken(appendStringBox(scalarBoxes, v))
+		p := appendBox(scalarBoxes, capN)
+		*p = String(v)
+		*val = boxedStringProgressToken(p)
 		return nil
 	}
 	return unmarshalProgressTokenValue(raw, val)
 }
 
 //nolint:gocritic // ptrToRefParam: val is an out-parameter; the boxed union slot is assigned in place.
-func unmarshalInlayHintTooltipValueBoxed(raw jsontext.Value, val *InlayHintTooltip, scalarBoxes *[]String) error {
+func unmarshalInlayHintTooltipValueBoxed(raw jsontext.Value, val *InlayHintTooltip, scalarBoxes *[]String, markupBoxes *[]MarkupContent, capN int) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
@@ -97,14 +117,101 @@ func unmarshalInlayHintTooltipValueBoxed(raw jsontext.Value, val *InlayHintToolt
 		if err != nil {
 			return err
 		}
-		*val = boxedStringInlayHintTooltip(appendStringBox(scalarBoxes, v))
+		p := appendBox(scalarBoxes, capN)
+		*p = String(v)
+		*val = boxedStringInlayHintTooltip(p)
 		return nil
+	case '{':
+		// MarkupContent is the only object arm, so no discriminating guard is
+		// required; a failed decode truncates the slab and falls back.
+		n := len(*markupBoxes)
+		v := appendBox(markupBoxes, capN)
+		if v.unmarshalLSPValue(raw) == nil {
+			*val = v
+			return nil
+		}
+		*markupBoxes = (*markupBoxes)[:n]
 	}
 	return unmarshalInlayHintTooltipValue(raw, val)
 }
 
+// unmarshalCompletionItemTextEditValueBoxed decodes the TextEdit |
+// InsertReplaceEdit union into per-message slabs. The arms' required key sets
+// ({range,newText} vs {newText,insert,replace}) are disjoint, so the guard
+// ladder mirrors the generated dispatcher: exact-shape matches first, then
+// required-key matches, then bare attempts, then the canonical fallback.
+//
 //nolint:gocritic // ptrToRefParam: val is an out-parameter; the boxed union slot is assigned in place.
-func unmarshalWorkspaceSymbolLocationValueBoxed(raw jsontext.Value, val *WorkspaceSymbolLocation, locationBoxes *[]Location, locationURIOnlyBoxes *[]LocationUriOnly) error {
+func unmarshalCompletionItemTextEditValueBoxed(raw jsontext.Value, val *CompletionItemTextEdit, textEditBoxes *[]TextEdit, insertReplaceBoxes *[]InsertReplaceEdit, capN int) error {
+	switch raw.Kind() {
+	case '{':
+		switch {
+		case objectHasAndKnownGuard(raw, []string{"range", "newText"}, []string{"range", "newText"}):
+			if v, ok := tryBoxArm[TextEdit](raw, textEditBoxes, capN); ok {
+				*val = v
+				return nil
+			}
+		case objectHasAndKnownGuard(raw, []string{"newText", "insert", "replace"}, []string{"newText", "insert", "replace"}):
+			if v, ok := tryBoxArm[InsertReplaceEdit](raw, insertReplaceBoxes, capN); ok {
+				*val = v
+				return nil
+			}
+		}
+		if objectHasKeys(raw, "range", "newText") {
+			if v, ok := tryBoxArm[TextEdit](raw, textEditBoxes, capN); ok {
+				*val = v
+				return nil
+			}
+		}
+		if objectHasKeys(raw, "newText", "insert", "replace") {
+			if v, ok := tryBoxArm[InsertReplaceEdit](raw, insertReplaceBoxes, capN); ok {
+				*val = v
+				return nil
+			}
+		}
+	}
+	return unmarshalCompletionItemTextEditValue(raw, val)
+}
+
+// unmarshalTextDocumentContentChangeEventValueBoxed decodes the partial |
+// whole-document change union into per-message slabs. The partial arm is the
+// key superset ({range,text} ⊃ {text}), so it is probed first, mirroring the
+// generated dispatcher's superset-wins ordering.
+//
+//nolint:gocritic // ptrToRefParam: val is an out-parameter; the boxed union slot is assigned in place.
+func unmarshalTextDocumentContentChangeEventValueBoxed(raw jsontext.Value, val *TextDocumentContentChangeEvent, partialBoxes *[]TextDocumentContentChangePartial, wholeBoxes *[]TextDocumentContentChangeWholeDocument, capN int) error {
+	switch raw.Kind() {
+	case '{':
+		switch {
+		case objectHasAndKnownGuard(raw, []string{"range", "text"}, []string{"range", "rangeLength", "text"}):
+			if v, ok := tryBoxArm[TextDocumentContentChangePartial](raw, partialBoxes, capN); ok {
+				*val = v
+				return nil
+			}
+		case objectHasAndKnownGuard(raw, []string{"text"}, []string{"text"}):
+			if v, ok := tryBoxArm[TextDocumentContentChangeWholeDocument](raw, wholeBoxes, capN); ok {
+				*val = v
+				return nil
+			}
+		}
+		if objectHasKeys(raw, "range", "text") {
+			if v, ok := tryBoxArm[TextDocumentContentChangePartial](raw, partialBoxes, capN); ok {
+				*val = v
+				return nil
+			}
+		}
+		if objectHasKeys(raw, "text") {
+			if v, ok := tryBoxArm[TextDocumentContentChangeWholeDocument](raw, wholeBoxes, capN); ok {
+				*val = v
+				return nil
+			}
+		}
+	}
+	return unmarshalTextDocumentContentChangeEventValue(raw, val)
+}
+
+//nolint:gocritic // ptrToRefParam: val is an out-parameter; the boxed union slot is assigned in place.
+func unmarshalWorkspaceSymbolLocationValueBoxed(raw jsontext.Value, val *WorkspaceSymbolLocation, locationBoxes *[]Location, locationURIOnlyBoxes *[]LocationUriOnly, capN int) error {
 	switch raw.Kind() {
 	case 'n':
 		*val = nil
@@ -112,7 +219,7 @@ func unmarshalWorkspaceSymbolLocationValueBoxed(raw jsontext.Value, val *Workspa
 	case '{':
 		if objectHasAndKnownGuard(raw, []string{"uri", "range"}, []string{"uri", "range"}) {
 			n := len(*locationBoxes)
-			v := appendLocationBox(locationBoxes)
+			v := appendBox(locationBoxes, capN)
 			if v.unmarshalLSPValue(raw) == nil {
 				*val = v
 				return nil
@@ -121,7 +228,7 @@ func unmarshalWorkspaceSymbolLocationValueBoxed(raw jsontext.Value, val *Workspa
 		}
 		if objectHasAndKnownGuard(raw, []string{"uri"}, []string{"uri"}) {
 			n := len(*locationURIOnlyBoxes)
-			v := appendLocationURIOnlyBox(locationURIOnlyBoxes)
+			v := appendBox(locationURIOnlyBoxes, capN)
 			if v.unmarshalLSPValue(raw) == nil {
 				*val = v
 				return nil
@@ -130,7 +237,7 @@ func unmarshalWorkspaceSymbolLocationValueBoxed(raw jsontext.Value, val *Workspa
 		}
 		if objectHasKeys(raw, "uri", "range") {
 			n := len(*locationBoxes)
-			v := appendLocationBox(locationBoxes)
+			v := appendBox(locationBoxes, capN)
 			if v.unmarshalLSPValue(raw) == nil {
 				*val = v
 				return nil
@@ -139,7 +246,7 @@ func unmarshalWorkspaceSymbolLocationValueBoxed(raw jsontext.Value, val *Workspa
 		}
 		if objectHasKeys(raw, "uri") {
 			n := len(*locationURIOnlyBoxes)
-			v := appendLocationURIOnlyBox(locationURIOnlyBoxes)
+			v := appendBox(locationURIOnlyBoxes, capN)
 			if v.unmarshalLSPValue(raw) == nil {
 				*val = v
 				return nil
@@ -148,7 +255,7 @@ func unmarshalWorkspaceSymbolLocationValueBoxed(raw jsontext.Value, val *Workspa
 		}
 		{
 			n := len(*locationBoxes)
-			v := appendLocationBox(locationBoxes)
+			v := appendBox(locationBoxes, capN)
 			if v.unmarshalLSPValue(raw) == nil {
 				*val = v
 				return nil
@@ -157,7 +264,7 @@ func unmarshalWorkspaceSymbolLocationValueBoxed(raw jsontext.Value, val *Workspa
 		}
 		{
 			n := len(*locationURIOnlyBoxes)
-			v := appendLocationURIOnlyBox(locationURIOnlyBoxes)
+			v := appendBox(locationURIOnlyBoxes, capN)
 			if v.unmarshalLSPValue(raw) == nil {
 				*val = v
 				return nil

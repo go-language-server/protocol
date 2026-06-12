@@ -548,7 +548,7 @@ type TextDocumentContentChangePartial struct {
 	// RangeLength The optional length of the range that got replaced.
 	//
 	// Deprecated: use range instead.
-	RangeLength *uint32 `json:"rangeLength,omitzero"`
+	RangeLength Optional[uint32] `json:"rangeLength,omitzero"`
 
 	// Text The new text for the provided range.
 	Text string `json:"text"`

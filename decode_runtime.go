@@ -446,6 +446,37 @@ func dvUint32SliceLenHint(raw []byte, i int) int {
 	return n
 }
 
+// dvStringSliceLenHint counts the elements of a string array by scanning for
+// closing quotes outside escape sequences, so dvStringSlice can size its
+// result in one allocation. String arrays cannot nest, which makes the count
+// exact for valid input; malformed input merely yields a harmless hint.
+func dvStringSliceLenHint(raw []byte, i int) int {
+	n := 0
+	inStr := false
+	for ; i < len(raw); i++ {
+		switch c := raw[i]; {
+		case inStr && c == '\\':
+			i++
+		case inStr && c == '"':
+			inStr = false
+			n++
+		case !inStr && c == '"':
+			inStr = true
+		case !inStr && c == ']':
+			return max(n, 1)
+		}
+	}
+	return max(n, 1)
+}
+
+// dvSliceCapHint bounds an element-count guess for pre-sizing slice and slab
+// capacity from the bytes remaining after i. Arrays dominate the tail of LSP
+// payloads, so remaining-length divided by a per-element wire estimate lands
+// within one growth step of the true count without a structural pre-scan.
+func dvSliceCapHint(raw []byte, i, perElem int) int {
+	return min((len(raw)-i)/perElem+1, 1024)
+}
+
 // dvStringSlice consumes a JSON array of strings into dst, reusing its
 // backing storage.
 func dvStringSlice[T ~string](raw []byte, i int, dst []T) (v []T, next int, err error) {
@@ -463,6 +494,7 @@ func dvStringSlice[T ~string](raw []byte, i int, dst []T) (v []T, next int, err 
 		}
 		return out, i + 1, nil
 	}
+	out = slices.Grow(out, dvStringSliceLenHint(raw, i))
 	for {
 		var s string
 		s, i, err = dvString(raw, skipSpace(raw, i))

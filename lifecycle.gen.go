@@ -245,7 +245,7 @@ type ServerInfo struct {
 	Name string `json:"name"`
 
 	// Version The server's version as defined by the server.
-	Version *string `json:"version,omitzero"`
+	Version Optional[string] `json:"version,omitzero"`
 }
 
 // ClientInfo Information about the client
@@ -258,7 +258,7 @@ type ClientInfo struct {
 	Name string `json:"name"`
 
 	// Version The client's version as defined by the client.
-	Version *string `json:"version,omitzero"`
+	Version Optional[string] `json:"version,omitzero"`
 }
 
 // ClientCapabilities Defines the capabilities provided by the client.

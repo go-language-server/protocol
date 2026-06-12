@@ -451,6 +451,15 @@ func (e *byteEncCtx) sliceGrowHint(elem string) int {
 	return min(e.encEstimateType(elem, 1), 96)
 }
 
+// sliceWireHint estimates wire bytes per element for the decode-side capacity
+// heuristic, sharing the encode calibration table.
+func sliceWireHint(elem string) int {
+	if v, ok := encSliceGrowHint[elem]; ok {
+		return v
+	}
+	return 64
+}
+
 func renderByteEncSliceHelper(b *strings.Builder, e *byteEncCtx, elem string) {
 	c := e.dec
 	fmt.Fprintf(b, "func appendSlice%sJSON(dst []byte, x []%s) ([]byte, error) {\n", exportName(elem), elem)

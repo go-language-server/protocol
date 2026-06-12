@@ -716,11 +716,11 @@ func (x ClientInfo) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.String(x.Name)); err != nil {
 		return err
 	}
-	if x.Version != nil {
+	if v, ok := x.Version.Get(); ok {
 		if err := enc.WriteToken(jsontext.String(`version`)); err != nil {
 			return err
 		}
-		if err := json.MarshalEncode(enc, x.Version); err != nil {
+		if err := enc.WriteToken(jsontext.String(v)); err != nil {
 			return err
 		}
 	}
@@ -8105,11 +8105,11 @@ func (x ServerInfo) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if err := enc.WriteToken(jsontext.String(x.Name)); err != nil {
 		return err
 	}
-	if x.Version != nil {
+	if v, ok := x.Version.Get(); ok {
 		if err := enc.WriteToken(jsontext.String(`version`)); err != nil {
 			return err
 		}
-		if err := json.MarshalEncode(enc, x.Version); err != nil {
+		if err := enc.WriteToken(jsontext.String(v)); err != nil {
 			return err
 		}
 	}
@@ -8920,7 +8920,7 @@ func (x TextDocumentContentChangePartial) MarshalJSONTo(enc *jsontext.Encoder) e
 	if err := encodeRangeTo(enc, x.Range); err != nil {
 		return err
 	}
-	if x.RangeLength != nil {
+	if !x.RangeLength.IsZero() {
 		if err := enc.WriteToken(jsontext.String(`rangeLength`)); err != nil {
 			return err
 		}
@@ -10858,7 +10858,7 @@ func isZeroGeneratedClientDiagnosticsTagOptions(x ClientDiagnosticsTagOptions) b
 
 func isZeroGeneratedClientInfo(x ClientInfo) bool {
 	return x.Name == "" &&
-		x.Version == nil
+		x.Version.IsZero()
 }
 
 func isZeroGeneratedClientInlayHintResolveOptions(x ClientInlayHintResolveOptions) bool {
@@ -10954,7 +10954,7 @@ func isZeroGeneratedSemanticTokensClientCapabilities(x SemanticTokensClientCapab
 
 func isZeroGeneratedServerInfo(x ServerInfo) bool {
 	return x.Name == "" &&
-		x.Version == nil
+		x.Version.IsZero()
 }
 
 func isZeroGeneratedSignatureHelp(x SignatureHelp) bool {

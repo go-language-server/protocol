@@ -1026,13 +1026,10 @@ func (x *ClientInfo) appendLSP(dst []byte) ([]byte, error) {
 	_ = first
 	dst = appendObjectName(dst, &first, `name`)
 	dst = appendJSONString(dst, string(x.Name))
-	if x.Version != nil {
+	if !x.Version.IsZero() {
 		dst = appendObjectName(dst, &first, `version`)
-		if x.Version == nil {
-			dst = append(dst, nullLiteral...)
-		} else {
-			dst = appendJSONString(dst, string(*x.Version))
-		}
+		ov, _ := x.Version.Get()
+		dst = appendJSONString(dst, string(ov))
 	}
 	return append(dst, '}'), nil
 }
@@ -11311,13 +11308,10 @@ func (x *ServerInfo) appendLSP(dst []byte) ([]byte, error) {
 	_ = first
 	dst = appendObjectName(dst, &first, `name`)
 	dst = appendJSONString(dst, string(x.Name))
-	if x.Version != nil {
+	if !x.Version.IsZero() {
 		dst = appendObjectName(dst, &first, `version`)
-		if x.Version == nil {
-			dst = append(dst, nullLiteral...)
-		} else {
-			dst = appendJSONString(dst, string(*x.Version))
-		}
+		ov, _ := x.Version.Get()
+		dst = appendJSONString(dst, string(ov))
 	}
 	return append(dst, '}'), nil
 }
@@ -12395,13 +12389,10 @@ func (x *TextDocumentContentChangePartial) appendLSP(dst []byte) ([]byte, error)
 	dst = appendUint32JSON(dst, uint32(x.Range.End.Character))
 	dst = append(dst, '}')
 	dst = append(dst, '}')
-	if x.RangeLength != nil {
+	if !x.RangeLength.IsZero() {
 		dst = appendObjectName(dst, &first, `rangeLength`)
-		if x.RangeLength == nil {
-			dst = append(dst, nullLiteral...)
-		} else {
-			dst = appendUint32JSON(dst, uint32(*x.RangeLength))
-		}
+		ov, _ := x.RangeLength.Get()
+		dst = appendUint32JSON(dst, uint32(ov))
 	}
 	dst = appendObjectName(dst, &first, `text`)
 	dst = appendJSONString(dst, string(x.Text))

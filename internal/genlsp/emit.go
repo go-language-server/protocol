@@ -865,6 +865,9 @@ func (g *Generator) renderMarshalers() string {
 }
 
 var hotOptionalFields = map[string]map[string]bool{
+	"ClientInfo": {
+		"Version": true,
+	},
 	"CompletionItem": {
 		"Detail":       true,
 		"Deprecated":   true,
@@ -880,13 +883,19 @@ var hotOptionalFields = map[string]map[string]bool{
 	"PublishDiagnosticsParams": {
 		"Version": true,
 	},
+	"ServerInfo": {
+		"Version": true,
+	},
+	"TextDocumentContentChangePartial": {
+		"RangeLength": true,
+	},
 }
 
 func hotOptionalField(owner, fieldName, base string, optional, nullable bool) bool {
 	if !optional || nullable {
 		return false
 	}
-	if base != "string" && base != "bool" && base != "int32" {
+	if base != "string" && base != "bool" && base != "int32" && base != "uint32" {
 		return false
 	}
 	fields := hotOptionalFields[owner]
