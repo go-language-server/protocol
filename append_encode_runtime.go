@@ -8,6 +8,7 @@ import (
 	"math"
 	"slices"
 	"strconv"
+	"unsafe"
 
 	"github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
@@ -35,6 +36,15 @@ func appendObjectName(dst []byte, first *bool, name string) []byte {
 }
 
 func appendJSONString(dst []byte, s string) []byte {
+	// Fast path: a printable-ASCII run without quotes or backslashes needs no
+	// escaping and no UTF-8 validation, so it appends verbatim. The unsafe
+	// view is read-only and never escapes this frame. Admission evidence for
+	// the SWAR scan lives in .bench/phase3-kernel-admission.md.
+	if n := dvScanStringSpecial(unsafe.Slice(unsafe.StringData(s), len(s)), 0); n == len(s) {
+		dst = append(dst, '"')
+		dst = append(dst, s...)
+		return append(dst, '"')
+	}
 	// jsontext.AppendQuote already replaces invalid UTF-8 with U+FFFD. Its
 	// only error for string input is reporting invalid UTF-8, which is allowed
 	// by wireOptions, so ignoring the error preserves this package's wire

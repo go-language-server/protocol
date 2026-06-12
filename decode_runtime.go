@@ -88,24 +88,20 @@ func dvString(raw []byte, i int) (s string, next int, err error) {
 		return "", i, dvSyntaxError(i, "string")
 	}
 	start := i + 1
-	n := start
-	for n < len(raw) {
-		c := raw[n]
-		if c == '"' {
-			if n == start {
-				return "", n + 1, nil
-			}
-			// unsafe.String aliases the per-message owned copy installed by
-			// Unmarshal/UnmarshalJSONFrom; .bench/phase2-after-M5-decode-amd64.txt
-			// records the allocation gate that justifies this hot-path risk.
-			return unsafe.String(&raw[start], n-start), n + 1, nil
-		}
-		if c == '\\' || c < ' ' || c >= utf8.RuneSelf {
-			return dvStringSlow(raw, i)
-		}
-		n++
+	n := dvScanStringSpecial(raw, start)
+	if n >= len(raw) {
+		return "", len(raw), io.ErrUnexpectedEOF
 	}
-	return "", len(raw), io.ErrUnexpectedEOF
+	if raw[n] == '"' {
+		if n == start {
+			return "", n + 1, nil
+		}
+		// unsafe.String aliases the per-message owned copy installed by
+		// Unmarshal/UnmarshalJSONFrom; .bench/phase2-after-M5-decode-amd64.txt
+		// records the allocation gate that justifies this hot-path risk.
+		return unsafe.String(&raw[start], n-start), n + 1, nil
+	}
+	return dvStringSlow(raw, i)
 }
 
 // dvStringEnd consumes and validates a JSON string without constructing its
@@ -116,17 +112,15 @@ func dvStringEnd(raw []byte, i int) (next int, err error) {
 	if i >= len(raw) || raw[i] != '"' {
 		return i, dvSyntaxError(i, "string")
 	}
-	for n := i + 1; n < len(raw); n++ {
-		c := raw[n]
-		if c == '"' {
-			return n + 1, nil
-		}
-		if c == '\\' || c < ' ' || c >= utf8.RuneSelf {
-			_, next, err := dvString(raw, i)
-			return next, err
-		}
+	n := dvScanStringSpecial(raw, i+1)
+	if n >= len(raw) {
+		return len(raw), io.ErrUnexpectedEOF
 	}
-	return len(raw), io.ErrUnexpectedEOF
+	if raw[n] == '"' {
+		return n + 1, nil
+	}
+	_, next, err = dvString(raw, i)
+	return next, err
 }
 
 // dvURI consumes a JSON string and parses it through go.lsp.dev/uri so URI

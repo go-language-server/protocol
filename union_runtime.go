@@ -41,14 +41,14 @@ func skipSpace(raw []byte, i int) int {
 func scanString(raw []byte, i int) (end int, ok bool) {
 	i++ // opening quote
 	for i < len(raw) {
-		switch raw[i] {
-		case '\\':
-			i += 2 // skip the escape and the escaped byte
-			continue
-		case '"':
+		i = dvScanQuoteBackslash(raw, i)
+		if i >= len(raw) {
+			break
+		}
+		if raw[i] == '"' {
 			return i + 1, true
 		}
-		i++
+		i += 2 // skip the escape and the escaped byte
 	}
 	return len(raw), false
 }
