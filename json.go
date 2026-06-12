@@ -10,6 +10,8 @@ import (
 
 	"github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
+
+	"go.lsp.dev/uri"
 )
 
 // wireOptions relaxes jsontext validation that the LSP wire contract does not
@@ -37,43 +39,50 @@ var unmarshalOptions = sync.OnceValue(func() json.Options {
 
 // Marshal encodes v as LSP-conformant JSON.
 //
-// Sealed-interface union values marshal as their dynamic concrete arm, so no
-// custom marshalers are required. Root semantic-token payloads use a direct
-// append path for their uint32 data array because they dominate encode cost in
-// the benchmark corpus.
+// Every generated type carries a byte-append writer, so struct values, named
+// slice wrappers, and sealed-interface union values (which marshal as their
+// dynamic concrete arm) all encode without entering the reflection machinery.
+// It is equivalent to AppendMarshal(nil, v).
 func Marshal(v any) ([]byte, error) {
-	switch x := v.(type) {
-	case SemanticTokens:
-		return appendSemanticTokensJSON(nil, x.ResultID, x.Data), nil
-	case *SemanticTokens:
-		if x == nil {
-			return []byte("null"), nil
-		}
-		return appendSemanticTokensJSON(nil, x.ResultID, x.Data), nil
-	case SemanticTokensPartialResult:
-		return appendSemanticTokensDataObject(nil, x.Data), nil
-	case *SemanticTokensPartialResult:
-		if x == nil {
-			return []byte("null"), nil
-		}
-		return appendSemanticTokensDataObject(nil, x.Data), nil
-	case *CompletionResult:
-		if x == nil {
-			return []byte("null"), nil
-		}
-		return appendCompletionResultJSON(nil, *x)
-	case *WorkspaceSymbolResult:
-		if x == nil {
-			return []byte("null"), nil
-		}
-		return appendWorkspaceSymbolResultJSON(nil, *x)
-	case *SymbolInformation:
-		return appendSymbolInformationJSON(nil, x), nil
-	}
+	return AppendMarshal(nil, v)
+}
+
+// AppendMarshal appends the LSP-conformant JSON encoding of v to dst and
+// returns the extended buffer, letting callers amortize the output allocation
+// across messages. dst may be nil.
+func AppendMarshal(dst []byte, v any) ([]byte, error) {
 	if m, ok := v.(appendMarshaler); ok {
-		return m.appendLSPJSON(nil)
+		return m.appendLSPJSON(dst)
 	}
-	return json.Marshal(v, wireOptions)
+	// Scalar union arms and pointer-to-union roots do not implement
+	// appendMarshaler; dispatch them before the reflection fallback.
+	switch x := v.(type) {
+	case nil:
+		return append(dst, nullLiteral...), nil
+	case String:
+		return appendJSONString(dst, string(x)), nil
+	case *String:
+		if x == nil {
+			return append(dst, nullLiteral...), nil
+		}
+		return appendJSONString(dst, string(*x)), nil
+	case Integer:
+		return appendInt32JSON(dst, int32(x)), nil
+	case Boolean:
+		return appendBoolJSON(dst, bool(x)), nil
+	case URI:
+		return appendJSONString(dst, string(x)), nil
+	case uri.URI:
+		return appendJSONString(dst, string(x)), nil
+	}
+	if out, ok, err := appendUnionRootJSON(dst, v); ok {
+		return out, err
+	}
+	b, err := json.Marshal(v, wireOptions)
+	if err != nil {
+		return nil, err
+	}
+	return append(dst, b...), nil
 }
 
 // byteUnmarshaler is implemented by every generated type carrying a

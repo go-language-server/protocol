@@ -46,6 +46,7 @@ formatters:
       - third_party$
       - builtin$
       - examples$
+      - internal/genlsp
 
 linters:
   default: none
@@ -204,6 +205,7 @@ linters:
       - third_party$
       - builtin$
       - examples$
+      - internal/genlsp
     rules:
       - linters:
           - errcheck

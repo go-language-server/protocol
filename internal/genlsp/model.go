@@ -95,8 +95,6 @@ type Type struct {
 }
 
 // UnmarshalJSON decodes a meta-model type, dispatching on its "kind".
-//
-//nolint:cyclop // discriminated-union decoder: one branch per Type kind.
 func (t *Type) UnmarshalJSON(data []byte) error {
 	var probe struct {
 		Kind TypeKind `json:"kind"`

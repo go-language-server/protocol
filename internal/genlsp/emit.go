@@ -139,6 +139,7 @@ func (g *Generator) Emit() (map[string][]byte, error) {
 	add("marshalers.go", g.renderMarshalers())
 	add("decoders.go", g.renderByteDecoders(g.byteCtx))
 	add("encoders.go", g.renderEncoders(generatedStructs, aliases))
+	add("append_encoders.go", g.renderByteEncoders(g.byteCtx, generatedStructs))
 	return files, firstErr
 }
 
@@ -1063,8 +1064,6 @@ func (g *Generator) renderFieldEncoder(ctx *encoderCtx, b *strings.Builder, f *r
 // encodeGuardByType maps an omitzero field type to the Go expression template
 // guarding its emission, keyed exactly; prefix-shaped types (pointers, slices,
 // maps) are handled structurally in fieldEncodeCondition.
-//
-//nolint:gosec // G101: Go expression templates for the generator, not credentials.
 var encodeGuardByType = map[string]string{
 	"LSPAny":                 "len(x.%s) > 0",
 	"LSPObject":              "len(x.%s) > 0",
