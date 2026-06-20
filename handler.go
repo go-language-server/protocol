@@ -6,28 +6,9 @@ package protocol
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"go.lsp.dev/jsonrpc2"
 )
-
-// detachedContext wraps a parent [context.Context], preserving its values while
-// shedding its cancellation and deadline. It is used to issue the
-// reply/notification of a request whose own context has already been canceled,
-// mirroring x/tools xcontext.Detach.
-type detachedContext struct{ parent context.Context } //nolint:containedctx // intentional: detaches cancellation/deadline while preserving values, mirroring x/tools xcontext.Detach
-
-func (detachedContext) Deadline() (time.Time, bool) { return time.Time{}, false }
-
-func (detachedContext) Done() <-chan struct{} { return nil }
-
-func (detachedContext) Err() error { return nil }
-
-func (c detachedContext) Value(k any) any { return c.parent.Value(k) }
-
-// detach returns a context that keeps ctx's values but drops its cancellation
-// and deadline.
-func detach(ctx context.Context) context.Context { return detachedContext{ctx} }
 
 // CancelHandler returns a [jsonrpc2.Handler] that observes "$/cancelRequest"
 // notifications and cancels the in-flight request they name.
@@ -83,7 +64,7 @@ func Call(ctx context.Context, conn jsonrpc2.Conn, method string, params, result
 // context so the cancellation is delivered even though the caller's context is
 // already done.
 func notifyCancel(ctx context.Context, conn jsonrpc2.Conn, id jsonrpc2.ID) {
-	ctx = detach(ctx)
+	ctx = context.WithoutCancel(ctx)
 	// The notification is best-effort: the request may already have completed.
 	_ = conn.Notify(ctx, MethodCancelRequest, &CancelParams{ID: idToProgressToken(id)})
 }
