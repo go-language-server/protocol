@@ -3,36 +3,7 @@
 
 package protocol
 
-import (
-	"slices"
-
-	"github.com/go-json-experiment/json/jsontext"
-)
-
-func appendSemanticTokensJSON(dst []byte, resultID *string, data []uint32) []byte {
-	dst = slices.Grow(dst, semanticTokensObjectLenHint(resultID, data))
-	dst = append(dst, '{')
-	if resultID != nil {
-		dst = append(dst, `"resultId":`...)
-		// jsontext.AppendQuote already replaces invalid UTF-8 with U+FFFD.
-		// Its only error for string input is reporting that invalid UTF-8 was
-		// seen, which is explicitly allowed by this package's wireOptions.
-		dst, _ = jsontext.AppendQuote(dst, *resultID)
-		dst = append(dst, ',')
-	}
-	dst = append(dst, `"data":`...)
-	dst = appendUint32JSONArray(dst, data)
-	dst = append(dst, '}')
-	return dst
-}
-
-func appendSemanticTokensDataObject(dst []byte, data []uint32) []byte {
-	dst = slices.Grow(dst, len(`{"data":}`)+uint32JSONArrayLen(data))
-	dst = append(dst, `{"data":`...)
-	dst = appendUint32JSONArray(dst, data)
-	dst = append(dst, '}')
-	return dst
-}
+import "slices"
 
 // uint32DigitPairs is the two-digit decimal lookup table ("00".."99") behind
 // appendUint32Decimal.
@@ -80,14 +51,6 @@ func appendUint32JSONArray(dst []byte, data []uint32) []byte {
 	}
 	dst = append(dst, ']')
 	return dst
-}
-
-func semanticTokensObjectLenHint(resultID *string, data []uint32) int {
-	n := len(`{"data":}`) + uint32JSONArrayLen(data)
-	if resultID != nil {
-		n += len(`"resultId":,`) + len(*resultID) + len(`""`)
-	}
-	return n
 }
 
 func uint32JSONArrayLen(data []uint32) int {

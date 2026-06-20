@@ -153,27 +153,6 @@ func TestSemanticTokensMarshalFastPathNilPointers(t *testing.T) {
 func TestAppendSemanticTokensJSONHelpers(t *testing.T) {
 	t.Parallel()
 
-	t.Run("appendSemanticTokensJSON preserves prefix and encodes result id", func(t *testing.T) {
-		t.Parallel()
-
-		resultID := "r1"
-		got := appendSemanticTokensJSON([]byte("prefix:"), &resultID, []uint32{1, math.MaxUint32})
-		want := []byte(`prefix:{"resultId":"r1","data":[1,4294967295]}`)
-		if !bytes.Equal(got, want) {
-			t.Errorf("appendSemanticTokensJSON mismatch\ngot:  %s\nwant: %s", got, want)
-		}
-	})
-
-	t.Run("appendSemanticTokensDataObject preserves prefix", func(t *testing.T) {
-		t.Parallel()
-
-		got := appendSemanticTokensDataObject([]byte("prefix:"), []uint32{0, 2})
-		want := []byte(`prefix:{"data":[0,2]}`)
-		if !bytes.Equal(got, want) {
-			t.Errorf("appendSemanticTokensDataObject mismatch\ngot:  %s\nwant: %s", got, want)
-		}
-	})
-
 	t.Run("appendUint32JSONArray encodes nil and max values", func(t *testing.T) {
 		t.Parallel()
 
@@ -245,16 +224,6 @@ func TestSemanticTokensLengthHints(t *testing.T) {
 					t.Errorf("uint32JSONArrayLen(%v) = %d, want %d", tt.data, hint, len(got))
 				}
 			})
-		}
-	})
-
-	t.Run("object hint is lower bound for escaped strings", func(t *testing.T) {
-		t.Parallel()
-
-		resultID := "needs\\escape"
-		got := appendSemanticTokensJSON(nil, &resultID, []uint32{1, 2})
-		if hint := semanticTokensObjectLenHint(&resultID, []uint32{1, 2}); hint > len(got) {
-			t.Errorf("semanticTokensObjectLenHint = %d, want <= appended len %d", hint, len(got))
 		}
 	})
 }
