@@ -11,7 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/google/go-cmp/cmp"
+	gocmp "github.com/google/go-cmp/cmp"
+
 	"go.lsp.dev/jsonrpc2"
 )
 
@@ -272,7 +273,7 @@ func TestServerHandlerCustomFallbackRetainsOwnedMethodAndParams(t *testing.T) {
 				{method: firstMethod, params: wantFirstParams},
 				{method: secondMethod, params: wantSecondParams},
 			}
-			if diff := cmp.Diff(wantRecords, records, cmp.AllowUnexported(fallbackRecord{})); diff != "" {
+			if diff := gocmp.Diff(wantRecords, records, gocmp.AllowUnexported(fallbackRecord{})); diff != "" {
 				t.Fatalf("fallback records mismatch (-want +got):\n%s", diff)
 			}
 

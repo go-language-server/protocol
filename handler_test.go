@@ -11,7 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/google/go-cmp/cmp"
+	gocmp "github.com/google/go-cmp/cmp"
+
 	"go.lsp.dev/jsonrpc2"
 )
 
@@ -103,7 +104,7 @@ func TestClientHandlerShowMessageRequestReturnsDirectResult(t *testing.T) {
 	if _, err := caller.Call(ctx, MethodWindowShowMessageRequest, params, &got); err != nil {
 		t.Fatalf("Call(%s): %v", MethodWindowShowMessageRequest, err)
 	}
-	if diff := cmp.Diff(*wantResult, got); diff != "" {
+	if diff := gocmp.Diff(*wantResult, got); diff != "" {
 		t.Fatalf("ShowMessageRequest result mismatch (-want +got):\n%s", diff)
 	}
 	select {
@@ -111,7 +112,7 @@ func TestClientHandlerShowMessageRequestReturnsDirectResult(t *testing.T) {
 	case <-ctx.Done():
 		t.Fatalf("ShowMessageRequest was not called: %v", ctx.Err())
 	}
-	if diff := cmp.Diff(&params, client.snapshotShowMessageRequestParams()); diff != "" {
+	if diff := gocmp.Diff(&params, client.snapshotShowMessageRequestParams()); diff != "" {
 		t.Fatalf("ShowMessageRequest params mismatch (-want +got):\n%s", diff)
 	}
 }
@@ -135,7 +136,7 @@ func TestClientHandlerLogMessageNotificationReturnsNilResult(t *testing.T) {
 	case <-ctx.Done():
 		t.Fatalf("LogMessage was not called: %v", ctx.Err())
 	}
-	if diff := cmp.Diff(&params, client.snapshotLogMessageParams()); diff != "" {
+	if diff := gocmp.Diff(&params, client.snapshotLogMessageParams()); diff != "" {
 		t.Fatalf("LogMessage params mismatch (-want +got):\n%s", diff)
 	}
 }
@@ -187,7 +188,7 @@ func TestClientHandlerUnknownMethodFallsBack(t *testing.T) {
 	case <-ctx.Done():
 		t.Fatalf("fallback handler was not called: %v", ctx.Err())
 	}
-	if diff := cmp.Diff(jsonrpc2.RawMessage(`{"fallback":true}`), got); diff != "" {
+	if diff := gocmp.Diff(jsonrpc2.RawMessage(`{"fallback":true}`), got); diff != "" {
 		t.Fatalf("fallback result mismatch (-want +got):\n%s", diff)
 	}
 }
@@ -230,7 +231,7 @@ func TestClientHandlerFallbackCloneAllowsRetention(t *testing.T) {
 	if cloned.Method() != firstMethod {
 		t.Fatalf("cloned fallback method = %q, want %q", cloned.Method(), firstMethod)
 	}
-	if diff := cmp.Diff(firstParams, cloned.Params()); diff != "" {
+	if diff := gocmp.Diff(firstParams, cloned.Params()); diff != "" {
 		t.Fatalf("cloned fallback params mismatch (-want +got):\n%s", diff)
 	}
 }
