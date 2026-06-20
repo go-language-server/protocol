@@ -15,38 +15,32 @@ import (
 )
 
 func TestObjectGuardEmission(t *testing.T) {
-	tests := []struct {
-		name     string
+	tests := map[string]struct {
 		required []string
 		all      []string
 		wantObj  string
 		wantArr  string
 	}{
-		{
-			name:     "required and known",
+		"success: required and known": {
 			required: []string{"uri", "range"},
 			all:      []string{"uri", "range", "data"},
 			wantObj:  `objectHasAndKnownGuard(raw, []string{"uri", "range"}, []string{"uri", "range", "data"})`,
 			wantArr:  `arrayFirstHasAndKnown(raw, []string{"uri", "range"}, []string{"uri", "range", "data"})`,
 		},
-		{
-			name:     "required only",
+		"success: required only": {
 			required: []string{"kind"},
 			wantObj:  `objectHasKeys(raw, "kind")`,
 			wantArr:  `arrayFirstHasKeys(raw, "kind")`,
 		},
-		{
-			name:    "known only",
+		"success: known only": {
 			all:     []string{"title", "command"},
 			wantObj: `objectKeysKnown(raw, "title", "command")`,
 			wantArr: `arrayFirstKeysKnown(raw, "title", "command")`,
 		},
-		{
-			name: "no signal",
-		},
+		"success: no signal": {},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
 			if got := objectGuard(tt.required, tt.all); got != tt.wantObj {
 				t.Fatalf("objectGuard() = %q, want %q", got, tt.wantObj)
 			}
@@ -109,8 +103,7 @@ func TestGeneratedFileName(t *testing.T) {
 }
 
 func TestHotOptionalField(t *testing.T) {
-	tests := []struct {
-		name      string
+	tests := map[string]struct {
 		owner     string
 		fieldName string
 		base      string
@@ -118,61 +111,54 @@ func TestHotOptionalField(t *testing.T) {
 		nullable  bool
 		want      bool
 	}{
-		{
-			name:      "completion item hot string",
+		"success: completion item hot string": {
 			owner:     "CompletionItem",
 			fieldName: "Detail",
 			base:      "string",
 			optional:  true,
 			want:      true,
 		},
-		{
-			name:      "completion item hot bool",
+		"success: completion item hot bool": {
 			owner:     "CompletionItem",
 			fieldName: "Deprecated",
 			base:      "bool",
 			optional:  true,
 			want:      true,
 		},
-		{
-			name:      "publish diagnostics hot int32",
+		"success: publish diagnostics hot int32": {
 			owner:     "PublishDiagnosticsParams",
 			fieldName: "Version",
 			base:      "int32",
 			optional:  true,
 			want:      true,
 		},
-		{
-			name:      "not allowlisted field",
+		"success: not allowlisted field": {
 			owner:     "CompletionItem",
 			fieldName: "Label",
 			base:      "string",
 			optional:  true,
 		},
-		{
-			name:      "not optional",
+		"success: not optional": {
 			owner:     "CompletionItem",
 			fieldName: "Detail",
 			base:      "string",
 		},
-		{
-			name:      "nullable stays nullable",
+		"success: nullable stays nullable": {
 			owner:     "CompletionItem",
 			fieldName: "Detail",
 			base:      "string",
 			optional:  true,
 			nullable:  true,
 		},
-		{
-			name:      "unsupported base type",
+		"success: unsupported base type": {
 			owner:     "CompletionItem",
 			fieldName: "Detail",
 			base:      "MarkupContent",
 			optional:  true,
 		},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
 			got := hotOptionalField(tt.owner, tt.fieldName, tt.base, tt.optional, tt.nullable)
 			if got != tt.want {
 				t.Fatalf("hotOptionalField() = %v, want %v", got, tt.want)

@@ -14,69 +14,57 @@ func (c customZero) IsZero() bool {
 }
 
 func TestIsZeroOmitValue(t *testing.T) {
-	tests := []struct {
-		name string
+	tests := map[string]struct {
 		v    any
 		want bool
 	}{
-		{
-			name: "nil interface",
+		"nil interface": {
 			v:    nil,
 			want: true,
 		},
-		{
-			name: "zero generated struct",
+		"zero generated struct": {
 			v:    CodeActionDisabled{},
 			want: true,
 		},
-		{
-			name: "non-zero generated struct",
+		"non-zero generated struct": {
 			v:    CodeActionDisabled{Reason: "server policy"},
 			want: false,
 		},
-		{
-			name: "zero enum without present-zero semantics",
+		"zero enum without present-zero semantics": {
 			v:    InsertTextFormat(0),
 			want: true,
 		},
-		{
-			name: "non-zero enum",
+		"non-zero enum": {
 			v:    InsertTextFormatPlainText,
 			want: false,
 		},
-		{
-			name: "nil raw json value",
+		"nil raw json value": {
 			v:    LSPAny(nil),
 			want: true,
 		},
-		{
-			name: "non-empty raw json value",
+		"non-empty raw json value": {
 			v:    LSPAny(`{"x":1}`),
 			want: false,
 		},
-		{
-			name: "custom Zeroer type returning true",
+		"custom Zeroer type returning true": {
 			v:    customZero{val: 42},
 			want: true,
 		},
-		{
-			name: "custom Zeroer type returning false",
+		"custom Zeroer type returning false": {
 			v:    customZero{val: 12},
 			want: false,
 		},
-		{
-			name: "Optional with value but not set",
+		"Optional with value but not set": {
 			v:    Optional[string]{value: "hello", set: false},
 			want: true,
 		},
-		{
-			name: "Optional set with zero value",
+		"Optional set with zero value": {
 			v:    Optional[string]{value: "", set: true},
 			want: false,
 		},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
 			if got := isZeroOmitValue(tt.v); got != tt.want {
 				t.Fatalf("isZeroOmitValue(%T) = %v, want %v", tt.v, got, tt.want)
 			}
