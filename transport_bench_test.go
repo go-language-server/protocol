@@ -35,11 +35,11 @@ func BenchmarkTransportCall(b *testing.B) {
 	clientConn := jsonrpc2.NewConn(jsonrpc2.NewStream(cliEnd), jsonrpc2.WithCodec(lspCodec{}))
 	serverConn := jsonrpc2.NewConn(jsonrpc2.NewStream(srvEnd), jsonrpc2.WithCodec(lspCodec{}))
 
-	serverHandler := func(ctx context.Context, reply jsonrpc2.Replier, req jsonrpc2.Request) error {
+	serverHandler := func(ctx context.Context, req *jsonrpc2.Request) (any, error) {
 		if req.Method() == benchTransportMethod {
-			return reply(ctx, &diag, nil)
+			return &diag, nil
 		}
-		return jsonrpc2.MethodNotFoundHandler(ctx, reply, req)
+		return jsonrpc2.MethodNotFoundHandler(ctx, req)
 	}
 	clientConn.Go(ctx, jsonrpc2.MethodNotFoundHandler)
 	serverConn.Go(ctx, serverHandler)

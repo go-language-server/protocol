@@ -44,173 +44,171 @@ func ClientDispatcher(conn jsonrpc2.Conn) Client {
 // ClientHandler returns a [jsonrpc2.Handler] that routes incoming requests to
 // client, falling back to handler for unhandled methods.
 func ClientHandler(client Client, handler jsonrpc2.Handler) jsonrpc2.Handler {
-	h := func(ctx context.Context, reply jsonrpc2.Replier, req jsonrpc2.Request) error {
+	return func(ctx context.Context, req *jsonrpc2.Request) (any, error) {
 		if ctx.Err() != nil {
-			return reply(detach(ctx), nil, ErrRequestCancelled)
+			return nil, ErrRequestCancelled
 		}
 
-		handled, err := clientDispatch(ctx, client, reply, req)
+		result, handled, err := clientDispatch(ctx, client, req)
 		if handled || err != nil {
-			return err
+			return result, err
 		}
 
-		return handler(ctx, reply, req)
+		return handler(ctx, req)
 	}
-
-	return h
 }
 
 // clientDispatch decodes req and invokes the matching [Client] method, reporting
 // handled=true when req named a standard client method.
 //
 //nolint:funlen,gocyclo,cyclop
-func clientDispatch(ctx context.Context, client Client, reply jsonrpc2.Replier, req jsonrpc2.Request) (handled bool, err error) {
+func clientDispatch(ctx context.Context, client Client, req *jsonrpc2.Request) (result any, handled bool, err error) {
 	if ctx.Err() != nil {
-		return true, reply(ctx, nil, ErrRequestCancelled)
+		return nil, true, ErrRequestCancelled
 	}
 
 	switch req.Method() {
 	case MethodProgress: // notification
 		var params ProgressParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, client.Progress(ctx, &params))
+		return nil, true, client.Progress(ctx, &params)
 
 	case MethodLogTrace: // notification
 		var params LogTraceParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, client.LogTrace(ctx, &params))
+		return nil, true, client.LogTrace(ctx, &params)
 
 	case MethodClientRegisterCapability: // request
 		var params RegistrationParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, client.RegisterCapability(ctx, &params))
+		return nil, true, client.RegisterCapability(ctx, &params)
 
 	case MethodClientUnregisterCapability: // request
 		var params UnregistrationParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, client.UnregisterCapability(ctx, &params))
+		return nil, true, client.UnregisterCapability(ctx, &params)
 
 	case MethodWindowShowMessage: // notification
 		var params ShowMessageParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, client.ShowMessage(ctx, &params))
+		return nil, true, client.ShowMessage(ctx, &params)
 
 	case MethodWindowShowMessageRequest: // request
 		var params ShowMessageRequestParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := client.ShowMessageRequest(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodWindowLogMessage: // notification
 		var params LogMessageParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, client.LogMessage(ctx, &params))
+		return nil, true, client.LogMessage(ctx, &params)
 
 	case MethodWindowShowDocument: // request
 		var params ShowDocumentParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := client.ShowDocument(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodWindowWorkDoneProgressCreate: // request
 		var params WorkDoneProgressCreateParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, client.WorkDoneProgressCreate(ctx, &params))
+		return nil, true, client.WorkDoneProgressCreate(ctx, &params)
 
 	case MethodTelemetryEvent: // notification
 		var params LSPAny
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, client.Telemetry(ctx, params))
+		return nil, true, client.Telemetry(ctx, params)
 
 	case MethodTextDocumentPublishDiagnostics: // notification
 		var params PublishDiagnosticsParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, client.PublishDiagnostics(ctx, &params))
+		return nil, true, client.PublishDiagnostics(ctx, &params)
 
 	case MethodWorkspaceConfiguration: // request
 		var params ConfigurationParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := client.Configuration(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodWorkspaceWorkspaceFolders: // request
 		resp, err := client.WorkspaceFolders(ctx)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodWorkspaceApplyEdit: // request
 		var params ApplyWorkspaceEditParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := client.ApplyEdit(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodWorkspaceCodeLensRefresh: // request
-		return true, reply(ctx, nil, client.CodeLensRefresh(ctx))
+		return nil, true, client.CodeLensRefresh(ctx)
 
 	case MethodWorkspaceFoldingRangeRefresh: // request
-		return true, reply(ctx, nil, client.FoldingRangeRefresh(ctx))
+		return nil, true, client.FoldingRangeRefresh(ctx)
 
 	case MethodWorkspaceSemanticTokensRefresh: // request
-		return true, reply(ctx, nil, client.SemanticTokensRefresh(ctx))
+		return nil, true, client.SemanticTokensRefresh(ctx)
 
 	case MethodWorkspaceInlineValueRefresh: // request
-		return true, reply(ctx, nil, client.InlineValueRefresh(ctx))
+		return nil, true, client.InlineValueRefresh(ctx)
 
 	case MethodWorkspaceInlayHintRefresh: // request
-		return true, reply(ctx, nil, client.InlayHintRefresh(ctx))
+		return nil, true, client.InlayHintRefresh(ctx)
 
 	case MethodWorkspaceDiagnosticRefresh: // request
-		return true, reply(ctx, nil, client.DiagnosticRefresh(ctx))
+		return nil, true, client.DiagnosticRefresh(ctx)
 
 	case MethodWorkspaceTextDocumentContentRefresh: // request
 		var params TextDocumentContentRefreshParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, client.TextDocumentContentRefresh(ctx, &params))
+		return nil, true, client.TextDocumentContentRefresh(ctx, &params)
 
 	default:
-		return false, nil
+		return nil, false, nil
 	}
 }
 

@@ -5,6 +5,7 @@ package protocol
 
 import (
 	"context"
+	"strings"
 
 	"go.lsp.dev/jsonrpc2"
 )
@@ -100,678 +101,676 @@ func ServerDispatcher(conn jsonrpc2.Conn) Server {
 //
 //nolint:unparam,revive // handler is part of the stable signature; intentionally unused
 func ServerHandler(server Server, handler jsonrpc2.Handler) jsonrpc2.Handler {
-	h := func(ctx context.Context, reply jsonrpc2.Replier, req jsonrpc2.Request) error {
+	return func(ctx context.Context, req *jsonrpc2.Request) (any, error) {
 		if ctx.Err() != nil {
-			return reply(detach(ctx), nil, ErrRequestCancelled)
+			return nil, ErrRequestCancelled
 		}
 
-		handled, err := serverDispatch(ctx, server, reply, req)
+		result, handled, err := serverDispatch(ctx, server, req)
 		if handled || err != nil {
-			return err
+			return result, err
 		}
 
 		// Non-standard requests route to Server.Request; params are passed through
-		// as an opaque LSPAny so custom methods stay fully general.
+		// as an opaque LSPAny so custom methods stay fully general. Copy the
+		// borrowed method before invoking user code.
+		method := strings.Clone(req.Method())
 		var params LSPAny
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return replyParseError(ctx, reply, err)
+			return nil, replyParseError(err)
 		}
 
-		resp, err := server.Request(ctx, req.Method(), params)
-
-		return reply(ctx, resp, err)
+		return server.Request(ctx, method, params)
 	}
-
-	return h
 }
 
 // serverDispatch decodes req and invokes the matching [Server] method, reporting
 // handled=true when req named a standard server method.
 //
 //nolint:gocognit,funlen,gocyclo,cyclop,maintidx
-func serverDispatch(ctx context.Context, server Server, reply jsonrpc2.Replier, req jsonrpc2.Request) (handled bool, err error) {
+func serverDispatch(ctx context.Context, server Server, req *jsonrpc2.Request) (result any, handled bool, err error) {
 	if ctx.Err() != nil {
-		return true, reply(ctx, nil, ErrRequestCancelled)
+		return nil, true, ErrRequestCancelled
 	}
 
 	switch req.Method() {
 	case MethodInitialize: // request
 		var params InitializeParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.Initialize(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodInitialized: // notification
 		var params InitializedParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, server.Initialized(ctx, &params))
+		return nil, true, server.Initialized(ctx, &params)
 
 	case MethodShutdown: // request
-		return true, reply(ctx, nil, server.Shutdown(ctx))
+		return nil, true, server.Shutdown(ctx)
 
 	case MethodExit: // notification
-		return true, reply(ctx, nil, server.Exit(ctx))
+		return nil, true, server.Exit(ctx)
 
 	case MethodSetTrace: // notification
 		var params SetTraceParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, server.SetTrace(ctx, &params))
+		return nil, true, server.SetTrace(ctx, &params)
 
 	case MethodProgress: // notification
 		var params ProgressParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, server.Progress(ctx, &params))
+		return nil, true, server.Progress(ctx, &params)
 
 	case MethodWindowWorkDoneProgressCancel: // notification
 		var params WorkDoneProgressCancelParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, server.WorkDoneProgressCancel(ctx, &params))
+		return nil, true, server.WorkDoneProgressCancel(ctx, &params)
 
 	case MethodTextDocumentDidOpen: // notification
 		var params DidOpenTextDocumentParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, server.DidOpen(ctx, &params))
+		return nil, true, server.DidOpen(ctx, &params)
 
 	case MethodTextDocumentDidChange: // notification
 		var params DidChangeTextDocumentParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, server.DidChange(ctx, &params))
+		return nil, true, server.DidChange(ctx, &params)
 
 	case MethodTextDocumentWillSave: // notification
 		var params WillSaveTextDocumentParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, server.WillSave(ctx, &params))
+		return nil, true, server.WillSave(ctx, &params)
 
 	case MethodTextDocumentWillSaveWaitUntil: // request
 		var params WillSaveTextDocumentParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.WillSaveWaitUntil(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentDidSave: // notification
 		var params DidSaveTextDocumentParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, server.DidSave(ctx, &params))
+		return nil, true, server.DidSave(ctx, &params)
 
 	case MethodTextDocumentDidClose: // notification
 		var params DidCloseTextDocumentParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, server.DidClose(ctx, &params))
+		return nil, true, server.DidClose(ctx, &params)
 
 	case MethodNotebookDocumentDidOpen: // notification
 		var params DidOpenNotebookDocumentParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, server.DidOpenNotebookDocument(ctx, &params))
+		return nil, true, server.DidOpenNotebookDocument(ctx, &params)
 
 	case MethodNotebookDocumentDidChange: // notification
 		var params DidChangeNotebookDocumentParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, server.DidChangeNotebookDocument(ctx, &params))
+		return nil, true, server.DidChangeNotebookDocument(ctx, &params)
 
 	case MethodNotebookDocumentDidSave: // notification
 		var params DidSaveNotebookDocumentParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, server.DidSaveNotebookDocument(ctx, &params))
+		return nil, true, server.DidSaveNotebookDocument(ctx, &params)
 
 	case MethodNotebookDocumentDidClose: // notification
 		var params DidCloseNotebookDocumentParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, server.DidCloseNotebookDocument(ctx, &params))
+		return nil, true, server.DidCloseNotebookDocument(ctx, &params)
 
 	case MethodTextDocumentDeclaration: // request
 		var params DeclarationParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.Declaration(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentDefinition: // request
 		var params DefinitionParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.Definition(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentTypeDefinition: // request
 		var params TypeDefinitionParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.TypeDefinition(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentImplementation: // request
 		var params ImplementationParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.Implementation(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentReferences: // request
 		var params ReferenceParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.References(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentPrepareCallHierarchy: // request
 		var params CallHierarchyPrepareParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.PrepareCallHierarchy(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodCallHierarchyIncomingCalls: // request
 		var params CallHierarchyIncomingCallsParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.IncomingCalls(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodCallHierarchyOutgoingCalls: // request
 		var params CallHierarchyOutgoingCallsParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.OutgoingCalls(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentPrepareTypeHierarchy: // request
 		var params TypeHierarchyPrepareParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.PrepareTypeHierarchy(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTypeHierarchySupertypes: // request
 		var params TypeHierarchySupertypesParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.Supertypes(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTypeHierarchySubtypes: // request
 		var params TypeHierarchySubtypesParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.Subtypes(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentDocumentHighlight: // request
 		var params DocumentHighlightParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.DocumentHighlight(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentDocumentLink: // request
 		var params DocumentLinkParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.DocumentLink(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodDocumentLinkResolve: // request
 		var params DocumentLink
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.DocumentLinkResolve(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentHover: // request
 		var params HoverParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.Hover(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentCodeLens: // request
 		var params CodeLensParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.CodeLens(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodCodeLensResolve: // request
 		var params CodeLens
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.CodeLensResolve(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentFoldingRange: // request
 		var params FoldingRangeParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.FoldingRanges(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentSelectionRange: // request
 		var params SelectionRangeParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.SelectionRange(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentDocumentSymbol: // request
 		var params DocumentSymbolParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.DocumentSymbol(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentSemanticTokensFull: // request
 		var params SemanticTokensParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.SemanticTokensFull(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentSemanticTokensFullDelta: // request
 		var params SemanticTokensDeltaParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.SemanticTokensFullDelta(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentSemanticTokensRange: // request
 		var params SemanticTokensRangeParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.SemanticTokensRange(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentInlineValue: // request
 		var params InlineValueParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.InlineValue(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentInlayHint: // request
 		var params InlayHintParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.InlayHint(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodInlayHintResolve: // request
 		var params InlayHint
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.InlayHintResolve(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentMoniker: // request
 		var params MonikerParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.Moniker(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentCompletion: // request
 		var params CompletionParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.Completion(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodCompletionItemResolve: // request
 		var params CompletionItem
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.CompletionResolve(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentDiagnostic: // request
 		var params DocumentDiagnosticParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.Diagnostic(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodWorkspaceDiagnostic: // request
 		var params WorkspaceDiagnosticParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.DiagnosticWorkspace(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentSignatureHelp: // request
 		var params SignatureHelpParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.SignatureHelp(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentCodeAction: // request
 		var params CodeActionParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.CodeAction(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodCodeActionResolve: // request
 		var params CodeAction
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.CodeActionResolve(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentDocumentColor: // request
 		var params DocumentColorParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.DocumentColor(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentColorPresentation: // request
 		var params ColorPresentationParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.ColorPresentation(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentFormatting: // request
 		var params DocumentFormattingParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.Formatting(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentRangeFormatting: // request
 		var params DocumentRangeFormattingParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.RangeFormatting(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentRangesFormatting: // request
 		var params DocumentRangesFormattingParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.RangesFormatting(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentOnTypeFormatting: // request
 		var params DocumentOnTypeFormattingParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.OnTypeFormatting(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentRename: // request
 		var params RenameParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.Rename(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentPrepareRename: // request
 		var params PrepareRenameParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.PrepareRename(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentLinkedEditingRange: // request
 		var params LinkedEditingRangeParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.LinkedEditingRange(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodTextDocumentInlineCompletion: // request
 		var params InlineCompletionParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.InlineCompletion(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodWorkspaceSymbol: // request
 		var params WorkspaceSymbolParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.Symbols(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodWorkspaceSymbolResolve: // request
 		var params WorkspaceSymbol
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.WorkspaceSymbolResolve(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodWorkspaceDidChangeConfiguration: // notification
 		var params DidChangeConfigurationParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, server.DidChangeConfiguration(ctx, &params))
+		return nil, true, server.DidChangeConfiguration(ctx, &params)
 
 	case MethodWorkspaceDidChangeWorkspaceFolders: // notification
 		var params DidChangeWorkspaceFoldersParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, server.DidChangeWorkspaceFolders(ctx, &params))
+		return nil, true, server.DidChangeWorkspaceFolders(ctx, &params)
 
 	case MethodWorkspaceWillCreateFiles: // request
 		var params CreateFilesParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.WillCreateFiles(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodWorkspaceWillRenameFiles: // request
 		var params RenameFilesParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.WillRenameFiles(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodWorkspaceWillDeleteFiles: // request
 		var params DeleteFilesParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.WillDeleteFiles(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodWorkspaceDidCreateFiles: // notification
 		var params CreateFilesParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, server.DidCreateFiles(ctx, &params))
+		return nil, true, server.DidCreateFiles(ctx, &params)
 
 	case MethodWorkspaceDidRenameFiles: // notification
 		var params RenameFilesParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, server.DidRenameFiles(ctx, &params))
+		return nil, true, server.DidRenameFiles(ctx, &params)
 
 	case MethodWorkspaceDidDeleteFiles: // notification
 		var params DeleteFilesParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, server.DidDeleteFiles(ctx, &params))
+		return nil, true, server.DidDeleteFiles(ctx, &params)
 
 	case MethodWorkspaceDidChangeWatchedFiles: // notification
 		var params DidChangeWatchedFilesParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 
-		return true, reply(ctx, nil, server.DidChangeWatchedFiles(ctx, &params))
+		return nil, true, server.DidChangeWatchedFiles(ctx, &params)
 
 	case MethodWorkspaceExecuteCommand: // request
 		var params ExecuteCommandParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.ExecuteCommand(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	case MethodWorkspaceTextDocumentContent: // request
 		var params TextDocumentContentParams
 		if err := Unmarshal(req.Params(), &params); err != nil {
-			return true, replyParseError(ctx, reply, err)
+			return nil, true, replyParseError(err)
 		}
 		resp, err := server.TextDocumentContent(ctx, &params)
 
-		return true, reply(ctx, resp, err)
+		return resp, true, err
 
 	default:
-		return false, nil
+		return nil, false, nil
 	}
 }
 

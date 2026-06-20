@@ -5,7 +5,7 @@ go 1.26
 require (
 	github.com/go-json-experiment/json v0.0.0-20260601182631-00ed12fed2a6
 	github.com/google/go-cmp v0.7.0
-	go.lsp.dev/jsonrpc2 v0.10.1-0.20260610195743-ce0ab3c881e1
+	go.lsp.dev/jsonrpc2 v0.10.1-0.20260620072128-44f77a148c2d
 	go.lsp.dev/uri v0.3.1-0.20260611030632-7d9d40a86072
 )
 
