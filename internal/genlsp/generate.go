@@ -14,11 +14,10 @@ const (
 	uriImportPath       = "go.lsp.dev/uri"
 	uriPackageQualifier = "uri"
 	unionURIWrapperType = "URI"
-	legacyURIRef        = "URI"
 )
 
 func isURIStringType(t string) bool {
-	return t == generatedURIType || t == unionURIWrapperType || t == legacyURIRef
+	return t == generatedURIType || t == unionURIWrapperType
 }
 
 // Generator lowers a [MetaModel] into Go declarations for the lsp package.
@@ -72,10 +71,9 @@ type unionMember struct {
 	GoType       string   // type expression used at the call site (e.g. "*Location", "Integer")
 	Receiver     string   // receiver type for the marker method (e.g. "*Location", "Integer")
 	Token        byte     // primary JSON token: '{' '[' '"' '0' 't' 'n'
-	IsObject     bool     // resolved to a struct/literal
 	KindConst    string   // discriminator value when the object has a const "kind" property
-	Required     []string // required JSON field names when IsObject
-	AllKeys      []string // all JSON field names (required+optional, incl. inherited) when IsObject
+	Required     []string // required JSON field names when Token=='{'
+	AllKeys      []string // all JSON field names (required+optional, incl. inherited) when Token=='{'
 	ElemRequired []string // required JSON field names of the element when Token=='['
 	ElemAllKeys  []string // all JSON field names of the element when Token=='['
 }
@@ -513,14 +511,14 @@ func (g *Generator) member(t *Type, hint string) *unionMember {
 	case KindLiteral:
 		name := g.literalType(t.Literal, hint)
 		return &unionMember{
-			GoType: "*" + name, Receiver: "*" + name, Token: '{', IsObject: true,
+			GoType: "*" + name, Receiver: "*" + name, Token: '{',
 			Required: requiredFieldNames(t.Literal.Properties),
 			AllKeys:  allFieldNames(t.Literal.Properties),
 		}
 	case KindMap:
 		gt := g.lower(t, hint)
 		w := g.mapWrapper(gt)
-		return &unionMember{GoType: w, Receiver: w, Token: '{', IsObject: true}
+		return &unionMember{GoType: w, Receiver: w, Token: '{'}
 	case KindStringLiteral:
 		return g.scalarMember(BaseString)
 	case KindIntegerLiteral:
@@ -529,11 +527,11 @@ func (g *Generator) member(t *Type, hint string) *unionMember {
 		return g.scalarMember(BaseBoolean)
 	case KindAnd:
 		name := g.andType(t, hint)
-		return &unionMember{GoType: "*" + name, Receiver: "*" + name, Token: '{', IsObject: true}
+		return &unionMember{GoType: "*" + name, Receiver: "*" + name, Token: '{'}
 	default:
 		g.warnf("union member: unhandled kind %q; treating as raw object", t.Kind)
 		w := g.mapWrapper("map[string]jsontext.Value")
-		return &unionMember{GoType: w, Receiver: w, Token: '{', IsObject: true}
+		return &unionMember{GoType: w, Receiver: w, Token: '{'}
 	}
 }
 
@@ -577,7 +575,7 @@ func (g *Generator) referenceMember(t *Type, _ string) *unionMember {
 	}
 	if s, ok := g.structures[name]; ok {
 		return &unionMember{
-			GoType: "*" + name, Receiver: "*" + name, Token: '{', IsObject: true,
+			GoType: "*" + name, Receiver: "*" + name, Token: '{',
 			KindConst: g.structKindConst(s),
 			Required:  g.structRequired(s),
 			AllKeys:   g.structAllKeys(s),
@@ -595,7 +593,7 @@ func (g *Generator) referenceMember(t *Type, _ string) *unionMember {
 		// the alias's own (defined) Go type as the arm.
 		if s := g.resolveStruct(name); s != nil {
 			return &unionMember{
-				GoType: name, Receiver: name, Token: '{', IsObject: true,
+				GoType: name, Receiver: name, Token: '{',
 				KindConst: g.structKindConst(s), Required: g.structRequired(s),
 				AllKeys: g.structAllKeys(s),
 			}
@@ -603,7 +601,7 @@ func (g *Generator) referenceMember(t *Type, _ string) *unionMember {
 		// Other non-union alias: token from the aliased type; the alias is a
 		// defined Go type that carries its own marker method.
 		token := g.aliasToken(a.Type)
-		return &unionMember{GoType: name, Receiver: name, Token: token, IsObject: token == '{'}
+		return &unionMember{GoType: name, Receiver: name, Token: token}
 	}
 	g.warnf("union member: unresolved reference %q", name)
 	return &unionMember{GoType: name, Receiver: name, Token: '{'}

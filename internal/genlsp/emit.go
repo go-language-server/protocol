@@ -362,7 +362,6 @@ type renderedEnum struct {
 	Doc        string
 	Underlying string
 	Values     []renderedEnumValue
-	CustomVals bool
 }
 
 type renderedEnumValue struct {
@@ -385,7 +384,6 @@ func (g *Generator) analyzeEnumerations() []*renderedEnum {
 			Name:       e.Name,
 			Doc:        g.docComment(e.Name, e.Documentation, e.Since, e.Deprecated, e.Proposed),
 			Underlying: underlying,
-			CustomVals: e.SupportsCustomValues,
 		}
 		for _, v := range e.Values {
 			re.Values = append(re.Values, renderedEnumValue{
@@ -638,7 +636,9 @@ func (g *Generator) renderUnionDecoder(b *strings.Builder, u *unionDecl) {
 			b.WriteString("\tcase 't', 'f':\n")
 			g.renderScalarDecode(b, members[0])
 		case 'n':
-			// handled above
+			// A null-token arm (alias whose base is null) reaches here via
+			// tokenOrder; null is already fully handled by the leading
+			// "case 'n'", so skip it to avoid emitting a duplicate case.
 		default:
 			fmt.Fprintf(b, "\tcase %s:\n", quoteByte(tok))
 			g.renderScalarDecode(b, members[0])
@@ -658,7 +658,7 @@ func (g *Generator) renderScalarDecode(b *strings.Builder, m *unionMember) {
 	if strings.HasPrefix(m.Receiver, "*") {
 		assign = "&v"
 	}
-	if base == unionURIWrapperType || base == legacyURIRef {
+	if base == unionURIWrapperType {
 		fmt.Fprintf(b, "\t\tv, err := dvScalarURI(raw)\n")
 		b.WriteString("\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n")
 		if strings.HasPrefix(m.Receiver, "*") {

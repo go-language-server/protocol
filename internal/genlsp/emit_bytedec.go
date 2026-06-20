@@ -84,7 +84,6 @@ func newByteDecCtx(g *Generator, structs []*renderedStruct, enums []*renderedEnu
 	}
 	// URI types are hand-written string types.
 	c.aliasType[unionURIWrapperType] = "string"
-	c.aliasType[legacyURIRef] = "string"
 	c.aliasType[generatedURIType] = "string"
 	for _, sig := range g.unionOrder {
 		n := g.unions[sig].Name
@@ -281,6 +280,16 @@ func (g *Generator) renderByteDecoders(c *byteDecCtx) string {
 	return b.String()
 }
 
+// renderUnmarshalJSONFromShim emits the v2 UnmarshalerFrom shim that reads a
+// whole value off the decoder and routes it through the byte walker. The shape
+// is identical for struct and slice-wrapper receivers.
+func renderUnmarshalJSONFromShim(b *strings.Builder, name string) {
+	fmt.Fprintf(b, "// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.\n")
+	fmt.Fprintf(b, "func (x *%s) UnmarshalJSONFrom(dec *jsontext.Decoder) error {\n", name)
+	b.WriteString("\traw, err := dec.ReadValue()\n\tif err != nil {\n\t\treturn err\n\t}\n")
+	b.WriteString("\treturn x.unmarshalLSPValue(slices.Clone(raw))\n}\n\n")
+}
+
 // renderByteValueEntry emits the whole-value entry and reflection shim for a
 // covered struct.
 func renderByteValueEntry(b *strings.Builder, name string) {
@@ -289,10 +298,7 @@ func renderByteValueEntry(b *strings.Builder, name string) {
 	b.WriteString("\tif err != nil {\n\t\treturn err\n\t}\n")
 	b.WriteString("\treturn dvEnd(raw, i)\n}\n\n")
 
-	fmt.Fprintf(b, "// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.\n")
-	fmt.Fprintf(b, "func (x *%s) UnmarshalJSONFrom(dec *jsontext.Decoder) error {\n", name)
-	b.WriteString("\traw, err := dec.ReadValue()\n\tif err != nil {\n\t\treturn err\n\t}\n")
-	b.WriteString("\treturn x.unmarshalLSPValue(slices.Clone(raw))\n}\n\n")
+	renderUnmarshalJSONFromShim(b, name)
 }
 
 // renderByteSliceValueEntry emits the whole-value entry and reflection shim
@@ -310,10 +316,7 @@ func renderByteSliceValueEntry(b *strings.Builder, name, elem string, direct boo
 		fmt.Fprintf(b, "\t*x = %s(v)\n\treturn nil\n}\n\n", name)
 	}
 
-	fmt.Fprintf(b, "// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.\n")
-	fmt.Fprintf(b, "func (x *%s) UnmarshalJSONFrom(dec *jsontext.Decoder) error {\n", name)
-	b.WriteString("\traw, err := dec.ReadValue()\n\tif err != nil {\n\t\treturn err\n\t}\n")
-	b.WriteString("\treturn x.unmarshalLSPValue(slices.Clone(raw))\n}\n\n")
+	renderUnmarshalJSONFromShim(b, name)
 }
 
 // sliceWireHint estimates wire bytes per element for the decode-side capacity

@@ -19,10 +19,11 @@ import (
 
 const maxHTTPSchemaBytes = 32 << 20
 
-// Load reads and decodes a metaModel.json file from path.
+// Load reads and decodes the metaModel.json from path, which may be a local
+// file path or an http(s)/file URL.
 func Load(ctx context.Context, path string) (*MetaModel, error) {
 	if strings.TrimSpace(path) == "" {
-		return nil, errors.New("rquire JSON path")
+		return nil, errors.New("require non-empty meta-model path or URL")
 	}
 
 	data, err := readSchemaSource(ctx, path)

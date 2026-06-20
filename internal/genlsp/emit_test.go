@@ -548,7 +548,7 @@ func TestDetectImportsIncludesURI(t *testing.T) {
 
 func TestEncoderScalarBaseTreatsURIAsString(t *testing.T) {
 	ctx := &encoderCtx{}
-	for _, typ := range []string{unionURIWrapperType, legacyURIRef, generatedURIType} {
+	for _, typ := range []string{unionURIWrapperType, generatedURIType} {
 		if got := ctx.scalarBase(typ); got != "string" {
 			t.Fatalf("scalarBase(%q) = %q, want string", typ, got)
 		}
