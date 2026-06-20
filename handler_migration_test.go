@@ -188,7 +188,7 @@ func (s *fallbackRecordingServer) Request(_ context.Context, method string, para
 	}
 	s.records = append(s.records, record)
 
-	return nil, nil
+	return nil, nil //nolint:nilnil // Server.Request contract: (nil, nil) is the valid "no result, no error" fallback return
 }
 
 func (s *fallbackRecordingServer) DidOpen(_ context.Context, _ *DidOpenTextDocumentParams) error {

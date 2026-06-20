@@ -242,7 +242,7 @@ func TestClientHandlerCanceledContextShortCircuits(t *testing.T) {
 	fallbackCalled := false
 	fallback := func(context.Context, *jsonrpc2.Request) (any, error) {
 		fallbackCalled = true
-		return nil, nil
+		return nil, nil //nolint:nilnil // jsonrpc2.Handler contract: (nil, nil) is the valid "no result, no error" fallback return
 	}
 	handler := ClientHandler(client, fallback)
 	ctx, cancel := context.WithCancel(t.Context())
