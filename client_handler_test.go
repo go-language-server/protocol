@@ -91,7 +91,7 @@ func TestClientHandlerShowMessageRequestReturnsDirectResult(t *testing.T) {
 	client := newRecordingClient()
 	wantResult := &MessageActionItem{Title: "Apply"}
 	client.setShowMessageRequestResult(wantResult)
-	caller, served := newClientHandlerConnPair(t, ctx, client, jsonrpc2.MethodNotFoundHandler)
+	caller, served := newClientHandlerConnPair(ctx, t, client, jsonrpc2.MethodNotFoundHandler)
 	defer closeJSONRPCConns(t, caller, served)
 
 	params := ShowMessageRequestParams{
@@ -123,7 +123,7 @@ func TestClientHandlerLogMessageNotificationReturnsNilResult(t *testing.T) {
 	defer cancel()
 
 	client := newRecordingClient()
-	caller, served := newClientHandlerConnPair(t, ctx, client, jsonrpc2.MethodNotFoundHandler)
+	caller, served := newClientHandlerConnPair(ctx, t, client, jsonrpc2.MethodNotFoundHandler)
 	defer closeJSONRPCConns(t, caller, served)
 
 	params := LogMessageParams{Type: MessageTypeLog, Message: "ready"}
@@ -147,7 +147,7 @@ func TestClientHandlerMalformedParamsReturnsParseError(t *testing.T) {
 	defer cancel()
 
 	client := newRecordingClient()
-	caller, served := newClientHandlerConnPair(t, ctx, client, jsonrpc2.MethodNotFoundHandler)
+	caller, served := newClientHandlerConnPair(ctx, t, client, jsonrpc2.MethodNotFoundHandler)
 	defer closeJSONRPCConns(t, caller, served)
 
 	_, err := caller.Call(ctx, MethodWindowLogMessage, jsonrpc2.RawMessage(`{"type":"bad"}`), nil)
@@ -171,7 +171,7 @@ func TestClientHandlerUnknownMethodFallsBack(t *testing.T) {
 		fallbackCalled <- req.Method()
 		return jsonrpc2.RawMessage(`{"fallback":true}`), nil
 	}
-	caller, served := newClientHandlerConnPair(t, ctx, client, fallback)
+	caller, served := newClientHandlerConnPair(ctx, t, client, fallback)
 	defer closeJSONRPCConns(t, caller, served)
 
 	var got jsonrpc2.RawMessage
@@ -204,7 +204,7 @@ func TestClientHandlerFallbackCloneAllowsRetention(t *testing.T) {
 		retained <- req.Clone()
 		return jsonrpc2.RawMessage(`{"fallback":true}`), nil
 	}
-	caller, served := newClientHandlerConnPair(t, ctx, client, fallback)
+	caller, served := newClientHandlerConnPair(ctx, t, client, fallback)
 	defer closeJSONRPCConns(t, caller, served)
 
 	const firstMethod = "workspace/customClientMethod"
@@ -260,7 +260,7 @@ func TestClientHandlerCanceledContextShortCircuits(t *testing.T) {
 	}
 }
 
-func newClientHandlerConnPair(t *testing.T, ctx context.Context, client Client, fallback jsonrpc2.Handler) (caller, served jsonrpc2.Conn) {
+func newClientHandlerConnPair(ctx context.Context, t *testing.T, client Client, fallback jsonrpc2.Handler) (caller, served jsonrpc2.Conn) {
 	t.Helper()
 
 	callerEnd, servedEnd := net.Pipe()
