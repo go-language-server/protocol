@@ -1127,14 +1127,14 @@ func (s *dispatchRecordingServer) TextDocumentContent(context.Context, *TextDocu
 
 // newServerHandlerConnPair wires a caller conn to a served conn running the
 // production ServerHandler for srv, mirroring newClientHandlerConnPair.
-func newServerHandlerConnPair(ctx context.Context, t *testing.T, srv Server, handler jsonrpc2.Handler) (caller, served jsonrpc2.Conn) {
+func newServerHandlerConnPair(ctx context.Context, t *testing.T, srv Server, fallback jsonrpc2.Handler) (caller, served jsonrpc2.Conn) {
 	t.Helper()
 
 	callerEnd, servedEnd := net.Pipe()
 	caller = jsonrpc2.NewConn(jsonrpc2.NewStream(callerEnd), jsonrpc2.WithCodec(lspCodec{}))
 	served = jsonrpc2.NewConn(jsonrpc2.NewStream(servedEnd), jsonrpc2.WithCodec(lspCodec{}))
 	caller.Go(ctx, jsonrpc2.MethodNotFoundHandler)
-	served.Go(ctx, ServerHandler(srv, jsonrpc2.MethodNotFoundHandler))
+	served.Go(ctx, ServerHandler(srv, fallback))
 
 	return caller, served
 }

@@ -103,6 +103,15 @@ func (c *fakeConn) snapshot() (method string, params any, calls, notifies int) {
 	return c.lastMethod, c.lastParams, c.callCount, c.notifyCnt
 }
 
+// lastMethodName returns just the recorded method for tests that assert routing
+// without inspecting params or call counts.
+func (c *fakeConn) lastMethodName() string {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	return c.lastMethod
+}
+
 func (c *fakeConn) setResult(result any, err error) {
 	c.mu.Lock()
 	defer c.mu.Unlock()

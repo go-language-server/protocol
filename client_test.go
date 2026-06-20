@@ -204,7 +204,7 @@ func TestClientShowDocumentResult(t *testing.T) {
 	if err != nil {
 		t.Fatalf("ShowDocument: %v", err)
 	}
-	method, _, _, _ := conn.snapshot()
+	method := conn.lastMethodName()
 	if method != MethodWindowShowDocument {
 		t.Errorf("method = %q, want %q", method, MethodWindowShowDocument)
 	}
@@ -225,7 +225,7 @@ func TestClientApplyEditResult(t *testing.T) {
 	if err != nil {
 		t.Fatalf("ApplyEdit: %v", err)
 	}
-	method, _, _, _ := conn.snapshot()
+	method := conn.lastMethodName()
 	if method != MethodWorkspaceApplyEdit {
 		t.Errorf("method = %q, want %q", method, MethodWorkspaceApplyEdit)
 	}
@@ -246,7 +246,7 @@ func TestClientConfigurationResult(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Configuration: %v", err)
 	}
-	method, _, _, _ := conn.snapshot()
+	method := conn.lastMethodName()
 	if method != MethodWorkspaceConfiguration {
 		t.Errorf("method = %q, want %q", method, MethodWorkspaceConfiguration)
 	}
