@@ -33,7 +33,10 @@ coverage:
 
 # https://docs.codecov.com/docs/ignoring-paths
 # prettier-ignore
-ignore: []
+ignore:
+  - "*.gen.go"
+  - internal/genlsp/cmd/genlsp/main.go
+  - unimplemented.go
 
 # https://docs.codecov.com/docs/codecovyml-reference#comment
 comment:
