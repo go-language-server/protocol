@@ -1,4 +1,4 @@
-// Copyright 2024 The Go Language Server Authors
+// Copyright 2026 The Go Language Server Authors
 // SPDX-License-Identifier: BSD-3-Clause
 
 // Package genlsp implements a generator that lowers the LSP meta-model

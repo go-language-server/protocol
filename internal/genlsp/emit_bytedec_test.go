@@ -9,7 +9,7 @@ import (
 )
 
 func TestByteDecodeCoverageFromModel(t *testing.T) {
-	m, err := Load("testdata/metaModel.json")
+	m, err := Load(t.Context(), "testdata/metaModel.json")
 	if err != nil {
 		t.Fatalf("load model: %v", err)
 	}

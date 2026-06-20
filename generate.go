@@ -5,5 +5,5 @@ package protocol
 
 // Regenerate the LSP types from the meta-model. After generation the files are
 // formatted with gofumpt (see the Makefile "generate" target).
-//
-//go:generate go run go.lsp.dev/protocol/internal/genlsp/cmd/genlsp -input internal/genlsp/testdata/metaModel.json -output . -pkg protocol
+
+//go:generate go run go.lsp.dev/protocol/internal/genlsp/cmd/genlsp -input https://raw.githubusercontent.com/microsoft/vscode-languageserver-node/refs/tags/release/protocol/3.18.0/protocol/metaModel.json -output . -pkg protocol

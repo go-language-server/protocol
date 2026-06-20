@@ -1,4 +1,4 @@
-// Copyright 2024 The Go Language Server Authors
+// Copyright 2026 The Go Language Server Authors
 // SPDX-License-Identifier: BSD-3-Clause
 
 // Command genlsp generates the go.lsp.dev/protocol package from the LSP
@@ -7,11 +7,12 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"flag"
 	"fmt"
 	"os"
 	"path/filepath"
-	"sort"
+	"slices"
 	"strings"
 
 	"go.lsp.dev/protocol/internal/genlsp"
@@ -30,7 +31,10 @@ func run() error {
 	pkg := flag.String("pkg", "protocol", "generated package name")
 	flag.Parse()
 
-	m, err := genlsp.Load(*input)
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	m, err := genlsp.Load(ctx, *input)
 	if err != nil {
 		return err
 	}
@@ -63,7 +67,7 @@ func run() error {
 	for name := range files {
 		names = append(names, name)
 	}
-	sort.Strings(names)
+	slices.Sort(names)
 	for _, name := range names {
 		path := filepath.Join(*output, name)
 		if err := os.WriteFile(path, files[name], 0o600); err != nil {

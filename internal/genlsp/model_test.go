@@ -1,4 +1,4 @@
-// Copyright 2024 The Go Language Server Authors
+// Copyright 2026 The Go Language Server Authors
 // SPDX-License-Identifier: BSD-3-Clause
 
 package genlsp
@@ -10,7 +10,7 @@ import (
 // loadTestModel decodes the vendored metaModel.json fixture.
 func loadTestModel(t *testing.T) *MetaModel {
 	t.Helper()
-	m, err := Load("testdata/metaModel.json")
+	m, err := Load(t.Context(), "testdata/metaModel.json")
 	if err != nil {
 		t.Fatalf("load meta model: %v", err)
 	}
