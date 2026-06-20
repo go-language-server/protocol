@@ -43,6 +43,10 @@ func ClientDispatcher(conn jsonrpc2.Conn) Client {
 
 // ClientHandler returns a [jsonrpc2.Handler] that routes incoming requests to
 // client, falling back to handler for unhandled methods.
+//
+// The fallback handler receives the original borrowed [jsonrpc2.Request]. Like
+// any jsonrpc2 handler, it must copy the method/params or call
+// [jsonrpc2.Request.Clone] before retaining request data past its return.
 func ClientHandler(client Client, handler jsonrpc2.Handler) jsonrpc2.Handler {
 	return func(ctx context.Context, req *jsonrpc2.Request) (any, error) {
 		if ctx.Err() != nil {
