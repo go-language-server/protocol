@@ -217,6 +217,15 @@ linters:
           - lll
           - wrapcheck
         path: _test\.go
+      # The dispatchRecordingServer/fakeConn test doubles return (nil, nil) from
+      # their routing stubs on purpose: the tests assert only which method the
+      # dispatcher reached, never the result value, so a fabricated zero value
+      # would add noise the assertions never read. maintidx likewise fires on the
+      # large, intentionally exhaustive method tables that drive every route.
+      - linters:
+          - nilnil
+          - maintidx
+        path: _test\.go
       - linters:
           - gocritic
         path: (.*)?_example_test.go
