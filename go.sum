@@ -644,8 +644,8 @@ go.augendre.info/arangolint v0.4.0 h1:xSCZjRoS93nXazBSg5d0OGCi9APPLNMmmLrC995tR5
 go.augendre.info/arangolint v0.4.0/go.mod h1:l+f/b4plABuFISuKnTGD4RioXiCCgghv2xqst/xOvAA=
 go.augendre.info/fatcontext v0.9.0 h1:Gt5jGD4Zcj8CDMVzjOJITlSb9cEch54hjRRlN3qDojE=
 go.augendre.info/fatcontext v0.9.0/go.mod h1:L94brOAT1OOUNue6ph/2HnwxoNlds9aXDF2FcUntbNw=
-go.lsp.dev/jsonrpc2 v0.10.1-0.20260620072128-44f77a148c2d h1:4GnlsdvjLN2Bg4B5rnC2QjjRp5Fkzz4lu9/q5v76RnY=
-go.lsp.dev/jsonrpc2 v0.10.1-0.20260620072128-44f77a148c2d/go.mod h1:WN+TesqrPumBmUdsuWyn9DHq3zl4i85L/qG0NLdj8qg=
+go.lsp.dev/jsonrpc2 v0.10.1-0.20260620085618-c9aebf79e107 h1:HQsKIGPhYCeaq2DOxn3J0xBiv5fwRCMGe4h51azm8rc=
+go.lsp.dev/jsonrpc2 v0.10.1-0.20260620085618-c9aebf79e107/go.mod h1:WN+TesqrPumBmUdsuWyn9DHq3zl4i85L/qG0NLdj8qg=
 go.lsp.dev/uri v0.3.1-0.20260611030632-7d9d40a86072 h1:vFJmBPuJK8ZsvFAOduL0+r3Pzm7CRW8mYv3krOIT+yE=
 go.lsp.dev/uri v0.3.1-0.20260611030632-7d9d40a86072/go.mod h1:06a0ghafs4PuqkLsJGUmlgPHw6+kH79edRXjOT/rA8s=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=
