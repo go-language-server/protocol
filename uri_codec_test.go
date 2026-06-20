@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	gocmp "github.com/google/go-cmp/cmp"
+
 	"go.lsp.dev/uri"
 )
 

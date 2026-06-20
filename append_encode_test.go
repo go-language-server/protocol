@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/go-json-experiment/json"
+
 	"go.lsp.dev/uri"
 )
 
