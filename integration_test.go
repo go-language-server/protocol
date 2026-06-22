@@ -158,3 +158,76 @@ func TestIntegrationRoundTrip(t *testing.T) {
 		t.Errorf("didOpen URI = %q, want %q", gotURI, wantURI)
 	}
 }
+
+// notifyingServer pushes a server->client window/logMessage notification from
+// inside its Hover handler. It models the common case of a server that emits
+// log notifications early in a session, which is what exposed the connection
+// teardown bug fixed in this change.
+type notifyingServer struct {
+	UnimplementedServer
+
+	mu     sync.Mutex
+	client Client
+}
+
+var _ Server = (*notifyingServer)(nil)
+
+func (s *notifyingServer) Hover(ctx context.Context, _ *HoverParams) (*Hover, error) {
+	s.mu.Lock()
+	client := s.client
+	s.mu.Unlock()
+
+	// A server->client notification: with the bug present, the client's
+	// un-overridden UnimplementedClient.LogMessage returned errNotImplemented,
+	// which the dispatcher escalated to conn.fail and tore the connection down.
+	if err := client.LogMessage(ctx, &LogMessageParams{Type: MessageTypeInfo, Message: "hello"}); err != nil {
+		return nil, err
+	}
+
+	return &Hover{Contents: String("ok")}, nil
+}
+
+// TestIntegrationUnimplementedClientSurvivesNotification is the regression guard
+// for the bug where an un-overridden UnimplementedClient notification method
+// returned errNotImplemented, causing the jsonrpc2 dispatcher to fail the whole
+// connection. A bare UnimplementedClient (overriding nothing) must absorb a
+// server-sent window/logMessage notification and the connection must remain
+// usable for a subsequent request.
+func TestIntegrationUnimplementedClientSurvivesNotification(t *testing.T) {
+	ctx, cancel := context.WithTimeout(t.Context(), 10*time.Second)
+	defer cancel()
+
+	a, b := net.Pipe()
+
+	ns := &notifyingServer{}
+
+	_, connA, clientDispatcher := NewServer(ctx, ns, jsonrpc2.NewStream(a))
+	defer func() { _ = connA.Close() }()
+
+	ns.mu.Lock()
+	ns.client = clientDispatcher
+	ns.mu.Unlock()
+
+	// The client overrides nothing: every notification falls through to
+	// UnimplementedClient, the exact configuration that previously killed the
+	// connection on the first server notification.
+	_, connB, serverDispatcher := NewClient(ctx, UnimplementedClient{}, jsonrpc2.NewStream(b))
+	defer func() { _ = connB.Close() }()
+
+	// The handler pushes window/logMessage to the client mid-request. If the
+	// notification tore the connection down, this Hover call would fail (or the
+	// LogMessage inside the handler would error and surface here).
+	hover, err := serverDispatcher.Hover(ctx, &HoverParams{})
+	if err != nil {
+		t.Fatalf("hover call after server notification: %v", err)
+	}
+	if contents, ok := hover.Contents.(String); !ok || contents != "ok" {
+		t.Fatalf("hover contents = %#v, want String(%q)", hover.Contents, "ok")
+	}
+
+	// Prove the connection is still alive after the notification by issuing a
+	// second request that must also round-trip.
+	if _, err := serverDispatcher.Hover(ctx, &HoverParams{}); err != nil {
+		t.Fatalf("second hover call: connection did not survive the notification: %v", err)
+	}
+}

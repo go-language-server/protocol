@@ -9,15 +9,25 @@ import (
 	"go.lsp.dev/jsonrpc2"
 )
 
-// errNotImplemented is the sentinel returned by every [UnimplementedServer] and
-// [UnimplementedClient] method. It carries the JSON-RPC "method not found" code
-// so peers observe a well-formed, classified error for un-overridden methods.
+// errNotImplemented is the sentinel returned by every un-overridden request
+// method of [UnimplementedServer] and [UnimplementedClient]. It carries the
+// JSON-RPC "method not found" code so peers observe a well-formed, classified
+// error response for un-overridden requests.
+//
+// Notification methods do NOT return this sentinel: a notification has no
+// response, so the jsonrpc2 dispatcher treats a non-nil error from a
+// notification handler as a connection-level failure and tears the connection
+// down. An un-overridden notification therefore returns nil (the notification
+// is silently ignored), which is also what the LSP specification prescribes for
+// notifications a peer does not handle.
 var errNotImplemented = jsonrpc2.NewError(jsonrpc2.ErrMethodNotFound.Code, "not implemented")
 
 // UnimplementedServer is an embeddable default implementation of the [Server]
-// interface. Every method returns [errNotImplemented] together with the zero
-// value of its result, so consumers can embed it and override only the methods
-// they support.
+// interface. Each un-overridden request method returns [errNotImplemented]
+// together with the zero value of its result, and each un-overridden
+// notification method returns nil (ignoring the notification), so consumers can
+// embed it and override only the methods they support without an un-overridden
+// notification tearing down the connection.
 type UnimplementedServer struct{}
 
 // compile-time assertion that UnimplementedServer satisfies Server.
@@ -28,35 +38,37 @@ func (UnimplementedServer) Initialize(context.Context, *InitializeParams) (*Init
 }
 
 func (UnimplementedServer) Initialized(context.Context, *InitializedParams) error {
-	return errNotImplemented
+	return nil // initialized is a notification; see errNotImplemented.
 }
 
 func (UnimplementedServer) Shutdown(context.Context) error { return errNotImplemented }
 
-func (UnimplementedServer) Exit(context.Context) error { return errNotImplemented }
+func (UnimplementedServer) Exit(context.Context) error {
+	return nil // exit is a notification; see errNotImplemented.
+}
 
 func (UnimplementedServer) SetTrace(context.Context, *SetTraceParams) error {
-	return errNotImplemented
+	return nil // $/setTrace is a notification; see errNotImplemented.
 }
 
 func (UnimplementedServer) Progress(context.Context, *ProgressParams) error {
-	return errNotImplemented
+	return nil // $/progress is a notification; see errNotImplemented.
 }
 
 func (UnimplementedServer) WorkDoneProgressCancel(context.Context, *WorkDoneProgressCancelParams) error {
-	return errNotImplemented
+	return nil // window/workDoneProgress/cancel is a notification; see errNotImplemented.
 }
 
 func (UnimplementedServer) DidOpen(context.Context, *DidOpenTextDocumentParams) error {
-	return errNotImplemented
+	return nil // textDocument/didOpen is a notification; see errNotImplemented.
 }
 
 func (UnimplementedServer) DidChange(context.Context, *DidChangeTextDocumentParams) error {
-	return errNotImplemented
+	return nil // textDocument/didChange is a notification; see errNotImplemented.
 }
 
 func (UnimplementedServer) WillSave(context.Context, *WillSaveTextDocumentParams) error {
-	return errNotImplemented
+	return nil // textDocument/willSave is a notification; see errNotImplemented.
 }
 
 func (UnimplementedServer) WillSaveWaitUntil(context.Context, *WillSaveTextDocumentParams) ([]TextEdit, error) {
@@ -64,27 +76,27 @@ func (UnimplementedServer) WillSaveWaitUntil(context.Context, *WillSaveTextDocum
 }
 
 func (UnimplementedServer) DidSave(context.Context, *DidSaveTextDocumentParams) error {
-	return errNotImplemented
+	return nil // textDocument/didSave is a notification; see errNotImplemented.
 }
 
 func (UnimplementedServer) DidClose(context.Context, *DidCloseTextDocumentParams) error {
-	return errNotImplemented
+	return nil // textDocument/didClose is a notification; see errNotImplemented.
 }
 
 func (UnimplementedServer) DidOpenNotebookDocument(context.Context, *DidOpenNotebookDocumentParams) error {
-	return errNotImplemented
+	return nil // notebookDocument/didOpen is a notification; see errNotImplemented.
 }
 
 func (UnimplementedServer) DidChangeNotebookDocument(context.Context, *DidChangeNotebookDocumentParams) error {
-	return errNotImplemented
+	return nil // notebookDocument/didChange is a notification; see errNotImplemented.
 }
 
 func (UnimplementedServer) DidSaveNotebookDocument(context.Context, *DidSaveNotebookDocumentParams) error {
-	return errNotImplemented
+	return nil // notebookDocument/didSave is a notification; see errNotImplemented.
 }
 
 func (UnimplementedServer) DidCloseNotebookDocument(context.Context, *DidCloseNotebookDocumentParams) error {
-	return errNotImplemented
+	return nil // notebookDocument/didClose is a notification; see errNotImplemented.
 }
 
 func (UnimplementedServer) Declaration(context.Context, *DeclarationParams) (DeclarationResult, error) {
@@ -272,11 +284,11 @@ func (UnimplementedServer) WorkspaceSymbolResolve(context.Context, *WorkspaceSym
 }
 
 func (UnimplementedServer) DidChangeConfiguration(context.Context, *DidChangeConfigurationParams) error {
-	return errNotImplemented
+	return nil // workspace/didChangeConfiguration is a notification; see errNotImplemented.
 }
 
 func (UnimplementedServer) DidChangeWorkspaceFolders(context.Context, *DidChangeWorkspaceFoldersParams) error {
-	return errNotImplemented
+	return nil // workspace/didChangeWorkspaceFolders is a notification; see errNotImplemented.
 }
 
 func (UnimplementedServer) WillCreateFiles(context.Context, *CreateFilesParams) (*WorkspaceEdit, error) {
@@ -292,19 +304,19 @@ func (UnimplementedServer) WillDeleteFiles(context.Context, *DeleteFilesParams) 
 }
 
 func (UnimplementedServer) DidCreateFiles(context.Context, *CreateFilesParams) error {
-	return errNotImplemented
+	return nil // workspace/didCreateFiles is a notification; see errNotImplemented.
 }
 
 func (UnimplementedServer) DidRenameFiles(context.Context, *RenameFilesParams) error {
-	return errNotImplemented
+	return nil // workspace/didRenameFiles is a notification; see errNotImplemented.
 }
 
 func (UnimplementedServer) DidDeleteFiles(context.Context, *DeleteFilesParams) error {
-	return errNotImplemented
+	return nil // workspace/didDeleteFiles is a notification; see errNotImplemented.
 }
 
 func (UnimplementedServer) DidChangeWatchedFiles(context.Context, *DidChangeWatchedFilesParams) error {
-	return errNotImplemented
+	return nil // workspace/didChangeWatchedFiles is a notification; see errNotImplemented.
 }
 
 func (UnimplementedServer) ExecuteCommand(context.Context, *ExecuteCommandParams) (LSPAny, error) {
@@ -320,20 +332,22 @@ func (UnimplementedServer) Request(context.Context, string, any) (any, error) {
 }
 
 // UnimplementedClient is an embeddable default implementation of the [Client]
-// interface. Every method returns [errNotImplemented] together with the zero
-// value of its result, so consumers can embed it and override only the methods
-// they support.
+// interface. Each un-overridden request method returns [errNotImplemented]
+// together with the zero value of its result, and each un-overridden
+// notification method returns nil (ignoring the notification), so consumers can
+// embed it and override only the methods they support without an un-overridden
+// notification tearing down the connection.
 type UnimplementedClient struct{}
 
 // compile-time assertion that UnimplementedClient satisfies Client.
 var _ Client = UnimplementedClient{}
 
 func (UnimplementedClient) Progress(context.Context, *ProgressParams) error {
-	return errNotImplemented
+	return nil // $/progress is a notification; see errNotImplemented.
 }
 
 func (UnimplementedClient) LogTrace(context.Context, *LogTraceParams) error {
-	return errNotImplemented
+	return nil // $/logTrace is a notification; see errNotImplemented.
 }
 
 func (UnimplementedClient) RegisterCapability(context.Context, *RegistrationParams) error {
@@ -345,7 +359,7 @@ func (UnimplementedClient) UnregisterCapability(context.Context, *Unregistration
 }
 
 func (UnimplementedClient) ShowMessage(context.Context, *ShowMessageParams) error {
-	return errNotImplemented
+	return nil // window/showMessage is a notification; see errNotImplemented.
 }
 
 func (UnimplementedClient) ShowMessageRequest(context.Context, *ShowMessageRequestParams) (*MessageActionItem, error) {
@@ -353,7 +367,7 @@ func (UnimplementedClient) ShowMessageRequest(context.Context, *ShowMessageReque
 }
 
 func (UnimplementedClient) LogMessage(context.Context, *LogMessageParams) error {
-	return errNotImplemented
+	return nil // window/logMessage is a notification; see errNotImplemented.
 }
 
 func (UnimplementedClient) ShowDocument(context.Context, *ShowDocumentParams) (*ShowDocumentResult, error) {
@@ -365,11 +379,11 @@ func (UnimplementedClient) WorkDoneProgressCreate(context.Context, *WorkDoneProg
 }
 
 func (UnimplementedClient) Telemetry(context.Context, LSPAny) error {
-	return errNotImplemented
+	return nil // telemetry/event is a notification; see errNotImplemented.
 }
 
 func (UnimplementedClient) PublishDiagnostics(context.Context, *PublishDiagnosticsParams) error {
-	return errNotImplemented
+	return nil // textDocument/publishDiagnostics is a notification; see errNotImplemented.
 }
 
 func (UnimplementedClient) Configuration(context.Context, *ConfigurationParams) ([]LSPAny, error) {
