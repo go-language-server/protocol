@@ -25,6 +25,14 @@ type Nullable[T any] struct {
 	null  bool
 }
 
+// NewNullable returns a Nullable holding the present value v (set=true, null=false).
+func NewNullable[T any](v T) Nullable[T] { return Nullable[T]{set: true, value: v} }
+
+// NullNullable returns a Nullable that represents an explicit JSON null
+// (set=true, null=true). This is the second non-zero tri-state; the third
+// (absent) needs no constructor because it is the zero Nullable[T]{}.
+func NullNullable[T any]() Nullable[T] { return Nullable[T]{set: true, null: true} }
+
 // IsZero reports whether the value is absent. It drives the ",omitzero" tag so
 // an unset Nullable is omitted entirely.
 func (n Nullable[T]) IsZero() bool { return !n.set }
