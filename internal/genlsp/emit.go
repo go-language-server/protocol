@@ -216,14 +216,30 @@ func detectImports(body string) []string {
 func (g *Generator) analyzeStructures() []*renderedStruct {
 	out := make([]*renderedStruct, 0, len(g.model.Structures))
 	for _, s := range g.model.Structures {
+		if strings.HasPrefix(s.Name, "_") {
+			// Underscore-prefixed structures are private bases that exist only to
+			// be flattened into their public referrers; do not emit them as their
+			// own type. They remain in g.structures for lookup during flattening.
+			continue
+		}
 		rs := &renderedStruct{
 			Name: s.Name,
 			Doc:  g.docComment(s.Name, s.Documentation, s.Since, s.Deprecated, s.Proposed),
 		}
 		for _, ref := range append(append([]*Type{}, s.Extends...), s.Mixins...) {
-			if ref.Kind == KindReference {
-				rs.Embeds = append(rs.Embeds, ref.Name)
+			if ref.Kind != KindReference {
+				continue
 			}
+			if base, ok := g.structures[ref.Name]; ok && strings.HasPrefix(ref.Name, "_") {
+				// Merge the private base directly into this struct so the embed of
+				// the underscore type disappears while its contributed embeds and
+				// fields come along, rendered against the public owner.
+				embeds, fields := g.inlineContribution(s.Name, base)
+				rs.Embeds = append(rs.Embeds, embeds...)
+				rs.Fields = append(rs.Fields, fields...)
+				continue
+			}
+			rs.Embeds = append(rs.Embeds, ref.Name)
 		}
 		for _, p := range s.Properties {
 			rs.Fields = append(rs.Fields, g.renderField(s.Name, p))
@@ -234,6 +250,29 @@ func (g *Generator) analyzeStructures() []*renderedStruct {
 	// feature keep their meta-model (reference) order.
 	sort.SliceStable(out, func(i, j int) bool { return featureRank(out[i].Name) < featureRank(out[j].Name) })
 	return out
+}
+
+// inlineContribution returns the embeds and fields a structure contributes when
+// flattened into a referrer, recursively flattening any further
+// underscore-prefixed references. owner is the public struct the fields are
+// rendered against, so doc hints and hot-field overrides match the parent.
+func (g *Generator) inlineContribution(owner string, s *Structure) (embeds []string, fields []renderedField) {
+	for _, ref := range append(append([]*Type{}, s.Extends...), s.Mixins...) {
+		if ref.Kind != KindReference {
+			continue
+		}
+		if base, ok := g.structures[ref.Name]; ok && strings.HasPrefix(ref.Name, "_") {
+			subEmbeds, subFields := g.inlineContribution(owner, base)
+			embeds = append(embeds, subEmbeds...)
+			fields = append(fields, subFields...)
+			continue
+		}
+		embeds = append(embeds, ref.Name)
+	}
+	for _, p := range s.Properties {
+		fields = append(fields, g.renderField(owner, p))
+	}
+	return embeds, fields
 }
 
 func (g *Generator) renderField(owner string, p *Property) renderedField {
@@ -298,6 +337,10 @@ func (g *Generator) renderStructures(structs []*renderedStruct) string {
 	var b strings.Builder
 	for _, s := range structs {
 		b.WriteString(s.Doc)
+		if len(s.Embeds) == 0 && len(s.Fields) == 0 {
+			fmt.Fprintf(&b, "type %s struct{}\n\n", s.Name)
+			continue
+		}
 		fmt.Fprintf(&b, "type %s struct {\n", s.Name)
 		for _, e := range s.Embeds {
 			fmt.Fprintf(&b, "\t%s\n", e)
@@ -558,6 +601,10 @@ func (g *Generator) renderScalarWrappers(b *strings.Builder) {
 
 func (g *Generator) renderLiteralStruct(b *strings.Builder, d *literalDecl) {
 	fmt.Fprintf(b, "// %s is a generated inline object literal type.\n", d.Name)
+	if len(d.Lit.Properties) == 0 {
+		fmt.Fprintf(b, "type %s struct{}\n\n", d.Name)
+		return
+	}
 	fmt.Fprintf(b, "type %s struct {\n", d.Name)
 	for i, p := range d.Lit.Properties {
 		f := g.renderField(d.Name, p)

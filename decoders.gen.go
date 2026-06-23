@@ -14879,6 +14879,22 @@ func (x *InitializeParams) unmarshalLSP(raw []byte, i int) (int, error) {
 				return i, err
 			}
 			i = n
+		case keyEquals(key, `workspaceFolders`):
+			if n, ok := dvNull(raw, i); ok {
+				x.WorkspaceFolders = Nullable[[]WorkspaceFolder]{set: true, null: true}
+				i = n
+			} else {
+				val, n, err := dvValue(raw, i)
+				if err != nil {
+					return n, err
+				}
+				var v []WorkspaceFolder
+				if err := decodeWith(val, &v); err != nil {
+					return i, err
+				}
+				x.WorkspaceFolders = Nullable[[]WorkspaceFolder]{set: true, value: v}
+				i = n
+			}
 		case keyEquals(key, `processId`):
 			if n, ok := dvNull(raw, i); ok {
 				x.ProcessID = nil
@@ -14962,22 +14978,6 @@ func (x *InitializeParams) unmarshalLSP(raw []byte, i int) (int, error) {
 			}
 			x.Trace = TraceValue(v)
 			i = n
-		case keyEquals(key, `workspaceFolders`):
-			if n, ok := dvNull(raw, i); ok {
-				x.WorkspaceFolders = Nullable[[]WorkspaceFolder]{set: true, null: true}
-				i = n
-			} else {
-				val, n, err := dvValue(raw, i)
-				if err != nil {
-					return n, err
-				}
-				var v []WorkspaceFolder
-				if err := decodeWith(val, &v); err != nil {
-					return i, err
-				}
-				x.WorkspaceFolders = Nullable[[]WorkspaceFolder]{set: true, value: v}
-				i = n
-			}
 		default:
 			_, n, err := dvValue(raw, i)
 			if err != nil {
@@ -32189,153 +32189,6 @@ func (x *WorkspaceUnchangedDocumentDiagnosticReport) unmarshalLSPValue(raw jsont
 
 // UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
 func (x *WorkspaceUnchangedDocumentDiagnosticReport) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
-	raw, err := dec.ReadValue()
-	if err != nil {
-		return err
-	}
-	return x.unmarshalLSPValue(slices.Clone(raw))
-}
-
-func (x *_InitializeParams) unmarshalLSP(raw []byte, i int) (int, error) {
-	if n, ok := dvNull(raw, i); ok {
-		*x = _InitializeParams{}
-		return n, nil
-	}
-	if i >= len(raw) || raw[i] != '{' {
-		return i, dvSyntaxError(i, "object")
-	}
-	i = skipSpace(raw, i+1)
-	if i < len(raw) && raw[i] == '}' {
-		return i + 1, nil
-	}
-	for {
-		key, n, err := dvMemberKey(raw, i)
-		if err != nil {
-			return n, err
-		}
-		i = n
-		_ = key
-		switch {
-		case keyEquals(key, `workDoneToken`):
-			val, n, err := dvValue(raw, i)
-			if err != nil {
-				return n, err
-			}
-			if err := unmarshalProgressTokenValue(val, &x.WorkDoneToken); err != nil {
-				return i, err
-			}
-			i = n
-		case keyEquals(key, `processId`):
-			if n, ok := dvNull(raw, i); ok {
-				x.ProcessID = nil
-				i = n
-			} else {
-				v, n, err := dvInt32(raw, i)
-				if err != nil {
-					return n, err
-				}
-				if x.ProcessID == nil {
-					x.ProcessID = new(int32)
-				}
-				*x.ProcessID = v
-				i = n
-			}
-		case keyEquals(key, `clientInfo`):
-			n, err := x.ClientInfo.unmarshalLSP(raw, i)
-			if err != nil {
-				return n, err
-			}
-			i = n
-		case keyEquals(key, `locale`):
-			if n, ok := dvNull(raw, i); ok {
-				x.Locale = nil
-				i = n
-			} else {
-				v, n, err := dvString(raw, i)
-				if err != nil {
-					return n, err
-				}
-				if x.Locale == nil {
-					x.Locale = new(string)
-				}
-				*x.Locale = v
-				i = n
-			}
-		case keyEquals(key, `rootPath`):
-			if n, ok := dvNull(raw, i); ok {
-				x.RootPath = Nullable[string]{set: true, null: true}
-				i = n
-			} else {
-				v, n, err := dvString(raw, i)
-				if err != nil {
-					return n, err
-				}
-				x.RootPath = Nullable[string]{set: true, value: v}
-				i = n
-			}
-		case keyEquals(key, `rootUri`):
-			if n, ok := dvNull(raw, i); ok {
-				x.RootURI = nil
-				i = n
-			} else {
-				v, n, err := dvURI(raw, i)
-				if err != nil {
-					return n, err
-				}
-				if x.RootURI == nil {
-					x.RootURI = new(uri.URI)
-				}
-				*x.RootURI = v
-				i = n
-			}
-		case keyEquals(key, `capabilities`):
-			n, err := x.Capabilities.unmarshalLSP(raw, i)
-			if err != nil {
-				return n, err
-			}
-			i = n
-		case keyEquals(key, `initializationOptions`):
-			val, n, err := dvValue(raw, i)
-			if err != nil {
-				return n, err
-			}
-			x.InitializationOptions = jsontext.Value(val)
-			i = n
-		case keyEquals(key, `trace`):
-			v, n, err := dvString(raw, i)
-			if err != nil {
-				return n, err
-			}
-			x.Trace = TraceValue(v)
-			i = n
-		default:
-			_, n, err := dvValue(raw, i)
-			if err != nil {
-				return n, err
-			}
-			i = n
-		}
-		var done bool
-		i, done, err = dvObjectNext(raw, i)
-		if err != nil {
-			return i, err
-		}
-		if done {
-			return i, nil
-		}
-	}
-}
-
-func (x *_InitializeParams) unmarshalLSPValue(raw jsontext.Value) error {
-	i, err := x.unmarshalLSP(raw, skipSpace(raw, 0))
-	if err != nil {
-		return err
-	}
-	return dvEnd(raw, i)
-}
-
-// UnmarshalJSONFrom implements the v2 UnmarshalerFrom interface via the byte walker.
-func (x *_InitializeParams) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	raw, err := dec.ReadValue()
 	if err != nil {
 		return err

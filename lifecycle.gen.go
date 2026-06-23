@@ -11,38 +11,8 @@ import (
 
 // InitializeParams is defined by the LSP specification.
 type InitializeParams struct {
-	_InitializeParams
-	WorkspaceFoldersInitializeParams
-}
-
-// InitializeResult The result returned from an initialize request.
-type InitializeResult struct {
-	// Capabilities The capabilities the language server provides.
-	Capabilities ServerCapabilities `json:"capabilities"`
-
-	// ServerInfo Information about the server.
-	//
-	// Since: 3.15.0
-	ServerInfo ServerInfo `json:"serverInfo,omitzero"`
-}
-
-// InitializeError The data type of the ResponseError if the
-// initialize request fails.
-type InitializeError struct {
-	// Retry Indicates whether the client execute the following retry logic:
-	// (1) show the message provided by the ResponseError to the user
-	// (2) user selects retry or cancel
-	// (3) if user selected retry the initialize method is sent again.
-	Retry bool `json:"retry"`
-}
-
-// InitializedParams is defined by the LSP specification.
-type InitializedParams struct {
-}
-
-// _InitializeParams The initialize parameters
-type _InitializeParams struct {
 	WorkDoneProgressParams
+	WorkspaceFoldersInitializeParams
 
 	// ProcessID The process Id of the parent process that started
 	// the server.
@@ -88,6 +58,30 @@ type _InitializeParams struct {
 	// Trace The initial trace setting. If omitted trace is disabled ('off').
 	Trace TraceValue `json:"trace,omitzero"`
 }
+
+// InitializeResult The result returned from an initialize request.
+type InitializeResult struct {
+	// Capabilities The capabilities the language server provides.
+	Capabilities ServerCapabilities `json:"capabilities"`
+
+	// ServerInfo Information about the server.
+	//
+	// Since: 3.15.0
+	ServerInfo ServerInfo `json:"serverInfo,omitzero"`
+}
+
+// InitializeError The data type of the ResponseError if the
+// initialize request fails.
+type InitializeError struct {
+	// Retry Indicates whether the client execute the following retry logic:
+	// (1) show the message provided by the ResponseError to the user
+	// (2) user selects retry or cancel
+	// (3) if user selected retry the initialize method is sent again.
+	Retry bool `json:"retry"`
+}
+
+// InitializedParams is defined by the LSP specification.
+type InitializedParams struct{}
 
 // ServerCapabilities Defines the capabilities provided by a language
 // server.

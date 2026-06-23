@@ -4878,6 +4878,14 @@ func (x InitializeParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 			return err
 		}
 	}
+	if !x.WorkspaceFolders.IsZero() {
+		if err := enc.WriteToken(jsontext.String(`workspaceFolders`)); err != nil {
+			return err
+		}
+		if err := json.MarshalEncode(enc, x.WorkspaceFolders); err != nil {
+			return err
+		}
+	}
 	if err := enc.WriteToken(jsontext.String(`processId`)); err != nil {
 		return err
 	}
@@ -4933,14 +4941,6 @@ func (x InitializeParams) MarshalJSONTo(enc *jsontext.Encoder) error {
 			return err
 		}
 		if err := json.MarshalEncode(enc, x.Trace); err != nil {
-			return err
-		}
-	}
-	if !x.WorkspaceFolders.IsZero() {
-		if err := enc.WriteToken(jsontext.String(`workspaceFolders`)); err != nil {
-			return err
-		}
-		if err := json.MarshalEncode(enc, x.WorkspaceFolders); err != nil {
 			return err
 		}
 	}
@@ -10607,79 +10607,6 @@ func (x WorkspaceUnchangedDocumentDiagnosticReport) MarshalJSONTo(enc *jsontext.
 	}
 	if err := json.MarshalEncode(enc, x.Version); err != nil {
 		return err
-	}
-	return enc.WriteToken(jsontext.EndObject)
-}
-
-func (x _InitializeParams) MarshalJSONTo(enc *jsontext.Encoder) error {
-	if err := enc.WriteToken(jsontext.BeginObject); err != nil {
-		return err
-	}
-	if x.WorkDoneToken != nil {
-		if err := enc.WriteToken(jsontext.String(`workDoneToken`)); err != nil {
-			return err
-		}
-		if err := encodeProgressTokenTo(enc, x.WorkDoneToken); err != nil {
-			return err
-		}
-	}
-	if err := enc.WriteToken(jsontext.String(`processId`)); err != nil {
-		return err
-	}
-	if err := json.MarshalEncode(enc, x.ProcessID); err != nil {
-		return err
-	}
-	if !isZeroGeneratedClientInfo(x.ClientInfo) {
-		if err := enc.WriteToken(jsontext.String(`clientInfo`)); err != nil {
-			return err
-		}
-		if err := x.ClientInfo.MarshalJSONTo(enc); err != nil {
-			return err
-		}
-	}
-	if x.Locale != nil {
-		if err := enc.WriteToken(jsontext.String(`locale`)); err != nil {
-			return err
-		}
-		if err := json.MarshalEncode(enc, x.Locale); err != nil {
-			return err
-		}
-	}
-	if !x.RootPath.IsZero() {
-		if err := enc.WriteToken(jsontext.String(`rootPath`)); err != nil {
-			return err
-		}
-		if err := json.MarshalEncode(enc, x.RootPath); err != nil {
-			return err
-		}
-	}
-	if err := enc.WriteToken(jsontext.String(`rootUri`)); err != nil {
-		return err
-	}
-	if err := json.MarshalEncode(enc, x.RootURI); err != nil {
-		return err
-	}
-	if err := enc.WriteToken(jsontext.String(`capabilities`)); err != nil {
-		return err
-	}
-	if err := x.Capabilities.MarshalJSONTo(enc); err != nil {
-		return err
-	}
-	if len(x.InitializationOptions) > 0 {
-		if err := enc.WriteToken(jsontext.String(`initializationOptions`)); err != nil {
-			return err
-		}
-		if err := enc.WriteValue(x.InitializationOptions); err != nil {
-			return err
-		}
-	}
-	if x.Trace != "" {
-		if err := enc.WriteToken(jsontext.String(`trace`)); err != nil {
-			return err
-		}
-		if err := json.MarshalEncode(enc, x.Trace); err != nil {
-			return err
-		}
 	}
 	return enc.WriteToken(jsontext.EndObject)
 }

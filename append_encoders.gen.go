@@ -6823,6 +6823,17 @@ func (x *InitializeParams) appendLSP(dst []byte) ([]byte, error) {
 			return nil, err
 		}
 	}
+	if !x.WorkspaceFolders.IsZero() {
+		dst = appendObjectName(dst, &first, `workspaceFolders`)
+		if x.WorkspaceFolders.IsNull() {
+			dst = append(dst, nullLiteral...)
+		} else {
+			nv, _ := x.WorkspaceFolders.Get()
+			if dst, err = appendSliceWorkspaceFolderJSON(dst, nv); err != nil {
+				return nil, err
+			}
+		}
+	}
 	dst = appendObjectName(dst, &first, `processId`)
 	if x.ProcessID == nil {
 		dst = append(dst, nullLiteral...)
@@ -6871,17 +6882,6 @@ func (x *InitializeParams) appendLSP(dst []byte) ([]byte, error) {
 	if x.Trace != "" {
 		dst = appendObjectName(dst, &first, `trace`)
 		dst = appendJSONString(dst, string(x.Trace))
-	}
-	if !x.WorkspaceFolders.IsZero() {
-		dst = appendObjectName(dst, &first, `workspaceFolders`)
-		if x.WorkspaceFolders.IsNull() {
-			dst = append(dst, nullLiteral...)
-		} else {
-			nv, _ := x.WorkspaceFolders.Get()
-			if dst, err = appendSliceWorkspaceFolderJSON(dst, nv); err != nil {
-				return nil, err
-			}
-		}
 	}
 	return append(dst, '}'), nil
 }
@@ -14786,82 +14786,6 @@ func (x *WorkspaceUnchangedDocumentDiagnosticReport) appendLSPJSON(dst []byte) (
 		return append(dst, nullLiteral...), nil
 	}
 	dst = slices.Grow(dst, 116)
-	return x.appendLSP(dst)
-}
-
-func (x *_InitializeParams) appendLSP(dst []byte) ([]byte, error) {
-	if x == nil {
-		return append(dst, nullLiteral...), nil
-	}
-	var err error
-	_ = err
-	dst = append(dst, '{')
-	first := true
-	_ = first
-	if x.WorkDoneToken != nil {
-		dst = appendObjectName(dst, &first, `workDoneToken`)
-		if dst, err = appendUnionProgressTokenJSON(dst, x.WorkDoneToken); err != nil {
-			return nil, err
-		}
-	}
-	dst = appendObjectName(dst, &first, `processId`)
-	if x.ProcessID == nil {
-		dst = append(dst, nullLiteral...)
-	} else {
-		dst = appendInt32JSON(dst, int32(*x.ProcessID))
-	}
-	if !isZeroGeneratedClientInfo(x.ClientInfo) {
-		dst = appendObjectName(dst, &first, `clientInfo`)
-		if dst, err = x.ClientInfo.appendLSP(dst); err != nil {
-			return nil, err
-		}
-	}
-	if x.Locale != nil {
-		dst = appendObjectName(dst, &first, `locale`)
-		if x.Locale == nil {
-			dst = append(dst, nullLiteral...)
-		} else {
-			dst = appendJSONString(dst, string(*x.Locale))
-		}
-	}
-	if !x.RootPath.IsZero() {
-		dst = appendObjectName(dst, &first, `rootPath`)
-		if x.RootPath.IsNull() {
-			dst = append(dst, nullLiteral...)
-		} else {
-			nv, _ := x.RootPath.Get()
-			dst = appendJSONString(dst, string(nv))
-		}
-	}
-	dst = appendObjectName(dst, &first, `rootUri`)
-	if x.RootURI == nil {
-		dst = append(dst, nullLiteral...)
-	} else {
-		dst = appendJSONString(dst, string(*x.RootURI))
-	}
-	dst = appendObjectName(dst, &first, `capabilities`)
-	if dst, err = x.Capabilities.appendLSP(dst); err != nil {
-		return nil, err
-	}
-	if len(x.InitializationOptions) > 0 {
-		dst = appendObjectName(dst, &first, `initializationOptions`)
-		if dst, err = appendRawJSONValue(dst, x.InitializationOptions); err != nil {
-			return nil, err
-		}
-	}
-	if x.Trace != "" {
-		dst = appendObjectName(dst, &first, `trace`)
-		dst = appendJSONString(dst, string(x.Trace))
-	}
-	return append(dst, '}'), nil
-}
-
-// appendLSPJSON implements appendMarshaler with a pre-sized buffer.
-func (x *_InitializeParams) appendLSPJSON(dst []byte) ([]byte, error) {
-	if x == nil {
-		return append(dst, nullLiteral...), nil
-	}
-	dst = slices.Grow(dst, 2048)
 	return x.appendLSP(dst)
 }
 

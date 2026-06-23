@@ -56,8 +56,7 @@ type MarkedStringSlice []MarkedString
 type ParameterInformationLabelTuple [2]uint32
 
 // SemanticTokensOptionsRange is a generated inline object literal type.
-type SemanticTokensOptionsRange struct {
-}
+type SemanticTokensOptionsRange struct{}
 
 // Definition The definition of a symbol represented as one or many [Location].
 // For most programming languages there is only one location at which a symbol is
