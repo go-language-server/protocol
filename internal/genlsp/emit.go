@@ -257,21 +257,33 @@ func (g *Generator) analyzeStructures() []*renderedStruct {
 // underscore-prefixed references. owner is the public struct the fields are
 // rendered against, so doc hints and hot-field overrides match the parent.
 func (g *Generator) inlineContribution(owner string, s *Structure) (embeds []string, fields []renderedField) {
-	for _, ref := range append(append([]*Type{}, s.Extends...), s.Mixins...) {
-		if ref.Kind != KindReference {
-			continue
+	seenEmbeds := make(map[string]bool)
+	seenFields := make(map[string]bool)
+
+	var flatten func(structure *Structure)
+	flatten = func(structure *Structure) {
+		for _, ref := range append(append([]*Type{}, structure.Extends...), structure.Mixins...) {
+			if ref.Kind != KindReference {
+				continue
+			}
+			if base, ok := g.structures[ref.Name]; ok && strings.HasPrefix(ref.Name, "_") {
+				flatten(base)
+				continue
+			}
+			if !seenEmbeds[ref.Name] {
+				seenEmbeds[ref.Name] = true
+				embeds = append(embeds, ref.Name)
+			}
 		}
-		if base, ok := g.structures[ref.Name]; ok && strings.HasPrefix(ref.Name, "_") {
-			subEmbeds, subFields := g.inlineContribution(owner, base)
-			embeds = append(embeds, subEmbeds...)
-			fields = append(fields, subFields...)
-			continue
+		for _, p := range structure.Properties {
+			if !seenFields[p.Name] {
+				seenFields[p.Name] = true
+				fields = append(fields, g.renderField(owner, p))
+			}
 		}
-		embeds = append(embeds, ref.Name)
 	}
-	for _, p := range s.Properties {
-		fields = append(fields, g.renderField(owner, p))
-	}
+	
+	flatten(s)
 	return embeds, fields
 }
 
