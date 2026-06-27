@@ -3,10 +3,10 @@ module go.lsp.dev/protocol
 go 1.26
 
 require (
-	github.com/go-json-experiment/json v0.0.0-20260601182631-00ed12fed2a6
+	github.com/go-json-experiment/json v0.0.0-20260623181947-01eb4420fa68
 	github.com/google/go-cmp v0.7.0
-	go.lsp.dev/jsonrpc2 v1.0.0
-	go.lsp.dev/uri v1.0.0
+	go.lsp.dev/jsonrpc2 v1.0.1
+	go.lsp.dev/uri v1.0.1
 )
 
 tool (
