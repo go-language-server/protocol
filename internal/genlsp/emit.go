@@ -226,20 +226,22 @@ func (g *Generator) analyzeStructures() []*renderedStruct {
 			Name: s.Name,
 			Doc:  g.docComment(s.Name, s.Documentation, s.Since, s.Deprecated, s.Proposed),
 		}
-		for _, ref := range append(append([]*Type{}, s.Extends...), s.Mixins...) {
-			if ref.Kind != KindReference {
-				continue
+		for _, refs := range [...][]*Type{s.Extends, s.Mixins} {
+			for _, ref := range refs {
+				if ref.Kind != KindReference {
+					continue
+				}
+				if base, ok := g.structures[ref.Name]; ok && strings.HasPrefix(ref.Name, "_") {
+					// Merge the private base directly into this struct so the embed of
+					// the underscore type disappears while its contributed embeds and
+					// fields come along, rendered against the public owner.
+					embeds, fields := g.inlineContribution(s.Name, base)
+					rs.Embeds = append(rs.Embeds, embeds...)
+					rs.Fields = append(rs.Fields, fields...)
+					continue
+				}
+				rs.Embeds = append(rs.Embeds, ref.Name)
 			}
-			if base, ok := g.structures[ref.Name]; ok && strings.HasPrefix(ref.Name, "_") {
-				// Merge the private base directly into this struct so the embed of
-				// the underscore type disappears while its contributed embeds and
-				// fields come along, rendered against the public owner.
-				embeds, fields := g.inlineContribution(s.Name, base)
-				rs.Embeds = append(rs.Embeds, embeds...)
-				rs.Fields = append(rs.Fields, fields...)
-				continue
-			}
-			rs.Embeds = append(rs.Embeds, ref.Name)
 		}
 		for _, p := range s.Properties {
 			rs.Fields = append(rs.Fields, g.renderField(s.Name, p))
@@ -262,17 +264,19 @@ func (g *Generator) inlineContribution(owner string, s *Structure) (embeds []str
 
 	var flatten func(structure *Structure)
 	flatten = func(structure *Structure) {
-		for _, ref := range append(append([]*Type{}, structure.Extends...), structure.Mixins...) {
-			if ref.Kind != KindReference {
-				continue
-			}
-			if base, ok := g.structures[ref.Name]; ok && strings.HasPrefix(ref.Name, "_") {
-				flatten(base)
-				continue
-			}
-			if !seenEmbeds[ref.Name] {
-				seenEmbeds[ref.Name] = true
-				embeds = append(embeds, ref.Name)
+		for _, refs := range [...][]*Type{structure.Extends, structure.Mixins} {
+			for _, ref := range refs {
+				if ref.Kind != KindReference {
+					continue
+				}
+				if base, ok := g.structures[ref.Name]; ok && strings.HasPrefix(ref.Name, "_") {
+					flatten(base)
+					continue
+				}
+				if !seenEmbeds[ref.Name] {
+					seenEmbeds[ref.Name] = true
+					embeds = append(embeds, ref.Name)
+				}
 			}
 		}
 		for _, p := range structure.Properties {
@@ -282,7 +286,7 @@ func (g *Generator) inlineContribution(owner string, s *Structure) (embeds []str
 			}
 		}
 	}
-	
+
 	flatten(s)
 	return embeds, fields
 }

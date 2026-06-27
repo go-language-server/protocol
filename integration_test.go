@@ -84,11 +84,6 @@ func (testClient) ApplyEdit(context.Context, *ApplyWorkspaceEditParams) (*ApplyW
 //  2. a client->server notification reaches the server (textDocument/didOpen);
 //  3. a server->client request issued from within a handler round-trips
 //     (workspace/applyEdit).
-//
-// TestIntegrationRoundTrip drives the production Handlers() chain through
-// NewServer/NewClient over an in-memory pipe: a client->server request, a
-// notification, and a server->client callback. It is the regression guard for
-// the reply-clobbering defect once present in protocol.CancelHandler.
 func TestIntegrationRoundTrip(t *testing.T) {
 	ctx, cancel := context.WithTimeout(t.Context(), 10*time.Second)
 	defer cancel()

@@ -27,6 +27,8 @@ func NewServer(ctx context.Context, server Server, stream jsonrpc2.Stream) (cont
 // NewClient returns the context in which the [Client] is embedded, the jsonrpc2
 // connection, and the [Server] dispatcher. The connection serves the supplied
 // [Client] and is wired with the union-aware [lspCodec].
+//
+//nolint:unparam // returned context mirrors NewServer and is part of the stable symmetric API; callers may embed and reuse it
 func NewClient(ctx context.Context, client Client, stream jsonrpc2.Stream) (context.Context, jsonrpc2.Conn, Server) {
 	ctx = WithClient(ctx, client)
 

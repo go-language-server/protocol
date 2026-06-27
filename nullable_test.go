@@ -24,9 +24,27 @@ func TestNewNullable(t *testing.T) {
 			wantVal    WorkspaceFolder
 			wantOK     bool
 		}{
-			"success: NewNullable sets value state":  {NewNullable(wf), false, false, wf, true},
-			"success: NullNullable sets null state":  {NullNullable[WorkspaceFolder](), false, true, zeroWF, false},
-			"success: zero Nullable is absent state": {Nullable[WorkspaceFolder]{}, true, false, zeroWF, false},
+			"success: NewNullable sets value state": {
+				n:          NewNullable(wf),
+				wantIsZero: false,
+				wantIsNull: false,
+				wantVal:    wf,
+				wantOK:     true,
+			},
+			"success: NullNullable sets null state": {
+				n:          NullNullable[WorkspaceFolder](),
+				wantIsZero: false,
+				wantIsNull: true,
+				wantVal:    zeroWF,
+				wantOK:     false,
+			},
+			"success: zero Nullable is absent state": {
+				n:          Nullable[WorkspaceFolder]{},
+				wantIsZero: true,
+				wantIsNull: false,
+				wantVal:    zeroWF,
+				wantOK:     false,
+			},
 		}
 		for name, tt := range tests {
 			t.Run(name, func(t *testing.T) {
@@ -94,9 +112,24 @@ func TestNullableTriState(t *testing.T) {
 		wantNull   bool
 		wantLen    int
 	}{
-		"success: absent": {`{}`, true, false, 0},
-		"success: null":   {`{"workspaceFolders":null}`, false, true, 0},
-		"success: value":  {`{"workspaceFolders":[{"uri":"file:///w","name":"w"}]}`, false, false, 1},
+		"success: absent": {
+			json:       `{}`,
+			wantAbsent: true,
+			wantNull:   false,
+			wantLen:    0,
+		},
+		"success: null": {
+			json:       `{"workspaceFolders":null}`,
+			wantAbsent: false,
+			wantNull:   true,
+			wantLen:    0,
+		},
+		"success: value": {
+			json:       `{"workspaceFolders":[{"uri":"file:///w","name":"w"}]}`,
+			wantAbsent: false,
+			wantNull:   false,
+			wantLen:    1,
+		},
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
