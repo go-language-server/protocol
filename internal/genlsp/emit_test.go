@@ -125,14 +125,34 @@ func TestAnalyzeStructuresDeduplicatesFlattenedPrivateBases(t *testing.T) {
 				Extends:    []*Type{ref("_BaseA"), ref("_BaseB"), ref("SharedEmbed")},
 				Properties: []*Property{prop("shadow"), prop("own")},
 			},
+			{
+				Name:       "_CycleA",
+				Extends:    []*Type{ref("_CycleB")},
+				Properties: []*Property{prop("cycleA")},
+			},
+			{
+				Name:       "_CycleB",
+				Extends:    []*Type{ref("_CycleA")},
+				Properties: []*Property{prop("cycleB")},
+			},
+			{
+				Name:       "PublicCycle",
+				Extends:    []*Type{ref("_CycleA")},
+				Properties: []*Property{prop("cycleOwn")},
+			},
 		},
 	}
 	g := NewGenerator(m, "protocol")
 
-	var public *renderedStruct
+	var public, publicCycle *renderedStruct
 	for _, s := range g.analyzeStructures() {
-		if s.Name == "Public" {
+		switch s.Name {
+		case "Public":
 			public = s
+		case "PublicCycle":
+			publicCycle = s
+		}
+		if public != nil && publicCycle != nil {
 			break
 		}
 	}
@@ -150,6 +170,18 @@ func TestAnalyzeStructuresDeduplicatesFlattenedPrivateBases(t *testing.T) {
 	wantFields := []string{"BaseAOnly", "BaseBOnly", "Shadow", "Own"}
 	if !slices.Equal(gotFields, wantFields) {
 		t.Fatalf("Public fields = %v, want %v", gotFields, wantFields)
+	}
+
+	if publicCycle == nil {
+		t.Fatal("PublicCycle structure not rendered")
+	}
+	gotFields = gotFields[:0]
+	for _, f := range publicCycle.Fields {
+		gotFields = append(gotFields, f.Name)
+	}
+	wantFields = []string{"CycleB", "CycleA", "CycleOwn"}
+	if !slices.Equal(gotFields, wantFields) {
+		t.Fatalf("PublicCycle fields = %v, want %v", gotFields, wantFields)
 	}
 }
 

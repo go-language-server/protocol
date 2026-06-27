@@ -271,8 +271,14 @@ func (g *Generator) inlineContribution(
 	s *Structure,
 	seenEmbeds, seenFields map[string]bool,
 ) (embeds []string, fields []renderedField) {
+	visited := make(map[string]bool)
 	var flatten func(structure *Structure)
 	flatten = func(structure *Structure) {
+		if visited[structure.Name] {
+			return
+		}
+		visited[structure.Name] = true
+
 		for _, refs := range [...][]*Type{structure.Extends, structure.Mixins} {
 			for _, ref := range refs {
 				if ref.Kind != KindReference {
