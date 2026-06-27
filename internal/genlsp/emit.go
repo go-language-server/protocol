@@ -226,6 +226,11 @@ func (g *Generator) analyzeStructures() []*renderedStruct {
 			Name: s.Name,
 			Doc:  g.docComment(s.Name, s.Documentation, s.Since, s.Deprecated, s.Proposed),
 		}
+		seenEmbeds := make(map[string]bool)
+		seenFields := make(map[string]bool)
+		for _, p := range s.Properties {
+			seenFields[p.Name] = true
+		}
 		for _, refs := range [...][]*Type{s.Extends, s.Mixins} {
 			for _, ref := range refs {
 				if ref.Kind != KindReference {
@@ -235,12 +240,15 @@ func (g *Generator) analyzeStructures() []*renderedStruct {
 					// Merge the private base directly into this struct so the embed of
 					// the underscore type disappears while its contributed embeds and
 					// fields come along, rendered against the public owner.
-					embeds, fields := g.inlineContribution(s.Name, base)
+					embeds, fields := g.inlineContribution(s.Name, base, seenEmbeds, seenFields)
 					rs.Embeds = append(rs.Embeds, embeds...)
 					rs.Fields = append(rs.Fields, fields...)
 					continue
 				}
-				rs.Embeds = append(rs.Embeds, ref.Name)
+				if !seenEmbeds[ref.Name] {
+					seenEmbeds[ref.Name] = true
+					rs.Embeds = append(rs.Embeds, ref.Name)
+				}
 			}
 		}
 		for _, p := range s.Properties {
@@ -258,10 +266,11 @@ func (g *Generator) analyzeStructures() []*renderedStruct {
 // flattened into a referrer, recursively flattening any further
 // underscore-prefixed references. owner is the public struct the fields are
 // rendered against, so doc hints and hot-field overrides match the parent.
-func (g *Generator) inlineContribution(owner string, s *Structure) (embeds []string, fields []renderedField) {
-	seenEmbeds := make(map[string]bool)
-	seenFields := make(map[string]bool)
-
+func (g *Generator) inlineContribution(
+	owner string,
+	s *Structure,
+	seenEmbeds, seenFields map[string]bool,
+) (embeds []string, fields []renderedField) {
 	var flatten func(structure *Structure)
 	flatten = func(structure *Structure) {
 		for _, refs := range [...][]*Type{structure.Extends, structure.Mixins} {

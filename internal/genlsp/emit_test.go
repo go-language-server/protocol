@@ -102,6 +102,57 @@ func TestGeneratedFileName(t *testing.T) {
 	}
 }
 
+func TestAnalyzeStructuresDeduplicatesFlattenedPrivateBases(t *testing.T) {
+	ref := func(name string) *Type { return &Type{Kind: KindReference, Name: name} }
+	prop := func(name string) *Property {
+		return &Property{Name: name, Type: &Type{Kind: KindBase, Name: string(BaseString)}}
+	}
+	m := &MetaModel{
+		Structures: []*Structure{
+			{Name: "SharedEmbed"},
+			{
+				Name:       "_BaseA",
+				Extends:    []*Type{ref("SharedEmbed")},
+				Properties: []*Property{prop("shadow"), prop("baseAOnly")},
+			},
+			{
+				Name:       "_BaseB",
+				Extends:    []*Type{ref("SharedEmbed")},
+				Properties: []*Property{prop("shadow"), prop("baseBOnly")},
+			},
+			{
+				Name:       "Public",
+				Extends:    []*Type{ref("_BaseA"), ref("_BaseB"), ref("SharedEmbed")},
+				Properties: []*Property{prop("shadow"), prop("own")},
+			},
+		},
+	}
+	g := NewGenerator(m, "protocol")
+
+	var public *renderedStruct
+	for _, s := range g.analyzeStructures() {
+		if s.Name == "Public" {
+			public = s
+			break
+		}
+	}
+	if public == nil {
+		t.Fatal("Public structure not rendered")
+	}
+	if want := []string{"SharedEmbed"}; !slices.Equal(public.Embeds, want) {
+		t.Fatalf("Public embeds = %v, want %v", public.Embeds, want)
+	}
+
+	var gotFields []string
+	for _, f := range public.Fields {
+		gotFields = append(gotFields, f.Name)
+	}
+	wantFields := []string{"BaseAOnly", "BaseBOnly", "Shadow", "Own"}
+	if !slices.Equal(gotFields, wantFields) {
+		t.Fatalf("Public fields = %v, want %v", gotFields, wantFields)
+	}
+}
+
 func TestHotOptionalField(t *testing.T) {
 	tests := map[string]struct {
 		owner     string
