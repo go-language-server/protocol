@@ -6,8 +6,6 @@
 # -----------------------------------------------------------------------------
 # go
 
-GO_VERSION ?= $(shell grep -rh "^go " --include="go.mod" . 2>/dev/null | cut -d' ' -f2 | sort | uniq -c | sort -nr | head -1 | xargs | cut -d' ' -f2 | grep . || echo unknown)
-GO_STABLE_VERSION = $(shell curl -sSL "https://go.dev/dl/?mode=json" | jq -r '[ .[] | select(.stable == true) ][0].version' | grep -oE '[0-9]+\.[0-9]+')
 GO_BUILDTAGS = osusergo,netgo,static
 GO_LDFLAGS = -s -w
 ifeq ($(GO_OS),linux)
@@ -15,10 +13,7 @@ GO_LDFLAGS += "-extldflags=-static"
 endif
 GO_FLAGS ?= -tags='${GO_BUILDTAGS}' -ldflags='${GO_LDFLAGS}'
 
-GOEXPERIMENT := runtimefreegc,sizespecializedmalloc,runtimesecret
-ifeq ($(findstring ${GO_STABLE_VERSION},${GO_VERSION}),)
-GOEXPERIMENT := ${GOEXPERIMENT},simd,runtimesecret,mapsplitgroup
-endif
+GOEXPERIMENT ?= simd,runtimesecret
 export GOEXPERIMENT
 
 TOOLS_BIN = ${CURDIR}/bin
