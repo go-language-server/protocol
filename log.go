@@ -110,6 +110,7 @@ func (s *loggingStream) logCommon(msg jsonrpc2.Message, isRead bool) {
 	}
 
 	s.logMu.Lock()
+	defer s.logMu.Unlock()
 
 	direction, pastTense := "Received", "Received"
 	get, set := maps.client, maps.setServer
@@ -151,6 +152,4 @@ func (s *loggingStream) logCommon(msg jsonrpc2.Message, isRead bool) {
 	}
 
 	s.log.Write(buf.Bytes())
-
-	s.logMu.Unlock()
 }
